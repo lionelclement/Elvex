@@ -49,7 +49,7 @@ Statement::Statement (unsigned int lineno,
   this->features = featuresPtr();
   this->bits = bitsetPtr();
   this->str = str;
-  this->fct = fct;
+  this->fct = NOP;
   this->list = listPtr();
   this->statements = statementsPtr();
   this->number=0;
