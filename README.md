@@ -1,5 +1,4 @@
 # Elvex
-A Natural Language Generation engine
 
 Elvex is an Natural Text Generator. It takes as an input a concept, a local lexicon, a compacted lexicon, and a grammar, and then outputs a text corresponding to the concept writing in Natural Language.
 
