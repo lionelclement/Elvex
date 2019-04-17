@@ -4,7 +4,7 @@
  * verbal tense & inflexion
  ************************************************** */
 
-//text [PRED:marcher, i:[PRED:Léon], tense:present]
+text [PRED:marcher, i:[PRED:Léon], tense:present]
 //text [PRED:marcher, i:[PRED:Léon], tense:past]
 //text [PRED:marcher, i:[PRED:Léon], tense:future]
 //text [PRED:marcher, i:[PRED:Léon], tense:past, aspect:imperfect]
