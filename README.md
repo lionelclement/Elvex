@@ -4,7 +4,7 @@ Elvex is an Natural Text Generator. It takes as an input a concept, a local lexi
 
 A little exemple of outputs in French : causal clauses with tense aggrement.
 
-// present
+//present
 text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
 --------------------------------------------------------
 S'il pleut, tu prendras un parapluie.
