@@ -1,55 +1,31 @@
-SUFFIXES: .poslemma .formmorpho .lemma2 .lemmamorpho .elvex .complete .lefff .pattern .lefff.bz2
+.PHONY: all output debug
 
-CLEANFILES = lefff.fsa lefff.tbl
-BUILDLEXICON = ../../src/elvexbuildlexicon
+SUBDIRS = lefff
+ELVEX = ../src/elvex
+ELVEXDEBUG = ../src/elvexdebug
+POSTEDITION = ../src/elvexpostedition
+CLEANFILES = $(patsubst %.input, %.output, $(wildcard *.input)) $(patsubst %.input, %.xml, $(wildcard *.input)) $(patsubst %.input, %.err, $(wildcard *.input)) $(patsubst %.input, %.html, $(wildcard *.input)) $(patsubst %.input, %.jpg, $(wildcard *.input))
 
-all:
-	@make lefff.fsa
+all: output
 
-%.poslemma: %.pos %.lemma
-	@echo "build $@"
-	@paste $^ | tr '\t' '#' > $@
+clean:
+	rm $(CLEANFILES)
 
-%.formmorpho: %.form %.predmorpho
-	@echo "build $@"
-	@paste $^ | tr '\t' '#' > $@
+output: $(patsubst %.input, %.output, $(wildcard *.input))
 
-%.pred: %.lemma
-	@echo "build $@"
-	@sed -e 's/^\(.*\)/PRED:\1,/' < $^ > $@
+debug: $(patsubst %.input, %.jpg, $(wildcard *.input))
 
-%.predmorpho: %.pred %.morpho
-	@echo "build $@"
-	@paste $*.pred $*.morpho | sed -e 's/	//' -e 's/\(.*\)/[\1]/' -e 's/,]/]/' > $@
+%.output: %.input %.lexicon %.grammar $(ELVEX) $(POSTEDITION) lefff/lefff.fsa Makefile
+	$(ELVEX) -compactDirectory lefff -compactLexiconFile lefff -grammarFile $*.grammar -lexiconFile $*.lexicon -inputFile $*.input 2> $*.err | $(POSTEDITION) | sed -e 's/^ //' > $@
+	@echo "\n\n\n";
+	@cat $@
+	@echo "\n";
 
-%.elvex: %.poslemma %.formmorpho
-	@echo "build $@"
-	@paste $^ | sort -u > $@
+%.xml: %.input %.lexicon %.grammar $(ELVEX) $(POSTEDITION) lefff/lefff.fsa Makefile
+	$(ELVEXDEBUG) -compactDirectory lefff -compactLexiconFile lefff -grammarFile $*.grammar -lexiconFile $*.lexicon -inputFile $*.input -xml $*.xml 2> $*.html > /dev/null
 
-%.fsa: %.elvex
-	@echo "build $@"
-	@$(BUILDLEXICON) -d . -f $* build $<
+%.dot: %.xml ../xsl/xml2dot.xsl
+	xsltproc ../xsl/xml2dot.xsl $*.xml > $@
 
-%.form: %.complete
-	@echo "build $@"
-	@grep -v '^//' < $< | cut -f1 > $@
-
-%.pos: %.complete
-	@echo "build $@"
-	@grep -v '^//' < $< | cut -f2 > $@
-
-%.lemma: %.complete
-	@echo "build $@"
-	@grep -v '^//' < $< | cut -f3 > $@
-
-%.morpho: %.complete
-	@echo "build $@"
-	@grep -v '^//' < $< | cut -f4 > $@
-
-%.complete: %.lefff %.pattern
-	@echo "build $@"
-	@perl completeLefff.pl $*.lefff $*.pattern > $@
-
-%.lefff: %.lefff.bz2
-	@echo "unzip $@"
-	@bunzip2 -c $< > $@
+%.jpg: %.dot
+	dot -T jpg -o $@ $<
