@@ -1,6 +1,6 @@
 @lexicon 
 
-"salut" hello;
+"bonjour" hello;
 "à bientôt" see_you_soon;
 "@" newline;
 
