@@ -168,7 +168,7 @@ Lex::saveFsa(FILE *file)
 bool
 Lex::loadFsa(FILE *file)
 {
-  std::cerr << "*** Loading Finite State Automata" << std::endl;
+  //std::cerr << "*** Loading Finite State Automata" << std::endl;
   int nbrBytes;
   if (!fread(&nbrBytes, sizeof(nbrBytes), 1, file))
     FATAL_ERROR;
@@ -371,7 +371,7 @@ Lex::load(char *directory, char *prefix)
 
   }
   else {
-    cerr << "*** Load buffer in memory" << endl;
+    //cerr << "*** Load buffer in memory" << endl;
 
     struct stat *statbuf;
     statbuf = (struct stat *)malloc(sizeof(struct stat));
