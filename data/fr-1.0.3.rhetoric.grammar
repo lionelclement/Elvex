@@ -345,7 +345,6 @@ conclusion → illocutionaryAct {
  * Si j'avais brûlé la voiture, elle marcherait forcément moins bien.
  * J'ai brûlé une voiture. Le véhicule marche forcément moins bien.
  ************************************************** */
-/*
 rhetoricalStructure → illocutionaryAct illocutionaryAct {
   [PRED:cause, i:[i:[id:$ID]], ii:[i:[idref:$ID]]];
   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
@@ -365,12 +364,10 @@ rhetoricalStructure → illocutionaryAct illocutionaryAct {
   else
     ↓2 = [i:[PRED:_pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
 }
-*/
 
 /* **************************************************
  * Succession
  ************************************************** */
-/***
 rhetoricalStructure → TimeClause comma form illocutionaryAct {
   [PRED:succ, i:[ii:[id:$ID]], ii:[i:[idref:$ID]]];
   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
@@ -416,7 +413,6 @@ rhetoricalStructure → TimeClause comma form illocutionaryAct {
   else
     ↓4 = [i:[PRED:_pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
 }
-***/
 
 /* **************************************************
  * Neutral
@@ -424,6 +420,27 @@ rhetoricalStructure → TimeClause comma form illocutionaryAct {
 rhetoricalStructure → illocutionaryAct {
   [rhet:neutral];
   ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Greetings, hello, etc
+ ************************************************** */
+rhetoricalStructure → hello comma newline text {
+  [PRED:hello, i:$i];
+  ↓1 = [];
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $i;
+  ⇑ = ⇓3;
+}
+
+rhetoricalStructure → text newline see_you_soon dot {
+  [PRED:see_you_soon, i:$i];
+  ↓1 = $i;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
   ⇑ = ⇓1;
 }
 

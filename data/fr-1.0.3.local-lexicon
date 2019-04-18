@@ -1,5 +1,9 @@
 @lexicon 
 
+"salut" hello;
+"à bientôt" see_you_soon;
+"@" newline;
+
 "est-ce que" est_ce_que;
 "il me semble que" il_me_semble_que;
 "en train de" en_train_de;

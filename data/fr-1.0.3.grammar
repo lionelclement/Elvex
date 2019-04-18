@@ -15,7 +15,7 @@ text → rhetoricalStructure {
     $language_register = neutral;
   if (!$lexFct)
     $lexFct = none;
-  if (($pred != cause) && ($pred != succ))
+  if (($pred != cause) && ($pred != succ) && ($pred != hello) && ($pred != see_you_soon))
     $rhet = neutral;
   else
     $rhet = $pred;

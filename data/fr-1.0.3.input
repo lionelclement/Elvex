@@ -1,10 +1,12 @@
 @input  
 
+text [PRED:hello, i:[PRED:see_you_soon, i:[PRED:installer, i:[PRED:_pro, number:sg, person:two], ii:[FORM:"Elvex"], tense:recent_past ]]]
+
 /* **************************************************
  * verbal tense & inflexion
  ************************************************** */
 
-text [PRED:marcher, i:[PRED:Léon], tense:present]
+//text [PRED:marcher, i:[PRED:Léon], tense:present]
 //text [PRED:marcher, i:[PRED:Léon], tense:past]
 //text [PRED:marcher, i:[PRED:Léon], tense:future]
 //text [PRED:marcher, i:[PRED:Léon], tense:past, aspect:imperfect]
