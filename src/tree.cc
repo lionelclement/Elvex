@@ -15,6 +15,7 @@
  *
  ************************************************** */
 
+#include <iostream>     // cout
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +32,7 @@
 Tree::Tree(Tree *child, Tree *sibling, class Info *info, char letter)
 {
   NEW;
-  this->adress=0;
+  this->address=0;
   this->child = child;
   this->sibling = sibling;
   this->info = info;
@@ -65,136 +66,114 @@ Tree::setChild(Tree *child)
 }
 
 /* **************************************************
-// Calcule les offsets du tableau FSA
+// Compute offsets of FSA array
 ************************************************** */
 void
 Tree::setIndexStaticFSA(unsigned long int &index)
 {
   for (class Tree *lexiconSy = this ; lexiconSy != NULL ; lexiconSy = lexiconSy->sibling){
-    lexiconSy->adress = index++;
-    if (lexiconSy->child != NULL)
+    lexiconSy->address = index++;
+    if (lexiconSy->child)
       lexiconSy->child->setIndexStaticFSA(index);
-
   }
 }
 
 /* **************************************************
-// �crit les enregistrements du FSA
-// les offsets sont calcul�s sur 32 (vs 16) bits si long==1
+// write record of FSA
 ************************************************** */
 void
 Tree::printStaticFSA(FILE *out, class Lex *lex) const
 {
-  struct Fsa elt;
-  const class Tree* lexiconSy;
-  if (this==lex->lexiconInit){
-    lex->init=this->adress;
-
+  const class Tree *lexiconSy;
+  if (this==lex->lexiconInit) {
+    lex->init=this->address;
   }
-  for (lexiconSy=this;lexiconSy;lexiconSy=lexiconSy->sibling){
-    elt.child=(lexiconSy->child==NULL)?(unsigned long int)~0UL:lexiconSy->child->adress;
-    elt.sibling=(lexiconSy->sibling==NULL)?(unsigned long int)~0UL:lexiconSy->sibling->adress;
-    elt.info=(lexiconSy->info==NULL)?(unsigned long int)~0UL:lexiconSy->info->getAdress();
-    elt.letter=lexiconSy->letter;
-    if (!fwrite(&elt, sizeof(elt), 1, out))
-      FATAL_ERROR
+  for (lexiconSy=this ; lexiconSy ; lexiconSy=lexiconSy->sibling){
+    struct Fsa *elt = new Fsa((lexiconSy->child==NULL)?(unsigned long int)~0UL:lexiconSy->child->address,
+			      (lexiconSy->sibling==NULL)?(unsigned long int)~0UL:lexiconSy->sibling->address,
+			      (lexiconSy->info==NULL)?(unsigned long int)~0UL:lexiconSy->info->getAddress(),
+			      lexiconSy->letter);
+    if (!fwrite(elt, sizeof(struct Fsa), 1, out)) { 
+      FATAL_ERROR;
+    }
 #ifdef TRACE_DIFF
-	fprintf(stdout, "%lX ch:%lX sb:%lX in:%lX <%c>\n", lexiconSy->adress, elt.child, elt.sibling, elt.info, elt.letter);
+    elt->print(std::cout);
 #endif //TRACE_DIFF
-    lexiconSy->child->printStaticFSA(out, lex);
-
+    free(elt);
+    if (lexiconSy->child)
+      lexiconSy->child->printStaticFSA(out, lex);
   }
 }
 
 /* **************************************************
-// Calcule les offsets du tableau info
+// Calculate offsets of the array
 ************************************************** */
 void
 Tree::setIndexStaticInfo(unsigned long int &index)
 {
-  Info *infoSy;
-  Tree *lexiconSy;
-  for (lexiconSy=this;lexiconSy!=NULL;lexiconSy=lexiconSy->sibling)
-    lexiconSy->child->setIndexStaticInfo(index);
-  for (lexiconSy=this;lexiconSy!=NULL;lexiconSy=lexiconSy->sibling){
-    for (infoSy=lexiconSy->info;infoSy!=NULL;infoSy=infoSy->getNext()){
-      infoSy->setAdress(index++);
-
+  for (Tree *lexiconSy=this ; lexiconSy!=NULL ; lexiconSy=lexiconSy->sibling) {
+    if (lexiconSy->child)
+      lexiconSy->child->setIndexStaticInfo(index);
+    }
+  for (Tree *lexiconSy=this ; lexiconSy!=NULL ; lexiconSy=lexiconSy->sibling) {
+    for (Info *infoSy=lexiconSy->info ; infoSy!=NULL ; infoSy=infoSy->getNext()) {
+      infoSy->setAddress(index++);
     }
   }
 }
 
 /* **************************************************
-// �crit les enregistrement du tableau d'infos
-// les offsets sont calcul�s sur 32 (vs 16) bits si long==1
+// write the records
+// offsets are calculated on 32 (vs 16) bits if long==1
 ************************************************** */
 void
 Tree::printStaticInfo(FILE *out) const
 {
-  Info *infoSy;
-  const Tree *lexiconSy;
-  struct InfoBuff elt;
-  for (lexiconSy=this;lexiconSy!=NULL;lexiconSy=lexiconSy->sibling)
-    lexiconSy->child->printStaticInfo(out);
-  for (lexiconSy=this;lexiconSy!=NULL;lexiconSy=lexiconSy->sibling){
-    for (infoSy=lexiconSy->info;infoSy!=NULL;infoSy=infoSy->getNext()){
-      elt.next=(infoSy->getNext()!=NULL)?infoSy->getNext()->getAdress():(unsigned long int)(~(0UL));
-      elt.offset=infoSy->getOffset();
-      if (!fwrite(&elt, sizeof(elt), 1, out))
+  for (const Tree *lexiconSy=this ; lexiconSy!=NULL ; lexiconSy=lexiconSy->sibling) {
+    if (lexiconSy->child)
+      lexiconSy->child->printStaticInfo(out);
+  }
+  for (const Tree *lexiconSy=this ; lexiconSy!=NULL ; lexiconSy=lexiconSy->sibling){
+    for (Info *infoSy=lexiconSy->info ; infoSy!=NULL ; infoSy=infoSy->getNext()){
+      struct InfoBuff *elt = new InfoBuff((infoSy->getNext()!=NULL)?infoSy->getNext()->getAddress():(unsigned long int)(~(0UL)),
+					  infoSy->getOffset());
+      if (!fwrite(elt, sizeof(struct InfoBuff), 1, out))
 	FATAL_ERROR;
 #ifdef TRACE_DIFF
-      fprintf(stdout, "%lX su:%lX of:%lX\n", infoSy->getAdress(), elt.next, elt.offset);
+      std::cout << infoSy->getAddress() << ' ';
+      elt->print(std::cout);
 #endif //TRACE_DIFF
-
     }
-
   }
 }
 
 /* **************************************************
-// ajoute un mot dans l'arbre � lettres
+// add a word 
 ************************************************** */
 void
 Tree::add(char *str,
 	  unsigned long int offset)
 {
-  //Info *infoSy;
   if (!this->letter){
     this->letter = str[0];
     if (!str[1]){
-      if(this->info){
-	this->info = new Info(this->info, offset);
-
-      }
-      else
-	this->info = new Info(NULL, offset);
-
+      this->info = new Info(this->info, offset);
     }
     else{
       if (!this->child)
 	this->child = new Tree(NULL, NULL, NULL, str[1]);
       this->child->add((char *)str+1, offset);
-
     }
-
   }
   else if (this->letter == str[0]){
     if (!str[1]){
-      if(this->info){
-	this->info = new Info(this->info, offset);
-
-      }
-      else
-	this->info = new Info(NULL, offset);
-
+      this->info = new Info(this->info, offset);
     }
     else{
       if (!this->child)
 	this->child = new Tree(NULL, NULL, NULL, str[1]);
       this->child->add((char *)str+1, offset);
-
     }
-
   }
   else if (this->sibling)
     this->sibling->add(str, offset);

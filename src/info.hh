@@ -24,7 +24,7 @@ class Info {
 private:
   class Info *next;
   unsigned long int offset;
-  unsigned long int adress;
+  unsigned long int address;
 
 public:
   Info(class Info *next = NULL, unsigned long int offset = 0);
@@ -32,8 +32,8 @@ public:
 
   class Info *getNext(void) const;
   unsigned long int getOffset(void) const;
-  unsigned long int getAdress(void) const;
-  void setAdress(unsigned long int adress);
+  unsigned long int getAddress(void) const;
+  void setAddress(unsigned long int);
 
   void printStatic(FILE *) const;
 };

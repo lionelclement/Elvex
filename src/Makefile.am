@@ -29,7 +29,9 @@ item.cc\
 itemset.cc\
 grammar.cc\
 id.cc\
+fsa.cc\
 info.cc\
+infobuff.cc\
 lex.cc\
 main.cc\
 node.cc\
@@ -46,6 +48,7 @@ list.cc\
 vartable.cc
 
 elvex_OPTIONS =
+#elvex_OPTIONS += -DTRACE_DIFF
 elvex_OPTIONS += -DMEMOIZATION
 elvex_OPTIONS += -DMAXLENGTH=1000
 elvex_OPTIONS += -DMAXUSAGES=1000
@@ -54,6 +57,7 @@ elvex_OPTIONS += -DMAXATTEMPTS=1000
 elvex_OPTIONS += -DMAXBITS=512
 
 elvex_CXXFLAGS = -std=c++11 -O3 -Wall -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvex_OPTIONS)
+#elvex_CXXFLAGS = -std=c++11 -g -Wall -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvex_OPTIONS)
 elvex_LDADD =
 
 elvexdebug_SOURCES =\
@@ -74,7 +78,9 @@ item.cc\
 itemset.cc\
 grammar.cc\
 id.cc\
+fsa.cc\
 info.cc\
+infobuff.cc\
 lex.cc\
 main.cc\
 node.cc\
@@ -114,12 +120,16 @@ elvexdebug_OPTIONS += -DMAXCARDINAL=1000
 elvexdebug_OPTIONS += -DMAXATTEMPTS=1000
 elvexdebug_OPTIONS += -DMAXBITS=512
 
-elvexdebug_CXXFLAGS = -g -std=c++11 -Wall -O3 `xml2-config --cflags` -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexdebug_OPTIONS)
+#elvexdebug_CXXFLAGS = -g -std=c++11 -Wall -O3 `xml2-config --cflags` -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexdebug_OPTIONS)
+elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexdebug_OPTIONS)
 elvexdebug_LDADD = -lxml2
 
-elvexbuildlexicon_SOURCES = lex.cc info.cc tree.cc buildlexicon.cc
-elvexbuildlexicon_OPTIONS = -DMAXBITS=512
+elvexbuildlexicon_SOURCES = fsa.cc lex.cc info.cc infobuff.cc tree.cc buildlexicon.cc
+elvexbuildlexicon_OPTIONS =
+#elvexbuildlexicon_OPTIONS += -DTRACE_DIFF
 elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O3 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
+#elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -g -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
+elvexbuildlexicon_LDADD =
 
 elvexpostedition_SOURCES = postedition.cc
 

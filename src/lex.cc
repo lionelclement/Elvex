@@ -39,22 +39,22 @@ Lex::printResults (std::ostream &output, unsigned long int index, bool sep) cons
   char tag[MAXSTRING];
   if (sep)
     output << SEP_PREF;
-  if (index == (unsigned long int)(~(0UL))){
+  if (index == (unsigned long int)(~0UL)){
     output << SEP_UW;
     if (sep)
       output << SEP_SUFF;
     return;
   }
-  while (index != (unsigned long int)(~(0UL))){
+  while (index != (unsigned long int)(~0UL)){
     // an other element will be describe
-    strcpy (tag, buffer+(info[index].offset));
+    strcpy (tag, buffer+(info[index].getOffset()));
     output << tag;
-    if (info[index].next!=(unsigned long int)(~(0UL)))
+    if (info[index].isNext())
       output << SEP_OR;
-    if ((info[index].next)!=(unsigned long int)(~(0UL)))
-      index=info[index].next;
+    if (info[index].isNext())
+	index=info[index].getNext();
     else
-      index=(unsigned long int)(~(0UL));
+      index=(unsigned long int)(~0UL);
   }
   if (sep)
     output << SEP_SUFF;
@@ -69,34 +69,33 @@ Lex::searchStatic(unsigned long int index, std::string s) const
 {
   char *str = strdup(s.c_str());
   char *str2 = str;
-  index=fsa[index].child;
+  index=fsa[index].getChild();
   // for each letter of the suffix
   while (*str){
     // parse the brothers while founding the actual char
-    while (*str != fsa[index].letter){
-      if (fsa[index].sibling != (unsigned long int)(~(0UL)))
-	index=fsa[index].sibling;
+    while (!fsa[index].isLetter(*str)){
+      if (fsa[index].isSibling())
+	index=fsa[index].getSibling();
       else
-	return (unsigned long int)(~(0UL));
+	return (unsigned long int)(~0UL);
     }
-    if (*str != fsa[index].letter)
-      return ((unsigned long int)(~(0UL)));
+    if (!fsa[index].isLetter(*str))
+      return ((unsigned long int)(~0UL));
     if (*(str+1)){
-      if (fsa[index].child != (unsigned long int)(~(0UL)))
-	index=fsa[index].child;
+      if (fsa[index].isChild())
+	index=fsa[index].getChild();
       else
-	return (unsigned long int)(~(0UL));
+	return (unsigned long int)(~0UL);
 
     }
     else
-      if (fsa[index].info != (unsigned long int)(~(0UL)))
-	return fsa[index].info;
+      if (fsa[index].isInfo())
+	return fsa[index].getInfo();
     str++;
 
   }
-
   delete str2;
-  return (unsigned long int)(~(0UL));
+  return (unsigned long int)(~0UL);
 }
 
 /* **************************************************
@@ -105,30 +104,29 @@ Lex::searchStatic(unsigned long int index, std::string s) const
 bool
 Lex::saveFsa(FILE *file)
 {
-  int nbrBytes=sizeof(unsigned long int);;
-  // encodage des offsets (16 ou 32 bits)
+  int nbrBytes=sizeof(unsigned long int);
+    // encodage des offsets (16 ou 32 bits)
   if (!fwrite(&nbrBytes, sizeof(nbrBytes), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "nbreBytes: %X\n", nbrBytes);
+  std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
   unsigned long int maxSize=(unsigned long int)~0UL;
   if (!fwrite(&maxSize, sizeof(maxSize), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "maxSize: %lX\n", maxSize);
+  std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
   // nombre d'offsets du fsa
-  //unsigned long int nbreItem=0;
   unsigned long int sizeFsa=0;
   lexiconInit->setIndexStaticFSA(sizeFsa);
   if (!fwrite(&sizeFsa, sizeof(sizeFsa), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "sizeFsa: %lX\n", sizeFsa);
+  std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
   if (sizeFsa == (unsigned long int)~0UL){
-    fputs ("*** Error: Lexicon too large\n", stderr);
+    std::cerr << "*** Error: Lexicon too large" << std::endl;
     return false;
 
   }
@@ -137,29 +135,29 @@ Lex::saveFsa(FILE *file)
   if (!fwrite(&sizeInfo, sizeof(sizeInfo), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "sizeInfo: %lX\n", sizeInfo);
+  std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
   if(sizeInfo == (unsigned long int)~0UL){
-    fputs("*** Error: Data too large\n", stderr);
+    std::cerr << "*** Error: Data too large" << std::endl;
     return false;
 
   }
 #ifdef TRACE_DIFF
-  fprintf(stdout, "---FSA---\n");
+  std::cout << "---FSA---" << std::endl;
 #endif //TRACE_DIFF
   lexiconInit->printStaticFSA(file, this);
 
 #ifdef TRACE_DIFF
-  fprintf(stdout, "---Info---\n");
+  std::cout << "---Info---" << std::endl;
 #endif //TRACE_DIFF
   lexiconInit->printStaticInfo(file);
-  fputs("*** Writing Data\n", stderr);
+  std::cerr << "*** Writing Data" << std::endl;
   // table
   fflush(file);
   if (!fwrite(&init, sizeof(init), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "Init: %lX\n", init);
+  std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
   return true;
 }
@@ -170,66 +168,65 @@ Lex::saveFsa(FILE *file)
 bool
 Lex::loadFsa(FILE *file)
 {
-  //fputs("*** Loading Finite State Automata\n", stderr);
+  std::cerr << "*** Loading Finite State Automata" << std::endl;
   int nbrBytes;
   if (!fread(&nbrBytes, sizeof(nbrBytes), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "nbreBytes: %X\n", nbrBytes);
+  std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
   unsigned long int maxSize;
   if (!fread(&maxSize, sizeof(maxSize), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "maxSize: %lX\n", maxSize);
+  std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
   if (nbrBytes!=(sizeof(unsigned long int)) || (maxSize!=(unsigned long int)~0UL)){
-    fputs("*** lexicon compiled with an incompatible system\n", stderr);
+    std::cerr << "*** lexicon compiled with an incompatible system" << std::endl;
     return false;
-
+    
   }
   unsigned long int sizeFsa;
   if (!fread(&sizeFsa, sizeof(sizeFsa), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "sizeFsa: %lX\n", sizeFsa);
+  std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
   unsigned long int sizeInfo;
   if (!fread(&sizeInfo, sizeof(sizeInfo), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "sizeInfo: %lX\n", sizeInfo);
+  std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
-
+  
 #ifdef TRACE_DIFF
-  fprintf(stdout, "---FSA---\n");
+  std::cout << "---FSA---" << std::endl;
 #endif //TRACE_DIFF
-  fsa = new Fsa[sizeFsa+1];
+  fsa = new Fsa[sizeFsa+1]();
   if (!fread(fsa, sizeof(Fsa), sizeFsa, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
   for(unsigned long int sizeSy=0;sizeSy<sizeFsa;sizeSy++){
-    fprintf(stdout, "%lX ch:%lX sb:%lX in:%lX <%c>\n", sizeSy, fsa[sizeSy].child, fsa[sizeSy].sibling, fsa[sizeSy].info, fsa[sizeSy].letter);
-
+    fsa[sizeSy].print(std::cout);
   }
 #endif //TRACE_DIFF
-
+      
 #ifdef TRACE_DIFF
-  fprintf(stdout, "---Info---\n");
+  std::cout << "---Info---" << std::endl;
 #endif //TRACE_DIFF
-  info = new InfoBuff [sizeInfo+1];
+  info = new InfoBuff [sizeInfo+1]();
   if (!fread(info, sizeof(InfoBuff), sizeInfo, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
   for(unsigned long int sizeSy=0;sizeSy<sizeInfo;sizeSy++){
-    fprintf(stdout, "%lX su:%lX of:%lX\n", sizeSy, info[sizeSy].next, info[sizeSy].offset);
-
+    std::cout << sizeSy << ' ';
+    info[sizeSy].print(std::cout);
   }
 #endif //TRACE_DIFF
   if (!fread(&init, sizeof(init), 1, file))
     FATAL_ERROR;
 #ifdef TRACE_DIFF
-  fprintf(stdout, "Init: %lX\n", init);
+  std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
   return true;
 }
@@ -374,7 +371,7 @@ Lex::load(char *directory, char *prefix)
 
   }
   else {
-    //cerr << "*** Load buffer in memory" << endl;
+    cerr << "*** Load buffer in memory" << endl;
 
     struct stat *statbuf;
     statbuf = (struct stat *)malloc(sizeof(struct stat));

@@ -1525,7 +1525,7 @@ compactLexicon->printResults(std::cerr, info, 1);
   if (info != ~0UL) {
     entriesPtr entries = Entries::create();
     while (info != ~0UL) {
-      std::string result = compactLexicon->buffer + (compactLexicon->info[info].offset);
+      std::string result = compactLexicon->buffer + (compactLexicon->info[info].getOffset());
       std::string form = result.substr(0, result.find("#"));
       std::string data = result.substr(result.find("#"), -1);
       int rulesresult = parseString(data, std::string("Lexicon"));
@@ -1546,8 +1546,8 @@ compactLexicon->printResults(std::cerr, info, 1);
 	std::cerr << "Illegal lexical entry: " << form << " " << Vartable::intToStr(code) << " " << result.substr(result.find("#")+1, -1) << std::endl;
 	FATAL_ERROR;
       }
-      if ((compactLexicon->info[info].next) != (unsigned long int) (~(0UL)))
-	info = compactLexicon->info[info].next;
+      if ((compactLexicon->info[info].isNext()))
+	info = compactLexicon->info[info].getNext();
       else
 	info = (unsigned long int) (~(0UL));
     }

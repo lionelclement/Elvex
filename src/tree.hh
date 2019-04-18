@@ -26,10 +26,10 @@ private:
   Tree *sibling;
   class Info *info;
   char letter;
-  unsigned long int adress;
+  unsigned long int address;
   
 public:
-  Tree(Tree *child, Tree *sibling, class Info *info, char letter);
+  Tree(Tree *child, Tree *sibling, class Info *info, const char letter);
   ~Tree();
   
   void setChild( Tree*);

@@ -15,16 +15,12 @@
  *
  ************************************************** */
 
-#include "info.hh"
-#include "messages.hh"
+#include "infobuff.hh"
 
 /* **************************************************
  *
  ************************************************** */
-Info::Info(class Info *next, unsigned long int offset)
-{
-  NEW;
-  address = 0;
+InfoBuff::InfoBuff(unsigned long int next, unsigned long int offset) {
   this->next = next;
   this->offset = offset;
 }
@@ -32,27 +28,15 @@ Info::Info(class Info *next, unsigned long int offset)
 /* **************************************************
  *
  ************************************************** */
-Info::~Info()
-{
-  if (next) {
-    delete(next);
-    next = NULL;
-  }
-  DELETE;
+InfoBuff::InfoBuff(void) {
+  this->next = (unsigned long int)(~0UL);
+  this->offset = (unsigned long int)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-class Info *Info::getNext(void) const
-{
-  return next;
-}
-
-/* **************************************************
- *
- ************************************************** */
-unsigned long int Info::getOffset(void) const 
+unsigned long int InfoBuff::getOffset() const
 {
   return offset;
 }
@@ -60,16 +44,32 @@ unsigned long int Info::getOffset(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned long int Info::getAddress(void) const 
+unsigned long int InfoBuff::getNext() const
 {
-  return address;
+  return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Info::setAddress(unsigned long int address)
+bool InfoBuff::isNext() const
 {
-  this->address=address;
+  return next != (unsigned long int)(~0UL);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool InfoBuff::isOffset() const
+{
+  return offset != (unsigned long int)(~0UL);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void InfoBuff::print(std::ostream& out) const
+{
+  out << (long int)next << ' ' << (long int)offset << std::endl;
 }
 
