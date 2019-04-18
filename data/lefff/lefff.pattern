@@ -16,6 +16,7 @@
 
 v	prendre	prendre	refl:yes,aux:avoir,iiReal:obj,iiiReal:prep_obj,prep_obj:[pcas:à]
 v	casser	casser	refl:yes,aux:avoir,iiReal:obj
+v	installer	installer	aux:avoir,iiReal:obj
 v	arrêter	arrêter	refl:yes,aux:avoir,iiReal:obj
 v	nourrir	nourrir	aux:avoir,iiReal:obj
 v	transporter	transporter	iiReal:obj,iiiReal:prep_obj,ivReal:prep_obj,prep_obj:[pcas:de],prep_obj2:[pcas:à]
