@@ -43,7 +43,7 @@ Tree::Tree(Tree *child, Tree *sibling, class Info *info, char letter)
  ************************************************** */
 Tree::~Tree()
 {
-  //DELETE;
+  DELETE;
 }
 
 /* **************************************************
@@ -59,7 +59,7 @@ Tree::getChild() const
  *
  ************************************************** */
 void
-Tree::setChild(Tree* child)
+Tree::setChild(Tree *child)
 {
   this->child = child;
 }
@@ -70,11 +70,9 @@ Tree::setChild(Tree* child)
 void
 Tree::setIndexStaticFSA(unsigned long int &index)
 {
-  NEW;
-  class Tree *lexiconSy;
-  for (lexiconSy=this;lexiconSy!=NULL;lexiconSy=lexiconSy->sibling){
+  for (class Tree *lexiconSy = this ; lexiconSy != NULL ; lexiconSy = lexiconSy->sibling){
     lexiconSy->adress = index++;
-    if (lexiconSy->child)
+    if (lexiconSy->child != NULL)
       lexiconSy->child->setIndexStaticFSA(index);
 
   }
@@ -123,7 +121,6 @@ Tree::setIndexStaticInfo(unsigned long int &index)
       infoSy->setAdress(index++);
 
     }
-
   }
 }
 

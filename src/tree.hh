@@ -25,7 +25,7 @@ private:
   Tree *child;
   Tree *sibling;
   class Info *info;
-  int letter;
+  char letter;
   unsigned long int adress;
   
 public:
