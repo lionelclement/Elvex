@@ -1,6 +1,6 @@
 @input  
 
-text [PRED:hello, i:[PRED:see_you_soon, i:[PRED:installer, i:[PRED:_pro, number:sg, person:two], ii:[FORM:"Elvex"], tense:recent_past ]]]
+text [PRED:hello, i:[FORM:" "], ii:[PRED:see_you_soon, i:[PRED:installer, i:[PRED:_pro, number:sg, person:two], ii:[FORM:"Elvex"], tense:recent_past ]]]
 
 /* **************************************************
  * verbal tense & inflexion
