@@ -15,7 +15,7 @@ You should ask **Elvex** to tell you exactly what you want to hear. **Elvex** wi
 What you can do with Elvex
 -----------------------------
 
-Write in a correct Natural Language, and rest assured that **Elvex** avoids any misunderstanding.
+Write automatically and quickly texts in a correct Natural Language, and rest assured that **Elvex** avoids any misunderstanding.
 
 Theorical aspects
 -----------------
