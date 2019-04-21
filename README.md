@@ -5,7 +5,7 @@ Elvex
 
 It is written by Lionel Clément at Bordeaux - France and released by LaBRI under GNU GPL License.
 
-The system, written in C++, takes as an input a *concept*, a *local lexicon*, a *compacted lexicon*, and *a grammar*, and then outputs a text corresponding to the concept writing in Natural Language.
+The system, written in C++, takes handwritten *lexicon* and *grammar* as parameters, a *concept* as input, and then outputs a text corresponding exactly to the concept writing in Natural Language.
 
 What you cannot do with Elvex
 -----------------------------
