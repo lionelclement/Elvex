@@ -24,14 +24,14 @@ Theorical aspects
 
 It works with handwritten lexicon and grammars, and not with learning data.
 
-practically speaking
+Practically speaking
 --------------------
 
 Each word, each use of the word has to be fully described in the lexicon, depending on the domain. It would be a long and costly process (several months for one person). 
 
 The grammar is more complex, but shorter to write (several weeks).
 
-a little French Grammar first
+A little French Grammar first
 -----------------------------
 
 Causal clauses with tense aggrement.
@@ -45,8 +45,7 @@ Causal clauses with tense aggrement.
 // future:
 // preterit => conditional
 
-text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
---------------------------------------------------------
+### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
 S'il pleut, tu prendras un parapluie.
 
 text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:present, aspect:continuous]
