@@ -2,8 +2,7 @@
 // fr-X.X.X.xxx.grammar
 
 // To appear
-// en-X.X.X.xxx.grammar en-X.X.X.lexicon
-
+// en-X.X.X.xxx.*
 
 // How to use this files:
 // In fr-1.0.3.input, uncomment a line begining with //text[...
