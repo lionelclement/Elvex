@@ -31,8 +31,8 @@ Each word, each use of the word has to be fully described in the lexicon, depend
 
 The grammar is more complex, but shorter to write (several weeks).
 
-A little French Grammar first
------------------------------
+Causal clauses in a little French Grammar first
+-----------------------------------------------
 
 Causal clauses with tense aggrement.
 
