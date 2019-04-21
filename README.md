@@ -7,10 +7,15 @@ It is written by Lionel Clément at Bordeaux - France and released by LaBRI unde
 
 The system, written in C++, takes as an input a *concept*, a *local lexicon*, a *compacted lexicon*, and *a grammar*, and then outputs a text corresponding to the concept writing in Natural Language.
 
-what you cannot do with Elvex
+What you cannot do with Elvex
 -----------------------------
 
 You should ask **Elvex** to tell you exactly what you want to hear. **Elvex** will know what to do to tell it, but will never be known what it is saying. You can ask to tell "It is raining" in any language you want, but never **Elvex** knows if it is raining or not... until the computer is on the water :-) 
+
+What you can do with Elvex
+-----------------------------
+
+Write in a correct language (not like me :), and rest assured that **Elvex** avoids any misunderstanding.
 
 Theorical aspects
 -----------------
