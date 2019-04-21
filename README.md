@@ -1,14 +1,44 @@
-# Elvex
+Elvex
+=====
 
-Elvex is an **Natural Text Generator**
+**Elvex** is an **Natural Text Generator**
 
-It is written by Lionel Clément and released by LaBRI (Bordeaux - France) under GNU GPL License.
+It is written by Lionel Clément at Bordeaux - France and released by LaBRI under GNU GPL License.
 
 The system, written in C++, takes as an input a *concept*, a *local lexicon*, a *compacted lexicon*, and *a grammar*, and then outputs a text corresponding to the concept writing in Natural Language.
 
-A little exemple of outputs in French : causal clauses with tense aggrement.
+what you cannot do with Elvex
+-----------------------------
 
-//present
+You should ask **Elvex** to tell you exactly what you want to hear. **Elvex** will know what to do to tell it, but will never be known what it is saying. You can ask to tell "It is raining" in any language you want, but never **Elvex** knows if it is raining or not... until the computer is on the water :-) 
+
+Theorical aspects
+-----------------
+
+**Elvex** is freely inspired by syntactic formalisms like lexique-grammaire (M. Gross 1960), Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982), Functional Grammar (M. Halliday 1994).
+
+It works with handwritten lexicon and grammars, and not with learning data.
+
+practically speaking
+--------------------
+
+Each word, each use of the word has to be fully described in the lexicon, depending on the domain. It would be a long and costly process (several months for one person). 
+
+The grammar is more complex, but shorter to write (several weeks).
+
+a little French Grammar first
+-----------------------------
+
+Causal clauses with tense aggrement.
+
+// In French, the verbal tense of premise and conclusion of a clausal clause
+//depends on the aspect and the tense of the sentence
+//present : 
+//present => future
+// past:
+//past => past conditional
+// future:
+// preterit => conditional
 
 text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
 --------------------------------------------------------
