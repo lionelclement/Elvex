@@ -1,6 +1,10 @@
 # Elvex
 
-Elvex is an *Natural Text Generator*. It takes as an input a concept, a local lexicon, a compacted lexicon, and a grammar, and then outputs a text corresponding to the concept writing in Natural Language.
+Elvex is an **Natural Text Generator**
+
+It is written by Lionel Clément and released by LaBRI (Bordeaux - France) under GNU GPL License.
+
+The system, written in C++, takes as an input a *concept*, a *local lexicon*, a *compacted lexicon*, and *a grammar*, and then outputs a text corresponding to the concept writing in Natural Language.
 
 A little exemple of outputs in French : causal clauses with tense aggrement.
 
