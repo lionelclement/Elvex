@@ -36,43 +36,37 @@ A little French Grammar first
 
 Causal clauses with tense aggrement.
 
-// In French, the verbal tense of premise and conclusion of a clausal clause
-//depends on the aspect and the tense of the sentence
-//present : 
-//present => future
-// past:
-//past => past conditional
-// future:
-// preterit => conditional
+In French, the verbal tense of premise and conclusion of a clausal clause
+depends on the aspect and the tense of the sentence
+- present : 
+present => future
+- past:
+past => past conditional
+- future:
+ preterit => conditional
 
 ### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
 S'il pleut, tu prendras un parapluie.
 
-text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:present, aspect:continuous]
---------------------------------------------------------
+### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:present, aspect:continuous]
 S'il est en train de pleuvoir, tu prendras un parapluie.
 
-text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, illocutionary:ask, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
---------------------------------------------------------
+### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, illocutionary:ask, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
 S'il pleut, est-ce que tu prendras un parapluie ?
 
 //past
 
-text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:past]
---------------------------------------------------------
+### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:past]
 S'il avait plu, tu aurais pris un parapluie.
 
-text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:past, aspect:continuous]
---------------------------------------------------------
+### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:past, aspect:continuous]
 S'il était en train de pleuvoir, tu aurais pris un parapluie.
 
 //future
 
-text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:future]
---------------------------------------------------------
+### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:future]
 S'il pleuvait, tu prendrais un parapluie.
 
-text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:future, aspect:continuous]
---------------------------------------------------------
+### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:future, aspect:continuous]
 S'il était en train de pleuvoir, tu prendrais un parapluie.
 
