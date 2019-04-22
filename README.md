@@ -27,7 +27,7 @@ What you cannot do with Elvex
 -----------------------------
 
 You should ask **Elvex** to tell you exactly what you want to hear. **Elvex** will know what to do to tell it, but will not really understand what it is saying. In short, **Elvex** does not know *what to say*. 
-You can ask to tell "It is raining" in any language you want, but never **Elvex** knows if it is raining or not... until the computer is on the water :-) 
+You can ask to tell "It is raining" in any language you want, but **Elvex** will never know if it is raining or not... until the computer is in the water :-) 
 
 What you can do with Elvex
 -----------------------------
