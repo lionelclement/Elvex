@@ -45,7 +45,7 @@ I do not explain the algorithms here. It is efficient and monotonic (in that eac
 Practically speaking
 --------------------
 
-Each word, each use of the word has to be fully described in the lexicon, depending on the domain. It would be a long and costly process (several months for one person). 
+Each word, each use of the word has to be fully described in the lexicon, depending on the domain. It would be a long and costly process (from several months to several years for one person). 
 
 The grammar is more complex, but shorter to write (several weeks).
 
