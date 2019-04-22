@@ -33,7 +33,8 @@ What you can do with Elvex
 -----------------------------
 
 Write automatically and quickly texts in a correct Natural Language, from the meaning and elements of discourse and rest assured that **Elvex** avoids any misunderstanding.
-Unlike other systems, the concepts which should be expressed may not be lexical entries.
+
+Note that unlike other systems, the concepts to be expressed may not depend on prior lexical choices.
 
 Theorical aspects
 -----------------
