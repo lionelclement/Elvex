@@ -50,13 +50,13 @@ Each word, each use of the word has to be fully described in the lexicon, depend
 
 The grammar is more complex, but shorter to write (several weeks).
 
-Causal clauses in a little French Grammar first
+Sample: Causal clauses in a little French Grammar first
 -----------------------------------------------
 
 Causal clauses with tense aggrement.
 
 In French, the verbal tense of premise and conclusion of a clausal clause
-depends on the aspect and the tense of the sentence
+depends on the aspect, the tense and even on the language register of the sentence
 - present : 
 if present => future
 - present in house or slang language
