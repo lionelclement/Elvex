@@ -7,6 +7,22 @@ It is written by Lionel Clément at Bordeaux - France and released by LaBRI unde
 
 The system, written in C++, takes handwritten *lexicon* and *grammar* as parameters, a *concept* as input, and then outputs a text corresponding exactly to the concept writing in Natural Language.
 
+License
+-------
+
+**Elvex** is release under GNU GPL License V3.
+
+That means that
+
+- Source code must be made available when the sofware is distributed
+- A copy of the licence and copyright notice must be included with the software
+- Modifications must be released under the same license when distributing the software. A similar or related license must be used
+- Changes made to the code must be documented 
+
+The license shall cover **Elvex** software and the included data except LeFFF which is under another license.
+
+But the language of **Elvex** is not under a licence (it is in the public domain), so the new data you will write (new grammars, new lexicons) are not a part of **Elvex** and is under any other license.
+
 What you cannot do with Elvex
 -----------------------------
 
