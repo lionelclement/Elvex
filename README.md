@@ -32,7 +32,8 @@ You can ask to tell "It is raining" in any language you want, but never **Elvex*
 What you can do with Elvex
 -----------------------------
 
-Write automatically and quickly texts in a correct Natural Language, from the meaning and elements of discourse, and rest assured that **Elvex** avoids any misunderstanding.
+Write automatically and quickly texts in a correct Natural Language, from the meaning and elements of discourse and rest assured that **Elvex** avoids any misunderstanding.
+Unlike other systems, the concepts which should be expressed may not be lexical entries.
 
 Theorical aspects
 -----------------
