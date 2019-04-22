@@ -20,9 +20,11 @@ Write automatically and quickly texts in a correct Natural Language, and rest as
 Theorical aspects
 -----------------
 
-**Elvex** is freely inspired by syntactic formalisms like lexique-grammaire (M. Gross 1960), Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982), Functional Grammar (M. Halliday 1994).
+**Elvex** is freely inspired by some syntactic formalisms: Lexique-Grammaire (M. Gross 1960), Functional Grammar (M. Kay 1979), Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982), Systemic Functional Grammar (M. Halliday 1994).
 
-It works with handwritten lexicon and grammars, and not with learning data.
+It works with handwritten lexicon and grammars close to the linguistic descriptions of syntactic phenomena, and not with learning data.
+
+I do not explain the algorithms here. It is efficient and monotonic (in that each rule adds something and never delete the effect of another rule).
 
 Practically speaking
 --------------------
