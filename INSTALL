@@ -1,5 +1,5 @@
-The full compilation of Elvex requires the following programs on your
-machine :
+The full compilation of Elvex requires the following programs on your computer:
+
 — g++
 — flex
 — bison
@@ -8,12 +8,12 @@ machine :
 — autoconf
 — libxml2-dev
 
-On Linux & MacOsX:
+Once you have downloaded and unzip **Elvex**
 
 aclocal
 automake −fa
 autoconf
-./ configure
+./configure
 make
 sudo make install
 
