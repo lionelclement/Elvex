@@ -8,7 +8,7 @@ The full compilation of Elvex requires the following programs on your computer:
 — autoconf
 — libxml2-dev
 
-Once you have downloaded and unzip **Elvex**
+Once you have downloaded and unzip Elvex
 
 aclocal
 automake −fa
