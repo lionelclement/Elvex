@@ -59,13 +59,13 @@ Causal clauses with tense aggrement.
 
 In French, the verbal tense of premise and conclusion of a clausal clause
 depends on the aspect, the tense and even on the language register of the sentence
-- present : 
+- present: 
 if present => future
-- present in house or slang language
+- present in house or slang language:
 conditional without "if" => conditional
 - past:
 if past => past conditional
-- past in house or slang language
+- past in house or slang language:
 past conditional without "if" => past conditional
 - future:
  preterit => conditional
