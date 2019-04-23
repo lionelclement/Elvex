@@ -61,20 +61,20 @@ In French, the verbal tense of premise and conclusion of a clausal clause
 depends on the aspect, the tense and even on the language register of the sentence
 - present: 
 if present => future
-- present in house or slang language:
+- present or future in house or slang language:
 conditional without "if" => conditional
 - past:
 if past => past conditional
 - past in house or slang language:
 past conditional without "if" => past conditional
 - future:
- preterit => conditional
+ Imperfect => conditional
 
 // present
 ### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
 S'il pleut, tu prendras un parapluie.
 
-// present & slang language
+// present or future & slang language
 ### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], language_register:slang]
 Il flotterait, tu prendrais un pépin.
 
