@@ -1,54 +1,60 @@
 Elvex
 =====
 
-**Elvex** is an **Natural Text Generator**
+**Elvex** is a **Natural Text Generator**
 
 It is written by Lionel Clément at Bordeaux - France and released by LaBRI under GNU GPL License.
 
-The system, written in C++, takes handwritten *lexicon* and *grammar* as parameters, a *concept* (i.e. meaning plus elements of discourse) as input, and then outputs a text corresponding exactly to the concept writing in Natural Language.
+The system, written in C++, is using handwritten *lexicon* and *grammar* as parameters, and also a *concept* (i.e. meaning + an elements of speech) as an input. Finally, the outputs of a text represent exactly the concept written in Natural Language.
 
 License
 -------
 
-**Elvex** is release under GNU GPL License V3.
+**Elvex** is released under GNU GPL License V3.
 
-That means that
+In other words
 
-- Source code must be made available when the sofware is distributed
-- A copy of the licence and copyright notice must be included with the software
-- Modifications must be released under the same license when distributing the software. A similar or related license must be used
-- Changes made to the code must be documented 
+- The source code must be made available when the software is distributed
+- A copy of the license and the copyright manual must be included with the software
+- Modifications must be released under the same license when the software is distributed. A similar or a related license must be used
+- Changes made to the code must be documented
 
 The license shall cover **Elvex** software and the included data except LeFFF which is under another license.
 
-But the language of **Elvex** is not under a licence (it is in the public domain), so the new data you will write (new grammars, new lexicons) are not a part of **Elvex** and is under any other license.
+The language of **Elvex** is not under licence (it belongs to the public domain), so the data you will write (new grammars, new lexicons) are not part of **Elvex**, it is under another license.
 
-What you cannot do with Elvex
+What you can't do with Elvex
 -----------------------------
 
-You should ask **Elvex** to tell you exactly what you want to hear. **Elvex** will know what to do to tell it, but will not really understand what it is saying. In short, **Elvex** does not know *what to say*. 
-You can ask to tell "It is raining" in any language you want, but **Elvex** will never know if it is raining or not... until the computer is in the water :-) 
+You should ask **Elvex** to interpret exactly what you expect. **Elvex** will translate your request but will not be in the position to understand the meaning of it. In short, **Elvex** does not know *what to say*.
+
+**Elvex** will translate your request but will not be in the position to understand the meaning of it. In short, **Elvex** does not know
 
 What you can do with Elvex
 -----------------------------
 
-Write automatically and quickly texts in a correct Natural Language, from the meaning and elements of discourse and rest assured that **Elvex** avoids any misunderstanding.
+Write automatically and quickly texts in a correct form of Natural Language, given a meaning and elements
+of speech. Rest assured that **Elvex** avoids any misunderstanding.
 
-Note that unlike other systems, the concepts to be expressed may not depend on prior lexical choices.
+Note that unlike other systems, the concepts that are expressed may not depend on prior lexical choices.
 
 Theorical aspects
 -----------------
 
-**Elvex** is freely inspired by some syntactic formalisms: Lexique-Grammaire (M. Gross 1960), Functional Grammar (M. Kay 1979), Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982), Systemic Functional Grammar (M. Halliday 1994).
+**Elvex** is freely inspired by some syntactic formalisms such as: 
 
-It works with handwritten lexicon and grammars close to the linguistic descriptions of syntactic phenomena, and not with learning data.
+-Lexique-Grammaire (M. Gross 1960)
+-Functional Grammar (M. Kay 1979)
+-Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982) 
+-Systemic Functional Grammar (M. Halliday 1994).
 
-I do not explain the algorithms here. It is efficient and monotonic (in that each rule adds something and never delete the effect of another rule).
+It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon but not with learning data.
+I don’t explain the algorithms here. It’s efficient and monotonic (each rule add something and never delete the effects of another rule).
 
 Practically speaking
 --------------------
 
-Each word, each use of the word has to be fully described in the lexicon, depending on the domain. It would be a long and costly process (several months for one person in a restricted domain). 
+Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process (several months for one person in a restricted domain).
 
 The grammar is more complex, but shorter to write (several weeks).
 
@@ -57,15 +63,15 @@ Sample: Causal clauses in a little French Grammar first
 
 Causal clauses with tense aggrement.
 
-In French, the verbal tense of premise and conclusion of a clausal clause
-depends on the aspect, the tense and even on the language register of the sentence
+In French, the basis of verbal tense and the conclusion of a causal clause depend on the aspect, the tense and even on the differences in language registers of a sentence
+
 - present: 
 if present => future
-- present or future in house or slang language:
+- present or future in slang language:
 conditional without "if" => conditional
 - past:
 if past => past conditional
-- past in house or slang language:
+- past in slang language:
 past conditional without "if" => past conditional
 - future:
  Imperfect => conditional
