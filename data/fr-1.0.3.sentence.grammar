@@ -1,0 +1,67 @@
+#include fr-1.0.3.verb.grammar
+#include fr-1.0.3.clitics.grammar
+#include fr-1.0.3.name.grammar
+
+sentence → S {
+  [subj:$subj, modS:NIL];
+  attest ($subj);
+  [voice:$voice] ⊂ ↑;
+  if (!$voice)
+    $voice = active;
+  ↓1 = ↑ U [voice:$voice];
+  ⇑ = ⇓1;
+}
+
+sentence → VP {
+  [subj:NIL, modS:NIL, $rest];
+  [voice:$voice] ⊂ ↑;
+  if (!$voice)
+    $voice=active;
+  ↓1 = [$rest, voice:$voice];
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Phrase
+ * problème de dépendance entre 
+ * ↓2 = [subj:[number:$N, gender:$G, person:$P], $rest] ∪ [subj:$subjSynt];       
+ * et
+ * [number:$N, gender:$G, person:$P] ⊂ ⇓1;
+ * revoir if!
+ ************************************************** */
+S → [NP|cln] VP {
+  [subj:$subj, $rest];
+  [aggrSubjSCompSubj:$aggrSubjSCompSubj, inv:$inv, mode:$mode, language_register:$language_register] ⊂ ↑;
+  [PRED:$predSubj] ⊂ $subj;
+  if (#1){
+    attest ($mode != imperative) ∧ (($inv != yes) ∨ ($predSubj != _pro));
+    ↓1 = $subj ∪ [det:yes, language_register:$language_register];
+    $subjSynt = ⇓1;
+    [number:$N, gender:$G, person:$P] ⊂ ⇓1;
+    if ($aggrSubjSCompSubj == yes){
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], scomp:[subj:[number:$N, gender:$G, person:$P]], $rest] ∪ [subj:$subjSynt];
+    } else {
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], $rest] ∪ [subj:$subjSynt];         
+    }
+  }
+  else {
+    attest ($mode == imperative) ∨ (($inv == yes) ∧ ($predSubj == _pro));
+    [number:$N, gender:$G, person:$P] ⊂ $subj;
+    $subjSynt = [];
+    if ($aggrSubjSCompSubj == yes)
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], scomp:[subj:[number:$N, gender:$G, person:$P]], mode:$mode, $rest];
+    else
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], mode:$mode, $rest];
+  }
+  ⇑ = ⇓2 ∪ [subj:$subjSynt];
+}
+
+S → form VP {
+  [language_register:$language_register] ⊂ ↑;
+  ↓2 = ↑ ∪ [subj:[person:three, number:sg], language_register:$language_register];
+  [subjC:$subjC] ⊂ ⇓2;
+  ↓1 = $subjC ∪ [language_register:$language_register];
+  $subjSynt = ⇓1;
+  ⇑ = ⇓2 ∪ [subj:$subjSynt];
+}
+

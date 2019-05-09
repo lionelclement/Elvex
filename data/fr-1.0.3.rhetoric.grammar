@@ -1,0 +1,447 @@
+#include fr-1.0.3.illocution.grammar
+#include fr-1.0.3.time.grammar
+
+/* **************************************************
+ *  * Cause, reason
+ * en effet, effectivement
+ * à cause de, pour, par, grâce à, du fait de, en raison de
+ * car
+ * parce que, du fait que, comme, sachant que, puisque, comme, vu que, étant donné que
+ *
+ * 
+ *  * consequence, effect
+ * finalement, bref, ainsi, c’est pourquoi
+ * donc, et
+ * de sorte que, si bien que, si…que, tant…que, tellement…que, au point que
+ * 
+ * 
+ * * but
+ * pour, afin de, dans l’idée de, en vue de
+ * pour que, afin que, de façon que, de peur que
+ * 
+ * * opposition ou concession
+ * pourtant, cependant néanmoins, toutefois, certes, en revanche, au contraire, malgré tout
+ * malgré, en dépit de
+ * mais, or
+ * bien que, quoique, alors que, même si
+ * 
+ * 
+ * comparaison
+ * comme, ainsi
+ * ainsi que, comme, tel que
+ * 
+ * 
+ * * hypothèse ou condition
+ * en cas de
+ * si, à condition que, pourvu que
+ * 
+ * 
+ * * addition
+ * d’abord, premièrement, de plus, en outre, mais encore, aussi, ensuite
+ * et
+ * 
+ * 
+ ************************************************** */
+
+
+/* **************************************************
+ * Cause
+ ************************************************** */
+rhetoricalStructure → [que] premise [que] conclusion {
+  [PRED:cause, i:$I, ii:$II, $rest];
+  [i:[ii:[id:$ID_I_II]], ii:[i:[idref:$ID]]] ⊂ ↑;
+  [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;
+  attest ($ID_I_II != $ID && $ID_I_I != $ID);
+
+  if (($language_register == slang) && ($illocutionaryII != ask)) {
+    ↓1 = [];
+    ↓3 = [];
+    attest (#1);
+    attest (#3);
+  }
+
+  [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ ↑;
+  if (!$aspect)
+     $aspect = neutral;
+  [modality:$modalityI, lexFct:$lexFctI] ⊂ $I;
+  if (!$modalityI) 
+    $modalityI = neutral;
+  if (!$lexFctI) 
+    $lexFctI = none;
+  [modality:$modalityII, lexFct:$lexFctII, illocutionary:$illocutionaryII] ⊂ $II;
+  if (!$modalityII)
+    $modalityII = neutral;
+  if (!$lexFctII) 
+    $lexFctII = none;
+  if (!$illocutionaryII)
+    $illocutionaryII = neutral;
+
+  ↓2 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modalityI, lexFct:$lexFctI, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓4 = $II ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, lexFct:$lexFctII, language_register:$language_register];
+ 
+}
+
+  
+/* **************************************************
+ * Cause
+ ************************************************** */
+rhetoricalStructure → zzz conclusion premise {
+  [PRED:cause, i:$I, ii:$II, $rest];
+  [i:[ii:[id:$ID_I_II]], ii:[i:[idref:$ID]]] ⊂ ↑;
+  [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;
+  attest ($ID_I_II != $ID && $ID_I_I != $ID);
+
+  [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ ↑;
+  if (!$aspect)
+     $aspect = neutral;
+  [modality:$modalityI, lexFct:$lexFctI] ⊂ $I;
+  if (!$modalityI) 
+    $modalityI = neutral;
+  if (!$lexFctI) 
+    $lexFctI = none;
+  [modality:$modalityII, lexFct:$lexFctII, illocutionary:$illocutionaryII] ⊂ $II;
+  if (!$modalityII)
+    $modalityII = neutral;
+  if (!$lexFctII) 
+    $lexFctII = none;
+  if (!$illocutionaryII)
+    $illocutionaryII = neutral;
+
+  ↓2 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modalityI, lexFct:$lexFctI, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓1 = $II ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, lexFct:$lexFctII, language_register:$language_register];
+ 
+}
+
+  
+/* **************************************************
+ * Coréférence objet de la cause avec agent de l'effet
+ * Si j'avais brûlé la voiture, elle marcherait forcément moins bien.
+ * J'ai brûlé une voiture. Le véhicule marche forcément moins bien.
+ ************************************************** */
+rhetoricalStructure → premise conclusion {
+  [PRED:cause, i:[ii:[id:$ID]], ii:[i:[idref:$ID]], $rest];
+  [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
+  [ii:$II] ⊂ ↑;
+  $inhI = $I;
+  [i:$iSynt, ii:$iiSynt] ⊂ ⇓1;
+
+  [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ ↑;
+  if (!$aspect)
+     $aspect = neutral;
+  [modality:$modalityI, lexFct:$lexFctI] ⊂ $I;
+  if (!$modalityI) 
+    $modalityI = neutral;
+  if (!$lexFctI) 
+    $lexFctI = none;
+  [modality:$modalityII, lexFct:$lexFctII, illocutionary:$illocutionaryII] ⊂ $II;
+  if (!$modalityII)
+    $modalityII = neutral;
+  if (!$lexFctII) 
+    $lexFctII = none;
+  if (!$illocutionaryII)
+    $illocutionaryII = neutral;
+
+  [PRED:$pred, def:$iiD, gender:$iiG, number:$iiN, person:$iiP] ⊂ $iiSynt;
+  [gender:$iG, number:$iN, person:$iP] ⊂ $iSynt;
+  // indéfinie => hypéronyme défini
+  if ($iiD == no){
+    $inhII = [i:[PRED:$pred, gender:$iiG, number:$iiN, def:yes, sem:hyper], vform:tensed, $iiRest];
+  }
+  else if ($iN != $iiN || $iG != $iiG)
+    $inhII = [i:[PRED:_pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
+  else 
+    $inhII = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
+  ↓1 = $inhI ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modalityI, lexFct:$lexFctI, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓2 = $inhII ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, lexFct:$lexFctII, language_register:$language_register];
+}
+
+/* **************************************************
+ * Si aujourd'hui tu gagnes... 
+ * Si hier tu avais gagné... 
+ * Si demain tu gagnais... 
+ ************************************************** */
+premise → si modalClause comma {
+  [language_register:neutral] ⊂ ↑;
+  [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
+  $mode = indicative;
+  if (!$aspect)
+     $aspect = neutral;
+  [modality:$modalityI, lexFct:$lexFctI] ⊂ ↑;
+  if (!$tense || ($tense == present)) { 
+    if ($aspect == continuous) {
+      $tense = present;
+    }
+    else {
+      $tense = present;
+    }
+  }
+  else if ($tense == past) { 
+    if ($aspect == continuous) {
+      $mode = indicative; $tense = past;
+    }
+    else {
+      $mode = indicative; $tense = past; $aspect = pluperfect;
+    }
+  }
+  else if ($tense == future) { 
+    if ($aspect == continuous) {
+      $mode = indicative; $tense = past;
+    }
+    else {
+      $mode = indicative; $tense = past; $aspect = imperfect;
+    }
+  }
+  
+  [modality:$modality, lexFct:$lexFct] ⊂ ↑;
+  if (!$modality) 
+    $modality = neutral;
+  if (!$lexFct) 
+    $lexFct = none;
+  ↓1 = [];
+  ↓2 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modality, lexFct:$lexFct, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓3 = [];
+  ⇑ = ⇓2;
+}
+
+/* **************************************************
+ * je gagnerais
+ ************************************************** */
+premise → modalClause comma {
+  [language_register:in_house|slang] ⊂ ↑;
+  [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$aspect)
+     $aspect = neutral;
+  [modality:$modality, lexFct:$lexFct] ⊂ ↑;
+  if (!$tense || ($tense == present) || ($tense == future)) { 
+    if ($aspect == continuous) {
+      $mode = conditional; $tense = present; $aspect = continuous;
+    }
+    else {
+      $mode = conditional; $tense = present;
+    }
+  }
+  else if ($tense == past) { 
+    if ($aspect == continuous) {
+      print __FILE__; print "("; print __LINE__; println ")";
+      println "à faire: deux auxiliaires (aurait été en train de)";
+      $mode = conditional; $tense = past; $aspect = continuous;
+    }
+    else {
+      $mode = conditional; $tense = past; $aspect = pluperfect;
+    }
+  }
+  
+  if (!$modality) 
+    $modality = neutral;
+  if (!$lexFct) 
+    $lexFct = none;
+  ↓1 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modality, lexFct:$lexFct, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓2 = [];
+  ⇑ = ⇓1;
+  
+}
+
+/* **************************************************
+ * Si aujourd'hui tu gagnes... tu remporteras le pactole
+ * Si hier tu avais gagné... tu aurais remporté le pactole
+ * Si demain tu gagnais... tu remporterais le pactole
+
+ * Si aujourd'hui le garagiste répare ta voiture... tu pourras aller à la campagne.
+ * Si aujourd'hui le garagiste répare ta voiture... elle pourra démarer.
+ * Si hier tu avais gagné... tu aurais remporté le pactole
+ * Si demain tu gagnais... tu remporterais le pactole
+
+ ************************************************** */
+conclusion → illocutionaryAct {
+  [language_register:neutral] ⊂ ↑;
+  [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$aspect)
+     $aspect = neutral;
+  if (!$tense || ($tense == present)) { 
+    if ($aspect == continuous) {
+      $mode = indicative; $tense  = future; $aspect = neutral;
+    }
+    else {
+      $mode = indicative; $tense = future;
+      //$mode = conditional; $tense = present;
+    }
+  }
+  else if ($tense == past) { 
+    if ($aspect == continuous) {
+      $mode = conditional; $tense  = past;
+    }
+    else {
+      $mode = conditional; $tense  = past;
+    }
+  }
+  else if ($tense == future) { 
+    if ($aspect == continuous) {
+      $mode = conditional; $tense  = present;
+    }
+    else {
+      $mode = conditional; $tense  = present; $aspect = neutral;
+    }
+  }
+  
+  [modality:$modality, lexFct:$lexFct, illocutionary:$illocutionary] ⊂ ↑;
+  if (!$modality)
+    $modality = neutral;
+  if (!$lexFct) 
+    $lexFct = none;
+  if (!$illocutionary)
+    $illocutionary = neutral;
+  
+  ↓1 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionary, modality:$modality, lexFct:$lexFct, language_register:$language_register];
+  
+}
+
+/* **************************************************
+ * Je gagnerais le pactole
+ ************************************************** */
+conclusion → illocutionaryAct {
+  [language_register:in_house|slang] ⊂ ↑;
+  [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$tense || ($tense == present)) { 
+    if ($aspect == continuous) {
+      $mode = conditional; $tense  = present; $aspect = neutral;
+    }
+    else {
+      $mode = conditional; $tense = present;
+    }
+  }
+  else if ($tense == past) { 
+    if ($aspect == continuous) {
+      print __FILE__; print "("; print __LINE__; println ")";
+      println "à faire: deux auxiliaires (aurait été en train de)";
+      $mode = conditional; $tense  = past; $aspect = neutral;
+    }
+    else {
+      $mode = conditional; $tense  = past;
+    }
+  }
+  else if ($tense == future) { 
+    if ($aspect == continuous) {
+      $mode = conditional; $tense  = present; $aspect = neutral;
+    }
+    else {
+      $mode = conditional; $tense  = present; $aspect = neutral;
+    }
+  }
+  
+  [modality:$modality, lexFct:$lexFct, illocutionary:$illocutionary] ⊂ ↑;
+  if (!$modality)
+    $modality = neutral;
+  if (!$lexFct) 
+    $lexFct = none;
+  if (!$illocutionary)
+    $illocutionary = neutral;
+  
+  ↓1 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionary, modality:$modality, lexFct:$lexFct, language_register:$language_register];
+  
+}
+
+/* **************************************************
+ * Coréférence objet de la cause avec agent de l'effet
+ * Si j'avais brûlé la voiture, elle marcherait forcément moins bien.
+ * J'ai brûlé une voiture. Le véhicule marche forcément moins bien.
+ ************************************************** */
+rhetoricalStructure → illocutionaryAct illocutionaryAct {
+  [PRED:cause, i:[i:[id:$ID]], ii:[i:[idref:$ID]]];
+  [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
+  ↓1 = $I ∪ [vform:tensed];
+  [i:$iSynt] ⊂ ⇓1;
+
+  // On cherche la référence précédente
+  [PRED:$pred, def:$D, gender:$G, number:$N, person:$P, human:$H] ⊂ $iSynt;
+  
+  // indéfinie => hypéronyme défini
+  if ($D == no){
+    if ($H == yes)
+      ↓2 = [i:[PRED:$pred, gender:$G, number:$N, def:yes, sem:hyper], vform:tensed, $iiRest];
+    else
+      ↓2 = [i:[PRED:$pred, number:$N, def:yes, sem:hyper], vform:tensed, $iiRest];
+  }
+  else
+    ↓2 = [i:[PRED:_pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
+}
+
+/* **************************************************
+ * Succession
+ ************************************************** */
+rhetoricalStructure → TimeClause comma form illocutionaryAct {
+  [PRED:succ, i:[ii:[id:$ID]], ii:[i:[idref:$ID]]];
+  [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
+  ↓1 = $I ∪ [vform:tensed];
+  [i:$iSynt, ii:$iiSynt] ⊂ ⇓1;
+
+  [PRED:$pred, def:$iiD, gender:$iiG, number:$iiN, person:$iiP] ⊂ $iiSynt;
+
+  [gender:$iG, number:$iN, person:$iP] ⊂ $iSynt;
+
+  ↓2 = [];
+  ↓3 = [FORM:"puis"];
+
+  // indéfinie => hypéronyme défini
+  if ($iiD == no)
+    ↓4 = [i:[PRED:$pred, gender:$iiG, number:$iiN, def:yes, sem:hyper], vform:tensed, $iiRest];
+  else if ($iN != $iiN || $iG != $iiG)
+    ↓4 = [i:[PRED:_pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
+  else 
+    ↓4 = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
+}
+
+rhetoricalStructure → TimeClause comma form illocutionaryAct {
+  [PRED:succ, i:[i:[id:$ID]], ii:[i:[idref:$ID]]];
+  [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
+  ↓1 = $I ∪ [vform:tensed];
+  [i:$iSynt] ⊂ ⇓1;
+
+  // On cherche la référence précédente
+  [PRED:$pred, def:$D, gender:$G, number:$N, person:$P, human:$H] ⊂ $iSynt;
+  
+  ↓2 = [];
+
+  ↓3 = [FORM:"puis"];
+
+  // indéfinie => hypéronyme défini
+  if ($D == no){
+    if ($H == yes)
+      ↓4 = [i:[PRED:$pred, gender:$G, number:$N, def:yes, sem:hyper], vform:tensed, $iiRest];
+    else
+      ↓4 = [i:[PRED:$pred, number:$N, def:yes, sem:hyper], vform:tensed, $iiRest];
+  }
+  else
+    ↓4 = [i:[PRED:_pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
+}
+
+/* **************************************************
+ * Neutral
+ ************************************************** */
+rhetoricalStructure → illocutionaryAct {
+  [rhet:neutral];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Greetings, hello, etc
+ ************************************************** */
+rhetoricalStructure → hello title comma newline text {
+  [PRED:hello, i:$i, ii:$ii];
+  ↓1 = [];
+  ↓2 = $i;
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $ii;
+  ⇑ = ⇓3;
+}
+
+rhetoricalStructure → text newline see_you_soon dot {
+  [PRED:see_you_soon, i:$i];
+  ↓1 = $i;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ⇑ = ⇓1;
+}
+

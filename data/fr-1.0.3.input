@@ -1,0 +1,158 @@
+@input  
+
+text [PRED:hello, i:[FORM:" "], ii:[PRED:see_you_soon, i:[PRED:installer, i:[PRED:_pro, number:sg, person:two], ii:[FORM:"Elvex"], tense:recent_past ]]]
+
+/* **************************************************
+ * verbal tense & inflexion
+ ************************************************** */
+
+//text [PRED:marcher, i:[PRED:Léon], tense:present]
+//text [PRED:marcher, i:[PRED:Léon], tense:past]
+//text [PRED:marcher, i:[PRED:Léon], tense:future]
+//text [PRED:marcher, i:[PRED:Léon], tense:past, aspect:imperfect]
+//text [PRED:marcher, i:[PRED:Léon], tense:past, aspect:continuous]
+//text [PRED:marcher, i:[PRED:Léon], tense:recent_past]
+//text [PRED:marcher, i:[PRED:Léon], tense:present, aspect:continuous]
+//text [PRED:marcher, i:[PRED:Léon], tense:near_future]
+//text [PRED:marcher, i:[PRED:Léon], tense:future, aspect:continuous]
+//text [PRED:partir, i:[PRED:Léon], tense:present]
+//text [PRED:partir, i:[PRED:Léon], tense:past]
+//text [PRED:partir, i:[PRED:Léon], tense:future]
+//text [PRED:partir, i:[PRED:Léon], tense:past, aspect:imperfect]
+//text [PRED:partir, i:[PRED:Léon], tense:past, aspect:continuous]
+//text [PRED:partir, i:[PRED:Léon], tense:recent_past]
+//text [PRED:partir, i:[PRED:Léon], tense:present, aspect:continuous]
+//text [PRED:partir, i:[PRED:Léon], tense:near_future]
+//text [PRED:partir, i:[PRED:Léon], tense:future, aspect:continuous]
+
+/* **************************************************
+ * Arguments
+ ************************************************** */
+
+//text [PRED:ronfler, i:[PRED:horloger, number:sg, gender:ms, def:yes]]
+//text [PRED:réparer, i:[PRED:horloger], ii:[PRED:montre]]
+//text [PRED:réparer, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]]
+//text [PRED:livrer, i:[PRED:horloger, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, genr:ms], tense:past]
+//text [PRED:livrer, i:[PRED:_ego], ii:[PRED:_pro], iii:[PRED:_pro]]
+//text [PRED:couper, i:[PRED:boucher, number:sg, def:yes], ii:[PRED:poulet, number:sg, def:yes], iii:[PRED:ciseaux, def:yes]]
+//text [PRED:dire, i:[PRED:boucher, number:sg, gender:ms, def:yes], ii:[PRED:ânerie, number:sg, def:no], iii:[PRED:client, gender:ms, number:sg, def:yes]]
+///text [PRED:provenir, i:[PRED:viande, number:sg, def:yes], ii:[FORM:"Rungis"]]
+///text [PRED:provenir, i:[PRED:viande, number:sg, def:yes], ii:[PRED:abattoir, number:pl, def:yes]]
+//text [PRED:transporter, i:[PRED:camion, number:sg, gender:ms, def:yes], ii:[PRED:viande, number:sg, def:yes], iii:[FORM:"Rungis"], iv:[PRED:boucherie, number:sg, def:yes]]
+///text [PRED:arrêter, i:[PRED:montre, number:sg, def:yes]]
+//text [PRED:arrêter, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes]]
+//text [PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], iii:[PRED:soupe, number:sg, def:no], tense:past]
+//text [PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], ii:[PRED:cochon, gender:ms, number:pl, def:yes], iii:[PRED:soupe, number:sg, part:yes], tense:past]
+//text [PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], ii:[PRED:cochon, gender:ms, number:pl, def:yes], iii:[PRED:soupe, number:sg, part:yes], tense:past, aspect:neutral, illocutionary:ask, neg:yes]
+
+/* **********************************************************
+ * Rhetorical Structure
+ * causal clauses
+ ********************************************************** */
+
+// language_register:neutral
+// present
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>]
+//past
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:hier]>]
+// future
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>]
+
+// language_register:in_house
+// present
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+//past
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:hier]>, language_register:in_house]
+// future
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>, language_register:in_house]
+
+// language_register:slang
+// present
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:slang]
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:slang]
+//past
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:hier]>, language_register:slang]
+// future
+//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>, language_register:slang]
+
+
+//
+// Anaphores and causal clauses
+//
+//text [PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg, id:1], tense:past]
+//text [PRED:rouler, i:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg, id:1]]
+//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1], tense:present], ii:[PRED:rouler, i:[idref:1]], modSType:time, modS:<[PRED:aujourd_hui]>, tense:present]
+//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:rouler, i:[idref:1]], tense:past ]
+//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:camion, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:rouler, i:[idref:1]] , tense:past ]
+//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:rouler, i:[idref:1]], modSType:time, modS:<[PRED:demain]>, tense:future] ]
+
+/* **************************************************
+ * Copule
+ ************************************************** */
+///text [PRED:facteur, i:[PRED:Pierre], tense:past, illocutionary:ask]
+///text [PRED:facteur, i:[PRED:Pierre], tense:present]
+///text [PRED:facteur, i:[PRED:Pierre], neg:yes, tense:past, illocutionary:ask]
+///text [PRED:facteur, i:[PRED:Pierre], tense:past, illocutionary:ask]
+///text [PRED:facteur]
+//text [PRED:sale, i:[PRED:voiture, number:sg, def:yes], tense:past]
+
+/* **************************************************
+ * Modality (be able to, may, should, etc)
+ ************************************************** */
+///text [PRED:marcher, modality:pouvoir, i:[PRED:_ego], tense:future]
+///text [PRED:réparer, tense:past, neg:yes, modality:pouvoir, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
+///text [PRED:réparer, neg:yes, modality:devoir, i:[PRED:_ego], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
+///text [PRED:réparer, tense:past, neg:yes, modality:savoir, i:[PRED:_ego], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
+///text [PRED:réparer, tense:past, neg:yes, modality:vouloir, i:[PRED:_ego], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
+
+/* **************************************************
+ * Illocutionary acts (ask, excl)
+ ************************************************** */
+//text [PRED:parler, i:[PRED:Marie], ii:[PRED:Pierre], illocutionary:assert]
+//text [PRED:parler, i:[PRED:Marie], ii:[PRED:Pierre], illocutionary:ask]
+//text [PRED:taire, i:[PRED:_pro, person:two, number:sg], illocutionary:assert]
+///text [PRED:taire, i:[PRED:_pro, person:two, number:sg], illocutionary:order]
+//text [PRED:taire, i:[PRED:_pro, person:two, number:sg], illocutionary:ask]
+///text [PRED:dormir, i:[PRED:_pro, person:two, number:sg], illocutionary:order]
+//text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms]]
+//text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:assert]
+///text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:order]
+//text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:ask]
+//text [PRED:livrer, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:a]
+//text [PRED:livrer, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:past, neges, illocutionary:ask]
+//text [PRED:livrer, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:past, neg:yes, illocutionary:it_seems_to_me]
+
+
+/* **************************************************
+ * Diathesis
+ ************************************************** */
+//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], tense:$t]
+//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], diathesis:passive, tense:$t]
+//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], tense:past]
+//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], diathesis:passive, tense:past]
+//text [PRED:casser, i:[PRED:carafe, number:sg, def:yes], diathesis:middle, tense:present]
+//text [PRED:livrer, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:$t]
+//text [PRED:livrer, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:$t, diathesis:passive, illocutionary:ask]
+
+/* **************************************************
+ * Literal Adjuncts
+ ************************************************** */
+//text [PRED:pleuvoir, tense:future, modSType:time, modS:<[FORM:"lundi 18 mars 2013", type:time]>]
+//text [PRED:pleuvoir, tense:future, modSType:lap_deixis, modS:<[FORM:"lundi", type:time], [FORM:"jeudi", type:time]>]
+//text [PRED:pleuvoir, tense:future, modSType:lap_date, modS:<[FORM:"lundi 18 mars 2013", type:time], [FORM:"mercredi 20 mars 2013", type:time]>]
+
+/* **************************************************
+ * Locution
+ ************************************************** */
+//text [PRED:tamponner_le_coquillard, i:[PRED:Marie], tense:near_future]
+//text [PRED:tamponner_le_coquillard, i:[PRED:Jean], tense:present]
+//text [PRED:tamponner_le_coquillard, i:[PRED:Jean], tense:present, aspect:continuous]
+//text [PRED:tamponner_le_coquillard, i:[PRED:Jean], tense:past]
+//text [PRED:tamponner_le_coquillard, i:[PRED:_pro], tense:$tense, aspect:$aspect]
+
+/* **************************************************
+ * Modifieurs
+ ************************************************** */
+//text [PRED:casser, i:[PRED:Jean], ii:[PRED:carafe, number:sg, def:yes, mod:<[PRED:petit],[PRED:blanc]>], diathesis:passive, tense:past, neg:yes, modV:<[PRED:brutalement]>]
+//text [PRED:casser, i:[PRED:Jean], ii:[PRED:carafe, number:sg, def:yes, mod:<[PRED:petit],[PRED:blanc]>], tense:past, neg:yes, modV:<[PRED:brutalement]>]
+

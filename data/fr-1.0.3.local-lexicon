@@ -1,0 +1,522 @@
+@lexicon 
+
+"bonjour" hello;
+"à bientôt" see_you_soon;
+"@" newline;
+
+"est-ce que" est_ce_que;
+"il me semble que" il_me_semble_que;
+"en train de" en_train_de;
+"si"	  si;
+"alors"	  alors;
+"que"	  que;
+
+"." dot;
+"?" interrogativeDot;
+"!" exclamativeDot;
+","	comma;
+"ERREUR"	error;
+
+
+
+"$V1-$V2-$V3" verbCat[vtense:$V1, mode:$V2, vform:$V3];
+"tag-$Line" tag[line:$Line];
+"(fct:$fct, language_register:$language_register)" fct[fct:$fct, language_register:$language_register];
+
+de de;
+le le;
+que que;
+
+FORM time;
+FORM form;
+FORM detForm;
+FORM title;
+
+"<HTML><HEAD></HEAD><BODY>" HTMLHeader;
+"</BODY></HTML>"	    HTMLFoot;
+
+"<H1>" HTMLHeadTitle;
+"</H1>" HTMLFootTitle;
+
+"<P>" HTMLHeadContent;
+"</P>" HTMLFootContent;
+
+"detNum-$V" detNum[PRED:num, value:$V];
+
+me	clr [PRED:_ego, number:sg, person:one];
+me	clr [PRED:_pro, number:sg, person:one];
+te	clr [PRED:_pro, number:sg, person:two, mode:conditional|indicative|subjonctive];
+"-toi"	clr [PRED:_pro, number:sg, person:two, mode:imperative];
+se	clr [PRED:_pro, number:sg|pl, person:three];
+nous	clr [PRED:_pro, number:pl, person:one, mode:conditional|indicative|subjonctive];
+"-nous"	clr [PRED:_pro, number:pl, person:one, mode:imperative];
+vous	clr [PRED:_pro, number:pl, person:two, mode:conditional|indicative|subjonctive];
+"-vous"	clr [PRED:_pro, number:pl, person:two, mode:imperative];
+
+me	cld [PRED:_ego, number:sg, person:one];
+me	cld [PRED:_pro, number:sg, person:one];
+te	cld [PRED:_pro, number:sg, person:two];
+lui	cld [PRED:_pro, number:sg, person:three];
+nous	cld [PRED:_pro, number:pl, person:one];
+vous	cld [PRED:_pro, number:pl, person:two];
+leur	cld [PRED:_pro, number:pl, person:three];
+
+me	cla [PRED:_ego, number:sg, person:one];
+me	cla [PRED:_pro, number:sg, person:one];
+te	cla [PRED:_pro, number:sg, person:two];
+le	cla [PRED:_pro, gender:ms, number:sg, person:three];
+la	cla [PRED:_pro, gender:fm, number:sg, person:three];
+nous	cla [PRED:_pro, number:pl, person:one];
+vous	cla [PRED:_pro, number:pl, person:two];
+les	cla [PRED:_pro, number:pl, person:three];
+
+// ceci	pro [PRED:_pro, gender:ms, number:sg, person:three];
+// "ceux-ci"	pro [PRED:_pro, gender:pl, number:sg, person:three];
+// "celle-ci"	pro [PRED:_pro, gender:ms, number:fm, person:three];
+// "cel<les-ci"	pro [PRED:_pro, gender:pl, number:fm, person:three];
+// celà	pro [PRED:_pro, gender:ms, number:sg, person:three];
+// "ceux-là"	pro [PRED:_pro, gender:pl, number:sg, person:three];
+// "celle-là"	pro [PRED:_pro, gender:ms, number:fm, person:three];
+// "celles-là"	pro [PRED:_pro, gender:pl, number:fm, person:three];
+
+"moi-même"	itself [number:sg, person:one, itself:yes];
+"toi-même"	itself [number:sg, person:two, itself:yes];
+"lui-même"	itself [gender:ms, number:sg, person:three, itself:yes];
+"elle-même"	itself [gender:fm, number:sg, person:three, itself:yes];
+"nous-mêmes"	itself [number:pl, person:one, itself:yes];
+"vous-mêmes"	itself [number:pl, person:two, itself:yes];
+"eux-mêmes"	itself [gender:ms, number:pl, person:three, itself:yes];
+"elles-mêmes"	itself [gender:fm, number:pl, person:three, itself:yes];
+
+je	cln [PRED:_ego, number:sg, person:one];
+je	cln [PRED:_pro, number:sg, person:one];
+tu	cln [PRED:_pro, number:sg, person:two];
+il	cln [PRED:_pro, number:sg, person:three, gender:ms];
+elle	cln [PRED:_pro, number:sg, person:three, gender:fm];
+nous	cln [PRED:_pro, number:pl, person:one];
+vous	cln [PRED:_pro, number:pl, person:two];
+ils	cln [PRED:_pro, number:pl, person:three, gender:ms];
+elles	cln [PRED:_pro, number:pl, person:three, gender:fm];
+
+"-je"	clint [number:sg, person:one];
+"-tu"	clint [number:sg, person:two];
+"-t-il"	clint [number:sg, person:three, gender:ms];
+"-t-elle"	clint [number:sg, person:three, gender:fm];
+"-nous"	clint [number:pl, person:one];
+"-vous"	clint [number:pl, person:two];
+"-t-ils"	clint [number:pl, person:three, gender:ms];
+"-t-elles"	clint [number:pl, person:three, gender:fm];
+
+y	cll [PRED:_pro, number:sg, person:three];
+
+en	clg [PRED:_pro, number:sg, person:three];
+
+le	det [number:sg, gender:ms, def:yes, dem:none, poss:none, part:no];
+la	det [number:sg, gender:fm, def:yes, dem:none, poss:none, part:no];
+les	det [number:pl, def:yes, dem:none, poss:none, part:no];
+
+un	det [number:sg, gender:ms, def:no, dem:none, poss:none, part:no];
+une	det [number:sg, gender:fm, def:no, dem:none, poss:none, part:no];
+des	det [number:pl, def:no, qual:no, dem:none, poss:none, part:no];
+de	det [number:pl, def:no, qual:yes, dem:none, poss:none, part:no];
+"de le"	det [number:sg, def:no, dem:none, poss:none, part:yes, gender:ms, neg:no];
+"de la"	det [number:sg, def:none, dem:none, poss:none, part:yes, gender:fm, neg:no];
+
+mon	det [number:sg, gender:ms, def:none, poss:yes, part:no, dem:none, personPoss:one, numberPoss:sg];
+ma	det [number:sg, gender:fm, def:none, poss:yes, part:no, dem:none, personPoss:one, numberPoss:sg];
+mes	det [number:pl, def:none, poss:yes, part:no, dem:none, personPoss:one, numberPoss:sg];
+ton	det [number:sg, gender:ms, def:none, poss:yes, part:no, dem:none, personPoss:two, numberPoss:sg];
+ta	det [number:sg, gender:fm, def:none, poss:yes, part:no, dem:none, personPoss:two, numberPoss:sg];
+tes	det [number:pl, def:none, poss:yes, part:no, dem:none, personPoss:two, numberPoss:sg];
+son	det [number:sg, gender:ms, def:none, poss:yes, part:no, dem:none, personPoss:three, numberPoss:sg];
+sa	det [number:sg, gender:fm, def:none, poss:yes, part:no, dem:none, personPoss:three, numberPoss:sg];
+ses	det [number:pl, def:none, poss:yes, part:no, dem:none, personPoss:three, numberPoss:sg];
+notre	det [number:sg, def:none, poss:yes, part:no, dem:none, personPoss:one, numberPoss:pl];
+nos	det [number:pl, def:none, poss:yes, part:no, dem:none, personPoss:one, numberPoss:pl];
+votre	det [number:sg, def:none, poss:yes, part:no, dem:none, personPoss:two, numberPoss:pl];
+vos	det [number:pl, def:none, poss:yes, part:no, dem:none, personPoss:two, numberPoss:pl];
+leur	det [number:sg, def:none, poss:yes, part:no, dem:none, personPoss:three, numberPoss:pl];
+leurs	det [number:pl, def:none, poss:yes, part:no, dem:none, personPoss:three, numberPoss:pl];
+
+ce	det [number:sg, gender:ms, def:none, poss:none, dem:yes, part:no];
+ces	det [number:pl, def:none, poss:none, dem:yes, part:no];
+cette	det [number:sg, gender:fm, def:none, poss:none, dem:yes, part:no];
+
+suis	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:one, number:sg]];
+es	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:two, number:sg]];
+est	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:three, number:sg]];
+sommes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:one, number:pl]];
+êtes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:two, number:pl]];
+sont	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:three, number:pl]];
+
+étais	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:one|two, number:sg]];
+était	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:three, number:sg]];
+étiez	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:one, number:pl]];
+étions	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:two, number:pl]];
+étaient	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:three, number:pl]];
+
+serai	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:one, number:sg]];
+seras	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:two, number:sg]];
+sera	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:three, number:sg]];
+serons	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:one, number:pl]];
+serez	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:two, number:pl]];
+seront	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:three, number:pl]];
+
+fus	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:one|two, number:sg]];
+fut	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:three, number:sg]];
+fûmes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:one, number:pl]];
+fûtes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:two, number:pl]];
+furent	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:three, number:pl]];
+
+suis	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:sg]];
+es	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:sg]];
+est	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:sg]];
+sommes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:pl]];
+êtes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:pl]];
+sont	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:pl]];
+
+étais	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one|two, number:sg]];
+était	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+étions	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+étiez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+étaient	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+
+fus	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one|two, number:sg]];
+fut	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:sg]];
+fûmes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one, number:pl]];
+fûtes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:two, number:pl]];
+furent	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+serai	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:sg]];
+seras	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:sg]];
+sera	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:sg]];
+serons	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:pl]];
+serez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:pl]];
+seront	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one, number:sg]];
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:two, number:sg]];
+serait	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+serions	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+seriez	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+seraient	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+sois	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:sg]];
+sois	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:sg]];
+soit	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+soyons	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+soyez	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+soient	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+fusse	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:sg]];
+fusses	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:sg]];
+fût	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+fussions	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+fussiez	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+fussent	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+
+// suis en train de 
+suis	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:one, number:sg]];
+es	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:two, number:sg]];
+est	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:three, number:sg]];
+sommes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:one, number:pl]];
+êtes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:two, number:pl]];
+sont	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:one, number:sg]];
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:two, number:sg]];
+serait	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:three, number:sg]];
+serions	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:one, number:pl]];
+seriez	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:two, number:pl]];
+seraient	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+// étais en train de 
+étais	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:one|two, number:sg]];
+était	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:three, number:sg]];
+étions	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:one, number:pl]];
+étiez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:two, number:pl]];
+étaient	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+// serai en train de 
+serai	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:one, number:sg]];
+seras	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:two, number:sg]];
+sera	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:three, number:sg]];
+serons	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:one, number:pl]];
+serez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:two, number:pl]];
+seront	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+// viens de <inf> 
+viens	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:one|two, number:sg]];
+vient	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:three, number:sg]];
+venons	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:one, number:pl]];
+venez	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:two, number:pl]];
+viennent	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:three, number:pl]];
+
+// vas <inf> 
+vais	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:one, number:sg]];
+vas	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:two, number:sg]];
+va	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:three, number:sg]];
+allons	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:one, number:pl]];
+allez	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:two, number:pl]];
+vont	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:three, number:pl]];
+
+été	aux_être [vform:participle, vtense:past];
+
+ai	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:sg]];
+as	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:sg]];
+a	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:sg], scomp:[vtense:past]];
+avons	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:pl]];
+avez	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:pl]];
+ont	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:pl]];
+
+avais	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one|two, number:sg]];
+avait	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+avions	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+aviez	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+avaient	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+
+aurais	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one|two, number:sg]];
+aurait	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+aurions	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+auriez	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+auraient	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+aurai	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:sg]];
+auras	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:sg]];
+aura	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:sg]];
+aurons	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:pl]];
+aurez	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:pl]];
+auront	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+eus	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one|two, number:sg]];
+eut	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:sg]];
+eûmes	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one, number:pl]];
+eûtes	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:two, number:pl]];
+eurent	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+aie	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:sg]];
+aies	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:sg]];
+ait	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+ayons	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+ayez	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+aient	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+eusse	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:sg]];
+eusses	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:sg]];
+eût	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+eussions	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+eussiez	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+eussent	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+
+ne	clneg[];
+pas	advneg[];
+
+qui	prel[];
+
+que	csu[compl:que] | prel[];
+si	csu[compl:si];
+
+de prep[pcas:de];
+à prep[pcas:à];
+par prep[pcas:par];
+pour prep[pcas:pour];
+sur prep[pcas:sur];
+avant prep[pcas:avant];
+après prep[pcas:après];
+avec prep[pcas:avec];
+contre prep[pcas:contre];
+dans prep[pcas:dans];
+
+// TEMPERATURE
+// none : la température est de 13 degrés
+// few : douce
+// much: élevée
+// high: chaud
+// low: froid
+est	v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], pobjC:[PRED:degré, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Deg]], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], fct:none, value:$Deg]
+	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:doux, number:sg, gender:fm], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], fct:few]
+	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:élevé, number:sg, gender:fm], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], fct:much];
+fait	v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:chaud, number:sg, gender:ms], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:high]
+	|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:chaud, number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:very_high]
+	|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:froid, number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:very_low]
+	|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:froid, number:sg, gender:ms], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:low]
+	;
+	
+était	v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], pobjC:[PRED:degré, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Deg]], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:none, value:$Deg]
+	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:doux, number:sg, gender:fm], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:few]
+	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:élevé, number:sg, gender:fm], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:much];
+faisait	v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:chaud, number:sg, gender:ms], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:high]
+	|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:froid, number:sg, gender:ms], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:low];
+
+sera	v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], pobjC:[PRED:degré, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Deg]], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:none, value:$Deg]
+	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:doux, number:sg, gender:fm], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:few]
+	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:élevé, number:sg, gender:fm], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:much];
+fera	v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:chaud, number:sg, gender:ms], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:high]
+	|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:froid, number:sg, gender:ms], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:low];
+
+été	v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], pobjC:[PRED:degré, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Deg]], vform:participle, aux:avoir, fct:none, value:$Deg]
+ 	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:doux, number:sg, gender:fm], vform:participle, aux:avoir, fct:few]
+ 	|v[PRED:temperature, subjC:[PRED:température, number:sg, det:yes, def:yes], modC:[PRED:élevé, number:sg, gender:fm], vform:participle, aux:avoir, fct:much];
+fait	v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:chaud, number:sg, gender:ms], vform:participle, aux:avoir, neg:$Neg, fct:high]
+ 	|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:froid, number:sg, gender:ms], vform:participle, aux:avoir, neg:$Neg, fct:low]
+	;
+
+// PLEUVOIR
+/*
+pleuve	v[PRED:pleuvoir, subjC:[FORM:"il"], vform:tensed, vtense:present, mode:subjonctive, subj:[person:three, number:sg], fct:none];
+pleuvoir	v[PRED:pleuvoir, subjC:[FORM:"il"], vform:infinitive, fct:none];
+pleuvait	v[PRED:pleuvoir, subjC:[FORM:"il"], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:none];
+pleuvra	v[PRED:pleuvoir, subjC:[FORM:"il"], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:none];
+plu	v[PRED:pleuvoir, subjC:[FORM:"il"], vform:participle, aux:avoir, fct:none];
+
+pleuve	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:corde, def:no, number:pl], vform:tensed, vtense:present, mode:subjonctive, subj:[person:three, number:sg], fct:much_much];
+pleuvoir	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:corde, def:no, number:pl], vform:infinitive, fct:much_much];
+pleuvait	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:corde, def:no, number:pl], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:much_much];
+pleuvra	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:corde, def:no, number:pl], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:much_much];
+plu	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:corde, def:no, number:pl], vform:participe, aux:avoir, fct:much_much];
+
+a	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:précipitation, det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort, pos:pre]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot];
+
+ait	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:subjonctive, subj:[person:three, number:sg], neg:$Neg, fct:few]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:subjonctive, subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:subjonctive, subj:[person:three, number:sg], neg:$Neg, fct:much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:précipitation, det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort, pos:pre]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:subjonctive, subj:[person:three, number:sg], neg:$Neg, fct:a_lot];
+
+avoir	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:infinitive, neg:$Neg, fct:few]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:infinitive, neg:$Neg, fct:not_much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:infinitive, neg:$Neg, fct:much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:précipitation, det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort, pos:pre]>], locCl:[PRED:_pro, number:sg, person:three], vform:infinitive, neg:$Neg, fct:a_lot];
+
+avait	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:précipitation, det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort, pos:pre]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot];
+
+aura	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:précipitation, det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort, pos:pre]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot];
+
+eu	v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:few]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:not_much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:pluie, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:much]
+	|v[PRED:pleuvoir, subjC:[FORM:"il"], objC:[PRED:précipitation, det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort, pos:pre]>], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:a_lot];
+*/
+
+// SNOW
+/*
+neige	v[PRED:snow, subjC:[FORM:"il"], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], fct:none];
+neigeait	v[PRED:snow, subjC:[FORM:"il"], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:none];
+neigera	v[PRED:snow, subjC:[FORM:"il"], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:none];
+neigé	v[PRED:snow, subjC:[FORM:"il"], vform:participle, aux:avoir, fct:none];
+a	v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, def:no, part:yes, number:sg, modForm:[FORM:"en petite quantité"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:tempête, number:sg, def:no, de_obj:[PRED:neige, number:sg, det:no]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot];
+avait	v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot];
+aura	v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot];
+eu	v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, qual:yes, def:no, mod:<[PRED:fin, pos:post]>], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:few]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:not_much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[PRED:neige, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:much]
+	|v[PRED:snow, subjC:[FORM:"il"], objC:[], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:a_lot];
+
+*/
+
+// WIND
+/*
+km	cn[PRED:km, gender:ms];
+
+est	v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:noeud, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], fct:noeud, value:$Number, modWind:$L]
+	|v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:km, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], fct:km, value:$Number, modWind:$L];
+était	v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:noeud, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:noeud, value:$Number, modWind:$L]
+	|v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:km, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], fct:km, value:$Number, modWind:$L];
+sera	v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:noeud, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:noeud, value:$Number, modWind:$L]
+	|v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:km, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], fct:km, value:$Number, modWind:$L];
+été	v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:noeud, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:participle, aux:avoir, fct:noeud, value:$Number, modWind:$L]
+	|v[PRED:wind, subjC:[PRED:vent, number:sg, det:yes, def:yes], pobjC:[PRED:km, number:pl, pcas:de, det:yes, detNum:[PRED:num, value:$Number], mod:$L], vform:participle, aux:avoir, fct:km, value:$Number, modWind:$L];
+
+
+a	v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, number:sg, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:ventriloque, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:ventose, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+avait	v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+aura	v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+eu	v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:none]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:a_lot]
+	|v[PRED:wind, subjC:[FORM:"il"], objC:[PRED:vent, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:few];
+*/
+
+// SUNSHINE
+/*
+a	v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+avait	v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+aura	v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+eu	v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:none]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:a_lot]
+	|v[PRED:sunshine, subjC:[FORM:"il"], objC:[PRED:soleil, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:few];
+
+//"soleil de plomb"	cn[PRED:soleil, number:sg, gender:ms, fct:magn1];
+//"soleil radieux"	cn[PRED:soleil, number:sg, gender:ms, fct:magn2];
+soleil	cn[PRED:soleil, number:sg, gender:ms, fct:a_lot|few|none];
+*/
+
+// FOG
+/*
+a	v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+avait	v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, persodegr:three], vform:tensed, vtense:imperfect, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+aura	v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:none]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:a_lot]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:tensed, vtense:future, mode:indicative, subj:[person:three, number:sg], neg:$Neg, fct:few];
+eu	v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, def:no, part:yes, neg:$Neg], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:none]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"beaucoup de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:a_lot]
+	|v[PRED:fog, subjC:[FORM:"il"], objC:[PRED:brouillard, det:yes, number:sg, detForm:[FORM:"peu de"]], locCl:[PRED:_pro, number:sg, person:three], vform:participle, aux:avoir, neg:$Neg, fct:few];
+
+//"brouillard à couper au couteau"	cn[PRED:brouillard, number:sg, gender:ms, fct:magn1];
+//brouillard	cn[PRED:brouillard, number:sg, gender:ms, fct:a_lot|few|none];
+*/
+
+// ronge	v[PRED:ronger_son_frein, objC:[PRED:frein, det:yes, number:sg, poss:yes, personPoss:one, numberPoss:sg], vform:tensed, vtense:present, mode:indicative, person:one, number:sg];
+// ronge	v[PRED:ronger_son_frein, objC:[PRED:frein, det:yes, number:sg, poss:yes, personPoss:three, numberPoss:sg], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg]];
+// rongent	v[PRED:ronger_son_frein, objC:[PRED:frein, det:yes, number:sg, poss:yes, personPoss:three, numberPoss:pl], vform:tensed, vtense:present, mode:indicative, person:three, number:pl];
+
+/*
+prend	v[PRED:initiative, fct:Oper1, objC:[PRED:initiative, det:yes, number:sg, qual:yes, def:no], vform:tensed, vtense:present, mode:indicative, subj:[person:three, number:sg]];
+*/
+
+/*
+initiative	cn[PRED:initiative, gender:fm, number:sg, fct:none];
+initiatives	cn[PRED:initiative, gender:fm, number:pl, fct:none];
+initiative	cn[PRED:initiative, gender:fm, number:sg, fct:Magn, mod:<[PRED:grand]>];
+initiative	cn[PRED:initiative, gender:fm, number:sg, fct:Magn, mod:<[PRED:beau]>];
+initiative	cn[PRED:initiative, gender:fm, number:sg, fct:Magn, mod:<[PRED:audacieux]>];
+initiatives	cn[PRED:initiative, gender:fm, number:pl, fct:Magn, mod:<[PRED:beau]>];
+*/
+
+/*
+fumeur	cn[PRED:fumeur, gender:ms, number:sg, fct:Magn, mod:<[PRED:gros]>];
+travail cn[PRED:travail, gender:ms, number:sg, fct:Magn, mod:<[PRED:important]>];
+travaux cn[PRED:travail, gender:ms, number:pl, fct:Magn, mod:<[PRED:important]>];
+*/
