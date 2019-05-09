@@ -26,9 +26,7 @@ The language of **Elvex** is not under licence (it belongs to the public domain)
 What you can't do with Elvex
 -----------------------------
 
-You should ask **Elvex** to interpret exactly what you expect. **Elvex** will translate your request but will not be in the position to understand the meaning of it. In short, **Elvex** does not know *what to say*.
-
-**Elvex** will translate your request but will not be in the position to understand the meaning of it. In short, **Elvex** does not know
+You should ask **Elvex** to interpret exactly what you expect. **Elvex** will translate your request but will not be in the position to understand the meaning of it.
 
 What you can do with Elvex
 -----------------------------
