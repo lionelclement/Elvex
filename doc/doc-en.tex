@@ -1,0 +1,1274 @@
+\documentclass[11pt]{article}
+
+\usepackage[francais]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{epsfig}
+\usepackage{hyperref}
+\usepackage{gb4e}
+\usepackage{enumitem}
+
+\lstset{
+  frame=single,
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  literate=  {→}{{$\rightarrow$}}1 {↓}{{$\downarrow$}}1 {↑}{{$\uparrow$}}1 {⇓}{{$\Downarrow$}}1 {⇑}{{$\Uparrow$}}1 {⊂}{{$\subset$}}1 {∪}{{$\cup$}}1 {¬}{{$\lnot$}}1
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {Ã}{{\~A}}1 {ã}{{\~a}}1 {Õ}{{\~O}}1 {õ}{{\~o}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+}
+
+
+\title{Elvex -- Documentation}
+\author{Lionel Clément}
+\date{Version 2.10.2 -- April 2019}
+
+\begin{document}
+\maketitle
+\section{The program \texttt{elvex}}
+
+\texttt{Elvex} is an Natural Text Generator. It takes as an input a
+concept, a local lexicon, a compacted lexicon, and a grammar, and then
+outputs a text corresponding to the concept writing in Natural
+Language.
+
+\subsection*{Compilation and full installation of \texttt{Elvex}}
+
+The full compilation of \texttt{Elvex} requires the following programs on your machine:
+
+\begin{itemize}
+\item g++
+\item flex
+\item bison
+\item aclocal
+\item automake
+\item autoconf
+\item libxml2-dev
+\end{itemize}
+
+The full command is:
+
+\begin{lstlisting}[frame=none, numbers=none]
+aclocal
+automake -fa
+autoconf
+./configure
+make
+sudo make install
+\end{lstlisting}
+
+\subsubsection{try \texttt{Elvex}}
+
+\begin{lstlisting}[frame=none, numbers=none]
+. ./try-me.sh
+\end{lstlisting}
+
+\subsection{\texttt{Elvex} command}
+
+The \texttt{elvex} command is:\\
+
+\noindent
+\verb#elvex [options] [input]*#\\
+
+The options are:
+
+\begin{description}
+\item \verb#-h|--help#
+
+Displays help and exits
+
+\item \verb#-v|--version#
+
+Displays the version number and exits
+
+\item \verb#-a|--reduceAll#
+
+  Reduces all rules during the generation process. This mode
+  allows fine debugging and requires an understanding of the
+  generation process to be mastered.
+
+\item \verb#-t|--trace#
+
+  Displays the reduced rules during the generation process. This mode allows one for a
+  grammar debugging.
+
+\item \verb#-r|--random#
+  
+  Displays only one randomly selected output.
+  
+\item \verb#-grammarFile <file>#
+  
+  File containing the grammar.
+  
+\item \verb#-lexiconFile <file>#
+  
+  File containing the lexicon. 
+
+\item \verb#-inputFile <file>#
+  
+  File containing the input. 
+  
+\item \verb#-compactDirectory <directory>#
+
+  Directory containing the files of the compacted lexicon.
+
+\item \verb#-compactLexiconFile <filePrefix>#
+
+  Prefix of the compacted lexicon files
+  \verb#<directory>/<filePrefix>.tbl# and
+  \verb#<directory>/<filePrefix>.fsa#
+  
+\item \verb#-maxLength <integer>#
+
+  Defines the maximum length of the sequence to be produced.
+
+\item \verb#-maxUsages <integer>#
+
+  Defines the maximum number of times the same rule can be used.
+
+\item \verb#-maxCardinal <integer>#
+
+  Defines the maximum cardinality of the item sets.
+
+\item \verb#-maxTime <integer>#
+
+  Defines the number of seconds before the program stops.
+
+\end{description}
+
+\subsection{Command for grammar debugging}
+
+\noindent
+\verb#elvexdebug [options] [input]*#\\
+
+The \texttt{elvexdebug} command works the same way with same options
+but produces a \texttt{HTML} document on the standard output. You must
+use your favorite browser to view this document properly and review
+the computation.
+
+The command \texttt{elvexdebug} is recommended to set the grammars in
+the most difficult cases.
+
+\subsection{\texttt{elvexbuildlexicon} for managing big lexicons}
+
+The command of \texttt{ElvexBuildLexicon} is
+
+\noindent
+\verb#elvexbuildlexicon [global-option] <build|consult|test> <input>#\\
+
+Where the options are:
+
+\begin{description}
+\item \verb#-h|--help#
+
+Displays help and exits
+
+\item \verb#-d <directory>#
+
+  Directory containing the files of the compacted lexicon.
+
+\item \verb#-f <filePrefix>#
+
+  Prefix of the compacted lexicon files \verb#<directory>/<filePrefix>.tbl# and \verb#<directory>/<filePrefix>.fsa#.
+  
+\end{description}
+
+\subsubsection*{Command to build a compacted lexicon}
+
+\begin{description}
+\item \verb#$buildlexiconmain -d <directory> -f <filePrefix> build <input># 
+\end{description}
+
+\subsubsection*{Command to test a compacted lexicon}
+
+\begin{description}
+\item \verb#$buildlexiconmain -d <directory> -f <filePrefix> test# 
+
+\subsubsection*{Command to consult a compacted lexicon}
+
+\item \verb#$buildlexiconmain -d <directory> -f <filePrefix> consult# 
+
+\end{description}
+
+The compacted lexicon is a set of lexical entries of the type
+
+\paragraph{}\verb@cat#lexeme	form#FS@
+
+\begin{itemize}
+\item \verb#cat# is a lexical category
+\item \verb#lexeme# is the lexeme given by the \verb#PRED# feature
+\item \verb#form# is the produced form (a string of UTF8 characters in version 2.10)
+\item \verb#FS# is a feature structure
+\end{itemize}
+
+\newpage
+\section{Grammar}
+
+An example will familiarize the reader with \texttt{Elvex}
+before we go any further. Let us take the case of the text generation of a
+nominal phrase in French.
+
+\subsubsection*{Example}
+
+\begin{lstlisting}
+@grammar
+/* **************************************************
+ * Elvex grammar
+ ************************************************** */
+NP → det N {
+  ↓2 = ↑;
+  ↓1 = ⇓2;
+}
+
+N → adj N {
+  [mod:<$Head::$Tail>, $Rest];
+  [number:$inhNb] ⊂ ↑;
+  ↓1 = $Head ∪ [number:$inhNb, gender:$synthGd];
+  ↓2 = [$Rest, mod:$Tail];
+  [gender:$synthGd] ⊂ ⇓2;
+  ⇑ = ⇓2 ∪ [qual:yes];
+}
+
+N → n {
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+\end{lstlisting}
+
+\subsection{Syntagmatic rules (\textit{Context-Free Grammar})}
+ 
+The first rule of grammar (line 5) defines \texttt{NP} as
+consisting of \texttt{det} and \texttt{N} from left to right.
+
+\texttt{det} is a word; it is not defined in the grammar, but
+in the lexicon that we will see later.
+
+Lines 10) and 19) follow the same logic and we have the
+context-free grammar:
+
+\begin{lstlisting}[numbers=none]
+NP → det N
+N → adj N
+N → n
+\end{lstlisting}
+
+The only sequence we can generate with this simple example is
+a noun, preceded by a determiner and possibly an adjective.
+
+Syntagmatic rules are therefore made to describe the order of
+components of phrases, sentences and speeches.
+
+\subsubsection*{Empty rules, optional terms}
+ 
+It is possible to write empty rules, i.e.  components that have no
+realization in text production. It is also possible to put optional
+elements written into brackets signs \verb#[]#.
+
+Example: The following rule gives all possible combinations for clitic
+pronouns placed before the verb.
+
+\begin{lstlisting}[numbers=none]
+  CLITICS → [clr] [cld] [cla] [cld] [clg] [cll] 
+\end{lstlisting}
+
+In French, the dative clitic (\texttt{cld}) is sometimes placed
+before, sometimes placed after the accusative clitic (\texttt{cla})
+according to the person of the pronoun.
+
+\begin{exe}
+\ex \begin{xlist} 
+\ex 
+\begin{tabbing}
+\textit{Jean} xxx \= \textbf{to\_me}(dative) \= \textbf{it}(accusative) \= \textit{donne}\kill
+\textit{Jean} \>\textit{\textbf{me}} \>\textit{\textbf{le}} \>\textit{donne}\\
+Jean \> \textbf{to\_me}(dative) \> \textbf{it}(accusative) \> gives\\
+Jean gives it to me\\
+\end{tabbing}
+
+\ex 
+\begin{tabbing}
+\textit{Jean} xxx \=\textbf{it}(accusative) \=\textbf{to\_him}(dative) \= \textit{donne}\kill
+\textit{Jean} \>\textit{\textbf{le}} \>\textit{\textbf{lui}} \>\textit{donne}\\
+Jean \>\textbf{it}(accusative) \>\textbf{to\_him}(dative) \>gives\\
+Jean gives it to him.
+\end{tabbing}
+\end{xlist}
+\end{exe}
+ 
+According to this rule, the phrase \texttt{CLITICS} can also be empty,
+due to the fact that each term is optional.
+
+\subsubsection*{Paradigms}
+
+Each element of a syntagmatic rule can be a list of terms
+separated by the character \verb#|# instead of being a single term. In this
+case, the product phrase is constructed with one of the terms in the list.
+
+Example:
+The following rule allows you to build a sentence without a subject, with a
+nominative clitic subject \texttt{cln} (\textit{je}, \textit{tu},
+\textit{il}, $\dots$), or with a subject as a nominal group.
+
+\begin{lstlisting}[numbers=none]
+S → [cln | NP] VP
+\end{lstlisting}
+
+A grammar written by using massively rules with alternatives and
+optional terms is equivalent to a very large grammar.  For example,
+the rule describing the order of clitic pronouns is equivalent to a
+set of 64 rules:
+ 
+\begin{lstlisting}[numbers=none]
+  CLITICS → 
+  CLITICS → clr 
+  CLITICS → cld 
+  ...
+  CLITICS → clr cld 
+  CLITICS → clr cl cla
+  ... ...
+\end{lstlisting}
+
+However, \texttt{Elvex} never builds these sets of rules
+and remains effective with very large grammars, even written in doing so.
+The use of alternatives and optional terms is therefore
+recommended to describe the order of words, without regard to
+the combinatorial problem mentioned above.
+
+\subsection{Operational semantics}
+
+Each rule contains a set of operations. These operations describe the
+functional properties of the language, which may or may not depend on
+the order of the words.
+
+\subsubsection*{The basics}
+
+We will explain this semantics through the example given to the
+beginning of this section before giving details.
+
+\begin{itemize}
+\item The rules on lines 6 and 7 express the nature of the links that
+  exist between \texttt{NP}, the name \texttt{N} and its determiner
+  \texttt{det}; the main one being that agreement in gender and number
+  occurs between nouns and their specifier.
+
+  \begin{itemize}
+  \item Rule 6) assigns the nominal phrase properties to the noun. The
+    attributes of the name are noted $\downarrow2$ (this is the second
+    term of the right part of the rule), those of the nominal phrase
+    $\uparrow$.
+
+  \item Rule 7) retrieves information from analyses of \texttt{N} to
+    assign them to the determiner.  The attributes of the determiner
+    are noted $\downarrow1$ (this is the first term of the right part
+    of the rule), those from the name \texttt{N} Downarrow $2$.
+
+  \end{itemize}
+  
+  With these two rules, the noun will be chosen in the lexicon
+  according to the concept to be expressed (attribute of the nominal
+  phrase $\uparrow$).  A female singular determiner will be chosen if
+  the gender of the noun is feminine and the nominal phrase is
+  singular.
+  
+  This mechanism, which makes it possible to articulate lexical
+  choices according to the concepts and syntactic properties according
+  to lexical properties is at the heart of \texttt{Elvex} and
+  implements two types of attributes: inherited attributes (noted
+  $\uparrow$, $\downarrow_i$) and synthesized attributes (noted
+  $\Uparrow$, $\Downarrow_i$).
+  
+  Inherited attributes are calculated from left to right of the
+  syntagmatic rules. Synthesized attributes are calculated from right
+  to left. To put it simply, we can say that the inherited attributes
+  convey information from the concept to the lexicon, and that the
+  synthesized attributes convey information from the lexicon to higher
+  layers of the syntactic analysis. Thus the rule 6) allows you to
+  propagate the input to the lexicon to make a lexical choice, whereas
+  conversely, rule 7) allows to retrieve the lexical information of
+  the chosen name according to the concept expressed and to propagate
+  this information (grammatical features, selection restrictions,
+  phraseological units constraints, etc.)  to the entire nominal
+  phrase.
+  
+\item The rules in lines 11 to 16 allow you to set the gender and
+  number agreement of the noun and adjective and also to propagate the
+  concepts that produce adjectives. We notice that in French, the
+  number is a semantism expressed directly as a sign associated with
+  the noun, whereas gender is a grammatical feature given by the
+  lexicon. The first will be propagated from the concept to the noun,
+  the second will be propagated from the lexicon to the layers
+  regulating the agreement.
+  
+
+\begin{itemize}
+  \item Rule 11) is a \textit{guard}, \textit{i. e.} a
+    condition to realize
+    $\mathtt{N} \rightarrow \mathtt{adj}~ \mathtt{N}$. It expresses that the
+    realization of an adjective is conditioned by
+    the existence of a list
+    \verb#<$Head::$Tail># as the value of an attribute \texttt{mod}
+    in the inherited attribute $uparrow$.
+    
+    \verb#$Head# and
+    \verb#$Tail# are two variables that respectively define the
+    head and the tail of a list, \textit{i. e.} respectively the
+    first item in the list and the rest of the list.
+    
+    if the condition is verified, 
+    \verb#$Head#, \verb#$$Tail# and
+    \verb#$Rest# will be affected by values given by the
+    subsumption\footnote{A feature structure \texttt{A} subsumes
+      a feature structure \texttt{B} iif all the features of
+      \texttt{B} are present in \texttt{A} with the same values
+      or with values that subsume those of the
+      values of \texttt{A}. } values of \\\verb#[mod:<$Head::$Tail>, $Rest]#
+    by $\uparrow$.
+    
+  \item Rule 12) assign to the variable
+    \verb#$inhNb# (\textit{Inherited noun}) the value of the
+    \texttt{number} feature of the inherited attribute
+    $uparrow$. This allows you to retrieve the number given to the
+    nominal phrase.
+    
+  \item Rule 13) assigns to the inherited attribute of the adjective
+    the head of the list \verb#$Head# unified\footnote{The unification
+      of a feature structure \texttt{A} with a feature structure
+      \texttt{B}, is the smallest feature structure \texttt{C} such
+      that \texttt{A} subsumes \texttt{C} and \texttt{B} subsumes
+      \texttt{C}.} with a structure that gives the synthesized gender
+    \verb#$synthGd# (\textit{synthesized gender}) and the inherited
+    number \verb#$inhNb#.
+    
+  \item Rule 14) assigns to the inherited attribute of the noun all
+    values passed by inheritance (\verb#$Rest#) and adds the feature
+    \verb#mod# with the value
+    \verb#$Tail#, which is the tail of the list that brings together
+    all other modifiers of the noun (other adjective or a proposal for
+    example).
+    
+  \item Rule 15) allows you to assign the variable
+    \verb#$synthGd# which is the gender synthesized from the noun.
+    
+  \item Finally rule 16) assigns to the synthesized attribute of the
+    phrase the synthesized attribute of the noun and adds a feature
+    \texttt{qual} which marks that this noun phrase is qualified
+    (which makes it possible to restrict others modifications).
+    
+\end{itemize}
+
+\item The rules on lines 20 to 22 are not specific, except for the
+  custody of rule 20) which implements the value \verb#NIL#.
+
+  \begin{itemize}    
+  \item Rule 20) is a guard which allows us to prevent the inherited
+    attribute $\uparrow$ to contain any feature
+    \texttt{mod}. \verb#mod:NIL# means that the attribute \verb#mod#
+    does not exist in $\uparrow$.
+    
+  \item Rules 21) and 22) do not require any futher comment.
+
+  \end{itemize}
+\end{itemize}
+
+It becomes clear by examining this simple example that the order of
+operational rules is not the one given by grammar, but the one
+dictated by the availability of operands. Here, a possible order of
+application of the rules is 11), 12), 14), 14), 15), 13) and 16). In
+the version 2.10 of \texttt{Elvex} this order is calculated on the
+fly. In the subsequent versions a dependency graph will be built with
+guidelines for developing grammars on this particular aspect.
+
+The advice I can give to develop a grammar is
+to write the rules as the synthesized attributes are available.
+
+We see that the syntagmatic rules are not produced
+linearly from left to right and from top to bottom, but in such a way that
+which is not determined by producing the first available elements.
+
+Before going any further, let us give definitions on the ratings that
+  allow us to understand the syntax of the rules.
+  
+\subsection*{Grammar syntax}
+ 
+A syntagmatic rule is written 
+
+$A~ \rightarrow B_1 B_2 \dots B_K <operational~semantics>;$
+ 
+Where $B_i$ is written:
+
+\begin{itemize}
+\item $[ B_i ]$ if the symbol $B_i$ is optional.
+\item $C_1 | C_2 | \dots | C_n$ if $B_i$ is a choice between the $C_i$
+\end{itemize}
+ 
+$B_i$, $C_i$ can be lexical categories or symbols of the
+grammar.
+
+\subsubsection*{Operational Semantics}
+
+\paragraph{Notations}
+
+Let the rule
+$A~ \rightarrow B_1 B_2 \dots B_i \dots B_k <operational~semantics>$
+
+\begin{itemize}
+\item $\uparrow$: refers to the attribute inherited from $A$.
+\item $\downarrow_i$: refers to the attribute inherited from $Bi$.
+\item $\Uparrow$: refers to the synthesized attribute of $A$.
+\item $\Downarrow_i$: refers to the synthesized attribute of $Bi$. 
+\end{itemize}
+
+The named variables are noted by an identifier preceded by \og
+\$\fg{}, the anonymous variables are noted \og \verb#_#\fg{}, the
+constant values are noted by identifiers.
+
+The feature structures are noted $[ feat_1, feat_2, \dots, feat_k ]$
+where $ feat_i$ is a feature as
+\begin{itemize}
+\item a linked named variable
+\item an anonymous variable
+\item \verb#PRED:<identifier of a lexeme># a feature for a predicate
+\item \verb#FORM:"<form>"# a feature for a literal form
+\item $attr_i:val_i$
+  \begin{itemize}
+  \item with $attr_i$ the name of an attribute
+  \item and with $val_i$ the value of an attribute that can be: 
+    
+    \begin{itemize}
+    \item A named variable
+    \item An anonymous variable
+    \item A nil value (\texttt{NIL})
+    \item A set of atomic constants separated by \verb#|#
+    \item A literal constant (number)
+    \item A feature structure
+    \item A list of feature structures
+    \end{itemize}
+  \end{itemize}
+  
+\end{itemize}
+
+The lists are noted
+\begin{itemize}
+\item $<fs_1, fs_2, \dots, fs_k>$ with $fs_i$ as feature structures
+\item $<head::tail>$ with $head$ as a feature structure and $tail$, a
+  list. $head$ refers to the first item on the list, $tail$ the rest
+  of the list.
+\end{itemize}
+
+If one wishes to bring an operational semantics to the syntagmatic
+rule, one defines $<operational~semantics>$ which is a list of rules
+in \{\} brackets.
+
+Each rule is written:
+
+\begin{itemize}
+
+\item $\{<$list of rules $>\}$ A list of rules.
+
+\item \verb#attest <expr>;# Explicit guard where \verb#<expr># is an
+  boolean expression that must be checked.
+
+\item \verb#[feat, feat, ...,..., feat];# Guard where the feature
+  structure must subsume $uparrow$. The guard may contain the feature
+  \verb#PRED# which represents the concept to be generated. Thus, a
+  concept is not necessarily linked to a lexical entry with
+  \texttt{Elvex}, unlike usual text generation systems; it can produce
+  a syntactic constraint. And a syntactic constraints may be not
+  joined to a specific concept.
+
+\item \verb#print <expr>;# Displays the expression at standard output
+  (useful for debugging).
+
+\item \verb#println <expr>;# Does the same and displays a new line.
+  
+\item  \verb#<expr1> = <expr2>;#
+  
+  An assignment of the expression $<expr1>$ with the value of the
+  expression $<expr2>$. The expression $<expr1>$ is a complex
+  variable, or simple variable, the expression $<expr2>$ is a constant
+  or a complex variable or a simple variable such that there is a
+  environment \footnote{An environment is an application $\phi$ from
+    $E$ to $F$ such that $E$ is a set of variables and $F$ a set of
+    constants or variables. The resolution of a variable $\alpha$ in
+    an environment is $\beta = \phi^k(\alpha)$ such that $\beta$ is a
+    constant. It should be noted that \texttt{Elvex} also handles
+    complex variables. In this case $\phi^k(\alpha)$ is replacing
+    variables in terms by their constants. } of the syntagmatic rule
+  to solve it.
+    
+The assignments of $\uparrow$ and $\Downarrow_i$ are not
+  possible, as these attributes are implicitly assessed during the
+  text generation and modification would result in
+  inconsistencies.
+
+    The assignments are limited to these cases:
+    \begin{itemize}
+      
+    \item Assign a list
+      
+      \begin{itemize}
+      \item  \verb#<#$\dots$\verb#> = <#$\dots$\verb#># Assigns a list to
+        another one.
+      \item \verb#<#$\dots$\verb#> = $X# Assigned by the value of the
+        variable \verb#$X#
+      \end{itemize}
+      
+    \item Assign an inherited attribute
+    
+      \begin{itemize}
+      \item $\downarrow$\verb#i =[#$\dots$\verb#]# Assigned by a
+        constant or variable feature structure.
+      \item $\downarrow$\verb#i = #$\uparrow$ Assigned by an inherited attribute.
+      \item $\downarrow$\verb#i = #$\dots$\verb# #$\cup$\verb# #$\dots$
+        Assigned by the result of the unification of two expressions
+        (feature structures or attributes).
+      \item $\downarrow$\verb#i = #$\Downarrow$\verb#j# Assigned by a
+        synthesized attribute.
+      \end{itemize}
+      
+    \item Assign a synthesized attribute
+    
+      \begin{itemize}
+      \item $\Uparrow$\verb# = $X#
+      \item $\Uparrow$\verb# = [#$\dots$\verb#]#
+      \item $\Uparrow$\verb# = #$\uparrow$
+      \item $\Uparrow$\verb# = #$\dots$\verb# #$\cup$\verb# #$\dots$
+      \item $\Uparrow$\verb# = #$\Downarrow$\verb#j#
+      \end{itemize}
+      
+    \item  Assign a simple variable
+    
+      \begin{itemize}
+      \item \verb#$X = $Y#
+      \item \verb#$X = a# Assigned by a constant or a literal.
+      \item \verb#$X = <#$\dots$\verb#>#
+      \item \verb#$X = [#$\dots$\verb#]#
+      \item \verb#$X = #$\uparrow$
+      \item \verb#$X = #$\dots$\verb# #$\cup$\verb# #$\dots$
+      \item \verb#$X = #$\Downarrow$\verb#j#
+      \item \verb#$X = <expr>#  by evaluating an arithmetical or logical expression.
+      \end{itemize}
+      
+    \item  \verb#[#$\dots$\verb#]# $\subset$ \verb#<expr>;#
+
+      A feature structure is subsumed
+
+      \begin{itemize}
+      \item \verb#[#$\dots$\verb#] #$\subset$\verb# #$\uparrow$ by an inherited attribute.
+      \item \verb#[#$\dots$\verb#] #$\subset$\verb# #$\Downarrow$\verb#j# by a synthesized attribute
+      \item \verb#[#$\dots$\verb#] #$\subset$\verb# $X# by the value of a variable.
+      \end{itemize}
+      
+    \item \verb#if (<boolExpr>) <rules>#
+    
+      Interprets operational semantics \verb#<rules># if and only
+      if the expression \verb#<boolExpr># is verified.
+
+    \item \verb#if (<boolExpr>) <rules> else <rules>#
+      
+      Interprets operational semantics \verb#<rules1># if and
+      only if \verb#<boolExpr># is verified, otherwise interpret \verb#<rules2>#.
+      
+    \end{itemize}
+
+    A logical expression \verb#<booExpr># is
+
+    \begin{itemize}
+    \item \verb#<boolExpr>#  $\lor$ \verb#<boolExpr># Or
+    \item \verb#<boolExpr>#  $\land$ \verb#<boolExpr># And
+    \item $\neg$ \verb#<boolExpr># Negation
+    \item \verb#<boolExpr>#  $\Rightarrow$ \verb#<boolExpr>#
+      Material implication
+    \item \verb#<boolExpr>#  $\Leftrightarrow$ \verb#<boolExpr>#
+      Biconditional
+    \item \verb#<expr>#  $==$ \verb#<expr># Equality
+    \item \verb#<expr>#  $\neq$ \verb#<expr># Difference
+    \item \verb#<expr># Expression evaluated as Boolean: A
+      feature structure is evaluated as true if it is not
+      \verb#NIL# or $\bot$ (result of the failure of unification
+      between two feature structures).
+    \end{itemize}
+    
+    The expressions are:
+    
+    \begin{itemize}
+    \item Integer
+    \item String
+    \item \verb#<expr>#  $\cup$ \verb#<expr># Unification of two
+      feature structures
+    \item $\uparrow$
+    \item $\Uparrow$
+    \item $\downarrow_i$
+    \item $\Downarrow_i$
+    \item \verb#[...]# Feature structure
+    \item \verb#NIL# Null value of a feature
+    \item \verb#a|b...# Constant
+    \item \verb#$xxx# Variable
+    \item \verb#<...># List
+    \end{itemize}
+    
+Let's add algebraic expressions and numbers:
+    
+    \begin{itemize}
+    \item \verb#<expr>#  $<$ \verb#<expr>#
+    \item \verb#<expr>#  $\le$ \verb#<expr>#
+    \item \verb#<expr>#  $>$ \verb#<expr>#
+    \item \verb#<expr>#  $\ge$ \verb#<expr>#
+    \item \verb#<expr>#  $+$ \verb#<expr>#
+    \item \verb#<expr>#  $-$ \verb#<expr>#
+    \item \verb#<expr>#  $*$ \verb#<expr>#
+    \item \verb#<expr>#  \% \verb#<expr>#
+    \item \verb#<expr>#  $/$ \verb#<expr>#
+    \item $-$ \verb#<expr>#
+    \item Double-precision floating-point format number
+    \end{itemize}
+    
+  \end{itemize}
+  
+\subsubsection*{Variable evaluation}
+
+Variables are evaluated locally at a syntagmatic rule. This
+defines the scope of a variable.
+
+Here are different methods for solving variables:
+
+\begin{itemize}
+\item Direct assignment
+\begin{lstlisting}
+S → S {
+  [vform:NIL];
+  [tense:$tense, aspect:$aspect, mode:$mode] ⊂ ↑;
+  if (!$tense)
+    $tense=present;
+...
+}
+\end{lstlisting}
+Line 5 indicates that the value of the variable \verb#$tense# is
+\verb#present# by default (in the absence of another value previously given). The
+value of
+\verb#$tense# is eventually given by the inherited attribute
+$\uparrow$ online 3.
+
+Note that the order of evaluation of the rules is indifferent and that it
+is not necessary to precede rule (3) in the order that they are listed.
+
+\item Guard
+\begin{lstlisting}[numbers=none]
+S → NP VP {
+  [subject:$inheritedSubject, $Rest];
+...
+}
+\end{lstlisting}
+
+The value of the variable \verb#$inheritedSubject# is given 
+by the $uparrow$ subject feature. The value of the variable 
+\verb#$Rest# is the feature structure that remains when you remove the
+feature \verb#subject#.
+
+\item Subsumption
+\begin{lstlisting}[numbers=none]
+S → NP VP {
+...
+  [subject:$synthesizedSubject] ⊂ ⇓2;
+...
+}
+\end{lstlisting}
+
+The value of the variable \verb#$synthesizedSubject# is given 
+by the \verb#subject# feature of $\Downarrow2$. 
+
+\item Binding a variable within a syntagmatic rule
+\begin{lstlisting}[numbers=none]
+S → NP VP {
+  [subject:$inheritedSubject, $Rest];
+  [subject:$synthesizedSubject] ⊂ ⇓2;
+  ↓1 = [subject:$inheritedSubject] 
+  		∪ [subject:$synthesizedSubject];
+...
+}
+\end{lstlisting}
+
+The variables \verb#$synthesizedSubject# and \verb#$inheritedSubject#
+are both used within this rule to be
+transmitted to the \verb#subject# feature of the inherited attribute $\downarrow1$.
+
+\item Linking a variable within a lexical entry
+
+\begin{lstlisting}[numbers=none]
+a	v[PRED:brouillard, subjC:[FORM:"il"], 
+		objC:[PRED:brouillard, det:yes, 
+		def:no, part:yes, neg:$Neg], 
+		locCl:[PRED:_pro, number:sg, 
+			person:three], 
+		vform:tensed, vtense:present, 
+		mode:indicative, 
+		subj:[person:three, number:sg], 
+		neg:$Neg, fct:none]
+\end{lstlisting}
+
+The variable \verb#$Neg# is linked in this lexical entry to the expression "it is foggy" so that its use as negative propagates a negation of the noun:
+
+\begin{exe}
+\ex \begin{xlist} 
+\ex \label{0-a} \textit{Il y a du brouillard} (it is foggy)
+\ex \label{0-a} \textit{Il n'y a pas de brouillard} (There is no fog)
+\ex \label{0-a} \textit{*Il y a de brouillard} ()
+\ex \label{0-a} \textit{*Il n'y a pas du brouillard}
+\end{xlist}
+\end{exe}
+
+\end{itemize}
+
+\subsection{Lexicon}
+
+The lexicon is a list of entries separated by semicolons.
+
+Each entry defines the sequence to be produced, followed by a disjunction
+(noted by the character \verb#|#) of lexical categories
+optionally followed by a feature structure.
+
+The sequence to be produced may be:
+
+\begin{itemize}
+\item A string of characters between \verb#""#, in which case the sequence
+  will be exactly this one. Note that the sequence may be empty.
+
+\item A string of characters between \verb#""# containing
+  variables. The sequence produced will be this one with the variables
+  substituted by their respective values.
+
+\item \texttt{FORM}: the sequence produced will literally be the one
+  given by the feature \texttt{FORM}. \texttt{Elvex} version 2.10 only provides for
+  constant, subsequent versions will also have
+  complex variables.
+
+\end{itemize}
+
+The category is an identifier, namely the final symbol of grammar.
+
+The feature structure allows to represent all the
+constraints imposed by the lexicon.
+
+A few examples:
+
+\begin{itemize}
+\item \verb#"?" interrogativeDot;#
+
+\bigskip
+\item \verb#"tag-$Line" tag[line:$Line]; #
+
+\bigskip
+\item \verb# FORM title; #
+
+\bigskip
+\item \verb#"elles-mêmes"	itself [gender:fm, number:pl, person:three, itself:yes]; #
+
+\bigskip
+\item \begin{verbatim}
+serai	aux_être [aux:être, voice:active, finite:yes,
+  mode:indicative,  vtense:future_anterieur, vform:tensed, 
+subj:[person:one, number:sg]]; 
+\end{verbatim}
+
+\bigskip
+\item \begin{verbatim}
+// Lexical input "temperature" producing 
+//"La température est de xxx degrés" (the temperature is xxx degrees Celsius"
+est v[PRED:température, 
+	subjC:[PRED:température, number:sg, det:yes, def:yes], 
+	pobjC:[PRED:degré, number:pl, pcas:de, det:yes,
+		detNum:[PRED:num, value:$Deg]], 
+	vform:tensed, vtense:present, mode:indicative, 
+	subj:[person:three, number:sg], fct:none, value:$Deg]
+
+//"la température est douce" (the temperature is mild)
+|v[PRED:température, subjC:[PRED:température, number:sg, 
+	det:yes, def:yes], modC:[PRED:doux, number:sg, gender:fm],
+	vform:tensed, vtense:present, mode:indicative, 
+	subj:[person:three, number:sg], fct:few]
+
+//"la température est élevée" (the temperature is high)
+|v[PRED:température, subjC:[PRED:température, number:sg, 
+	det:yes, def:yes], modC:[PRED:élevé, number:sg, gender:fm],
+	vform:tensed, vtense:present, mode:indicative, 
+	subj:[person:three, number:sg], fct:much];
+\end{verbatim}
+
+\bigskip
+\item \begin{verbatim}
+// Lexical entry of "temperature".
+// producing "Il fait chaud" (It's hot)
+fait	v[PRED:température, subjC:[FORM:"il"], 
+	modC:[PRED:chaud, number:sg, gender:ms], vform:tensed,
+	vtense:present, mode:indicative, 
+	subj:[person:three, number:sg], neg:$Neg, fct:high]
+
+//"Il fait très chaud" (It's very hot)
+|v[PRED:température, subjC:[FORM:"il"], modC:[PRED:chaud, 
+	number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed, 
+	vtense:present, mode:indicative, subj:[person:three, 
+	number:sg], neg:$Neg, fct:very_high]
+
+//"Il fait très froid" (It's very cold)
+|v[PRED:température, subjC:[FORM:"il"], modC:[PRED:froid, 
+	number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed,
+	vtense:present, mode:indicative, subj:[person:three, 
+	number:sg], neg:$Neg, fct:very_low]
+
+//"Il fait froid" (It's cold)
+|v[PRED:température, subjC:[FORM:"il"], modC:[PRED:froid, 
+	number:sg, gender:ms], vform:tensed, vtense:present, 
+	mode:indicative, subj:[person:three, number:sg], 
+	neg:$Neg, fct:low]; 
+\end{verbatim}
+	
+\bigskip
+\item \begin{verbatim}
+// Lexical entry of "rain" producing
+// "Il y a une pluie fine" (A fine rain fell)
+a	v[PRED:pleuvoir, subjC:[FORM:"il"], 
+	objC:[PRED:pluie, det:yes, number:sg, qual:yes,
+		def:no, mod:<[PRED:fin, pos:post]>], 
+	locCl:[PRED:_pro, number:sg, person:three], 
+	vform:tensed, vtense:present, mode:indicative, 
+	subj:[person:three, number:sg], neg:$Neg, fct:few]
+	
+// "il y a un peu de pluie" (It is raining a bit)
+|v[PRED:pleuvoir, subjC:[FORM:"il"], 
+	objC:[PRED:pluie, det:yes, number:sg, 
+	detForm:[FORM:"un peu de"]], 
+	locCl:[PRED:_pro, number:sg, person:three], 
+	vform:tensed, vtense:present, mode:indicative, 
+	subj:[person:three, number:sg], neg:$Neg, fct:not_much]
+
+// "il y a beaucoup de pluie" (There is plenty of rainfall)
+|v[PRED:pleuvoir, subjC:[FORM:"il"], 
+	objC:[PRED:pluie, det:yes, number:sg, 
+	detForm:[FORM:"beaucoup de"]], 
+	locCl:[PRED:_pro, number:sg, person:three], 
+	vform:tensed, vtense:present, mode:indicative, 
+	subj:[person:three, number:sg], neg:$Neg, fct:much]
+
+// "il y a de fortes précipitations" (It is raining so much)
+|v[PRED:pleuvoir, subjC:[FORM:"il"], 
+	objC:[PRED:précipitation,
+        det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort,
+        pos:pre]>], locCl:[PRED:_pro, number:sg, person:three],
+        vform:tensed, vtense:present, mode:indicative,
+        subj:[person:three, number:sg], neg:$Neg, fct:a_lot]; 
+\end{verbatim}
+
+\end{itemize}
+
+\subsection{Input}
+
+The input is summarized by the type of phrase or text you want to generate, followed by a
+feature structure containing the concept and the illocutionary structure to be expressed.
+
+
+\texttt{PRED} allows you to define the named concept to be generated.
+
+examples
+
+\begin{itemize}
+\item 
+\begin{verbatim}
+sentence [PRED:raining, neg:yes]
+\end{verbatim}
+
+Simple entry for the concept of \textit{raining} producing 
+\begin{exe}
+\ex \begin{xlist} 
+\ex \textit{Il ne pleut pas} (It is not raining)
+\ex \textit{Il n'y a pas de pluie} (There is no rain)
+\end{xlist}
+\end{exe}
+
+
+\item 
+\begin{verbatim}
+sentence 
+   [PRED:to_ask,
+    i:[PRED:menuisier, id:3, number:sg, gender:ms, def:yes],
+    iii:[PRED:apprenti, id:6, def:yes, gender:ms, number:sg],
+    ii:[PRED:scier,
+        i:[idref:6],
+        ii:[PRED:poutre, number:sg, def:yes]
+        ]
+    ]
+\end{verbatim}
+
+Complex concept where the features \texttt{id} and \texttt{idref}
+make it possible to constrain co-references. 
+
+This entry produces 
+\begin{exe}
+\ex 
+\begin{tabbing}
+\textit{Le menuisier} \= \textit{demande} \= \textit{à} \textit{l'apprenti}~~~ \= \textit{de} \textit{scier} \= \textit{la} \textit{poutre}\\
+The carpenter \> asks \> the apprentice \> to saw \> the beam\\
+The carpenter asks the apprentice to saw the
+beam
+\end{tabbing}
+\end{exe}
+
+\item 
+\begin{verbatim}
+sentence 
+   [PRED:raining, 
+    tense:future, 
+    modSType:time, 
+    modS:<[FORM:"lundi 18 mars 2019", type:time]>
+   ]
+\end{verbatim}
+
+Concept producing an adverbial on the basis of the
+constant "lundi 18 mars 2019" (Monday, the 18th of March 2019). This entry produces:
+
+\begin{exe}
+\ex \textit{Il va pleuvoir le lundi 18 mars 2019.} (It will rain on Monday, March 18, 2019) 
+\end{exe}
+
+\item 
+\begin{verbatim}
+sentence 
+   [PRED:cause, 
+    i: [PRED:raining]]
+    ii: [PRED:se_couvrir, i:[PRED:you], modality:devoir]
+   ]
+\end{verbatim}
+
+Input for the following generated sentences:
+\begin{exe}
+\ex \begin{xlist} 
+\ex \textit{Il pleut, tu dois te couvrir} (It is raining, you have to dress warmly)
+\ex \textit{Il pleut, par conséquent tu dois te couvrir} (It is raining, therefore you have to dress warmly)
+\ex \textit{Tu dois te couvrir s'il pleut} (You have to dress warmly if it is raining)
+\ex \textit{Tu dois te couvrir car il pleut} (You have to dress warmly because it is raining)
+\ex \textit{S'il pleuvait, tu devrais te couvrir} (If it rained, you should dress warmly)
+\ex \textit{S'il pleut, tu devras te couvrir} (If it is raining, you should dress warmly)
+\ex \textit{Il pleuvrait, tu devrais te couvrir} (It would rain, you should dress warmly)
+\end{xlist}
+\end{exe}
+
+\item 
+\begin{verbatim}
+sentence 
+   [PRED:initiative, 
+    i:[PRED:Jean], 
+    objC:[lexFct:Magn, mod:<[PRED:audacieux]>], 
+    lexFct:Oper1
+   ]
+\end{verbatim}
+
+Input containing features to fix lexical functions. The
+production is 
+\begin{exe}
+\ex \textit{Jean prend une initiative très audacieuse.} (Jean takes a very bold initiative)
+\end{exe}
+
+\item 
+\begin{verbatim}
+sentence 
+   [PRED:initiative, 
+    i:[PRED:Jean], 
+    objC:[lexFct:Magn], 
+    lexFct:Oper1
+   ]
+\end{verbatim}
+
+Input for
+
+\begin{exe}
+\ex \textit{Jean prend une belle initiative.}  (Jean takes a fine initiative)
+\end{exe}
+
+\item 
+\begin{verbatim}
+sentence 
+   [PRED:to_break,
+    i:[PRED:Jean], 
+    ii:[PRED:carafe, number:sg, def:yes, 
+       mod:<[PRED:little],[PRED:white]>], 
+    diathesis:passive, tense:past, neg:yes, 
+    modV:<[PRED:roughly]>
+   ]
+\end{verbatim}
+
+Input containing a negative passive feature. The
+production is
+\begin{exe}
+\ex \textit{La petite carafe blanche n'avait pas été cassée
+brutalement par Jean.} (The small white carafe had not been broken
+brutally by Jean.)
+\end{exe}
+
+\end{itemize}
+
+\section{Design pattern (to be completed)}
+
+A design pattern applies in a general case which can be summarized by
+some constraints. It is not associated with a specific event, but to a
+recurring organization of the grammar for which a single and coherent
+answer must be provided.
+
+
+\subsubsection*{A - Local propagation of synthesized attributes}
+
+Context:
+A feature \texttt{A} that must constrain a result \texttt{R}, where
+\texttt{R} depends only on the lexicon or grammar.
+
+Examples of applications:
+\begin{itemize}
+\item Production of a constrained noun in an idiomatic phrase (\textit{breaking the \textbf{ice}})
+\item Conjugation to the passive voice
+\end{itemize}
+
+The general rule is written as follows
+
+\begin{lstlisting}
+X → Y {
+  [A:$v, $rest];
+  [ARealization:R] ⊂ ⇓1;
+  ↓1 = [R:$v, $rest];
+}
+\end{lstlisting}
+
+Example 1: The sentence \textit{We basically got taken to the cleaners
+  on that deal.} introduces the fixed noun \textit{cleaners} which
+comes from the verb \textit{take one to the cleaner}. Here the agent of the
+passive sentence is not represented.
+
+\begin{lstlisting}
+VN → V [PP] PP {
+  [obj:NIL, obl:$Obl];
+  [subj:$subj] ⊂ ↑;
+  ↓1 = ↑;
+  ↓3 = ↑$Obl;
+  [oblC:$oblSynt] ⊂ ⇓1;
+  if (#2) {
+    attest $oblSynt;
+    ↓2 = $oblSynt;
+  }
+  else {
+    attest ¬$oblSynt;
+  }
+}
+
+taken verb[PRED:take_one_to_the_cleaners, 
+	constI:[PRED:cleaner, number:pl, def:yes]];
+\end{lstlisting}
+
+Example 2:
+The agent of a clause is carried out by the grammatical function subject
+for conjugation to the active voice, and by the oblique function in
+\textit{by} for a passive voice conjugation.
+
+\begin{lstlisting}
+// agent as subject
+Sentence → Sentence {
+  [agent:$agent, $rest];
+  [agentRealization:subject] ⊂ ⇓1;
+  ↓1 = [subject:$agent, $rest];
+  ⇑ = ⇓1;
+}
+
+// agent as oblique
+Sentence → Sentence {
+  [agent:$agent, $rest];
+  [agentRealization:oblBy] ⊂ ⇓1;
+  ↓1 = [byObj:$agent, $rest];
+  ⇑ = ⇓1;
+}
+
+// patient as object
+Sentence → Sentence {
+  [patient:$patient, agent:NIL, $rest];
+  [patientRealization:object] ⊂ ⇓1;
+  ↓1 = [object:$patient, $rest];
+  ⇑ = ⇓1;
+}
+
+// patient as subject
+Sentence → Sentence {
+  [patient:$patient, agent:NIL, $rest];
+  [patientRealization:subject] ⊂ ⇓1;
+  ↓1 = [subject:$patient, $rest];
+  ⇑ = ⇓1;
+}
+
+// passive voice
+Sentence → NP VERB PP {
+  [subject:$subject, parObl:$parObl, $rest];
+  ↓1 = $subject;
+  ↓2 = $rest ∪ [voice:passive];
+  ↓3 = $parObl;
+  ⇑ = [agentRealization:oblBy, 
+	patientRealization:subject];
+}
+
+// active voice
+Sentence → NP VERB NP {
+  [subject:$subject, object:$object, $rest];
+  ↓1 = $subject;
+  ↓2 = $rest ∪ [voice:active];
+  ↓3 = $object;
+  ⇑ = [agentRealization:subject, 
+	patientRealization:object];
+}
+\end{lstlisting}
+
+\subsubsection*{B - Transformation of the attribute inherited by a syntactic head}
+
+Context:
+An inherited attribute \texttt{A} that must constrain a realization
+\texttt{R} by a new predicate in generation.
+
+Examples of applications:
+\begin{itemize}
+\item Use of a verbal tense auxiliary or a modal auxiliary
+\item Compound conjugation in French
+\end{itemize}
+
+The general rule is written as follows
+
+\begin{lstlisting}
+X → Y {
+  [A:K];
+  [PRED:$PRED, A:k, $Rest] ⊂ ↑;
+  ↓1 = [PRED:L, arg:[PRED:$PRED, $Rest]];
+}
+
+\end{lstlisting}
+
+Example:
+In French, the aspect is reflected in conjugated forms, but also in
+compound verb constructions (\og être en train de + inf\fg{} (to be in the
+process of doing sth). 
+
+\begin{lstlisting}
+sentence → sentence {
+  [aspect:progressive];
+  [PRED:$PRED, aspect:progressive, i:$I, $Rest] ⊂ ↑;
+  ↓1 = [PRED:être_en_train_de, 
+	i:[PRED:$PRED, i:$I, $Rest]];
+  ⇑ = ⇓1;
+}
+\end{lstlisting}
+
+\end{document}
