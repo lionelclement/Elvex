@@ -117,32 +117,31 @@ int main(int argn, char **argv) {
     synthesizer.setOutXML(NULL);
 #endif
     if (argn > 1) {
-      for (unsigned int arg = 1; argv[arg]; arg++) {
+      for (unsigned int arg = 1; argv[arg]; ++arg) {
 	if (argv[arg][0] == '-') {
 	  if (!strcmp(argv[arg]+1, "v") || !strcmp(argv[arg] + 1, "-version")) {
-	    std::cout << PACKAGE_VERSION;
+	    std::cout << PACKAGE_VERSION << std::endl;
 	    return EXIT_SUCCESS;
-	  } else if (!strcmp(argv[arg]+1, "h") || !strcmp(argv[arg] + 1, "-help")) {
+	  }
+	  
+	  else if (!strcmp(argv[arg]+1, "h") || !strcmp(argv[arg] + 1, "-help")) {
 	    Usage(argv);
 	    return EXIT_SUCCESS;
-	  } else if (!strcmp(argv[arg]+1, "t") || !strcmp(argv[arg] + 1, "-trace")) {
+	  }
+
+	  else if (!strcmp(argv[arg]+1, "t") || !strcmp(argv[arg] + 1, "-trace")) {
 	    synthesizer.setTrace(true);
-	  } else if (!strcmp(argv[arg]+1, "a") || !strcmp(argv[arg] + 1, "-reduceAll")) {
+	  }
+
+	  else if (!strcmp(argv[arg]+1, "a") || !strcmp(argv[arg] + 1, "-reduceAll")) {
 	    synthesizer.setReduceAll(true);
-	  } else if (!strcmp(argv[arg]+1, "r") || !strcmp(argv[arg] + 1, "-random")) {
+	  }
+
+	  else if (!strcmp(argv[arg]+1, "r") || !strcmp(argv[arg] + 1, "-random")) {
+	    CERR_LINE;
 	    std::srand(time(nullptr));
 	    synthesizer.setRandom(true);
 	  }
-#ifdef OUTPUT_XML
-	  else if (!strcmp (argv[arg]+1, "xml")) {
-	    if (argv[arg+1]!=NULL) {
-	      synthesizer.setOutXML(strdup(argv[++arg]));
-	    } else {
-	      Usage(argv);
-	      return EXIT_FAILURE;
-	    }
-	  }
-#endif
 
 	  else if (!strcmp(argv[arg] + 1, "lexiconFile")) {
 	    if (argv[arg + 1] != NULL) {
@@ -227,7 +226,19 @@ int main(int argn, char **argv) {
 	    }
 	  }
 	  
+#ifdef OUTPUT_XML
+	  else if (!strcmp (argv[arg]+1, "xml")) {
+	    if (argv[arg+1]!=NULL) {
+	      synthesizer.setOutXML(strdup(argv[++arg]));
+	    } else {
+	      Usage(argv);
+	      return EXIT_FAILURE;
+	    }
+	  }
+#endif
+	  
 	  else {
+	    CERR_LINE;
 	    std::cerr << argv[arg] + 1 << std::endl;
 	    Usage(argv);
 	    return EXIT_FAILURE;

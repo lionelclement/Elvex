@@ -21,7 +21,6 @@
 #include "environment.hh"
 #include "value.hh"
 #include "messages.hh"
-#include "ipointer.hh"
 #include "bitset.hh"
 
 featuresPtr Features::_bottom = createBottom();

@@ -33,7 +33,8 @@ public:
 
   unsigned int getCode(void) const;
   void print(std::ostream &outStream=std::cout) const;
-  class Term *clone(void);
+  std::string toString() const;
+  class Term* clone();
 
   // compare deux termes
   struct Less {

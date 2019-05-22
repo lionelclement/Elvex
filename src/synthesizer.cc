@@ -642,15 +642,19 @@ itemPtr Synthesizer::createItem(itemPtr item, unsigned int row) {
 }
 
 #ifdef MEMOIZATION
+#ifdef MEMOIZATION_SHIFT
 /* **************************************************
  *
  ************************************************** */
 std::string
-Synthesizer::keyMemoization(itemPtr item)
+Synthesizer::keyMemoization(itemPtr actualItem)
 {
-  return std::to_string(item->getCurrentTerm()->getCode()) + (*item->getInheritedSonFeatures())[item->getIndex()]->serialize();
+  //return std::to_string(actualItem->getId()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->serialize();
+  return std::to_string(actualItem->getCurrentTerm()->getCode()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->serialize();
 }
+#endif
 
+#ifdef MEMOIZATION_REDUCE
 /* **************************************************
  *
  ************************************************** */
@@ -658,8 +662,10 @@ std::string
 Synthesizer::keyMemoization(itemPtr actualItem, itemPtr previousItem)
 {
   return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()->getCode()) + actualItem->getSynthesizedFeatures()->serialize();
+  //return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getId()) + actualItem->getSynthesizedFeatures()->serialize();
 }
 
+#endif
 #endif
 
 /* **************************************************
@@ -724,10 +730,10 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	std::cerr << std::endl;
 #endif
 	if (!state->insert(it, this)){
-	  break;
-	  //FATAL_ERROR;
+	  FATAL_ERROR;
+	} else {
+	  insertItemMap(it);
 	}
-	insertItemMap(it);
 	it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
 	it->setRule((*actualItem)->getRule()->clone());
 	it->setIndex((*actualItem)->getIndex());
@@ -738,11 +744,11 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	std::cerr << std::endl;
 #endif
 	if (!state->insert(it, this)){
-	  //break;
 	  FATAL_ERROR;
+	} else {
+	  insertItemMap(it);
 	}
-	insertItemMap(it);
-	state->erase((*actualItem));
+	state->erase(*actualItem);
 	eraseItemMap((*actualItem)->getId());
 	goto loop;
       }
@@ -775,8 +781,11 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	  it->print(std::cerr);
 	  std::cerr << std::endl;
 #endif
-	  if (state->insert(it, this))
+	  if (!state->insert(it, this)) {
+	    FATAL_ERROR;
+	  } else {
 	    insertItemMap(it);
+	  }
 	}
 	state->erase((*actualItem));
 	eraseItemMap((*actualItem)->getId());
@@ -846,14 +855,18 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		  it.reset();
 		} else {
 		  it->addRef((*actualItem)->getId());
-		  state->insert(it, this);
+		  if (!state->insert(it, this)){
+		    FATAL_ERROR;
+		  } else {
+		    insertItemMap(it);
+		  }
 		  if (getMaxCardinalMsg()) {
 		    FATAL_ERROR_MSG("maxCardinal");
 		  }
-		  insertItemMap(it);
 		}
 		modification = true;
 		(*actualItem)->addFlags(Flags::SEEN);
+		//goto loop;
 	      }
 	    }
 	  }
@@ -868,7 +881,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	}
 	
 #ifdef TRACE_REDUCE
-	std::cerr << "####################### REDUCE Y -> γ • #######################" << std::endl;
+	std::cerr << "####################### REDUCE Y -> γ • (actual) #######################" << std::endl;
 	(*actualItem)->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -947,26 +960,28 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	      } else {
 		
 #ifdef TRACE_REDUCE
-		std::cerr << "####################### REDUCE (X -> α • Y β) #######################" << std::endl;
+		std::cerr << "####################### REDUCE (X -> α • Y β) (previous) #######################" << std::endl;
 		previousItem->print(std::cerr);
 		std::cerr << std::endl;
 #endif
 		
 #ifdef MEMOIZATION
+#ifdef MEMOIZATION_REDUCE
 		std::string key = keyMemoization(*actualItem, previousItem);
-		memoizationMap::const_iterator memItem = memoizedItems.find(key);
+		auto memItem = memoizedMap.find(key);
 		// Is this shift action already done ?
-		if (memItem != memoizedItems.end()) {
-		  memoizationValues result = memItem->second;
+		if (memItem != memoizedMap.end()) {
+
+		  std::list< memoizationValuePtr > result = memItem->second;
 		  
-		  for (memoizationValues::const_iterator i = result.begin();
+		  for (std::list< memoizationValuePtr >::const_iterator i = result.begin();
 		       i != result.end();
 		       ++i) {
 
 		    // New item build
 		    itemPtr it = createItem(previousItem, row);
 		    it->setEnvironment(previousItem->getEnvironment() ? previousItem->getEnvironment()->clone() : environmentPtr());
-		    it->getSynthesizedSonFeatures()->push(previousItem->getIndex(), (*i).first);
+		    it->getSynthesizedSonFeatures()->push(previousItem->getIndex(), (*i)->getFeatures());
 		    //...
 		    featuresPtr inheritedFeatures = it->getInheritedFeatures();
 		    if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom()) {
@@ -977,25 +992,36 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      }
 		    }		
 		    
-		    it->addForestIdentifiers(previousItem->getIndex(), (*i).second);
+		    it->addForestIdentifiers(previousItem->getIndex(), (*i)->getForestIdentifier());
 		    
-#ifdef TRACE_REDUCE
+#ifdef TRACE_MEMOIZATION
 		    std::cerr << "####################### MEMOIZED REDUCE (X -> α Y • β) #######################" << std::endl;
 		    it->print(std::cerr);
 		    std::cerr << std::endl;
 #endif
 		    it->setRefs(previousItem->getRefs());
-		    states[row]->insert(it, this);
-		    if (getMaxCardinalMsg()) {
-		      FATAL_ERROR_MSG("maxCardinal");
+
+		    ItemSet::iterator found = states[row]->find(it);
+		    if (found != states[row]->end()) {
+		      (*found)->addRefs(previousItem->getRefs());
+		      it.reset();
+		    } else {
+		      if (!states[row]->insert(it, this)) {
+			FATAL_ERROR;
+		      } else {
+			if (getMaxCardinalMsg()) {
+			  FATAL_ERROR_MSG("maxCardinal");
+			}
+			insertItemMap(it);
+			modification = true;
+		      }
 		    }
-		    insertItemMap(it);
-		    modification = true;
 		    (*actualItem)->addFlags(Flags::SEEN);
 		  }
 		}
 		// This reduce action is new
 		else
+#endif
 #endif
 		  {
 		    itemPtr it = createItem(previousItem, row);
@@ -1033,9 +1059,9 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      forestMap.insert(std::pair<forestIdentifierPtr, forestPtr>(fi, forestFound));
 		      it->addForestIdentifiers(previousItem->getIndex(), fi);
 		    }
-		    if (!forestFound->addNode(node))
-		      ;//FATAL_ERROR
-		    ;
+		    if (!forestFound->addNode(node)) {
+		      //FATAL_ERROR;
+		    }
 #ifdef TRACE_REDUCE
 		    std::cerr << "####################### REDUCE (X -> α Y • β) #######################" << std::endl;
 		    it->print(std::cerr);
@@ -1047,32 +1073,35 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      it.reset();
 		    } else {
 #ifdef MEMOIZATION
+#ifdef MEMOIZATION_REDUCE
 		      // tabulates this result
-		      std::string key = keyMemoization(*actualItem, previousItem);
-		      featuresPtr memFeatures = (*it->getSynthesizedSonFeatures())[it->getIndex()-1];
-		      forestIdentifierPtr memForestIdentifier = it->getForestIdentifiers()[it->getIndex()-1];
-		      std::pair<featuresPtr, forestIdentifierPtr> memValue = std::pair<featuresPtr, forestIdentifierPtr> (memFeatures, memForestIdentifier);
-		      memoizationMap::iterator memItem = memoizedItems.find(key);
+		      // std::string key = keyMemoization(*actualItem, previousItem);
+		      memoizationValuePtr memValue = MemoizationValue::create((*it->getSynthesizedSonFeatures())[it->getIndex()-1],
+									      it->getForestIdentifiers()[it->getIndex()-1]);
+		      auto memItem = memoizedMap.find(key);
 		      
-		      // Is this shift action already done ?
-		      if (memItem != memoizedItems.end()) {
+		      // Is this reduce action already done ?
+		      if (memItem != memoizedMap.end()) {
 			memItem->second.push_back(memValue);
 		      }
 		      else {
-			memoizationValues memValues;
+			std::list< memoizationValuePtr > memValues;
 			memValues.push_back(memValue);
-			memoizedItems.insert(memoizationItem(key, memValues));
+			memoizedMap.insert(key, memValues);
 		      }
-		      
+#endif
 #endif
 		      // record the item
 		      it->setRefs(previousItem->getRefs());
-		      states[row]->insert(it, this);
-		      if (getMaxCardinalMsg()) {
-			FATAL_ERROR_MSG("maxCardinal");
+		      if (!states[row]->insert(it, this)){
+			FATAL_ERROR;
+		      } else {
+			if (getMaxCardinalMsg()) {
+			  FATAL_ERROR_MSG("maxCardinal");
+			}
+			insertItemMap(it);
+			modification = true;
 		      }
-		      insertItemMap(it);
-		      modification = true;
 		      (*actualItem)->addFlags(Flags::SEEN);
 		    }
 		  }
@@ -1139,7 +1168,6 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 	  std::cerr << std::endl;
 #endif
 	  
-	  
 	  if ((*actualItem)->getEnvironment() && (*actualItem)->getEnvironment()->size() > 0) {
 	    bool effect = false;
 	    (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
@@ -1147,34 +1175,37 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 	  }
 	  
 #ifdef MEMOIZATION
+#ifdef MEMOIZATION_SHIFT
 	  // Is this shift action already done ?
 	  std::string key = keyMemoization(*actualItem);
-	  memoizationMap::const_iterator memItem = memoizedItems.find(key);
-	  
-	  if (memItem != memoizedItems.end()) {
-	    memoizationValues result = memItem->second;
-
-	    for (memoizationValues::const_iterator i = result.begin();
+	  auto memItem = memoizedMap.find(key);
+	  if (memItem != memoizedMap.end()) {
+	    std::list< memoizationValuePtr > result = memItem->second;
+	    
+	    for (std::list< memoizationValuePtr >::const_iterator i = result.begin();
 		 i != result.end();
 		 ++i) {
 	      // New item build
 	      itemPtr it = createItem(*actualItem, row);
-
-	      it->getSynthesizedSonFeatures()->push((*actualItem)->getIndex(), (*i).first);
+	      it->getSynthesizedSonFeatures()->push((*actualItem)->getIndex(), (*i)->getFeatures());
 	      it->setEnvironment((*actualItem)->getEnvironment() ? (*actualItem)->getEnvironment()->clone() : Environment::create());
-	      it->addForestIdentifiers((*actualItem)->getIndex(), (*i).second);
+	      it->addForestIdentifiers((*actualItem)->getIndex(), (*i)->getForestIdentifier());
 	      
-#ifdef TRACE_SHIFT
+#ifdef TRACE_MEMOIZATION
 	      std::cerr << "####################### MEMOIZED SHIFT (X -> α ω • β) #######################" << std::endl;
 	      it->print(std::cerr);
 	      std::cerr << std::endl;
 #endif
 	      it->setRefs((*actualItem)->getRefs());
-	      states[row]->insert(it, this);
+	      if (!states[row]->insert(it, this)){
+		FATAL_ERROR;
+	      }
+	      else {
+		insertItemMap(it);
+	      }
 	      if (getMaxCardinalMsg()) {
 		FATAL_ERROR_MSG("maxCardinal");
 	      }
-	      insertItemMap(it);
 	      modification = true;
 	      modificationOnce = true;
 	      (*actualItem)->addFlags(Flags::SEEN);
@@ -1182,6 +1213,7 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 	  }
 	  // This shift action is new
 	  else
+#endif
 #endif
 	    {
 	      unsigned int pred = inheritedSonFeatures->assignPred();
@@ -1321,23 +1353,21 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			std::cerr << std::endl;
 #endif
 #ifdef MEMOIZATION
+#ifdef MEMOIZATION_SHIFT
 			// tabulates this result
-			std::string key = keyMemoization(*actualItem);
-						
-			featuresPtr memFeatures = (*it->getSynthesizedSonFeatures())[it->getIndex()-1];
-			forestIdentifierPtr memForestIdentifier = it->getForestIdentifiers()[it->getIndex()-1];
-			std::pair<featuresPtr, forestIdentifierPtr> memValue = std::pair<featuresPtr, forestIdentifierPtr> (memFeatures, memForestIdentifier);
-			memoizationMap::iterator memItem = memoizedItems.find(key);
-			
+			memoizationValuePtr memValue = MemoizationValue::create((*it->getSynthesizedSonFeatures())[it->getIndex()-1],
+										it->getForestIdentifiers()[it->getIndex()-1]);
+			auto memItem = memoizedMap.find(key);
 			// Is this shift action already done ?
-			if (memItem != memoizedItems.end()) {
+			if (memItem != memoizedMap.end()) {
 			  memItem->second.push_back(memValue);
 			}
 			else {
-			  memoizationValues memValues;
+			  std::list< memoizationValuePtr > memValues;
 			  memValues.push_back(memValue);
-			  memoizedItems.insert(memoizationItem(key, memValues));
+			  memoizedMap.insert(key, memValues);
 			}
+#endif
 #endif
 			// record the item
 			it->setRefs((*actualItem)->getRefs());

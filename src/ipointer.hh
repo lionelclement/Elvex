@@ -30,6 +30,7 @@ typedef shared_ptr< class Features > featuresPtr;
 typedef shared_ptr< class ListFeatures > listFeaturesPtr;
 typedef shared_ptr< class Value > valuePtr;
 typedef shared_ptr< class List > listPtr;
+typedef shared_ptr< class MemoizationValue > memoizationValuePtr;
 typedef shared_ptr< class Node > nodePtr;
 typedef shared_ptr< class Forest > forestPtr;
 typedef shared_ptr< class Statement > statementPtr;

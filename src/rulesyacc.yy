@@ -78,8 +78,6 @@
   std::list< std::string> argsPred;
   unsigned int codeString; 
   
-  //#define YYERROR_VERBOSE true
-  
   unsigned int globalLineno;
   std::string globalBufferName;
   %}

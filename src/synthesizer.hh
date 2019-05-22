@@ -27,6 +27,7 @@
 #include "forestmap.hh"
 #include "grammar.hh"
 #include "ipointer.hh"
+#include "memoizationmap.hh"
 
 #ifndef MAXLENGTH
 #define MAXLENGTH 1000
@@ -90,11 +91,7 @@ private:
 #endif
 
 #ifdef MEMOIZATION
-  typedef std::pair<featuresPtr, forestIdentifierPtr> memoizationValue;
-  typedef std::list< memoizationValue > memoizationValues;
-  typedef std::pair<std::string, memoizationValues > memoizationItem;
-  typedef std::map<std::string, memoizationValues > memoizationMap;
-  memoizationMap memoizedItems;
+  MemoizationMap memoizedMap;
 #endif
   
 public:
@@ -196,8 +193,12 @@ private:
   void generate(void);
   const entriesPtr findCompactLexicon(const unsigned int code, const unsigned int pred);
 #ifdef MEMOIZATION
+#ifdef MEMOIZATION_SHIFT
   std::string keyMemoization(itemPtr);
+#endif
+#ifdef MEMOIZATION_REDUCE
   std::string keyMemoization(itemPtr, itemPtr);
+#endif
 #endif
   
 };

@@ -42,7 +42,6 @@ Item::Item (class Rule *rule,
 	      statementsPtr statements)//: Item(rule, index, indexTerm, statements)
 {
   NEW;
-
   this->rule=rule;
   this->index=index;
   this->statements=statements;
@@ -630,211 +629,216 @@ void Item::defaultInheritedSonFeatures (){
  *
  ************************************************** */
 void
-Item::print(std::ostream& outStream) const
+Item::print(std::ostream& out) const
 {
-  outStream << "<table border=\"1\" style=\"color:black; ";
+  out << "<table border=\"1\" style=\"color:black; ";
   if (isSetFlags(Flags::BOTTOM)){
-    outStream << " background-color:Pink;";
+    out << " background-color:Pink;";
   }
   else if (isSetFlags(Flags::SEEN))
-    outStream << " background-color:PaleTurquoise;";
-  outStream << "\">";
-  outStream << "<tr>";
+    out << " background-color:PaleTurquoise;";
+  out << "\">";
+  out << "<tr>";
   if (s_id)
-    outStream << "<th>ID</th>";
+    out << "<th>ID</th>";
   if (s_ruleSerialId)
-    outStream << "<th>RuleSerialId</th>";
+    out << "<th>RuleSerialId</th>";
   if (s_ruleId)
-    outStream << "<th>RuleId</th>";
+    out << "<th>RuleId</th>";
   if (s_flags)
-    outStream << "<th>Flags</th>";
+    out << "<th>Flags</th>";
   if (s_refs)
-    outStream << "<th>Refs</th>";
+    out << "<th>Refs</th>";
   if (s_seen)
-    outStream << "<th>Seen</th>";
+    out << "<th>Seen</th>";
   if (s_item)
-    outStream << "<th>Item</th>";
+    out << "<th>Item</th>";
   if (s_index)
-    outStream << "<th>Index</th>";
+    out << "<th>Index</th>";
   if (s_indexTerms)
-    outStream << "<th>IndexTerms</th>";
+    out << "<th>IndexTerms</th>";
   if (s_terms)
-    outStream << "<th>Terms</th>";
+    out << "<th>Terms</th>";
   if (s_ranges)
-    outStream << "<th>Ranges</th>";
+    out << "<th>Ranges</th>";
   if (s_forestIdentifiers)
-    outStream << "<th>ForestIdentifiers</th>";
+    out << "<th>ForestIdentifiers</th>";
   if (s_inheritedFeatures)
-    outStream << "<th bgcolor=\"lightyellow\"><center>↑</center></th>";
+    out << "<th bgcolor=\"lightyellow\"><center>↑</center></th>";
   if (s_inheritedSonFeatures)
-    outStream << "<th bgcolor=\"lightyellow\"><center>↓i</center></th>";
+    out << "<th bgcolor=\"lightyellow\"><center>↓i</center></th>";
   if (s_synthesizedFeatures)
-    outStream << "<th bgcolor=\"lightcyan\"><center>⇑</center></th>";
+    out << "<th bgcolor=\"lightcyan\"><center>⇑</center></th>";
   if (s_synthesizedSonFeatures)
-    outStream << "<th bgcolor=\"lightcyan\"><center>⇓i</center></th>";
+    out << "<th bgcolor=\"lightcyan\"><center>⇓i</center></th>";
   if (s_statements)
-    outStream << "<th bgcolor=\"white\"><center>Statements</center></th>";
+    out << "<th bgcolor=\"white\"><center>Statements</center></th>";
   if (s_environment && environment)
-    outStream << "<th align = center>Environment</th>";
-  outStream << "<tr>";
+    out << "<th align = center>Environment</th>";
+  out << "<tr>";
   if (s_id){
-    outStream << "<td>";
-    outStream << '#' << this->getId();
-    outStream << "</td>";
+    out << "<td>";
+    out << '#' << this->getId();
+    out << "</td>";
   }
   if (s_ruleSerialId){
-    outStream << "<td>";
-    outStream << this->getRule()->serialize();
-    outStream << "</td>";
+    out << "<td>";
+    out << this->getRule()->serialize();
+    out << "</td>";
   }
   if (s_ruleId){
-    outStream << "<td>";
-    outStream << this->getRule()->getId();
-    outStream << "</td>";
+    out << "<td>";
+    out << this->getRule()->getId();
+    out << "</td>";
   }
   if (s_flags){
-    outStream << "<td>";
-    Flags::printFlags(outStream);
-    outStream << "</td>";
+    out << "<td>";
+    Flags::printFlags(out);
+    out << "</td>";
 
   }
   if (s_refs){
-    outStream << "<td>(";
+    out << "<td>(";
     std::set<unsigned int>::const_iterator ref = refs.begin();
     while (ref!=refs.end()){
-      outStream << '#' << *ref;
+      out << '#' << *ref;
       if (++ref!=refs.end())
-	outStream << ' ';
+	out << ' ';
     }
-    outStream << ")</td>";
+    out << ")</td>";
   }
   if (s_seen){
-    outStream << "<td>(";
+    out << "<td>(";
     std::vector<bool>::const_iterator s = seen.begin();
     while (s!=seen.end()){
-      outStream << *s;
+      out << *s;
       if (++s!=seen.end())
-	outStream << ' ';
+	out << ' ';
     }
-    outStream << ")</td>";
+    out << ")</td>";
   }
   if (s_item){
-    outStream << "<td>";
-    rule->print(outStream, index, false);
-    outStream << "</td>";
+    out << "<td>";
+    rule->print(out, index, false);
+    out << "</td>";
   }
   if (s_index){
-    outStream << "<td>";
+    out << "<td>";
     if (getIndex()==UINT_MAX)
-      outStream << "UINT_MAX";
+      out << "UINT_MAX";
     else
-      outStream << getIndex();
-    outStream << "</td>";
+      out << getIndex();
+    out << "</td>";
   }
   if (s_indexTerms){
-    outStream << "<td>";
+    out << "<td>";
     for (std::vector<unsigned int>::const_iterator i = indexTerms.begin() ; i != indexTerms.end() ; ++i)
       if ((*i) == UINT_MAX)
-	outStream << "UINT_MAX" << "&nbsp;";
+	out << "UINT_MAX" << "&nbsp;";
       else
-	outStream << (*i) << "&nbsp;";
-    outStream << "</td>";
+	out << (*i) << "&nbsp;";
+    out << "</td>";
   }
   if (s_terms){
-    outStream << "<td>";
+    out << "<td>";
     class Terms *terms = getCurrentTerms();
     if (terms)
-      terms->print(outStream);
+      terms->print(out);
     else
-      outStream << "NULL";
-    outStream << "</td>";
+      out << "NULL";
+    out << "</td>";
 
   }
   if (s_ranges){
-    outStream << "<td>";//<center>Ranges</center><br>";
-    outStream << "(";
-    for(std::vector<unsigned int>::const_iterator i = ranges.begin();
-	i!=ranges.end();){
-      outStream << (*i);
-      if (++i!=ranges.end()){
-	outStream << ", ";
+    out << "<td>";//<center>Ranges</center><br>";
+    int old = -1;
+    bool first = true;
+    for (std::vector<unsigned int>::const_iterator i = ranges.begin();
+	 i!=ranges.end();
+	 i++) {
+      if (old != -1) {
+	if (first)
+	  first = false;
+	else
+	  out << "&nbsp;";
+	out << '[' << old << '-' << *i << ']';
       }
+      old = *i;
     }
-    outStream << ")";
-    outStream << "</td>";
+    out << "</td>";
   }
   if (s_forestIdentifiers){
-    outStream << "<td>";//<center>ForestIdentifiers</center><br>";
+    out << "<td>";//<center>ForestIdentifiers</center><br>";
     for(std::vector<forestIdentifierPtr >::const_iterator i = forestIdentifiers.begin(); i!=forestIdentifiers.end();){
       if (*i)
-	(*i)->print(outStream);
+	(*i)->print(out);
       else
-	outStream << "NULL";
+	out << "NULL";
       if (++i!=forestIdentifiers.end()){
-	outStream << ", ";
+	out << ", ";
       }
     }
-    outStream << "</td>";
+    out << "</td>";
   }
   if (s_inheritedFeatures){
-    outStream << "<td bgcolor=\"lightyellow\">";//<center>↑</center><br>";
-    inheritedFeatures->print(outStream);
-    //outStream << inheritedFeatures->serialize(); 
-    outStream << "</td>";
+    out << "<td bgcolor=\"lightyellow\">";//<center>↑</center><br>";
+    inheritedFeatures->print(out);
+    //out << inheritedFeatures->serialize(); 
+    out << "</td>";
   }
   if (s_inheritedSonFeatures){
-    outStream << "<td bgcolor=\"lightyellow\"><table>";//<center>↓i</center><br>";
+    out << "<td bgcolor=\"lightyellow\"><table>";//<center>↓i</center><br>";
     for(std::vector<featuresPtr >::const_iterator i = inheritedSonFeatures->begin(); i!=inheritedSonFeatures->end(); ++i){
-      outStream << "<tr><td>";
+      out << "<tr><td>";
       if (*i)
-	(*i)->print(outStream);
+	(*i)->print(out);
       else
-	outStream << "null";
-      //outStream << (*i)->serialize(); 
-      outStream << "</td></tr>";
+	out << "null";
+      //out << (*i)->serialize(); 
+      out << "</td></tr>";
     }
-    outStream << "</table></td>";
+    out << "</table></td>";
   }
   if (s_synthesizedFeatures){
-    outStream << "<td bgcolor=\"lightcyan\">";//<center>⇑</center><br>";
+    out << "<td bgcolor=\"lightcyan\">";//<center>⇑</center><br>";
     if (synthesizedFeatures){
-      synthesizedFeatures->print(outStream);
-      //outStream << synthesizedFeatures->serialize(); 
+      synthesizedFeatures->print(out);
+      //out << synthesizedFeatures->serialize(); 
     }
     else
-      outStream << "null";
-    outStream << "</td>";
+      out << "null";
+    out << "</td>";
   }
   if (s_synthesizedSonFeatures){
-    outStream << "<td bgcolor=\"lightcyan\"><table>";//<center>⇓i</center><br>";
+    out << "<td bgcolor=\"lightcyan\"><table>";//<center>⇓i</center><br>";
     for(std::vector<featuresPtr >::const_iterator i = synthesizedSonFeatures->begin(); i!=synthesizedSonFeatures->end(); ++i){
-      outStream << "<tr><td>";
+      out << "<tr><td>";
       if (*i)
-	(*i)->print(outStream);
+	(*i)->print(out);
       else
-	outStream << "null";
-      outStream << "</td></tr>";
+	out << "null";
+      out << "</td></tr>";
     }
-    outStream << "</table></td>";
+    out << "</table></td>";
   }
   if (s_statements){
-    outStream << "<td bgcolor=\"white\">";
+    out << "<td bgcolor=\"white\">";
     if (statements)
-      statements->print(outStream);
+      statements->print(out);
     else
-      outStream << "&nbsp;";
-    outStream << "</td>";
+      out << "&nbsp;";
+    out << "</td>";
   }
   if (s_environment && environment){
-    outStream << "<td align = center>";
+    out << "<td align = center>";
     if (environment)
-      environment->print(outStream);
+      environment->print(out);
     else
-      outStream << "&nbsp;";
-    outStream << "</td>";
+      out << "&nbsp;";
+    out << "</td>";
   }
-  outStream << "</tr></table>";
-  outStream << std::endl;
+  out << "</tr></table>";
+  out << std::endl;
 }
 
 /* **************************************************

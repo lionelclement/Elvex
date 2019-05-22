@@ -107,7 +107,7 @@ bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer)
   item->print(std::cerr);
   std::cerr << std::endl;
 #endif
-  std::pair<iterator, bool> result=items.insert(item);
+  std::pair<iterator, bool> result = items.insert(item);
   return result.second;
 }
 

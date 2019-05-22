@@ -34,6 +34,8 @@ info.cc\
 infobuff.cc\
 lex.cc\
 main.cc\
+memoizationvalue.cc\
+memoizationmap.cc\
 node.cc\
 rule.cc\
 serializable.cc\
@@ -48,8 +50,9 @@ list.cc\
 vartable.cc
 
 elvex_OPTIONS =
-#elvex_OPTIONS += -DTRACE_DIFF
-#elvex_OPTIONS += -DMEMOIZATION
+elvex_OPTIONS += -DMEMOIZATION
+elvex_OPTIONS += -DMEMOIZATION_SHIFT
+elvex_OPTIONS += -DMEMOIZATION_REDUCE
 elvex_OPTIONS += -DMAXLENGTH=1000
 elvex_OPTIONS += -DMAXUSAGES=1000
 elvex_OPTIONS += -DMAXCARDINAL=1000
@@ -57,7 +60,6 @@ elvex_OPTIONS += -DMAXATTEMPTS=1000
 elvex_OPTIONS += -DMAXBITS=512
 
 elvex_CXXFLAGS = -std=c++11 -O3 -Wall -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvex_OPTIONS)
-#elvex_CXXFLAGS = -std=c++11 -g -Wall -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvex_OPTIONS)
 elvex_LDADD =
 
 elvexdebug_SOURCES =\
@@ -69,20 +71,23 @@ entry.cc\
 environment.cc\
 feature.cc\
 features.cc\
-listfeatures.cc\
 flags.cc\
 forest.cc\
 forestidentifier.cc\
 forestmap.cc\
-item.cc\
-itemset.cc\
+fsa.cc\
 grammar.cc\
 id.cc\
-fsa.cc\
 info.cc\
 infobuff.cc\
+item.cc\
+itemset.cc\
 lex.cc\
+list.cc\
+listfeatures.cc\
 main.cc\
+memoizationmap.cc\
+memoizationvalue.cc\
 node.cc\
 rule.cc\
 serializable.cc\
@@ -93,7 +98,6 @@ term.cc\
 terms.cc\
 tree.cc\
 value.cc\
-list.cc\
 vartable.cc 
 
 elvexdebug_OPTIONS =
@@ -107,20 +111,22 @@ elvexdebug_OPTIONS += -DTRACE_HTML
 #elvexdebug_OPTIONS += -DTRACE_UNFOLD
 elvexdebug_OPTIONS += -DTRACE_STAGE
 elvexdebug_OPTIONS += -DTRACE_SHIFT
-elvexdebug_OPTIONS += -DTRACE_CLOSE
-elvexdebug_OPTIONS += -DTRACE_REDUCE
+#elvexdebug_OPTIONS += -DTRACE_CLOSE
+#elvexdebug_OPTIONS += -DTRACE_REDUCE
 #elvexdebug_OPTIONS += -DTRACE_EVAL
 #elvexdebug_OPTIONS += -DTRACE_ACTION
 #elvexdebug_OPTIONS += -DTRACE_LEXICON
+#elvexdebug_OPTIONS += -DTRACE_MEMOIZATION
 elvexdebug_OPTIONS += -DOUTPUT_XML
-#elvexdebug_OPTIONS += -DMEMOIZATION
+elvexdebug_OPTIONS += -DMEMOIZATION
+elvexdebug_OPTIONS += -DMEMOIZATION_SHIFT
+elvexdebug_OPTIONS += -DMEMOIZATION_REDUCE
 elvexdebug_OPTIONS += -DMAXLENGTH=1000
 elvexdebug_OPTIONS += -DMAXUSAGES=1000
 elvexdebug_OPTIONS += -DMAXCARDINAL=1000
 elvexdebug_OPTIONS += -DMAXATTEMPTS=1000
 elvexdebug_OPTIONS += -DMAXBITS=512
 
-#elvexdebug_CXXFLAGS = -g -std=c++11 -Wall -O3 `xml2-config --cflags` -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexdebug_OPTIONS)
 elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexdebug_OPTIONS)
 elvexdebug_LDADD = -lxml2
 
@@ -128,7 +134,6 @@ elvexbuildlexicon_SOURCES = fsa.cc lex.cc info.cc infobuff.cc tree.cc buildlexic
 elvexbuildlexicon_OPTIONS =
 #elvexbuildlexicon_OPTIONS += -DTRACE_DIFF
 elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O3 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
-#elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -g -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
 elvexbuildlexicon_LDADD =
 
 elvexpostedition_SOURCES = postedition.cc

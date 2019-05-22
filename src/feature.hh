@@ -20,6 +20,7 @@
 
 #include "flags.hh"
 #include "id.hh"
+
 #include "vartable.hh"
 #include "ipointer.hh"
 #include "serializable.hh"
