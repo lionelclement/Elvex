@@ -27,3 +27,54 @@ text → rhetoricalStructure {
   ⇑ = [];
 }
 
+
+/* **************************************************
+ ************************************************** */
+text → text text [text] [text] [text] [text] [text] [text] [text] [text] {
+  [PRED:succ,
+   i:$i,
+   ii:$ii,
+   iii:$iii,
+   iv:$iv,
+   v:$v,
+   vi:$vi,
+   vii:$vii,
+   viii:$viii,
+   ix:$ix,
+   x:$x];
+  ↓1 = $i;
+  ↓2 = $ii;
+  if ($iii) {
+    attest #3;
+    ↓3 = $iii;
+  }
+    if ($iv) {
+    attest #4;
+    ↓4 = $iv;
+  }
+  if ($v) {
+    attest #5;
+    ↓5 = $v;
+  }
+  if ($vi) {
+    attest #6;
+    ↓6 = $vi;
+  }
+  if ($vii) {
+    attest #7;
+    ↓7 = $vii;
+  }
+  if ($viii) {
+    attest #8;
+    ↓8 = $viii;
+  }
+  if ($ix) {
+    attest #9;
+    ↓9 = $ix;
+  }
+  if ($x) {
+    attest #10;
+    ↓10 = $x;
+  }
+}
+
