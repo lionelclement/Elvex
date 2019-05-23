@@ -442,7 +442,7 @@ List::compare_values (valuePtr v1, valuePtr v2)
     valuePtr va2=v2->getFeatures()->find(gwith);
     if ((va1->getType()==Value::CONSTANT)
 	&& (va2->getType()==Value::CONSTANT)){
-      if (va1->getBits()->toString() < va2->getBits()->toString())
+      if (va1->getBits()->serialize() < va2->getBits()->serialize())
 	return true;
       else
 	return false;

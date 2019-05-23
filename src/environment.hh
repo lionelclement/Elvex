@@ -34,7 +34,7 @@ public:
   ~Environment();
   static environmentPtr create(void);
 
-  typedef std::map<const std::string, valuePtr > mapStringValue;
+  typedef std::map< const std::string, valuePtr > mapStringValue;
   
 private:
   mapStringValue env;

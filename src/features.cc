@@ -240,7 +240,6 @@ Features::makeSerializationId()
 	serialId += (*f)->serialize();
       }
     }
-    serialId += ']';
   }
   return serialId;
 }

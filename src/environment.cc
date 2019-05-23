@@ -80,8 +80,10 @@ void Environment::add(std::string a, valuePtr b)
   ************************************************** */
  void Environment::add(bitsetPtr a, valuePtr b)
  {
-   std::string k = a->toString();
-   add (k, b);
+   //std::string k = a->toString();
+   std::string k = a->serialize();
+   //add ( a->toString(), b);
+   add ( k, b);
  }
 
 /* **************************************************
@@ -139,7 +141,7 @@ Environment::find(bitsetPtr variable) const
   cerr << "findValue: " << variable->toString() << std::endl;
   cerr << std::endl;
    ***/
-  Environment::mapStringValue::const_iterator it=env.find(variable->toString());
+  Environment::mapStringValue::const_iterator it=env.find(variable->serialize());
   if (it != env.end())
     ret = it->second;
   /*** 
@@ -163,7 +165,7 @@ Environment::print(std::ostream &out) const
   out << "<TABLE border=\"0\"><TR>";
   while(i!=end()){
     if (first)
-      first=false;
+      first = false;
     else
       out << "</TR><TR>";
     out << "<TD>";

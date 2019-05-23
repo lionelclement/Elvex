@@ -58,9 +58,7 @@ public:
   static bitsetPtr create(unsigned int=0);
   static bitsetPtr create(std::bitset<MAXBITS>);
   static bitsetPtr create(bitsetPtr);
-  std::string toString();
-  unsigned int toFirstInt();
-  static unsigned int toFirstInt(std::bitset<MAXBITS>);
+  std::string _toString(void);
 #ifdef OUTPUT_XML
   void toXML(xmlNodePtr);
   #endif

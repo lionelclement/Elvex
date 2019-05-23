@@ -90,16 +90,16 @@ bitsetPtr Bitset::create(bitsetPtr bs)
  *                                                            *
  ************************************************************ */
 std::string
-Bitset::toString()
+Bitset::_toString()
 {
   std::stringstream s;
   size_t c=this->count();
   size_t sz=this->size();
-  bool first=true;
+  bool first = true;
   for( size_t i = 0 ; i < sz && c > 0 ; ++i) {
-    if (this->test(i)){
+    if ((*this)[i]){
       --c;
-      if (first) first=false; else s<<'|';
+      if (first) first=false; else s << '|';
       s << bitsToStrTable[i];
     }
   }
@@ -112,44 +112,16 @@ Bitset::toString()
 const std::string
 Bitset::makeSerializationId()
 {
+  std::stringstream s;
   size_t c = this->count();
   size_t sz = this->size();
-  bool first = true;
-  serialId.clear();
   for( size_t i = 0 ; i < sz && c > 0 ; ++i) {
-    if (this->test(i)){
+    if ((*this)[i]){
       --c;
-      if (first) first=false; else serialId += '|';
-      serialId += std::to_string(i);
+      serialId += i + '.';
     }
   }
   return serialId;
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-unsigned int
-Bitset::toFirstInt()
-{
-  size_t sz=this->size();
-  for(size_t i = 0 ; i < sz; ++i )
-    if (this->test(i))
-      return i;
-  return 0;
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-unsigned int
-Bitset::toFirstInt(std::bitset< MAXBITS> b)
-{
-  size_t sz=b.size();
-  for(size_t i = 0 ; i < sz; ++i )
-    if (b.test(i))
-      return i;
-  return 0;
 }
 
 #ifdef OUTPUT_XML
