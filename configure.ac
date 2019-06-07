@@ -8,7 +8,7 @@ AC_PREREQ([2.69])
 # ====================
 m4_define([elvex_version_major],[2])
 m4_define([elvex_version_minor],[10])
-m4_define([elvex_version_micro],[1])
+m4_define([elvex_version_micro],[3])
 m4_define([elvex_version],[elvex_version_major.elvex_version_minor.elvex_version_micro])
 
 # =============
