@@ -1,8 +1,8 @@
 The full compilation of Elvex requires the following programs on your computer:
 
 — g++
-— flex
-— bison
+— flex (only if you need to recompile lex files)
+— bison (only if you need to recompile yacc file)
 — aclocal
 — automake 
 — autoconf
