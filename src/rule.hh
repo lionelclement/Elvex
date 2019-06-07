@@ -55,8 +55,7 @@ public:
   void setCurrentTerms(class Terms *);
 
   statementsPtr getStatements(void) const;
-  const unsigned int getUsages(void) const;
-  const unsigned int incUsages(void);
+  void incUsages(class Synthesizer *);
   void resetUsages(void);
 
   const unsigned int getLineno(void) const;

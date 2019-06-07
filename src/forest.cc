@@ -189,7 +189,7 @@ Forest::generate(bool random)
 	if (random)
 	  break;
 	else
-	  ++n;
+	++n;
       }
     }
   }

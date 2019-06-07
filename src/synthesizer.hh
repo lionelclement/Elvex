@@ -20,7 +20,6 @@
 
 #include <stack>
 #include <fstream>
-#include <list>
 #include <string>
 
 #include "forestidentifier.hh"
@@ -66,9 +65,6 @@ private:
   unsigned int maxLength;
   unsigned int maxUsages;
   unsigned int maxCardinal;
-  bool maxLengthMsg;
-  bool maxUsagesMsg;
-  bool maxCardinalMsg;
   std::string lexiconFileName;
   std::string grammarFileName;
   std::string inputFileName;
@@ -133,14 +129,10 @@ public:
 
   void setMaxLength(unsigned int);
   void setMaxUsages(unsigned int);
+  unsigned int getMaxUsages(void);
   void setMaxCardinal(unsigned int);
   unsigned int getMaxCardinal(void);
-  void setMaxLengthMsg(bool);
-  void setMaxUsagesMsg(bool);
-  void setMaxCardinalMsg(bool);
-  bool getMaxUsagesMsg(void) const;
-  bool getMaxCardinalMsg(void) const;
-
+  
   class Lex *getCompactLexicon(void) const;
   void setCompactLexicon(class Lex *);
 

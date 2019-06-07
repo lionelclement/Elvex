@@ -17,6 +17,8 @@
 
 #include <iostream>
 #include "memoizationmap.hh"
+#include "features.hh"
+#include "forestidentifier.hh"
 
 /* ************************************************************
  * 
@@ -25,24 +27,15 @@ std::map<std::string, std::list< memoizationValuePtr > >::iterator
 MemoizationMap::find(const std::string key)
 {
   auto memItem = map.find(key);
-  if (memItem != map.end()) {
 #ifdef TRACE_MEMOIZATION
-    std::cerr << "####################### RECORDED SHIFT FOUND " << key << " #######################" << std::endl;
+  if (memItem != map.end()) {
+    std::cerr << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
     std::cerr << "<BR>";
     std::cerr << std::endl;
-#endif
   }
+#endif
   return memItem;
 }
-
-/* ************************************************************
- * 
- ************************************************************ */
-// std::map<std::string, std::list< memoizationValuePtr > >::iterator MemoizationMap::begin() const
-// {
-//   return memoizationMap.begin();
-// }
-
 
 /* ************************************************************
  * 
@@ -56,12 +49,21 @@ MemoizationMap::end(void)
 /* ************************************************************
  * 
  ************************************************************ */
-void MemoizationMap::insert(const std::string key, std::list< memoizationValuePtr > &values)
+void MemoizationMap::insert(const std::string key, featuresPtr features, forestIdentifierPtr forestIdentifier)
 {
 #ifdef TRACE_MEMOIZATION
-  std::cerr << "####################### RECORD SHIFT " << key << " #######################" << std::endl;
+  std::cerr << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
   std::cerr << "<BR>";
   std::cerr << std::endl;
 #endif
-  map[key] = values;
+  memoizationValuePtr value = MemoizationValue::create(features, forestIdentifier);
+  auto memItem = map.find(key);
+  if (memItem != map.end()) {
+    memItem->second.push_back(value);
+  }
+  else {
+    std::list< memoizationValuePtr > values;
+    values.push_back(value);
+    map[key] = values;
+  }
 }

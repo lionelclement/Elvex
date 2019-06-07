@@ -518,6 +518,9 @@ const bool Item::Less::operator() (const itemPtr i1, const itemPtr i2) const
   if (i1->forestIdentifiers.size() != i2->forestIdentifiers.size())
       return  (i1->forestIdentifiers.size() < i2->forestIdentifiers.size());
   
+  if (i1->refs.size() != i2->refs.size())
+      return  (i1->refs.size() < i2->refs.size());
+  
   std::vector<unsigned int>::const_iterator ind1 = i1->indexTerms.begin();
   std::vector<unsigned int>::const_iterator ind2 = i2->indexTerms.begin();
   while (ind1 != i1->indexTerms.end()){
@@ -526,19 +529,27 @@ const bool Item::Less::operator() (const itemPtr i1, const itemPtr i2) const
     ++ind1; ++ind2;
   }
   
-  std::vector< forestIdentifierPtr >::const_iterator t1 = i1->forestIdentifiers.begin();
-  std::vector< forestIdentifierPtr >::const_iterator t2 = i2->forestIdentifiers.begin();
-  while (t1 != i1->forestIdentifiers.end()){
-    if (!*t1 || !*t2){
-      if (*t1 != *t2)
-	return  (*t1 < *t2);
+  std::set<unsigned int>::const_iterator ref1 = i1->refs.begin();
+  std::set<unsigned int>::const_iterator ref2 = i2->refs.begin();
+  while (ref1 != i1->refs.end()){
+    if ((*ref1) != (*ref2))
+      return  ((*ref1) < (*ref2));
+    ++ref1; ++ref2;
+  }
+  
+  std::vector< forestIdentifierPtr >::const_iterator fi1 = i1->forestIdentifiers.begin();
+  std::vector< forestIdentifierPtr >::const_iterator fi2 = i2->forestIdentifiers.begin();
+  while (fi1 != i1->forestIdentifiers.end()){
+    if (!*fi1 || !*fi2){
+      if (*fi1 != *fi2)
+	return  (*fi1 < *fi2);
     }
     else {
-      if ((**t1) != (**t2)){
-	return  ((**t1) < (**t2));
+      if ((**fi1) != (**fi2)){
+	return  ((**fi1) < (**fi2));
       }
     }
-    ++t1; ++t2;
+    ++fi1; ++fi2;
   }
 
   if (!(i1->inheritedFeatures) || !(i2->inheritedFeatures)){
@@ -622,7 +633,7 @@ void Item::defaultInheritedSonFeatures (){
        it != assignedInheritedSonFeatures.end();
        ++it, ++j)
     if (!(*it))
-      (*inheritedSonFeatures).push (j, Features::create());
+      (*inheritedSonFeatures).add (j, Features::create());
 }
 
 /* **************************************************
@@ -871,7 +882,7 @@ void
 Item::successor(itemSetPtr state, class Synthesizer *synthesizer, bool &effect)
 {
 #ifdef TRACE_SUCCESSOR
-  std::cerr << "####################### SUCCESSOR #######################" << std::endl;
+  std::cerr << "<H3>####################### SUCCESSOR #######################</H3>" << std::endl;
   this->print(std::cerr);
   std::cerr << std::endl;
 #endif
@@ -893,7 +904,7 @@ Item::successor(itemSetPtr state, class Synthesizer *synthesizer, bool &effect)
       this->setSeen(this->index, true);
     
 #ifdef TRACE_SUCCESSOR
-  std::cerr << "####################### SUCCESSOR DONE #######################" << std::endl;
+  std::cerr << "<H3>####################### SUCCESSOR DONE #######################</H3>" << std::endl;
   this->print(std::cerr);
   std::cerr << std::endl;
 #endif
@@ -910,7 +921,7 @@ Item::apply(itemSetPtr state, class Synthesizer *synthesizer)
     bool effect = true;
     while(effect){
 #ifdef TRACE_ACTION
-      std::cerr << "####################### ACTION #######################" << '(' << k << ')' << std::endl;
+      std::cerr << "<H3>####################### ACTION #######################</H3>" << '(' << k << ')' << std::endl;
       print(std::cerr);
       std::cerr << std::endl;
 #endif
@@ -920,7 +931,7 @@ Item::apply(itemSetPtr state, class Synthesizer *synthesizer)
       statements->apply(shared_from_this(), effect, synthesizer->getTrace());
       ++k;
 #ifdef TRACE_ACTION
-      std::cerr << "####################### ACTION DONE #######################" << '(' << k << ')' << std::endl;
+      std::cerr << "<H3>####################### ACTION DONE #######################</H3>" << '(' << k << ')' << std::endl;
       print(std::cerr);
       std::cerr << std::endl;
 #endif

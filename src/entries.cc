@@ -30,16 +30,17 @@ Entries::Entries(void)
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(entryPtr  entry)
+Entries::Entries(entryPtr entry)
 {
   NEW;
-  this->entries.push_front(entry);
+  //this->entries.push_front(entry);
+  this->entries.insert(this->entries.begin(), entry);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(std::list<entryPtr  >& entries)
+Entries::Entries(std::vector< entryPtr >& entries)
 {
   NEW;
   this->entries=entries;
@@ -51,7 +52,8 @@ Entries::Entries(std::list<entryPtr  >& entries)
 Entries::Entries(int codePos, int codeLemma, std::string form)
 {
   NEW;
-  this->entries.push_front(Entry::create(codePos, codeLemma, form));
+  //this->entries.push_front(Entry::create(codePos, codeLemma, form));
+  this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
 }
 
 /* **************************************************
@@ -59,7 +61,7 @@ Entries::Entries(int codePos, int codeLemma, std::string form)
  ************************************************** */
 Entries::~Entries()
 {
-  for (std::list<entryPtr  >::iterator i=entries.begin();
+  for (std::vector< entryPtr >::iterator i=entries.begin();
        i!=entries.end();
        i++) {
     entryPtr tmp = *i;
@@ -88,7 +90,7 @@ entriesPtr Entries::create(entryPtr  entry)
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(std::list<entryPtr  > &entries)
+entriesPtr Entries::create(std::vector< entryPtr > &entries)
 {
   return entriesPtr( new Entries(entries) );
 }
@@ -112,7 +114,7 @@ const size_t Entries::size(void) const
 /* **************************************************
  *
  ************************************************** */
-std::list<entryPtr >::const_iterator Entries::begin(void) const
+std::vector<entryPtr >::const_iterator Entries::begin(void) const
 {
   return this->entries.begin();
 }
@@ -120,9 +122,17 @@ std::list<entryPtr >::const_iterator Entries::begin(void) const
 /* **************************************************
  *
  ************************************************** */
-std::list<entryPtr >::const_iterator Entries::end(void) const
+std::vector<entryPtr >::const_iterator Entries::end(void) const
 {
   return this->entries.end();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entryPtr Entries::at(size_t i) const
+{
+  return this->entries.at(i);
 }
 
 /* **************************************************
@@ -141,7 +151,7 @@ void
 Entries::toXML(xmlNodePtr nodeRoot) const
 {
   xmlNodePtr node=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRIES", NULL);
-  for (std::list<entryPtr  >::const_iterator i=entries.begin();
+  for (std::vector< entryPtr >::const_iterator i=entries.begin();
        i!=entries.end();
        i++)
     (*i)->toXML(node);
@@ -154,7 +164,7 @@ Entries::toXML(xmlNodePtr nodeRoot) const
 void
 Entries::print(std::ostream& out) const
 {
-  for (std::list<entryPtr  >::const_iterator i = entries.begin();
+  for (std::vector< entryPtr >::const_iterator i = entries.begin();
        i != entries.end();
        ++i)
     (*i)->print(out);

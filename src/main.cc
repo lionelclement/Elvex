@@ -83,22 +83,22 @@ void generate(void) {
     synthesizer.generate();
   if (synthesizer.getNodeRoot() && synthesizer.getNodeRoot()->getForests().size() > 0) {
     std::vector<forestPtr>::const_iterator forestIterator = synthesizer.getNodeRoot()->getForests().begin();
-    if (synthesizer.getRandom()) {
+    /*if (synthesizer.getRandom()) {
       int rv = std::rand()/((RAND_MAX + 1u)/synthesizer.getNodeRoot()->getForests().size());
       int i = 0;
       while (i++ < rv)
 	++forestIterator;
-    }
+	}*/
     while (forestIterator != synthesizer.getNodeRoot()->getForests().end()) {
       for (std::vector<std::string>::const_iterator i = (*forestIterator)->getOutput().begin();
 	   i != (*forestIterator)->getOutput().end();
 	   ++i){
 	std::cout << *i << std::endl;
       }
-      if (synthesizer.getRandom()) 
-	break;
-      else
-	++forestIterator;
+      //if (synthesizer.getRandom()) 
+      //break;
+      //else
+      ++forestIterator;
     }
   }
 }
@@ -138,67 +138,66 @@ int main(int argn, char **argv) {
 	  }
 
 	  else if (!strcmp(argv[arg]+1, "r") || !strcmp(argv[arg] + 1, "-random")) {
-	    CERR_LINE;
 	    std::srand(time(nullptr));
 	    synthesizer.setRandom(true);
 	  }
-
+	  
 	  else if (!strcmp(argv[arg] + 1, "lexiconFile")) {
-	    if (argv[arg + 1] != NULL) {
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setLexiconFileName(argv[++arg]);
-	    } else {
+	    else {
 	      Usage(argv);
 	      return EXIT_FAILURE;
 	    }
 	  }
 
 	  else if (!strcmp(argv[arg] + 1, "grammarFile")) {
-	    if (argv[arg + 1] != NULL)
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setGrammarFileName(argv[++arg]);
 	    else {
 	      Usage(argv);
 	      return EXIT_FAILURE;
 	    }
 	  }
-
+	  
 	  else if (!strcmp(argv[arg] + 1, "inputFile")) {
-	    if (argv[arg + 1] != NULL) {
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setInputFileName(argv[++arg]);
-	    } else {
+	    else {
 	      Usage(argv);
 	      return EXIT_FAILURE;
 	    }
 	  }
-
+	  
 	  else if (!strcmp(argv[arg] + 1, "maxLength")) {
-	    if (argv[arg + 1] != NULL)
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setMaxLength(atoi(argv[++arg]));
 	    else {
 	      Usage(argv);
 	      return EXIT_FAILURE;
 	    }
 	  }
-
+	  
 	  else if (!strcmp(argv[arg] + 1, "maxUsages")) {
-	    if (argv[arg + 1] != NULL)
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setMaxUsages(atoi(argv[++arg]));
 	    else {
 	      Usage(argv);
 	      return EXIT_FAILURE;
 	    }
 	  }
-
+	  
 	  else if (!strcmp(argv[arg] + 1, "maxCardinal")) {
-	    if (argv[arg + 1] != NULL)
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setMaxCardinal(atoi(argv[++arg]));
 	    else {
 	      Usage(argv);
 	      return EXIT_FAILURE;
 	    }
 	  }
-
+	  
 	  else if (!strcmp(argv[arg] + 1, "maxTime")) {
-	    if (argv[arg + 1] != NULL) {
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-')) {
 	      signal(SIGALRM, seq);
 	      alarm(atoi(argv[++arg]));
 	      time(&start);
@@ -207,9 +206,9 @@ int main(int argn, char **argv) {
 	      return EXIT_FAILURE;
 	    }
 	  }
-
+	  
 	  else if (!strcmp(argv[arg] + 1, "compactDirectory")) {
-	    if (argv[arg + 1] != NULL)
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setCompactDirectoryName(argv[++arg]);
 	    else {
 	      Usage(argv);
@@ -218,7 +217,7 @@ int main(int argn, char **argv) {
 	  }
 	  
 	  else if (!strcmp(argv[arg] + 1, "compactLexiconFile")) {
-	    if (argv[arg + 1] != NULL)
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setCompactLexiconFileName(argv[++arg]);
 	    else {
 	      Usage(argv);
@@ -228,7 +227,7 @@ int main(int argn, char **argv) {
 	  
 #ifdef OUTPUT_XML
 	  else if (!strcmp (argv[arg]+1, "xml")) {
-	    if (argv[arg+1]!=NULL) {
+	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-')) {
 	      synthesizer.setOutXML(strdup(argv[++arg]));
 	    } else {
 	      Usage(argv);
@@ -245,6 +244,8 @@ int main(int argn, char **argv) {
 	  }
 	}
       }
+      
+      //std::cerr << synthesizer.getMaxCardinal() << std::endl;
       
       if (synthesizer.getLexiconFileName().length() > 0) {
 #ifdef TRACE_INIT

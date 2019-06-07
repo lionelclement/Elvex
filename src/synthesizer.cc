@@ -52,9 +52,6 @@ Synthesizer::Synthesizer(void) {
   this->maxLength = MAXLENGTH;
   this->maxUsages = MAXUSAGES;
   this->maxCardinal = MAXCARDINAL;
-  this->maxLengthMsg = false;
-  this->maxUsagesMsg = false;
-  this->maxCardinalMsg = false;
   this->nodeRoot = nodePtr();
   this->startFeatures = featuresPtr();
   this->startTerm = NULL;
@@ -281,41 +278,9 @@ Synthesizer::getMaxCardinal(void) {
 /* **************************************************
  *
  ************************************************** */
-void 
-Synthesizer::setMaxLengthMsg(bool b) {
-  this->maxLengthMsg = b;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void 
-Synthesizer::setMaxUsagesMsg(bool b) {
-  this->maxUsagesMsg = b;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void 
-Synthesizer::setMaxCardinalMsg(bool b) {
-  this->maxCardinalMsg = b;
-}
-
-/* **************************************************
- *
- ************************************************** */
-bool 
-Synthesizer::getMaxCardinalMsg(void) const {
-  return this->maxCardinalMsg;
-}
-
-/* **************************************************
- *
- ************************************************** */
-bool 
-Synthesizer::getMaxUsagesMsg(void) const {
-  return this->maxUsagesMsg;
+unsigned int 
+Synthesizer::getMaxUsages(void) {
+  return this->maxUsages;
 }
 
 /* **************************************************
@@ -650,6 +615,10 @@ std::string
 Synthesizer::keyMemoization(itemPtr actualItem)
 {
   //return std::to_string(actualItem->getId()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->serialize();
+  //CERR_LINE;
+  //actualItem->getCurrentTerm()->print(cerr);
+  //(*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->print(cerr);
+  
   return std::to_string(actualItem->getCurrentTerm()->getCode()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->serialize();
 }
 #endif
@@ -676,9 +645,6 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
   bool modification;
   do {
   loop:
-    //if (getMaxCardinalMsg()) {
-    //FATAL_ERROR_MSG("maxCardinal");
-    //}
     modification = false;
 
     // Iterate through list
@@ -690,7 +656,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	continue;
       
 #ifdef TRACE_CLOSE
-      std::cerr << "####################### CLOSE #######################" << std::endl;
+      std::cerr << "<H3>####################### CLOSE #######################</H3>" << std::endl;
       (*actualItem)->print(std::cerr);
       std::cerr << std::endl;
 #endif
@@ -702,7 +668,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	  && (*actualItem)->getCurrentTerms()->isOptional()) {
 
 #ifdef TRACE_UNHIDE
-	std::cerr << "####################### UNHIDE #######################" << std::endl;
+	std::cerr << "<H3>####################### UNHIDE #######################</H3>" << std::endl;
 	(*actualItem)->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -725,7 +691,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	it->setIndex((*actualItem)->getIndex()+1);
 	it->addRanges(row);
 #ifdef TRACE_UNHIDE
-	std::cerr << "####################### UNHIDE: X -> alpha [Y] • gamma #######################" << std::endl;
+	std::cerr << "<H3>####################### UNHIDE: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
 	it->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -739,7 +705,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	it->setIndex((*actualItem)->getIndex());
 	it->getCurrentTerms()->unsetOptional();
 #ifdef TRACE_UNHIDE
-	std::cerr << "####################### UNHIDE: X -> alpha • Y gamma #######################" << std::endl;
+	std::cerr << "<H3>####################### UNHIDE: X -> alpha • Y gamma #######################</H3>" << std::endl;
 	it->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -760,7 +726,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	  && (*actualItem)->getCurrentTerms()->size() > 1) {
 	
 #ifdef TRACE_UNFOLD
-	std::cerr << "####################### UNFOLD #######################" << std::endl;
+	std::cerr << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
 	(*actualItem)->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -777,7 +743,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	  it->getIndexTerms()[(*actualItem)->getIndex()] = indexTerm1;
 
 #ifdef TRACE_UNHIDE
-	  std::cerr << "####################### UNFOLD: insert #######################" << std::endl;
+	  std::cerr << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
 	  it->print(std::cerr);
 	  std::cerr << std::endl;
 #endif
@@ -793,11 +759,6 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
       }
       
       (*actualItem)->apply(state, this);
-#ifdef TRACE_CLOSE
-      std::cerr << "####################### APPLIED #######################" << std::endl;
-      (*actualItem)->print(std::cerr);
-      std::cerr << std::endl;
-#endif
       if ((*actualItem)->isSetFlags(Flags::BOTTOM)) {
 	state->erase((*actualItem));
 	eraseItemMap((*actualItem)->getId());
@@ -814,7 +775,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	       && !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
 
 #ifdef TRACE_CLOSE
-	std::cerr << "####################### CLOSE (X -> α • Y β) #######################" << std::endl;
+	std::cerr << "<H3>####################### CLOSE (X -> α • Y β) #######################</H3>" << std::endl;
 	(*actualItem)->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -834,40 +795,32 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	    if (((*iterRules)->getLhs()->getCode() == (*actualItem)->getCurrentTerm()->getCode())) {
 	      
 	      itemPtr it;
-	      unsigned int i = (*iterRules)->incUsages();
-	      if (i > maxUsages) {
-		setMaxUsagesMsg(true);
-	      } else {
-		it = Item::create((*iterRules)->clone(), 0, 0, (*iterRules)->getStatements() ? (*iterRules)->getStatements()->clone(0) : statementsPtr());
-		it->addRanges(row);
-		it->setInheritedFeatures(inheritedSonFeatures->clone());
-
+	      (*iterRules)->incUsages(this);
+	      it = Item::create((*iterRules)->clone(), 0, 0, (*iterRules)->getStatements() ? (*iterRules)->getStatements()->clone(0) : statementsPtr());
+	      it->addRanges(row);
+	      it->setInheritedFeatures(inheritedSonFeatures->clone());
+	      
 #ifdef TRACE_CLOSE
-		std::cerr << "####################### CLOSE (Y -> • γ) #######################" << std::endl;
-		it->print(std::cerr);
-		std::cerr << std::endl;
+	      std::cerr << "<H3>####################### CLOSE (Y -> • γ) #######################</H3>" << std::endl;
+	      it->print(std::cerr);
+	      std::cerr << std::endl;
 #endif
-
-		// record the item
-		ItemSet::iterator found = state->find(it);
-		if (found != state->end()) {
-		  (*found)->addRef((*actualItem)->getId());
-		  it.reset();
+	      
+	      // record the item
+	      ItemSet::iterator found = state->find(it);
+	      if (found != state->end()) {
+		(*found)->addRef((*actualItem)->getId());
+		it.reset();
+	      } else {
+		it->addRef((*actualItem)->getId());
+		if (!state->insert(it, this)){
+		  FATAL_ERROR;
 		} else {
-		  it->addRef((*actualItem)->getId());
-		  if (!state->insert(it, this)){
-		    FATAL_ERROR;
-		  } else {
-		    insertItemMap(it);
-		  }
-		  if (getMaxCardinalMsg()) {
-		    FATAL_ERROR_MSG("maxCardinal");
-		  }
+		  insertItemMap(it);
 		}
-		modification = true;
-		(*actualItem)->addFlags(Flags::SEEN);
-		//goto loop;
 	      }
+	      modification = true;
+	      (*actualItem)->addFlags(Flags::SEEN);
 	    }
 	  }
 	}
@@ -877,11 +830,11 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
       else if ((*actualItem)->isCompleted()) {
 
 	if (trace) {
-	  std::cerr << "*** Rule reduced " << (*actualItem)->getFilename() << '(' << (*actualItem)->getLineno() << ')' << std::endl;
+	  std::cout << "*** Rule reduced " << (*actualItem)->getFilename() << '(' << (*actualItem)->getLineno() << ')' << std::endl;
 	}
 	
 #ifdef TRACE_REDUCE
-	std::cerr << "####################### REDUCE Y -> γ • (actual) #######################" << std::endl;
+	std::cerr << "<H3>####################### REDUCE Y -> γ • (actual) #######################</H3>" << std::endl;
 	(*actualItem)->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -901,7 +854,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	    // If Axiom reduced or debug Transients
 	    if (reduceAll || (*actualItem)->getRefs().size() == 0) {
 #ifdef TRACE_REDUCE
-	      std::cerr << "####################### REDUCE S -> γ • (AXIOM REDUCED) #######################" << std::endl;
+	      std::cerr << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
 	      (*actualItem)->print(std::cerr);
 	      std::cerr << std::endl;
 	      
@@ -912,7 +865,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		(*actualItem)->getEnvironment()->replaceVariables((*actualItem)->getSynthesizedFeatures(), effect);
 		if (effect){
 #ifdef TRACE_REDUCE
-		  std::cerr << "####################### REDUCE S -> γ • (AXIOM REDUCED) #######################" << std::endl;
+		  std::cerr << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
 		  (*actualItem)->print(std::cerr);
 		  std::cerr << std::endl;
 		  
@@ -960,7 +913,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	      } else {
 		
 #ifdef TRACE_REDUCE
-		std::cerr << "####################### REDUCE (X -> α • Y β) (previous) #######################" << std::endl;
+		std::cerr << "<H3>####################### REDUCE (X -> α • Y β) (previous) #######################</H3>" << std::endl;
 		previousItem->print(std::cerr);
 		std::cerr << std::endl;
 #endif
@@ -981,7 +934,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		    // New item build
 		    itemPtr it = createItem(previousItem, row);
 		    it->setEnvironment(previousItem->getEnvironment() ? previousItem->getEnvironment()->clone() : environmentPtr());
-		    it->getSynthesizedSonFeatures()->push(previousItem->getIndex(), (*i)->getFeatures());
+		    it->getSynthesizedSonFeatures()->add(previousItem->getIndex(), (*i)->getFeatures());
 		    //...
 		    featuresPtr inheritedFeatures = it->getInheritedFeatures();
 		    if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom()) {
@@ -995,7 +948,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		    it->addForestIdentifiers(previousItem->getIndex(), (*i)->getForestIdentifier());
 		    
 #ifdef TRACE_MEMOIZATION
-		    std::cerr << "####################### MEMOIZED REDUCE (X -> α Y • β) #######################" << std::endl;
+		    std::cerr << "<H3>####################### MEMOIZED REDUCE (X -> α Y • β) #######################</H3>" << std::endl;
 		    it->print(std::cerr);
 		    std::cerr << std::endl;
 #endif
@@ -1009,9 +962,6 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      if (!states[row]->insert(it, this)) {
 			FATAL_ERROR;
 		      } else {
-			if (getMaxCardinalMsg()) {
-			  FATAL_ERROR_MSG("maxCardinal");
-			}
 			insertItemMap(it);
 			modification = true;
 		      }
@@ -1026,7 +976,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		  {
 		    itemPtr it = createItem(previousItem, row);
 		    it->setEnvironment(previousItem->getEnvironment() ? previousItem->getEnvironment()->clone() : environmentPtr());
-		    it->getSynthesizedSonFeatures()->push(previousItem->getIndex(), (*actualItem)->getSynthesizedFeatures()->clone());
+		    it->getSynthesizedSonFeatures()->add(previousItem->getIndex(), (*actualItem)->getSynthesizedFeatures()->clone());
 		    
 		    //...
 		    featuresPtr inheritedFeatures = it->getInheritedFeatures();
@@ -1063,7 +1013,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      //FATAL_ERROR;
 		    }
 #ifdef TRACE_REDUCE
-		    std::cerr << "####################### REDUCE (X -> α Y • β) #######################" << std::endl;
+		    std::cerr << "<H3>####################### REDUCE (X -> α Y • β) #######################</H3>" << std::endl;
 		    it->print(std::cerr);
 		    std::cerr << std::endl;
 #endif
@@ -1076,19 +1026,9 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 #ifdef MEMOIZATION_REDUCE
 		      // tabulates this result
 		      // std::string key = keyMemoization(*actualItem, previousItem);
-		      memoizationValuePtr memValue = MemoizationValue::create((*it->getSynthesizedSonFeatures())[it->getIndex()-1],
-									      it->getForestIdentifiers()[it->getIndex()-1]);
-		      auto memItem = memoizedMap.find(key);
-		      
-		      // Is this reduce action already done ?
-		      if (memItem != memoizedMap.end()) {
-			memItem->second.push_back(memValue);
-		      }
-		      else {
-			std::list< memoizationValuePtr > memValues;
-			memValues.push_back(memValue);
-			memoizedMap.insert(key, memValues);
-		      }
+		      memoizedMap.insert(key,
+					 (*it->getSynthesizedSonFeatures())[it->getIndex()-1],
+					 it->getForestIdentifiers()[it->getIndex()-1]);
 #endif
 #endif
 		      // record the item
@@ -1096,9 +1036,6 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      if (!states[row]->insert(it, this)){
 			FATAL_ERROR;
 		      } else {
-			if (getMaxCardinalMsg()) {
-			  FATAL_ERROR_MSG("maxCardinal");
-			}
 			insertItemMap(it);
 			modification = true;
 		      }
@@ -1120,7 +1057,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	       && grammar.isTerminal((*actualItem)->getCurrentTerm())
 	       && !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
 #ifdef TRACE_CLOSE
-	std::cerr << "#######################  X -> alpha • t beta #######################" << std::endl;
+	std::cerr << "<H3>#######################  X -> alpha • t beta #######################</H3>" << std::endl;
 	(*actualItem)->print(std::cerr);
 	std::cerr << std::endl;
 #endif
@@ -1163,7 +1100,7 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 	    && grammar.getTerminals().find((*actualItem)->getCurrentTerm()->getCode()) != grammar.getTerminals().end()) {
 	  
 #ifdef TRACE_SHIFT
-	  std::cerr << "####################### SHIFT (X -> α • ω β) where ω ∈ ℒ #######################" << std::endl;
+	  std::cerr << "<H3>####################### SHIFT (X -> α • ω β) where ω ∈ ℒ #######################</H3>" << std::endl;
 	  (*actualItem)->print(std::cerr);
 	  std::cerr << std::endl;
 #endif
@@ -1182,33 +1119,36 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 	  if (memItem != memoizedMap.end()) {
 	    std::list< memoizationValuePtr > result = memItem->second;
 	    
-	    for (std::list< memoizationValuePtr >::const_iterator i = result.begin();
-		 i != result.end();
-		 ++i) {
+	    for (std::list< memoizationValuePtr >::const_iterator memoizedValue = result.begin();
+		 memoizedValue != result.end();
+		 ++memoizedValue) {
 	      // New item build
 	      itemPtr it = createItem(*actualItem, row);
-	      it->getSynthesizedSonFeatures()->push((*actualItem)->getIndex(), (*i)->getFeatures());
+	      it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(), (*memoizedValue)->getFeatures());
 	      it->setEnvironment((*actualItem)->getEnvironment() ? (*actualItem)->getEnvironment()->clone() : Environment::create());
-	      it->addForestIdentifiers((*actualItem)->getIndex(), (*i)->getForestIdentifier());
+	      it->addForestIdentifiers((*actualItem)->getIndex(), (*memoizedValue)->getForestIdentifier());
 	      
 #ifdef TRACE_MEMOIZATION
-	      std::cerr << "####################### MEMOIZED SHIFT (X -> α ω • β) #######################" << std::endl;
+	      std::cerr << "<H3>####################### MEMOIZED SHIFT (X -> α ω • β) #######################</H3>" << std::endl;
 	      it->print(std::cerr);
 	      std::cerr << std::endl;
 #endif
 	      it->setRefs((*actualItem)->getRefs());
 	      if (!states[row]->insert(it, this)){
+		std::cerr << "<H3>####################### STAGE " << states[row]->getId() << " #######################</H3>" << std::endl;
+		states[row]->print(std::cerr);
+		std::cerr << std::endl;
+		std::cerr << "ERROR" << std::endl;
+		it->print(std::cerr);
+		std::cerr << std::endl;
 		FATAL_ERROR;
 	      }
 	      else {
 		insertItemMap(it);
+		modification = true;
+		modificationOnce = true;
+		(*actualItem)->addFlags(Flags::SEEN);
 	      }
-	      if (getMaxCardinalMsg()) {
-		FATAL_ERROR_MSG("maxCardinal");
-	      }
-	      modification = true;
-	      modificationOnce = true;
-	      (*actualItem)->addFlags(Flags::SEEN);
 	    }
 	  }
 	  // This shift action is new
@@ -1279,17 +1219,19 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 		  // Found !
 		  if (entries) {
 		    cont = false;
-		    std::list<entryPtr>::const_iterator entry = entries->begin();
-		    if (random) {
+		    std::vector<entryPtr>::const_iterator entryIt = entries->begin();
+		    entryPtr entry;
+		    if (this->getRandom()) {
 		      int rv = std::rand()/((RAND_MAX + 1u)/entries->size());
-		      int i = 0;
-		      while (i++ < rv)
-			++entry;
+		      entry = entries->at(rv);
+		    }
+		    else {
+		      entry = *entryIt;
 		    }
 		    int attempts = 1;
-		    while (entry != entries->end()) {
+		    while (entryIt != entries->end()) {
 		      
-		      featuresPtr entryFeatures = (*entry)->getFeatures() ? (*entry)->getFeatures()->clone() : featuresPtr();
+		      featuresPtr entryFeatures = entry->getFeatures() ? entry->getFeatures()->clone() : featuresPtr();
 		      statementsPtr entryStatements = statementsPtr();
 		      environmentPtr env = (*actualItem)->getEnvironment() ? (*actualItem)->getEnvironment()->clone() : Environment::create();
 		      
@@ -1297,6 +1239,7 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 		      // entryFeatures subsumes ↑
 		      if (stage == 2
 			  || (entryFeatures && entryFeatures->subsumes(inheritedSonFeatures, env))) {
+
 			// New item build
 			itemPtr it = createItem(*actualItem, row);
 
@@ -1316,23 +1259,23 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			    bool effect = false;
 			    it->getEnvironment()->replaceVariables(resultFeatures, effect);
 			  }
-			  resultFeatures->renameVariables((*entry)->getId());
+			  resultFeatures->renameVariables(entry->getId());
 			}
 			
-			it->getSynthesizedSonFeatures()->push((*actualItem)->getIndex(), resultFeatures);
+			it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(), resultFeatures);
 			if (entryStatements)
-			  entryStatements->renameVariables((*entry)->getId());
+			  entryStatements->renameVariables(entry->getId());
 			entryPtr word;
 			if (stage == 2)
-			  word = Entry::create((*entry)->getCode(), UINT_MAX, form, resultFeatures);
+			  word = Entry::create(entry->getCode(), UINT_MAX, form, resultFeatures);
 			else {
-			  size_t found = (*entry)->getForm().find('$');
+			  size_t found = entry->getForm().find('$');
 			  if (found != std::string::npos){
 			    bool effect = false;
-			    word = Entry::create((*entry)->getCode(), (*entry)->getCodePred(), it->getEnvironment()->replaceVariables((*entry)->getForm(), effect), resultFeatures);
+			    word = Entry::create(entry->getCode(), entry->getCodePred(), it->getEnvironment()->replaceVariables(entry->getForm(), effect), resultFeatures);
 			  }
 			  else
-			    word = Entry::create((*entry)->getCode(), (*entry)->getCodePred(), (*entry)->getForm(), resultFeatures);
+			    word = Entry::create(entry->getCode(), entry->getCodePred(), entry->getForm(), resultFeatures);
 			}
 			forestIdentifierPtr fi = ForestIdentifier::create(word->getId(), resultFeatures->serialize(), row - 1, row);
 			ForestMap::mapForestIdentifierForest::const_iterator forestMapIt = forestMap.find(fi);
@@ -1341,47 +1284,42 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			  fi.reset();
 			  //std::cerr << "stage : " << stage << "<BR>" << std::endl;
 			  //std::cerr << "pred : " << Vartable::intToStr(pred) << "<BR>" << std::endl;
-			  //std::cerr << "form : " << form << "<BR>" << std::endl;
+			  //std::cout << "form : " << form << "<BR>" << std::endl;
 			} else {
 			  forestMap.insert(std::pair<forestIdentifierPtr, forestPtr>(fi, Forest::create(word, row - 1, row)));
 			  it->addForestIdentifiers((*actualItem)->getIndex(), fi);
 			}
+			it->setRefs((*actualItem)->getRefs());
 			
 #ifdef TRACE_SHIFT
-			std::cerr << "####################### SHIFT (X -> α ω • β) #######################" << std::endl;
+			std::cerr << "<H3>####################### SHIFT (X -> α ω • β) #######################</H3>" << std::endl;
 			it->print(std::cerr);
 			std::cerr << std::endl;
 #endif
 #ifdef MEMOIZATION
 #ifdef MEMOIZATION_SHIFT
 			// tabulates this result
-			memoizationValuePtr memValue = MemoizationValue::create((*it->getSynthesizedSonFeatures())[it->getIndex()-1],
-										it->getForestIdentifiers()[it->getIndex()-1]);
-			auto memItem = memoizedMap.find(key);
-			// Is this shift action already done ?
-			if (memItem != memoizedMap.end()) {
-			  memItem->second.push_back(memValue);
-			}
-			else {
-			  std::list< memoizationValuePtr > memValues;
-			  memValues.push_back(memValue);
-			  memoizedMap.insert(key, memValues);
-			}
+			memoizedMap.insert(key,
+					   (*it->getSynthesizedSonFeatures())[it->getIndex()-1],
+					   it->getForestIdentifiers()[it->getIndex()-1]);
 #endif
 #endif
 			// record the item
-			it->setRefs((*actualItem)->getRefs());
-			states[row]->insert(it, this);
-			if (getMaxCardinalMsg()) {
-			  FATAL_ERROR_MSG("maxCardinal");
+			if (!states[row]->insert(it, this)) {
+			  std::cerr << "<H3>####################### STAGE #######################</H3>" << std::endl;
+			  states[row]->print(std::cerr);
+			  std::cerr << std::endl;
+			  std::cerr << "ERROR" << std::endl;
+			  it->print(std::cerr);
+			  std::cerr << std::endl;
+			  FATAL_ERROR;
 			}
 			insertItemMap(it);
+			modification = true;
+			modificationOnce = true;
+			(*actualItem)->addFlags(Flags::SEEN);
 		      }
-		      modification = true;
-		      modificationOnce = true;
-		      (*actualItem)->addFlags(Flags::SEEN);
-		      
-		      if (random) {
+		      if (this->getRandom()) {
 			if (modification) {
 			  break;
 			}
@@ -1393,15 +1331,14 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			    std::cerr << std::endl;
 			    exit(1);
 			  }
-			  entry = entries->begin();
 			  int rv = std::rand()/((RAND_MAX + 1u)/entries->size());
-			  int i = 0;
-			  while (i++ < rv)
-			    ++entry;
+			  entry = entries->at(rv);
 			}
 		      }
 		      else {
-			++entry;
+			++entryIt;
+			if (entryIt != entries->end())
+			  entry = *entryIt;
 		      }
 		    }
 		  }
@@ -1444,20 +1381,17 @@ Synthesizer::generate() {
   for (std::list<class Rule *>::const_iterator rule = rules->begin();
        rule != rules->end();
        ++rule) {
-    (*rule)->incUsages();
+    (*rule)->incUsages(this);
     it = Item::create(*rule, UINT_MAX, 0, (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
     it->addRanges(0);
     it->setInheritedFeatures(getStartFeatures());
 #ifdef TRACE_INIT
-    std::cerr << "####################### INIT #######################" << std::endl;
+    std::cerr << "<H3>####################### INIT #######################</H3>" << std::endl;
     it->print(std::cerr);
     std::cerr << std::endl;
 #endif
     insertItemMap(it);
     initState->insert(it, this);
-    if (getMaxCardinalMsg()) {
-      FATAL_ERROR_MSG("maxCardinal");
-    }
   }
 
   states.insert(std::pair<unsigned int, itemSetPtr>(0, initState));
@@ -1467,7 +1401,7 @@ Synthesizer::generate() {
   while (i <= maxLength) {
 
 #ifdef TRACE_STAGE
-    std::cerr << "####################### STAGE #######################" << std::endl;
+    std::cerr << "<H3>####################### STAGE " << initState->getId() << " #######################</H3>" << std::endl;
     initState->print(std::cerr);
     std::cerr << std::endl;
 #endif
@@ -1488,10 +1422,7 @@ Synthesizer::generate() {
     std::cerr << "Length : " << i << std::endl;
   }
 
-  if (getMaxUsagesMsg()) {
-    FATAL_ERROR_MSG("maxUsages");
-  }
-  nodeRoot->generate(this->random);
+  nodeRoot->generate(false && this->getRandom());
 #ifdef OUTPUT_XML
   if (outXML) {
     nodeRoot->toXML(xmlNodeRoot, xmlNodeRoot);
@@ -1545,7 +1476,7 @@ Synthesizer::findCompactLexicon(const unsigned int code, const unsigned int pred
   // in : pos#lemma
   // out : form#fs
 #ifdef TRACE_LEXICON
-  std::cerr << "####################### FIND IN THE COMPACT LEXICON #######################" << std::endl;
+  std::cerr << "<H3>####################### FIND IN THE COMPACT LEXICON #######################</H3>" << std::endl;
   std::cerr << "<DIV>" << std::endl;
   std::cerr << str << " => ";
 compactLexicon->printResults(std::cerr, info, 1);

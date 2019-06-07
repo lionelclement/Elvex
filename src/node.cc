@@ -149,7 +149,7 @@ Node::generate(vectorForests::const_iterator forest)
       else {
 	for (std::vector<std::string>::iterator o = output.begin(); o != output.end(); ++o){
 	  if (o->size() != 0 && s->size() != 0) {
-	    *o = *o + " " + *s;
+	    *o = *o + ' ' + *s;
 	  }
 	  else if (s->size() != 0) {
 	    *o = *s;

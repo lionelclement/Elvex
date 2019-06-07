@@ -31,12 +31,10 @@ private:
   std::map<std::string, std::list< memoizationValuePtr > > map;
 
 public:
-  //std::map<std::string, std::list< MemoizationValue* > >::iterator begin(void) ;
   std::map<std::string, std::list< memoizationValuePtr > >::iterator end(void) ;
   std::map<std::string, std::list< memoizationValuePtr > >::iterator find(const std::string);
-  void insert(std::string, std::list< memoizationValuePtr > &);
-  //void push_back(MemoizationValue*);
-  //void print(std::ostream &) const;
+  //void insert(std::string, memoizationValuePtr);
+  void insert(std::string, featuresPtr, forestIdentifierPtr);
   
 };  
 #endif // MEMOIZATIONMAP_H

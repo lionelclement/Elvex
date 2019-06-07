@@ -76,7 +76,7 @@ void ListFeatures::push_back(featuresPtr fs)
 /* **************************************************
  *
  ************************************************** */
-void ListFeatures::push(unsigned int j, featuresPtr fs)
+void ListFeatures::add(unsigned int j, featuresPtr fs)
 {
   listFeatures[j] = fs;
 }

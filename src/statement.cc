@@ -1861,7 +1861,7 @@ Statement::buildInheritedSonFeatures(itemPtr item, bool &result)
   if (features->isNil())
     result = false;
   else
-    item->getInheritedSonFeatures()->push(lhs->getFirst(), features);
+    item->getInheritedSonFeatures()->add(lhs->getFirst(), features);
 }
 
 /* ************************************************************

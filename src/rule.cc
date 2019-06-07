@@ -20,6 +20,7 @@
 #include "terms.hh"
 #include "statements.hh"
 #include "messages.hh"
+#include "synthesizer.hh"
 
 /* ************************************************************
  *
@@ -118,17 +119,11 @@ statementsPtr Rule::getStatements(void) const
 /* ************************************************************
  *
  ************************************************************ */
-const unsigned int Rule::getUsages(void) const 
+void Rule::incUsages(class Synthesizer *synthesizer)
 {
-  return usages;
-}
-
-/* ************************************************************
- *
- ************************************************************ */
-const unsigned int Rule::incUsages(void)
-{
-  return ++usages;
+  if (++usages > synthesizer->getMaxUsages()) {
+    FATAL_ERROR_MSG("maxUsages");
+  }
 }
 
 /* ************************************************************

@@ -63,6 +63,7 @@ public:
 #endif
   
   void generate(bool);
+  //void generate(void);
 
 };
 #endif // FOREST_H

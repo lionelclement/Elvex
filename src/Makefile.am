@@ -53,10 +53,10 @@ elvex_OPTIONS =
 elvex_OPTIONS += -DMEMOIZATION
 elvex_OPTIONS += -DMEMOIZATION_SHIFT
 elvex_OPTIONS += -DMEMOIZATION_REDUCE
-elvex_OPTIONS += -DMAXLENGTH=1000
-elvex_OPTIONS += -DMAXUSAGES=1000
-elvex_OPTIONS += -DMAXCARDINAL=1000
-elvex_OPTIONS += -DMAXATTEMPTS=1000
+elvex_OPTIONS += -DMAXLENGTH=10000
+elvex_OPTIONS += -DMAXUSAGES=10000
+elvex_OPTIONS += -DMAXCARDINAL=10000
+elvex_OPTIONS += -DMAXATTEMPTS=10000
 elvex_OPTIONS += -DMAXBITS=512
 
 elvex_CXXFLAGS = -std=c++11 -O3 -Wall -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvex_OPTIONS)
@@ -101,10 +101,10 @@ value.cc\
 vartable.cc 
 
 elvexdebug_OPTIONS =
+elvexdebug_OPTIONS += -DTRACE_HTML
 #elvexdebug_OPTIONS += -DTRACE_DIFF
 #elvexdebug_OPTIONS += -DTRACE_MALLOC
 #elvexdebug_OPTIONS += -DTRACE_INIT
-elvexdebug_OPTIONS += -DTRACE_HTML
 #elvexdebug_OPTIONS += -DTRACE_SUCCESSOR
 #elvexdebug_OPTIONS += -DTRACE_INSERT
 #elvexdebug_OPTIONS += -DTRACE_UNHIDE
@@ -117,14 +117,14 @@ elvexdebug_OPTIONS += -DTRACE_SHIFT
 #elvexdebug_OPTIONS += -DTRACE_ACTION
 #elvexdebug_OPTIONS += -DTRACE_LEXICON
 #elvexdebug_OPTIONS += -DTRACE_MEMOIZATION
-elvexdebug_OPTIONS += -DOUTPUT_XML
+#elvexdebug_OPTIONS += -DOUTPUT_XML
 elvexdebug_OPTIONS += -DMEMOIZATION
 elvexdebug_OPTIONS += -DMEMOIZATION_SHIFT
 elvexdebug_OPTIONS += -DMEMOIZATION_REDUCE
-elvexdebug_OPTIONS += -DMAXLENGTH=1000
-elvexdebug_OPTIONS += -DMAXUSAGES=1000
-elvexdebug_OPTIONS += -DMAXCARDINAL=1000
-elvexdebug_OPTIONS += -DMAXATTEMPTS=1000
+elvexdebug_OPTIONS += -DMAXLENGTH=10000
+elvexdebug_OPTIONS += -DMAXUSAGES=10000
+elvexdebug_OPTIONS += -DMAXCARDINAL=1000000
+elvexdebug_OPTIONS += -DMAXATTEMPTS=10000
 elvexdebug_OPTIONS += -DMAXBITS=512
 
 elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexdebug_OPTIONS)

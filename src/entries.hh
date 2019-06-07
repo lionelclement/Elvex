@@ -18,7 +18,8 @@
 #ifndef ENTRIES_H
 #define ENTRIES_H
 
-#include <list>
+#include <iostream>
+#include <vector>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
@@ -28,23 +29,24 @@ class Entries:
   public enable_shared_from_this< class Entries > {
 
 private:
-  std::list<entryPtr> entries;
+  std::vector< entryPtr > entries;
 
   Entries();
-  Entries(entryPtr );
-  Entries(std::list<entryPtr >&);
+  Entries(entryPtr);
+  Entries(std::vector< entryPtr >&);
   Entries(int codePos, int codeLemma, std::string form);
 
 public:
   ~Entries();
   static entriesPtr create();
   static entriesPtr create(entryPtr );
-  static entriesPtr create(std::list<entryPtr >&);
+  static entriesPtr create(std::vector<entryPtr >&);
   static entriesPtr create(int codePos, int codeLemma, std::string form);
 
   const size_t size() const;
-  std::list<entryPtr >::const_iterator begin() const;
-  std::list<entryPtr >::const_iterator end() const;
+  std::vector<entryPtr >::const_iterator begin() const;
+  std::vector<entryPtr >::const_iterator end() const;
+  entryPtr at(size_t) const;
 
   void add(const entryPtr);
 #ifdef OUTPUT_XML

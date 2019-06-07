@@ -38,7 +38,7 @@ class ListFeatures:
   ~ListFeatures();
   static listFeaturesPtr create(void);
   void push_back( featuresPtr );
-  void push(unsigned int, featuresPtr);
+  void add(unsigned int, featuresPtr);
   void clear(void);
   std::vector< featuresPtr >::const_iterator begin(void) const;
   std::vector< featuresPtr >::const_iterator end(void) const;

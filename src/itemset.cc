@@ -100,10 +100,10 @@ ItemSet::const_iterator ItemSet::find(itemPtr item) const
 bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer)
 {
   if (items.size() > synthesizer->getMaxCardinal()){
-    synthesizer->setMaxCardinalMsg(true);
+    FATAL_ERROR_MSG("maxCardinal");
   }
 #ifdef TRACE_INSERT
-  std::cerr << "####################### INSERT " << item->getId() << " #######################" << std::endl;
+  std::cerr << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
   item->print(std::cerr);
   std::cerr << std::endl;
 #endif

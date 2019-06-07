@@ -288,12 +288,12 @@ word:
 	|stringOrIdentifier lexical_entries TOKEN_SEMI
 	{
 	  DBUGPRT("word");
-	  for (std::list< entryPtr >::const_iterator entry = (*$2)->begin();
+	  for (std::vector< entryPtr >::const_iterator entry = (*$2)->begin();
 	       entry != (*$2)->end();
 	       ++entry){
 	    (*entry)->setForm(*$1);
 	    //}
-	    //for (std::list< entryPtr >::const_iterator entry = (*$2)->begin();
+	    //for (std::vector< entryPtr >::const_iterator entry = (*$2)->begin();
 	    //    entry != (*$2)->end();
 	    //   ++entry){
 	    entriesPtr lp;
