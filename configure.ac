@@ -6,8 +6,10 @@
 # CNRS (UMR 5800), the University of Bordeaux,
 # and the Bordeaux INP
 #
-# Author: Lionel Clément,
-# Labri -- 351, cours de la Libération
+# Author: 
+# Lionel Clément
+# LaBRI -- Université Bordeaux 
+# 351, cours de la Libération
 # 33405 Talence Cedex - France
 # lionel.clement@labri.fr
 # 
@@ -24,8 +26,8 @@ AC_PREREQ([2.69])
 # Version informations
 # ====================
 m4_define([elvex_version_major],[2])
-m4_define([elvex_version_minor],[10])
-m4_define([elvex_version_micro],[3])
+m4_define([elvex_version_minor],[11])
+m4_define([elvex_version_micro],[0])
 m4_define([elvex_version],[elvex_version_major.elvex_version_minor.elvex_version_micro])
 
 # =============
