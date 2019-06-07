@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2018 LABRI, 
+ * Copyright 2019 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux, 
  * and the Bordeaux INP
  *

@@ -1,9 +1,19 @@
-/*
- * buildlexicon.hh
- *
- *  Created on: 5 oct. 2017
- *      Author: clement
- */
+/* **************************************************
+*
+* ELVEX
+*
+* Copyright 2019 LABRI,
+* CNRS (UMR 5800), the University of Bordeaux,
+* and the Bordeaux INP
+*
+* Author: Lionel Clément,
+* Labri -- 351, cours de la Libération
+* 33405 Talence Cedex - France
+* lionel.clement@labri.fr
+*
+* This file is part of ELVEX.
+*
+************************************************** */
 
 #ifndef BUILDLEXICON_HPP_
 #define BUILDLEXICON_HPP_
