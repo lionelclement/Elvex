@@ -1,9 +1,15 @@
 /* **************************************************
  *
- * CNRS (UMRPtr 5800), the University of Bordeaux,
-
-Ptr * Author: Lionel Clément,
- * Labri -- 351, cours de la Libération
+ * ELVEX
+ *
+ * Copyright 2019 LABRI, 
+ * CNRS (UMR 5800), the University of Bordeaux,
+ * and the Bordeaux INP
+ *
+ * Author: 
+ * Lionel Clément
+ * LaBRI -- Université Bordeaux 
+ * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
  * 
@@ -14,8 +20,6 @@ Ptr * Author: Lionel Clément,
 #ifndef RULE_H
 #define RULE_H
 
-#include <climits>
-#include <vector>
 #include <ostream>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
