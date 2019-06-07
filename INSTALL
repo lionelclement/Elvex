@@ -11,7 +11,7 @@ The full compilation of Elvex requires the following programs on your computer:
 Once you have downloaded Elvex execute these commands:
 
 aclocal
-automake −fa
+automake −a
 autoconf
 ./configure
 make
