@@ -305,10 +305,10 @@ Value::print(std::ostream& outStream, bool par, bool flat) const
       FATAL_ERROR;
       break;
     case CONSTANT:
-      outStream << getBits()->_toString();
+      outStream << getBits()->toString();
       break;
     case VARIABLE:
-      outStream << getBits()->_toString();
+      outStream << getBits()->toString();
       break;
     case ANONYMOUS:
       outStream << '_';
@@ -502,7 +502,7 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
 	ret=false;
     }
     else if (value->type == IDENTIFIER){
-      if (Vartable::intToStr(getIdentifier()) != getBits()->_toString())
+      if (Vartable::intToStr(getIdentifier()) != getBits()->toString())
 	ret=false;
     }
     else {
@@ -701,7 +701,7 @@ Value::eq(valuePtr o) const
     case CONSTANT:
       if ((type==CONSTANT) && ((*getBits() & *o->getBits()).any()))
 	ret=true;
-      else if ((type==IDENTIFIER) && (o->getBits()->_toString() == Vartable::intToStr(getIdentifier())))
+      else if ((type==IDENTIFIER) && (o->getBits()->toString() == Vartable::intToStr(getIdentifier())))
 	ret=true;
       break;
     case STR:
@@ -788,7 +788,7 @@ Value::renameVariables(unsigned int i)
   case VARIABLE:
     {
       std::ostringstream oss;
-      oss << getBits()->_toString() << "_" << i;
+      oss << getBits()->toString() << "_" << i;
       std::string str = oss.str();
       bitsetPtr variableBits=Vartable::varTableAdd(str);
       this->bits=variableBits;

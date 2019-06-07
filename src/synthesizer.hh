@@ -84,6 +84,14 @@ private:
   bool warning;
   bool random;
   
+#ifdef TRACE
+  bool traceStage;
+  bool traceClose;
+  bool traceShift;
+  bool traceReduce;
+  bool traceAction;
+#endif
+  
 #ifdef OUTPUT_XML
   char *outXML;
 #endif
@@ -148,6 +156,20 @@ public:
 #ifdef OUTPUT_XML
   void setOutXML(char *);
   char *getOutXML(void) const;
+#endif
+
+#ifdef TRACE
+  void setTraceStage(bool);
+  void setTraceClose(bool);
+  void setTraceShift(bool);
+  void setTraceReduce(bool);
+  void setTraceAction(bool);
+  bool getTraceStage(void);
+  bool getTraceClose(void);
+  bool getTraceShift(void);
+  bool getTraceReduce(void);
+  bool getTraceAction(void);
+
 #endif
 
   nodePtr getNodeRoot(void);

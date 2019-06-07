@@ -54,7 +54,7 @@ forestPtr Forest::create(entryPtr  entry, unsigned int from, unsigned int to)
  ************************************************** */
 Forest::~Forest()
 {
-  for(setNodes::iterator n=nodes.begin() ; n!=nodes.end() ; ++n) {
+  for(vectorNodes::iterator n=nodes.begin() ; n!=nodes.end() ; ++n) {
     nodePtr tmp = *n;
     if (tmp)
       tmp.reset();
@@ -75,7 +75,7 @@ void Forest::setId(idType id)
 /* **************************************************
  *
  ************************************************** */
-Forest::setNodes &Forest::getNodes(void)
+Forest::vectorNodes &Forest::getNodes(void)
 {
   return nodes;
 }
@@ -116,12 +116,11 @@ Forest::getOutput(void)
 /* **************************************************
  *
  ************************************************** */
-bool
+void
 Forest::addNode(nodePtr n)
 {
-  std::pair<Forest::setNodes::iterator, bool> result = nodes.insert(n);
   empty=false;
-  return result.second;
+  nodes.push_back(n);
 }
 
 #ifdef OUTPUT_XML
@@ -157,7 +156,7 @@ Forest::toXML(xmlNodePtr nodeRoot, bool root)
       for(std::vector<std::string>::const_iterator s=output.begin() ; s!=output.end() ; ++s)
 	xmlNewChild(o, NULL, (const xmlChar*)"S", (xmlChar*)(*s).c_str());
     }
-    for(Forest::setNodes::const_iterator n=nodes.begin() ; n!=nodes.end() ; ++n){
+    for(Forest::vectorNodes::const_iterator n=nodes.begin() ; n!=nodes.end() ; ++n){
       (*n)->toXML(nodeRoot, f);
     }
   }
@@ -176,22 +175,22 @@ Forest::generate(bool random)
       output.push_back(entry->getForm());
     }
     else if (nodes.size() != 0) {
-      Forest::setNodes::const_iterator n = nodes.begin() ;
+      Forest::vectorNodes::const_iterator nodeIt = nodes.begin();
+      nodePtr node;
       if (random) {
-	int rv = std::rand()/((RAND_MAX + 1u)/nodes.size());
-	int i = 0;
-	while (i++ < rv)
-	  ++n;
+	size_t rv = std::rand()/((RAND_MAX + 1u)/nodes.size());
+	node = nodes.at(rv);
       }
-      while (n != nodes.end()) {
-	if ((*n)->isUnsetFlags(Flags::GEN))
-	  (*n)->generate(random);
-	for (std::vector<std::string>::const_iterator s = (*n)->getOutput().begin(); s != (*n)->getOutput().end(); ++s)
+      while (nodeIt != nodes.end()) {
+	if (!random)
+	  node = *nodeIt;
+	if (node->isUnsetFlags(Flags::GEN))
+	  node->generate(random);
+	for (std::vector<std::string>::const_iterator s = node->getOutput().begin(); s != node->getOutput().end(); ++s)
 	  output.push_back(*s);
 	if (random)
 	  break;
-	else
-	++n;
+	++nodeIt;
       }
     }
   }

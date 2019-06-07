@@ -247,7 +247,7 @@ word:
 	    zeroToEntries=foundCode->second;
 	  } else {
 	    zeroToEntries=new std::map< unsigned int, entriesPtr >;
-	    synthesizer.getLexicon().insert(std::pair< const unsigned int, std::map< unsigned int, entriesPtr > *> (code, zeroToEntries));
+	    synthesizer.getLexicon().insert(std::make_pair(code, zeroToEntries));
 	  }
 	  std::map< unsigned int, entriesPtr >::iterator foundPred=zeroToEntries->find(0);
 	  entriesPtr lp;
@@ -255,7 +255,7 @@ word:
 	    lp=foundPred->second;
 	  } else {
 	    lp = Entries::create();
-	    zeroToEntries->insert(std::pair< const unsigned int, entriesPtr > (0, lp));
+	    zeroToEntries->insert(std::make_pair(0, lp));
 	  }
 	  lp->add(Entry::create(code, UINT_MAX, std::string(), Features::create()));
 	}
@@ -272,7 +272,7 @@ word:
 	    zeroToEntries=foundCode->second;
 	  } else {
 	    zeroToEntries=new std::map< unsigned int, entriesPtr >;
-	    synthesizer.getLexicon().insert(std::pair< const unsigned int, std::map< unsigned int, entriesPtr > *> (code, zeroToEntries));
+	    synthesizer.getLexicon().insert(std::make_pair(code, zeroToEntries));
 	  }
 	  std::map< unsigned int, entriesPtr >::iterator foundPred=zeroToEntries->find(0);
 	  entriesPtr lp;
@@ -280,7 +280,7 @@ word:
 	    lp=foundPred->second;
 	  } else {
 	    lp=Entries::create();
-	    zeroToEntries->insert(std::pair< unsigned int, entriesPtr > (0, lp));
+	    zeroToEntries->insert(std::make_pair(0, lp));
 	  }
 	  lp->add(Entry::create(code, UINT_MAX, std::string(), *$3));
 	  free($3);
@@ -306,14 +306,14 @@ word:
 	      predToEntries = foundCode->second;
 	    } else {
 	      predToEntries = new std::map< unsigned int, entriesPtr >;
-	      synthesizer.getLexicon().insert(std::pair< unsigned int, std::map< unsigned int, entriesPtr > *> ((*entry)->getCode(), predToEntries));
+	      synthesizer.getLexicon().insert(std::make_pair((*entry)->getCode(), predToEntries));
 	    }
 	    std::map< unsigned int, entriesPtr >::iterator foundPred = predToEntries->find((*entry)->getCodePred());
 	    if (foundPred != predToEntries->end()){
 	      lp = foundPred->second;
 	    } else {
 	      lp = Entries::create();
-	      predToEntries->insert(std::pair< unsigned int, entriesPtr > ((*entry)->getCodePred(), lp));
+	      predToEntries->insert(std::make_pair((*entry)->getCodePred(), lp));
 	    }
 	    lp->add(*entry);
 	  }

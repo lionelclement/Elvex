@@ -66,41 +66,43 @@ environmentPtr Environment::create()
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(std::string a, valuePtr b)
+void Environment::add(std::string key, valuePtr value)
 {
-  Environment::mapStringValue::iterator i=env.find(a);
-  if (i==env.end()){
-    env.insert (std::pair <std::string, valuePtr >(a, b));
+  Environment::mapStringValue::iterator it = env.find(key);
+  if (it == env.end()) {
+    env.insert (std::make_pair(key, value));
   }
-  else{
-    i->second = b;
+  else {
+    it->second = value;
   }
 }
 
  /* **************************************************
   *
   ************************************************** */
- void Environment::add(bitsetPtr a, valuePtr b)
+ void Environment::add(bitsetPtr key, valuePtr value)
  {
-   //std::string k = a->toString();
-   std::string k = a->serialize();
-   //add ( a->toString(), b);
-   add ( k, b);
+#ifdef TRACE
+   std::string strKey = key->toString();
+#else
+   std::string strKey = key->serialize();
+#endif
+   add ( strKey, value);
  }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(environmentPtr e)
+void Environment::add(const environmentPtr e)
 {
-  for (Environment::mapStringValue::const_iterator i=e->begin(); i!=e->end(); i++)
+  for (Environment::mapStringValue::const_iterator i=e->begin(); i!=e->end(); ++i)
     add(i->first, i->second);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(environmentPtr e, environmentPtr where)
+void Environment::add(const environmentPtr e, const environmentPtr where)
 {
   if (where)
     for (Environment::mapStringValue::const_iterator i=e->begin(); i!=e->end(); i++)
@@ -136,23 +138,17 @@ const size_t Environment::size() const
  *
  ************************************************** */
 valuePtr 
-Environment::find(bitsetPtr variable) const 
+Environment::find(bitsetPtr key) const 
 {
   valuePtr ret = valuePtr();
-  /*** 
-  cerr << "findValue: " << variable->toString() << std::endl;
-  cerr << std::endl;
-   ***/
-  Environment::mapStringValue::const_iterator it=env.find(variable->serialize());
+#ifdef TRACE
+  std::string strKey = key->toString();
+#else
+  std::string strKey = key->serialize();
+#endif
+  Environment::mapStringValue::const_iterator it = env.find(strKey);
   if (it != env.end())
     ret = it->second;
-  /*** 
-  if (ret)
-    ret->print(cerr);
-  else 
-    cerr << "NULL";
-  cerr << std::endl;
-   ***/
   return ret;
 }
 
@@ -171,14 +167,13 @@ Environment::print(std::ostream &out) const
     else
       out << "</TR><TR>";
     out << "<TD>";
-    //out << Bitset::bitsToStrTable[(*i).first];
     out << (*i).first;
     if ((*i).second){
       out << ":</TD><TD>";
       (*i).second->print(out);
     }
     out << "</TD>";
-    i++;
+    ++i;
   }
   out << "</TR></TABLE>";
 }

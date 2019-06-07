@@ -356,9 +356,9 @@ void Item::setSeen(unsigned int index, bool b)
 /* **************************************************
  *
  ************************************************** */
-void Item::addItem(std::map<int, itemPtr >&table, int clef, itemPtr item)
+void Item::addItem(std::map<int, itemPtr >&table, int key, itemPtr item)
 {
-  table.insert(std::pair<int, itemPtr >(clef, item));
+  table.insert(std::make_pair(key, item));
 }
 
 /* **************************************************
@@ -922,20 +922,24 @@ Item::apply(itemSetPtr state, class Synthesizer *synthesizer)
     int k=1;
     bool effect = true;
     while(effect){
-#ifdef TRACE_ACTION
-      std::cerr << "<H3>####################### ACTION #######################</H3>" << '(' << k << ')' << std::endl;
-      print(std::cerr);
-      std::cerr << std::endl;
+#ifdef TRACE
+      if (synthesizer->getTraceAction()){
+	std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
+	print(std::cout);
+	std::cout << std::endl;
+      }
 #endif
       if (isSetFlags(Flags::BOTTOM))
 	return;
       effect = false;
       statements->apply(shared_from_this(), effect, synthesizer->getTrace());
       ++k;
-#ifdef TRACE_ACTION
-      std::cerr << "<H3>####################### ACTION DONE #######################</H3>" << '(' << k << ')' << std::endl;
-      print(std::cerr);
-      std::cerr << std::endl;
+#ifdef TRACE
+      if (synthesizer->getTraceAction()){
+	std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
+	print(std::cout);
+	std::cout << std::endl;
+      }
 #endif
     }
   }

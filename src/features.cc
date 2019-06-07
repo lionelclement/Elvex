@@ -183,11 +183,14 @@ Features::print(std::ostream& outStream, bool par, bool flat) const
   else if (isBottom())
     outStream << "⊥";
   else {
-    if (flat && par)
-      outStream << "[";
-    else if (par) {
-      outStream << "<TABLE border=\"1\">";
-      outStream << "<TBODY align=\"left\"><TR><TD><TABLE border=\"0\">";
+    if (par) {
+      if (flat) {
+	outStream << "[";
+      }
+      else {
+	outStream << "<TABLE border=\"1\">";
+	outStream << "<TBODY align=\"left\"><TR><TD><TABLE border=\"0\">";
+      }
     }
     if (features.size()){
       bool first=true;
@@ -214,10 +217,12 @@ Features::print(std::ostream& outStream, bool par, bool flat) const
       if (!flat && par)
 	outStream << "<TR><TD></TD></TR>";
     }
-    if (flat && par)
-      outStream << "]";
-    else if (par) 
-      outStream << "</TABLE></TD></TR></TBODY></TABLE>";
+    if (par) {
+      if (flat) 
+	outStream << "]";
+      else
+	outStream << "</TABLE></TD></TR></TBODY></TABLE>";
+    }
   }
 }
 

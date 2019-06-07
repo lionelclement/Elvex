@@ -242,14 +242,20 @@ List::print(std::ostream& outStream, bool par, bool flat) const
 {
   switch (type){
   case NIL:
-    outStream << "&lt;&gt;";
+    if (flat)
+      outStream << "<>";
+    else
+      outStream << "&lt;&gt;";
     break;
   case ATOM:
     value->print(outStream, true, flat);
     break;
   case PAIRP:
     if (par || cdr()->isAtom()){
-      outStream << "&lt;";
+      if (flat)
+	outStream << "<";
+      else
+	outStream << "&lt;";
     }
     car()->print(outStream, true, flat);
     if (cdr()->isAtom()){
@@ -263,7 +269,10 @@ List::print(std::ostream& outStream, bool par, bool flat) const
       cdr()->print(outStream, false, flat);
     }
     if (par || cdr()->isAtom()){
-      outStream << "&gt;";
+      if (flat)
+	outStream << ">";
+      else
+	outStream << "&gt;";
     }
     break;
   }

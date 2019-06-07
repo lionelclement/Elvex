@@ -60,7 +60,7 @@ public:
   static bitsetPtr create(unsigned int=0);
   static bitsetPtr create(std::bitset<MAXBITS>);
   static bitsetPtr create(bitsetPtr);
-  std::string _toString(void);
+  const std::string toString(void) const;
 #ifdef OUTPUT_XML
   void toXML(xmlNodePtr);
   #endif

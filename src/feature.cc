@@ -101,7 +101,7 @@ const bitsetPtr Feature::getAttribute(void) const
  ************************************************** */
 std::string Feature::attributeToString(void) const 
 {
-  return attribute->_toString();
+  return attribute->toString();
 }
 
 /* **************************************************

@@ -263,10 +263,8 @@ void Grammar::analyseTerms(class Synthesizer &synthesizer) {
 	  std::map<unsigned int, std::map<unsigned int, entriesPtr>*>::iterator foundCode = synthesizer.getLexicon().find(code);
 	  if (foundCode == synthesizer.getLexicon().end()) {
 	    predToEntries = new std::map<unsigned int, entriesPtr>;
-	    predToEntries->insert(std::pair<unsigned int, entriesPtr>(code,
-								      Entries::create()));
-	    synthesizer.getLexicon().insert(std::pair<unsigned int,
-					    std::map<unsigned int, entriesPtr>*>(code, predToEntries));
+	    predToEntries->insert(std::make_pair(code, Entries::create()));
+	    synthesizer.getLexicon().insert(std::make_pair(code, predToEntries));
 	  }
 	}
       }

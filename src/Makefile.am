@@ -120,7 +120,7 @@ value.cc\
 vartable.cc 
 
 elvexdebug_OPTIONS =
-elvexdebug_OPTIONS += -DTRACE_HTML
+elvexdebug_OPTIONS += -DTRACE
 #elvexdebug_OPTIONS += -DTRACE_DIFF
 #elvexdebug_OPTIONS += -DTRACE_MALLOC
 #elvexdebug_OPTIONS += -DTRACE_INIT
@@ -128,10 +128,6 @@ elvexdebug_OPTIONS += -DTRACE_HTML
 #elvexdebug_OPTIONS += -DTRACE_INSERT
 #elvexdebug_OPTIONS += -DTRACE_UNHIDE
 #elvexdebug_OPTIONS += -DTRACE_UNFOLD
-elvexdebug_OPTIONS += -DTRACE_STAGE
-elvexdebug_OPTIONS += -DTRACE_SHIFT
-#elvexdebug_OPTIONS += -DTRACE_CLOSE
-#elvexdebug_OPTIONS += -DTRACE_REDUCE
 #elvexdebug_OPTIONS += -DTRACE_EVAL
 #elvexdebug_OPTIONS += -DTRACE_ACTION
 #elvexdebug_OPTIONS += -DTRACE_LEXICON

@@ -43,9 +43,9 @@ private:
   void add(const std::string, valuePtr=valuePtr());
   
 public:
-  void add(bitsetPtr, valuePtr=valuePtr());
-  void add(environmentPtr);
-  void add(environmentPtr, environmentPtr);
+  void add(const bitsetPtr, valuePtr=valuePtr());
+  void add(const environmentPtr);
+  void add(const environmentPtr, const environmentPtr);
   mapStringValue::const_iterator begin() const;
   mapStringValue::const_iterator end() const;
   const size_t size() const;
@@ -54,7 +54,7 @@ public:
   environmentPtr clone(void);
   valuePtr find(bitsetPtr) const;
   valuePtr replaceVariables(valuePtr, bool &);
-  std::string replaceVariables(std::string, bool &);
+  std::string replaceVariables(const std::string, bool &);
   void replaceVariables(featuresPtr, bool &);
   void replaceVariables(listFeaturesPtr, bool &);
   void replaceVariables(listPtr, bool &);

@@ -488,7 +488,7 @@ Statement::print(std::ostream &outStream, int left) const
     break;
   case CONSTANT:
   case VARIABLE:
-    outStream << getBits()->_toString();
+    outStream << getBits()->toString();
     break;
   case PRINT:
     outStream << "print&nbsp;";
@@ -1190,7 +1190,7 @@ Statement::evalValue(itemPtr item, bool replaceVariables)
 	if (v1) {
 	  isv1astring = true;
 	  if (v1->isVariable())
-	    v1str = v1->getBits()->_toString();
+	    v1str = v1->getBits()->toString();
 	  else if (v1->isIdentifier())
 	    v1str = Vartable::intToStr(v1->getIdentifier());
 	  else if (v1->isStr())
@@ -1204,7 +1204,7 @@ Statement::evalValue(itemPtr item, bool replaceVariables)
 	if (v2) {
 	  isv2astring = true;
 	  if (v2->isVariable())
-	    v2str = v2->getBits()->_toString();
+	    v2str = v2->getBits()->toString();
 	  else if (v2->isIdentifier())
 	    v2str = Vartable::intToStr(v2->getIdentifier());
 	  else if (v2->isStr())
@@ -2204,7 +2204,7 @@ Statement::guard(itemPtr item, bool &result, bool trace)
       result = false;
     else {
       if (trace) {
-	std::cerr << "*** Guard evaluated to true " << item->getFilename() << '(' << item->getLineno() << ')' << std::endl;
+	std::cerr << "*** Guard clause checked " << item->getFilename() << '(' << item->getLineno() << ')' << std::endl;
       }
     }
     if (item->getEnvironment()->size()==0) {
@@ -2257,7 +2257,7 @@ Statement::renameVariables(unsigned int i)
       //ostringstream oss;
       //oss << getBits()->toString() << "_" << i;
       //string str = oss.str();
-      std::string str = getBits()->_toString() + "_" + std::to_string(i);
+      std::string str = getBits()->toString() + "_" + std::to_string(i);
       bitsetPtr variableBits = Vartable::varTableAdd(str);
       bits = variableBits;
       //resetSerialID();

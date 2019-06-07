@@ -62,7 +62,7 @@ Vartable::varTableAdd(std::string str)
   varTableIt = varTable.find(str);
   if (varTableIt == varTable.end()) {
     result=Bitset::create(varTableIndex);
-    varTable.insert (std::pair<std::string, bitsetPtr>(str, result));
+    varTable.insert (std::make_pair(str, result));
 
     size_t i=0;
     while ((i < varTableIndex.size()) && !varTableIndex.test(i))

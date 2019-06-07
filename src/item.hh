@@ -52,18 +52,18 @@ private:
   environmentPtr environment;
   
   bool
-    s_id = true,
+    s_id = false,
     s_ruleId = false,
     s_ruleSerialId = false,
     s_flags = false,
-    s_refs = true,
+    s_refs = false,
     s_seen = false,
     s_item = true,
     s_index = false,
     s_indexTerms = false,
     s_terms = false,
     s_ranges = false,
-    s_forestIdentifiers = true,
+    s_forestIdentifiers = false,
     s_inheritedFeatures = true,
     s_inheritedSonFeatures = true,
     s_synthesizedFeatures = true,

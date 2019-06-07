@@ -20,7 +20,7 @@
 #ifndef FOREST_H
 #define FOREST_H
 
-#include <set>
+#include <vector>
 
 #include "id.hh"
 #ifdef OUTPUT_XML
@@ -36,15 +36,15 @@ class Forest: public Id,
 	      public enable_shared_from_this< class Forest > {
 
 public:
-  typedef std::set<nodePtr, Node::Less> setNodes;
+  typedef std::vector< nodePtr > vectorNodes;
 
 private:
   unsigned int from;
   unsigned int to;
-  setNodes nodes;
+  vectorNodes nodes;
   bool empty;
   entryPtr entry;
-  std::vector<std::string> output;
+  std::vector< std::string > output;
   Forest (entryPtr entry, unsigned int from, unsigned int to);
   void setId(idType);
 
@@ -52,20 +52,19 @@ public:
   ~Forest();
   static forestPtr create(entryPtr entry, unsigned int from, unsigned int to);
 
-  setNodes &getNodes(void);
+  vectorNodes &getNodes(void);
   unsigned int getFrom(void) const;
   unsigned int getTo(void) const;
   bool isEmpty(void) const;
   
   std::vector<std::string> &getOutput(void);
   
-  bool addNode(nodePtr);
+  void addNode(nodePtr);
 #ifdef OUTPUT_XML
   void toXML(const xmlNodePtr, bool);
 #endif
   
   void generate(bool);
-  //void generate(void);
 
 };
 #endif // FOREST_H

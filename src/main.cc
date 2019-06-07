@@ -45,15 +45,23 @@ xmlDocPtr document;
  *
  ************************************************** */
 void Usage(char **argv) {
-  fprintf(stderr, "Usage: %s [options] [<input>]*\n", PACKAGE_NAME);
-  fputs(
-	"\
+  cerr << "Usage: " << PACKAGE_NAME << " [options] [<input>]*\n";
+  cerr << "\
 options\n\
 \t--help|-h                   print this\n\
 \t--version|-v                print version\n\
 \t--reduceAll|-a              reduce all rules\n\
 \t--trace|-t                  trace the generation process\n\
-\t--random|-r                 outputs one sentence randomly selected\n\
+\t--random|-r                 outputs one sentence randomly selected\n";
+#ifdef TRACE
+  cerr << "\
+\t--traceStage\n\
+\t--traceClose\n\
+\t--traceShift\n\
+\t--traceReduce\n\
+\t--traceAction\n";
+#endif
+  cerr << "\
 \t-maxLength <number>         max number of length\n\
 \t-maxUsages <number>         max number of rule usage\n\
 \t-maxCardinal <number>       max number of items per set\n\
@@ -62,10 +70,10 @@ options\n\
 \t-lexiconFile <file>\n\
 \t-inputFile <file>\n\
 \t-compactDirectory <directory>\n\
-\t-compactLexiconFile <file>\n",
-	stderr);
+\t-compactLexiconFile <file>\n\
+";
 #ifdef OUTPUT_XML
-  fputs("\t-xml <file>                 the XML file\n", stderr);
+  cerr << "\t-xml <file>                 the XML file\n";
 #endif
 }
 
@@ -83,38 +91,49 @@ void seq(int i) {
 void generate(void) {
   if (synthesizer.getStartTerm())
     synthesizer.generate();
+#ifdef TRACE
+  std::cout << "<ul>" << std::endl;
+#endif
   if (synthesizer.getNodeRoot() && synthesizer.getNodeRoot()->getForests().size() > 0) {
-    std::vector<forestPtr>::const_iterator forestIterator = synthesizer.getNodeRoot()->getForests().begin();
-    /*if (synthesizer.getRandom()) {
+    std::vector<forestPtr>::const_iterator forestIt = synthesizer.getNodeRoot()->getForests().begin();
+    forestPtr forest;
+    if (synthesizer.getRandom()) {
       int rv = std::rand()/((RAND_MAX + 1u)/synthesizer.getNodeRoot()->getForests().size());
-      int i = 0;
-      while (i++ < rv)
-	++forestIterator;
-	}*/
-    while (forestIterator != synthesizer.getNodeRoot()->getForests().end()) {
-      for (std::vector<std::string>::const_iterator i = (*forestIterator)->getOutput().begin();
-	   i != (*forestIterator)->getOutput().end();
+      forest = synthesizer.getNodeRoot()->getForests().at(rv);
+    }
+    while (forestIt != synthesizer.getNodeRoot()->getForests().end()) {
+      if (!synthesizer.getRandom())
+	forest = *forestIt;
+      for (std::vector<std::string>::const_iterator i = forest->getOutput().begin();
+	   i != forest->getOutput().end();
 	   ++i){
+#ifdef TRACE
+  std::cout << "<li>" << std::endl;
+#endif
 	std::cout << *i << std::endl;
+#ifdef TRACE
+  std::cout << "</li>" << std::endl;
+#endif
       }
-      //if (synthesizer.getRandom()) 
-      //break;
-      //else
-      ++forestIterator;
+      if (synthesizer.getRandom()) 
+	break;
+      ++forestIt;
     }
   }
+#ifdef TRACE
+  std::cout << "</ul>" << std::endl;
+#endif
 }
 
 /* **************************************************
  *
  ************************************************** */
 int main(int argn, char **argv) {
-#ifdef TRACE_HTML
-  std::cerr << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
+#ifdef TRACE
+  std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
 #endif
   try {
     vartable.init();
-
 #ifdef OUTPUT_XML
     synthesizer.setOutXML(NULL);
 #endif
@@ -144,6 +163,29 @@ int main(int argn, char **argv) {
 	    synthesizer.setRandom(true);
 	  }
 	  
+#ifdef TRACE
+	  else if (!strcmp(argv[arg] + 1, "-traceStage")) {
+	    synthesizer.setTraceStage(true);
+	  }
+
+	  else if (!strcmp(argv[arg] + 1, "-traceClose")) {
+	    synthesizer.setTraceClose(true);
+	  }
+
+	  else if (!strcmp(argv[arg] + 1, "-traceShift")) {
+	    synthesizer.setTraceShift(true);
+	  }
+
+	  else if (!strcmp(argv[arg] + 1, "-traceReduce")) {
+	    synthesizer.setTraceReduce(true);
+	  }
+
+	  else if (!strcmp(argv[arg] + 1, "-traceAction")) {
+	    synthesizer.setTraceAction(true);
+	  }
+
+#endif
+
 	  else if (!strcmp(argv[arg] + 1, "lexiconFile")) {
 	    if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
 	      synthesizer.setLexiconFileName(argv[++arg]);
@@ -240,7 +282,7 @@ int main(int argn, char **argv) {
 	  
 	  else {
 	    CERR_LINE;
-	    std::cerr << argv[arg] + 1 << std::endl;
+	    std::cerr << "Unknown argument: " << argv[arg] + 1 << std::endl;
 	    Usage(argv);
 	    return EXIT_FAILURE;
 	  }
@@ -319,8 +361,8 @@ int main(int argn, char **argv) {
   } catch (char const *message) {
     std::cerr << "*** FATAL ERROR " << message << std::endl;
   }
-#ifdef TRACE_HTML
-  std::cerr << "</body></html>" << std::endl;
+#ifdef TRACE
+  std::cout << "</body></html>" << std::endl;
 #endif
   return EXIT_SUCCESS;
 }

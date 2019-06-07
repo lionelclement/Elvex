@@ -91,8 +91,8 @@ bitsetPtr Bitset::create(bitsetPtr bs)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-std::string
-Bitset::_toString()
+const std::string
+Bitset::toString() const
 {
   std::stringstream s;
   size_t c=this->count();
