@@ -20,6 +20,7 @@
 #ifndef RULE_H
 #define RULE_H
 
+#include <climits>
 #include <ostream>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>

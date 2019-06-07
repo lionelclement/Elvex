@@ -78,7 +78,7 @@ elvex_OPTIONS += -DMAXCARDINAL=10000
 elvex_OPTIONS += -DMAXATTEMPTS=10000
 elvex_OPTIONS += -DMAXBITS=512
 
-elvex_CXXFLAGS = -std=c++11 -O3 -Wall -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvex_OPTIONS)
+elvex_CXXFLAGS = -std=c++11 -O3 -Wall $(elvex_OPTIONS)
 elvex_LDADD =
 
 elvexdebug_SOURCES =\
@@ -146,7 +146,7 @@ elvexdebug_OPTIONS += -DMAXCARDINAL=1000000
 elvexdebug_OPTIONS += -DMAXATTEMPTS=10000
 elvexdebug_OPTIONS += -DMAXBITS=512
 
-elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexdebug_OPTIONS)
+elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` $(elvexdebug_OPTIONS)
 elvexdebug_LDADD = -lxml2
 
 elvexbuildlexicon_SOURCES = fsa.cc lex.cc info.cc infobuff.cc tree.cc buildlexicon.cc
