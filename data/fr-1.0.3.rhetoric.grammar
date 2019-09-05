@@ -85,7 +85,7 @@ rhetoricalStructure → [que] premise [que] conclusion {
 /* **************************************************
  * Cause
  ************************************************** */
-rhetoricalStructure → zzz conclusion premise {
+rhetoricalStructure → conclusion premise zzz {
   [PRED:cause, i:$I, ii:$II, $rest];
   [i:[ii:[id:$ID_I_II]], ii:[i:[idref:$ID]]] ⊂ ↑;
   [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;

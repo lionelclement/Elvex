@@ -3,6 +3,7 @@
  ************************************************** */
 // Verbe simple
 VP → V [NP] [PP] [ADJ] [ADVM] {
+  //println ↑;//__LINE__;
   [obj:NIL, prep_obj:NIL, prep_obj2:NIL, scomp:NIL, vcomp:NIL];
   [subj:$subj, neg:$neg, lexFct:$fctH, language_register:$language_register] ⊂ ↑;
   if (¬ $fctH)
@@ -712,7 +713,7 @@ V → [clneg] aux_être [clint] [advneg] [ADVM] NP|ADJ {
   
   [mode:$mode, vtense:$vtense, vform:$vform, subj:$subj, inv:$inv, finite:$finite, $rest] ⊂ ↑;
   [number:$number, gender:$gender] ⊂ $subj;
-
+  
   if (#3){
     attest ($inv == yes);
     ↓3 = $subj;
@@ -724,9 +725,9 @@ V → [clneg] aux_être [clint] [advneg] [ADVM] NP|ADJ {
   ↓2 = [subj:$subj, mode:$mode, vtense:$vtense, vform:$vform, finite:$finite, voice:passive];
   ↓6 = ↑ ∪ [number:$number, gender:$gender, det:no];
   if (#6:1){
-     [state:$state] ⊂ ⇓6;
-     attest ($state == yes);
-     }
+    [state:$state] ⊂ ⇓6;
+    attest ($state == yes);
+  }
   ⇑ = ⇓6;
 }
 

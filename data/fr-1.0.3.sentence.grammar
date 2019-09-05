@@ -48,10 +48,11 @@ S → [NP|cln] VP {
     attest ($mode == imperative) ∨ (($inv == yes) ∧ ($predSubj == _pro));
     [number:$N, gender:$G, person:$P] ⊂ $subj;
     $subjSynt = [];
-    if ($aggrSubjSCompSubj == yes)
+    if ($aggrSubjSCompSubj == yes){
       ↓2 = [subj:[number:$N, gender:$G, person:$P], scomp:[subj:[number:$N, gender:$G, person:$P]], mode:$mode, $rest];
-    else
+    } else {
       ↓2 = [subj:[number:$N, gender:$G, person:$P], mode:$mode, $rest];
+    }
   }
   ⇑ = ⇓2 ∪ [subj:$subjSynt];
 }
@@ -64,4 +65,3 @@ S → form VP {
   $subjSynt = ⇓1;
   ⇑ = ⇓2 ∪ [subj:$subjSynt];
 }
-

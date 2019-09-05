@@ -30,7 +30,8 @@ illocutionaryAct → il_me_semble_que modalClause dot {
 
 illocutionaryAct → modalClause exclamativeDot {
   [illocutionary:order, $rest];
-  ↓1 = [mode:imperative, $rest];
+  //↓1 = [mode:imperative, $rest];
+  ↓1 = [$rest];
   ↓2 = [];
   ⇑ = ⇓1;
 }

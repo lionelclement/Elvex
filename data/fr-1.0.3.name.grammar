@@ -4,7 +4,7 @@
  ************************************************** */
 NP → [det|detNum|detForm] N [form] {
   //print __FILE__; print " ("; print __LINE__; println ")";
-  //println ↑;
+  //println ↓2;
   [sem:$sem, $Rest] ⊂ ↑;
   if (!$sem)
     $sem=default;
@@ -147,8 +147,8 @@ NP → form {
 
 N → cn {
   //print __FILE__; print " ("; print __LINE__; println ")";
-  //println ↑;
-  [lexFct:NIL, mod:NIL, i:NIL];
+  [mod:NIL, i:NIL];
+  //[lexFct:$lexFct] ⊂ ↑;
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
@@ -202,7 +202,7 @@ ADJ → adj {
   }
 */
 
-PP → prep form|NP {
+PP → prep NP {
    //print __FILE__; print " ("; print __LINE__; println ")";
   ↓1 = ↑;
   ↓2 = ↑;
