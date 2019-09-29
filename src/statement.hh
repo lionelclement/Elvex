@@ -70,7 +70,6 @@ public:
 
   enum arithmetic_op {
     NOP, NOT, AND, OR, DIFF, EQ, LT, LE, GT, GE, PLUS, MINUS, TIMES, DIVIDE, MODULO, MINUS_U, RAND
-    // Here arithmetic functions
   };
 
 private:
