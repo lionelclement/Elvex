@@ -430,7 +430,7 @@ Environment::replaceVariables(std::string str, bool &effect)
  *
  ************************************************** */
 environmentPtr
-Environment::clone(void)
+Environment::clone(void) const
 {
   environmentPtr environment=Environment::create();
   for (Environment::mapStringValue::const_iterator i = begin();

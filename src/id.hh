@@ -24,7 +24,6 @@
 #include <cstdint>
 
 typedef uint32_t idType;
-//typedef unsigned int idType;
 
 class Id {  
   
@@ -39,7 +38,6 @@ public:
   virtual ~Id(void);
   
   const idType getId(void) const;
-  virtual void setId(idType)=0;
   
 };
 

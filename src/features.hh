@@ -38,8 +38,6 @@ class Features:
   
 public:
   typedef std::list< featurePtr > listFeatures;
-
-public:
   static featuresPtr _nil;
   static featuresPtr _bottom;
 
@@ -52,7 +50,6 @@ private:
 
   static featuresPtr createBottom(void);
   static featuresPtr createNil(void);
-  void setId(idType);
   const std::string makeSerializationId(void);
 
 public:
@@ -74,7 +71,7 @@ public:
 #ifdef OUTPUT_XML
   void toXML(xmlNodePtr);
 #endif
-  featuresPtr clone(void);
+  featuresPtr clone(void) const;
   valuePtr find(bitsetPtr) const;
 
   const bool buildEnvironment(environmentPtr, featuresPtr, bool, bool);

@@ -74,8 +74,9 @@ mesure		mm|cm|m|dm|km|m2|m3|A|[oO]hm|V|VA|gr|[kK]g
   [^[:alpha:]][dD]e[[:space:]]+les/([[:space:]]|quel) {std::cout << yytext[0] << yytext[1] << "es";}
   [^[:alpha:]](à|À)[[:space:]]+les/([[:space:]]|quel) {std::cout << yytext[0] << "aux";}
   [^[:alpha:]][dD]e[[:space:]]+le/([[:space:]]|quel) {std::cout << yytext[0] << yytext[1] << 'u';}
-  [^[:alpha:]](à|À)[[:space:]]+le/([[:space:]]|quel) {std::cout << yytext[0] << "au";}
-  [^[:alpha:]](à|À)[[:space:]]+l[ea][[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << "à l'";}
+  [^[:alpha:]](à|À)[[:space:]]+le/[[:space:]] {std::cout << yytext[0] << "au";}
+  [^[:alpha:]](à|À)[[:space:]]+le/quel {std::cout << yytext[0] << "au";}
+  [^[:alpha:]](à|À)[[:space:]]+l[ea][[:space:]]+[hH]?/([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << "à l'";}
   [^[:alpha:]][sS]i[[:space:]]+[i] {std::cout << yytext[0] << yytext[1] << '\'' << yytext[yyleng-1];}
   [^[:alpha:]][dD]e[[:space:]]+des/[[:space:]] {std::cout << yytext[0] << yytext[1] << 'e';}
   [[:digit:]]+[[:space:]]/{mesure}[[:space:]] {yytext[yyleng-1]=0; ECHO;}

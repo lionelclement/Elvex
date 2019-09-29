@@ -30,13 +30,13 @@ private:
   unsigned int code;
 
 public:
-  Term(unsigned int code=0);
+  Term(unsigned int code = 0);
   ~Term();
 
   unsigned int getCode(void) const;
-  void print(std::ostream &outStream=std::cout) const;
+  void print(std::ostream &outStream = std::cout) const;
   std::string toString() const;
-  class Term* clone();
+  class Term *clone() const;
 
   // compare deux termes
   struct Less {

@@ -78,7 +78,7 @@ Term::toString() const
  *
  ************************************************** */
 class Term* 
-Term::clone()
+Term::clone() const
 {
   return new Term(code);
 }

@@ -63,7 +63,6 @@ public:
 private:
   Value(const enum Type, std::string);
   Value(const enum Type, unsigned int=0, double=0.0, bitsetPtr bitset=bitsetPtr(), featuresPtr=featuresPtr(), listPtr lst=listPtr());
-  void setId(idType);
   const std::string makeSerializationId(void);
 
 public:

@@ -20,7 +20,7 @@
 #include "id.hh"
 #include "messages.hh"
 
-idType Id::uniqId=1;
+idType Id::uniqId = 1;
 
 /* **************************************************
  *

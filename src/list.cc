@@ -50,14 +50,6 @@ List::~List()
 /* **************************************************
  *
  ************************************************** */
-void List::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
-/* **************************************************
- *
- ************************************************** */
 listPtr List::create()
 {
   return shared_ptr< class List >( new List(List::NIL) );
@@ -424,7 +416,7 @@ List::toXML(xmlNodePtr nodeRoot)
  *
  ************************************************** */
 listPtr 
-List::clone()
+List::clone() const
 {
   switch (type){
   case NIL:
@@ -471,73 +463,6 @@ List::compare_values (valuePtr v1, valuePtr v2)
   else
     FATAL_ERROR;
   return false;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void
-List::sort(bitsetPtr with)
-{
-  /***
-      cerr << "<H4>List::sort</H4>" << endl;
-      cerr << "<table border=\"1\"><tr><th>this</th><th>with</th></tr>";
-      cerr << "<tr><td>";
-      this->print(cerr);
-      cerr << "</td><td>";
-      cerr << Vartable::bitsToStr(*with);
-      cerr << "</td></tr></table>";
-  ***/
-  std::list<valuePtr >lst;
-  listPtr l=shared_from_this();
-  while(l
-	&& l->getType()==PAIRP
-	&& l->car()->getType()==ATOM){
-    lst.push_back(l->car()->getValue());
-    l=l->cdr();
-  }
-  gwith=with;
-  lst.sort(compare_values);
-  l=shared_from_this();
-  while(l
-	&& l->getType()==PAIRP
-	&& l->car()->getType()==ATOM){
-    l->car()->setValue(lst.front());
-    lst.pop_front();
-    l=l->cdr();
-  }
-  /***
-      cerr << "<H4>List::sort result</H4>" << endl;
-      cerr << "<table border=\"1\"><tr><th>this</th></tr>";
-      cerr << "<tr><td>";
-      this->print(cerr);
-      cerr << "</td></tr></table>";
-  ***/
-}
-
-/* **************************************************
- *
- ************************************************** */
-void
-List::reverse()
-{
-  std::list<valuePtr >lst;
-  listPtr l=shared_from_this();
-  while(l
-	&& l->getType()==PAIRP
-	&& l->car()->getType()==ATOM){
-    lst.push_back(l->car()->getValue());
-    l=l->cdr();
-  }
-  lst.reverse();
-  l=shared_from_this();
-  while(l
-	&& l->getType()==PAIRP
-	&& l->car()->getType()==ATOM){
-    l->car()->setValue(lst.front());
-    lst.pop_front();
-    l=l->cdr();
-  }
 }
 
 /* ************************************************************

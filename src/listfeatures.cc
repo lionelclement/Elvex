@@ -46,14 +46,6 @@ ListFeatures::~ListFeatures(void)
 /* **************************************************
  *
  ************************************************** */
-void ListFeatures::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
-/* **************************************************
- *
- ************************************************** */
 listFeaturesPtr ListFeatures::create(void)
 {
   return listFeaturesPtr(new ListFeatures());

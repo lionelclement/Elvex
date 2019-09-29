@@ -45,7 +45,7 @@ ForestMap::~ForestMap()
 /* **************************************************
  *
  ************************************************** */
-ForestMap::mapForestIdentifierForest::const_iterator ForestMap::find(forestIdentifierPtr forestIdentifier)
+ForestMap::mapForestIdentifierForest::const_iterator ForestMap::find(forestIdentifierPtr forestIdentifier) const
 {
   return data.find(forestIdentifier);
 }
@@ -77,7 +77,7 @@ void ForestMap::clear(void)
 /* **************************************************
  *
  ************************************************** */
-bool ForestMap::insert (ForestMap::pairForestIdentifierForest pair)
+const bool ForestMap::insert (ForestMap::pairForestIdentifierForest pair)
 {
   return data.insert(pair).second;
 }

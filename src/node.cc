@@ -50,19 +50,10 @@ nodePtr Node::create(void)
   return nodePtr( new Node() );
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Node::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::vectorForests&
-Node::getForests(void)
+Node::vectorForests &Node::getForests(void)
 {
   return forests;
 }
@@ -79,8 +70,8 @@ Node::addForest(forestPtr forest)
 /* **************************************************
  *
  ************************************************** */
-std::vector<std::string> &
-Node::getOutput(void) 
+const std::vector<std::string> &
+Node::getOutput(void)  const
 {
   return this->output;
 }
@@ -114,7 +105,7 @@ Node::Less::operator () (nodePtr n1, nodePtr n2) const
  *
  ************************************************** */
 void
-Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather)
+Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 {
   xmlNodePtr node=xmlNewChild(nodeFather, NULL, (const xmlChar*)"NODE", NULL);
   xmlSetProp(node, (xmlChar*)"id", (xmlChar*)(std::to_string(this->getId())).c_str());

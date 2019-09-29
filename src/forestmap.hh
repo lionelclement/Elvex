@@ -40,11 +40,11 @@ public:
   ForestMap(void);
   ~ForestMap();
 
-  mapForestIdentifierForest::const_iterator find(const forestIdentifierPtr);
+  mapForestIdentifierForest::const_iterator find(const forestIdentifierPtr) const;
   mapForestIdentifierForest::const_iterator begin(void) const;
   mapForestIdentifierForest::const_iterator end(void) const;
   void clear(void);
-  bool insert (pairForestIdentifierForest);
+  const bool insert (pairForestIdentifierForest);
 
 };
 #endif // FORESTMAP_H

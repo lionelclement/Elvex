@@ -49,7 +49,6 @@
   bitsetPtr attribute; // variable ou constante
   valuePtr value;
   Feature(Type, bitsetPtr, valuePtr );
-  void setId(idType);
   const std::string makeSerializationId(void);
 
  public:
@@ -65,7 +64,7 @@
 
   std::string attributeToString(void) const;
 
-  featurePtr clone(void);
+  featurePtr clone(void) const;
   void print(std::ostream &, bool flat=false) const;
   
 #ifdef OUTPUT_XML

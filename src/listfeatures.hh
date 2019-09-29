@@ -34,7 +34,6 @@ class ListFeatures:
  private:
   std::vector< featuresPtr > listFeatures;
   ListFeatures(void);
-  void setId(idType);
   
  public:
   ~ListFeatures();

@@ -29,7 +29,6 @@ Terms::Terms(std::vector<class Term* >& terms, bool optional)
   NEW;
   this->terms = terms;
   this->optional = optional;
-  // this->ready = false;
 }
 
 /* **************************************************
@@ -40,7 +39,6 @@ Terms::Terms(class Term* term, bool optional)
   NEW;
   this->terms.push_back(term);
   this->optional = optional;
-  // this->ready = false;
 }
 
 /* **************************************************
@@ -167,7 +165,7 @@ Terms::print(std::ostream& outStream)
  *
  ************************************************** */
 class Terms * 
-Terms::clone(void)
+Terms::clone(void)  const
 {
   std::vector<class Term * > new_terms;
   for (std::vector<class Term * >::const_iterator t = begin();

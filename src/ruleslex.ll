@@ -348,6 +348,16 @@ downDoubleArrow "⇓"
     return TOKEN_COMBINATION;
   }
   
+  "foreach" {
+    DBUGPRT("TOKEN_FOREACH\n");
+    return TOKEN_FOREACH;
+  }
+  
+  "in" {
+    DBUGPRT("TOKEN_IN\n");
+    return TOKEN_IN;
+  }
+  
   "|" {
     DBUGPRT("TOKEN_PIPE\n");
     return TOKEN_PIPE;

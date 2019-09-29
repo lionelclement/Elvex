@@ -67,15 +67,7 @@ Forest::~Forest()
 /* **************************************************
  *
  ************************************************** */
-void Forest::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
-/* **************************************************
- *
- ************************************************** */
-Forest::vectorNodes &Forest::getNodes(void)
+const Forest::vectorNodes &Forest::getNodes(void) const
 {
   return nodes;
 }
@@ -107,8 +99,8 @@ bool Forest::isEmpty(void) const
 /* **************************************************
  *
  ************************************************** */
-std::vector<std::string> &
-Forest::getOutput(void)
+const std::vector<std::string> &
+Forest::getOutput(void) const
 {
   return this->output;
 }

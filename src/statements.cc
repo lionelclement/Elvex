@@ -56,14 +56,6 @@ statementsPtr Statements::create (statementPtr statement)
 /* **************************************************
  *
  ************************************************** */
-void Statements::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
-/* **************************************************
- *
- ************************************************** */
 std::list<statementPtr >&  Statements::getStatements(void)
 {
   return this->statements;
@@ -100,7 +92,7 @@ std::list<statementPtr >::const_iterator Statements::end(void) const
 void 
 Statements::addStatement(statementPtr statement)
 {
-  if (statement->getOp()==Statement::GUARD)
+  if (statement->isGuard())
     this->guard = statement;
   else
     this->statements.push_back(statement);

@@ -29,20 +29,20 @@
 class Environment: 
   public enable_shared_from_this< class Environment > {
 
+public:
+  typedef std::map< const std::string, valuePtr > mapStringValue;
+  
 private:
   Environment();
-  
-public:
-  ~Environment();
-  static environmentPtr create(void);
-
-  typedef std::map< const std::string, valuePtr > mapStringValue;
   
 private:
   mapStringValue env;
   void add(const std::string, valuePtr=valuePtr());
   
 public:
+  ~Environment();
+  static environmentPtr create(void);
+
   void add(const bitsetPtr, valuePtr=valuePtr());
   void add(const environmentPtr);
   void add(const environmentPtr, const environmentPtr);
@@ -51,7 +51,7 @@ public:
   const size_t size() const;
   
   void print(std::ostream &) const;
-  environmentPtr clone(void);
+  environmentPtr clone(void) const;
   valuePtr find(bitsetPtr) const;
   valuePtr replaceVariables(valuePtr, bool &);
   std::string replaceVariables(const std::string, bool &);

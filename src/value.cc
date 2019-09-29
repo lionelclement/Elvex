@@ -135,14 +135,6 @@ valuePtr Value::create(const enum Type type, listPtr lst)
 /* **************************************************
  *
  ************************************************** */
-void Value::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
-/* **************************************************
- *
- ************************************************** */
 Value::Type Value::getType(void) const 
 {
   return type;

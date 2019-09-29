@@ -46,19 +46,16 @@ private:
   entryPtr entry;
   std::vector< std::string > output;
   Forest (entryPtr entry, unsigned int from, unsigned int to);
-  void setId(idType);
-
+  
 public:
   ~Forest();
   static forestPtr create(entryPtr entry, unsigned int from, unsigned int to);
 
-  vectorNodes &getNodes(void);
+  const vectorNodes &getNodes(void) const;
   unsigned int getFrom(void) const;
   unsigned int getTo(void) const;
   bool isEmpty(void) const;
-  
-  std::vector<std::string> &getOutput(void);
-  
+  const std::vector<std::string> &getOutput(void) const;
   void addNode(nodePtr);
 #ifdef OUTPUT_XML
   void toXML(const xmlNodePtr, bool);

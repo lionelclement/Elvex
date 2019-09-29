@@ -48,7 +48,6 @@ private:
   List (enum Type type, valuePtr value=valuePtr(), listPtr car=listPtr(), listPtr cdr=listPtr());
 
   static listPtr create(void);
-  void setId(idType);
   const std::string makeSerializationId(void);
 
 public:
@@ -80,10 +79,8 @@ public:
 #ifdef OUTPUT_XML
   void toXML(const xmlNodePtr);
 #endif
-  listPtr clone(void);
+  listPtr clone(void) const;
   static bool compare_values (valuePtr, valuePtr);
-  void sort(bitsetPtr);
-  void reverse(void);
   void enable(statementPtr, itemPtr, bool &, bool);
   bool subsumes(listPtr , environmentPtr );
 

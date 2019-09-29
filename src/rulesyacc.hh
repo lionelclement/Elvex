@@ -71,40 +71,42 @@
      TOKEN_ELSE = 287,
      TOKEN_NIL = 288,
      TOKEN_TRUE = 289,
-     TOKEN_SORT = 290,
-     TOKEN_WITH = 291,
-     TOKEN_REVERSE = 292,
-     TOKEN_COMBINATION = 293,
-     TOKEN_RAND = 294,
-     TOKEN_UNION = 295,
-     TOKEN_SUBSUME = 296,
-     TOKEN_INSET = 297,
-     TOKEN_AFF = 298,
-     TOKEN_PIPE = 299,
-     TOKEN_NOT = 300,
-     TOKEN_OR = 301,
-     TOKEN_AND = 302,
-     TOKEN_IMPLICATION = 303,
-     TOKEN_EQUIV = 304,
-     TOKEN_PLUS = 305,
-     TOKEN_MINUS = 306,
-     TOKEN_TIMES = 307,
-     TOKEN_DIVIDE = 308,
-     TOKEN_MODULO = 309,
-     TOKEN_EQUAL = 310,
-     TOKEN_DIFF = 311,
-     TOKEN_LT = 312,
-     TOKEN_LE = 313,
-     TOKEN_GT = 314,
-     TOKEN_GE = 315,
-     TOKEN_IDENTIFIER = 316,
-     TOKEN_STRING = 317,
-     TOKEN_INTEGER = 318,
-     TOKEN_DOUBLE = 319,
-     TOKEN_VARIABLE = 320,
-     TOKEN_ANONYMOUS = 321,
-     TOKEN_MINUS_U = 322,
-     TOKEN_NOELSE = 323
+     TOKEN_FOREACH = 290,
+     TOKEN_IN = 291,
+     TOKEN_SORT = 292,
+     TOKEN_WITH = 293,
+     TOKEN_REVERSE = 294,
+     TOKEN_COMBINATION = 295,
+     TOKEN_RAND = 296,
+     TOKEN_UNION = 297,
+     TOKEN_SUBSUME = 298,
+     TOKEN_INSET = 299,
+     TOKEN_AFF = 300,
+     TOKEN_PIPE = 301,
+     TOKEN_NOT = 302,
+     TOKEN_OR = 303,
+     TOKEN_AND = 304,
+     TOKEN_IMPLICATION = 305,
+     TOKEN_EQUIV = 306,
+     TOKEN_PLUS = 307,
+     TOKEN_MINUS = 308,
+     TOKEN_TIMES = 309,
+     TOKEN_DIVIDE = 310,
+     TOKEN_MODULO = 311,
+     TOKEN_EQUAL = 312,
+     TOKEN_DIFF = 313,
+     TOKEN_LT = 314,
+     TOKEN_LE = 315,
+     TOKEN_GT = 316,
+     TOKEN_GE = 317,
+     TOKEN_IDENTIFIER = 318,
+     TOKEN_STRING = 319,
+     TOKEN_INTEGER = 320,
+     TOKEN_DOUBLE = 321,
+     TOKEN_VARIABLE = 322,
+     TOKEN_ANONYMOUS = 323,
+     TOKEN_MINUS_U = 324,
+     TOKEN_NOELSE = 325
    };
 #endif
 /* Tokens.  */
@@ -140,40 +142,42 @@
 #define TOKEN_ELSE 287
 #define TOKEN_NIL 288
 #define TOKEN_TRUE 289
-#define TOKEN_SORT 290
-#define TOKEN_WITH 291
-#define TOKEN_REVERSE 292
-#define TOKEN_COMBINATION 293
-#define TOKEN_RAND 294
-#define TOKEN_UNION 295
-#define TOKEN_SUBSUME 296
-#define TOKEN_INSET 297
-#define TOKEN_AFF 298
-#define TOKEN_PIPE 299
-#define TOKEN_NOT 300
-#define TOKEN_OR 301
-#define TOKEN_AND 302
-#define TOKEN_IMPLICATION 303
-#define TOKEN_EQUIV 304
-#define TOKEN_PLUS 305
-#define TOKEN_MINUS 306
-#define TOKEN_TIMES 307
-#define TOKEN_DIVIDE 308
-#define TOKEN_MODULO 309
-#define TOKEN_EQUAL 310
-#define TOKEN_DIFF 311
-#define TOKEN_LT 312
-#define TOKEN_LE 313
-#define TOKEN_GT 314
-#define TOKEN_GE 315
-#define TOKEN_IDENTIFIER 316
-#define TOKEN_STRING 317
-#define TOKEN_INTEGER 318
-#define TOKEN_DOUBLE 319
-#define TOKEN_VARIABLE 320
-#define TOKEN_ANONYMOUS 321
-#define TOKEN_MINUS_U 322
-#define TOKEN_NOELSE 323
+#define TOKEN_FOREACH 290
+#define TOKEN_IN 291
+#define TOKEN_SORT 292
+#define TOKEN_WITH 293
+#define TOKEN_REVERSE 294
+#define TOKEN_COMBINATION 295
+#define TOKEN_RAND 296
+#define TOKEN_UNION 297
+#define TOKEN_SUBSUME 298
+#define TOKEN_INSET 299
+#define TOKEN_AFF 300
+#define TOKEN_PIPE 301
+#define TOKEN_NOT 302
+#define TOKEN_OR 303
+#define TOKEN_AND 304
+#define TOKEN_IMPLICATION 305
+#define TOKEN_EQUIV 306
+#define TOKEN_PLUS 307
+#define TOKEN_MINUS 308
+#define TOKEN_TIMES 309
+#define TOKEN_DIVIDE 310
+#define TOKEN_MODULO 311
+#define TOKEN_EQUAL 312
+#define TOKEN_DIFF 313
+#define TOKEN_LT 314
+#define TOKEN_LE 315
+#define TOKEN_GT 316
+#define TOKEN_GE 317
+#define TOKEN_IDENTIFIER 318
+#define TOKEN_STRING 319
+#define TOKEN_INTEGER 320
+#define TOKEN_DOUBLE 321
+#define TOKEN_VARIABLE 322
+#define TOKEN_ANONYMOUS 323
+#define TOKEN_MINUS_U 324
+#define TOKEN_NOELSE 325
 
 
 
@@ -200,7 +204,7 @@ typedef union YYSTYPE
   std::list<  bitsetPtr > *list_args;
  }
 /* Line 1529 of yacc.c.  */
-#line 204 "rulesyacc.hh"
+#line 208 "rulesyacc.hh"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

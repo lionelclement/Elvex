@@ -41,9 +41,9 @@ public:
   ~ForestIdentifier();
   static forestIdentifierPtr create(unsigned int, std::string, unsigned int, unsigned int);  
   
-  const unsigned int getFrom(void){return from;};
-  const unsigned int getTo(void){return to;};
-  const unsigned int getCode(void){return code;};
+  const unsigned int getFrom(void) const {return from;};
+  const unsigned int getTo(void) const {return to;} ;
+  const unsigned int getCode(void) const {return code;};
   void print(std::ostream &) const;
   
   const bool operator <(const ForestIdentifier &) const;

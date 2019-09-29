@@ -188,15 +188,167 @@ statementPtr Statement::create (void)
 /* **************************************************
  *
  ************************************************** */
-Statement::type Statement::getOp(void) const 
+const bool Statement::isAff(void) const
 {
-  return this->op;
+  return op==AFF;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Statement::arithmetic_op Statement::getFct(void) const 
+const bool Statement::isSubsume(void) const
+{
+  return op==SUBSUME;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isUp(void) const
+{
+  return op==UP;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isUp2(void) const
+{
+  return op==UP2;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isDown(void) const
+{
+  return op==DOWN;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isDown2(void) const
+{
+  return op==DOWN2;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isFeatures(void) const
+{
+  return op==FEATURES;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isVariable(void) const
+{
+  return op==VARIABLE;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isConstant(void) const
+{
+  return op==CONSTANT;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isUnif(void) const
+{
+  return op==UNIF;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isGuard(void) const
+{
+  return op==GUARD;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isPrint(void) const
+{
+  return op==PRINT;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isPrintln(void) const
+{
+  return op==PRINTLN;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isAttest(void) const
+{
+  return op==ATTEST;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isIf(void) const
+{
+  return op==IF;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isStms(void) const
+{
+  return op==STMS;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isStr(void) const
+{
+  return op==STR;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isList(void) const
+{
+  return op==LIST;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isDouble(void) const
+{
+  return op==DOUBLE;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const bool Statement::isFct(void) const
+{
+  return op==FCT;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const Statement::arithmetic_op Statement::getFct(void) const
 {
   return fct;
 }
@@ -204,7 +356,7 @@ Statement::arithmetic_op Statement::getFct(void) const
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::getLhs(void) const 
+const statementPtr Statement::getLhs(void) const
 {
   return lhs;
 }
@@ -212,7 +364,7 @@ statementPtr Statement::getLhs(void) const
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::getRhs(void) const 
+const statementPtr Statement::getRhs(void) const 
 {
   return rhs;
 }
@@ -220,15 +372,15 @@ statementPtr Statement::getRhs(void) const
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Statement::getFeatures(void) const 
+const featuresPtr Statement::getFeatures(void) const 
 {
   return features;
-}
+};
 
 /* **************************************************
  *
  ************************************************** */
-bitsetPtr Statement::getBits(void) const 
+const bitsetPtr Statement::getBits(void) const 
 {
   return bits;
 }
@@ -236,7 +388,7 @@ bitsetPtr Statement::getBits(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Statement::getFirst(void) const 
+const unsigned int Statement::getFirst(void) const 
 {
   return pair.first;
 }
@@ -244,7 +396,7 @@ unsigned int Statement::getFirst(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Statement::getSecond(void) const 
+const unsigned int Statement::getSecond(void) const 
 {
   return pair.second;
 }
@@ -252,7 +404,7 @@ unsigned int Statement::getSecond(void) const
 /* **************************************************
  *
  ************************************************** */
-std::string Statement::getStr(void) const 
+const std::string Statement::getStr(void) const 
 {
   return str;
 }
@@ -260,7 +412,7 @@ std::string Statement::getStr(void) const
 /* **************************************************
  *
  ************************************************** */
-listPtr Statement::getList(void) const 
+const listPtr Statement::getList(void) const 
 {
   return list;
 }
@@ -268,26 +420,27 @@ listPtr Statement::getList(void) const
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Statement::getStatements(void) const 
+const statementsPtr Statement::getStatements(void) const 
 {
-  return this->statements;
+  return statements;
 }
 
 /* **************************************************
  *
  ************************************************** */
-double Statement::getNumber(void) const 
+const double Statement::getNumber(void) const 
 {
-  return this->number;
+  return number;
 }
 
 /* **************************************************
  *
  ************************************************** */
-int Statement::getLineno(void) const 
+const int Statement::getLineno(void) const 
 {
   return lineno;
 }
+
 
 /* **************************************************
  *
@@ -297,8 +450,6 @@ Statement::print(std::ostream &outStream, int left) const
 {
   std::string red="", green="", blue="";
   switch (this->op) {
-  case SORT:
-  case REVERSE:
   case ATTEST:
   case AFF:
   case SUBSUME:
@@ -331,22 +482,6 @@ Statement::print(std::ostream &outStream, int left) const
     outStream << "<S>";
   }
   switch (this->op) {
-  case SORT:
-    outStream << "sort&nbsp;";
-    lhs->print(outStream);
-    if (rhs) {
-      outStream << " with&nbsp;";
-      rhs->print(outStream);
-    }
-    break;
-  case REVERSE:
-    outStream << "reverse&nbsp;";
-    lhs->print(outStream);
-    break;
-    // case COMBINATION:
-    //   outStream << "combination&nbsp;";
-    //   lhs->print(outStream);
-    //   break;
   case ATTEST:
     outStream << "attest&nbsp;";
     lhs->print(outStream);
@@ -571,8 +706,6 @@ Statement::print(std::ostream &outStream, int left) const
     break;
   }
   switch (this->op) {
-  case SORT:
-  case REVERSE:
   case ATTEST:
   case AFF:
   case SUBSUME:
@@ -598,15 +731,6 @@ const std::string
 Statement::makeSerializationId() 
 {
   switch (this->op) {
-  case SORT:
-    serialId = 'S' + lhs->serialize();
-    if (rhs) {
-      serialId += " W " + rhs->serialize();
-    }
-    break;
-  case REVERSE:
-    serialId = 'R' + lhs->serialize();
-    break;
   case ATTEST:
     serialId = 'A' + lhs->serialize();
     break;
@@ -785,8 +909,6 @@ Statement::clone(const std::bitset < NBRFLAGS>& savedFlags)
   case IF:
   case THENELSE:
   case UNIF:
-  case SORT:
-  case REVERSE:
   case AFF:
   case SUBSUME:
   case INSET:
@@ -836,8 +958,6 @@ Statement::evalFeatures(itemPtr item, bool replaceVariables)
   case DOWN:
   case UP2:
   case LIST:
-  case SORT:
-  case REVERSE:
   case STMS:
   case DOUBLE:
   case FCT:
@@ -947,45 +1067,6 @@ Statement::evalList(itemPtr item, bool replaceVariables)
   case FCT:
   case FINISHED:
     FATAL_ERROR_STM;
-    break;
-  case SORT:
-    {
-      valuePtr v = lhs->evalValue(item, replaceVariables);
-      valuePtr with = rhs ? rhs->evalValue(item, replaceVariables) : valuePtr();
-      if (!v)
-	resultList = listPtr();
-      else if (v->isNil())
-	resultList = List::nil;
-      else if (v->isList())
-	resultList = v->getList()->clone();
-      else {
-	WARNING_STM;
-      }
-      if (with
-	  && (!with->isNil())
-	  && (with->isConstant())) {
-	resultList->sort(with->getBits());
-      }
-      else if (!with)
-	resultList->sort(bitsetPtr());
-      else
-	WARNING_STM;
-    }
-    break;
-  case REVERSE:
-    {
-      valuePtr v = lhs->evalValue(item, replaceVariables);
-      if (!v)
-	resultList = listPtr();
-      else if (v->isNil())
-	resultList = List::nil;
-      else if (v->isList())
-	resultList = v->getList()->clone();
-      else {
-	WARNING_STM;
-      }
-      resultList->reverse();
-    }
     break;
   case LIST:
     resultList = getList()->clone();
@@ -1173,8 +1254,6 @@ Statement::evalValue(itemPtr item, bool replaceVariables)
     break;
 
   case LIST:
-  case SORT:
-  case REVERSE:
     resultList = evalList(item, replaceVariables);
     break;
 
@@ -2032,10 +2111,10 @@ void
 Statement::buildEnvironmentWithValue(itemPtr item, bool &result)
 {
   /***
-  std::cerr << "<DIV>buildEnvironmentWithValue</DIV>";
-  std::cerr << "<DIV>";
-  this->print(std::cerr, 0);
-  std::cerr << "</DIV>";
+      std::cerr << "<DIV>buildEnvironmentWithValue</DIV>";
+      std::cerr << "<DIV>";
+      this->print(std::cerr, 0);
+      std::cerr << "</DIV>";
   ***/
   switch (this->op) {
   case AFF:
@@ -2048,7 +2127,7 @@ Statement::buildEnvironmentWithValue(itemPtr item, bool &result)
     // 	 X = sort X with a;
     // 	 X = reverse X;
 
-    if (lhs->getOp()==VARIABLE) {
+    if (lhs->isVariable()) {
       //*effect = true;
       valuePtr right = rhs->evalValue(item, true);
       if (!right) {
@@ -2072,7 +2151,7 @@ Statement::buildEnvironmentWithValue(itemPtr item, bool &result)
     // 	 ( … ) = ( … )
     // 	 ( … ) = sort X with a;
     // 	 ( … ) = reverse X;
-    else if (lhs->getOp()==LIST) {
+    else if (lhs->isList()) {
       //*effect = true;
       listPtr right = rhs->evalList(item, true);
       if (!right) {
@@ -2226,7 +2305,7 @@ void
 Statement::stmPrint(itemPtr item)
 {
   addFlags(Flags::SEEN);
-  if (lhs->getOp()==STR) {
+  if (lhs->isStr()) {
     std::cout << lhs->getStr();
   }
   else{
@@ -2280,8 +2359,6 @@ Statement::renameVariables(unsigned int i)
   case INSET:
   case FCT:
   case UNIF:
-  case SORT:
-  case REVERSE:
   case ATTEST:
   case PRINT:
   case PRINTLN:
@@ -2455,8 +2532,6 @@ void Statement::enable(statementPtr root, itemPtr item, bool &effect, bool on)
     }
     break;
     
-  case SORT:
-  case REVERSE:
   case CONSTANT:
   case NIL:
   case NOT_NIL:
@@ -2486,7 +2561,7 @@ Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
   if (item->isSetFlags(Flags::BOTTOM))
     return;
 
-  if (getOp()==Statement::IF) {
+  if (isIf()) {
     statementPtr left = getRhs()->getLhs();
     statementPtr right = getRhs()->getRhs();
 
@@ -2531,15 +2606,15 @@ Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
   }
 
   // […]
-  else if (getOp()==Statement::GUARD) {
+  else if (isGuard()) {
     guard(item, result, trace);
     effect = true;
     addFlags(Flags::SEEN);
   }
 
   // ↓1 = …
-  else if ((getOp()==Statement::AFF)
-	   && (getLhs()->getOp()==Statement::DOWN)) {
+  else if ((isAff())
+	   && (getLhs()->isDown())) {
     buildInheritedSonFeatures(item, result);
     effect = true;
     addFlags(Flags::SEEN);
@@ -2547,13 +2622,13 @@ Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
 
   // [ … X … ] ⊂ ⇓1
   // X = ⇓1
-  else if (((getOp()==Statement::SUBSUME)
-	    && (getRhs()->getOp()==Statement::DOWN2)
-	    && (getLhs()->getOp()==Statement::FEATURES))
+  else if (((isSubsume())
+	    && (getRhs()->isDown2())
+	    && (getLhs()->isFeatures()))
 	   ||
-	   ((getOp()==Statement::AFF)
-	    && (getRhs()->getOp()==Statement::DOWN2)
-	    && (getLhs()->getOp()==Statement::VARIABLE))) {
+	   ((isAff())
+	    && (getRhs()->isDown2())
+	    && (getLhs()->isVariable()))) {
     buildEnvironmentWithSynthesize(item, result);
     effect = true;
     addFlags(Flags::SEEN);
@@ -2561,13 +2636,13 @@ Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
 
   // [ … X … ] ⊂ ↑
   // X = ↑
-  else if (((getOp()==Statement::SUBSUME)
-	    && (getRhs()->getOp()==Statement::UP)
-	    && (getLhs()->getOp()==Statement::FEATURES))
+  else if (((isSubsume())
+	    && (getRhs()->isUp())
+	    && (getLhs()->isFeatures()))
 	   ||
-	   ((getOp()==Statement::AFF)
-	    && (getRhs()->getOp()==Statement::UP)
-	    && (getLhs()->getOp()==Statement::VARIABLE))) {
+	   ((isAff())
+	    && (getRhs()->isUp())
+	    && (getLhs()->isVariable()))) {
     buildEnvironmentWithInherited(item, result);
     effect = true;
     addFlags(Flags::SEEN);
@@ -2590,63 +2665,59 @@ Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
   //
   // […X…] ⊂ Y
   // […X…] ⊂ […]
-  else if (((getOp()==Statement::AFF)
-	    && (getLhs()->getOp()==Statement::VARIABLE)
-	    && ((getRhs()->getOp()==Statement::CONSTANT)
-		||(getRhs()->getOp()==Statement::VARIABLE)
-		||(getRhs()->getOp()==Statement::UNIF)
-		||(getRhs()->getOp()==Statement::FEATURES)
-		||(getRhs()->getOp()==Statement::DOUBLE)
-		||(getRhs()->getOp()==Statement::FCT)
-		||(getRhs()->getOp()==Statement::LIST)
-		||(getRhs()->getOp()==Statement::SORT)
-		||(getRhs()->getOp()==Statement::REVERSE)))
-	   ||((getOp()==Statement::AFF)
-	      && (getLhs()->getOp()==Statement::LIST)
-	      && ((getRhs()->getOp()==Statement::VARIABLE)
-		  ||(getRhs()->getOp()==Statement::LIST)
-		  ||(getRhs()->getOp()==Statement::SORT)
-		  ||(getRhs()->getOp()==Statement::REVERSE)))
-	   ||((getOp()==Statement::SUBSUME)
-	      && (getLhs()->getOp()==Statement::FEATURES)
-	      && ((getRhs()->getOp()==Statement::VARIABLE)
-		  ||(getRhs()->getOp()==Statement::FEATURES)))) {
+  else if (((isAff())
+	    && (getLhs()->isVariable())
+	    && ((getRhs()->isConstant())
+		||(getRhs()->isVariable())
+		||(getRhs()->isUnif())
+		||(getRhs()->isFeatures())
+		||(getRhs()->isDouble())
+		||(getRhs()->isFct())
+		||(getRhs()->isList())))
+	   ||((isAff())
+	      && (getLhs()->isList())
+	      && ((getRhs()->isVariable())
+		  ||(getRhs()->isList())))
+	   ||((isSubsume())
+	      && (getLhs()->isFeatures())
+	      && ((getRhs()->isVariable())
+		  ||(getRhs()->isFeatures())))) {
     buildEnvironmentWithValue(item, result);
     effect = true;
     addFlags(Flags::SEEN);
   }
 
   // ⇑ = …
-  else if ((getOp()==Statement::AFF)
-	   && (getLhs()->getOp()==Statement::UP2)) {
+  else if ((isAff())
+	   && (getLhs()->isUp2())) {
     buildSynthesizedFeatures(item, result);
     effect = true;
     addFlags(Flags::SEEN);
   }
 
   // attest …
-  else if (getOp()==Statement::ATTEST) {
+  else if (isAttest()) {
     attest(item, result);
     effect = true;
     addFlags(Flags::SEEN);
   }
 
   // print
-  else if (getOp()==Statement::PRINT) {
+  else if (isPrint()) {
     stmPrint(item);
     effect = true;
     addFlags(Flags::SEEN);
   }
 
   // println
-  else if (getOp()==Statement::PRINTLN) {
+  else if (isPrintln()) {
     stmPrintln(item);
     effect = true;
     addFlags(Flags::SEEN);
   }
 
   // statements
-  else if (getOp()==Statement::STMS) {
+  else if (isStms()) {
     getStatements()->apply(item, effect, trace);
   }
 
@@ -2679,7 +2750,7 @@ Statement::lookingForAssignedInheritedSonFeatures(std::vector< bool > &assignedI
   switch (this->op) {
   case AFF:
     // ↓1 = …
-    if ((this->getOp()==Statement::AFF) && (this->getLhs()->getOp()==Statement::DOWN))
+    if ((this->isAff()) && (this->getLhs()->isDown()))
       assignedInheritedSonFeatures[this->getLhs()->getFirst()] = true;
     break;
 
@@ -2778,8 +2849,6 @@ bool Statement::findVariable(bitsetPtr variable)
     
   case DASH:
   case DOWN2:
-  case SORT:
-  case REVERSE:
   case CONSTANT:
   case NIL:
   case NOT_NIL:

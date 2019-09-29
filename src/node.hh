@@ -39,12 +39,12 @@ public:
   typedef std::vector<forestPtr> vectorForests;
   
 private:
-  int nbrCS;
+  unsigned int nbrCS;
   vectorForests forests;
   std::vector<std::string> output;
   
   Node(void);
-  void setId(idType);
+  //void setId(idType);
   void generate(vectorForests::const_iterator);
 
 public:
@@ -52,13 +52,13 @@ public:
   static nodePtr create(void);
 
   vectorForests &getForests(void);
-  std::vector<std::string> &getOutput(void);
+  const std::vector<std::string> &getOutput(void) const;
   
   void addForest(forestPtr);
   forestPtr getForest(unsigned int) const;
   
 #ifdef OUTPUT_XML
-  void toXML(const xmlNodePtr, const xmlNodePtr);
+  void toXML(const xmlNodePtr, const xmlNodePtr) const;
 #endif
   void generate(bool);
 

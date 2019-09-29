@@ -44,7 +44,6 @@ private:
   
   Entry(unsigned int, unsigned int, std::string, featuresPtr);
   Entry(unsigned int, std::string, std::string, featuresPtr);
-  void setId(idType);
   const std::string makeSerializationId(void);
 
 public:

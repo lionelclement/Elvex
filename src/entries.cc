@@ -155,7 +155,7 @@ Entries::toXML(xmlNodePtr nodeRoot) const
   xmlNodePtr node=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRIES", NULL);
   for (std::vector< entryPtr >::const_iterator i=entries.begin();
        i!=entries.end();
-       i++)
+       ++i)
     (*i)->toXML(node);
 }
 #endif

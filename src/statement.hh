@@ -47,6 +47,7 @@ public:
     UP2,
     DOWN,
     DOWN2,
+    //DOWNVARIABLE,
     FEATURES,
     VARIABLE,
     CONSTANT,
@@ -62,8 +63,6 @@ public:
     STMS,
     STR,
     LIST,
-    SORT,
-    REVERSE,
     DOUBLE,
     FCT,
     FINISHED
@@ -94,6 +93,7 @@ private:
   
 private:
   Statement (unsigned int, type op, std::string str);
+  Statement (unsigned int, type op, bitsetPtr bits);
   Statement (unsigned int, type op=FINISHED, statementPtr lhs=statementPtr(), statementPtr rhs=statementPtr(), unsigned int first=UINT_MAX, unsigned int second=UINT_MAX, featuresPtr features=featuresPtr(), bitsetPtr bits=bitsetPtr(), arithmetic_op fct=NOP, listPtr list=listPtr(), statementsPtr stms=statementsPtr(), double=0.0);
   const std::string makeSerializationId(void);
   
@@ -111,19 +111,40 @@ public:
   static statementPtr create (unsigned int lineno, type op, double);
   static statementPtr create ();
 
-  type getOp(void) const;
-  arithmetic_op getFct(void) const;
-  statementPtr getLhs(void) const;
-  statementPtr getRhs(void) const;
-  featuresPtr getFeatures(void) const;
-  bitsetPtr getBits(void) const;
-  unsigned int getFirst(void) const;
-  unsigned int getSecond(void) const;
-  std::string getStr(void) const;
-  listPtr getList(void) const;
-  statementsPtr getStatements(void) const;
-  double getNumber(void) const;
-  int getLineno(void) const;
+  const bool isAff(void) const;
+  const bool isSubsume(void) const;
+  const bool isUp(void) const;
+  const bool isUp2(void) const;
+  const bool isDown(void) const;
+  const bool isDown2(void) const;
+  const bool isFeatures(void) const;
+  const bool isVariable(void) const;
+  const bool isConstant(void) const;
+  const bool isUnif(void) const;
+  const bool isGuard(void) const;
+  const bool isPrint(void) const;
+  const bool isPrintln(void) const;
+  const bool isAttest(void) const;
+  const bool isIf(void) const;
+  const bool isStms(void) const;
+  const bool isStr(void) const;
+  const bool isList(void) const;
+  const bool isDouble(void) const;
+  const bool isFct(void) const;
+  
+  const arithmetic_op getFct(void) const;
+  const statementPtr getLhs(void) const;
+  const statementPtr getRhs(void) const;
+  const featuresPtr getFeatures(void) const;
+  const bitsetPtr getBits(void) const;
+  const unsigned int getFirst(void) const;
+  const unsigned int getSecond(void) const;
+  const std::string getStr(void) const;
+  const listPtr getList(void) const;
+  const statementsPtr getStatements(void) const;
+  const double getNumber(void) const;
+  const int getLineno(void) const;
+
   void print(std::ostream &, int=0) const;
   featuresPtr evalFeatures(itemPtr, bool);
   listPtr evalList(itemPtr, bool);

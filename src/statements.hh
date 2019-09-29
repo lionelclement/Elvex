@@ -40,8 +40,7 @@ private:
   std::list< statementPtr > statements;
   Statements(statementPtr);
   const std::string makeSerializationId(void);
-  void setId(idType);
-
+  
 public:
   ~Statements();
   static statementsPtr create(statementPtr=statementPtr());

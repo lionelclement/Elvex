@@ -122,8 +122,8 @@
 %token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN
 %token TOKEN_IF TOKEN_ELSE
 %token TOKEN_NIL TOKEN_TRUE
-%token TOKEN_SORT TOKEN_WITH
-%token TOKEN_REVERSE
+%token TOKEN_FOREACH TOKEN_IN
+%token TOKEN_SORT TOKEN_WITH TOKEN_REVERSE
 %token TOKEN_COMBINATION
 %token TOKEN_RAND
 
@@ -268,7 +268,7 @@ word:
 	  // constantNoun => (0 => args)
 	  std::map< unsigned int, std::map< unsigned int, entriesPtr > *>::iterator foundCode=synthesizer.getLexicon().find(code);
 	  std::map< unsigned int, entriesPtr > *zeroToEntries;
-	  if (foundCode!=synthesizer.getLexicon().end()){
+	  if (foundCode!=synthesizer.getLexicon().end()) {
 	    zeroToEntries=foundCode->second;
 	  } else {
 	    zeroToEntries=new std::map< unsigned int, entriesPtr >;
@@ -339,8 +339,7 @@ lexical_entries:
 	  DBUGPRT("lexical_entries");
 	  $$=new entriesPtr(Entries::create(*$1));
 	  free($1);
-	 }
-	;
+	 };
 
 lexical_entry:
 	// pos
@@ -358,8 +357,7 @@ lexical_entry:
 	  DBUGPRT("lexical_entry");
 	  $$=new entryPtr(Entry::create(Vartable::strToInt(*$1), UINT_MAX, std::string(), Features::create()));
 	  free($1);
-	}
-	;
+	};
 
 ///////////////////////////
 // RULES
@@ -426,7 +424,6 @@ terms:
 	  DBUGPRT("term");
 	  $$=$2;
 	  $$->setOptional();
-	  //$$->setFolded();
 	};
 
 terms_disj:
@@ -435,7 +432,6 @@ terms_disj:
 	  DBUGPRT("term_disj");
 	  $$=$1;
 	  $$->push_back($3);
-	  //$$->setFolded();
 	}
 
 	|term
@@ -479,8 +475,7 @@ structure_statement:
 	|TOKEN_SEMI
 	{
 	  $$=NULL;
-	}
-	;
+	};
 
 list_statement:
 	statement
@@ -510,10 +505,10 @@ statements:
 	{
 	  DBUGPRT("statement");
 	  $$=new statementPtr(Statement::create(ruleslineno, Statement::STMS, Statements::create()));
-	}
+	};
 	
 statement:
-	statements{
+	statements {
 	  DBUGPRT("statement");
 	  $$=$1;
 	 }
@@ -546,47 +541,41 @@ statement:
 	  DBUGPRT("statement");
 	  $$=new statementPtr(Statement::create(ruleslineno, Statement::AFF, *$1, *$3));
 	  // <X, …> = <…>
-	  // <X, …> = sort …
-	  // <X, …> = reverse …
 	  // <X, …> = Z
-	  if (((*$1)->getOp()==Statement::LIST) && (((*$3)->getOp()==Statement::LIST)||((*$3)->getOp()==Statement::SORT)||((*$3)->getOp()==Statement::REVERSE)||((*$3)->getOp()==Statement::VARIABLE)))
+	  if (((*$1)->isList()) && (((*$3)->isList())||((*$3)->isVariable())))
 	    ;	  
 	  // ↓i = X
 	  // ↓i = […]
 	  // ↓i = ↑
 	  // ↓i = … ∪ …
 	  // ↓i = ⇓j
-	  else if (((*$1)->getOp()==Statement::DOWN) && (((*$3)->getOp()==Statement::VARIABLE)||((*$3)->getOp()==Statement::FEATURES)||((*$3)->getOp()==Statement::UP)||((*$3)->getOp()==Statement::UNIF)||((*$3)->getOp()==Statement::DOWN2)))
+	  else if (((*$1)->isDown()) && (((*$3)->isVariable())||((*$3)->isFeatures())||((*$3)->isUp())||((*$3)->isUnif())||((*$3)->isDown2())))
 	    ;
 	  // ⇑ = X
 	  // ⇑ = […]
 	  // ⇑ = ↑
 	  // ⇑ = … ∪ …
 	  // ⇑ = ⇓j
-	  else if (((*$1)->getOp()==Statement::UP2) && (((*$3)->getOp()==Statement::VARIABLE)||((*$3)->getOp()==Statement::FEATURES)||((*$3)->getOp()==Statement::UP)||((*$3)->getOp()==Statement::UNIF)||((*$3)->getOp()==Statement::DOWN2)))
+	  else if (((*$1)->isUp2()) && (((*$3)->isVariable())||((*$3)->isFeatures())||((*$3)->isUp())||((*$3)->isUnif())||((*$3)->isDown2())))
 	    ;
 	  // X = Y
 	  // X = a
 	  // X = <…>
-	  // X = sort …
-	  // X = reverse …
 	  // X = […]
 	  // X = ↑
 	  // X = … ∪ …
 	  // X = ⇓j
 	  // X = <expr>
-	  else if (((*$1)->getOp()==Statement::VARIABLE) 
-		   &&(((*$3)->getOp()==Statement::VARIABLE)
-		      ||((*$3)->getOp()==Statement::CONSTANT)
-		      ||((*$3)->getOp()==Statement::LIST)
-		      ||((*$3)->getOp()==Statement::SORT)
-		      ||((*$3)->getOp()==Statement::REVERSE)
-		      ||((*$3)->getOp()==Statement::FEATURES)
-		      ||((*$3)->getOp()==Statement::UP)
-		      ||((*$3)->getOp()==Statement::UNIF)
-		      ||((*$3)->getOp()==Statement::DOWN2)
-		      ||((*$3)->getOp()==Statement::DOUBLE)
-		      ||((*$3)->getOp()==Statement::FCT)));
+	  else if (((*$1)->isVariable()) 
+		   &&(((*$3)->isVariable())
+		      ||((*$3)->isConstant())
+		      ||((*$3)->isList())
+		      ||((*$3)->isFeatures())
+		      ||((*$3)->isUp())
+		      ||((*$3)->isUnif())
+		      ||((*$3)->isDown2())
+		      ||((*$3)->isDouble())
+		      ||((*$3)->isFct())));
 	  else {
 	    yyerror((char*)"syntax error");
 	  }
@@ -600,7 +589,7 @@ statement:
 	  // […] ⊂ ↑ 
 	  // […] ⊂ ⇓j 
 	  // […] ⊂ X 
-	  if (((*$1)->getOp()==Statement::FEATURES) && (((*$3)->getOp()==Statement::UP)||((*$3)->getOp()==Statement::DOWN2)||((*$3)->getOp()==Statement::VARIABLE)))
+	  if (((*$1)->isFeatures()) && (((*$3)->isUp())||((*$3)->isDown2())||((*$3)->isVariable())))
 	    ;
 	  else 
 	    yyerror((char *)"syntax error");
@@ -612,8 +601,8 @@ statement:
 	  DBUGPRT("statement");
 	  $$=new statementPtr(Statement::create(ruleslineno, Statement::INSET, (*$1), (*$3)));
 	  // ↓i ∈ <...>
-	  if (((*$1)->getOp()==Statement::DOWN)
-	       && (((*$3)->getOp()==Statement::LIST)))
+	  if (((*$1)->isDown())
+	       && (((*$3)->isList())))
 	    ;
 	    else 
 	  yyerror((char *)"syntax error");
@@ -641,15 +630,25 @@ statement:
 	  free($5);
 	  free($7);
 	}
-	;
+
+	|TOKEN_FOREACH variable TOKEN_IN expression_statement statement {
+	  DBUGPRT("statement");
+	  FATAL_ERROR;
+	  /*$$=new statementPtr(Statement::create(ruleslineno, 
+						Statement::FOREACH,
+						(*$3), 
+						Statement::create(ruleslineno, Statement::THENELSE, (*$5), statementPtr())));
+	  */
+	  //free($3);
+	  //free($5);
+	};
 
 left_hand_side_subset_statement:
 	features {
 	  DBUGPRT("left_hand_side_statement");
 	  $$=new statementPtr(Statement::create(ruleslineno, Statement::FEATURES, *$1));
 	  free($1);
-	}
-	;
+	};
 	
 right_hand_side_subset_statement:
 	variable {
@@ -672,22 +671,19 @@ right_hand_side_subset_statement:
 	  DBUGPRT("right_hand_side_subset_statement");
 	  $$=new statementPtr(Statement::create(ruleslineno, Statement::FEATURES, *$1));
 	  free($1);
-	}
-	;
+	};
 	
 left_hand_side_inset_statement:
 	down {
 	  DBUGPRT("left_hand_side_statement");
 	  $$=$1;
-	}
-	;
+	};
 	
 right_hand_side_inset_statement:
 	expression_statement {
 	  DBUGPRT("right_hand_side_statement");
 	  $$=$1;
-	}
-	;	
+	};	
 
 left_hand_side_aff_statement:
 	updouble {
@@ -714,15 +710,13 @@ left_hand_side_aff_statement:
 							     List::create(Value::create(Value::VARIABLE, *$4)))));
 	  free($2);
 	  free($4);
-	}
-	;
+	};
 
 right_hand_side_aff_statement:
 	expression_statement {
 	  DBUGPRT("right_hand_side_statement");
 	  $$=$1;
-	}
-	;	
+	};	
 
 expression_statement:
 	//////////////////////////////////////////////////
@@ -943,48 +937,6 @@ expression_statement:
 	  $$=$2;
 	}
 	
-	|TOKEN_SORT variable TOKEN_WITH identifier {
-	  DBUGPRT("expression_statement");
-	  $$=new statementPtr(Statement::create(ruleslineno, Statement::SORT,
-						Statement::create(ruleslineno, Statement::VARIABLE, *$2),
-						Statement::create(ruleslineno, Statement::CONSTANT, *$4)));
-	  free($2);
-	  free($4);
-	}
-	
-	|TOKEN_SORT variable {
-	  DBUGPRT("expression_statement");
-	  $$=new statementPtr(Statement::create(ruleslineno, Statement::SORT,
-						Statement::create(ruleslineno, Statement::VARIABLE, *$2),
-						statementPtr()));
-	  free($2);
-	}
-
-	|TOKEN_SORT list TOKEN_WITH identifier {
-	  DBUGPRT("expression_statement");
-	  $$=new statementPtr(Statement::create(ruleslineno, Statement::SORT,
-						Statement::create(ruleslineno, Statement::LIST, *$2), 
-						Statement::create(ruleslineno, Statement::CONSTANT, *$4)));
-	  free($2);
-	  free($4);
-	}
-
-	|TOKEN_SORT list {
-	  DBUGPRT("expression_statement");
-	  $$=new statementPtr(Statement::create(ruleslineno, Statement::SORT,
-						Statement::create(ruleslineno, Statement::LIST, *$2), 
-						statementPtr()));
-	  free($2);
-	}
-
-	|TOKEN_REVERSE variable {
-	  DBUGPRT("expression_statement");
-	  $$=new statementPtr(Statement::create(ruleslineno, Statement::REVERSE,
-						Statement::create(ruleslineno, Statement::VARIABLE, *$2),
-						statementPtr()));
-	  free($2);
-	}
-
 	|list {
 	  DBUGPRT("expression_statement");
 	  $$=new statementPtr(Statement::create(ruleslineno, Statement::LIST, *$1));
@@ -994,8 +946,7 @@ expression_statement:
 	|dash_statement {
 	  DBUGPRT("expression_statement");
 	  $$=$1;
-	 }
-	;
+	};
 
 up:
 	TOKEN_UPARROW {  
@@ -1012,9 +963,17 @@ updouble:
 down:
 	TOKEN_DOWNARROW TOKEN_INTEGER
 	{ 
-	  DBUGPRT("downSimple");
+	  DBUGPRT("down");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWN, (unsigned int)$2-1)); 
-	};
+	}
+
+	/*|TOKEN_DOWNARROW identifier
+	{ 
+	  DBUGPRT("down");
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWNVARIABLE, *$2));
+	  free($2);
+	}*/
+        ;
 
 dash_statement:
 	TOKEN_DASH TOKEN_INTEGER TOKEN_COLON TOKEN_INTEGER
@@ -1055,8 +1014,7 @@ features:
 	{
 	  DBUGPRT("features");
 	  $$=new featuresPtr(Features::create());
-	}
-	;
+	};
 
 features_components:
 	features_components TOKEN_COMMA feature
@@ -1073,8 +1031,7 @@ features_components:
 	  $$=new featuresPtr(Features::create());
 	  (*$$)->addFeature(*$1);
 	  free($1);
-	}
-	;
+	};
 
 feature:
 	// PRED: predicate
@@ -1135,8 +1092,7 @@ feature:
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::VARIABLE, *$1, valuePtr()));
 	  free($1);
-	}
-	;
+	};
 
 feature_value:
 	variable
@@ -1195,8 +1151,7 @@ feature_value:
 	{
 	  DBUGPRT("variable");
 	  $$=new valuePtr(Value::_anonymous);
-	}
-	;
+	};
 
 constant:
 	identifier
@@ -1229,8 +1184,7 @@ variable:
   	  std::string str = oss.str();
 	  $$=new bitsetPtr(Bitset::create(Vartable::varTableAdd(str)));
 	  free($1);
-	}
-	;
+	};
 	
 list:
 	TOKEN_LT list_elements TOKEN_GT
@@ -1254,8 +1208,7 @@ list:
 	    $$=new listPtr(List::create(*$2, *$4));
 	  free($2);
 	  free($4);
-	}
-	;
+	};
 
 list_elements:
 	list_element TOKEN_COMMA list_elements 
@@ -1271,8 +1224,7 @@ list_elements:
 	  DBUGPRT("list_elements");
 	  $$=new listPtr(List::create(*$1, List::nil));
 	  free($1);
-	}
-	;
+	};
 
 list_element:
 	variable
@@ -1312,7 +1264,6 @@ list_element:
 	{
 	  DBUGPRT("list_element");
 	  $$=$1;
-	}
-	;
+	};
 
 %%

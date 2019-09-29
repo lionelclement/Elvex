@@ -80,7 +80,6 @@ private:
 	unsigned int,
 	std::vector<unsigned int> &,
 	statementsPtr);
-  void setId(idType);
   
 public:
   virtual ~Item();
@@ -124,7 +123,7 @@ public:
 
   void addItem(std::map<int, itemPtr > &, int, itemPtr );
   
-  std::vector<unsigned int> & getRanges(void);
+  std::vector<unsigned int> &getRanges(void);
   void addRanges(unsigned int);
   void addRanges(std::vector<unsigned int> &);
   

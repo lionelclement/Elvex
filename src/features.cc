@@ -63,13 +63,13 @@ featuresPtr Features::create(featurePtr feature)
   return featuresPtr(new Features(feature));
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Features::setId(idType id)
-{
-  FATAL_ERROR;
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// void Features::setId(idType id)
+// {
+//   FATAL_ERROR;
+// }
 
 /* ************************************************************
  *
@@ -109,7 +109,7 @@ void Features::addFeatures(featuresPtr features, bool front)
 {
   for (listFeatures::const_iterator j=features->begin();
        j!=features->end();
-       j++)
+       ++j)
     if (front)
       this->features.push_front(*j);
     else
@@ -194,10 +194,10 @@ Features::print(std::ostream& outStream, bool par, bool flat) const
     }
     if (features.size()){
       bool first=true;
-      for (int t=Feature::first_type ; t <= Feature::last_type ; t++){
+      for (int t=Feature::first_type ; t <= Feature::last_type ; ++t){
 	for (Features::listFeatures::const_iterator f=features.begin();
 	     f!=features.end();
-	     f++){
+	     ++f){
 	  if ((*f)->getType()==t){
 	    if (flat){
 	      if (first) first=false; else outStream << ", ";
@@ -283,7 +283,7 @@ Features::assignForm()
     return form;
   for (Features::listFeatures::const_iterator f=features.begin();
        f!=features.end();
-       f++){
+       ++f){
     if ((*f)->getType()==Feature::FORM){
       form=(*f)->getValue()->getStr();
       return form;
@@ -304,7 +304,7 @@ Features::toXML(xmlNodePtr nodeRoot)
   if (features.size())
     for (Features::listFeatures::const_iterator i=features.begin();
 	 i!=features.end();
-	 i++)
+	 ++i)
       (*i)->toXML(f);
 }
 #endif
@@ -313,14 +313,16 @@ Features::toXML(xmlNodePtr nodeRoot)
  *
  ************************************************** */
 featuresPtr
-Features::clone(void)
+Features::clone(void) const
 {
-  if (isNil() || isBottom())
-    return shared_from_this();
-  featuresPtr result=Features::create();
+  if (isNil())
+    return _nil;
+  if (isBottom())
+    return _bottom;
+  featuresPtr result = Features::create();
   for (Features::listFeatures::const_iterator i=features.begin();
        i!=features.end();
-       i++)
+       ++i)
     result->features.push_back((*i)->clone());
   result->pred=pred;
   result->form=form;
@@ -335,7 +337,7 @@ Features::find(bitsetPtr code) const
 {
   for (Features::listFeatures::const_iterator i1=features.begin();
        i1!=features.end();
-       i1++){
+       ++i1){
     if (((*(*i1)->getAttribute()) & *code).any()){
       return (*i1)->getValue();
     }
@@ -403,7 +405,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
 	  }
 	  break;
 	}
-	i2++;
+	++i2;
       }
       // Trait i1 inexistant
       if (i2==features->end()){
@@ -449,7 +451,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
 	    (*i2)->addFlags(Flags::SEEN);
 	    nFeatures->addFeature(*i2);
 	  }
-	  i2++;
+	  ++i2;
 	}
 	//environment->add((*i1)->getAttribute(), new Value(nFeatures, Value::FEATURES));
       }
@@ -461,7 +463,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
 	    (*i2)->addFlags(Flags::SEEN);
 	    nFeatures->addFeature(*i2);
 	  }
-	  i2++;
+	  ++i2;
 	}
 	environment->add((*i1)->getAttribute(), Value::create(Value::FEATURES, nFeatures));
       }
@@ -521,8 +523,8 @@ Features::subsumes(featuresPtr o, environmentPtr environment)
   else {
     Features::listFeatures::const_iterator i1;
     Features::listFeatures::const_iterator i2;
-    for (i1=begin(); i1!=end(); i1++){
-      for (i2=o->begin(); i2!=o->end(); i2++){
+    for (i1=begin(); i1!=end(); ++i1){
+      for (i2=o->begin(); i2!=o->end(); ++i2){
 	// [PRED:X]  < [PRED:Y]
 	// [att:X] < [att:Y]
 	// X < Y
@@ -556,7 +558,7 @@ Features::subFlags(const std::bitset<NBRFLAGS>& flags)
 {
   for (Features::listFeatures::const_iterator i=begin();
        i!=end();
-       i++)
+       ++i)
     (*i)->subFlags(flags);
 }
 
@@ -567,7 +569,7 @@ const bool
 Features::renameVariables(unsigned int i)
 {
   bool effect=false;
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); feature++)
+  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
     if ((*feature)->renameVariables(i)) effect=true;
   resetSerialId();
   return effect;
@@ -579,7 +581,7 @@ Features::renameVariables(unsigned int i)
 void
 Features::enable(statementPtr root, itemPtr item, bool &effect, bool on)
 {
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); feature++)
+  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
     (*feature)->enable(root, item, effect, on);
 }
 
@@ -590,7 +592,7 @@ void
 Features::deleteAnonymousVariables()
 {
  redo:
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); feature++){
+  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature){
     switch ((*feature)->getType()){
     case Feature::FORM:
     case Feature::PRED:
@@ -615,7 +617,7 @@ Features::deleteAnonymousVariables()
 const bool
 Features::findVariable(bitsetPtr variable)
 {
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); feature++)
+  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
     if ((*feature)->findVariable(variable))
       return true;
   return false;

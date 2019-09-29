@@ -49,7 +49,7 @@ public:
   void push_back(class Term * term);
 
   void print(std::ostream &outStream=std::cout);
-  class Terms *clone(void);
+  class Terms *clone(void) const;
 #ifdef OUTPUT_XML
   void toXML(const xmlNodePtr);
 #endif

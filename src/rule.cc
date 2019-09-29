@@ -77,14 +77,6 @@ Rule::~Rule()
   //DELETE;
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Rule::setId(idType id)
-{
-  this->id = id;
-}
-
 /* ************************************************************
  *
  ************************************************************ */
@@ -203,7 +195,7 @@ Rule::clone() const
     rhsCopy.push_back(rhs[i]->clone());
   class Rule *rule = new Rule(this->lineno, this->filename, lhs, rhsCopy, statements);
   rule->usages = usages;
-  rule->setId(this->getId());
+  rule->id = this->id;
   return rule;
 }
 

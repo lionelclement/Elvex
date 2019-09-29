@@ -383,8 +383,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 40
-#define YY_END_OF_BUFFER 41
+#define YY_NUM_RULES 41
+#define YY_END_OF_BUFFER 42
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -394,15 +394,15 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_acclist[82] =
     {   0,
-       41,   16,   40,    1,   16,   40,   40,    2,   16,   40,
-       16,   40,   39,   40,   37,   39,   40,   38,   40,   39,
-       40,   39,   40,   39,   40,   17,   40,    3,    4,    5,
+       42,   16,   41,    1,   16,   41,   41,    2,   16,   41,
+       16,   41,   40,   41,   38,   40,   41,   39,   41,   40,
+       41,   40,   41,   40,   41,   17,   41,    3,    4,    5,
         7,    6,    8,    9,   10,   11,   12,   13,   14,   15,
-       37,   36,   18,   18,   18,   18,   18,   18,   18,   18,
-       18,16419,16403,16403,16405,16404, 8227,   24, 8211, 8213,
-     8212,16406,   33,   26,   25,16414, 8214,16415,   23,   27,
-     8222,16412,16416, 8223,16416,16413,   34, 8220, 8224, 8221,
-     8223
+       38,   37,   18,   18,   18,   18,   18,   18,   18,   18,
+       18,16420,16403,16403,16405,16404, 8228,   24, 8211, 8213,
+     8212,16406,   34,   26,   25,16414, 8214,   23,   27, 8222,
+    16412,16417,   31,16417,16413,   35, 8220, 8225,16417, 8221,
+       32
     } ;
 
 static yyconst flex_int16_t yy_accept[140] =
@@ -419,8 +419,8 @@ static yyconst flex_int16_t yy_accept[140] =
        60,   61,   61,   61,   62,   62,   62,   63,   64,   64,
 
        64,   65,   65,   66,   66,   67,   68,   68,   68,   68,
-       69,   70,   71,   71,   72,   72,   73,   74,   76,   76,
-       77,   78,   78,   79,   79,   80,   80,   80,   80,   81,
+       68,   69,   70,   70,   71,   71,   72,   73,   75,   75,
+       76,   77,   77,   78,   78,   79,   80,   80,   80,   81,
        81,   81,   81,   81,   81,   81,   82,   82,   82
     } ;
 
@@ -1222,68 +1222,80 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
+*yy_cp = (yy_hold_char); /* undo effects of setting up rulestext */
+(yy_c_buf_p) = yy_cp -= 1;
+YY_DO_BEFORE_ACTION; /* set up rulestext again */
 YY_RULE_SETUP
 #line 77 "postedition.ll"
 {std::cout << rulestext[0] << "au";}
 	YY_BREAK
 case 32:
 /* rule 32 can match eol */
+*yy_cp = (yy_hold_char); /* undo effects of setting up rulestext */
+(yy_c_buf_p) = yy_cp -= 4;
+YY_DO_BEFORE_ACTION; /* set up rulestext again */
 YY_RULE_SETUP
 #line 78 "postedition.ll"
-{std::cout << rulestext[0] << "à l'";}
+{std::cout << rulestext[0] << "au";}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
 #line 79 "postedition.ll"
-{std::cout << rulestext[0] << rulestext[1] << '\'' << rulestext[rulesleng-1];}
+{std::cout << rulestext[0] << "à l'";}
 	YY_BREAK
 case 34:
 /* rule 34 can match eol */
-*yy_cp = (yy_hold_char); /* undo effects of setting up rulestext */
-(yy_c_buf_p) = yy_cp -= 1;
-YY_DO_BEFORE_ACTION; /* set up rulestext again */
 YY_RULE_SETUP
 #line 80 "postedition.ll"
-{std::cout << rulestext[0] << rulestext[1] << 'e';}
+{std::cout << rulestext[0] << rulestext[1] << '\'' << rulestext[rulesleng-1];}
 	YY_BREAK
 case 35:
 /* rule 35 can match eol */
-YY_RULE_SETUP
-#line 81 "postedition.ll"
-{rulestext[rulesleng-1]=0; ECHO;}
-	YY_BREAK
-case 36:
 *yy_cp = (yy_hold_char); /* undo effects of setting up rulestext */
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up rulestext again */
 YY_RULE_SETUP
+#line 81 "postedition.ll"
+{std::cout << rulestext[0] << rulestext[1] << 'e';}
+	YY_BREAK
+case 36:
+/* rule 36 can match eol */
+YY_RULE_SETUP
 #line 82 "postedition.ll"
-{}
+{rulestext[rulesleng-1]=0; ECHO;}
 	YY_BREAK
 case 37:
+*yy_cp = (yy_hold_char); /* undo effects of setting up rulestext */
+(yy_c_buf_p) = yy_cp -= 1;
+YY_DO_BEFORE_ACTION; /* set up rulestext again */
 YY_RULE_SETUP
 #line 83 "postedition.ll"
-{std::cout << ' ';}
+{}
 	YY_BREAK
 case 38:
-/* rule 38 can match eol */
 YY_RULE_SETUP
 #line 84 "postedition.ll"
-{ECHO; BEGIN(INITIAL);}
+{std::cout << ' ';}
 	YY_BREAK
 case 39:
+/* rule 39 can match eol */
 YY_RULE_SETUP
 #line 85 "postedition.ll"
+{ECHO; BEGIN(INITIAL);}
+	YY_BREAK
+case 40:
+YY_RULE_SETUP
+#line 86 "postedition.ll"
 {ECHO;}
 	YY_BREAK
 
-case 40:
+case 41:
 YY_RULE_SETUP
-#line 88 "postedition.ll"
+#line 89 "postedition.ll"
 ECHO;
 	YY_BREAK
-#line 1287 "postedition.cc"
+#line 1299 "postedition.cc"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(NEXT):
 			case YY_STATE_EOF(BEGINLINE):
@@ -2256,7 +2268,7 @@ void rulesfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 88 "postedition.ll"
+#line 89 "postedition.ll"
 
 
 

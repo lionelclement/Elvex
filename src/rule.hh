@@ -48,7 +48,6 @@ public:
   Rule(unsigned int, std::string, class Term *, std::vector<class Terms *> &rhs, statementsPtr statements=statementsPtr());
   Rule(unsigned int, std::string, class Term *lhs, statementsPtr statements=statementsPtr());
   ~Rule();
-  void setId(idType);
   
 
   class Term *getLhs(void) const;

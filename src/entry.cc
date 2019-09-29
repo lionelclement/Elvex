@@ -64,14 +64,6 @@ Entry::~Entry()
 /* **************************************************
  *
  ************************************************** */
-void Entry::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
-/* **************************************************
- *
- ************************************************** */
 entryPtr Entry::create(unsigned int code, unsigned int codePred, std::string form, featuresPtr features)
 {
   return entryPtr( new Entry(code, codePred, form, features) );

@@ -48,14 +48,6 @@ Feature::~Feature()
   DELETE;
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Feature::setId(idType id)
-{
-  FATAL_ERROR;
-}
-
 /* ************************************************************
  * 
  ************************************************************ */
@@ -253,10 +245,9 @@ Feature::toXML(xmlNodePtr nodeRoot)
  *
  ************************************************** */
 featurePtr 
-Feature::clone()
+Feature::clone() const
 {
-  featurePtr result = create(type, attribute, (value) ? value->clone() : valuePtr());
-  return result;
+  return create(type, attribute, (value) ? value->clone() : valuePtr());
 }
 
 /* **************************************************

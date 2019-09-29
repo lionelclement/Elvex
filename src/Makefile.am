@@ -26,7 +26,7 @@ NAME= elvex
 
 YFLAGS = -v --defines --report=all
 LFLAGS = -8
-CXXFLAGS =
+CXXFLAGS = -Wall -Wno-unused-label -Wno-unneeded-internal-declaration -Wno-deprecated-register  
 
 bin_PROGRAMS = elvex elvexdebug elvexbuildlexicon elvexpostedition
 
