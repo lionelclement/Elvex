@@ -699,10 +699,6 @@ itemPtr Synthesizer::createItem(itemPtr item, unsigned int row) {
 std::string
 Synthesizer::keyMemoization(itemPtr actualItem)
 {
-  //return std::to_string(actualItem->getId()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->peekSerialString;
-  //CERR_LINE;
-  //actualItem->getCurrentTerm()->print(cerr);
-  //(*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->print(cerr);
   return std::to_string(actualItem->getCurrentTerm()->getCode()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->peekSerialString();
 }
 #endif
@@ -714,7 +710,6 @@ Synthesizer::keyMemoization(itemPtr actualItem)
 std::string
 Synthesizer::keyMemoization(itemPtr actualItem, itemPtr previousItem)
 {
-  //return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getId()) + actualItem->getSynthesizedFeatures()->serialize();
   return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()->getCode()) + actualItem->getSynthesizedFeatures()->peekSerialString();
 }
 
@@ -732,7 +727,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
     modification = false;
 
     // Iterate through list
-    for (ItemSet::iterator actualItem = state->begin();
+    for (ItemSet::const_iterator actualItem = state->begin();
 	 actualItem != state->end() && !modification;
 	 ++actualItem) {
       
@@ -898,7 +893,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 #endif
 	      
 	      // record the item
-	      ItemSet::iterator found = state->find(it);
+	      ItemSet::const_iterator found = state->find(it);
 	      if (found != state->end()) {
 		(*found)->addRef((*actualItem)->getId());
 		it.reset();
@@ -1047,7 +1042,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 #endif
 		    it->setRefs(previousItem->getRefs());
 
-		    ItemSet::iterator found = states[row]->find(it);
+		    ItemSet::const_iterator found = states[row]->find(it);
 		    if (found != states[row]->end()) {
 		      (*found)->addRefs(previousItem->getRefs());
 		      it.reset();
@@ -1110,7 +1105,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      std::cout << std::endl;
 		    }
 #endif
-		    ItemSet::iterator found = states[row]->find(it);
+		    ItemSet::const_iterator found = states[row]->find(it);
 		    if (found != states[row]->end()) {
 		      (*found)->addRefs(previousItem->getRefs());
 		      it.reset();
@@ -1171,7 +1166,7 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
     modification = false;
     
     // Iterate through list
-    for (ItemSet::iterator actualItem = state->begin();
+    for (ItemSet::const_iterator actualItem = state->begin();
 	 actualItem != state->end() && !modification; 
 	 ++actualItem) {
       if ((*actualItem)->isSetFlags(Flags::SEEN))

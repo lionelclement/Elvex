@@ -899,7 +899,6 @@ Item::makeSerialString()
 {
   serialString = std::to_string(getRule()->getId());
   
-  //serialString += '|';
   if (getIndex()==UINT_MAX)
     serialString += '+';
   else
