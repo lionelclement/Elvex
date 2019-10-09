@@ -24,6 +24,7 @@
 #include "messages.hh"
 #include "synthesizer.hh"
 #include "entries.hh"
+#include "rule.hh"
 
 /* **************************************************
  *
@@ -41,7 +42,7 @@ Grammar::Grammar(void) {
 Grammar::~Grammar(void) {
   terminals.clear();
   nonTerminals.clear();
-  for (ruleSet::iterator iterRules = rulesBegin();
+  for (ruleList::const_iterator iterRules = rulesBegin();
        iterRules != rulesEnd();
        ++iterRules) {
     class Rule *tmp = *iterRules;
@@ -79,7 +80,7 @@ std::set<unsigned int> &Grammar::getNonTerminals(void)
 /* **************************************************
  *
  ************************************************** */
-const ruleSet &Grammar::getRules(void) const {
+const ruleList &Grammar::getRules(void) const {
   return rules;
 }
 
@@ -114,23 +115,24 @@ void Grammar::setStartTerm(class Term *startTerm) {
 /* **************************************************
  *
  ************************************************** */
-ruleSet::const_iterator Grammar::rulesBegin(void) const {
+ruleList::const_iterator Grammar::rulesBegin(void) const {
   return rules.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ruleSet::const_iterator Grammar::rulesEnd(void) const {
+ruleList::const_iterator Grammar::rulesEnd(void) const {
   return rules.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Grammar::addRule(class Rule *rule) {
-  std::pair<ruleSet::iterator, bool> result = rules.insert(rule);
-  return result.second;
+void Grammar::addRule(class Rule *rule) {
+  rules.push_back(rule);
+  //std::pair<ruleList::iterator, bool> result = rules.insert(rule);
+  //return result.second;
 }
 
 /* **************************************************
@@ -156,7 +158,7 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
   std::string fileName = "";
   r = new Rule(0, fileName, startTerm, rhs);
   setStartTerm(startTerm);
-  rules.insert(r);
+  rules.push_back(r);
   firstRule = r;
 }
 
@@ -197,7 +199,7 @@ void Grammar::print(std::ostream &outStream, class Gitem *gitem) const {
     outStream << "NULL";
   outStream << std::endl;
   outStream << "</td></tr><tr><td>Rules</td></tr>";
-  for (ruleSet::const_iterator iterRules = rulesBegin();
+  for (ruleList::const_iterator iterRules = rulesBegin();
        iterRules != rulesEnd(); iterRules++) {
     outStream << "<tr><td>";
     (*iterRules)->print(outStream, -1, true);
@@ -245,7 +247,7 @@ void Grammar::analyseTerms(class Synthesizer &synthesizer) {
   nonTerminals.clear();
   terminals.clear();
   
-  ruleSet::const_iterator iterRules;
+  ruleList::const_iterator iterRules;
   for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
     nonTerminals.insert((*iterRules)->getLhs()->getCode());
   }
@@ -290,7 +292,7 @@ Grammar::toXML(xmlNodePtr nodeRoot)
     xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::intToStrTable[*iter].c_str()));
   }
   xmlNodePtr r=xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
-  ruleSet::const_iterator iterRules;
+  ruleList::const_iterator iterRules;
   for (iterRules=rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
     (*iterRules)->toXML(r);
   }
@@ -303,7 +305,7 @@ Grammar::toXML(xmlNodePtr nodeRoot)
 std::list<class Rule*> *
 Grammar::findRules(class Term *lhs) {
   std::list<class Rule*> *result = new std::list<class Rule*>;
-  ruleSet::const_iterator iterRules;
+  ruleList::const_iterator iterRules;
   for (iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++) {
     if (lhs->getCode() == (*iterRules)->getLhs()->getCode()) {
       result->push_back(*iterRules);

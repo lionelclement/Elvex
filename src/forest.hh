@@ -33,7 +33,7 @@
 
 class Forest: public Id,
 	      public Flags,
-	      public enable_shared_from_this< class Forest > {
+	      public std::enable_shared_from_this< class Forest > {
 
 public:
   typedef std::vector< nodePtr > vectorNodes;

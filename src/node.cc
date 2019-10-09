@@ -53,7 +53,7 @@ nodePtr Node::create(void)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::vectorForests &Node::getForests(void)
+std::vector< forestPtr > &Node::getForests(void)
 {
   return forests;
 }
@@ -70,34 +70,10 @@ Node::addForest(forestPtr forest)
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string> &
+const std::vector< std::string > &
 Node::getOutput(void)  const
 {
   return this->output;
-}
-
-/* **************************************************
- *
- ************************************************** */
-bool
-Node::Less::operator () (nodePtr n1, nodePtr n2) const
-{
-  if (n1->getForests().size() < n2->getForests().size())
-    return true;
-  if (n1->getForests().size() > n2->getForests().size())
-    return false;
-  
-  vectorForests::const_iterator s1=n1->forests.begin();
-  vectorForests::const_iterator s2=n2->forests.begin();
-  while (s1 != n1->forests.end()){
-    if (!*s1 || !*s2)
-      FATAL_ERROR;
-    if ((*s1)->getId() != (*s2)->getId())
-      return (*s1)->getId() < (*s2)->getId();
-    s1++; s2++;
-
-  }
-  return false;
 }
 
 #ifdef OUTPUT_XML
@@ -109,7 +85,7 @@ Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 {
   xmlNodePtr node=xmlNewChild(nodeFather, NULL, (const xmlChar*)"NODE", NULL);
   xmlSetProp(node, (xmlChar*)"id", (xmlChar*)(std::to_string(this->getId())).c_str());
-  for (vectorForests::const_iterator s=forests.begin() ;
+  for (std::vector< forestPtr >::const_iterator s=forests.begin() ;
        s!=forests.end() ;
        ++s){
     if ((*s)->isUnsetFlags(Flags::XML))
@@ -132,7 +108,7 @@ Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
  *
  ************************************************** */
 void
-Node::generate(vectorForests::const_iterator forest)
+Node::generate(std::vector< forestPtr >::const_iterator forest)
 {
   if ((*forest)->getOutput().size() > 0) {
     for (std::vector<std::string>::const_iterator s = (*forest)->getOutput().begin(); s != (*forest)->getOutput().end(); ++s){
@@ -164,7 +140,7 @@ Node::generate(bool random)
 {
   if (isUnsetFlags(Flags::GEN)){
     addFlags(Flags::GEN);
-    for (vectorForests::const_iterator forestIterator=forests.begin(); forestIterator!=forests.end(); ++forestIterator) {
+    for (std::vector< forestPtr >::const_iterator forestIterator=forests.begin(); forestIterator!=forests.end(); ++forestIterator) {
       if ((*forestIterator)->isUnsetFlags(Flags::GEN))
 	(*forestIterator)->generate(random);
     }

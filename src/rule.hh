@@ -30,8 +30,7 @@
 #include "serializable.hh"
 
 class Rule:
-  public Id::Id,
-  public Serializable {
+  public Id::Id {
   
 private:
   class Term *lhs;
@@ -40,9 +39,6 @@ private:
   unsigned int usages;
   std::string filename;
   unsigned int lineno;
-
-private:
-  const std::string makeSerializationId(void);
 
 public:
   Rule(unsigned int, std::string, class Term *, std::vector<class Terms *> &rhs, statementsPtr statements=statementsPtr());
@@ -73,10 +69,6 @@ public:
 #endif
   void addDefaults(void);
   
-  struct Less {
-    const bool operator()(const class Rule *r1, const class Rule *r2) const;
-  };
-
 };
 
 #endif // RULE_H

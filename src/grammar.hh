@@ -24,13 +24,13 @@
 #include <list>
 #include "rule.hh"
 
-typedef std::set<class Rule *, Rule::Less> ruleSet;
+typedef std::list<class Rule *> ruleList;
 
 class Grammar {
 private:
   std::set<unsigned int> terminals;
   std::set<unsigned int> nonTerminals;
-  ruleSet rules;
+  ruleList rules;
   class Term *startTerm;
   class Rule *firstRule;
   unsigned int idMax;
@@ -41,15 +41,15 @@ private:
   
   std::set<unsigned int> &getTerminals(void);
   std::set<unsigned int> &getNonTerminals(void);
-  const ruleSet &getRules(void) const;
+  const ruleList &getRules(void) const;
   class Term *getStartTerm(void) const;
   class Rule *getFirstRule(void) const;
   const unsigned int *getRefIdMax(void) const;
   void setStartTerm(class Term* startTerm);
   
-  ruleSet::const_iterator rulesBegin(void) const;
-  ruleSet::const_iterator rulesEnd(void) const;
-  bool addRule(class Rule *rule);
+  ruleList::const_iterator rulesBegin(void) const;
+  ruleList::const_iterator rulesEnd(void) const;
+  void addRule(class Rule *rule);
   void addNewStartTerm(bool);
   void addNonTerminal(unsigned int);
   void addTerminal(unsigned int);

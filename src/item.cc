@@ -35,6 +35,30 @@
 #include "term.hh"
 #include "terms.hh"
 
+// namespace std
+// {
+//     template <>
+//     struct hash<itemPtr>
+//     {
+//         size_t operator()(itemPtr x) const noexcept
+//         {
+// 	  return (x->getSerialId());
+//         }
+//     };
+// }
+
+// namespace std
+// {
+//   template <>
+//   struct less<Item>
+//   {
+//     size_t operator()(itemPtr i1, itemPtr i2) const noexcept
+//     {
+//       return i1->getSerialId() < i2->getSerialId();
+//     }
+//   };
+// }
+
 /* **************************************************
  *
  ************************************************** */
@@ -143,7 +167,7 @@ itemPtr Item::create (class Rule *rule,
 			unsigned int indexTerm,
 			statementsPtr statements)
 {
-  return shared_ptr< class Item >( new Item(rule, index, indexTerm, statements) );
+  return itemPtr( new Item(rule, index, indexTerm, statements) );
 }
 
 /* **************************************************
@@ -154,7 +178,7 @@ itemPtr Item::create (class Rule *rule,
 			std::vector<unsigned int>& indexTerms,
 			statementsPtr statements)
 {
-  return shared_ptr< class Item >( new Item(rule, index, indexTerms, statements) );
+  return itemPtr( new Item(rule, index, indexTerms, statements) );
 }
 
 /* **************************************************
@@ -492,73 +516,6 @@ bool Item::isStarted(void)
 }
 
 /* **************************************************
- * compare deux items
- ************************************************** */
-const bool Item::Less::operator() (const itemPtr i1, const itemPtr i2) const
-{
-
-  if (i1->getRule()->getId() != i2->getRule()->getId())
-    return (i1->getRule()->getId() < i2->getRule()->getId());
-  
-  if (i1->getRule()->serialize() != i2->getRule()->serialize())
-      return  (i1->getRule()->serialize() < i2->getRule()->serialize());
-  
-  if (i1->getIndex() != i2->getIndex())
-      return  (i1->getIndex() < i2->getIndex());
-
-  if (i1->indexTerms.size() != i2->indexTerms.size())
-      return  (i1->indexTerms.size() < i2->indexTerms.size());
-  
-  if (i1->forestIdentifiers.size() != i2->forestIdentifiers.size())
-      return  (i1->forestIdentifiers.size() < i2->forestIdentifiers.size());
-  
-  if (i1->refs.size() != i2->refs.size())
-      return  (i1->refs.size() < i2->refs.size());
-  
-  std::vector<unsigned int>::const_iterator ind1 = i1->indexTerms.begin();
-  std::vector<unsigned int>::const_iterator ind2 = i2->indexTerms.begin();
-  while (ind1 != i1->indexTerms.end()){
-    if ((*ind1) != (*ind2))
-      return  ((*ind1) < (*ind2));
-    ++ind1; ++ind2;
-  }
-  
-  std::set<unsigned int>::const_iterator ref1 = i1->refs.begin();
-  std::set<unsigned int>::const_iterator ref2 = i2->refs.begin();
-  while (ref1 != i1->refs.end()){
-    if ((*ref1) != (*ref2))
-      return  ((*ref1) < (*ref2));
-    ++ref1; ++ref2;
-  }
-  
-  std::vector< forestIdentifierPtr >::const_iterator fi1 = i1->forestIdentifiers.begin();
-  std::vector< forestIdentifierPtr >::const_iterator fi2 = i2->forestIdentifiers.begin();
-  while (fi1 != i1->forestIdentifiers.end()){
-    if (!*fi1 || !*fi2){
-      if (*fi1 != *fi2)
-	return  (*fi1 < *fi2);
-    }
-    else {
-      if ((**fi1) != (**fi2)){
-	return  ((**fi1) < (**fi2));
-      }
-    }
-    ++fi1; ++fi2;
-  }
-
-  if (!(i1->inheritedFeatures) || !(i2->inheritedFeatures)){
-    if (i1->inheritedFeatures != i2->inheritedFeatures)
-      return  (i1->inheritedFeatures < i2->inheritedFeatures);
-  } else {
-    if (i1->inheritedFeatures->serialize() != i2->inheritedFeatures->serialize()) {
-      return (i1->inheritedFeatures->serialize() < i2->inheritedFeatures->serialize());
-    }
-  }
-  
-  return false;
-}
-
-/* **************************************************
  *
  ************************************************** */
 void 
@@ -646,10 +603,10 @@ Item::print(std::ostream& out) const
   out << "<tr>";
   if (s_id)
     out << "<th>ID</th>";
-  if (s_ruleSerialId)
-    out << "<th>RuleSerialId</th>";
   if (s_ruleId)
     out << "<th>RuleId</th>";
+  if (s_rule)
+    out << "<th>Rule</th>";
   if (s_flags)
     out << "<th>Flags</th>";
   if (s_refs)
@@ -686,14 +643,14 @@ Item::print(std::ostream& out) const
     out << '#' << this->getId();
     out << "</td>";
   }
-  if (s_ruleSerialId){
-    out << "<td>";
-    out << this->getRule()->serialize();
-    out << "</td>";
-  }
   if (s_ruleId){
     out << "<td>";
     out << this->getRule()->getId();
+    out << "</td>";
+  }
+  if (s_rule){
+    out << "<td>";
+    this->getRule()->print(out);
     out << "</td>";
   }
   if (s_flags){
@@ -788,7 +745,6 @@ Item::print(std::ostream& out) const
   if (s_inheritedFeatures){
     out << "<td bgcolor=\"lightyellow\">";//<center>↑</center><br>";
     inheritedFeatures->print(out);
-    //out << inheritedFeatures->serialize(); 
     out << "</td>";
   }
   if (s_inheritedSonFeatures){
@@ -799,7 +755,6 @@ Item::print(std::ostream& out) const
 	(*i)->print(out);
       else
 	out << "null";
-      //out << (*i)->serialize(); 
       out << "</td></tr>";
     }
     out << "</table></td>";
@@ -808,7 +763,6 @@ Item::print(std::ostream& out) const
     out << "<td bgcolor=\"lightcyan\">";//<center>⇑</center><br>";
     if (synthesizedFeatures){
       synthesizedFeatures->print(out);
-      //out << synthesizedFeatures->serialize(); 
     }
     else
       out << "null";
@@ -876,9 +830,9 @@ void
 Item::successor(itemSetPtr state, class Synthesizer *synthesizer, bool &effect)
 {
 #ifdef TRACE_SUCCESSOR
-  std::cerr << "<H3>####################### SUCCESSOR #######################</H3>" << std::endl;
-  this->print(std::cerr);
-  std::cerr << std::endl;
+  std::cout << "<H3>####################### SUCCESSOR #######################</H3>" << std::endl;
+  this->print(std::cout);
+  std::cout << std::endl;
 #endif
     for(unsigned int i = 0; i < this->getRhs().size(); ++i){
       if ((i == index)
@@ -898,9 +852,9 @@ Item::successor(itemSetPtr state, class Synthesizer *synthesizer, bool &effect)
       this->setSeen(this->index, true);
     
 #ifdef TRACE_SUCCESSOR
-  std::cerr << "<H3>####################### SUCCESSOR DONE #######################</H3>" << std::endl;
-  this->print(std::cerr);
-  std::cerr << std::endl;
+  std::cout << "<H3>####################### SUCCESSOR DONE #######################</H3>" << std::endl;
+  this->print(std::cout);
+  std::cout << std::endl;
 #endif
 }
 
@@ -935,4 +889,58 @@ Item::apply(itemSetPtr state, class Synthesizer *synthesizer)
 #endif
     }
   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void
+Item::makeSerialString()
+{
+  serialString = std::to_string(getRule()->getId());
+  
+  //serialString += '|';
+  if (getIndex()==UINT_MAX)
+    serialString += '+';
+  else
+    serialString += std::to_string(getIndex());
+  
+  serialString += '|';
+  std::vector<unsigned int>::const_iterator ind = indexTerms.begin();
+  while (ind != indexTerms.end())
+    serialString += std::to_string(*(ind++)) + '-';
+    
+  serialString += '|';
+  std::set<unsigned int>::const_iterator ref = refs.begin();
+  while (ref != refs.end())
+    serialString += std::to_string(*(ref++)) + '-';
+  
+  serialString += '|';
+  std::vector< forestIdentifierPtr >::const_iterator fi = forestIdentifiers.begin();
+  while (fi != forestIdentifiers.end()){
+    if (*fi)
+      serialString += (*fi)->peekSerialString() + '-';
+    else
+      serialString += '.';
+    ++fi;
+  }
+  
+  serialString += '|';
+  serialString += inheritedFeatures->peekSerialString();
+}
+ 
+// /* **************************************************
+//  * compare deux items
+//  ************************************************** */
+size_t Item::hash::operator() (itemPtr const i) const
+{
+  return i->hashCode();
+}
+
+// /* **************************************************
+//  * compare deux items
+//  ************************************************** */
+bool Item::equal_to::operator() (itemPtr const i1, itemPtr const i2) const
+{
+  return i1->peekSerialString() == i2->peekSerialString();
 }

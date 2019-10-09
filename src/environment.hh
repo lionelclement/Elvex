@@ -27,17 +27,17 @@
 #include "ipointer.hh"
 
 class Environment: 
-  public enable_shared_from_this< class Environment > {
+  public std::enable_shared_from_this< class Environment > {
 
 public:
-  typedef std::map< const std::string, valuePtr > mapStringValue;
+  typedef std::map< std::string const, valuePtr > mapStringValue;
   
 private:
   Environment();
   
 private:
   mapStringValue env;
-  void add(const std::string, valuePtr=valuePtr());
+  void add(std::string const, valuePtr=valuePtr());
   
 public:
   ~Environment();
@@ -54,9 +54,9 @@ public:
   environmentPtr clone(void) const;
   valuePtr find(bitsetPtr) const;
   valuePtr replaceVariables(valuePtr, bool &);
-  std::string replaceVariables(const std::string, bool &);
   void replaceVariables(featuresPtr, bool &);
   void replaceVariables(listFeaturesPtr, bool &);
   void replaceVariables(listPtr, bool &);
+  std::string replaceVariables(const std::string, bool &);
 };
 #endif // ENVIRONMENT_H

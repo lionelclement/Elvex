@@ -45,7 +45,7 @@ ForestMap::~ForestMap()
 /* **************************************************
  *
  ************************************************** */
-ForestMap::mapForestIdentifierForest::const_iterator ForestMap::find(forestIdentifierPtr forestIdentifier) const
+const ForestMap::mapForestIdentifierForest::const_iterator ForestMap::find(forestIdentifierPtr forestIdentifier) const
 {
   return data.find(forestIdentifier);
 }
@@ -53,7 +53,7 @@ ForestMap::mapForestIdentifierForest::const_iterator ForestMap::find(forestIdent
 /* **************************************************
  *
  ************************************************** */
-ForestMap::mapForestIdentifierForest::const_iterator ForestMap::begin(void) const
+const ForestMap::mapForestIdentifierForest::const_iterator ForestMap::begin(void) const
 {
   return data.begin();
 }
@@ -61,7 +61,7 @@ ForestMap::mapForestIdentifierForest::const_iterator ForestMap::begin(void) cons
 /* **************************************************
  *
  ************************************************** */
-ForestMap::mapForestIdentifierForest::const_iterator ForestMap::end(void) const
+const ForestMap::mapForestIdentifierForest::const_iterator ForestMap::end(void) const
 {
   return data.end();
 }

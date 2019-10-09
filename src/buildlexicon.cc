@@ -31,6 +31,14 @@
 #include "info.hh"
 #include "lex.hh"
 
+#ifndef PACKAGE_NAME
+#define PACKAGE_NAME "elvex"
+#endif
+
+#ifndef PACKAGE_VERSION
+#define PACKAGE_VERSION "?.?.?"
+#endif
+
 /* **************************************************
 *
 ************************************************** */

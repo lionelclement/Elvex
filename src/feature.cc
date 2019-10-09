@@ -187,28 +187,27 @@ Feature::print(std::ostream& outStream, bool flat) const
 /* **************************************************
  *
  ************************************************** */
-const std::string
-Feature::makeSerializationId()
+void
+Feature::makeSerialString(void)
 {
   switch(type){
   case Feature::PRED:
-    serialId = 'P';
+    serialString = 'P';
     break;
   case Feature::FORM:
-    serialId = 'F';
+    serialString = 'F';
     break;
   case Feature::CONSTANT:
-    serialId = this->attribute->serialize() + ':';
+    serialString = this->attribute->peekSerialString();
     break;
   case Feature::VARIABLE:
-    serialId = '$' + this->attribute->serialize() + ':';
+	serialString = '$' + this->attribute->peekSerialString();
     break;
   }
   if (value)
-    serialId += value->serialize();
+    serialString += ':' + value->peekSerialString();
   else
-    serialId += 'N';
-  return serialId;
+    serialString += 'N';
 }
 
 #ifdef OUTPUT_XML
@@ -268,11 +267,11 @@ Feature::renameVariables(const unsigned int i)
   case Feature::VARIABLE:
     {
       std::string str = attributeToString() + '_' + std::to_string(i);
-      bitsetPtr variableBits=Vartable::varTableAdd(str);
+      bitsetPtr variableBits = Vartable::varTableAdd(str);
       attribute=variableBits;
       if (value)
 	value->renameVariables(i);
-      resetSerialId();
+      resetSerial();
       effect = true;
     }
     break;

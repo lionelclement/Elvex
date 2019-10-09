@@ -32,6 +32,14 @@
 #include "forest.hh"
 #include "messages.hh"
 
+#ifndef PACKAGE_NAME
+#define	PACKAGE_NAME "elvex"
+#endif
+
+#ifndef PACKAGE_VERSION
+#define PACKAGE_VERSION "?.?.?"
+#endif
+
 Synthesizer synthesizer;
 
 time_t start, end;
@@ -45,8 +53,8 @@ xmlDocPtr document;
  *
  ************************************************** */
 void Usage(char **argv) {
-  cerr << "Usage: " << PACKAGE_NAME << " [options] [<input>]*\n";
-  cerr << "\
+  std::cerr << "Usage: " << PACKAGE_NAME << " [options] [<input>]*\n";
+  std::cerr << "\
 options\n\
 \t--help|-h                   print this\n\
 \t--version|-v                print version\n\
@@ -54,14 +62,14 @@ options\n\
 \t--trace|-t                  trace the generation process\n\
 \t--random|-r                 outputs one sentence randomly selected\n";
 #ifdef TRACE
-  cerr << "\
+  std::cerr << "\
 \t--traceStage\n\
 \t--traceClose\n\
 \t--traceShift\n\
 \t--traceReduce\n\
 \t--traceAction\n";
 #endif
-  cerr << "\
+  std::cerr << "\
 \t-maxLength <number>         max number of length\n\
 \t-maxUsages <number>         max number of rule usage\n\
 \t-maxCardinal <number>       max number of items per set\n\
@@ -73,7 +81,7 @@ options\n\
 \t-compactLexiconFile <file>\n\
 ";
 #ifdef OUTPUT_XML
-  cerr << "\t-xml <file>                 the XML file\n";
+  std::cerr << "\t-xml <file>                 the XML file\n";
 #endif
 }
 
@@ -137,7 +145,11 @@ int main(int argn, char **argv) {
 #ifdef OUTPUT_XML
     synthesizer.setOutXML(NULL);
 #endif
-    if (argn > 1) {
+    if (argn <= 1) {
+      Usage(argv);
+      return EXIT_SUCCESS;
+    }
+    else {
       for (unsigned int arg = 1; argv[arg]; ++arg) {
 	if (argv[arg][0] == '-') {
 	  if (!strcmp(argv[arg]+1, "v") || !strcmp(argv[arg] + 1, "-version")) {
@@ -289,15 +301,13 @@ int main(int argn, char **argv) {
 	}
       }
       
-      //std::cerr << synthesizer.getMaxCardinal() << std::endl;
-      
       if (synthesizer.getLexiconFileName().length() > 0) {
 #ifdef TRACE_INIT
 	std::cerr << "load lexicon" << "<BR>" << std::endl;
 #endif
 	synthesizer.parseFile(synthesizer.getLexiconFileName());
       }
-      
+
       if (synthesizer.getGrammarFileName().length() > 0) {
 #ifdef TRACE_INIT
 	std::cerr << "load grammar" << "<BR>" << std::endl;
@@ -317,7 +327,7 @@ int main(int argn, char **argv) {
 	if (!synthesizer.getCompactLexicon()->load(dir, file))
 	  return EXIT_FAILURE;
       }
-      
+
 #ifdef OUTPUT_XML
       if (synthesizer.getOutXML()) {
 	document = xmlNewDoc ((xmlChar*)"1.0");
@@ -356,7 +366,7 @@ int main(int argn, char **argv) {
 #ifdef TRACE_INIT
     std::cerr << std::endl << "EXIT_SUCCESS" << "<BR>" << std::endl;
 #endif
-  } catch (std::string& message) {
+  } catch (std::string &message) {
     std::cerr << "*** FATAL ERROR " << message << std::endl;
   } catch (char const *message) {
     std::cerr << "*** FATAL ERROR " << message << std::endl;

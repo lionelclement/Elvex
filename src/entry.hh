@@ -34,7 +34,7 @@
 class Entry: 
   public Id,
   public Serializable,
-  public enable_shared_from_this< class Entry > {
+  public std::enable_shared_from_this< class Entry > {
   
 private:
   unsigned int code;
@@ -44,7 +44,7 @@ private:
   
   Entry(unsigned int, unsigned int, std::string, featuresPtr);
   Entry(unsigned int, std::string, std::string, featuresPtr);
-  const std::string makeSerializationId(void);
+  void makeSerialString(void);
 
 public:
   ~Entry();

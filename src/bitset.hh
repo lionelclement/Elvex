@@ -34,7 +34,7 @@
 #endif
 
 class Bitset:
-  public enable_shared_from_this< Bitset >,
+  public std::enable_shared_from_this< Bitset >,
   public Serializable,
   public std::bitset<MAXBITS> {
 
@@ -53,7 +53,7 @@ private:
   Bitset(unsigned int=0);
   Bitset(std::bitset<MAXBITS> &);
   Bitset(bitsetPtr);
-  const std::string makeSerializationId();
+  void makeSerialString();
 
 public:
   ~Bitset();

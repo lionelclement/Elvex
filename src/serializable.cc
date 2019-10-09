@@ -27,6 +27,8 @@
  ************************************************** */
 Serializable::Serializable(){
   NEW;
+  serialHashCode = 0;
+  serialString = std::string();
 }
 
 /* **************************************************
@@ -39,16 +41,31 @@ Serializable::~Serializable(){
 /* **************************************************
  *
  ************************************************** */
-const std::string Serializable::serialize()
+const std::size_t Serializable::hashCode()
 {
-  if (serialId.empty())
-    serialId = makeSerializationId();
-  return serialId;
+  if (serialHashCode == 0) {
+    makeSerialString();
+    serialHashCode = std::hash<std::string>()(serialString);
+  }
+  return serialHashCode;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Serializable::resetSerialId(){
-  serialId.clear();
+const std::string Serializable::peekSerialString()
+{
+  if (serialString.size()==0) {
+    makeSerialString();
+    serialHashCode = std::hash<std::string>()(serialString);
+  }
+  return serialString;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Serializable::resetSerial(){
+  serialHashCode = 0;
+  serialString = std::string();
 }

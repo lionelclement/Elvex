@@ -25,11 +25,11 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-ForestIdentifier::ForestIdentifier (unsigned int code, std::string featuresSerialID, unsigned int from, unsigned int to)
+ForestIdentifier::ForestIdentifier (unsigned int code, std::string const featuresSerialString, unsigned int from, unsigned int to)
 {
   NEW;
   this->code = code;
-  this->featuresSerialID = featuresSerialID;
+  this->featuresSerialString = featuresSerialString;
   this->from = from;
   this->to = to;
 }
@@ -45,75 +45,65 @@ ForestIdentifier::~ForestIdentifier ()
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-forestIdentifierPtr ForestIdentifier::create(unsigned int code, std::string featuresSignature, unsigned int from, unsigned int to)  
+forestIdentifierPtr ForestIdentifier::create(unsigned int code, std::string const featuresSerialString, unsigned int from, unsigned int to)  
 {
-  return forestIdentifierPtr( new ForestIdentifier(code, featuresSignature, from, to) );
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-const bool
-ForestIdentifier::operator <(const ForestIdentifier &o) const
-{
-  return ((this->code < o.code)||(this->from < o.from)||(this->to < o.to)||(this->featuresSerialID < o.featuresSerialID));
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-const bool
-ForestIdentifier::operator !=(const ForestIdentifier &o) const
-{
-  return ((this->code != o.code)||(this->from != o.from)||(this->to != o.to)||(this->featuresSerialID != o.featuresSerialID));
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-const bool
-ForestIdentifier::Less::operator()(const forestIdentifierPtr lhs, const forestIdentifierPtr rhs) const
-{
-  if (lhs->code < rhs->code){
-    return true;
-  }
-  if (lhs->code > rhs->code){
-    return false;
-  }
-  if (lhs->from < rhs->from){
-    return true;
-  }
-  if (lhs->from > rhs->from){
-    return false;
-  }
-  if (lhs->to < rhs->to){
-    return true;
-  }
-  if (lhs->to > rhs->to){
-    return false;
-  }
-  if (lhs->featuresSerialID < rhs->featuresSerialID) {
-    return true;
-  }
-  if (lhs->featuresSerialID > rhs->featuresSerialID) {
-    return false;
-  }
-  return false;
+  return forestIdentifierPtr( new ForestIdentifier(code, featuresSerialString, from, to) );
 }
 
 /* **************************************************
  *
  ************************************************** */
-const std::string
-ForestIdentifier::makeSerializationId()
+void 
+ForestIdentifier::makeSerialString(void)
 {
-  return Vartable::intToStr(code)
-    + std::to_string(code)
-    + '['
-    + std::to_string(from)
-    + '-'
-    + std::to_string(to)
-    + ']';
+  serialString = std::to_string(code);
+  serialString += '[';
+  serialString += from;
+  serialString += '-';
+  serialString += to;
+  serialString += ']';
+  serialString += featuresSerialString;
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+bool
+ForestIdentifier::operator <(ForestIdentifier const &o) const
+{
+   return ((this->code < o.code)
+    	  ||(this->from < o.from)
+    	  ||(this->to < o.to)
+    	  ||(this->featuresSerialString < o.featuresSerialString));
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+bool
+ForestIdentifier::operator !=(ForestIdentifier const &o) const
+{
+   return ((this->code != o.code)
+   	  ||(this->from != o.from)
+   	  ||(this->to != o.to)
+   	  ||(this->featuresSerialString != o.featuresSerialString));
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+bool
+ForestIdentifier::less::operator()(forestIdentifierPtr const lhs, forestIdentifierPtr const rhs) const
+{
+  if (lhs->code != rhs->code)
+    return lhs->code < rhs->code;
+  if (lhs->from != rhs->from)
+    return lhs->from < rhs->from;
+  if (lhs->to != rhs->to)
+    return lhs->to < rhs->to;
+  if (lhs->featuresSerialString != rhs->featuresSerialString)
+    return lhs->featuresSerialString < rhs->featuresSerialString;
+  return false;
 }
 
 /* **************************************************
@@ -122,5 +112,5 @@ ForestIdentifier::makeSerializationId()
 void 
 ForestIdentifier::print(std::ostream& out) const
 {
-  out << "#" << Vartable::intToStr(code) << code << '[' << from << '-' << to << ']';
+  out << "#" << code << '[' << from << '-' << to << ']';
 }

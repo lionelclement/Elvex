@@ -1,4 +1,4 @@
-/* **************************************************
+	/* **************************************************
  *
  * ELVEX
  *
@@ -29,13 +29,13 @@
 #include "ipointer.hh"
 #include "serializable.hh"
 
-  #define FATAL_ERROR_STM {std::ostringstream oss; oss << "fatal error with statement line " << getLineno(); FATAL_ERROR;}
+#define FATAL_ERROR_STM {std::ostringstream oss; oss << "fatal error with statement line " << getLineno(); FATAL_ERROR;}
 #define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
 
 class Statement:
   public Flags,
   public Serializable,
-  public enable_shared_from_this< class Statement > {
+  public std::enable_shared_from_this< class Statement > {
   
 public:
   enum type {
@@ -94,7 +94,7 @@ private:
   Statement (unsigned int, type op, std::string str);
   Statement (unsigned int, type op, bitsetPtr bits);
   Statement (unsigned int, type op=FINISHED, statementPtr lhs=statementPtr(), statementPtr rhs=statementPtr(), unsigned int first=UINT_MAX, unsigned int second=UINT_MAX, featuresPtr features=featuresPtr(), bitsetPtr bits=bitsetPtr(), arithmetic_op fct=NOP, listPtr list=listPtr(), statementsPtr stms=statementsPtr(), double=0.0);
-  const std::string makeSerializationId(void);
+  void makeSerialString(void);
   
 public:
   ~Statement ();
@@ -163,7 +163,7 @@ public:
   void enable(statementPtr, itemPtr, bool&, bool);
   void apply(itemPtr, bool &, bool &, bool);
   void lookingForAssignedInheritedSonFeatures(std::vector< bool > &);
-  bool findVariable(bitsetPtr);
+  const bool findVariable(bitsetPtr);
 
 }; 
 

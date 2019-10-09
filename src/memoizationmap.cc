@@ -21,19 +21,20 @@
 #include "memoizationmap.hh"
 #include "features.hh"
 #include "forestidentifier.hh"
+#include "messages.hh"
 
 /* ************************************************************
  * 
  ************************************************************ */
-std::map<std::string, std::list< memoizationValuePtr > >::iterator
-MemoizationMap::find(const std::string key)
+std::map<std::string, std::list< memoizationValuePtr > >::const_iterator
+MemoizationMap::find(std::string const key) const
 {
   auto memItem = map.find(key);
 #ifdef TRACE_MEMOIZATION
   if (memItem != map.end()) {
-    std::cerr << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
-    std::cerr << "<BR>";
-    std::cerr << std::endl;
+    std::cout << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
+    std::cout << "<BR>";
+    std::cout << std::endl;
   }
 #endif
   return memItem;
@@ -42,8 +43,8 @@ MemoizationMap::find(const std::string key)
 /* ************************************************************
  * 
  ************************************************************ */
-std::map<std::string, std::list< memoizationValuePtr > >::iterator
-MemoizationMap::end(void) 
+std::map<std::string, std::list< memoizationValuePtr > >::const_iterator
+MemoizationMap::end(void) const
 {
   return map.end();
 }
@@ -51,12 +52,12 @@ MemoizationMap::end(void)
 /* ************************************************************
  * 
  ************************************************************ */
-void MemoizationMap::insert(const std::string key, featuresPtr features, forestIdentifierPtr forestIdentifier)
+void MemoizationMap::insert(std::string const key, featuresPtr features, forestIdentifierPtr forestIdentifier)
 {
 #ifdef TRACE_MEMOIZATION
-  std::cerr << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
-  std::cerr << "<BR>";
-  std::cerr << std::endl;
+  std::cout << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
+  std::cout << "<BR>";
+  std::cout << std::endl;
 #endif
   memoizationValuePtr value = MemoizationValue::create(features, forestIdentifier);
   auto memItem = map.find(key);
@@ -67,5 +68,6 @@ void MemoizationMap::insert(const std::string key, featuresPtr features, forestI
     std::list< memoizationValuePtr > values;
     values.push_back(value);
     map[key] = values;
-  }
+    }
 }
+

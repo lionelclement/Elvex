@@ -45,7 +45,7 @@ Environment::Environment()
  ************************************************** */
 Environment::~Environment()
 {
-  for (std::map<const std::string, valuePtr>::iterator i = env.begin();
+  for (std::map<std::string const, valuePtr>::iterator i = env.begin();
        i != env.end();
        ++i) {
     valuePtr tmp = i->second;
@@ -66,7 +66,7 @@ environmentPtr Environment::create()
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(std::string key, valuePtr value)
+void Environment::add(std::string const key, valuePtr value)
 {
   Environment::mapStringValue::iterator it = env.find(key);
   if (it == env.end()) {
@@ -77,17 +77,13 @@ void Environment::add(std::string key, valuePtr value)
   }
 }
 
- /* **************************************************
+/* **************************************************
   *
   ************************************************** */
- void Environment::add(bitsetPtr key, valuePtr value)
+ void Environment::add(bitsetPtr attr, valuePtr value)
  {
-#ifdef TRACE
-   std::string strKey = key->toString();
-#else
-   std::string strKey = key->serialize();
-#endif
-   add ( strKey, value);
+   std::string const key = attr->toString();
+   add ( key, value);
  }
 
 /* **************************************************
@@ -138,18 +134,14 @@ const size_t Environment::size() const
  *
  ************************************************** */
 valuePtr 
-Environment::find(bitsetPtr key) const 
+Environment::find(bitsetPtr attr) const 
 {
-  valuePtr ret = valuePtr();
-#ifdef TRACE
-  std::string strKey = key->toString();
-#else
-  std::string strKey = key->serialize();
-#endif
-  Environment::mapStringValue::const_iterator it = env.find(strKey);
+  std::string const key = attr->toString();
+  Environment::mapStringValue::const_iterator it = env.find(key);
   if (it != env.end())
-    ret = it->second;
-  return ret;
+    return it->second;
+  else
+    return valuePtr();
 }
 
 /* **************************************************
@@ -267,7 +259,7 @@ Environment::replaceVariables(featuresPtr features, bool &effect)
       std::cerr << "</td></tr></table>";
   ***/
   if (effect)
-    features->resetSerialId();
+    features->resetSerial();
 }
 
 /* **************************************************
@@ -333,7 +325,7 @@ Environment::replaceVariables(valuePtr value, bool &effect)
       std::cerr << "</td></tr></table>";
   ***/
   if (effect)
-    value->resetSerialId();
+    value->resetSerial();
   return ret;
 }
 
@@ -374,7 +366,7 @@ Environment::replaceVariables(listPtr list, bool &effect)
       std::cerr << "</td></tr></table>";
   ***/
   if (effect)
-    list->resetSerialId();
+    list->resetSerial();
 }
 
 /* **************************************************
@@ -399,10 +391,10 @@ Environment::replaceVariables(std::string str, bool &effect)
   try {
     std::regex regexpression(pattern, std::regex_constants::ECMAScript);   
     while (std::regex_search(result.c_str(), match, regexpression, std::regex_constants::format_first_only)){
-      std::string s = match[1];
-      Environment::mapStringValue::iterator i = this->env.find(s);
+      std::string const key = match[1];
+      Environment::mapStringValue::iterator i = this->env.find(key);
       if (i == this->env.end()){
-	std::cerr << "*** error variable " << s << " not found" << std::endl;
+	std::cerr << "*** error variable " << match[1] << " not found" << std::endl;
 	exit(1);
       }
       else{

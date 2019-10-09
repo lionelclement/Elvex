@@ -31,31 +31,31 @@
   public Id,
   public Flags,
   public Serializable,
-  public enable_shared_from_this< class Feature > {
-  
- public:
+  public std::enable_shared_from_this< class Feature > {
+    
+  public:
   enum Type {
     PRED=0,
     CONSTANT,
     FORM,
     VARIABLE,
   };
-  
-  static const Type first_type = PRED;
-  static const Type last_type = VARIABLE;
-
- private:
-  enum Type type;
-  bitsetPtr attribute; // variable ou constante
-  valuePtr value;
-  Feature(Type, bitsetPtr, valuePtr );
-  const std::string makeSerializationId(void);
-
- public:
-  ~Feature();
-  static featurePtr create(enum Type type=CONSTANT, bitsetPtr attribute=bitsetPtr(), valuePtr value=valuePtr());
-
-  const bitsetPtr getAttribute(void) const;
+    
+    static const Type first_type = PRED;
+    static const Type last_type = VARIABLE;
+    
+  private:
+    enum Type type;
+    bitsetPtr attribute; // variable ou constante
+    valuePtr value;
+    Feature(Type, bitsetPtr, valuePtr);
+    void makeSerialString(void);
+    
+  public:
+    ~Feature();
+    static featurePtr create(enum Type type=CONSTANT, bitsetPtr attribute=bitsetPtr(), valuePtr value=valuePtr());
+    
+    const bitsetPtr getAttribute(void) const;
   void setAttribute(const bitsetPtr);
   const valuePtr getValue(void) const;
   void setValue(const valuePtr );

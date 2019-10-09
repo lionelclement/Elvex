@@ -28,7 +28,7 @@
 #include "ipointer.hh"
 
 class Entries:
-  public enable_shared_from_this< class Entries > {
+  public std::enable_shared_from_this< class Entries > {
 
 private:
   std::vector< entryPtr > entries;

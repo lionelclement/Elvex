@@ -23,7 +23,7 @@
 #include "ipointer.hh"
 
 class MemoizationValue:
-  public enable_shared_from_this< class MemoizationValue > {
+  public std::enable_shared_from_this< class MemoizationValue > {
 
 private:
   featuresPtr features;
@@ -35,8 +35,8 @@ public:
   static memoizationValuePtr create(featuresPtr, forestIdentifierPtr);
   
 public:
-  featuresPtr getFeatures(void);
-  forestIdentifierPtr getForestIdentifier(void);
+  featuresPtr getFeatures(void) const;
+  forestIdentifierPtr getForestIdentifier(void) const;
   
 };  
 #endif // MEMOIZATIONVALUE_H

@@ -144,17 +144,6 @@ const std::string &Rule::getFilename(void) const
   return filename;
 }
 
-/************************************************************
- *
- ************************************************************ */
-const bool Rule::Less::operator()(const class Rule *r1, const class Rule *r2) const
-{
-  if (r1->getId() != r2->getId())
-    return r1->getId() < r2->getId();
-  else
-    return false;
-}
-
 /* ************************************************************
  *
  ************************************************************ */
@@ -220,34 +209,6 @@ Rule::toXML(xmlNodePtr nodeRoot)
   // }
 }
 #endif
-
-/* **************************************************
- *
- ************************************************** */
-const std::string
-Rule::makeSerializationId()
-{
-  bool firstTerms = true;
-  serialId = std::to_string(lhs->getCode()) + ':';
-  for(unsigned int i = 0; i < rhs.size(); ++i){
-    if (rhs[i]->isOptional())
-      serialId += '[';
-    if (firstTerms) firstTerms = false; else serialId += '-';
-    bool firstTerm = true;
-    for (std::vector< class Term * >::const_iterator term = rhs[i]->begin();
-	 term != rhs[i]->end();
-	 ++term){
-      if (firstTerm) firstTerm = false; else serialId += '|';
-      serialId += std::to_string((*term)->getCode());
-    }
-    if (rhs[i]->isOptional())
-      serialId += ']';
-  }
-  statementsPtr stms = getStatements();
-  if (stms)
-    serialId += stms->serialize();
-  return serialId;
-}
 
 /* **************************************************
  *

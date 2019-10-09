@@ -30,7 +30,7 @@
 class ForestMap {
 
 public:
-  typedef std::map<const forestIdentifierPtr, forestPtr, ForestIdentifier::Less> mapForestIdentifierForest;
+  typedef std::map<const forestIdentifierPtr, forestPtr, ForestIdentifier::less> mapForestIdentifierForest;
   typedef std::pair<const forestIdentifierPtr, forestPtr> pairForestIdentifierForest;
 
 private:
@@ -40,9 +40,9 @@ public:
   ForestMap(void);
   ~ForestMap();
 
-  mapForestIdentifierForest::const_iterator find(const forestIdentifierPtr) const;
-  mapForestIdentifierForest::const_iterator begin(void) const;
-  mapForestIdentifierForest::const_iterator end(void) const;
+  const mapForestIdentifierForest::const_iterator find(const forestIdentifierPtr) const;
+  const mapForestIdentifierForest::const_iterator begin(void) const;
+  const mapForestIdentifierForest::const_iterator end(void) const;
   void clear(void);
   const bool insert (pairForestIdentifierForest);
 

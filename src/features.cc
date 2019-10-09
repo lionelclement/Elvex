@@ -63,14 +63,6 @@ featuresPtr Features::create(featurePtr feature)
   return featuresPtr(new Features(feature));
 }
 
-// /* **************************************************
-//  *
-//  ************************************************** */
-// void Features::setId(idType id)
-// {
-//   FATAL_ERROR;
-// }
-
 /* ************************************************************
  *
  ************************************************************ */
@@ -229,26 +221,28 @@ Features::print(std::ostream& outStream, bool par, bool flat) const
 /* **************************************************
  *
  ************************************************** */
-const std::string
-Features::makeSerializationId()
+void
+Features::makeSerialString()
 {
   if (isNil())
-    serialId = '#';
+    serialString = '#';
   else if (isBottom())
-    serialId = '&';
+    serialString = '&';
   else {
-    serialId = '[';
+    serialString = '[';
     if (features.size()){
       bool first=true;
       for (Features::listFeatures::const_iterator f = features.begin();
 	   f != features.end();
 	   ++f){
-	if (first) first=false; else serialId += ',';
-	serialId += (*f)->serialize();
+	if (first)
+	  first=false;
+	else
+	  serialString += ',';
+	serialString += (*f)->peekSerialString();
       }
     }
   }
-  return serialId;
 }
 
 /* **************************************************
@@ -569,9 +563,12 @@ const bool
 Features::renameVariables(unsigned int i)
 {
   bool effect=false;
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
-    if ((*feature)->renameVariables(i)) effect=true;
-  resetSerialId();
+  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature) {
+    if ((*feature)->renameVariables(i)) 
+      effect=true;
+  }
+  if (effect)
+    resetSerial();
   return effect;
 }
 

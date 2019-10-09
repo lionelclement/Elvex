@@ -42,6 +42,10 @@
 #define MAXCARDINAL 1000
 #endif
 
+#ifndef MAXATTEMPTS
+#define MAXATTEMPTS 1000
+#endif
+
 class Synthesizer {
 
 private:
@@ -63,7 +67,7 @@ private:
   class Term *startTerm;
   class Lex *compactLexicon;
   entryPtr localEntry; //flying lexical entry
-  std::map<std::string, entryPtr > mapLocalEntry;
+  std::map<std::string const, entryPtr > mapLocalEntry;
   unsigned int maxLength;
   unsigned int maxUsages;
   unsigned int maxCardinal;
@@ -210,10 +214,10 @@ private:
   const entriesPtr findCompactLexicon(const unsigned int code, const unsigned int pred);
 #ifdef MEMOIZATION
 #ifdef MEMOIZATION_SHIFT
-  std::string keyMemoization(itemPtr);
+  std::string keyMemoization(itemPtr const);
 #endif
 #ifdef MEMOIZATION_REDUCE
-  std::string keyMemoization(itemPtr, itemPtr);
+  std::string keyMemoization(itemPtr const, itemPtr const);
 #endif
 #endif
   

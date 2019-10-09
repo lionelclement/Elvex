@@ -29,7 +29,7 @@
 class ListFeatures:
   public Id,
   public Flags,
-  public enable_shared_from_this< class ListFeatures > {
+  public std::enable_shared_from_this< class ListFeatures > {
   
  private:
   std::vector< featuresPtr > listFeatures;

@@ -33,25 +33,24 @@
 class Node: 
   public Flags,
   public Id,
-  public enable_shared_from_this<class Node> {
+  public std::enable_shared_from_this<class Node> {
 
-public:
-  typedef std::vector<forestPtr> vectorForests;
+  //public:
+  //typedef std::vector< forestPtr > vectorForests;
   
 private:
   unsigned int nbrCS;
-  vectorForests forests;
-  std::vector<std::string> output;
+  std::vector< forestPtr > forests;
+  std::vector< std::string > output;
   
   Node(void);
-  //void setId(idType);
-  void generate(vectorForests::const_iterator);
+  void generate(std::vector< forestPtr >::const_iterator);
 
 public:
   ~Node();
   static nodePtr create(void);
 
-  vectorForests &getForests(void);
+  std::vector< forestPtr > &getForests(void);
   const std::vector<std::string> &getOutput(void) const;
   
   void addForest(forestPtr);
@@ -62,10 +61,10 @@ public:
 #endif
   void generate(bool);
 
-  // compare deux items
-  struct Less {
-    bool operator() (nodePtr, nodePtr) const;
-  };
+  // compare deux nodes
+  //struct less {
+  //bool operator() (nodePtr, nodePtr) const;
+  //};
 
 };
 

@@ -25,32 +25,33 @@
 #include "ipointer.hh"
 
 class ForestIdentifier:
-  public enable_shared_from_this< ForestIdentifier > {  
+  public Serializable,
+  public std::enable_shared_from_this< ForestIdentifier > {  
   
 private:
   
   unsigned int code;
+  std::string featuresSerialString;
   unsigned int from;
   unsigned int to;
-  std::string featuresSerialID;
   
-  ForestIdentifier(unsigned int, std::string, unsigned int, unsigned int);  
-  const std::string makeSerializationId(void);
-
+  ForestIdentifier(unsigned int, std::string const, unsigned int, unsigned int);  
+  
 public:
   ~ForestIdentifier();
-  static forestIdentifierPtr create(unsigned int, std::string, unsigned int, unsigned int);  
+  static forestIdentifierPtr create(unsigned int, std::string const, unsigned int, unsigned int);  
   
-  const unsigned int getFrom(void) const {return from;};
-  const unsigned int getTo(void) const {return to;} ;
-  const unsigned int getCode(void) const {return code;};
+  void makeSerialString(void);
+  unsigned int getFrom(void) const {return from;};
+  unsigned int getTo(void) const {return to;} ;
+  unsigned int getCode(void) const {return code;};
   void print(std::ostream &) const;
   
-  const bool operator <(const ForestIdentifier &) const;
-  const bool operator !=(const ForestIdentifier &) const;
+  bool operator <(ForestIdentifier const &) const;
+  bool operator !=(ForestIdentifier const &) const;
 
-  struct Less {
-    const bool operator()(const forestIdentifierPtr, const forestIdentifierPtr) const;
+  struct less {
+    bool operator()(forestIdentifierPtr const, forestIdentifierPtr const) const;
   };
   
 };

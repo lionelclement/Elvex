@@ -699,12 +699,11 @@ itemPtr Synthesizer::createItem(itemPtr item, unsigned int row) {
 std::string
 Synthesizer::keyMemoization(itemPtr actualItem)
 {
-  //return std::to_string(actualItem->getId()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->serialize();
+  //return std::to_string(actualItem->getId()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->peekSerialString;
   //CERR_LINE;
   //actualItem->getCurrentTerm()->print(cerr);
   //(*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->print(cerr);
-  
-  return std::to_string(actualItem->getCurrentTerm()->getCode()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->serialize();
+  return std::to_string(actualItem->getCurrentTerm()->getCode()) + (*actualItem->getInheritedSonFeatures())[actualItem->getIndex()]->peekSerialString();
 }
 #endif
 
@@ -715,8 +714,8 @@ Synthesizer::keyMemoization(itemPtr actualItem)
 std::string
 Synthesizer::keyMemoization(itemPtr actualItem, itemPtr previousItem)
 {
-  return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()->getCode()) + actualItem->getSynthesizedFeatures()->serialize();
   //return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getId()) + actualItem->getSynthesizedFeatures()->serialize();
+  return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()->getCode()) + actualItem->getSynthesizedFeatures()->peekSerialString();
 }
 
 #endif
@@ -754,12 +753,13 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	  && !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
 	  && (*actualItem)->getCurrentTerms()->isOptional()) {
 
+	
 #ifdef TRACE_UNHIDE
 	std::cout << "<H3>####################### UNHIDE #######################</H3>" << std::endl;
 	(*actualItem)->print(std::cout);
 	std::cout << std::endl;
 #endif
-
+	
 	(*actualItem)->addFlags(Flags::SEEN);
 	
 	itemPtr it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
@@ -878,7 +878,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	    inheritedSonFeatures->deleteAnonymousVariables();
 	  }
 	  
-	  for (ruleSet::const_iterator iterRules = grammar.getRules().begin();
+	  for (ruleList::const_iterator iterRules = grammar.getRules().begin();
 	       iterRules != grammar.getRules().end();
 	       ++iterRules) {
 	    if (((*iterRules)->getLhs()->getCode() == (*actualItem)->getCurrentTerm()->getCode())) {
@@ -972,7 +972,7 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 	      
 	      forestPtr forestFound = forestPtr();
 	      forestIdentifierPtr fi = ForestIdentifier::create((*actualItem)->getLhs()->getCode(),
-								((*actualItem)->getSynthesizedFeatures() ? (*actualItem)->getSynthesizedFeatures()->serialize() : std::string()),
+								((*actualItem)->getSynthesizedFeatures() ? (*actualItem)->getSynthesizedFeatures()->peekSerialString() : std::string()),
 								(*actualItem)->getRanges()[0],
 								row);
 	      ForestMap::mapForestIdentifierForest::const_iterator forestMapIt = forestMap.find(fi);
@@ -1020,13 +1020,10 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		auto memItem = memoizedMap.find(key);
 		// Is this shift action already done ?
 		if (memItem != memoizedMap.end()) {
-
 		  std::list< memoizationValuePtr > result = memItem->second;
-		  
 		  for (std::list< memoizationValuePtr >::const_iterator i = result.begin();
 		       i != result.end();
 		       ++i) {
-
 		    // New item build
 		    itemPtr it = createItem(previousItem, row);
 		    it->setEnvironment(previousItem->getEnvironment() ? previousItem->getEnvironment()->clone() : environmentPtr());
@@ -1105,9 +1102,6 @@ Synthesizer::close(itemSetPtr state, unsigned int row) {
 		      forestMap.insert(std::make_pair(fi, forestFound));
 		      it->addForestIdentifiers(previousItem->getIndex(), fi);
 		    }
-		    //if (!) {
-		    		      //FATAL_ERROR;
-		    //}
 		    forestFound->addNode(node);
 #ifdef TRACE
 		    if (traceReduce){
@@ -1296,6 +1290,7 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 		      entries = found->second;
 		    } else
 		      break;
+		    break;
 		  case 2: 
 		    found = listPred->find(0);// IDENTITY : 0 = > ...
 		    if (found != listPred->end())
@@ -1374,7 +1369,7 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			  else
 			    word = Entry::create(entry->getCode(), entry->getCodePred(), entry->getForm(), resultFeatures);
 			}
-			forestIdentifierPtr fi = ForestIdentifier::create(word->getId(), resultFeatures->serialize(), row - 1, row);
+			forestIdentifierPtr fi = ForestIdentifier::create(word->getId(), resultFeatures->peekSerialString(), row - 1, row);
 			ForestMap::mapForestIdentifierForest::const_iterator forestMapIt = forestMap.find(fi);
 			if (forestMapIt != forestMap.end()) {
 			  it->addForestIdentifiers((*actualItem)->getIndex(), (*forestMapIt).first);
@@ -1426,7 +1421,7 @@ Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			  if (++attempts > MAXATTEMPTS) {
 			    std::cerr << "*** Random error: no lexical entry matching ";
 			    (*actualItem)->getCurrentTerm()->print(std::cerr);
-			    inheritedSonFeatures->print(cerr, true, true);
+			    inheritedSonFeatures->print(std::cerr, true, true);
 			    std::cerr << std::endl;
 			    exit(1);
 			  }
@@ -1462,7 +1457,7 @@ Synthesizer::generate() {
   itemMap.clear();
   forestMap.clear();
   mapLocalEntry.clear();
-  for (ruleSet::const_iterator iterRules = grammar.getRules().begin();
+  for (ruleList::const_iterator iterRules = grammar.getRules().begin();
        iterRules != grammar.getRules().end();
        ++iterRules) {
     (*iterRules)->resetUsages();
@@ -1591,12 +1586,12 @@ Synthesizer::findCompactLexicon(const unsigned int code, const unsigned int pred
 	if (localEntry) {
 	  localEntry->setCode(code);
 	  localEntry->setForm(form);
-	  std::string localEntrySignature = localEntry->serialize();
-	  std::map<std::string, entryPtr>::iterator found = mapLocalEntry.find(localEntrySignature);
+	  std::string localEntrySerialString = localEntry->peekSerialString();
+	  std::map<std::string const, entryPtr>::iterator found = mapLocalEntry.find(localEntrySerialString);
 	  if (found != mapLocalEntry.end()) {
 	    entries->add(found->second);
 	  } else {
-	    mapLocalEntry.insert(std::make_pair(localEntrySignature, localEntry));
+	    mapLocalEntry.insert(std::make_pair(localEntrySerialString, localEntry));
 	    entries->add(localEntry);
 	  }
 	}

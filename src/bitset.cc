@@ -69,7 +69,7 @@ Bitset::~Bitset()
  ************************************************************ */
 bitsetPtr Bitset::create(unsigned int data)
 {
-  return shared_ptr< Bitset >( new Bitset(data) );
+  return bitsetPtr( new Bitset(data) );
 }
 
 /* ************************************************************
@@ -77,7 +77,7 @@ bitsetPtr Bitset::create(unsigned int data)
  ************************************************************ */
 bitsetPtr Bitset::create(std::bitset< MAXBITS> data)
 {
-  return shared_ptr< Bitset >( new Bitset(data) );
+  return bitsetPtr( new Bitset(data) );
 }
 
 /* ************************************************************
@@ -85,7 +85,7 @@ bitsetPtr Bitset::create(std::bitset< MAXBITS> data)
  ************************************************************ */
 bitsetPtr Bitset::create(bitsetPtr bs)
 {
-  return shared_ptr< Bitset >( new Bitset(bs) );
+  return bitsetPtr( new Bitset(bs) );
 }
 
 /* ************************************************************
@@ -111,19 +111,22 @@ Bitset::toString() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-const std::string
-Bitset::makeSerializationId()
+void
+Bitset::makeSerialString()
 {
+  serialString = std::string();
   std::stringstream s;
   size_t c = this->count();
   size_t sz = this->size();
   for( size_t i = 0 ; i < sz && c > 0 ; ++i) {
     if ((*this)[i]){
       --c;
-      serialId += i + '.';
+      serialString += std::to_string(i);
+      if (c>0)
+	serialString += ',';
+      //std::to_string(i);
     }
   }
-  return serialId;
 }
 
 #ifdef OUTPUT_XML

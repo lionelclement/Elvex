@@ -727,147 +727,147 @@ Statement::print(std::ostream &outStream, int left) const
 /* **************************************************
  *
  ************************************************** */
-const std::string
-Statement::makeSerializationId() 
+void
+Statement::makeSerialString() 
 {
+  serialString = std::string();
   switch (this->op) {
   case ATTEST:
-    serialId = 'A' + lhs->serialize();
+    serialString = 'A' + lhs->peekSerialString();
     break;
   case NIL:
-    serialId = 'N';
+    serialString = 'N';
     break;
   case NOT_NIL:
-    serialId = '~';
+    serialString = '~';
     break;
   case FINISHED:
-    serialId = 'F';
+    serialString = 'F';
     break;
   case AFF:
-    serialId = lhs->serialize() + '=' + rhs->serialize();
+    serialString = lhs->peekSerialString() + '=' + rhs->peekSerialString();
     break;
   case SUBSUME:
-    serialId = lhs->serialize() + "⊂" + rhs->serialize();
+    serialString = lhs->peekSerialString() + "⊂" + rhs->peekSerialString();
     break;
   case INSET:
-    serialId = lhs->serialize() + "∈" + rhs->serialize();
+    serialString = lhs->peekSerialString() + "∈" + rhs->peekSerialString();
     break;
   case FCT:
     switch (this->getFct()) {
     case NOP:
-      serialId = ';';
+      serialString = ';';
       break;
     case NOT:
-      serialId = "¬("+lhs->serialize()+')';
+      serialString = "¬(" + lhs->peekSerialString() + ')';
       break;
     case AND:
-      serialId = '('+lhs->serialize()+"∧"+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + "∧" + rhs->peekSerialString() + ')';
       break;
     case OR:
-      serialId = '('+lhs->serialize()+"∨"+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + "∨" + rhs->peekSerialString() + ')';
       break;
     case DIFF:
-      serialId = '('+lhs->serialize()+"≠"+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + "≠" + rhs->peekSerialString() + ')';
       break;
     case EQ:
-      serialId = '('+lhs->serialize()+"=="+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + "==" + rhs->peekSerialString() + ')';
       break;
     case PLUS:
-      serialId = '('+lhs->serialize()+"+"+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + '+' + rhs->peekSerialString() + ')';
       break;
     case MINUS:
-      serialId = '('+lhs->serialize()+'-'+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + '-' + rhs->peekSerialString() + ')';
       break;
     case TIMES:
-      serialId = '('+lhs->serialize()+'*'+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + '*' + rhs->peekSerialString() + ')';
       break;
     case DIVIDE:
-      serialId = '('+lhs->serialize()+'/'+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + '/' + rhs->peekSerialString() + ')';
       break;
     case MODULO:
-      serialId = '('+lhs->serialize()+'%'+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + '%' + rhs->peekSerialString() + ')';
       break;
     case LT:
-      serialId = '('+lhs->serialize()+'<'+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + '<' + rhs->peekSerialString() + ')';
       break;
     case LE:
-      serialId = '('+lhs->serialize()+"≤"+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + "≤" + rhs->peekSerialString() + ')';
       break;
     case GT:
-      serialId = '('+lhs->serialize()+'>'+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + '>' + rhs->peekSerialString() + ')';
       break;
     case GE:
-      serialId = '('+lhs->serialize()+"≥"+rhs->serialize()+')';
+      serialString = '(' + lhs->peekSerialString() + "≥" + rhs->peekSerialString() + ')';
       break;
     case MINUS_U:
-      serialId = '-'+lhs->serialize();
+      serialString = '-'+lhs->peekSerialString();
       break;
     case RAND:
-      serialId = "r()";
+      serialString = "r()";
       break;
     }
     break;
   case CONSTANT:
   case VARIABLE:
-    serialId = getBits()->serialize();
+    serialString = getBits()->peekSerialString();
     break;
   case PRINT:
-    serialId = "P "+lhs->serialize();
+    serialString = "P "+lhs->peekSerialString();
     break;
   case PRINTLN:
-    serialId = "PL "+lhs->serialize();
+    serialString = "PL "+lhs->peekSerialString();
     break;
   case FEATURES:
-    serialId = getFeatures()->serialize();
+    serialString = getFeatures()->peekSerialString();
     break;
   case LIST:
-    serialId = getList()->serialize();
+    serialString = getList()->peekSerialString();
     break;
   case GUARD:
-    serialId = "G "+getFeatures()->serialize();
+    serialString = "G "+getFeatures()->peekSerialString();
     break;
   case UNIF:
-    serialId = '('+lhs->serialize()+"∪"+rhs->serialize()+')';
+    serialString = '('+lhs->peekSerialString()+"∪"+rhs->peekSerialString()+')';
     break;
   case UP:
-    serialId = "↑";
+    serialString = "↑";
     break;
   case UP2:
-    serialId = "⇑";
+    serialString = "⇑";
     break;
   case DASH:
-    serialId = '#'+std::to_string(getFirst()+1);
+    serialString = '#'+std::to_string(getFirst()+1);
     if (getSecond()!=UINT_MAX)
-      serialId += ":" + std::to_string(getSecond()+1);
+      serialString += ":" + std::to_string(getSecond()+1);
     break;
   case DOWN:
-    serialId = "↓"+std::to_string(getFirst()+1);
+    serialString = "↓"+std::to_string(getFirst()+1);
     if (getSecond()!=UINT_MAX)
-      serialId += '.' + std::to_string(getSecond()+1);
+      serialString += '.' + std::to_string(getSecond()+1);
     break;
   case DOWN2:
-    serialId = "⇓"+std::to_string(getFirst()+1);
+    serialString = "⇓"+std::to_string(getFirst()+1);
     break;
   case IF:
-    serialId = "if("+lhs->serialize()+')'+rhs->serialize();
+    serialString = "if("+lhs->peekSerialString()+')'+rhs->peekSerialString();
     break;
   case THENELSE:
-    serialId = "then("+lhs->serialize()+')';
+    serialString = "then("+lhs->peekSerialString()+')';
     if (rhs) {
-      serialId += "else("+rhs->serialize()+')';
+      serialString += "else("+rhs->peekSerialString()+')';
     }
     break;
   case STR:
-    serialId = '"' + getStr() + '"';
+    serialString = '"' + getStr() + '"';
     break;
   case STMS:
-    serialId = getStatements()->serialize();
+    serialString = getStatements()->peekSerialString();
     break;
   case DOUBLE:
-    serialId = getNumber();
+    serialString = getNumber();
     break;
   }
-  return serialId;
 }
 
 /* **************************************************
@@ -932,12 +932,12 @@ featuresPtr
 Statement::evalFeatures(itemPtr item, bool replaceVariables)
 {
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL FEATURES #######################" << std::endl;
-  std::cerr << "<div>" << std::endl;
-  this->print(std::cerr);
-  std::cerr << std::endl;
-  item->print(std::cerr);
-  std::cerr << "</div>" << std::endl;
+  std::cout << "####################### EVAL FEATURES #######################" << std::endl;
+  std::cout << "<div>" << std::endl;
+  this->print(std::cout);
+  std::cout << std::endl;
+  item->print(std::cout);
+  std::cout << "</div>" << std::endl;
 #endif
   
   featuresPtr resultFeatures = Features::_nil;
@@ -1015,15 +1015,15 @@ Statement::evalFeatures(itemPtr item, bool replaceVariables)
     break;
   }
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL FEATURES DONE #######################" << std::endl;
-  std::cerr << "<div>" << std::endl;
-  this->print(std::cerr);
-  std::cerr << std::endl;
+  std::cout << "####################### EVAL FEATURES DONE #######################" << std::endl;
+  std::cout << "<div>" << std::endl;
+  this->print(std::cout);
+  std::cout << std::endl;
   if (resultFeatures)
-    resultFeatures->print(std::cerr);
+    resultFeatures->print(std::cout);
   else
-    std::cerr << "NULL";
-  std::cerr << "</div>" << std::endl;
+    std::cout << "NULL";
+  std::cout << "</div>" << std::endl;
 #endif
   return resultFeatures;
 }
@@ -1035,10 +1035,10 @@ listPtr
 Statement::evalList(itemPtr item, bool replaceVariables)
 {
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL LIST #######################" << std::endl;
-  std::cerr << "<div>" << std::endl;
-  this->print(std::cerr);
-  std::cerr << "</div>" << std::endl;
+  std::cout << "####################### EVAL LIST #######################" << std::endl;
+  std::cout << "<div>" << std::endl;
+  this->print(std::cout);
+  std::cout << "</div>" << std::endl;
 #endif
   listPtr resultList = List::nil;
   switch (this->op) {
@@ -1097,15 +1097,15 @@ Statement::evalList(itemPtr item, bool replaceVariables)
     break;
   }
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL LIST DONE #######################" << std::endl;
-  std::cerr << "<div>" << std::endl;
-  this->print(std::cerr);
-  std::cerr << std::endl;
+  std::cout << "####################### EVAL LIST DONE #######################" << std::endl;
+  std::cout << "<div>" << std::endl;
+  this->print(std::cout);
+  std::cout << std::endl;
   if (resultList)
-    resultList->print(std::cerr);
+    resultList->print(std::cout);
   else
-    std::cerr << "NULL";
-  std::cerr << "</div>" << std::endl;
+    std::cout << "NULL";
+  std::cout << "</div>" << std::endl;
 #endif
   return resultList;
 }
@@ -1117,11 +1117,11 @@ valuePtr
 Statement::evalValue(itemPtr item, bool replaceVariables)
 {
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL VALUE #######################" << std::endl;
-  std::cerr << "<div>" << std::endl;
-  this->print(std::cerr, 0);
-  item->print(std::cerr);
-  std::cerr << "</div>" << std::endl;
+  std::cout << "####################### EVAL VALUE #######################" << std::endl;
+  std::cout << "<div>" << std::endl;
+  this->print(std::cout, 0);
+  item->print(std::cout);
+  std::cout << "</div>" << std::endl;
 #endif
   valuePtr resultValue = valuePtr();
   featuresPtr resultFeatures = featuresPtr();
@@ -1567,16 +1567,16 @@ Statement::evalValue(itemPtr item, bool replaceVariables)
   }
  valueBuilt:
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL VALUE DONE #######################" << std::endl;
-  std::cerr << "<div>" << std::endl;
-  this->print(std::cerr);
-  std::cerr << "<H3>";
+  std::cout << "####################### EVAL VALUE DONE #######################" << std::endl;
+  std::cout << "<div>" << std::endl;
+  this->print(std::cout);
+  std::cout << "<H3>";
   if (resultValue)
-    resultValue->print(std::cerr);
+    resultValue->print(std::cout);
   else
-    std::cerr << "NULL";
-  std::cerr << "</H3>";
-  std::cerr << "</div>" << std::endl;
+    std::cout << "NULL";
+  std::cout << "</H3>";
+  std::cout << "</div>" << std::endl;
 #endif
   return resultValue;
 }
@@ -1588,18 +1588,18 @@ featuresPtr
 Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item)
 {
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL UNIF #######################" << std::endl;
-  std::cerr << "<table border=\"1\"><tr><th>fs1</th><th>fs2</th><th>Environment</th></tr>";
-  std::cerr << "<tr><td>";
+  std::cout << "####################### EVAL UNIF #######################" << std::endl;
+  std::cout << "<table border=\"1\"><tr><th>fs1</th><th>fs2</th><th>Environment</th></tr>";
+  std::cout << "<tr><td>";
   if (fs1)
-    fs1->print(std::cerr);
-  std::cerr << "</td><td>";
+    fs1->print(std::cout);
+  std::cout << "</td><td>";
   if (fs2)
-    fs2->print(std::cerr);
-  std::cerr << "</td><td>";
+    fs2->print(std::cout);
+  std::cout << "</td><td>";
   if (item->getEnvironment())
-    item->getEnvironment()->print(std::cerr);
-  std::cerr << "</td></tr></table>";
+    item->getEnvironment()->print(std::cout);
+  std::cout << "</td></tr></table>";
 #endif
 
   featuresPtr result = featuresPtr();
@@ -1914,15 +1914,15 @@ Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item)
  endUnif:
 
 #ifdef TRACE_EVAL
-  std::cerr << "####################### EVAL UNIF DONE #######################" << std::endl;
-  std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-  std::cerr << "<tr><td>";
+  std::cout << "####################### EVAL UNIF DONE #######################" << std::endl;
+  std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+  std::cout << "<tr><td>";
   if (result)
-    result->print(std::cerr);
-  std::cerr << "</td><td>";
+    result->print(std::cout);
+  std::cout << "</td><td>";
   if (item->getEnvironment())
-    item->getEnvironment()->print(std::cerr);
-  std::cerr << "</td></tr></table>";
+    item->getEnvironment()->print(std::cout);
+  std::cout << "</td></tr></table>";
 #endif
   return result;
 }
@@ -2549,10 +2549,10 @@ void
 Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
 {
 #ifdef TRACE_EVAL
-  std::cerr << "####################### APPLY STATEMENT #######################" << std::endl;
-  std::cerr << "<DIV>";
-  print(std::cerr);
-  std::cerr << "</DIV>";
+  std::cout << "####################### APPLY STATEMENT #######################" << std::endl;
+  std::cout << "<DIV>";
+  print(std::cout);
+  std::cout << "</DIV>";
 #endif
 
   if (isSetFlags(Flags::SEEN | DISABLED))
@@ -2722,8 +2722,8 @@ Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
   }
 
   else{
-    cerr << "Not yet implemented" << endl;
-    cerr << this->serialize() << endl;
+    std::cerr << "Not yet implemented" << std::endl;
+    std::cerr << this->peekSerialString() << std::endl;
     FATAL_ERROR_STM;
   }
 
@@ -2733,11 +2733,11 @@ Statement::apply(itemPtr item, bool &result, bool &effect, bool trace)
   }
 
 #ifdef TRACE_EVAL
-  std::cerr << "####################### APPLY STATEMENT DONE #######################" << std::endl;
-  std::cerr << "<DIV>";
-  item->print(std::cerr);
-  print(std::cerr);
-  std::cerr << "</DIV>";
+  std::cout << "####################### APPLY STATEMENT DONE #######################" << std::endl;
+  std::cout << "<DIV>";
+  item->print(std::cout);
+  print(std::cout);
+  std::cout << "</DIV>";
 #endif
 }
 
@@ -2779,7 +2779,7 @@ Statement::lookingForAssignedInheritedSonFeatures(std::vector< bool > &assignedI
 /* ************************************************************
  *
  ************************************************************ */
-bool Statement::findVariable(bitsetPtr variable)
+const bool Statement::findVariable(bitsetPtr variable)
 {
   switch (this->op) {
 

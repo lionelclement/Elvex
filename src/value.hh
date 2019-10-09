@@ -30,7 +30,7 @@ class Value:
   public Id,
   public Flags,
   public Serializable,
-  public enable_shared_from_this< class Value > {
+  public std::enable_shared_from_this< class Value > {
   
 public:
   enum Type {
@@ -63,7 +63,7 @@ public:
 private:
   Value(const enum Type, std::string);
   Value(const enum Type, unsigned int=0, double=0.0, bitsetPtr bitset=bitsetPtr(), featuresPtr=featuresPtr(), listPtr lst=listPtr());
-  const std::string makeSerializationId(void);
+  void makeSerialString(void);
 
 public:
   ~Value();

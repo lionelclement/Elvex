@@ -33,13 +33,13 @@ class Statements:
   public Id,
   public Flags,
   public Serializable,
-  public enable_shared_from_this< class Statements > {
+  public std::enable_shared_from_this< class Statements > {
 
 private:
   statementPtr guard;
   std::list< statementPtr > statements;
   Statements(statementPtr);
-  const std::string makeSerializationId(void);
+  void makeSerialString(void);
   
 public:
   ~Statements();

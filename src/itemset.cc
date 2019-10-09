@@ -67,7 +67,7 @@ unsigned int ItemSet::getId(void)
 /* **************************************************
  *
  ************************************************** */
-std::set<itemPtr, Item::Less> &ItemSet::getItems(void)
+ItemSet::set &ItemSet::getItems(void)
 {
   return items;
 }
@@ -105,12 +105,11 @@ bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer)
     FATAL_ERROR_MSG("maxCardinal");
   }
 #ifdef TRACE_INSERT
-  std::cerr << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
-  item->print(std::cerr);
-  std::cerr << std::endl;
+  std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
+  item->print(std::cout);
+  std::cout << std::endl;
 #endif
-  std::pair<iterator, bool> result = items.insert(item);
-  return result.second;
+  return items.insert(item).second;
 }
 
 /* **************************************************

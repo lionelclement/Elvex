@@ -21,6 +21,7 @@
 #define ITEMSET_H
 
 #include <set>
+#include <unordered_set>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
@@ -28,17 +29,16 @@
 #include "ipointer.hh"
 
 class ItemSet:
-  public enable_shared_from_this< class ItemSet > {
+  public std::enable_shared_from_this< class ItemSet > {
+
+public:
+  typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to > set;
+  typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to >::const_iterator const_iterator;
+  typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to >::iterator iterator;
 
 private:
   unsigned int id;
-  std::set< itemPtr, Item::Less > items;
-  
-public:
-  typedef std::set<itemPtr, Item::Less>::const_iterator const_iterator;
-  typedef std::set<itemPtr, Item::Less>::iterator iterator;
-  //
-private:
+  set items;
   ItemSet (int);
   
 public:
@@ -46,7 +46,7 @@ public:
   static itemSetPtr create(unsigned int);
   
   unsigned int getId(void);
-  std::set<itemPtr, Item::Less>& getItems(void);
+  set &getItems(void);
   
   const_iterator begin(void) const;
   const_iterator end(void) const;

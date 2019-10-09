@@ -49,7 +49,7 @@ memoizationValuePtr MemoizationValue::create(featuresPtr features, forestIdentif
 /* ************************************************************
  * 
  ************************************************************ */
-featuresPtr MemoizationValue::getFeatures(void)
+featuresPtr MemoizationValue::getFeatures(void) const
 {
   return this->features;
 }
@@ -57,7 +57,7 @@ featuresPtr MemoizationValue::getFeatures(void)
 /* ************************************************************
  * 
  ************************************************************ */
-forestIdentifierPtr MemoizationValue::getForestIdentifier(void)
+forestIdentifierPtr MemoizationValue::getForestIdentifier(void) const
 {
   return this->forestIdentifier;
 }

@@ -121,16 +121,15 @@ Statements::print(std::ostream& outStream, int left) const
 /* **************************************************
  *
  ************************************************** */
-const std::string
-Statements::makeSerializationId()
+void
+Statements::makeSerialString()
 {
-  serialId = '{';
+  serialString = '{';
   if (guard)
-    serialId += guard->serialize() + ';';
+    serialString += guard->peekSerialString() + ';';
   for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i)
-    serialId += (*i)->serialize() + ';';
-  serialId += '}';
-  return serialId;
+    serialString += (*i)->peekSerialString() + ';';
+  serialString += '}';
 }
 
 /* **************************************************

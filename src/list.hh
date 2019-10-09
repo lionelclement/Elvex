@@ -27,7 +27,7 @@
 #include "ipointer.hh"
 
 class List:
-  public enable_shared_from_this< List >,
+  public std::enable_shared_from_this< List >,
   public Serializable,
   public Flags,
   public Id {
@@ -48,7 +48,7 @@ private:
   List (enum Type type, valuePtr value=valuePtr(), listPtr car=listPtr(), listPtr cdr=listPtr());
 
   static listPtr create(void);
-  const std::string makeSerializationId(void);
+  void makeSerialString(void);
 
 public:
   ~List();
@@ -80,7 +80,6 @@ public:
   void toXML(const xmlNodePtr);
 #endif
   listPtr clone(void) const;
-  static bool compare_values (valuePtr, valuePtr);
   void enable(statementPtr, itemPtr, bool &, bool);
   bool subsumes(listPtr , environmentPtr );
 

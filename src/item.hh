@@ -28,19 +28,19 @@
 #include "flags.hh"
 #include "id.hh"
 #include "ipointer.hh"
-#include "item.hh"
+#include "serializable.hh"
 
 class Item:
   public Id,
   public Flags,
-  public enable_shared_from_this< class Item > {
+  public Serializable,
+  public std::enable_shared_from_this< class Item > {
   
 private:
   class Rule *rule;
   unsigned int index; // the \bullet position
   std::vector<unsigned int> indexTerms; // which term in a disjunction
   statementsPtr statements;
-  
   std::set< unsigned int > refs; // item from which this one is derived
   std::vector< bool > seen;
   std::vector< unsigned int > ranges;
@@ -53,23 +53,23 @@ private:
   
   bool
     s_id = false,
-    s_ruleId = false,
-    s_ruleSerialId = false,
+    s_ruleId = true,
+    s_rule = false,
     s_flags = false,
-    s_refs = false,
+    s_refs = true,
     s_seen = false,
-    s_item = true,
-    s_index = false,
-    s_indexTerms = false,
+    s_item = false,
+    s_index = true,
+    s_indexTerms = true,
     s_terms = false,
     s_ranges = false,
-    s_forestIdentifiers = false,
+    s_forestIdentifiers = true,
     s_inheritedFeatures = true,
-    s_inheritedSonFeatures = true,
-    s_synthesizedFeatures = true,
-    s_synthesizedSonFeatures = true,
-    s_statements = true,
-    s_environment = true;
+    s_inheritedSonFeatures = false,
+    s_synthesizedFeatures = false,
+    s_synthesizedSonFeatures = false,
+    s_statements = false,
+    s_environment = false;
 
   Item (class Rule *,
 	unsigned int,
@@ -80,6 +80,7 @@ private:
 	unsigned int,
 	std::vector<unsigned int> &,
 	statementsPtr);
+  void makeSerialString(void);
   
 public:
   virtual ~Item();
@@ -161,10 +162,18 @@ public:
   void defaultInheritedSonFeatures (void);
   void apply(itemSetPtr, class Synthesizer *);
   
-  // compare deux items
-  struct Less {
-    const bool operator() (itemPtr, itemPtr) const;
-  };
+  // // compare deux items
+  //struct less {
+  //   bool operator() (itemPtr const, itemPtr const) const;
+  // };
   
-};  
+  struct hash {
+    size_t operator() (itemPtr const) const;
+   };
+
+  struct equal_to {
+    bool operator() (itemPtr const, itemPtr const) const;
+    };
+};
+
 #endif // ITEM_H

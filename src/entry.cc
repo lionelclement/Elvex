@@ -169,13 +169,12 @@ Entry::print(std::ostream& out) const
 /* **************************************************
  *
  ************************************************** */
-const std::string
-Entry::makeSerializationId()
+void
+Entry::makeSerialString()
 {
-  serialId = std::to_string(code) + std::to_string(codePred) + '"' + form + '"';
+  serialString = std::to_string(code) + std::to_string(codePred) + '"' + form + '"';
   if (features)
-    serialId += features->serialize();
+    serialString += features->peekSerialString();
   else
-    serialId += 'N';
-  return serialId;
+    serialString += 'N';
 }

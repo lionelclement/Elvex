@@ -34,7 +34,7 @@ class Features:
   public Id,
   public Flags,
   public Serializable,
-  public enable_shared_from_this< class Features > {
+  public std::enable_shared_from_this< class Features > {
   
 public:
   typedef std::list< featurePtr > listFeatures;
@@ -50,11 +50,12 @@ private:
 
   static featuresPtr createBottom(void);
   static featuresPtr createNil(void);
-  const std::string makeSerializationId(void);
+  void makeSerialString(void);
 
 public:
   ~Features();
   static featuresPtr create(featurePtr=featurePtr());
+
 
   void putId(unsigned int id);
 

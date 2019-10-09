@@ -52,7 +52,7 @@ List::~List()
  ************************************************** */
 listPtr List::create()
 {
-  return shared_ptr< class List >( new List(List::NIL) );
+  return listPtr( new List(List::NIL) );
 }
 
 /* **************************************************
@@ -60,7 +60,7 @@ listPtr List::create()
  ************************************************** */
 listPtr List::create(valuePtr value)
 {
-  return shared_ptr< class List >( new List(List::ATOM, value) );
+  return listPtr( new List(List::ATOM, value) );
 }
 
 /* **************************************************
@@ -68,7 +68,7 @@ listPtr List::create(valuePtr value)
  ************************************************** */
 listPtr List::create(listPtr car, listPtr cdr)
 {
-  return shared_ptr< class List >( new List(List::PAIRP, valuePtr(), car, cdr) );
+  return listPtr( new List(List::PAIRP, valuePtr(), car, cdr) );
 }
 
 /* ************************************************************
@@ -197,33 +197,29 @@ List::getIdentifier(void) const
 /* **************************************************
  *
  ************************************************** */
-const std::string
-List::makeSerializationId(void)
+void
+List::makeSerialString(void)
 {
   switch (type){
   case NIL:
-    serialId = 'N';
+    serialString = 'N';
     break;
   case ATOM:
-    serialId = value->serialize();
+    serialString = value->peekSerialString();
     break;
   case PAIRP:
-    serialId = '<';
-    serialId += car()->serialize();
+    serialString = '<' + car()->peekSerialString();
     if (cdr()->isAtom()){
-      serialId += ':';
-      serialId += cdr()->serialize();
+      serialString += ':' + cdr()->peekSerialString();
     }
     else if (cdr()->isNil()){
     }
     else{
-      serialId += ',';
-      serialId += cdr()->serialize();
+      serialString += ',' + cdr()->peekSerialString();
     }
-    serialId += '>';
+    serialString += '>';
     break;
   }
-  return serialId;
 }
 
 /* **************************************************
@@ -431,38 +427,6 @@ List::clone() const
     break;
   }
   return listPtr();
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-bool 
-List::compare_values (valuePtr v1, valuePtr v2)
-{
-  if ((v1->getType()==Value::FEATURES)
-      &&(v2->getType()==Value::FEATURES)){
-    valuePtr va1=v1->getFeatures()->find(gwith);
-    valuePtr va2=v2->getFeatures()->find(gwith);
-    if ((va1->getType()==Value::CONSTANT)
-	&& (va2->getType()==Value::CONSTANT)){
-      if (va1->getBits()->serialize() < va2->getBits()->serialize())
-	return true;
-      else
-	return false;
-    }
-    else
-      FATAL_ERROR;
-  }
-  else if ((v1->getType()==Value::DOUBLE)
-	   &&(v2->getType()==Value::DOUBLE)){
-    if (v1->getDouble() < v2->getDouble())
-      return true;
-    else
-      return false;
-  }
-  else
-    FATAL_ERROR;
-  return false;
 }
 
 /* ************************************************************
