@@ -1,8 +1,15 @@
 @lexicon 
 
-"bonjour" hello;
-"à bientôt" see_you_soon;
+cher dear [gender:ms, number:sg];
+chers dear [gender:ms, number:pl];
+chère dear [gender:fm, number:pl];
+chères dear [gender:fm, number:pl];
+FORM name;
+salutations regards;
+FORM signature;
 "@" newline;
+"@@" paragraph;
+
 
 "est-ce que" est_ce_que;
 "il me semble que" il_me_semble_que;
@@ -76,8 +83,8 @@ les	cla [PRED:_pro, number:pl, person:three];
 // "cel<les-ci"	pro [PRED:_pro, gender:pl, number:fm, person:three];
 // celà	pro [PRED:_pro, gender:ms, number:sg, person:three];
 // "ceux-là"	pro [PRED:_pro, gender:pl, number:sg, person:three];
-// "celle-là"	pro [PRED:_pro, gender:ms, number:fm, person:three];
-// "celles-là"	pro [PRED:_pro, gender:pl, number:fm, person:three];
+// "celle-là"	pro [PRED:_pro, gender:ms, number:sg, person:three];
+// "celles-là"	pro [PRED:_pro, gender:pl, number:sg, person:three];
 
 "moi-même"	itself [number:sg, person:one, itself:yes];
 "toi-même"	itself [number:sg, person:two, itself:yes];
@@ -520,3 +527,4 @@ fumeur	cn[PRED:fumeur, gender:ms, number:sg, fct:Magn, mod:<[PRED:gros]>];
 travail cn[PRED:travail, gender:ms, number:sg, fct:Magn, mod:<[PRED:important]>];
 travaux cn[PRED:travail, gender:ms, number:pl, fct:Magn, mod:<[PRED:important]>];
 */
+

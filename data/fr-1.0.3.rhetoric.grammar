@@ -426,22 +426,16 @@ rhetoricalStructure → illocutionaryAct {
 /* **************************************************
  * Greetings, hello, etc
  ************************************************** */
-rhetoricalStructure → hello title comma newline text {
-  [PRED:hello, i:$i, ii:$ii];
-  ↓1 = [];
+rhetoricalStructure → dear name comma paragraph text paragraph regards newline signature {
+  [PRED:letter, i:$i, ii:$ii, iii:$iii];
+  ↓1 = $i;
   ↓2 = $i;
   ↓3 = [];
   ↓4 = [];
   ↓5 = $ii;
-  ⇑ = ⇓3;
-}
-
-rhetoricalStructure → text newline see_you_soon dot {
-  [PRED:see_you_soon, i:$i];
-  ↓1 = $i;
-  ↓2 = [];
-  ↓3 = [];
-  ↓4 = [];
-  ⇑ = ⇓1;
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = $iii;
 }
 
