@@ -7,6 +7,11 @@ It is written by Lionel Clément at Bordeaux - France and released by LaBRI unde
 
 The system is using handwritten *lexicon* and *grammar* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the concept. The "concept" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc. 
 
+programming language used
+-------
+
+C++
+
 License
 -------
 
