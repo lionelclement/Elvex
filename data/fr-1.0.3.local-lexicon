@@ -8,7 +8,7 @@ FORM name;
 salutations regards;
 FORM signature;
 "@" newline;
-"@@" paragraph;
+"@@" newParagraph;
 
 
 "est-ce que" est_ce_que;
@@ -98,7 +98,9 @@ les	cla [PRED:_pro, number:pl, person:three];
 je	cln [PRED:_ego, number:sg, person:one];
 je	cln [PRED:_pro, number:sg, person:one];
 tu	cln [PRED:_pro, number:sg, person:two];
+tu	cln [PRED:_you, number:sg, person:two];
 il	cln [PRED:_pro, number:sg, person:three, gender:ms];
+il	cln [PRED:_him, number:sg, person:three, gender:ms];
 elle	cln [PRED:_pro, number:sg, person:three, gender:fm];
 nous	cln [PRED:_pro, number:pl, person:one];
 vous	cln [PRED:_pro, number:pl, person:two];

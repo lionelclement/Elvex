@@ -423,19 +423,3 @@ rhetoricalStructure → illocutionaryAct {
   ⇑ = ⇓1;
 }
 
-/* **************************************************
- * Greetings, hello, etc
- ************************************************** */
-rhetoricalStructure → dear name comma paragraph text paragraph regards newline signature {
-  [PRED:letter, i:$i, ii:$ii, iii:$iii];
-  ↓1 = $i;
-  ↓2 = $i;
-  ↓3 = [];
-  ↓4 = [];
-  ↓5 = $ii;
-  ↓6 = [];
-  ↓7 = [];
-  ↓8 = [];
-  ↓9 = $iii;
-}
-
