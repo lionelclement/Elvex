@@ -38,7 +38,8 @@ private:
 private:
   mapStringValue env;
   void add(std::string const, valuePtr=valuePtr());
-  
+  void remove(std::string const);
+
 public:
   ~Environment();
   static environmentPtr create(void);
@@ -46,6 +47,7 @@ public:
   void add(const bitsetPtr, valuePtr=valuePtr());
   void add(const environmentPtr);
   void add(const environmentPtr, const environmentPtr);
+  void remove(const bitsetPtr);
   mapStringValue::const_iterator begin() const;
   mapStringValue::const_iterator end() const;
   const size_t size() const;

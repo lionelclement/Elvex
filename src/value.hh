@@ -84,9 +84,10 @@ public:
   std::string getStr(void) const;
   listPtr getList(void) const;
 
-  void print(std::ostream&, bool par=true, bool flat=false) const;
+  void print(std::ostream&) const;
+  void flatPrint(std::ostream&) const;
   #ifdef OUTPUT_XML
-  void toXML(xmlNodePtr NodeRoot) const;
+  void toXML(xmlNodePtr) const;
 #endif
   bool buildEnvironment(environmentPtr , valuePtr , bool, bool);
   bool subsumes(valuePtr , environmentPtr );
@@ -108,6 +109,7 @@ public:
   bool eq(valuePtr ) const;
   bool lt(valuePtr ) const;
   bool findVariable(bitsetPtr);
+  void apply(itemPtr item, class Synthesizer *, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body);
   
 };
 

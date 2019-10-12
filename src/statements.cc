@@ -102,18 +102,18 @@ Statements::addStatement(statementPtr statement)
  *
  ************************************************** */
 void 
-Statements::print(std::ostream& outStream, int left) const 
+Statements::print(std::ostream& outStream, int tabulation) const 
 {
-  for (int j=1 ; j<=left ; ++j)
+  for (int j=1 ; j<=tabulation ; ++j)
     outStream << "&nbsp;";
   outStream << "{<DIV>";
-  left+=3;
+  tabulation+=3;
   if (guard)
-    guard->print(outStream, left);
+    guard->print(outStream, tabulation);
   for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i)
-    (*i)->print(outStream, left);
-  left-=3;
-  for (int j=1 ; j<=left ; ++j)
+    (*i)->print(outStream, tabulation);
+  tabulation-=3;
+  for (int j=1 ; j<=tabulation ; ++j)
     outStream << "&nbsp;";
   outStream << "}</DIV>";
 }
@@ -161,7 +161,7 @@ Statements::renameVariables(unsigned int i)
  * Applique l'ensemble des instructions
  ************************************************** */
 void
-Statements::apply(itemPtr item, bool &effect, bool trace)
+Statements::apply(itemPtr item, Synthesizer *synthesizer, bool &effect, bool trace)
 {
   if (item->isSetFlags(Flags::BOTTOM))
     return;
@@ -174,7 +174,7 @@ Statements::apply(itemPtr item, bool &effect, bool trace)
       guard->enable(guard, item, change, true);
     if (!guard->isSetFlags(Flags::SEEN | DISABLED)){
       bool result = true;
-      guard->apply(item, result, effect, trace);
+      guard->apply(item, synthesizer, result, effect, trace);
       if (!result){
 	guard->addFlags(Flags::BOTTOM);
 	item->addFlags(Flags::BOTTOM);
@@ -199,7 +199,7 @@ Statements::apply(itemPtr item, bool &effect, bool trace)
 	  item->setEnvironment(environmentPtr());
 	  }
 	bool result = true;
-	(*statement)->apply(item, result, effect, trace);
+	(*statement)->apply(item, synthesizer, result, effect, trace);
 	if (!result){
 	  (*statement)->addFlags(Flags::BOTTOM);
 	  item->addFlags(Flags::BOTTOM);

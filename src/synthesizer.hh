@@ -76,7 +76,11 @@ private:
   std::string inputFileName;
   std::stack< std::string > bufferNames;
   std::stack< int > linenos;
-  
+
+  std::list<std::string> inputs;
+
+  std::map<std::string, featuresPtr, std::less<std::string> > macros;
+
   std::string lexiconString;
   std::string grammarString;
   std::string inputString;
@@ -122,6 +126,7 @@ public:
   int popLineno(void);
   int getTopLineno(void);
   class ForestMap getForestMap(void);
+  std::list<std::string> &getInputs(void);
   
   void setInputFileName(char *);
   void setLexiconFileName(char *);
@@ -157,7 +162,9 @@ public:
   void setStartTerm(class Term *);
 
   
-#ifdef OUTPUT_XML
+  void addInput(std::string);
+
+  #ifdef OUTPUT_XML
   void setOutXML(char *);
   char *getOutXML(void) const;
 #endif
@@ -201,12 +208,10 @@ public:
   void setRandom(bool);
   bool getRandom(void) const;
 
-private:
   void printState(std::ostream &, itemSetPtr);
   void close(itemSetPtr, unsigned int);
   bool shift(itemSetPtr, unsigned int);
   
- public:  
   itemPtr createItem(itemPtr, unsigned int);
   void parseFile(std::string);
   int parseString(std::string, std::string);
@@ -220,7 +225,9 @@ private:
   std::string keyMemoization(itemPtr const, itemPtr const);
 #endif
 #endif
-  
+  void addMacros(std::string, featuresPtr);
+  featuresPtr findMacros(std::string);
+
 };
 
 

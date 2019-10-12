@@ -58,7 +58,7 @@ private:
   bool isNonTerminal(class Term *) const;
   void analyseTerms(class Synthesizer&);
 #ifdef OUTPUT_XML
-  void toXML(const xmlNodePtr);
+  void toXML(xmlNodePtr);
 #endif
   std::list<class Rule *> *findRules(class Term *lhs);
 };

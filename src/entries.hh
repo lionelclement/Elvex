@@ -35,24 +35,24 @@ private:
 
   Entries();
   Entries(entryPtr);
-  Entries(std::vector< entryPtr >&);
-  Entries(int codePos, int codeLemma, std::string form);
+  Entries(const std::vector< entryPtr >&);
+  Entries(const int codePos, const int codeLemma, const std::string form);
 
 public:
   ~Entries();
   static entriesPtr create();
-  static entriesPtr create(entryPtr );
-  static entriesPtr create(std::vector<entryPtr >&);
-  static entriesPtr create(int codePos, int codeLemma, std::string form);
+  static entriesPtr create(entryPtr);
+  static entriesPtr create(const std::vector<entryPtr> &);
+  static entriesPtr create(int codePos, const int codeLemma, const std::string form);
 
   const size_t size() const;
   std::vector<entryPtr >::const_iterator begin() const;
   std::vector<entryPtr >::const_iterator end() const;
-  entryPtr at(size_t) const;
+  entryPtr at(const size_t) const;
 
   void add(const entryPtr);
 #ifdef OUTPUT_XML
-  void toXML(const xmlNodePtr) const;
+  void toXML(xmlNodePtr) const;
 #endif
   void print(std::ostream &) const;
 };

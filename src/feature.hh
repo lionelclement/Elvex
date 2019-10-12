@@ -46,7 +46,7 @@
     
   private:
     enum Type type;
-    bitsetPtr attribute; // variable ou constante
+    bitsetPtr attribute;
     valuePtr value;
     Feature(Type, bitsetPtr, valuePtr);
     void makeSerialString(void);
@@ -65,7 +65,8 @@
   std::string attributeToString(void) const;
 
   featurePtr clone(void) const;
-  void print(std::ostream &, bool flat=false) const;
+  void print(std::ostream &) const;
+  void flatPrint(std::ostream &) const;
   
 #ifdef OUTPUT_XML
   void toXML(xmlNodePtr nodeRoot);

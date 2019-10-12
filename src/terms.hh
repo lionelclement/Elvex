@@ -51,7 +51,7 @@ public:
   void print(std::ostream &outStream=std::cout);
   class Terms *clone(void) const;
 #ifdef OUTPUT_XML
-  void toXML(const xmlNodePtr);
+  void toXML(xmlNodePtr);
 #endif
 
   // compare deux termes

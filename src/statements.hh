@@ -56,7 +56,7 @@ public:
   void renameVariables(unsigned int);
   void print(std::ostream &, int=0) const;
   statementsPtr clone(const std::bitset<NBRFLAGS>&savedFlags) const;
-  void apply(itemPtr, bool &, bool);
+  void apply(itemPtr, class Synthesizer *, bool &, bool);
   void lookingForAssignedInheritedSonFeatures(std::vector< bool > &);
   void enable(itemPtr, bool &, bool);
   bool findVariableElsewhere(statementPtr, bitsetPtr);

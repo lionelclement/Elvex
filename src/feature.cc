@@ -108,7 +108,7 @@ void Feature::setAttribute(bitsetPtr attribute)
  *
  ************************************************** */
 void 
-Feature::setValue(valuePtr value)
+Feature::setValue(valuePtr value) 
 {
   this->value=value;
 }
@@ -117,68 +117,76 @@ Feature::setValue(valuePtr value)
  *
  ************************************************** */
 void
-Feature::print(std::ostream& outStream, bool flat) const
+Feature::print(std::ostream& outStream) const
 {
   switch(type){
   case Feature::PRED:
-    if (!flat)
-      outStream << "<TD ALIGN=\"LEFT\">";
-    outStream << "PRED";
-    if (!flat)
-      outStream << "</TD><TD ALIGN=\"LEFT\">";
-    else
-      outStream << ":";
+    outStream << "<TD ALIGN=\"LEFT\">PRED</TD><TD ALIGN=\"LEFT\">";
     if (value)
-      value->print(outStream, false, flat);
+      value->print(outStream);
     else
       outStream << "NIL";
-    if (!flat)
-      outStream << "</TD>";
+    outStream << "</TD>";
     break;
   case Feature::FORM:
-    if (!flat)
-      outStream << "<TD ALIGN=\"LEFT\">";
-    outStream << "FORM";
-    if (!flat)
-      outStream << "</TD><TD ALIGN=\"LEFT\">";
-    else
-      outStream << ":";
+    outStream << "<TD ALIGN=\"LEFT\">FORM</TD><TD ALIGN=\"LEFT\">";
     if (value)
-      value->print(outStream, true, flat);
+      value->print(outStream);
     else
       outStream << "NIL";
-    if (!flat)
-      outStream << "</TD>";
+    outStream << "</TD>";
     break;
   case Feature::CONSTANT:
-    if (!flat)
-      outStream << "<TD ALIGN=\"LEFT\">";
-    outStream << attributeToString();
-    if (!flat)
-      outStream << "</TD><TD ALIGN=\"LEFT\">";
-    else
-      outStream << ":";
+    outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD><TD ALIGN=\"LEFT\">";
     if (value)
-      value->print(outStream, true, flat);
+      value->print(outStream);
     else
       outStream << "NIL";
-    if (!flat)
-      outStream << "</TD>";
+    outStream << "</TD>";
     break;
   case Feature::VARIABLE:
-    if (!flat)
-      outStream << "<TD ALIGN=\"LEFT\">";
-    outStream << attributeToString();
-    if (!flat)
-      outStream << "</TD>";
+    outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD>";
     if (value && !value->isNil()){
-      if (!flat)
-	outStream << "<TD ALIGN=\"LEFT\">";
-      else
-	outStream << ":";
-      value->print(outStream, true, flat);
-      if (!flat)
-	outStream << "</TD>";
+      outStream << "<TD ALIGN=\"LEFT\">";
+      value->print(outStream);
+      outStream << "</TD>";
+    }
+    break;
+  }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void
+Feature::flatPrint(std::ostream& outStream) const
+{
+  switch(type){
+  case Feature::PRED:
+    outStream << "PRED:";
+    if (value)
+      value->flatPrint(outStream);
+    else
+      outStream << "NIL";
+    break;
+  case Feature::FORM:
+    outStream << "FORM:";
+    if (value)
+      value->flatPrint(outStream);
+    else
+      outStream << "NIL";
+    break;
+  case Feature::CONSTANT:
+    outStream << attributeToString() << ':';
+    if (value)
+      value->flatPrint(outStream);
+    else
+      outStream << "NIL";
+    break;
+  case Feature::VARIABLE:
+    outStream << attributeToString() << ':';
+    if (value && !value->isNil()){
+      value->flatPrint(outStream);
     }
     break;
   }

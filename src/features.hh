@@ -59,8 +59,8 @@ public:
 
   void putId(unsigned int id);
 
-  void addFeature(featurePtr, bool=false);
-  void addFeatures(featuresPtr, bool=false);
+  void add(featurePtr, bool=false);
+  void add(featuresPtr, bool=false);
   listFeatures::iterator erase(listFeatures::iterator i);
 
   const size_t size(void) const;
@@ -68,8 +68,10 @@ public:
   listFeatures::iterator end(void);
   featurePtr front(void) const;
 
-  void print(std::ostream &, bool=true, bool=false) const;
-#ifdef OUTPUT_XML
+  void print(std::ostream &) const;
+  void flatPrint(std::ostream &) const;
+
+  #ifdef OUTPUT_XML
   void toXML(xmlNodePtr);
 #endif
   featuresPtr clone(void) const;

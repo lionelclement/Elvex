@@ -18,6 +18,7 @@
  ************************************************** */
 
 #include <map>
+#include <bitset>
 
 #include "bitset.hh"
 #include "flags.hh"

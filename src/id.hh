@@ -20,24 +20,21 @@
 #ifndef ID_H
 #define ID_H
 
-//#include <tr1/cstdint>
-#include <cstdint>
-
-typedef uint32_t idType;
+#include <cstddef>
 
 class Id {  
   
 private:
-  static idType uniqId;
+  static std::size_t uniqId;
   
 protected:
-  idType id; // uniq id
+  std::size_t id; // uniq id
   
 public:
   Id(void);
   virtual ~Id(void);
   
-  const idType getId(void) const;
+  const size_t getId(void) const;
   
 };
 

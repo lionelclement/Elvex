@@ -50,9 +50,17 @@ public:
   bool operator <(ForestIdentifier const &) const;
   bool operator !=(ForestIdentifier const &) const;
 
-  struct less {
-    bool operator()(forestIdentifierPtr const, forestIdentifierPtr const) const;
-  };
+//  struct _less {
+//    bool operator()(forestIdentifierPtr const, forestIdentifierPtr const) const;
+//  };
+//
+  struct hash {
+    size_t operator() (forestIdentifierPtr const) const;
+   };
+
+  struct equal_to {
+    bool operator() (forestIdentifierPtr const, forestIdentifierPtr const) const;
+    };
   
 };
 

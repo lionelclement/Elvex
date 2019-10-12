@@ -35,30 +35,6 @@
 #include "term.hh"
 #include "terms.hh"
 
-// namespace std
-// {
-//     template <>
-//     struct hash<itemPtr>
-//     {
-//         size_t operator()(itemPtr x) const noexcept
-//         {
-// 	  return (x->getSerialId());
-//         }
-//     };
-// }
-
-// namespace std
-// {
-//   template <>
-//   struct less<Item>
-//   {
-//     size_t operator()(itemPtr i1, itemPtr i2) const noexcept
-//     {
-//       return i1->getSerialId() < i2->getSerialId();
-//     }
-//   };
-// }
-
 /* **************************************************
  *
  ************************************************** */
@@ -731,12 +707,10 @@ Item::print(std::ostream& out) const
   }
   if (s_forestIdentifiers){
     out << "<td>";//<center>ForestIdentifiers</center><br>";
-    for(std::vector<forestIdentifierPtr >::const_iterator i = forestIdentifiers.begin(); i!=forestIdentifiers.end();){
+    for(std::vector<forestIdentifierPtr >::const_iterator i = forestIdentifiers.begin() ; i!=forestIdentifiers.end() ; ){
       if (*i)
 	(*i)->print(out);
-      else
-	out << "NULL";
-      if (++i!=forestIdentifiers.end()){
+      if (++i != forestIdentifiers.end()){
 	out << ", ";
       }
     }
@@ -753,8 +727,6 @@ Item::print(std::ostream& out) const
       out << "<tr><td>";
       if (*i)
 	(*i)->print(out);
-      else
-	out << "null";
       out << "</td></tr>";
     }
     out << "</table></td>";
@@ -764,18 +736,14 @@ Item::print(std::ostream& out) const
     if (synthesizedFeatures){
       synthesizedFeatures->print(out);
     }
-    else
-      out << "null";
     out << "</td>";
   }
   if (s_synthesizedSonFeatures){
-    out << "<td bgcolor=\"lightcyan\"><table>";//<center>⇓i</center><br>";
+    out << "<td bgcolor=\"lightcyan\"><table border=\"1\">";//<center>⇓i</center><br>";
     for(std::vector<featuresPtr >::const_iterator i = synthesizedSonFeatures->begin(); i!=synthesizedSonFeatures->end(); ++i){
       out << "<tr><td>";
       if (*i)
 	(*i)->print(out);
-      else
-	out << "null";
       out << "</td></tr>";
     }
     out << "</table></td>";
@@ -789,7 +757,7 @@ Item::print(std::ostream& out) const
     out << "</td>";
   }
   if (s_environment && environment){
-    out << "<td align = center>";
+    out << "<td align=\"center\">";
     if (environment)
       environment->print(out);
     else
@@ -878,7 +846,7 @@ Item::apply(itemSetPtr state, class Synthesizer *synthesizer)
       if (isSetFlags(Flags::BOTTOM))
 	return;
       effect = false;
-      statements->apply(shared_from_this(), effect, synthesizer->getTrace());
+      statements->apply(shared_from_this(), synthesizer, effect, synthesizer->getTrace());
       ++k;
 #ifdef TRACE
       if (synthesizer->getTraceAction()){
@@ -928,17 +896,17 @@ Item::makeSerialString()
   serialString += inheritedFeatures->peekSerialString();
 }
  
-// /* **************************************************
-//  * compare deux items
-//  ************************************************** */
+ /* **************************************************
+  *
+  ************************************************** */
 size_t Item::hash::operator() (itemPtr const i) const
 {
   return i->hashCode();
 }
 
-// /* **************************************************
-//  * compare deux items
-//  ************************************************** */
+ /* **************************************************
+  *
+  ************************************************** */
 bool Item::equal_to::operator() (itemPtr const i1, itemPtr const i2) const
 {
   return i1->peekSerialString() == i2->peekSerialString();

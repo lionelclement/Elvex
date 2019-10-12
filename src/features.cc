@@ -33,11 +33,11 @@ featuresPtr Features::_nil = createNil();
  ************************************************** */
 Features::Features(featurePtr feature)
 {
-  NEW;
-  if (feature)
-    features.push_front(feature);
-  this->pred=0;
-  this->form="";
+	NEW;
+	if (feature)
+		features.push_front(feature);
+	this->pred=0;
+	this->form="";
 }
 
 /* **************************************************
@@ -45,14 +45,14 @@ Features::Features(featurePtr feature)
  ************************************************** */
 Features::~Features()
 {
-   for (listFeatures::iterator j = features.begin();
-        j != features.end();
-        ++j) {
-     featurePtr tmp = *j;
-     if (tmp)
-       tmp.reset();
-   }
-   DELETE;
+	for (listFeatures::iterator j = features.begin();
+			j != features.end();
+			++j) {
+		featurePtr tmp = *j;
+		if (tmp)
+			tmp.reset();
+	}
+	DELETE;
 }
 
 /* ************************************************************
@@ -60,7 +60,7 @@ Features::~Features()
  ************************************************************ */
 featuresPtr Features::create(featurePtr feature)
 {
-  return featuresPtr(new Features(feature));
+	return featuresPtr(new Features(feature));
 }
 
 /* ************************************************************
@@ -68,9 +68,9 @@ featuresPtr Features::create(featurePtr feature)
  ************************************************************ */
 featuresPtr Features::createBottom(void)
 {
-  featuresPtr fs = create();
-  fs->setFlags(Flags::BOTTOM);
-  return fs;
+	featuresPtr fs = create();
+	fs->setFlags(Flags::BOTTOM);
+	return fs;
 }
 
 /* ************************************************************
@@ -78,34 +78,34 @@ featuresPtr Features::createBottom(void)
  ************************************************************ */
 featuresPtr Features::createNil(void)
 {
-  featuresPtr fs = create();
-  fs->setFlags(Flags::NIL);
-  return fs;
+	featuresPtr fs = create();
+	fs->setFlags(Flags::NIL);
+	return fs;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Features::addFeature(featurePtr feature, bool front)
+void Features::add(featurePtr feature, bool front)
 {
-  if (front)
-    this->features.push_front(feature);
-  else
-    this->features.push_back(feature);
+	if (front)
+		this->features.push_front(feature);
+	else
+		this->features.push_back(feature);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Features::addFeatures(featuresPtr features, bool front)
+void Features::add(featuresPtr features, bool front)
 {
-  for (listFeatures::const_iterator j=features->begin();
-       j!=features->end();
-       ++j)
-    if (front)
-      this->features.push_front(*j);
-    else
-      this->features.push_back(*j);
+	for (listFeatures::const_iterator j=features->begin();
+			j!=features->end();
+			++j)
+		if (front)
+			this->features.push_front(*j);
+		else
+			this->features.push_back(*j);
 }
 
 /* **************************************************
@@ -113,7 +113,7 @@ void Features::addFeatures(featuresPtr features, bool front)
  ************************************************** */
 Features::listFeatures::iterator Features::erase(Features::listFeatures::iterator i)
 {
-  return features.erase(i);
+	return features.erase(i);
 }
 
 /* **************************************************
@@ -121,7 +121,7 @@ Features::listFeatures::iterator Features::erase(Features::listFeatures::iterato
  ************************************************** */
 const size_t Features::size(void) const
 {
-  return features.size();
+	return features.size();
 }
 
 /* **************************************************
@@ -129,7 +129,7 @@ const size_t Features::size(void) const
  ************************************************** */
 Features::listFeatures::iterator Features::begin(void)
 {
-  return features.begin();
+	return features.begin();
 }
 
 /* **************************************************
@@ -137,7 +137,7 @@ Features::listFeatures::iterator Features::begin(void)
  ************************************************** */
 Features::listFeatures::iterator Features::end(void)
 {
-  return features.end();
+	return features.end();
 }
 
 /* **************************************************
@@ -145,7 +145,7 @@ Features::listFeatures::iterator Features::end(void)
  ************************************************** */
 featurePtr Features::front(void) const
 {
-  return *(features.begin());
+	return *(features.begin());
 }
 
 /* **************************************************
@@ -153,7 +153,7 @@ featurePtr Features::front(void) const
  ************************************************** */
 const bool Features::isNil(void) const
 {
-  return isSetFlags(Flags::NIL);
+	return isSetFlags(Flags::NIL);
 }
 
 /* **************************************************
@@ -161,61 +161,73 @@ const bool Features::isNil(void) const
  ************************************************** */
 const bool Features::isBottom(void) const
 {
-  return isSetFlags(Flags::BOTTOM);
+	return isSetFlags(Flags::BOTTOM);
 }
 
 /* **************************************************
  *
  ************************************************** */
 void
-Features::print(std::ostream& outStream, bool par, bool flat) const
+Features::print(std::ostream& outStream) const
 {
-  if (isNil())
-    outStream << "NIL";
-  else if (isBottom())
-    outStream << "⊥";
-  else {
-    if (par) {
-      if (flat) {
-	outStream << "[";
-      }
-      else {
-	outStream << "<TABLE border=\"1\">";
-	outStream << "<TBODY align=\"left\"><TR><TD><TABLE border=\"0\">";
-      }
-    }
-    if (features.size()){
-      bool first=true;
-      for (int t=Feature::first_type ; t <= Feature::last_type ; ++t){
-	for (Features::listFeatures::const_iterator f=features.begin();
-	     f!=features.end();
-	     ++f){
-	  if ((*f)->getType()==t){
-	    if (flat){
-	      if (first) first=false; else outStream << ", ";
-	    }
-	    else if (par) {
-	      outStream << "<TR>";
-	    }
-	    (*f)->print(outStream, flat);
-	    if (!flat && par){
-	      outStream << "</TR>";
-	    }
-	  }
+	if (isNil())
+		outStream << "NIL";
+	else if (isBottom())
+		outStream << "⊥";
+	else {
+		outStream << "<TABLE border=\"1\">";
+		outStream << "<TBODY align=\"left\"><TR><TD><TABLE border=\"0\">";
+		if (features.size()){
+			for (int t=Feature::first_type ; t <= Feature::last_type ; ++t){
+				for (Features::listFeatures::const_iterator f=features.begin();
+						f!=features.end();
+						++f){
+					if ((*f)->getType() == t){
+						outStream << "<TR>";
+						(*f)->print(outStream);
+						outStream << "</TR>";
+					}
+				}
+			}
+		}
+		else {
+			outStream << "<TR><TD></TD></TR>";
+		}
+		outStream << "</TABLE></TD></TR></TBODY>";
+		outStream << "</TABLE>";
 	}
-      }
-    }
-    else {
-      if (!flat && par)
-	outStream << "<TR><TD></TD></TR>";
-    }
-    if (par) {
-      if (flat) 
-	outStream << "]";
-      else
-	outStream << "</TABLE></TD></TR></TBODY></TABLE>";
-    }
-  }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void
+Features::flatPrint(std::ostream& outStream) const
+{
+	if (isNil())
+		outStream << "NIL";
+	else if (isBottom())
+		outStream << "⊥";
+	else {
+		outStream << '[';
+		if (features.size()){
+			bool first = true;
+			for (int t=Feature::first_type ; t <= Feature::last_type ; ++t){
+				for (Features::listFeatures::const_iterator f=features.begin();
+						f!=features.end();
+						++f){
+					if ((*f)->getType() == t){
+						if(first) first=false; else outStream << ", ";
+						(*f)->flatPrint(outStream);
+					}
+				}
+			}
+		}
+		else {
+			outStream << "<TR><TD></TD></TR>";
+		}
+		outStream << ']';
+	}
 }
 
 /* **************************************************
@@ -224,25 +236,25 @@ Features::print(std::ostream& outStream, bool par, bool flat) const
 void
 Features::makeSerialString()
 {
-  if (isNil())
-    serialString = '#';
-  else if (isBottom())
-    serialString = '&';
-  else {
-    serialString = '[';
-    if (features.size()){
-      bool first=true;
-      for (Features::listFeatures::const_iterator f = features.begin();
-	   f != features.end();
-	   ++f){
-	if (first)
-	  first=false;
-	else
-	  serialString += ',';
-	serialString += (*f)->peekSerialString();
-      }
-    }
-  }
+	if (isNil())
+		serialString = '#';
+	else if (isBottom())
+		serialString = '&';
+	else {
+		serialString = '[';
+		if (features.size()){
+			bool first=true;
+			for (Features::listFeatures::const_iterator f = features.begin();
+					f != features.end();
+					++f){
+				if (first)
+					first=false;
+				else
+					serialString += ',';
+				serialString += (*f)->peekSerialString();
+			}
+		}
+	}
 }
 
 /* **************************************************
@@ -251,20 +263,20 @@ Features::makeSerialString()
 const unsigned int
 Features::assignPred()
 {
-  int ret = UINT_MAX;
-  if (this->pred)
-    return this->pred;
-  for (Features::listFeatures::const_iterator f = features.begin();
-       f != features.end();
-       ++f) {
-    // […, PRED=…, …]
-    if ((*f)->getType()==Feature::PRED) {
-      ret = (*f)->getValue()->getIdentifier();
-      break;
-    }
-  }
-  this->pred = ret;
-  return ret;
+	int ret = UINT_MAX;
+	if (this->pred)
+		return this->pred;
+	for (Features::listFeatures::const_iterator f = features.begin();
+			f != features.end();
+			++f) {
+		// […, PRED=…, …]
+		if ((*f)->getType()==Feature::PRED) {
+			ret = (*f)->getValue()->getIdentifier();
+			break;
+		}
+	}
+	this->pred = ret;
+	return ret;
 }
 
 /* **************************************************
@@ -273,17 +285,17 @@ Features::assignPred()
 std::string
 Features::assignForm()
 {
-  if (form.size()>0)
-    return form;
-  for (Features::listFeatures::const_iterator f=features.begin();
-       f!=features.end();
-       ++f){
-    if ((*f)->getType()==Feature::FORM){
-      form=(*f)->getValue()->getStr();
-      return form;
-    }
-  }
-  return std::string();
+	if (form.size()>0)
+		return form;
+	for (Features::listFeatures::const_iterator f=features.begin();
+			f!=features.end();
+			++f){
+		if ((*f)->getType()==Feature::FORM){
+			form=(*f)->getValue()->getStr();
+			return form;
+		}
+	}
+	return std::string();
 }
 
 #ifdef OUTPUT_XML
@@ -293,13 +305,13 @@ Features::assignForm()
 void
 Features::toXML(xmlNodePtr nodeRoot)
 {
-  xmlNodePtr f=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"FS", NULL);
-  xmlSetProp(f, (xmlChar*)"id", (xmlChar*)std::to_string(this->getId()).c_str());
-  if (features.size())
-    for (Features::listFeatures::const_iterator i=features.begin();
-	 i!=features.end();
-	 ++i)
-      (*i)->toXML(f);
+	xmlNodePtr f=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"FS", NULL);
+	xmlSetProp(f, (xmlChar*)"id", (xmlChar*)std::to_string(this->getId()).c_str());
+	if (features.size())
+		for (Features::listFeatures::const_iterator i=features.begin();
+				i!=features.end();
+				++i)
+			(*i)->toXML(f);
 }
 #endif
 
@@ -309,18 +321,18 @@ Features::toXML(xmlNodePtr nodeRoot)
 featuresPtr
 Features::clone(void) const
 {
-  if (isNil())
-    return _nil;
-  if (isBottom())
-    return _bottom;
-  featuresPtr result = Features::create();
-  for (Features::listFeatures::const_iterator i=features.begin();
-       i!=features.end();
-       ++i)
-    result->features.push_back((*i)->clone());
-  result->pred=pred;
-  result->form=form;
-  return result;
+	if (isNil())
+		return _nil;
+	if (isBottom())
+		return _bottom;
+	featuresPtr result = Features::create();
+	for (Features::listFeatures::const_iterator i=features.begin();
+			i!=features.end();
+			++i)
+		result->features.push_back((*i)->clone());
+	result->pred=pred;
+	result->form=form;
+	return result;
 }
 
 /* **************************************************
@@ -329,14 +341,14 @@ Features::clone(void) const
 valuePtr 
 Features::find(bitsetPtr code) const
 {
-  for (Features::listFeatures::const_iterator i1=features.begin();
-       i1!=features.end();
-       ++i1){
-    if (((*(*i1)->getAttribute()) & *code).any()){
-      return (*i1)->getValue();
-    }
-  }
-  return valuePtr();
+	for (Features::listFeatures::const_iterator i1=features.begin();
+			i1!=features.end();
+			++i1){
+		if (((*(*i1)->getAttribute()) & *code).any()){
+			return (*i1)->getValue();
+		}
+	}
+	return valuePtr();
 }
 
 /* **************************************************
@@ -345,14 +357,15 @@ Features::find(bitsetPtr code) const
 const bool
 Features::buildEnvironment(environmentPtr environment, featuresPtr features, bool acceptToFilterNULLVariables, bool root)
 {
-  bool ret=true;
-  if (environment){
-    bool effect = false;
-    environment->replaceVariables(shared_from_this(), effect);
-    environment->replaceVariables(features, effect);
-  }
+	bool ret=true;
+	//	if (environment){
+	//		bool effect = false;
+	//		CERR_LINE;
+	//		//environment->replaceVariables(shared_from_this(), effect);
+	//		//environment->replaceVariables(features, effect);
+	//	}
 
-  /*** 
+	/***
   if (root) {
     CERR_LINE;
     std::cerr << "<H4>Features::buildEnvironment</H4>" << std::endl;
@@ -368,104 +381,104 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
     environment->print(std::cerr);
     std::cerr << "</td></tr></table>";
   }
-  ***/
-  
-  
-  // Traite tous les attributs constants
-  for (Features::listFeatures::const_iterator i1=begin();
-       i1!=end();
-       ++i1){
-    if (((*i1)->getType()==Feature::PRED)
-	|| ((*i1)->getType()==Feature::CONSTANT)){
-      Features::listFeatures::const_iterator i2=features->begin();
-      while(i2!=features->end()){
-	// Si deux constantes matchent
-	// ou deux PRED matchent
-	if ((((*i2)->getType()==Feature::CONSTANT) && ((*i1)->getType()==Feature::CONSTANT) && ((*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()))
-	    || (((*i1)->getType()==Feature::PRED) && ((*i2)->getType()==Feature::PRED))){
-	  (*i2)->addFlags(SEEN);
-	  // Si les deux valeurs sont NIL
-	  if (((*i1)->getValue()->isNil()) && ((*i2)->getValue()->isNil())){
-	  }
-	  // Si les deux valeurs sont TRUE
-	  else if (((*i1)->getValue()->isTrue()) && ((*i2)->getValue()->isTrue())){
-	  }
-	  // Si l'une des deux est ANONYMOUS
-	  else if (((*i1)->getValue()->isAnonymous()) || ((*i2)->getValue()->isAnonymous())){
-	  }
-	  // Sinon on construit l'environnement avec les deux valeurs
-	  else if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(), acceptToFilterNULLVariables, false)){
-	    ret=false;
-	  }
-	  break;
-	}
-	++i2;
-      }
-      // Trait i1 inexistant
-      if (i2==features->end()){
-	// i1: a=$X
-	if (((*i1)->getType()==Feature::CONSTANT) || (*i1)->getType()==Feature::PRED) {
-	  if ((*i1)->getValue()->getType()==Value::VARIABLE){
-	    // => $X=NIL
-	    if (acceptToFilterNULLVariables){
-	      environment->add((*i1)->getValue()->getBits(), Value::_anonymous);
-	    }
-	    else {
-	      ret=false;
-	    }
-	  }
-	  else if ((*i1)->getValue()->isNil()){
-	  }
-	  // i1: a=...
-	  else {
-	    if (!acceptToFilterNULLVariables){
-	      ret=false;
-	    }
-	  }
-	}
-      }
-    }
-  }
+	 ***/
 
-  // traite les variables de structures
-  for (Features::listFeatures::const_iterator i1=begin();
-       i1!=end();
-       ++i1){
-    // i1: X
-    if ((*i1)->getType()==Feature::VARIABLE){
-      if ((*i1)->getValue()){
-	throw "A variable attribute is not allowed in this context";
-	//if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(), acceptToFilterNULLVariables, false)){
-	//ret=false;
-	//}
-	featuresPtr nFeatures=Features::create();
-	Features::listFeatures::const_iterator i2=features->begin();
-	while(i2!=features->end()){
-	  if ((*i2)->isUnsetFlags(Flags::SEEN)){
-	    (*i2)->addFlags(Flags::SEEN);
-	    nFeatures->addFeature(*i2);
-	  }
-	  ++i2;
-	}
-	//environment->add((*i1)->getAttribute(), new Value(nFeatures, Value::FEATURES));
-      }
-      else {
-	featuresPtr nFeatures=Features::create();
-	Features::listFeatures::const_iterator i2=features->begin();
-	while(i2!=features->end()){
-	  if ((*i2)->isUnsetFlags(Flags::SEEN)){
-	    (*i2)->addFlags(Flags::SEEN);
-	    nFeatures->addFeature(*i2);
-	  }
-	  ++i2;
-	}
-	environment->add((*i1)->getAttribute(), Value::create(Value::FEATURES, nFeatures));
-      }
-    }
-  }
-  features->subFlags(SEEN);
 
-  /***
+	// Traite tous les attributs constants
+	for (Features::listFeatures::const_iterator i1=begin();
+			i1!=end();
+			++i1){
+		if (((*i1)->getType()==Feature::PRED)
+				|| ((*i1)->getType()==Feature::CONSTANT)){
+			Features::listFeatures::const_iterator i2=features->begin();
+			while(i2!=features->end()){
+				// Si deux constantes matchent
+				// ou deux PRED matchent
+				if ((((*i2)->getType()==Feature::CONSTANT) && ((*i1)->getType()==Feature::CONSTANT) && ((*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()))
+						|| (((*i1)->getType()==Feature::PRED) && ((*i2)->getType()==Feature::PRED))){
+					(*i2)->addFlags(SEEN);
+					// Si les deux valeurs sont NIL
+					if (((*i1)->getValue()->isNil()) && ((*i2)->getValue()->isNil())){
+					}
+					// Si les deux valeurs sont TRUE
+					else if (((*i1)->getValue()->isTrue()) && ((*i2)->getValue()->isTrue())){
+					}
+					// Si l'une des deux est ANONYMOUS
+					else if (((*i1)->getValue()->isAnonymous()) || ((*i2)->getValue()->isAnonymous())){
+					}
+					// Sinon on construit l'environnement avec les deux valeurs
+					else if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(), acceptToFilterNULLVariables, false)){
+						ret=false;
+					}
+					break;
+				}
+				++i2;
+			}
+			// Trait i1 inexistant
+			if (i2==features->end()){
+				// i1: a=$X
+				if (((*i1)->getType()==Feature::CONSTANT) || (*i1)->getType()==Feature::PRED) {
+					if ((*i1)->getValue()->getType()==Value::VARIABLE){
+						// => $X=NIL
+						if (acceptToFilterNULLVariables){
+							environment->add((*i1)->getValue()->getBits(), Value::_anonymous);
+						}
+						else {
+							ret=false;
+						}
+					}
+					else if ((*i1)->getValue()->isNil()){
+					}
+					// i1: a=...
+					else {
+						if (!acceptToFilterNULLVariables){
+							ret=false;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// traite les variables de structures
+	for (Features::listFeatures::const_iterator i1=begin();
+			i1!=end();
+			++i1){
+		// i1: X
+		if ((*i1)->getType()==Feature::VARIABLE){
+			if ((*i1)->getValue()){
+				throw "A variable attribute is not allowed in this context";
+				//if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(), acceptToFilterNULLVariables, false)){
+				//ret=false;
+				//}
+				featuresPtr nFeatures=Features::create();
+				Features::listFeatures::const_iterator i2=features->begin();
+				while(i2!=features->end()){
+					if ((*i2)->isUnsetFlags(Flags::SEEN)){
+						(*i2)->addFlags(Flags::SEEN);
+						nFeatures->add(*i2);
+					}
+					++i2;
+				}
+				//environment->add((*i1)->getAttribute(), new Value(nFeatures, Value::FEATURES));
+			}
+			else {
+				featuresPtr nFeatures=Features::create();
+				Features::listFeatures::const_iterator i2=features->begin();
+				while(i2!=features->end()){
+					if ((*i2)->isUnsetFlags(Flags::SEEN)){
+						(*i2)->addFlags(Flags::SEEN);
+						nFeatures->add(*i2);
+					}
+					++i2;
+				}
+				environment->add((*i1)->getAttribute(), Value::create(Value::FEATURES, nFeatures));
+			}
+		}
+	}
+	features->subFlags(SEEN);
+
+	/***
   if (root) {
     std::cerr << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
     std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
@@ -473,8 +486,8 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
     environment->print(std::cerr);
     std::cerr << "</td></tr></table>";
   }
-  ***/
-  return ret;
+	 ***/
+	return ret;
 }
 
 /* **************************************************
@@ -484,7 +497,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
 const bool
 Features::subsumes(featuresPtr o, environmentPtr environment)
 {
-  /***
+	/***
       CERR_LINE;
       cerr << "<DIV>";
       cerr << "Subsumes (" << this << ")";
@@ -496,52 +509,52 @@ Features::subsumes(featuresPtr o, environmentPtr environment)
       cerr << "</TD>";
       cerr << "</TR></TABLE>";
       cerr << "</DIV>";
-  ***/
+	 ***/
 
-  bool ret=true;
-  // NIL < NIL
-  if (isNil() && o->isNil()){
-    // OK
-  }
-
-  // NIL < […]
-  // […] < NIL
-  else if (isNil() || o->isNil()){
-    ret=false;
-  }
-  // ⊥ < […]
-  // […] < ⊥
-  else if (isBottom() || o->isBottom()){
-    ret=false;
-  }
-  else {
-    Features::listFeatures::const_iterator i1;
-    Features::listFeatures::const_iterator i2;
-    for (i1=begin(); i1!=end(); ++i1){
-      for (i2=o->begin(); i2!=o->end(); ++i2){
-	// [PRED:X]  < [PRED:Y]
-	// [att:X] < [att:Y]
-	// X < Y
-	if ((((*i1)->getType()==Feature::PRED) && ((*i2)->getType()==Feature::PRED))
-	    || (((*i1)->getType()==Feature::CONSTANT) && ((*i2)->getType()==Feature::CONSTANT) && ((*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()))){
-	  valuePtr v1=(*i1)->getValue();
-	  valuePtr v2=(*i2)->getValue();
-	  if (!v1->subsumes(v2, environment)){
-	    ret=false;
-	  }
-	  break;
+	bool ret=true;
+	// NIL < NIL
+	if (isNil() && o->isNil()){
+		// OK
 	}
-      }
-    }
-  }
-  /*** 
+
+	// NIL < […]
+	// […] < NIL
+	else if (isNil() || o->isNil()){
+		ret=false;
+	}
+	// ⊥ < […]
+	// […] < ⊥
+	else if (isBottom() || o->isBottom()){
+		ret=false;
+	}
+	else {
+		Features::listFeatures::const_iterator i1;
+		Features::listFeatures::const_iterator i2;
+		for (i1=begin(); i1!=end(); ++i1){
+			for (i2=o->begin(); i2!=o->end(); ++i2){
+				// [PRED:X]  < [PRED:Y]
+				// [att:X] < [att:Y]
+				// X < Y
+				if ((((*i1)->getType()==Feature::PRED) && ((*i2)->getType()==Feature::PRED))
+						|| (((*i1)->getType()==Feature::CONSTANT) && ((*i2)->getType()==Feature::CONSTANT) && ((*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()))){
+					valuePtr v1=(*i1)->getValue();
+					valuePtr v2=(*i2)->getValue();
+					if (!v1->subsumes(v2, environment)){
+						ret=false;
+					}
+					break;
+				}
+			}
+		}
+	}
+	/***
        cerr << "<DIV>";
        cerr << "result: (" << shared_from_this() << ")";
        cerr << (ret?"true":"false") << endl;
        //environment->print(cerr);
        cerr << "</DIV>";
-  ***/
-  return ret;
+	 ***/
+	return ret;
 }
 
 /* **************************************************
@@ -550,10 +563,10 @@ Features::subsumes(featuresPtr o, environmentPtr environment)
 void
 Features::subFlags(const std::bitset<NBRFLAGS>& flags)
 {
-  for (Features::listFeatures::const_iterator i=begin();
-       i!=end();
-       ++i)
-    (*i)->subFlags(flags);
+	for (Features::listFeatures::const_iterator i=begin();
+			i!=end();
+			++i)
+		(*i)->subFlags(flags);
 }
 
 /* **************************************************
@@ -562,14 +575,14 @@ Features::subFlags(const std::bitset<NBRFLAGS>& flags)
 const bool
 Features::renameVariables(unsigned int i)
 {
-  bool effect=false;
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature) {
-    if ((*feature)->renameVariables(i)) 
-      effect=true;
-  }
-  if (effect)
-    resetSerial();
-  return effect;
+	bool effect=false;
+	for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature) {
+		if ((*feature)->renameVariables(i))
+			effect=true;
+	}
+	if (effect)
+		resetSerial();
+	return effect;
 }
 
 /* **************************************************
@@ -578,8 +591,8 @@ Features::renameVariables(unsigned int i)
 void
 Features::enable(statementPtr root, itemPtr item, bool &effect, bool on)
 {
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
-    (*feature)->enable(root, item, effect, on);
+	for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
+		(*feature)->enable(root, item, effect, on);
 }
 
 /* **************************************************
@@ -588,24 +601,24 @@ Features::enable(statementPtr root, itemPtr item, bool &effect, bool on)
 void
 Features::deleteAnonymousVariables()
 {
- redo:
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature){
-    switch ((*feature)->getType()){
-    case Feature::FORM:
-    case Feature::PRED:
-    case Feature::VARIABLE:
-    case Feature::CONSTANT:
-      if ((*feature)->getValue()){
-	(*feature)->getValue()->deleteAnonymousVariables();
-	if ((*feature)->getValue() && ((*feature)->getValue()->isAnonymous())){
-	  features.erase(feature);
-	  goto redo;
-	  return;
+	redo:
+	for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature){
+		switch ((*feature)->getType()){
+			case Feature::FORM:
+			case Feature::PRED:
+			case Feature::VARIABLE:
+			case Feature::CONSTANT:
+				if ((*feature)->getValue()){
+					(*feature)->getValue()->deleteAnonymousVariables();
+					if ((*feature)->getValue() && ((*feature)->getValue()->isAnonymous())){
+						features.erase(feature);
+						goto redo;
+						return;
+					}
+				}
+				break;
+		}
 	}
-      }
-      break;
-    }
-  }
 }
 
 /* **************************************************
@@ -614,9 +627,9 @@ Features::deleteAnonymousVariables()
 const bool
 Features::findVariable(bitsetPtr variable)
 {
-  for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
-    if ((*feature)->findVariable(variable))
-      return true;
-  return false;
+	for (Features::listFeatures::iterator feature=features.begin(); feature!=features.end(); ++feature)
+		if ((*feature)->findVariable(variable))
+			return true;
+	return false;
 }
 

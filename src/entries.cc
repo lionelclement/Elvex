@@ -42,7 +42,7 @@ Entries::Entries(entryPtr entry)
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(std::vector< entryPtr >& entries)
+Entries::Entries(const std::vector< entryPtr > &entries)
 {
   NEW;
   this->entries=entries;
@@ -51,7 +51,7 @@ Entries::Entries(std::vector< entryPtr >& entries)
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(int codePos, int codeLemma, std::string form)
+Entries::Entries(const int codePos, const int codeLemma, const std::string form)
 {
   NEW;
   //this->entries.push_front(Entry::create(codePos, codeLemma, form));
@@ -92,7 +92,7 @@ entriesPtr Entries::create(entryPtr  entry)
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(std::vector< entryPtr > &entries)
+entriesPtr Entries::create(const std::vector< entryPtr > &entries)
 {
   return entriesPtr( new Entries(entries) );
 }

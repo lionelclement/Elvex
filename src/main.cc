@@ -116,11 +116,11 @@ void generate(void) {
 	   i != forest->getOutput().end();
 	   ++i){
 #ifdef TRACE
-  std::cout << "<li>" << std::endl;
+	std::cout << "<li>" << std::endl;
 #endif
 	std::cout << *i << std::endl;
 #ifdef TRACE
-  std::cout << "</li>" << std::endl;
+	std::cout << "</li>" << std::endl;
 #endif
       }
       if (synthesizer.getRandom()) 
@@ -150,7 +150,7 @@ int main(int argn, char **argv) {
       return EXIT_SUCCESS;
     }
     else {
-      for (unsigned int arg = 1; argv[arg]; ++arg) {
+      for (unsigned int arg = 1;argv[arg];++arg) {
 	if (argv[arg][0] == '-') {
 	  if (!strcmp(argv[arg]+1, "v") || !strcmp(argv[arg] + 1, "-version")) {
 	    std::cout << PACKAGE_VERSION << std::endl;
@@ -299,6 +299,10 @@ int main(int argn, char **argv) {
 	    return EXIT_FAILURE;
 	  }
 	}
+
+	else {
+	  synthesizer.addInput(argv[arg]);
+	}
       }
       
       if (synthesizer.getLexiconFileName().length() > 0) {
@@ -336,24 +340,19 @@ int main(int argn, char **argv) {
       }
 #endif
       
-      srand (time(NULL));
-      if (synthesizer.getInputFileName().length() > 0) {
+    }
+    srand (time(NULL));
+    if (synthesizer.getInputFileName().length() > 0) {
 #ifdef TRACE_INIT
-	std::cerr << "load input" << "<BR>" << std::endl;
+      std::cerr << "load input" << "<BR>" << std::endl;
 #endif
-	synthesizer.parseFile(synthesizer.getInputFileName());
-	generate();
-      }
-      
-      for (unsigned int arg = 1; argv[arg]; arg++) {
-	if (argv[arg][0] == '-') {
-	  ++arg;
-	}
-	else {
-	  synthesizer.parseString("@input " + std::string(argv[arg]), std::string("Input"));
-	  generate();
-	}
-      }
+      synthesizer.parseFile(synthesizer.getInputFileName());
+      generate();
+    }
+    
+    for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin() ; i != synthesizer.getInputs().end() ; ++i) {
+      synthesizer.parseString("@input " + *i, std::string("Input"));
+      generate();
     }
     
 #ifdef OUTPUT_XML
@@ -367,9 +366,9 @@ int main(int argn, char **argv) {
     std::cerr << std::endl << "EXIT_SUCCESS" << "<BR>" << std::endl;
 #endif
   } catch (std::string &message) {
-    std::cerr << "*** FATAL ERROR " << message << std::endl;
+    std::cerr << message << std::endl;
   } catch (char const *message) {
-    std::cerr << "*** FATAL ERROR " << message << std::endl;
+    std::cerr << message << std::endl;
   }
 #ifdef TRACE
   std::cout << "</body></html>" << std::endl;

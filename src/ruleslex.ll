@@ -36,8 +36,8 @@
 #define DBUG(x)
 #endif
 
-#define DBUGPRT(x) DBUG(cerr << "*** " << x << "<BR>" << std::endl;);
-#define DBUGPRTARG(x,s) DBUG(cerr << "*** " << x << "&nbsp;" << s << "<BR>" << std::endl);
+#define DBUGPRT(x) DBUG(std::cerr << "*** " << x << "<BR>" << std::endl;);
+#define DBUGPRTARG(x,s) DBUG(std::cerr << "*** " << x << "&nbsp;" << s << "<BR>" << std::endl);
   
   extern char *lexString;
   extern bool stringInput;
@@ -224,8 +224,8 @@ downDoubleArrow "⇓"
   }
   
   "::" {
-    DBUGPRT("TOKEN_COLON2\n");
-    return TOKEN_COLON2;
+    DBUGPRT("TOKEN_DOUBLECOLON\n");
+    return TOKEN_DOUBLECOLON;
   }
   
   ":" {
@@ -283,6 +283,11 @@ downDoubleArrow "⇓"
     return TOKEN_DIVIDE;
   }
   
+  "@" {
+    DBUGPRT("TOKEN_AROBASE\n");
+    return TOKEN_AROBASE;
+  }
+  
   "@input" {
     DBUGPRT("TOKEN_INPUT\n");
     return TOKEN_INPUT;
@@ -298,6 +303,11 @@ downDoubleArrow "⇓"
     return TOKEN_LEXICON;
   }
   
+  "attest" {
+    DBUGPRT("TOKEN_ATTEST\n");
+    return TOKEN_ATTEST;
+  }
+  
   "if" {
     DBUGPRT("TOKEN_IF\n");
     return TOKEN_IF;
@@ -308,11 +318,6 @@ downDoubleArrow "⇓"
     return TOKEN_ELSE;
   }
   
-  "attest" {
-    DBUGPRT("TOKEN_ATTEST\n");
-    return TOKEN_ATTEST;
-  }
-  
   "print" {
     DBUGPRT("TOKEN_PRINT\n");
     return TOKEN_PRINT;
@@ -321,6 +326,11 @@ downDoubleArrow "⇓"
   "println" {
     DBUGPRT("TOKEN_PRINTLN\n");
     return TOKEN_PRINTLN;
+  }
+  
+  "search" {
+    DBUGPRT("TOKEN_SEARCH\n");
+    return TOKEN_SEARCH;
   }
   
   "sort" {

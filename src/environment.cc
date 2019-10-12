@@ -78,6 +78,14 @@ void Environment::add(std::string const key, valuePtr value)
 }
 
 /* **************************************************
+ *
+ ************************************************** */
+void Environment::remove(std::string const key)
+{
+	env.erase(key);
+}
+
+/* **************************************************
   *
   ************************************************** */
  void Environment::add(bitsetPtr attr, valuePtr value)
@@ -105,6 +113,15 @@ void Environment::add(const environmentPtr e, const environmentPtr where)
       if (where->env.find(i->first)!=where->env.end())
 	add(i->first, i->second);
 }
+
+/* **************************************************
+  *
+  ************************************************** */
+ void Environment::remove(bitsetPtr attr)
+ {
+   std::string const key = attr->toString();
+   remove (key);
+ }
 
 /* **************************************************
  *
@@ -151,9 +168,9 @@ void
 Environment::print(std::ostream &out) const 
 {
   bool first=true;
-  Environment::mapStringValue::const_iterator i=begin();
-  out << "<TABLE border=\"0\"><TR>";
-  while(i!=end()){
+  Environment::mapStringValue::const_iterator i = begin();
+  out << "<TABLE border=\"1\"><TR>";
+  while(i != end()){
     if (first)
       first = false;
     else
@@ -225,7 +242,7 @@ Environment::replaceVariables(featuresPtr features, bool &effect)
 	for (std::list< featurePtr >::iterator f = value->getFeatures()->begin();
 	     f != value->getFeatures()->end();
 	     ++f){
-	  features->addFeature(*f);
+	  features->add(*f);
 	}
 	effect = true;
 	goto redo;

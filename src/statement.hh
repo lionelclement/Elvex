@@ -28,8 +28,11 @@
 #include "vartable.hh"
 #include "ipointer.hh"
 #include "serializable.hh"
+#include "grammar.hh"
+
 
 #define FATAL_ERROR_STM {std::ostringstream oss; oss << "fatal error with statement line " << getLineno(); FATAL_ERROR;}
+#define FATAL_ERROR_MSG_STM(msg) {std::ostringstream oss; oss << "fatal error with statement line " << getLineno(); FATAL_ERROR_MSG(msg);}
 #define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
 
 class Statement:
@@ -47,7 +50,6 @@ public:
     UP2,
     DOWN,
     DOWN2,
-    //DOWNVARIABLE,
     FEATURES,
     VARIABLE,
     CONSTANT,
@@ -60,11 +62,14 @@ public:
     ATTEST,
     IF,
     THENELSE,
-    STMS,
+    FOREACH,
+	IN,
+	STMS,
     STR,
     LIST,
     DOUBLE,
     FCT,
+	SEARCH,
     FINISHED
   };
 
@@ -92,7 +97,7 @@ private:
   
 private:
   Statement (unsigned int, type op, std::string str);
-  Statement (unsigned int, type op, bitsetPtr bits);
+  Statement (unsigned int, type op, bitsetPtr bits, statementPtr lhs=statementPtr());
   Statement (unsigned int, type op=FINISHED, statementPtr lhs=statementPtr(), statementPtr rhs=statementPtr(), unsigned int first=UINT_MAX, unsigned int second=UINT_MAX, featuresPtr features=featuresPtr(), bitsetPtr bits=bitsetPtr(), arithmetic_op fct=NOP, listPtr list=listPtr(), statementsPtr stms=statementsPtr(), double=0.0);
   void makeSerialString(void);
   
@@ -102,12 +107,12 @@ public:
   static statementPtr create (unsigned int lineno, type op, unsigned int first, unsigned int second=UINT_MAX);
   static statementPtr create (unsigned int lineno, type op, featuresPtr features);
   static statementPtr create (unsigned int lineno, type op, valuePtr value);
-  static statementPtr create (unsigned int lineno, type op, bitsetPtr bits);
+  static statementPtr create (unsigned int lineno, type op, bitsetPtr bits, statementPtr lhs=statementPtr());
   static statementPtr create (unsigned int lineno, type op, std::string str);
   static statementPtr create (unsigned int lineno, type op, arithmetic_op fct, statementPtr lhs=statementPtr(), statementPtr rhs=statementPtr());
   static statementPtr create (unsigned int lineno, type op, listPtr );
   static statementPtr create (unsigned int lineno, type op, statementsPtr );
-  static statementPtr create (unsigned int lineno, type op, double);
+  static statementPtr _create (unsigned int lineno, type op, double);
   static statementPtr create ();
 
   const bool isAff(void) const;
@@ -125,12 +130,14 @@ public:
   const bool isPrintln(void) const;
   const bool isAttest(void) const;
   const bool isIf(void) const;
+  const bool isForeach(void) const;
   const bool isStms(void) const;
   const bool isStr(void) const;
   const bool isList(void) const;
   const bool isDouble(void) const;
   const bool isFct(void) const;
-  
+  const bool isSearch(void) const;
+
   const arithmetic_op getFct(void) const;
   const statementPtr getLhs(void) const;
   const statementPtr getRhs(void) const;
@@ -145,23 +152,24 @@ public:
   const int getLineno(void) const;
 
   void print(std::ostream &, int=0) const;
-  featuresPtr evalFeatures(itemPtr, bool);
+  featuresPtr evalFeatures(itemPtr, class Synthesizer *synthesizer, bool);
   listPtr evalList(itemPtr, bool);
-  valuePtr evalValue(itemPtr, bool);
+  valuePtr evalValue(itemPtr, class Synthesizer *synthesizer, bool);
   featuresPtr unif(featuresPtr, featuresPtr, itemPtr);
-  statementPtr clone(const std::bitset<NBRFLAGS> &savedFlags);
-  void buildInheritedSonFeatures(itemPtr, bool &);
-  void buildSynthesizedFeatures(itemPtr, bool &);
-  void buildEnvironmentWithInherited(itemPtr, bool &);
-  void buildEnvironmentWithSynthesize(itemPtr, bool &);
-  void buildEnvironmentWithValue(itemPtr, bool &);
-  void attest(itemPtr, bool &);
-  void guard(itemPtr, bool &, bool);
-  void stmPrint(itemPtr);
-  void stmPrintln(itemPtr);
+  statementPtr clone(const std::bitset<NBRFLAGS> &savedFlags=std::bitset<NBRFLAGS>());
+  void buildInheritedSonFeatures(itemPtr, class Synthesizer *synthesizer, bool &);
+  void buildSynthesizedFeatures(itemPtr, class Synthesizer *synthesizer, bool &);
+  void buildEnvironmentWithInherited(itemPtr, class Synthesizer *synthesizer, bool &);
+  void buildEnvironmentWithSynthesize(itemPtr, class Synthesizer *synthesizer, bool &);
+  void buildEnvironmentWithValue(itemPtr, class Synthesizer *synthesizer, bool &);
+  void stmAttest(itemPtr, class Synthesizer *synthesizer, bool &);
+  void stmGuard(itemPtr, bool &, bool);
+  void stmForeach(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace);
+  void stmPrint(itemPtr, class Synthesizer *synthesizer);
+  void stmPrintln(itemPtr, class Synthesizer *synthesizer);
   void renameVariables(unsigned int);
   void enable(statementPtr, itemPtr, bool&, bool);
-  void apply(itemPtr, bool &, bool &, bool);
+  void apply(itemPtr, class Synthesizer *, bool &, bool &, bool);
   void lookingForAssignedInheritedSonFeatures(std::vector< bool > &);
   const bool findVariable(bitsetPtr);
 

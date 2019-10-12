@@ -26,6 +26,7 @@
 #include "messages.hh"
 #include "item.hh"
 #include "ipointer.hh"
+#include "synthesizer.hh"
 
 valuePtr Value::_nil = Value::create(Value::BOOL, (unsigned int)0);
 valuePtr Value::_true = Value::create(Value::BOOL, (unsigned int)1);
@@ -285,7 +286,7 @@ bool Value::isList(void) const
  *
  ************************************************** */
 void 
-Value::print(std::ostream& outStream, bool par, bool flat) const 
+Value::print(std::ostream& outStream) const 
 {
   if (isNil())
     outStream << "NIL";
@@ -315,10 +316,52 @@ Value::print(std::ostream& outStream, bool par, bool flat) const
       outStream << "&quot;" << getStr() << "&quot;";
       break;
     case FEATURES:
-      getFeatures()->print(outStream, par, flat);
+      getFeatures()->print(outStream);
       break;
     case LIST:
-      getList()->print(outStream, true, flat);
+      getList()->flatPrint(outStream, true);
+      break;
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void
+Value::flatPrint(std::ostream& outStream) const
+{
+  if (isNil())
+    outStream << "NIL";
+  else if (isTrue())
+    outStream << "TRUE";
+  else
+    switch(type){
+    case BOOL:
+      FATAL_ERROR;
+      break;
+    case CONSTANT:
+      outStream << getBits()->toString();
+      break;
+    case VARIABLE:
+      outStream << getBits()->toString();
+      break;
+    case ANONYMOUS:
+      outStream << '_';
+      break;
+    case IDENTIFIER:
+      outStream << Vartable::intToStr(getIdentifier());
+      break;
+    case DOUBLE:
+      outStream << getDouble();
+      break;
+    case STR:
+      outStream << "&quot;" << getStr() << "&quot;";
+      break;
+    case FEATURES:
+      getFeatures()->flatPrint(outStream);
+      break;
+    case LIST:
+      getList()->flatPrint(outStream, true);
       break;
     }
 }
@@ -864,4 +907,33 @@ Value::findVariable(bitsetPtr variable)
     break;
   }
   return false;
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+void Value::apply(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body)
+{
+	  switch(type){
+	  case BOOL:
+	  case IDENTIFIER:
+	  case STR:
+	  case CONSTANT:
+	  case DOUBLE:
+	  case ANONYMOUS:
+	  case VARIABLE:
+	  case LIST:
+		  FATAL_ERROR;
+	    break;
+	  case FEATURES:
+		  //variable->print(std::cout, 0);
+		  //this->print(std::cout);
+		  //body->print(std::cout, 12);
+		  item->getEnvironment()->add(variable->getBits(), shared_from_this());
+		  body->apply(item, synthesizer, result, effect, trace);
+		  //item->print(std::cout);
+		  //item->getEnvironment()->remove(variable->getBits());
+		  //FATAL_ERROR;
+	    break;
+	  }
 }

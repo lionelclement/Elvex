@@ -23,6 +23,8 @@
 #include "features.hh"
 #include "messages.hh"
 #include "ipointer.hh"
+#include "grammar.hh"
+#include "statement.hh"
 
 listPtr List::nil=List::create();
 bitsetPtr List::gwith;
@@ -226,43 +228,58 @@ List::makeSerialString(void)
  *
  ************************************************** */
 void
-List::print(std::ostream& outStream, bool par, bool flat) const
+List::print(std::ostream& outStream) const
 {
   switch (type){
   case NIL:
-    if (flat)
-      outStream << "<>";
-    else
-      outStream << "&lt;&gt;";
+    outStream << "NIL";
     break;
   case ATOM:
-    value->print(outStream, true, flat);
+    value->print(outStream);
     break;
   case PAIRP:
-    if (par || cdr()->isAtom()){
-      if (flat)
-	outStream << "<";
-      else
-	outStream << "&lt;";
-    }
-    car()->print(outStream, true, flat);
+    car()->print(outStream);
     if (cdr()->isAtom()){
       outStream << "::";
-      cdr()->print(outStream, true, flat);
+      cdr()->print(outStream);
     }
-    else if (cdr()->isNil()){
-    }
-    else{
-      outStream << ",";
-      cdr()->print(outStream, false, flat);
-    }
-    if (par || cdr()->isAtom()){
-      if (flat)
-	outStream << ">";
-      else
-	outStream << "&gt;";
+    else if (!cdr()->isNil()){
+      cdr()->print(outStream);
     }
     break;
+  }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void
+List::flatPrint(std::ostream& outStream, bool par) const
+{
+  switch (type){
+  case NIL:
+    outStream << "NIL";
+    break;
+  case ATOM:
+    value->flatPrint(outStream);
+    break;
+  case PAIRP:
+	    if (par || cdr()->isAtom()){
+		outStream << "&lt;";
+	    }
+	    car()->flatPrint(outStream, true);
+	    if (cdr()->isAtom()){
+	      outStream << "::";
+	      cdr()->flatPrint(outStream, true);
+	    }
+	    else if (!cdr()->isNil()){
+	      outStream << ",";
+	      cdr()->flatPrint(outStream, false);
+	    }
+	    if (par || cdr()->isAtom()){
+	      outStream << "&gt;";
+	    }
+	    break;
   }
 }
 
@@ -560,4 +577,24 @@ List::findVariable(bitsetPtr variable)
     break;
   }
   return false;
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+void List::apply(itemPtr item, Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body)
+{
+  switch (type){
+  case NIL:
+    break;
+  case ATOM:
+    value->apply(item, synthesizer, result, effect, trace, variable, body->clone(0));
+    break;
+  case PAIRP:
+    if (car())
+      car()->apply(item, synthesizer, result, effect, trace, variable, body);
+    if (cdr())
+      cdr()->apply(item, synthesizer, result, effect, trace, variable, body);
+    break;
+  }
 }

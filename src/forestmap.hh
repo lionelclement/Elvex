@@ -20,7 +20,7 @@
 #ifndef FORESTMAP_H
 #define FORESTMAP_H
 
-#include <map>
+#include <unordered_map>
 
 #include "forestidentifier.hh"
 #ifdef OUTPUT_XML
@@ -30,21 +30,21 @@
 class ForestMap {
 
 public:
-  typedef std::map<const forestIdentifierPtr, forestPtr, ForestIdentifier::less> mapForestIdentifierForest;
-  typedef std::pair<const forestIdentifierPtr, forestPtr> pairForestIdentifierForest;
+  typedef std::unordered_map<const forestIdentifierPtr, forestPtr, ForestIdentifier::hash, ForestIdentifier::equal_to> map;
+  typedef std::pair<const forestIdentifierPtr, forestPtr> pair;
 
 private:
-  mapForestIdentifierForest data;
+  map data;
 
 public:
   ForestMap(void);
   ~ForestMap();
 
-  const mapForestIdentifierForest::const_iterator find(const forestIdentifierPtr) const;
-  const mapForestIdentifierForest::const_iterator begin(void) const;
-  const mapForestIdentifierForest::const_iterator end(void) const;
+  const map::const_iterator find(const forestIdentifierPtr) const;
+  const map::const_iterator begin(void) const;
+  const map::const_iterator end(void) const;
   void clear(void);
-  const bool insert (pairForestIdentifierForest);
+  const bool insert (pair);
 
 };
 #endif // FORESTMAP_H

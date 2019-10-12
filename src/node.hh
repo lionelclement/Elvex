@@ -35,9 +35,6 @@ class Node:
   public Id,
   public std::enable_shared_from_this<class Node> {
 
-  //public:
-  //typedef std::vector< forestPtr > vectorForests;
-  
 private:
   unsigned int nbrCS;
   std::vector< forestPtr > forests;
@@ -57,14 +54,9 @@ public:
   forestPtr getForest(unsigned int) const;
   
 #ifdef OUTPUT_XML
-  void toXML(const xmlNodePtr, const xmlNodePtr) const;
+  void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
   void generate(bool);
-
-  // compare deux nodes
-  //struct less {
-  //bool operator() (nodePtr, nodePtr) const;
-  //};
 
 };
 

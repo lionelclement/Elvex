@@ -89,23 +89,6 @@ ForestIdentifier::operator !=(ForestIdentifier const &o) const
    	  ||(this->featuresSerialString != o.featuresSerialString));
 }
 
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-bool
-ForestIdentifier::less::operator()(forestIdentifierPtr const lhs, forestIdentifierPtr const rhs) const
-{
-  if (lhs->code != rhs->code)
-    return lhs->code < rhs->code;
-  if (lhs->from != rhs->from)
-    return lhs->from < rhs->from;
-  if (lhs->to != rhs->to)
-    return lhs->to < rhs->to;
-  if (lhs->featuresSerialString != rhs->featuresSerialString)
-    return lhs->featuresSerialString < rhs->featuresSerialString;
-  return false;
-}
-
 /* **************************************************
  *
  ************************************************** */
@@ -114,3 +97,37 @@ ForestIdentifier::print(std::ostream& out) const
 {
   out << "#" << code << '[' << from << '-' << to << ']';
 }
+
+///* ************************************************************
+// *                                                            *
+// ************************************************************ */
+//bool
+//ForestIdentifier::_less::operator()(forestIdentifierPtr const lhs, forestIdentifierPtr const rhs) const
+//{
+//  if (lhs->code != rhs->code)
+//    return lhs->code < rhs->code;
+//  if (lhs->from != rhs->from)
+//    return lhs->from < rhs->from;
+//  if (lhs->to != rhs->to)
+//    return lhs->to < rhs->to;
+//  if (lhs->featuresSerialString != rhs->featuresSerialString)
+//    return lhs->featuresSerialString < rhs->featuresSerialString;
+//  return false;
+//}
+//
+/* **************************************************
+ *
+ ************************************************** */
+size_t ForestIdentifier::hash::operator() (forestIdentifierPtr const i) const
+{
+  return i->hashCode();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool ForestIdentifier::equal_to::operator() (forestIdentifierPtr const i1, forestIdentifierPtr const i2) const
+{
+  return i1->peekSerialString() == i2->peekSerialString();
+}
+

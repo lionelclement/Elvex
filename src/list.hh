@@ -72,12 +72,14 @@ public:
   featuresPtr getfeaturePtrs(void) const;
   int getIdentifier(void) const;
 
-  void print(std::ostream&, bool par=true, bool flat=false) const;
+  void print(std::ostream &) const;
+  void flatPrint(std::ostream &, bool par) const;
   bool buildEnvironment(environmentPtr, listPtr , bool, bool);
   void deleteAnonymousVariables(void);
   bool renameVariables(unsigned int);
+  void apply(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body);
 #ifdef OUTPUT_XML
-  void toXML(const xmlNodePtr);
+  void toXML(xmlNodePtr);
 #endif
   listPtr clone(void) const;
   void enable(statementPtr, itemPtr, bool &, bool);

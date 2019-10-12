@@ -65,7 +65,7 @@ public:
   void print(std::ostream &, unsigned int=UINT_MAX, bool=false, bool=true) const;
 
 #ifdef OUTPUT_XML
-  void toXML(const xmlNodePtr);
+  void toXML(xmlNodePtr);
 #endif
   void addDefaults(void);
   
