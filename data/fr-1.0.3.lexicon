@@ -56,6 +56,7 @@ leur	cld [PRED:_pro, number:pl, person:three];
 
 me	cla [PRED:_ego, number:sg, person:one];
 me	cla [PRED:_pro, number:sg, person:one];
+te	cla [PRED:_you, number:sg, person:two];
 te	cla [PRED:_pro, number:sg, person:two];
 le	cla [PRED:_pro, gender:ms, number:sg, person:three];
 la	cla [PRED:_pro, gender:fm, number:sg, person:three];

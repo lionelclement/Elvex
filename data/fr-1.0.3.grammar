@@ -27,6 +27,60 @@ text → rhetoricalStructure {
   ⇑ = [];
 }
 
+/* **************************************************
+ ************************************************** */
+paragraph → texts {
+  [PRED:paragraph, $rest];
+  ↓1 = $rest;
+  ⇑ = [];
+}
+
+/* **************************************************
+ ************************************************** */
+texts → text texts {
+  [texts:<$head::$tail>];
+  ↓1 = $head;
+  ↓2 = [texts:$tail];
+  ⇑ = [];
+}
+
+texts → {
+  [texts:NIL];
+  ⇑ = [];
+}
+
+/* **************************************************
+ * Greetings, hello, etc
+ ************************************************** */
+letter → dear name comma newParagraph text newParagraph regards newline signature {
+  [PRED:letter, i:$i, ii:$ii, iii:$iii];
+  [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct] ⊂ ↑;
+  if (!$vform)
+    $vform = tensed;
+  if (!$mode)
+    $mode = indicative;
+  if (!$language_register)
+    $language_register = neutral;
+  if (!$lexFct)
+    $lexFct = none;
+  if (($pred != cause) && ($pred != succ))
+    $rhet = neutral;
+  else
+    $rhet = $pred;
+  if (!$illocutionary)
+    $illocutionary = neutral;
+  if (!$modality)
+    $modality = neutral;
+  ↓1 = $i;
+  ↓2 = $i;
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $ii ∪ [vform:$vform, mode:$mode, language_register:$language_register, lexFct:$lexFct, rhet:$rhet, illocutionary:$illocutionary, modality:$modality];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = $iii;
+}
 
 /* **************************************************
  ************************************************** */

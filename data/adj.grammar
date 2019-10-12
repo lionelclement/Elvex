@@ -1,0 +1,45 @@
+@grammar
+
+/* **************************************************
+* Elvex grammar
+************************************************** */
+
+// [PRED:figure, adj:<[PRED:yellow], [PRED:big], [PRED:square]>]
+N → [ADJ] [ADJ] [ADJ] [ADJ] N
+{
+  [adjunct:$List, $Rest];
+  foreach $i in $List {
+  	  [type:$type] ⊂ search($i);
+	  if ($type == size) 
+     	     ↓1 = $i;
+     	 else if ($type == shape)
+     	     ↓2 = $i;
+     	 else if ($type == color)
+     	     ↓3 = $i;
+     	 else if ($type == material)
+     	     ↓4 = $i;
+  }
+  if (↓1)
+  	attest #1;
+  if (↓2)
+  	attest #2;
+  if (↓3)
+  	attest #3;
+  if (↓4)
+  	attest #4;
+  ↓5 = $Rest;
+  ⇑ = ⇓5;
+}
+
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N → noun
+{
+  [adjunct:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

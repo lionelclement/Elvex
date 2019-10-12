@@ -1,6 +1,42 @@
 @input
 
-/***
+paragraph[PRED:paragraph,
+texts:<
+[PRED:marcher, i:[PRED:Léon], tense:present],
+[PRED:marcher, i:[PRED:Léon], tense:past],
+[PRED:marcher, i:[PRED:Léon], tense:future],
+[PRED:marcher, i:[PRED:Léon], tense:past, aspect:imperfect],
+[PRED:marcher, i:[PRED:Léon], tense:past, aspect:continuous],
+[PRED:marcher, i:[PRED:Léon], tense:recent_past],
+[PRED:marcher, i:[PRED:Léon], tense:present, aspect:continuous],
+[PRED:marcher, i:[PRED:Léon], tense:near_future],
+[PRED:marcher, i:[PRED:Léon], tense:future, aspect:continuous],
+[PRED:partir, i:[PRED:Léon], tense:present],
+//[PRED:partir, i:[PRED:Léon], tense:past]
+[PRED:partir, i:[PRED:Léon], tense:future],
+[PRED:partir, i:[PRED:Léon], tense:past, aspect:imperfect],
+[PRED:partir, i:[PRED:Léon], tense:past, aspect:continuous],
+[PRED:partir, i:[PRED:Léon], tense:recent_past],
+[PRED:partir, i:[PRED:Léon], tense:present, aspect:continuous],
+[PRED:partir, i:[PRED:Léon], tense:near_future],
+[PRED:partir, i:[PRED:Léon], tense:future, aspect:continuous],
+[PRED:ronfler, i:[PRED:horloger, number:sg, gender:ms, def:yes]],
+[PRED:réparer, i:[PRED:horloger, def:yes, gender:ms, number:sg], ii:[PRED:montre, number:sg, def:yes], tense:past],
+[PRED:réparer, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]],
+[PRED:livrer, i:[PRED:horloger, def:yes, gender:ms, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, genr:ms], tense:past],
+[PRED:livrer, i:[PRED:horloger, def:yes, gender:ms, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:client, number:sg, gender:ms, def:yes], tense:past],
+[PRED:livrer, i:[PRED:_ego], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, number:sg, person:two], tense:past],
+[PRED:couper, i:[PRED:boucher, number:sg, gender:ms, def:yes], ii:[PRED:poulet, number:sg, gender:ms, def:yes], iii:[PRED:ciseaux, def:yes], tense:present],
+[PRED:dire, i:[PRED:boucher, number:sg, gender:ms, def:yes], ii:[PRED:ânerie, number:sg, def:no], iii:[PRED:client, gender:ms, number:sg, def:yes]],
+[PRED:transporter, i:[PRED:camion, number:sg, gender:ms, def:yes], ii:[PRED:viande, number:sg, def:yes], iii:[FORM:"Rungis"], iv:[PRED:boucherie, number:sg, def:yes]],
+[PRED:arrêter, i:[PRED:horloger, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes]],
+// [PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], iii:[PRED:soupe, number:sg, def:no], tense:past],
+[PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], ii:[PRED:cochon, gender:ms, number:pl, def:yes], iii:[PRED:soupe, number:sg, part:yes], tense:past],
+[PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], ii:[PRED:cochon, gender:ms, number:pl, def:yes], iii:[PRED:soupe, number:sg, part:yes], tense:past, aspect:neutral, illocutnary:ask, neg:yes]
+>
+]
+
+/*** 
 text [PRED:succ,
       i:[PRED:succ,
 	 i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
@@ -126,21 +162,21 @@ text [PRED:succ,
 	 iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
 	 v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
 	 vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-	 vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
+	 vii:[PRED:cause, i:[PRED:pleu<voir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
 	 viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
 	 ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
 	 x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
 
 ]
       ]
-***/
+ ***/
 
 /* **************************************************
  * verbal tense & inflexion
  ************************************************** */
 
 //text [PRED:marcher, i:[PRED:Léon], tense:present]
-//text [PRED:marcher, i:[PRED:Léon], tense:past]
+text [PRED:marcher, i:[PRED:Léon], tense:past]
 //text [PRED:marcher, i:[PRED:Léon], tense:future]
 //text [PRED:marcher, i:[PRED:Léon], tense:past, aspect:imperfect]
 //text [PRED:marcher, i:[PRED:Léon], tense:past, aspect:continuous]
@@ -229,7 +265,7 @@ text [PRED:succ,
 
 //text [PRED:sale, i:[PRED:voiture, number:sg, def:yes]]
 //text [PRED:sale, i:[PRED:voiture, number:sg, def:yes], tense:past]
-text [PRED:court, i:[PRED:histoire, number:sg, def:yes], tense:past]
+//text [PRED:court, i:[PRED:histoire, number:sg, def:yes], tense:past]
 
 /* **************************************************
  * Modality (be able to, may, should, etc)
