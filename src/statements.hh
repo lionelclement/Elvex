@@ -54,7 +54,7 @@ public:
   
   void addStatement(statementPtr);
   void renameVariables(unsigned int);
-  void print(std::ostream &, int=0) const;
+  void print(std::ostream &, unsigned int=0) const;
   statementsPtr clone(const std::bitset<NBRFLAGS>&savedFlags) const;
   void apply(itemPtr, class Synthesizer *, bool &, bool);
   void lookingForAssignedInheritedSonFeatures(std::vector< bool > &);

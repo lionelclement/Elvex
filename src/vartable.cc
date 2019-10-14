@@ -19,6 +19,8 @@
 
 #include <climits>
 #include <sstream>
+#include <map>
+#include <unordered_map>
 #include "vartable.hh"
 
 const unsigned int Vartable::_END_;
@@ -29,9 +31,9 @@ const unsigned int Vartable::_FIRSTID_;
 
 unsigned int Vartable::intToStrIndex;
 std::bitset<MAXBITS> Vartable::varTableIndex;
-std::map<std::string, bitsetPtr, std::less<std::string> > Vartable::varTable;
-std::map<unsigned int, std::string, std::less<unsigned int> > Vartable::intToStrTable;
-std::map<std::string, unsigned int, std::less<std::string> > Vartable::strToIntTable;
+std::unordered_map<std::string, bitsetPtr > Vartable::varTable;
+std::map< unsigned int, std::string > Vartable::intToStrTable;
+std::unordered_map<std::string, unsigned int > Vartable::strToIntTable;
 
 /* **************************************************
  *
@@ -58,7 +60,7 @@ bitsetPtr
 Vartable::varTableAdd(std::string str)
 {
   bitsetPtr result = bitsetPtr();
-  std::map<std::string, bitsetPtr, std::less<std::string> >::const_iterator varTableIt;
+  std::unordered_map<std::string, bitsetPtr >::const_iterator varTableIt;
   varTableIt = varTable.find(str);
   if (varTableIt == varTable.end()) {
     result=Bitset::create(varTableIndex);
@@ -73,10 +75,6 @@ Vartable::varTableAdd(std::string str)
     if (varTableIndex.none())
       throw "Too much values";
 
-    //Bitset::bitsToStrTable[Bitset::toFirstInt(varTableIndex)]=str;
-    //varTableIndex <<= 1;
-    //if (varTableIndex.none())
-    //throw "Too much values";
   } else 
     result=varTableIt->second;
   return result;
@@ -89,7 +87,7 @@ unsigned int
 Vartable::strToInt(std::string str)
 {
   unsigned int code;
-  std::map<std::string, unsigned int, std::less<std::string> >::const_iterator it(strToIntTable.find(str));
+  std::unordered_map<std::string, unsigned int >::const_iterator it(strToIntTable.find(str));
   if (it==strToIntTable.end()){
     code=intToStrIndex;
     strToIntTable[str]=intToStrIndex;

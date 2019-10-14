@@ -102,7 +102,7 @@ std::vector< featuresPtr >::const_iterator ListFeatures::end() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int ListFeatures::size() const 
+size_t ListFeatures::size() const
 {
   return listFeatures.size();
 }

@@ -80,7 +80,7 @@ entryPtr Entry::create(unsigned int code, std::string pred, std::string form, fe
 /* **************************************************
  *
  ************************************************** */
-const unsigned int Entry::getCode(void) const 
+const unsigned int Entry::getCode(void) const
 {
   return code;
 }
@@ -96,7 +96,7 @@ void Entry::setCode(unsigned int code)
 /* **************************************************
  *
  ************************************************** */
-const unsigned int Entry::getCodePred(void) const 
+const unsigned int Entry::getCodePred(void) const
 {
   return codePred;
 }
@@ -159,7 +159,7 @@ void
 Entry::print(std::ostream& out) const
 {
   out << "(id: " << this->getId() << ", code: " << Vartable::intToStr(this->code);
-  if ((this->codePred!=(unsigned int)UINT_MAX))
+  if ((this->codePred != UINT_MAX))
     out << ", pred: " << Vartable::intToStr(this->codePred);
   if (this->form.size()!=0)
     out << ", form: " << this->form;

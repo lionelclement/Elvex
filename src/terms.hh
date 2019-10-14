@@ -34,8 +34,8 @@ private:
   bool optional;
 
 public:
-  Terms(std::vector<class Term *> &, bool optional=false);
-  Terms(class Term *, bool optional=false);
+  Terms(std::vector<class Term *> &, bool optional = false);
+  Terms(class Term *, bool optional = false);
   ~Terms();
 
   bool isOptional(void) const;

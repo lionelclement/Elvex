@@ -41,7 +41,7 @@ Term::~Term()
 /* **************************************************
  *
  ************************************************** */
-unsigned int Term::getCode(void) const 
+unsigned int Term::getCode(void) const
 {
   return code;
 }

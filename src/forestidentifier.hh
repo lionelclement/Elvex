@@ -35,11 +35,11 @@ private:
   unsigned int from;
   unsigned int to;
   
-  ForestIdentifier(unsigned int, std::string const, unsigned int, unsigned int);  
+  ForestIdentifier(unsigned int, std::string const, unsigned int, unsigned int);
   
 public:
   ~ForestIdentifier();
-  static forestIdentifierPtr create(unsigned int, std::string const, unsigned int, unsigned int);  
+  static forestIdentifierPtr create(unsigned int, std::string const, unsigned int, unsigned int);
   
   void makeSerialString(void);
   unsigned int getFrom(void) const {return from;};

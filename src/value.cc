@@ -153,7 +153,7 @@ bitsetPtr Value::getBits(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Value::getIdentifier(void) const 
+unsigned int Value::getIdentifier(void) const
 {
   return integer;
 }

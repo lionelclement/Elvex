@@ -25,7 +25,7 @@
 class Flags {
 
 public:
-  static const size_t NBRFLAGS=8;
+  static const int NBRFLAGS=8;
   static const std::bitset<NBRFLAGS> SEEN;
   static const std::bitset<NBRFLAGS> XML;
   static const std::bitset<NBRFLAGS> GEN;

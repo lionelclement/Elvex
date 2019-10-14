@@ -21,6 +21,7 @@
 #define VARTABLE_H
 
 #include <bitset>
+#include <unordered_map>
 #include <map>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -41,9 +42,9 @@ public:
 public:
   static unsigned int intToStrIndex;
   static std::bitset<MAXBITS> varTableIndex;
-  static std::map<std::string, bitsetPtr, std::less<std::string> > varTable;
-  static std::map<unsigned int, std::string, std::less<unsigned int> > intToStrTable;
-  static std::map<std::string, unsigned int, std::less<std::string> > strToIntTable;
+  static std::unordered_map<std::string, bitsetPtr > varTable;
+  static std::map< unsigned int, std::string > intToStrTable;
+  static std::unordered_map<std::string, unsigned int > strToIntTable;
   
   static void init();
   static bitsetPtr varTableAdd(std::string); // string -> bit

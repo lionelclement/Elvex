@@ -23,6 +23,7 @@
 #include <stack>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 
 #include "forestidentifier.hh"
 #include "forestmap.hh"
@@ -48,26 +49,29 @@
 
 class Synthesizer {
 
-private:
-  class Grammar grammar;
-  std::map<unsigned int, itemSetPtr > states;
-
+public:
+  typedef std::unordered_map<std::string const, entryPtr, std::hash<std::string>, std::equal_to<std::string> > string_to_entry_map;
   // pos => (PRED => entries)
   // verb => (manger => (mangions, mange|mange))
-  typedef std::map<unsigned int, std::map<unsigned int, entriesPtr, std::less<unsigned int> >*, std::less<unsigned int> > lexiconType;
-  typedef std::map<unsigned int, itemPtr > itemMapType;
+  typedef std::map< unsigned int, std::map< unsigned int, entriesPtr >* > lexicon_map;
+  typedef std::map< unsigned int, itemPtr > item_map;
 
-  lexiconType lexicon;
+
+private:
+  class Grammar grammar;
+  std::map< unsigned int, itemSetPtr > states;
+
+  lexicon_map lexicon;
   
   // Associe un identifieur de foret à une foret
   class ForestMap forestMap;
-  itemMapType itemMap;
+  item_map itemMap;
   nodePtr nodeRoot;
   featuresPtr startFeatures;
   class Term *startTerm;
   class Lex *compactLexicon;
   entryPtr localEntry; //flying lexical entry
-  std::map<std::string const, entryPtr > mapLocalEntry;
+  string_to_entry_map mapLocalEntry;
   unsigned int maxLength;
   unsigned int maxUsages;
   unsigned int maxCardinal;
@@ -75,11 +79,11 @@ private:
   std::string grammarFileName;
   std::string inputFileName;
   std::stack< std::string > bufferNames;
-  std::stack< int > linenos;
+  std::stack< unsigned int > linenos;
 
   std::list<std::string> inputs;
 
-  std::map<std::string, featuresPtr, std::less<std::string> > macros;
+  std::unordered_map<std::string, featuresPtr > macros;
 
   std::string lexiconString;
   std::string grammarString;
@@ -115,16 +119,16 @@ public:
 
   class Grammar &getGrammar(void);
   void setGrammar(class Grammar &grammar);
-  std::map<unsigned int, itemSetPtr >::const_iterator begin(void) const;
-  std::map<unsigned int, itemSetPtr >::const_iterator end(void) const;
-  int size(void) const;
+  std::map< unsigned int, itemSetPtr >::const_iterator begin(void) const;
+  std::map< unsigned int, itemSetPtr >::const_iterator end(void) const;
+  size_t size(void) const;
 
   void pushBufferName(std::string);
   std::string popBufferName(void);
   std::string getTopBufferName(void);
-  void pushLineno(int);
-  int popLineno(void);
-  int getTopLineno(void);
+  void pushLineno(unsigned int);
+  unsigned int popLineno(void);
+  unsigned int getTopLineno(void);
   class ForestMap getForestMap(void);
   std::list<std::string> &getInputs(void);
   
@@ -184,11 +188,11 @@ public:
 #endif
 
   nodePtr getNodeRoot(void);
-  lexiconType &getLexicon(void);
-  void setLexicon(lexiconType &);
-  lexiconType::const_iterator findLexicon(const unsigned int i) const;
-  lexiconType::const_iterator beginLexicon(void) const;
-  lexiconType::const_iterator endLexicon(void) const;
+  lexicon_map &getLexicon(void);
+  void setLexicon(lexicon_map &);
+  lexicon_map::const_iterator findLexicon(const unsigned int i) const;
+  lexicon_map::const_iterator beginLexicon(void) const;
+  lexicon_map::const_iterator endLexicon(void) const;
 
   entryPtr getLocalEntry(void) const;
   void setLocalEntry(entryPtr);
@@ -214,7 +218,7 @@ public:
   
   itemPtr createItem(itemPtr, unsigned int);
   void parseFile(std::string);
-  int parseString(std::string, std::string);
+  unsigned int parseString(std::string, std::string);
   void generate(void);
   const entriesPtr findCompactLexicon(const unsigned int code, const unsigned int pred);
 #ifdef MEMOIZATION

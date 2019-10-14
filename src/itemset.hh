@@ -39,7 +39,7 @@ public:
 private:
   unsigned int id;
   set items;
-  ItemSet (int);
+  ItemSet (unsigned int);
   
 public:
   ~ItemSet();
@@ -53,7 +53,7 @@ public:
   const_iterator find(itemPtr) const;
   bool insert(itemPtr, class Synthesizer *);
   void erase(itemPtr);
-  unsigned int size(void) const;
+  size_t size(void) const;
   void resetUsages(void);
   
   void print(std::ostream &);

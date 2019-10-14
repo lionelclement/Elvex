@@ -131,7 +131,7 @@ void Rule::resetUsages(void)
 /* ************************************************************
  *
  ************************************************************ */
-const unsigned int Rule::getLineno(void) const 
+const unsigned int Rule::getLineno(void) const
 {
   return lineno;
 }

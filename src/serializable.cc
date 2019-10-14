@@ -41,7 +41,7 @@ Serializable::~Serializable(){
 /* **************************************************
  *
  ************************************************** */
-const std::size_t Serializable::hashCode()
+const size_t Serializable::hashCode()
 {
   if (serialHashCode == 0) {
     makeSerialString();

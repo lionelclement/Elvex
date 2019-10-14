@@ -261,10 +261,10 @@ void Grammar::analyseTerms(class Synthesizer &synthesizer) {
 	  unsigned long int code = (*term)->getCode();
 	  terminals.insert(code);
 	  
-	  std::map<unsigned int, entriesPtr> *predToEntries;
-	  std::map<unsigned int, std::map<unsigned int, entriesPtr>*>::iterator foundCode = synthesizer.getLexicon().find(code);
+	  std::map< unsigned int, entriesPtr> *predToEntries;
+	  std::map< unsigned int, std::map< unsigned int, entriesPtr>*>::iterator foundCode = synthesizer.getLexicon().find(code);
 	  if (foundCode == synthesizer.getLexicon().end()) {
-	    predToEntries = new std::map<unsigned int, entriesPtr>;
+	    predToEntries = new std::map< unsigned int, entriesPtr>;
 	    predToEntries->insert(std::make_pair(code, Entries::create()));
 	    synthesizer.getLexicon().insert(std::make_pair(code, predToEntries));
 	  }

@@ -176,7 +176,7 @@ void Item::setRule(class Rule *rule)
 /* **************************************************
  *
  ************************************************** */
-const unsigned int Item::getLineno(void) const 
+const unsigned int Item::getLineno(void) const
 {
   return rule->getLineno();
 }
@@ -192,7 +192,7 @@ const std::string &Item::getFilename(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getIndex(void) const 
+unsigned int Item::getIndex(void) const
 {
   return index;
 }
@@ -348,7 +348,7 @@ void Item::setSeen(unsigned int index, bool b)
 /* **************************************************
  *
  ************************************************** */
-void Item::addItem(std::map<int, itemPtr >&table, int key, itemPtr item)
+void Item::addItem(std::unordered_map<unsigned int, itemPtr >&table, unsigned int key, itemPtr item)
 {
   table.insert(std::make_pair(key, item));
 }
@@ -689,7 +689,7 @@ Item::print(std::ostream& out) const
   }
   if (s_ranges){
     out << "<td>";//<center>Ranges</center><br>";
-    int old = -1;
+    unsigned int old = -1;
     bool first = true;
     for (std::vector<unsigned int>::const_iterator i = ranges.begin();
 	 i!=ranges.end();
@@ -739,7 +739,7 @@ Item::print(std::ostream& out) const
     out << "</td>";
   }
   if (s_synthesizedSonFeatures){
-    out << "<td bgcolor=\"lightcyan\"><table border=\"1\">";//<center>⇓i</center><br>";
+    out << "<td bgcolor=\"lightcyan\"><table>";//<center>⇓i</center><br>";
     for(std::vector<featuresPtr >::const_iterator i = synthesizedSonFeatures->begin(); i!=synthesizedSonFeatures->end(); ++i){
       out << "<tr><td>";
       if (*i)
@@ -833,7 +833,7 @@ void
 Item::apply(itemSetPtr state, class Synthesizer *synthesizer)
 {
   if (statements){
-    int k=1;
+    unsigned int k=1;
     bool effect = true;
     while(effect){
 #ifdef TRACE

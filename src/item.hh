@@ -122,7 +122,7 @@ public:
   bool isSeen(unsigned int) const;
   void setSeen(unsigned int, bool);
 
-  void addItem(std::map<int, itemPtr > &, int, itemPtr );
+  void addItem(std::unordered_map<unsigned int, itemPtr > &, unsigned int, itemPtr );
   
   std::vector<unsigned int> &getRanges(void);
   void addRanges(unsigned int);

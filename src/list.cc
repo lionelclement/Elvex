@@ -190,7 +190,7 @@ List::getfeaturePtrs(void) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-int
+unsigned int
 List::getIdentifier(void) const
 {
   return value->getIdentifier();

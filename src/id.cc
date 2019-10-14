@@ -20,7 +20,7 @@
 #include "id.hh"
 #include "messages.hh"
 
-std::size_t Id::uniqId = 1;
+unsigned int Id::uniqId = 1;
 
 /* **************************************************
  *
@@ -46,7 +46,7 @@ Id::~Id()
 /* **************************************************
  *
  ************************************************** */
-const std::size_t Id::getId(void) const
+const unsigned int Id::getId(void) const
 {
   return this->id;
 }

@@ -70,7 +70,7 @@ public:
 
   bitsetPtr getBits(void) const;
   featuresPtr getfeaturePtrs(void) const;
-  int getIdentifier(void) const;
+  unsigned int getIdentifier(void) const;
 
   void print(std::ostream &) const;
   void flatPrint(std::ostream &, bool par) const;

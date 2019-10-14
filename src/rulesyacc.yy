@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 #include <list>
-#include <map>
+#include <unordered_map>
 #include <bitset>
 #include "id.hh"
 #include "vartable.hh"
@@ -85,7 +85,7 @@
   %}
 
 %union{
-  int integer_slot;
+  unsigned int integer_slot;
   double double_slot;
   class Term *term_slot;
   class Terms *terms_slot; //(A|B)
@@ -242,7 +242,7 @@ dictionary_line:
 	  unsigned int code=Vartable::strToInt(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  std::map< unsigned int, std::map< unsigned int, entriesPtr > *>::iterator foundCode=synthesizer.getLexicon().find(code);
+	  std::map< unsigned int, std::map< unsigned int, entriesPtr > *>::iterator foundCode = synthesizer.getLexicon().find(code);
 	  std::map< unsigned int, entriesPtr > *zeroToEntries;
 	  if (foundCode!=synthesizer.getLexicon().end()){
 	    zeroToEntries=foundCode->second;

@@ -45,7 +45,7 @@ ForestIdentifier::~ForestIdentifier ()
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-forestIdentifierPtr ForestIdentifier::create(unsigned int code, std::string const featuresSerialString, unsigned int from, unsigned int to)  
+forestIdentifierPtr ForestIdentifier::create(unsigned int code, std::string const featuresSerialString, unsigned int from, unsigned int to)
 {
   return forestIdentifierPtr( new ForestIdentifier(code, featuresSerialString, from, to) );
 }

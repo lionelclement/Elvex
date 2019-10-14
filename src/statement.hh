@@ -1,4 +1,4 @@
-	/* **************************************************
+/* **************************************************
  *
  * ELVEX
  *
@@ -149,9 +149,9 @@ public:
   const listPtr getList(void) const;
   const statementsPtr getStatements(void) const;
   const double getNumber(void) const;
-  const int getLineno(void) const;
+  const unsigned int getLineno(void) const;
 
-  void print(std::ostream &, int=0) const;
+  void print(std::ostream &, unsigned int=0) const;
   featuresPtr evalFeatures(itemPtr, class Synthesizer *synthesizer, bool);
   listPtr evalList(itemPtr, bool);
   valuePtr evalValue(itemPtr, class Synthesizer *synthesizer, bool);

@@ -26,7 +26,7 @@
 /* ************************************************************
  * 
  ************************************************************ */
-std::map<std::string, std::list< memoizationValuePtr > >::const_iterator
+MemoizationMap::unordered_map::const_iterator
 MemoizationMap::find(std::string const key) const
 {
   auto memItem = map.find(key);
@@ -43,7 +43,7 @@ MemoizationMap::find(std::string const key) const
 /* ************************************************************
  * 
  ************************************************************ */
-std::map<std::string, std::list< memoizationValuePtr > >::const_iterator
+MemoizationMap::unordered_map::const_iterator
 MemoizationMap::end(void) const
 {
   return map.end();

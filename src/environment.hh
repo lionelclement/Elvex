@@ -21,7 +21,7 @@
 #define ENVIRONMENT_H
 
 #include <bitset>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include "vartable.hh"
 #include "ipointer.hh"
@@ -30,13 +30,13 @@ class Environment:
   public std::enable_shared_from_this< class Environment > {
 
 public:
-  typedef std::map< std::string const, valuePtr > mapStringValue;
+  typedef std::unordered_map< std::string const, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
   
 private:
   Environment();
   
 private:
-  mapStringValue env;
+  unordered_map env;
   void add(std::string const, valuePtr=valuePtr());
   void remove(std::string const);
 
@@ -48,8 +48,8 @@ public:
   void add(const environmentPtr);
   void add(const environmentPtr, const environmentPtr);
   void remove(const bitsetPtr);
-  mapStringValue::const_iterator begin() const;
-  mapStringValue::const_iterator end() const;
+  unordered_map::const_iterator begin() const;
+  unordered_map::const_iterator end() const;
   const size_t size() const;
   
   void print(std::ostream &) const;

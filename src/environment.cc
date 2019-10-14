@@ -45,7 +45,7 @@ Environment::Environment()
  ************************************************** */
 Environment::~Environment()
 {
-  for (std::map<std::string const, valuePtr>::iterator i = env.begin();
+  for (unordered_map::iterator i = env.begin();
        i != env.end();
        ++i) {
     valuePtr tmp = i->second;
@@ -68,7 +68,7 @@ environmentPtr Environment::create()
  ************************************************** */
 void Environment::add(std::string const key, valuePtr value)
 {
-  Environment::mapStringValue::iterator it = env.find(key);
+  Environment::unordered_map::iterator it = env.find(key);
   if (it == env.end()) {
     env.insert (std::make_pair(key, value));
   }
@@ -99,7 +99,7 @@ void Environment::remove(std::string const key)
  ************************************************** */
 void Environment::add(const environmentPtr e)
 {
-  for (Environment::mapStringValue::const_iterator i=e->begin(); i!=e->end(); ++i)
+  for (Environment::unordered_map::const_iterator i=e->begin(); i!=e->end(); ++i)
     add(i->first, i->second);
 }
 
@@ -109,7 +109,7 @@ void Environment::add(const environmentPtr e)
 void Environment::add(const environmentPtr e, const environmentPtr where)
 {
   if (where)
-    for (Environment::mapStringValue::const_iterator i=e->begin(); i!=e->end(); i++)
+    for (Environment::unordered_map::const_iterator i=e->begin(); i!=e->end(); i++)
       if (where->env.find(i->first)!=where->env.end())
 	add(i->first, i->second);
 }
@@ -126,7 +126,7 @@ void Environment::add(const environmentPtr e, const environmentPtr where)
 /* **************************************************
  *
  ************************************************** */
-Environment::mapStringValue::const_iterator Environment::begin() const 
+Environment::unordered_map::const_iterator Environment::begin() const 
 {
   return env.begin();
 }
@@ -134,7 +134,7 @@ Environment::mapStringValue::const_iterator Environment::begin() const
 /* **************************************************
  *
  ************************************************** */
-Environment::mapStringValue::const_iterator Environment::end() const 
+Environment::unordered_map::const_iterator Environment::end() const 
 {
   return env.end();
 }
@@ -154,7 +154,7 @@ valuePtr
 Environment::find(bitsetPtr attr) const 
 {
   std::string const key = attr->toString();
-  Environment::mapStringValue::const_iterator it = env.find(key);
+  Environment::unordered_map::const_iterator it = env.find(key);
   if (it != env.end())
     return it->second;
   else
@@ -168,7 +168,7 @@ void
 Environment::print(std::ostream &out) const 
 {
   bool first=true;
-  Environment::mapStringValue::const_iterator i = begin();
+  Environment::unordered_map::const_iterator i = begin();
   out << "<TABLE border=\"1\"><TR>";
   while(i != end()){
     if (first)
@@ -409,7 +409,7 @@ Environment::replaceVariables(std::string str, bool &effect)
     std::regex regexpression(pattern, std::regex_constants::ECMAScript);   
     while (std::regex_search(result.c_str(), match, regexpression, std::regex_constants::format_first_only)){
       std::string const key = match[1];
-      Environment::mapStringValue::iterator i = this->env.find(key);
+      Environment::unordered_map::iterator i = this->env.find(key);
       if (i == this->env.end()){
 	std::cerr << "*** error variable " << match[1] << " not found" << std::endl;
 	exit(1);
@@ -442,7 +442,7 @@ environmentPtr
 Environment::clone(void) const
 {
   environmentPtr environment=Environment::create();
-  for (Environment::mapStringValue::const_iterator i = begin();
+  for (Environment::unordered_map::const_iterator i = begin();
        i != end();
        ++i){
     environment->add((*i).first,

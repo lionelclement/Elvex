@@ -43,7 +43,7 @@ class ListFeatures:
   void clear(void);
   std::vector< featuresPtr >::const_iterator begin(void) const;
   std::vector< featuresPtr >::const_iterator end(void) const;
-  unsigned int size() const;
+  size_t size() const;
   listFeaturesPtr clone(void);
   featuresPtr operator[](unsigned int);
 };

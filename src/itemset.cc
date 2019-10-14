@@ -26,7 +26,7 @@
 /* **************************************************
  *
  ************************************************** */
-ItemSet::ItemSet (int id)
+ItemSet::ItemSet (unsigned int id)
 {
   NEW;
   this->id = id;
@@ -123,7 +123,7 @@ void ItemSet::erase(itemPtr item)
 /* **************************************************
  *
  ************************************************** */
-unsigned int ItemSet::size(void) const 
+size_t ItemSet::size(void) const
 {
   return items.size();
 }

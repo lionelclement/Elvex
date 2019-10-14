@@ -24,17 +24,21 @@
 #include "ipointer.hh"
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <string>
 
 class MemoizationMap:
   public std::enable_shared_from_this< class MemoizationMap > {
   
+public:
+  typedef std::unordered_map<std::string, std::list< memoizationValuePtr > > unordered_map;
+
 private:
-  std::map<std::string, std::list< memoizationValuePtr > > map;
+  unordered_map map;
 
 public:
-  std::map<std::string, std::list< memoizationValuePtr > >::const_iterator end(void) const;
-  std::map<std::string, std::list< memoizationValuePtr > >::const_iterator find(const std::string) const;
+  unordered_map::const_iterator end(void) const;
+  unordered_map::const_iterator find(const std::string) const;
   void insert(std::string, featuresPtr, forestIdentifierPtr);
   
 };  

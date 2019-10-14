@@ -24,6 +24,7 @@
 #define MAXBITS 512
 #endif
 
+#include <unordered_map>
 #include <map>
 #include <bitset>
 
@@ -38,7 +39,7 @@ class Bitset:
   public Serializable,
   public std::bitset<MAXBITS> {
 
-  typedef std::map<size_t, std::string, std::less<size_t> > bitsToStrType;
+  typedef std::map<unsigned int, std::string> map;
 
 private:
   static const std::bitset<MAXBITS> LEXBITSET;
@@ -47,7 +48,7 @@ private:
   static const std::bitset<MAXBITS> FIRSTBITSET;
 
 public:
-  static bitsToStrType bitsToStrTable;
+  static map bitsToStrTable;
 
 private:
   Bitset(unsigned int=0);

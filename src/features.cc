@@ -204,30 +204,25 @@ Features::print(std::ostream& outStream) const
 void
 Features::flatPrint(std::ostream& outStream) const
 {
-	if (isNil())
-		outStream << "NIL";
-	else if (isBottom())
-		outStream << "⊥";
-	else {
-		outStream << '[';
-		if (features.size()){
-			bool first = true;
-			for (int t=Feature::first_type ; t <= Feature::last_type ; ++t){
-				for (Features::listFeatures::const_iterator f=features.begin();
-						f!=features.end();
-						++f){
-					if ((*f)->getType() == t){
-						if(first) first=false; else outStream << ", ";
-						(*f)->flatPrint(outStream);
-					}
-				}
-			}
-		}
-		else {
-			outStream << "<TR><TD></TD></TR>";
-		}
-		outStream << ']';
+  if (isNil())
+    outStream << "NIL";
+  else if (isBottom())
+    outStream << "⊥";
+  else {
+    outStream << '[';
+    bool first = true;
+    for (int t=Feature::first_type ; t <= Feature::last_type ; ++t){
+      for (Features::listFeatures::const_iterator f=features.begin();
+	   f!=features.end();
+	   ++f){
+	if ((*f)->getType() == t){
+	  if(first) first=false; else outStream << ", ";
+	  (*f)->flatPrint(outStream);
 	}
+      }
+    }
+  }
+  outStream << ']';
 }
 
 /* **************************************************
@@ -263,7 +258,7 @@ Features::makeSerialString()
 const unsigned int
 Features::assignPred()
 {
-	int ret = UINT_MAX;
+	unsigned int ret = UINT_MAX;
 	if (this->pred)
 		return this->pred;
 	for (Features::listFeatures::const_iterator f = features.begin();

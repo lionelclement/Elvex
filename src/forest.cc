@@ -133,7 +133,7 @@ Forest::toXML(xmlNodePtr nodeRoot, bool root)
     addFlags(Flags::XML);
     xmlSetProp(f, (xmlChar*)"from", (xmlChar*)std::to_string(this->from).c_str());
     xmlSetProp(f, (xmlChar*)"to", (xmlChar*)std::to_string(this->to).c_str());
-    xmlSetProp(f, (xmlChar*)"size", (xmlChar*)(std::to_string((unsigned int)nodes.size())).c_str());
+    xmlSetProp(f, (xmlChar*)"size", (xmlChar*)(std::to_string(nodes.size())).c_str());
     
     if (empty)
       xmlSetProp(f, (xmlChar*)"empty", (xmlChar*)"yes");

@@ -102,9 +102,9 @@ Statements::addStatement(statementPtr statement)
  *
  ************************************************** */
 void 
-Statements::print(std::ostream& outStream, int tabulation) const 
+Statements::print(std::ostream& outStream, unsigned int tabulation) const
 {
-  for (int j=1 ; j<=tabulation ; ++j)
+  for (unsigned int j=1 ; j<=tabulation ; ++j)
     outStream << "&nbsp;";
   outStream << "{<DIV>";
   tabulation+=3;
@@ -113,7 +113,7 @@ Statements::print(std::ostream& outStream, int tabulation) const
   for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i)
     (*i)->print(outStream, tabulation);
   tabulation-=3;
-  for (int j=1 ; j<=tabulation ; ++j)
+  for (unsigned int j=1 ; j<=tabulation ; ++j)
     outStream << "&nbsp;";
   outStream << "}</DIV>";
 }

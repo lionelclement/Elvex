@@ -31,7 +31,7 @@ const std::bitset< MAXBITS> Bitset::ARGBITSET = Bitset::LEXBITSET << 1;
 const std::bitset< MAXBITS> Bitset::SYSBITSET = Bitset::ARGBITSET << 1;
 const std::bitset< MAXBITS> Bitset::FIRSTBITSET = Bitset::SYSBITSET << 1;
 
-Bitset::bitsToStrType Bitset::bitsToStrTable;
+Bitset::map Bitset::bitsToStrTable;
 
 /* ************************************************************
  *                                                            *
@@ -137,7 +137,7 @@ Bitset::makeSerialString()
 void Bitset::toXML(xmlNodePtr nodeRoot)
 {
   xmlNodePtr f=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ALT", NULL);
-  bitsToStrType::const_iterator varTableIt;
+  map::const_iterator varTableIt;
   size_t c=this->count();
   size_t sz=this->size();
   for(unsigned int i = 0 ; i < sz && c > 0; ++i)
