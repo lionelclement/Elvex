@@ -54,7 +54,7 @@ Theoretical aspects
 It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon but not with learning data.
 I don’t explain the algorithms here. It’s efficient and monotonic (each rule add something and never delete the effects of another rule).
 
-Practically speaking
+Practically speaking: to build a robust Text Generator with Elvex
 --------------------
 
 Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process (several months for one person in a restricted domain).
