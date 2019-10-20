@@ -20,33 +20,23 @@
 #include "id.hh"
 #include "messages.hh"
 
-unsigned int Id::uniqId = 1;
+std::size_t Id::uniqId = 1;
 
 /* **************************************************
  *
  ************************************************** */
-Id::Id()
+Id::Id(size_t id)
 {
-  NEW;
-  this->id = ++uniqId;
-  if (this->id == 0) {
-    std::cerr << "*** too ids" << std::endl;
-    FATAL_ERROR;
-  }
+  if (id)
+    this->id = id;
+  else
+    this->id = ++uniqId;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Id::~Id()
-{
-  DELETE;
-}
-
-/* **************************************************
- *
- ************************************************** */
-const unsigned int Id::getId(void) const
+std::size_t Id::getId(void) const
 {
   return this->id;
 }

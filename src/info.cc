@@ -25,10 +25,10 @@
  ************************************************** */
 Info::Info(class Info *next, unsigned long int offset)
 {
-  NEW;
-  address = 0;
+  this->address = 0;
   this->next = next;
   this->offset = offset;
+  NEW;
 }
 
 /* **************************************************
@@ -36,11 +36,11 @@ Info::Info(class Info *next, unsigned long int offset)
  ************************************************** */
 Info::~Info()
 {
+	  DELETE;
   if (next) {
     delete(next);
     next = NULL;
   }
-  DELETE;
 }
 
 /* **************************************************

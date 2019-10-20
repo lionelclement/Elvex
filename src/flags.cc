@@ -34,7 +34,6 @@ const std::bitset<Flags::NBRFLAGS> Flags::REJECTED		= 	std::bitset<Flags::NBRFLA
  ************************************************** */
 Flags::Flags(void)
 {
-  NEW;
   this->flags = 0;
 }
 
@@ -43,17 +42,15 @@ Flags::Flags(void)
  ************************************************** */
 Flags::Flags(const std::bitset<Flags::NBRFLAGS> &flags)
 {
-  NEW;
   this->flags = flags;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Flags::~Flags(void)
-{
-  DELETE;
-}
+//Flags::~Flags(void)
+//{
+//}
 
 /* **************************************************
  *

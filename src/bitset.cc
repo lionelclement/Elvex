@@ -36,7 +36,8 @@ Bitset::map Bitset::bitsToStrTable;
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Bitset::Bitset(unsigned int data): std::bitset< MAXBITS>(data)
+Bitset::Bitset(unsigned int data)
+  : std::bitset< MAXBITS>(data)
 {
   NEW;
 }
@@ -44,7 +45,8 @@ Bitset::Bitset(unsigned int data): std::bitset< MAXBITS>(data)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Bitset::Bitset(std::bitset< MAXBITS>& data): std::bitset< MAXBITS>(data)
+Bitset::Bitset(std::bitset< MAXBITS>& data)
+  : std::bitset< MAXBITS>(data)
 {
   NEW;
 }
@@ -52,7 +54,8 @@ Bitset::Bitset(std::bitset< MAXBITS>& data): std::bitset< MAXBITS>(data)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Bitset::Bitset(bitsetPtr bitset): std::bitset< MAXBITS>(*bitset)
+Bitset::Bitset(bitsetPtr bitset)
+  : std::bitset< MAXBITS>(*bitset)
 {
   NEW;
 }

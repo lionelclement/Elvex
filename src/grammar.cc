@@ -30,16 +30,17 @@
  *
  ************************************************** */
 Grammar::Grammar(void) {
-  NEW;
   this->firstRule = NULL;
   this->startTerm = NULL;
   this->idMax = 0;
+  NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Grammar::~Grammar(void) {
+  DELETE;
   terminals.clear();
   nonTerminals.clear();
   for (ruleList::const_iterator iterRules = rulesBegin();
@@ -51,14 +52,12 @@ Grammar::~Grammar(void) {
   }
   rules.clear();
   if (startTerm){
-    delete startTerm;
-    startTerm = NULL;
+    startTerm.reset();
   }
   if (firstRule){
     delete firstRule;
     firstRule = NULL;
   }
-  DELETE;
 }
 
 /* **************************************************
@@ -87,7 +86,7 @@ const ruleList &Grammar::getRules(void) const {
 /* **************************************************
  *
  ************************************************** */
-class Term *Grammar::getStartTerm(void) const {
+termPtr Grammar::getStartTerm(void) const {
   return startTerm;
 }
 
@@ -108,7 +107,7 @@ const unsigned int *Grammar::getRefIdMax(void) const {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::setStartTerm(class Term *startTerm) {
+void Grammar::setStartTerm(termPtr startTerm) {
   this->startTerm = startTerm;
 }
 
@@ -140,7 +139,7 @@ void Grammar::addRule(class Rule *rule) {
  ************************************************** */
 void Grammar::addNewStartTerm(bool addENDTerminal) {
   class Rule *r;
-  std::vector<class Terms *> rhs;
+  std::vector<termsPtr > rhs;
 
   if (addENDTerminal) {
     terminals.insert(Vartable::_END_);
@@ -149,12 +148,12 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
   Vartable::intToStrTable[Vartable::_STARTTERM_] = "_STARTTERM_";
   nonTerminals.insert(Vartable::_STARTTERM_);
 
-  rhs.push_back(new Terms(getStartTerm()));
+  rhs.push_back(Terms::create(getStartTerm()));
   if (addENDTerminal) {
-    rhs.push_back(new Terms(new class Term(Vartable::_END_)));
+    rhs.push_back(Terms::create(Term::create(Vartable::_END_)));
   }
 
-  class Term *startTerm = new class Term(Vartable::_STARTTERM_);
+  termPtr startTerm = Term::create(Vartable::_STARTTERM_);
   std::string fileName = "";
   r = new Rule(0, fileName, startTerm, rhs);
   setStartTerm(startTerm);
@@ -227,7 +226,7 @@ void Grammar::addTerminal(unsigned int s) {
 /* **************************************************
  *
  ************************************************** */
-bool Grammar::isTerminal(class Term *t) const {
+bool Grammar::isTerminal(termPtr t) const {
   std::set<unsigned int>::const_iterator iter = terminals.find(t->getCode());
   return (iter != terminals.end());
 }
@@ -235,7 +234,7 @@ bool Grammar::isTerminal(class Term *t) const {
 /* **************************************************
  *
  ************************************************** */
-bool Grammar::isNonTerminal(class Term *t) const {
+bool Grammar::isNonTerminal(termPtr t) const {
   std::set<unsigned int>::const_iterator iter = nonTerminals.find(t->getCode());
   return (iter != nonTerminals.end());
 }
@@ -254,7 +253,7 @@ void Grammar::analyseTerms(class Synthesizer &synthesizer) {
   for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
     unsigned int i;
     for (i = 0; i < (*iterRules)->getRhs().size(); ++i) {
-      for (std::vector<class Term *>::const_iterator term = (*iterRules)->getTerms(i)->begin();
+      for (std::vector<termPtr >::const_iterator term = (*iterRules)->getTerms(i)->begin();
 	   term != (*iterRules)->getTerms(i)->end();
 	   ++term) {
 	if (nonTerminals.find((*term)->getCode()) == nonTerminals.end()) {
@@ -303,7 +302,7 @@ Grammar::toXML(xmlNodePtr nodeRoot)
  *
  ************************************************** */
 std::list<class Rule*> *
-Grammar::findRules(class Term *lhs) {
+Grammar::findRules(termPtr lhs) {
   std::list<class Rule*> *result = new std::list<class Rule*>;
   ruleList::const_iterator iterRules;
   for (iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++) {

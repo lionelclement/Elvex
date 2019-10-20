@@ -35,7 +35,7 @@
     
   public:
   enum Type {
-    PRED=0,
+    PRED = 0,
     CONSTANT,
     FORM,
     VARIABLE,
@@ -53,7 +53,7 @@
     
   public:
     ~Feature();
-    static featurePtr create(enum Type type=CONSTANT, bitsetPtr attribute=bitsetPtr(), valuePtr value=valuePtr());
+    static featurePtr create(enum Type type = CONSTANT, bitsetPtr attribute=bitsetPtr(), valuePtr value = valuePtr());
     
     const bitsetPtr getAttribute(void) const;
   void setAttribute(const bitsetPtr);

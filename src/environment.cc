@@ -45,6 +45,7 @@ Environment::Environment()
  ************************************************** */
 Environment::~Environment()
 {
+	  DELETE;
   for (unordered_map::iterator i = env.begin();
        i != env.end();
        ++i) {
@@ -52,7 +53,6 @@ Environment::~Environment()
     if (tmp)
       tmp.reset();
   }
-  DELETE;    
 }
 
 /* **************************************************

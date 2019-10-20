@@ -53,9 +53,9 @@ private:
   double number;
 
 public:
-  static valuePtr _nil;
-  static valuePtr _anonymous;
-  static valuePtr _true;
+  static valuePtr NIL;
+  static valuePtr ANONYMOUS_VARIABLE;
+  static valuePtr TRUE;
 
   Type type;
   featuresPtr features; // pour encoder les SF
@@ -109,7 +109,7 @@ public:
   bool eq(valuePtr ) const;
   bool lt(valuePtr ) const;
   bool findVariable(bitsetPtr);
-  void apply(itemPtr item, class Synthesizer *, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body);
+  void apply(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body);
   
 };
 

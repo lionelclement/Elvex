@@ -35,10 +35,10 @@
 #endif
 
 class Bitset:
-  public std::enable_shared_from_this< Bitset >,
+  public std::bitset<MAXBITS>,
   public Serializable,
-  public std::bitset<MAXBITS> {
-
+  public std::enable_shared_from_this< Bitset > {
+  
   typedef std::map<unsigned int, std::string> map;
 
 private:

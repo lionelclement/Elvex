@@ -28,8 +28,8 @@
  ************************************************** */
 ItemSet::ItemSet (unsigned int id)
 {
-  NEW;
   this->id = id;
+  NEW;
 }
 
 /* **************************************************
@@ -37,6 +37,7 @@ ItemSet::ItemSet (unsigned int id)
  ************************************************** */
 ItemSet::~ItemSet()
 {
+	  DELETE;
   for (iterator it = items.begin();
        it != items.end();
        ++it){
@@ -45,7 +46,6 @@ ItemSet::~ItemSet()
       (tmp).reset();
   }
   items.clear();
-  DELETE;
 }
 
 /* **************************************************

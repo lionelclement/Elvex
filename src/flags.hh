@@ -41,7 +41,7 @@ private:
 public:
   Flags(void);
   Flags(const std::bitset<NBRFLAGS> &flags);
-  ~Flags(void);
+  //~Flags(void);
   
   std::bitset<NBRFLAGS> &getFlags(void);
   bool isSetFlags(const std::bitset<NBRFLAGS>&  cmp) const;

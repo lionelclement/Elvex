@@ -25,9 +25,9 @@
  ************************************************************ */
 MemoizationValue::MemoizationValue(featuresPtr features, forestIdentifierPtr forestIdentifier)
 {
-  NEW;
   this->features = features;
   this->forestIdentifier = forestIdentifier;
+  NEW;
 }
 
 /* ************************************************************

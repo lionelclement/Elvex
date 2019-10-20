@@ -33,12 +33,12 @@
  ************************************************** */
 Tree::Tree(Tree *child, Tree *sibling, class Info *info, char letter)
 {
-  NEW;
   this->address=0;
   this->child = child;
   this->sibling = sibling;
   this->info = info;
   this->letter = letter;
+  NEW;
 }
 
 /* **************************************************

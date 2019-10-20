@@ -27,28 +27,48 @@
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, class Term *lhs, std::vector<class Terms *> &rhs, statementsPtr statements)
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr > &rhs, statementsPtr statements)
+  : Id(id)
 {
-  NEW;
+  this->lineno = lineno;
+  this->filename = filename;
   this->lhs = lhs;
   this->rhs = rhs;
   this->statements = statements;
   this->usages = 0;
-  this->lineno = lineno;
-  this->filename = filename;
+  NEW;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, class Term *lhs, statementsPtr statements)
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements)
+  : Id(id)
 {
-  NEW;
+  this->lineno = lineno;
+  this->filename = filename;
   this->lhs = lhs;
   this->statements = statements;
   this->usages = 0;
-  this->lineno = lineno;
-  this->filename = filename;
+  NEW;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+Rule::Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr > &rhs, statementsPtr statements)
+  : Rule(0, lineno, filename, lhs, rhs, statements)
+{
+  NEW;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+Rule::Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements)
+  : Rule(0, lineno, filename, lhs, statements) 
+{
+  NEW;
 }
 
 /* ************************************************************
@@ -56,8 +76,9 @@ Rule::Rule(unsigned int lineno, std::string filename, class Term *lhs, statement
  ************************************************************ */
 Rule::~Rule()
 {
+  DELETE;
   /*
-  for (std::vector <class Terms *>::iterator term=rhs.begin();
+  for (std::vector <termsPtr >::iterator term=rhs.begin();
        term != rhs.end();
        term++)
     if (*term)
@@ -74,13 +95,12 @@ Rule::~Rule()
 
   }
   */
-  //DELETE;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-class Term *Rule::getLhs(void) const 
+termPtr Rule::getLhs(void) const 
 {
   return lhs;
 }
@@ -88,7 +108,7 @@ class Term *Rule::getLhs(void) const
 /* ************************************************************
  *
  ************************************************************ */
-std::vector<class Terms *> &Rule::getRhs(void)
+std::vector<termsPtr > &Rule::getRhs(void)
 {
   return this->rhs;
 }
@@ -96,7 +116,7 @@ std::vector<class Terms *> &Rule::getRhs(void)
 /* ************************************************************
  *
  ************************************************************ */
-class Terms *
+termsPtr 
 Rule::getTerms(unsigned int index) const
 {
   return this->rhs[index];
@@ -179,12 +199,11 @@ Rule::print(std::ostream& outStream, unsigned int index, bool withSemantic, bool
 class Rule * 
 Rule::clone() const 
 {
-  std::vector<class Terms *> rhsCopy;
+  std::vector<termsPtr > rhsCopy;
   for(unsigned int i=0; i<rhs.size(); ++i)
     rhsCopy.push_back(rhs[i]->clone());
-  class Rule *rule = new Rule(this->lineno, this->filename, lhs, rhsCopy, statements);
+  class Rule *rule = new Rule(this->getId(), this->lineno, this->filename, lhs, rhsCopy, statements);
   rule->usages = usages;
-  rule->id = this->id;
   return rule;
 }
 
@@ -201,7 +220,7 @@ Rule::toXML(xmlNodePtr nodeRoot)
   // lhs->toXML(hs);
   // hs=xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
   // for(unsigned int i=0; i<rhs.size(); i++){
-  //   for (vector <class Terms *>::const_iterator term=rhs[i]->begin();
+  //   for (vector <termsPtr >::const_iterator term=rhs[i]->begin();
   // 	 term != rhs[i]->end();
   // 	 term++) {
   //     (*term)->toXML(hs);

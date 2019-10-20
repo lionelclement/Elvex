@@ -33,13 +33,13 @@ ForestMap::ForestMap()
  ************************************************** */
 ForestMap::~ForestMap()
 {
+	  DELETE;
   for (map::iterator i=data.begin();
        i!=data.end(); ++i){
     forestPtr tmp = i->second;
     if (tmp)
       tmp.reset();
   }
-  DELETE;
 }
 
 /* **************************************************

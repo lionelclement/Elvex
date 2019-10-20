@@ -32,9 +32,9 @@ class ItemSet:
   public std::enable_shared_from_this< class ItemSet > {
 
 public:
-  typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to > set;
-  typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to >::const_iterator const_iterator;
-  typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to >::iterator iterator;
+  typedef std::unordered_set< itemPtr, Item::hash, Item::equal_to > set;
+  typedef std::unordered_set< itemPtr, Item::hash, Item::equal_to >::const_iterator const_iterator;
+  typedef std::unordered_set< itemPtr, Item::hash, Item::equal_to >::iterator iterator;
 
 private:
   unsigned int id;

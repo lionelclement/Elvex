@@ -69,6 +69,7 @@ list.cc\
 vartable.cc
 
 elvex_OPTIONS =
+#elvex_OPTIONS += -DTRACE_MALLOC
 elvex_OPTIONS += -DMEMOIZATION
 elvex_OPTIONS += -DMEMOIZATION_SHIFT
 elvex_OPTIONS += -DMEMOIZATION_REDUCE

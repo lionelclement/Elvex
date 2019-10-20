@@ -31,7 +31,7 @@ private:
   std::set<unsigned int> terminals;
   std::set<unsigned int> nonTerminals;
   ruleList rules;
-  class Term *startTerm;
+  termPtr startTerm;
   class Rule *firstRule;
   unsigned int idMax;
   
@@ -42,10 +42,10 @@ private:
   std::set<unsigned int> &getTerminals(void);
   std::set<unsigned int> &getNonTerminals(void);
   const ruleList &getRules(void) const;
-  class Term *getStartTerm(void) const;
+  termPtr getStartTerm(void) const;
   class Rule *getFirstRule(void) const;
   const unsigned int *getRefIdMax(void) const;
-  void setStartTerm(class Term* startTerm);
+  void setStartTerm(termPtr  startTerm);
   
   ruleList::const_iterator rulesBegin(void) const;
   ruleList::const_iterator rulesEnd(void) const;
@@ -54,13 +54,13 @@ private:
   void addNonTerminal(unsigned int);
   void addTerminal(unsigned int);
   void print(std::ostream &, class Gitem *) const;
-  bool isTerminal(class Term *) const;
-  bool isNonTerminal(class Term *) const;
+  bool isTerminal(termPtr ) const;
+  bool isNonTerminal(termPtr ) const;
   void analyseTerms(class Synthesizer&);
 #ifdef OUTPUT_XML
   void toXML(xmlNodePtr);
 #endif
-  std::list<class Rule *> *findRules(class Term *lhs);
+  std::list<class Rule *> *findRules(termPtr lhs);
 };
 
 #endif // GRAMMAR_H

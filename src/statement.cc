@@ -38,7 +38,6 @@
  *
  ************************************************** */
 Statement::Statement(unsigned int lineno, type op, std::string str) {
-  NEW;
   this->lineno = lineno;
   this->op = op;
   this->lhs = statementPtr();
@@ -52,6 +51,7 @@ Statement::Statement(unsigned int lineno, type op, std::string str) {
   this->list = listPtr();
   this->statements = statementsPtr();
   this->number = 0;
+  NEW;
 }
 
 /* **************************************************
@@ -59,7 +59,6 @@ Statement::Statement(unsigned int lineno, type op, std::string str) {
  ************************************************** */
 Statement::Statement(unsigned int lineno, type op, statementPtr lhs, statementPtr rhs, unsigned int first, unsigned int second, featuresPtr features, bitsetPtr bits,
 		     arithmetic_op fct, listPtr list, statementsPtr statements, double number) {
-  NEW;
   this->lineno = lineno;
   this->op = op;
   this->lhs = lhs;
@@ -73,13 +72,14 @@ Statement::Statement(unsigned int lineno, type op, statementPtr lhs, statementPt
   this->list = list;
   this->statements = statements;
   this->number = number;
+  NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Statement::~Statement(void) {
-  //DELETE;
+  DELETE;
 }
 
 /* **************************************************
@@ -933,7 +933,7 @@ featuresPtr Statement::evalFeatures(itemPtr item, Synthesizer *synthesizer, bool
   std::cout << "</div>" << std::endl;
 #endif
 
-  featuresPtr resultFeatures = Features::_nil;
+  featuresPtr resultFeatures = Features::NIL;
   switch (this->op) {
   case STR:
   case DASH:
@@ -1044,7 +1044,7 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
   this->print(std::cout);
   std::cout << "</div>" << std::endl;
 #endif
-  listPtr resultList = List::nil;
+  listPtr resultList = List::NILLIST;
   switch (this->op) {
   case STR:
   case DASH:
@@ -1090,7 +1090,7 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
 	resultList = listPtr();
       }
       else if (value->isNil())
-	resultList = List::nil;
+	resultList = List::NILLIST;
       else if (value->isList())
 	resultList = value->getList()->clone();
       else
@@ -1133,16 +1133,16 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
   listPtr resultList = listPtr();
   switch (this->op) {
   case NIL:
-    resultValue = Value::_nil;
+    resultValue = Value::NIL;
     break;
   case NOT_NIL:
-    resultValue = Value::_true;
+    resultValue = Value::TRUE;
     break;
   case FINISHED:
     if (item->isCompleted())
-      resultValue = Value::_true;
+      resultValue = Value::TRUE;
     else
-      resultValue = Value::_nil;
+      resultValue = Value::NIL;
     break;
 
   case PRINT:
@@ -1161,22 +1161,22 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 
   case DASH:
     {
-      class Terms *t = item->getTerms(getFirst());
+      termsPtr t = item->getTerms(getFirst());
       // if (#i) false
       if (t->isOptional())
-	resultValue = Value::_nil;
+	resultValue = Value::NIL;
       else {
 	// if (#i)
 	if (getSecond()==UINT_MAX) {
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	}
 	//if (#i:j)
 	else {
 	  if (getSecond() == item->getIndexTerms()[getFirst()]) {
-	    resultValue = Value::_true;
+	    resultValue = Value::TRUE;
 	  }
 	  else {
-	    resultValue = Value::_nil;
+	    resultValue = Value::NIL;
 	  }
 	}
       }
@@ -1396,9 +1396,9 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isFalse()) || (v2->isFalse()))
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	else
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	goto valueBuilt;
       }
       break;
@@ -1409,9 +1409,9 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isFalse()) && (v2->isFalse()))
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	else
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	goto valueBuilt;
       }
       break;
@@ -1420,22 +1420,22 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
 	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
 	if ((!v1) && (!v2))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 
 	else if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 
 	else if ((v1->isAnonymous()) && (v2->isAnonymous()))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 
 	else if ((v1->isAnonymous()) || (v2->isAnonymous()))
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 
 	else if (v1->eq(v2))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 
 	else
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 
 	goto valueBuilt;
       }
@@ -1445,25 +1445,25 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
 	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
 	if ((!v1) && (!v2)) {
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	}
 
 	else if ((!v1) || (!v2)) {
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	}
 
 	else if ((v1->isAnonymous()) && (v2->isAnonymous()))
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 
 	else if ((v1->isAnonymous()) || (v2->isAnonymous()))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 
 	else if (v1->eq(v2)) {
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	}
 
 	else {
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	}
 	goto valueBuilt;
       }
@@ -1474,12 +1474,12 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	}
 	else if (v1->lt(v2))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	else
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	goto valueBuilt;
       }
       break;
@@ -1489,12 +1489,12 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	}
 	else if ((v1->lt(v2)) || (v1->eq(v2)))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	else
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	goto valueBuilt;
       }
       break;
@@ -1504,12 +1504,12 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	}
 	else if (!(v1->lt(v2)) && (!(v1->eq(v2))))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	else
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	goto valueBuilt;
       }
       break;
@@ -1519,12 +1519,12 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	}
 	else if (!(v1->lt(v2)))
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	else
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	goto valueBuilt;
       }
       break;
@@ -1533,9 +1533,9 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
 	if (!v1
 	    || v1->isFalse())
-	  resultValue = Value::_true;
+	  resultValue = Value::TRUE;
 	else
-	  resultValue = Value::_nil;
+	  resultValue = Value::NIL;
 	goto valueBuilt;
       }
       break;
@@ -1563,9 +1563,9 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
   }
   else if (resultFeatures) {
     if (resultFeatures->isNil())
-      resultValue = Value::_nil;
+      resultValue = Value::NIL;
     else if (resultFeatures->isBottom())
-      resultValue = Value::_nil;
+      resultValue = Value::NIL;
     else {
       if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
 	bool effect = false;
@@ -1612,11 +1612,11 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
   featuresPtr result = featuresPtr();
 
   if (fs1->isBottom() || fs2->isBottom()) {
-    result = Features::_bottom;
+    result = Features::BOTTOM;
     goto endUnif;
   }
   if (fs1->isNil() && fs2->isNil()) {
-    result = Features::_nil;
+    result = Features::NIL;
     goto endUnif;
   }
   if (fs1->isNil()) {
@@ -1641,7 +1641,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	    switch ((*i2)->getValue()->getType()) {
 	    case Value::IDENTIFIER:
 	      if ((*i1)->getValue()->getIdentifier() != (*i2)->getValue()->getIdentifier()) {
-		result = Features::_bottom;
+		result = Features::BOTTOM;
 		goto endUnif;
 	      }
 	      break;
@@ -1701,7 +1701,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	    FATAL_ERROR_STM;
 
 	  if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr()) {
-	    result = Features::_bottom;
+	    result = Features::BOTTOM;
 	    goto endUnif;
 	  }
 	  break;
@@ -1718,7 +1718,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	if (((*i2)->getType() == Feature::CONSTANT) && (*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()) {
 	  (*i2)->addFlags(Flags::SEEN);
 	  if ((!(*i1)->getValue()) || (!(*i2)->getValue())) {
-	    result = Features::_bottom;
+	    result = Features::BOTTOM;
 	    goto endUnif;
 	  }
 
@@ -1728,7 +1728,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	    switch ((*i2)->getValue()->getType()) {
 	    case Value::STR:
 	      if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr()) {
-		result = Features::_bottom;
+		result = Features::BOTTOM;
 		goto endUnif;
 	      }
 	      result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), (*i1)->getValue()));
@@ -1756,7 +1756,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	      switch ((*i2)->getValue()->getType()) {
 	      case Value::BOOL:
 		if ((*i1)->getValue()->isNil() != (*i2)->getValue()->isNil()) {
-		  result = Features::_bottom;
+		  result = Features::BOTTOM;
 		  goto endUnif;
 		}
 
@@ -1780,7 +1780,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	      switch ((*i2)->getValue()->getType()) {
 	      case Value::DOUBLE:
 		if ((*i1)->getValue()->getDouble() != (*i2)->getValue()->getDouble()) {
-		  result = Features::_bottom;
+		  result = Features::BOTTOM;
 		  goto endUnif;
 		}
 
@@ -1804,7 +1804,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	      switch ((*i2)->getValue()->getType()) {
 	      case Value::IDENTIFIER:
 		if ((*i1)->getValue()->getIdentifier() != (*i2)->getValue()->getIdentifier()) {
-		  result = Features::_bottom;
+		  result = Features::BOTTOM;
 		  goto endUnif;
 		}
 
@@ -1828,7 +1828,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	      switch ((*i2)->getValue()->getType()) {
 	      case Value::CONSTANT:
 		if (((*(*i1)->getValue()->getBits()) & (*(*i2)->getValue()->getBits())).none()) {
-		  result = Features::_bottom;
+		  result = Features::BOTTOM;
 		  goto endUnif;
 		}
 
@@ -2220,7 +2220,7 @@ void Statement::stmAttest(itemPtr item, class Synthesizer *synthesizer, bool &re
   switch (this->op) {
   case ATTEST: {
     valuePtr res = lhs->evalValue(item, synthesizer, true);
-    if ((!res) || (res == Value::_nil) || (res == Value::_anonymous) || ((res->getType() == Value::FEATURES) && (res->getFeatures()->isBottom()))) {
+    if ((!res) || (res == Value::NIL) || (res == Value::ANONYMOUS_VARIABLE) || ((res->getType() == Value::FEATURES) && (res->getFeatures()->isBottom()))) {
       result = false;
     }
   }
@@ -2236,12 +2236,12 @@ void Statement::stmAttest(itemPtr item, class Synthesizer *synthesizer, bool &re
  ************************************************************ */
 void Statement::stmGuard(itemPtr item, bool &result, bool trace) {
   /***
-      STD::CERR_LINE;
-      std::cerr << "<DIV>guard ";
-      item->print(std::cerr, NULL);
-      print(std::cerr);
-      std::cerr << "</DIV>";
-  ***/
+  CERR_LINE;
+  std::cerr << "<DIV>guard ";
+  item->print(std::cerr);
+  print(std::cerr);
+  std::cerr << "</DIV>";
+   ***/
   if (isSetFlags(Flags::DISABLED | Flags::SEEN)) {
     FATAL_ERROR_STM;
   }
@@ -2271,10 +2271,10 @@ void Statement::stmGuard(itemPtr item, bool &result, bool trace) {
     }
   }
   /***
-      std::cerr << "<DIV>guard done";
-      item->print(std::cerr, NULL);
-      std::cerr << "</DIV>";
-  ***/
+  std::cerr << "<DIV>guard done";
+  item->print(std::cerr);
+  std::cerr << "</DIV>";
+   ***/
 }
 
 /* ************************************************************
@@ -2597,7 +2597,7 @@ void Statement::apply(itemPtr item, Synthesizer *synthesizer, bool &result, bool
       valuePtr res = getLhs()->evalValue(item, synthesizer, true);
       if (!res)
 	resif = 0;
-      else if (res == Value::_nil || res == Value::_anonymous) {
+      else if (res == Value::NIL || res == Value::ANONYMOUS_VARIABLE) {
 	resif = 2;
 	left->addFlags(Flags::REJECTED);
 	if (right)

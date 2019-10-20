@@ -22,27 +22,30 @@
 
 #include <iostream>
 #include "flags.hh"
+#include "ipointer.hh"
 
 class Term:
-  public Flags {
+  public Flags,
+  public std::enable_shared_from_this< class Term > {
 
 private:
   unsigned int code;
+  Term(unsigned int code);
 
 public:
-  Term(unsigned int code = 0);
   ~Term();
+  static termPtr create(unsigned int code = 0);
 
   unsigned int getCode(void) const;
   void print(std::ostream &outStream = std::cout) const;
   std::string toString() const;
-  class Term *clone() const;
+  termPtr clone() const;
 
   // compare deux termes
   struct Less {
-    const bool operator() (const Term *t1, const Term *t2) const;
+    const bool operator() (const termPtr t1, const termPtr t2) const;
   };
 
-};  
+};
 
 #endif // TERM_H

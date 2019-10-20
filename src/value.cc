@@ -28,16 +28,15 @@
 #include "ipointer.hh"
 #include "synthesizer.hh"
 
-valuePtr Value::_nil = Value::create(Value::BOOL, (unsigned int)0);
-valuePtr Value::_true = Value::create(Value::BOOL, (unsigned int)1);
-valuePtr Value::_anonymous = Value::create(Value::ANONYMOUS);
+valuePtr Value::NIL = Value::create(Value::BOOL, (unsigned int)0);
+valuePtr Value::TRUE = Value::create(Value::BOOL, (unsigned int)1);
+valuePtr Value::ANONYMOUS_VARIABLE = Value::create(Value::ANONYMOUS);
 
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, std::string str)
+Value::Value(Value::Type const type, std::string str): Id(0)
 {
-  NEW;
   this->type = type;
   this->integer = 0;
   this->number = 0;
@@ -49,20 +48,21 @@ Value::Value(Value::Type const type, std::string str)
   else if (type == STR){
     this->str = str;
   }
+  NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr bits, featuresPtr features, listPtr list)
+Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr bits, featuresPtr features, listPtr list): Id(0)
 {
-  NEW;
   this->type = type;
   this->integer = integer;
   this->number = number;
   this->bits = bits;
   this->features = features;
   this->list = list;
+  NEW;
 }
 
 /* **************************************************
@@ -70,11 +70,11 @@ Value::Value(Value::Type const type, unsigned int integer, double number, bitset
  ************************************************** */
 Value::~Value()
 {
-  //if (bits)
-  //  bits->reset();
-  //if (list)
-  //list->reset();
-  //DELETE;
+  DELETE;
+  if (bits)
+    bits.reset();
+  if (list)
+    list.reset();
 }
 
 /* **************************************************
@@ -149,7 +149,6 @@ bitsetPtr Value::getBits(void) const
   return bits;
 }
 
-
 /* **************************************************
  *
  ************************************************** */
@@ -158,7 +157,6 @@ unsigned int Value::getIdentifier(void) const
   return integer;
 }
 
-
 /* **************************************************
  *
  ************************************************** */
@@ -166,7 +164,6 @@ featuresPtr Value::getFeatures(void) const
 {
   return features;
 }
-
 
 /* **************************************************
  *
@@ -460,7 +457,6 @@ Value::toXML(xmlNodePtr nodeRoot) const
 
   }
 }
-
 #endif
 
 /* **************************************************
@@ -499,19 +495,20 @@ bool
 Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptToFilterNULLVariables, bool root)
 {
   /***
-      std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
-      std::cerr << "<table border=\"1\"><tr><th></th><th></th><th>Environment</th></tr>";
-      std::cerr << "<tr><td>";
-      this->print(std::cerr);
-      std::cerr << "</td><td>";
-      if (value)
-      value->print(std::cerr);
-      else
-      std::cerr << "NULL";
-      std::cerr << "</td><td>";
-      environment->print(std::cerr);
-      std::cerr << "</td></tr></table>";
-  ***/
+  CERR_LINE;
+  std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
+  std::cerr << "<table border=\"1\"><tr><th></th><th></th><th>Environment</th></tr>";
+  std::cerr << "<tr><td>";
+  this->print(std::cerr);
+  std::cerr << "</td><td>";
+  if (value)
+    value->print(std::cerr);
+  else
+    std::cerr << "NULL";
+  std::cerr << "</td><td>";
+  environment->print(std::cerr);
+  std::cerr << "</td></tr></table>";
+   ***/
       
   bool ret = true;
   switch(type){
@@ -524,6 +521,10 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
   case FEATURES:
     if (value->type == FEATURES){
       if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(), acceptToFilterNULLVariables, root))
+	ret = false;
+    }
+    else if (value->type == ANONYMOUS){
+      if (!this->getFeatures()->buildEnvironment(environment, Features::create(), acceptToFilterNULLVariables, root))
 	ret = false;
     }
     else
@@ -539,6 +540,8 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
     else if (value->type == IDENTIFIER){
       if (Vartable::intToStr(getIdentifier()) != getBits()->toString())
 	ret = false;
+    }
+    else if (value->type == ANONYMOUS){
     }
     else {
       this->print(std::cerr);
@@ -571,12 +574,14 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
     }
     else if (value->type == VARIABLE)
       environment->add(value->getBits(), shared_from_this());
+    else if (value->type == ANONYMOUS)
+      environment->add(value->getBits(), shared_from_this());
     else
       ret = false;
     break;
   case VARIABLE:
     if (!value)
-      environment->add(this->getBits(), _nil);
+      environment->add(this->getBits(), NIL);
     else
       environment->add(this->getBits(), value);
     break;
@@ -584,12 +589,12 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
     break;
   }
   /***
-      std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
-      std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-      std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-      environment->print(std::cerr);
-      std::cerr << "</td></tr></table>";
-  ***/
+  std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
+  std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+  std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+  environment->print(std::cerr);
+  std::cerr << "</td></tr></table>";
+   ***/
   return ret;
 }
 

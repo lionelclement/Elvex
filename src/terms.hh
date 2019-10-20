@@ -26,40 +26,47 @@
 #include <libxml/tree.h>
 #endif
 #include "flags.hh"
+#include "ipointer.hh"
 
-class Terms {
+class Terms :
+  public std::enable_shared_from_this< class Terms > {
 
 private:
-  std::vector< class Term * > terms;
+  std::vector< termPtr > terms;
   bool optional;
 
+  Terms(std::vector< termPtr > &, bool optional);
+  Terms(termPtr , bool optional);
+  Terms(void);
+
 public:
-  Terms(std::vector<class Term *> &, bool optional = false);
-  Terms(class Term *, bool optional = false);
   ~Terms();
+  static termsPtr create(std::vector< termPtr > &, bool optional = false);
+  static termsPtr create(termPtr, bool optional = false);
+  static termsPtr create(void);
 
   bool isOptional(void) const;
   void setOptional(void);
   void unsetOptional(void);
 
   size_t size(void) const;
-  std::vector<class Term *>::const_iterator begin(void) const;
-  std::vector<class Term *>::const_iterator end(void) const;
-  void erase(std::vector<class Term*>::iterator begin, std::vector<class Term *>::iterator end);
-  void push_back(class Term * term);
+  std::vector< termPtr >::const_iterator begin(void) const;
+  std::vector< termPtr >::const_iterator end(void) const;
+  void erase(std::vector< termPtr >::iterator begin, std::vector< termPtr >::iterator end);
+  void push_back(termPtr term);
 
   void print(std::ostream &outStream=std::cout);
-  class Terms *clone(void) const;
+  termsPtr clone(void) const;
 #ifdef OUTPUT_XML
   void toXML(xmlNodePtr);
 #endif
 
   // compare deux termes
   struct Less {
-    const bool operator() (const class Terms *t1, const class Terms *t2) const;
+    const bool operator() (const termsPtr t1, const termsPtr t2) const;
   };
 
-  class Term *operator[] (unsigned int);
+  termPtr operator[] (unsigned int);
 };  
 
 #endif // TERMS_H

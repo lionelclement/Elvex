@@ -28,12 +28,12 @@
 /* ************************************************************
  * 
  ************************************************************ */
-Feature::Feature(enum Feature::Type type, bitsetPtr attribute, valuePtr value)
+Feature::Feature(enum Feature::Type type, bitsetPtr attribute, valuePtr value): Id(0)
 {
-  NEW;
   this->type=type;
   this->attribute = attribute;
   this->value = value;
+  NEW;
 }
 
 /* ************************************************************
@@ -41,11 +41,11 @@ Feature::Feature(enum Feature::Type type, bitsetPtr attribute, valuePtr value)
  ************************************************************ */
 Feature::~Feature()
 {
+  DELETE;
   if (attribute)
     attribute.reset();
   if (value)
     value.reset();
-  DELETE;
 }
 
 /* ************************************************************

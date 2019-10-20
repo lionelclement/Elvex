@@ -27,7 +27,6 @@
 #include <sys/stat.h>
 #include <string.h>
 
-#include "buildlexicon.hh"
 #include "info.hh"
 #include "lex.hh"
 

@@ -26,8 +26,8 @@
  ************************************************** */
 Term::Term(unsigned int code)
 {
+  this->code = code;
   NEW;
-  this->code=code;
 }
 
 /* **************************************************
@@ -35,7 +35,15 @@ Term::Term(unsigned int code)
  ************************************************** */
 Term::~Term()
 {
-  //DELETE;
+  DELETE;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+termPtr Term::create(unsigned int code)
+{
+  return termPtr( new Term(code) );
 }
 
 /* **************************************************
@@ -49,7 +57,7 @@ unsigned int Term::getCode(void) const
 /* **************************************************
  *
  ************************************************** */
-const bool Term::Less::operator() (const class Term* t1, const class Term* t2) const
+const bool Term::Less::operator() (const termPtr t1, const termPtr t2) const
 {
   if (t1->getCode() != t2->getCode())
     return (t1->getCode() < t2->getCode());
@@ -77,8 +85,8 @@ Term::toString() const
 /* **************************************************
  *
  ************************************************** */
-class Term* 
+termPtr
 Term::clone() const
 {
-  return new Term(code);
+  return create(code);
 }

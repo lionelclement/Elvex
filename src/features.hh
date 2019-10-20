@@ -38,8 +38,8 @@ class Features:
   
 public:
   typedef std::list< featurePtr > listFeatures;
-  static featuresPtr _nil;
-  static featuresPtr _bottom;
+  static featuresPtr NIL;
+  static featuresPtr BOTTOM;
 
 private:
   listFeatures features;

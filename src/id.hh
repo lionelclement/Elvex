@@ -25,16 +25,12 @@
 class Id {  
   
 private:
-  static unsigned int uniqId;
-  
-protected:
-  unsigned int id; // uniq id
+  static std::size_t uniqId;
+  std::size_t id;
   
 public:
-  Id(void);
-  virtual ~Id(void);
-  
-  const unsigned int getId(void) const;
+  Id(size_t id);
+  std::size_t getId(void) const;
   
 };
 

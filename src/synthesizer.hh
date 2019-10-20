@@ -50,28 +50,30 @@
 class Synthesizer {
 
 public:
-  typedef std::unordered_map<std::string const, entryPtr, std::hash<std::string>, std::equal_to<std::string> > string_to_entry_map;
+  typedef std::unordered_map<std::string const, entryPtr, std::hash<std::string>, std::equal_to<std::string> > entry_map;
   // pos => (PRED => entries)
   // verb => (manger => (mangions, mange|mange))
-  typedef std::map< unsigned int, std::map< unsigned int, entriesPtr >* > lexicon_map;
+  typedef std::map< unsigned int, entriesPtr > entries_map;
+  typedef std::map< unsigned int, entries_map * > entries_map_map;
   typedef std::map< unsigned int, itemPtr > item_map;
-
-
+  typedef std::map< unsigned int, itemSetPtr > itemSet_map;
+  typedef std::unordered_map<std::string, featuresPtr > features_map;
+  
 private:
   class Grammar grammar;
-  std::map< unsigned int, itemSetPtr > states;
+  itemSet_map states;
 
-  lexicon_map lexicon;
+  entries_map_map lexicon;
   
   // Associe un identifieur de foret à une foret
   class ForestMap forestMap;
   item_map itemMap;
   nodePtr nodeRoot;
   featuresPtr startFeatures;
-  class Term *startTerm;
+  termPtr startTerm;
   class Lex *compactLexicon;
   entryPtr localEntry; //flying lexical entry
-  string_to_entry_map mapLocalEntry;
+  entry_map mapLocalEntry;
   unsigned int maxLength;
   unsigned int maxUsages;
   unsigned int maxCardinal;
@@ -83,7 +85,7 @@ private:
 
   std::list<std::string> inputs;
 
-  std::unordered_map<std::string, featuresPtr > macros;
+  features_map macros;
 
   std::string lexiconString;
   std::string grammarString;
@@ -119,8 +121,8 @@ public:
 
   class Grammar &getGrammar(void);
   void setGrammar(class Grammar &grammar);
-  std::map< unsigned int, itemSetPtr >::const_iterator begin(void) const;
-  std::map< unsigned int, itemSetPtr >::const_iterator end(void) const;
+  itemSet_map::const_iterator begin(void) const;
+  itemSet_map::const_iterator end(void) const;
   size_t size(void) const;
 
   void pushBufferName(std::string);
@@ -162,8 +164,8 @@ public:
   void setStartFeatures(featuresPtr);
   featuresPtr getStartFeatures(void) const;
 
-  class Term *getStartTerm(void) const;
-  void setStartTerm(class Term *);
+  termPtr getStartTerm(void) const;
+  void setStartTerm(termPtr );
 
   
   void addInput(std::string);
@@ -188,11 +190,11 @@ public:
 #endif
 
   nodePtr getNodeRoot(void);
-  lexicon_map &getLexicon(void);
-  void setLexicon(lexicon_map &);
-  lexicon_map::const_iterator findLexicon(const unsigned int i) const;
-  lexicon_map::const_iterator beginLexicon(void) const;
-  lexicon_map::const_iterator endLexicon(void) const;
+  entries_map_map &getLexicon(void);
+  void setLexicon(entries_map_map &);
+  entries_map_map::const_iterator findLexicon(const unsigned int i) const;
+  entries_map_map::const_iterator beginLexicon(void) const;
+  entries_map_map::const_iterator endLexicon(void) const;
 
   entryPtr getLocalEntry(void) const;
   void setLocalEntry(entryPtr);

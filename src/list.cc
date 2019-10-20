@@ -26,19 +26,19 @@
 #include "grammar.hh"
 #include "statement.hh"
 
-listPtr List::nil=List::create();
+listPtr List::NILLIST = List::create();
 bitsetPtr List::gwith;
 
 /* **************************************************
  *
  ************************************************** */
-List::List(enum List::Type type, valuePtr value, listPtr car, listPtr cdr)
+List::List(enum List::Type type, valuePtr value, listPtr car, listPtr cdr): Id(0)
 {
+  this->type = type;
+  this->value = value;
+  this->pairp.car = car;
+  this->pairp.cdr = cdr;
   NEW;
-  this->type=type;
-  this->value=value;
-  this->pairp.car=car;
-  this->pairp.cdr=cdr;
 }
 
 /* **************************************************
@@ -46,7 +46,11 @@ List::List(enum List::Type type, valuePtr value, listPtr car, listPtr cdr)
  ************************************************** */
 List::~List()
 {
-  //DELETE;
+  DELETE;
+  if (pairp.car)
+	  pairp.car.reset();
+  if (pairp.cdr)
+	  pairp.cdr.reset();
 }
 
 /* **************************************************
@@ -94,7 +98,7 @@ valuePtr List::getValue(void) const
  ************************************************************ */
 void List::setValue(valuePtr value)
 {
-  this->value=value;
+  this->value = value;
 }
 
 /* ************************************************************
@@ -150,7 +154,7 @@ listPtr List::cdar(void) const
  ************************************************************ */
 bool List::isNil(void) const 
 {
-  return (this->type==List::NIL);
+  return (this->type == List::NIL);
 }
 
 /* ************************************************************
@@ -158,7 +162,7 @@ bool List::isNil(void) const
  ************************************************************ */
 bool List::isAtom(void) const 
 {
-  return (this->type==List::ATOM);
+  return (this->type == List::ATOM);
 }
 
 /* ************************************************************
@@ -166,7 +170,7 @@ bool List::isAtom(void) const
  ************************************************************ */
 bool List::isPairp(void) const 
 {
-  return (this->type==PAIRP);
+  return (this->type == PAIRP);
 }
 
 /* ************************************************************
@@ -204,13 +208,13 @@ List::makeSerialString(void)
 {
   switch (type){
   case NIL:
-    serialString = 'N';
+    serialString  =  'N';
     break;
   case ATOM:
-    serialString = value->peekSerialString();
+    serialString  =  value->peekSerialString();
     break;
   case PAIRP:
-    serialString = '<' + car()->peekSerialString();
+    serialString  =  '<' + car()->peekSerialString();
     if (cdr()->isAtom()){
       serialString += ':' + cdr()->peekSerialString();
     }
@@ -287,76 +291,87 @@ List::flatPrint(std::ostream& outStream, bool par) const
  *
  ************************************************** */
 bool
-List::buildEnvironment(environmentPtr environment, listPtr list, bool acceptToFilterNULLVariables, bool root)
+List::buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root)
 {
-  bool ret=true;
+  bool ret = true;
   /***
-      cerr << "<H4>List::buildEnvironment</H4>" << endl;
-      cerr << "<table border=\"1\"><tr><th>this</th><th>list</th><th>Environment</th></tr>";
-      cerr << "<tr><td>";
-      this->print(cerr);
-      cerr << "</td><td>";
-      list->print(cerr);
-      cerr << "</td><td>";
-      environment->print(cerr);
-      cerr << "</td></tr></table>";
-  ***/
-
+  std::cerr << "<H4>List::buildEnvironment</H4>" << std::endl;
+  std::cerr << "<table border = \"1\"><tr><th>this</th><th>list</th><th>Environment</th></tr>";
+  std::cerr << "<tr><td>";
+  this->flatPrint(std::cerr, true);
+  std::cerr << "</td><td>";
+  otherList->flatPrint(std::cerr, true);
+  std::cerr << "</td><td>";
+  environment->print(std::cerr);
+  std::cerr << "</td></tr></table>";
+   ***/
+  
   switch (this->type){
-  case NIL:
-    break;
-  case ATOM:
-    if (this->value->getType()==Value::VARIABLE){
-      if (list){
-	switch (list->getType()){
-	case NIL:
-	  environment->add(this->value->getBits(), Value::_nil);
-	  break;
-	case ATOM:
-	  environment->add(this->value->getBits(), list->getValue());
-	  break;
-	case PAIRP:
-	  environment->add(this->value->getBits(), Value::create(Value::LIST, list));
-	  break;
-	}
-      }
-      else {
-	FATAL_ERROR;
-      }
-    }
-    else if (!list){
-      ret=false;
-    }
-    else if (list->getType()==ATOM){
-      if (list->value->getType()==Value::VARIABLE)
-	environment->add(list->value->getBits(), this->getValue());
-      else if (!this->value->buildEnvironment(environment, list->value, acceptToFilterNULLVariables, root))
-	ret=false;
-    }
-    else
-      ret=false;
-    break;
-  case PAIRP:
-    if (list->getType()==PAIRP){
-      if (!this->car()->buildEnvironment(environment, list->car(), acceptToFilterNULLVariables, root)){
-	ret=false;
-	break;
-      }
-      if (!this->cdr()->buildEnvironment(environment, list->cdr(), acceptToFilterNULLVariables, root)){
-	ret=false;
-      }
-    }
-    else
-      ret=false;
-    break;
+	  case NIL:
+		  if (otherList->type == NIL){
+			  ret=true;
+		  }
+		  else if ((otherList->type == ATOM) && (otherList->value->getType() == Value::VARIABLE)){
+			  environment->add(otherList->value->getBits(), Value::NIL);
+		  }
+		  else {
+			  ret = false;
+		  }
+		  break;
+	  case ATOM:
+		  if (this->value->getType() == Value::VARIABLE){
+			  if (!otherList){
+				  FATAL_ERROR;
+			  } else {
+				  switch (otherList->getType()){
+					  case NIL:
+						  environment->add(this->value->getBits(), Value::NIL);
+						  break;
+					  case ATOM:
+						  environment->add(this->value->getBits(), otherList->getValue());
+						  break;
+					  case PAIRP:
+						  environment->add(this->value->getBits(), Value::create(Value::LIST, otherList));
+						  break;
+				  }
+			  }
+		  }
+		  else if (!otherList){
+			  ret = false;
+		  }
+		  else if (otherList->getType() == ATOM){
+			  if (otherList->value->getType() == Value::VARIABLE)
+				  environment->add(otherList->value->getBits(), this->getValue());
+			  else if (!this->value->buildEnvironment(environment, otherList->value, acceptToFilterNULLVariables, root))
+				  ret = false;
+		  }
+		  else
+			  ret = false;
+		  break;
+	  case PAIRP:
+		  if (otherList->getType() == PAIRP) {
+			  if ((this->car()->getType() == NIL) && (otherList->car()->getType() == NIL)) {
+				  ret = true;
+			  } else if (!this->car()->buildEnvironment(environment, otherList->car(), acceptToFilterNULLVariables, root)){
+				  ret = false;
+			  } else if ((this->cdr()->getType() == NIL) && (otherList->cdr()->getType() == NIL)) {
+				  ret = true;
+			  } else if (!this->cdr()->buildEnvironment(environment, otherList->cdr(), acceptToFilterNULLVariables, root)){
+				  ret = false;
+			  }
+		  }
+		  else
+			  ret = false;
+		  break;
   }
+
   /***
-      cerr << "<H4>Result List::buildEnvironment</H4>" << endl;
-      cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-      cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-      environment->print(cerr);
-      cerr << "</td></tr></table>";
-  ***/
+  std::cerr << "<H4>Result List::buildEnvironment</H4>" << std::endl;
+  std::cerr << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+  std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+  environment->print(std::cerr);
+  std::cerr << "</td></tr></table>";
+   ***/
   return ret;
 }
 
@@ -386,17 +401,17 @@ List::deleteAnonymousVariables()
 bool
 List::renameVariables(unsigned int i)
 {
-  bool effect=false;
+  bool effect = false;
   switch (type){
   case NIL:
     break;
   case ATOM:
     if (value)
-      if (value->renameVariables(i)) effect=true;
+      if (value->renameVariables(i)) effect = true;
     break;
   case PAIRP:
-    if (car()->renameVariables(i)) effect=true;
-    if (cdr()->renameVariables(i)) effect = true;
+    if (car()->renameVariables(i)) effect = true;
+    if (cdr()->renameVariables(i)) effect  =  true;
     break;
   }
   return effect;
@@ -410,7 +425,7 @@ List::renameVariables(unsigned int i)
 void 
 List::toXML(xmlNodePtr nodeRoot)
 {
-  xmlNodePtr l=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"LIST", NULL);
+  xmlNodePtr l = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"LIST", NULL);
   switch (type){
   case NIL:
     break;
@@ -433,7 +448,7 @@ List::clone() const
 {
   switch (type){
   case NIL:
-    return nil;
+    return NILLIST;
     break;
   case ATOM:
     if (value)
@@ -454,27 +469,27 @@ List::subsumes(listPtr o, environmentPtr environment)
 {
   /***
       BUG;
-      this->print(cerr);
-      cerr << " ";
-      o->print(cerr);
-      cerr << endl;
+      this->print(std::cerr);
+      std::cerr << " ";
+      o->print(std::cerr);
+      std::cerr << std::endl;
   ***/
   switch (type){
     // NIL < L
   case NIL:
-    if (o->getType()!=NIL)
+    if (o->getType() != NIL)
       return false;
     break;
     // atom < L
   case ATOM:
-    if (o->getType()!=ATOM)
+    if (o->getType() != ATOM)
       return false;
     else if (!value->subsumes(o->getValue(), environment))
       return false;
     break;
     // (a1::a2) < L
   case PAIRP:
-    if (o->getType()!=PAIRP)
+    if (o->getType() != PAIRP)
       return false;
     else if (!car()->subsumes(o->car(), environment))
       return false;
@@ -500,7 +515,7 @@ List::pushFront(valuePtr value)
     break;
   case PAIRP:
     {
-      listPtr n=create(create(value), shared_from_this());
+      listPtr n = create(create(value), shared_from_this());
       return n;
       break;
     }
@@ -523,11 +538,11 @@ List::pushBack(valuePtr value)
     break;
   case PAIRP:
     {
-      listPtr m=this->clone();
-      listPtr n=m;
-      while (n->cdr()!=List::nil)
-	n=n->cdr();
-      n->pairp.cdr=create(create(value), List::nil);
+      listPtr m = this->clone();
+      listPtr n = m;
+      while (n->cdr() != List::NILLIST)
+	n = n->cdr();
+      n->pairp.cdr = create(create(value), List::NILLIST);
       return m;
       break;
     }
@@ -582,7 +597,7 @@ List::findVariable(bitsetPtr variable)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(itemPtr item, Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body)
+void List::apply(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body)
 {
   switch (type){
   case NIL:

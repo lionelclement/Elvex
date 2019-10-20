@@ -28,11 +28,11 @@
 /* **************************************************
  *
  ************************************************** */
-Statements::Statements(statementPtr statement)
+Statements::Statements(statementPtr statement): Id(0)
 {
-  NEW;
   if (statement)
     statements.push_front(statement);
+  NEW;
 }
 
 /* **************************************************
@@ -40,9 +40,9 @@ Statements::Statements(statementPtr statement)
  ************************************************** */
 Statements::~Statements()
 { 
+	  DELETE;
   for (std::list<statementPtr >::iterator i = statements.begin(); i != statements.end(); ++i)
     i->reset();
-  DELETE;
 }
 
 /* **************************************************

@@ -34,7 +34,7 @@ class List:
   
 public:
   enum Type {ATOM, PAIRP, NIL};
-  static listPtr nil;
+  static listPtr NILLIST;
 
 private:
   static bitsetPtr gwith;

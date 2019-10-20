@@ -49,7 +49,6 @@ extern void scan_string(std::string);
  *
  ************************************************** */
 Synthesizer::Synthesizer(void) {
-  NEW;
   this->compactLexicon = NULL;
   this->maxLength = MAXLENGTH;
   this->maxUsages = MAXUSAGES;
@@ -68,13 +67,14 @@ Synthesizer::Synthesizer(void) {
   this->trace = false;
   this->warning = false;
   this->random = false;
+  NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Synthesizer::~Synthesizer(void) {
-  //DELETE;
+  DELETE;
 }
 
 /* **************************************************
@@ -95,14 +95,14 @@ void Synthesizer::setGrammar(class Grammar &grammar) {
 /* **************************************************
  *
  ************************************************** */
-std::map< unsigned int, itemSetPtr>::const_iterator Synthesizer::begin(void) const {
+Synthesizer::itemSet_map::const_iterator Synthesizer::begin(void) const {
   return states.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::map< unsigned int, itemSetPtr>::const_iterator Synthesizer::end(void) const {
+Synthesizer::itemSet_map::const_iterator Synthesizer::end(void) const {
   return states.end();
 }
 
@@ -292,7 +292,7 @@ featuresPtr Synthesizer::getStartFeatures(void) const {
 /* **************************************************
  *
  ************************************************** */
-class Term *
+termPtr 
 Synthesizer::getStartTerm(void) const {
   return startTerm;
 }
@@ -300,7 +300,7 @@ Synthesizer::getStartTerm(void) const {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setStartTerm(class Term *startTerm) {
+void Synthesizer::setStartTerm(termPtr startTerm) {
   this->startTerm = startTerm;
 }
 
@@ -452,7 +452,7 @@ bool Synthesizer::getTraceAction(void)
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::lexicon_map &
+Synthesizer::entries_map_map &
 Synthesizer::getLexicon(void) {
   return lexicon;
 }
@@ -460,7 +460,7 @@ Synthesizer::getLexicon(void) {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setLexicon(lexicon_map &lexicon) {
+void Synthesizer::setLexicon(entries_map_map &lexicon) {
   this->lexicon = lexicon;
 }
 
@@ -474,21 +474,21 @@ std::list<std::string> &Synthesizer::getInputs(void) {
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::lexicon_map::const_iterator Synthesizer::findLexicon(unsigned int i) const {
+Synthesizer::entries_map_map::const_iterator Synthesizer::findLexicon(unsigned int i) const {
   return lexicon.find(i);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::lexicon_map::const_iterator Synthesizer::beginLexicon(void) const {
+Synthesizer::entries_map_map::const_iterator Synthesizer::beginLexicon(void) const {
   return lexicon.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::lexicon_map::const_iterator Synthesizer::endLexicon(void) const {
+Synthesizer::entries_map_map::const_iterator Synthesizer::endLexicon(void) const {
   return lexicon.end();
 }
 
@@ -599,11 +599,11 @@ class ForestMap Synthesizer::getForestMap(void) {
  ************************************************** */
 void Synthesizer::printLexicon(std::ostream& out) const {
   out << "<ul>";
-  for (lexicon_map::const_iterator i = beginLexicon(); i != endLexicon(); ++i) {
+  for (entries_map_map::const_iterator i = beginLexicon(); i != endLexicon(); ++i) {
     out << "<li>";
     out << Vartable::intToStr((*i).first);
     out << "<ul>";
-    for (std::map< unsigned int, entriesPtr>::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
+    for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
       out << "<li>";
       if ((*j).first == 0)
 	out << "0 = &gt; ";
@@ -767,12 +767,12 @@ void Synthesizer::close(itemSetPtr state, unsigned int row) {
 #endif
 
 	(*actualItem)->addFlags(Flags::SEEN);
-	class Terms *terms = (*actualItem)->getCurrentTerms();
+	termsPtr terms = (*actualItem)->getCurrentTerms();
 	for (unsigned int indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1) {
 	  itemPtr it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
 	  it->setRule((*actualItem)->getRule()->clone());
 	  it->setIndex((*actualItem)->getIndex());
-	  it->setCurrentTerms(new Terms((*terms)[indexTerm1]));
+	  it->setCurrentTerms(Terms::create((*terms)[indexTerm1]));
 	  it->getIndexTerms()[(*actualItem)->getIndex()] = indexTerm1;
 
 #ifdef TRACE_UNHIDE
@@ -1199,11 +1199,11 @@ bool Synthesizer::shift(itemSetPtr state, unsigned int row) {
 		std::cerr << "form:" << form << std::endl;
 		//std::cerr << "POS : " << Vartable::intToStr((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
 		*/
-	      lexicon_map::const_iterator foundCode = lexicon.find((*actualItem)->getCurrentTerm()->getCode());
+	      entries_map_map::const_iterator foundCode = lexicon.find((*actualItem)->getCurrentTerm()->getCode());
 	      if (foundCode != lexicon.end() && (foundCode->second->size() != 0)) {
-		std::map< unsigned int, entriesPtr> *listPred = foundCode->second;
+		entries_map *listPred = foundCode->second;
 		if (listPred) {
-		  std::map< unsigned int, entriesPtr>::const_iterator found;
+		  entries_map::const_iterator found;
 		  // stages : // 1) : without PRED or FORM
 		  // 2) : with FORM
 		  // 3) : with PRED
@@ -1253,19 +1253,12 @@ bool Synthesizer::shift(itemSetPtr state, unsigned int row) {
 		    // Found !
 		    if (entries) {
 		      cont = false;
-		      std::vector<entryPtr>::const_iterator entryIt = entries->begin();
-		      entryPtr entry;
-		      if (this->getRandom()) {
-			unsigned int rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
-			entry = entries->get(rv);
-		      }
-		      else {
-		      }
-		      unsigned int attempts = 1;
-		      while (entryIt != entries->end()) {
-			if (!this->getRandom())
-			  entry = *entryIt;
-
+		      for (Entries::list::const_iterator entryIt = entries->begin();
+			   entryIt != entries->end() ;
+			   ++entryIt ) {
+			entryPtr entry = *entryIt;
+			
+			
 			featuresPtr entryFeatures = entry->getFeatures() ? entry->getFeatures()->clone() : featuresPtr();
 			statementsPtr entryStatements = statementsPtr();
 			environmentPtr env = (*actualItem)->getEnvironment() ? (*actualItem)->getEnvironment()->clone() : Environment::create();
@@ -1359,23 +1352,6 @@ bool Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			  modificationOnce = true;
 			  (*actualItem)->addFlags(Flags::SEEN);
 			}
-			if (this->getRandom()) {
-			  if (modification) {
-			    break;
-			  }
-			  else {
-			    if (++attempts > MAXATTEMPTS) {
-			      std::cerr << "*** Random error: no lexical entry matching ";
-			      (*actualItem)->getCurrentTerm()->print(std::cerr);
-			      inheritedSonFeatures->print(std::cerr);
-			      std::cerr << std::endl;
-			      exit(1);
-			    }
-			    unsigned int rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
-			    entry = entries->get(rv);
-			  }
-			}
-			++entryIt;
 		      }
 		    }
 		  }
@@ -1524,7 +1500,7 @@ const entriesPtr Synthesizer::findCompactLexicon(const unsigned int code, const 
 	  localEntry->setCode(code);
 	  localEntry->setForm(form);
 	  std::string localEntrySerialString = localEntry->peekSerialString();
-	  string_to_entry_map::iterator found = mapLocalEntry.find(localEntrySerialString);
+	  entry_map::iterator found = mapLocalEntry.find(localEntrySerialString);
 	  if (found != mapLocalEntry.end()) {
 	    entries->add(found->second);
 	  }

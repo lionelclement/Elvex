@@ -29,9 +29,8 @@
 /* **************************************************
  *
  ************************************************** */
-Forest::Forest(entryPtr  entry, unsigned int from, unsigned int to)
+Forest::Forest(entryPtr  entry, unsigned int from, unsigned int to): Id(0)
 {
-  NEW;
   this->entry=entry;
   this->from=from;
   this->to=to;
@@ -39,6 +38,7 @@ Forest::Forest(entryPtr  entry, unsigned int from, unsigned int to)
     this->empty=true;
   else
     this->empty=false;
+  NEW;
 }
 
 /* **************************************************
@@ -54,6 +54,7 @@ forestPtr Forest::create(entryPtr  entry, unsigned int from, unsigned int to)
  ************************************************** */
 Forest::~Forest()
 {
+	  DELETE;
   for(vectorNodes::iterator n=nodes.begin() ; n!=nodes.end() ; ++n) {
     nodePtr tmp = *n;
     if (tmp)
@@ -61,7 +62,6 @@ Forest::~Forest()
   }
   if (entry)
     entry.reset();
-  DELETE;
 }
 
 /* **************************************************

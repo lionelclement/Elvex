@@ -39,69 +39,72 @@
  *
  ************************************************** */
 Item::Item (class Rule *rule, 
-	      unsigned int index,
-	      unsigned int indexTerm,
-	      statementsPtr statements)//: Item(rule, index, indexTerm, statements)
+	    unsigned int index,
+	    statementsPtr statements)
+  :Id(0)
 {
-  NEW;
-  this->rule=rule;
-  this->index=index;
-  this->statements=statements;
-  this->environment = environmentPtr();
+  this->rule = rule;
+  this->index = index;
   this->statements = statements;
-  this->inheritedFeatures = Features::_nil;
-  this->synthesizedFeatures = Features::_nil;
+  this->environment = environmentPtr();
+  this->inheritedFeatures = Features::NIL;
+  this->synthesizedFeatures = Features::NIL;
   this->synthesizedSonFeatures = ListFeatures::create();
   this->inheritedSonFeatures = ListFeatures::create();
-
-  std::vector<class Terms*> terms = rule->getRhs();
-  unsigned j=0;
-  for (std::vector<class Terms*>::const_iterator i = terms.begin();
-       i != terms.end();
-       ++i, ++j){
-    this->indexTerms.push_back(0);
-    this->seen.push_back(false);
-    this->forestIdentifiers.push_back(forestIdentifierPtr());
-    this->synthesizedSonFeatures->push_back(Features::_nil);
-    this->inheritedSonFeatures->push_back(Features::_nil);
-  }
-
-  if ((terms.size() < index) && (index != UINT_MAX))
-    this->indexTerms[index]=indexTerm;
-
+  NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Item::Item (class Rule *rule, 
-	      unsigned int index,
-	      std::vector<unsigned int>& indexTerms,
-	      statementsPtr statements)
+	    unsigned int index,
+	    unsigned int indexTerm,
+	    statementsPtr statements)
+  :Item (rule, 
+	 index,
+	 statements)
 {
-  NEW;
-  this->rule=rule;
-  this->index=index;
-  this->indexTerms=indexTerms;
-  this->statements=statements;
-  this->environment = environmentPtr();
-  this->statements = statements;
-  this->inheritedFeatures = Features::_nil;
-  this->synthesizedFeatures = Features::_nil;
-  synthesizedSonFeatures = ListFeatures::create();
-  inheritedSonFeatures = ListFeatures::create();
-  
-  std::vector<class Terms*> terms = rule->getRhs();
-  unsigned j=0;
-  for (std::vector< class Terms * >::iterator i = terms.begin();
+  std::vector< termsPtr > terms = rule->getRhs();
+  unsigned j = 0;
+  for (std::vector<termsPtr >::const_iterator i = terms.begin();
        i != terms.end();
        ++i, ++j){
     this->indexTerms.push_back(0);
     this->seen.push_back(false);
     this->forestIdentifiers.push_back(forestIdentifierPtr());
-    this->synthesizedSonFeatures->push_back(Features::_nil);
-    this->inheritedSonFeatures->push_back(Features::_nil);
+    this->synthesizedSonFeatures->push_back(Features::NIL);
+    this->inheritedSonFeatures->push_back(Features::NIL);
   }
+  if ((terms.size() < index) && (index != UINT_MAX))
+    this->indexTerms[index] = indexTerm;
+  NEW;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Item::Item (class Rule *rule, 
+	    unsigned int index,
+	    std::vector<unsigned int> &indexTerms,
+	    statementsPtr statements)
+  :Item (rule, 
+	 index,
+	 statements)
+{
+  this->indexTerms = indexTerms;
+  std::vector< termsPtr > terms = rule->getRhs();
+  unsigned j = 0;
+  for (std::vector<termsPtr >::const_iterator i = terms.begin();
+       i != terms.end();
+       ++i, ++j){
+    this->indexTerms.push_back(0);
+    this->seen.push_back(false);
+    this->forestIdentifiers.push_back(forestIdentifierPtr());
+    this->synthesizedSonFeatures->push_back(Features::NIL);
+    this->inheritedSonFeatures->push_back(Features::NIL);
+  }
+  NEW;
 }
 
 /* **************************************************
@@ -109,6 +112,7 @@ Item::Item (class Rule *rule,
  ************************************************** */
 Item::~Item ()
 {
+  DELETE;
   refs.clear();
   seen.clear();
   ranges.clear();
@@ -132,7 +136,6 @@ Item::~Item ()
     statements.reset();
   if (environment)
     environment.reset();
-  DELETE;
 }
 
 /* **************************************************
@@ -224,7 +227,7 @@ statementsPtr Item::getStatements(void)
 /* **************************************************
  *
  ************************************************** */
-class Terms *
+termsPtr 
 Item::getTerms(const unsigned int index) const
 {
   return rule->getRhs()[index];
@@ -233,7 +236,7 @@ Item::getTerms(const unsigned int index) const
 /* **************************************************
  *
  ************************************************** */
-class Terms *
+termsPtr 
 Item::getCurrentTerms() const
 {
   if ((this->index == UINT_MAX) || (this->index >= this->getRhs().size()))
@@ -245,7 +248,7 @@ Item::getCurrentTerms() const
  *
  ************************************************** */
 void
-Item::setCurrentTerms(class Terms *terms)
+Item::setCurrentTerms(termsPtr terms)
 {
   this->rule->getRhs()[this->index] = terms;
 }
@@ -253,10 +256,10 @@ Item::setCurrentTerms(class Terms *terms)
 /* **************************************************
  *
  ************************************************** */
-class Term *
+termPtr 
 Item::getCurrentTerm(void) const 
 {
-  class Terms *terms = getCurrentTerms();
+  termsPtr terms = getCurrentTerms();
   if ((terms == NULL) || (terms->size() == 0))
     return NULL;
   return (*terms)[0];
@@ -265,7 +268,7 @@ Item::getCurrentTerm(void) const
 /* **************************************************
  *
  ************************************************** */
-class Term *
+termPtr 
 Item::getLhs(void) const 
 {
   return rule->getLhs();
@@ -274,7 +277,7 @@ Item::getLhs(void) const
 /* **************************************************
  *
  ************************************************** */
-std::vector<class Terms *> &
+std::vector<termsPtr > &
 Item::getRhs(void) const
 {
   return rule->getRhs();
@@ -544,9 +547,9 @@ Item::addEnvironment(environmentPtr e, environmentPtr where)
  *
  ************************************************** */
 void Item::defaultInheritedSonFeatures (){
-  std::vector<class Terms*> terms = this->getRhs();
+  std::vector<termsPtr > terms = this->getRhs();
   std::vector< bool > assignedInheritedSonFeatures;
-  for (std::vector<class Terms*>::const_iterator it = terms.begin();
+  for (std::vector<termsPtr >::const_iterator it = terms.begin();
        it != terms.end();
        ++it)
     assignedInheritedSonFeatures.push_back(false);
@@ -679,7 +682,7 @@ Item::print(std::ostream& out) const
   }
   if (s_terms){
     out << "<td>";
-    class Terms *terms = getCurrentTerms();
+    termsPtr terms = getCurrentTerms();
     if (terms)
       terms->print(out);
     else
@@ -866,12 +869,10 @@ void
 Item::makeSerialString()
 {
   serialString = std::to_string(getRule()->getId());
-  
   if (getIndex()==UINT_MAX)
     serialString += '+';
   else
     serialString += std::to_string(getIndex());
-  
   serialString += '|';
   std::vector<unsigned int>::const_iterator ind = indexTerms.begin();
   while (ind != indexTerms.end())

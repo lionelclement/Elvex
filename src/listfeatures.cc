@@ -26,7 +26,7 @@
 /* **************************************************
  *
  ************************************************** */
-ListFeatures::ListFeatures(void)
+ListFeatures::ListFeatures(void): Id(0)
 {
   NEW;
 }
@@ -36,11 +36,11 @@ ListFeatures::ListFeatures(void)
  ************************************************** */
 ListFeatures::~ListFeatures(void)
 {
+	  DELETE;
   for (std::vector<featuresPtr >::iterator i = listFeatures.begin();
        i != listFeatures.end();
        ++i)
     i->reset();
-  DELETE;
 }
 
 /* **************************************************

@@ -29,6 +29,7 @@
 #include "bitset.hh"
 #include "grammar.hh"
 #include "term.hh"
+#include "terms.hh"
 #include "entry.hh"
 #include "entries.hh"
 #include "synthesizer.hh"
@@ -87,9 +88,9 @@
 %union{
   unsigned int integer_slot;
   double double_slot;
-  class Term *term_slot;
-  class Terms *terms_slot; //(A|B)
-  std::vector< class Terms * > *vector_terms_slot; // X Y
+  termPtr *term_slot;
+  termsPtr *terms_slot; //(A|B)
+  std::vector< termsPtr  > *vector_terms_slot; // X Y
   std::string *string_slot;
   entryPtr *entry_slot;
   entriesPtr *entries_slot;
@@ -190,7 +191,7 @@ declaration:
 
 	|TOKEN_INPUT term features {
 	  DBUGPRT("declaration input");
-	  synthesizer.setStartTerm($2);
+	  synthesizer.setStartTerm(*$2);
 	  (*$3)->renameVariables((*$3)->getId());
 	  synthesizer.setStartFeatures(*$3);
 	  free($3);
@@ -198,7 +199,7 @@ declaration:
 
 	|TOKEN_INPUT term {
 	  DBUGPRT("declaration input");
-	  synthesizer.setStartTerm($2);
+	  synthesizer.setStartTerm(*$2);
 	  synthesizer.setStartFeatures(Features::create());
 	 }
 
@@ -242,15 +243,15 @@ dictionary_line:
 	  unsigned int code=Vartable::strToInt(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  std::map< unsigned int, std::map< unsigned int, entriesPtr > *>::iterator foundCode = synthesizer.getLexicon().find(code);
-	  std::map< unsigned int, entriesPtr > *zeroToEntries;
-	  if (foundCode!=synthesizer.getLexicon().end()){
-	    zeroToEntries=foundCode->second;
+	  Synthesizer::entries_map_map::iterator foundCode = synthesizer.getLexicon().find(code);
+	  Synthesizer::entries_map *zeroToEntries;
+	  if (foundCode != synthesizer.getLexicon().end()){
+	    zeroToEntries = foundCode->second;
 	  } else {
-	    zeroToEntries = new std::map< unsigned int, entriesPtr >;
+	    zeroToEntries = new Synthesizer::entries_map();
 	    synthesizer.getLexicon().insert(std::make_pair(code, zeroToEntries));
 	  }
-	  std::map< unsigned int, entriesPtr >::iterator foundPred=zeroToEntries->find(0);
+	  Synthesizer::entries_map::iterator foundPred=zeroToEntries->find(0);
 	  entriesPtr lp;
 	  if (foundPred!=zeroToEntries->end()){
 	    lp=foundPred->second;
@@ -267,15 +268,15 @@ dictionary_line:
 	  unsigned int code=Vartable::strToInt(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  std::map< unsigned int, std::map< unsigned int, entriesPtr > *>::iterator foundCode=synthesizer.getLexicon().find(code);
-	  std::map< unsigned int, entriesPtr > *zeroToEntries;
+	  Synthesizer::entries_map_map::iterator foundCode=synthesizer.getLexicon().find(code);
+	  Synthesizer::entries_map *zeroToEntries;
 	  if (foundCode!=synthesizer.getLexicon().end()) {
 	    zeroToEntries=foundCode->second;
 	  } else {
-	    zeroToEntries = new std::map< unsigned int, entriesPtr >;
+	    zeroToEntries = new Synthesizer::entries_map;
 	    synthesizer.getLexicon().insert(std::make_pair(code, zeroToEntries));
 	  }
-	  std::map< unsigned int, entriesPtr >::iterator foundPred=zeroToEntries->find(0);
+	  Synthesizer::entries_map::iterator foundPred=zeroToEntries->find(0);
 	  entriesPtr lp;
 	  if (foundPred!=zeroToEntries->end()){
 	    lp=foundPred->second;
@@ -291,7 +292,7 @@ dictionary_line:
 	|stringOrIdentifier lexical_entries TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  for (std::vector< entryPtr >::const_iterator entry = (*$2)->begin();
+	  for (Entries::list::const_iterator entry = (*$2)->begin();
 	       entry != (*$2)->end();
 	       ++entry){
 	    (*entry)->setForm(*$1);
@@ -300,16 +301,16 @@ dictionary_line:
 	    //    entry != (*$2)->end();
 	    //   ++entry){
 	    entriesPtr lp;
-	    std::map< unsigned int, entriesPtr > *predToEntries;
+	    Synthesizer::entries_map *predToEntries;
 	    //std::cerr << (*entry)->getCode() << std::endl;
-	    std::map< unsigned int, std::map< unsigned int, entriesPtr > *>::iterator foundCode = synthesizer.getLexicon().find((*entry)->getCode());
+	    Synthesizer::entries_map_map::iterator foundCode = synthesizer.getLexicon().find((*entry)->getCode());
 	    if (foundCode != synthesizer.getLexicon().end()){
 	      predToEntries = foundCode->second;
 	    } else {
-	      predToEntries = new std::map< unsigned int, entriesPtr >;
+	      predToEntries = new Synthesizer::entries_map;
 	      synthesizer.getLexicon().insert(std::make_pair((*entry)->getCode(), predToEntries));
 	    }
-	    std::map< unsigned int, entriesPtr >::iterator foundPred = predToEntries->find((*entry)->getCodePred());
+	    Synthesizer::entries_map::iterator foundPred = predToEntries->find((*entry)->getCodePred());
 	    if (foundPred != predToEntries->end()){
 	      lp = foundPred->second;
 	    } else {
@@ -388,11 +389,11 @@ rule:
 	term TOKEN_RIGHTARROW terms_vector structure_statement
 	{
 	  DBUGPRT("rule");
-	  class Rule *rule = new Rule(globalLineno, globalBufferName, $1, *$3, $4 ? *$4 : statementsPtr());
+	  class Rule *rule = new Rule(globalLineno, globalBufferName, *$1, *$3, $4 ? *$4 : statementsPtr());
 	  rule->addDefaults();
 	  synthesizer.getGrammar().addRule(rule);
 	  if (!synthesizer.getGrammar().getStartTerm()){
-	    synthesizer.getGrammar().setStartTerm($1);
+	    synthesizer.getGrammar().setStartTerm(*$1);
 	  }
 	  free($3);
 	  if ($4)
@@ -402,11 +403,11 @@ rule:
 	|term TOKEN_RIGHTARROW structure_statement
 	{
 	  DBUGPRT("Rule");
-	  class Rule *rule = new Rule(globalLineno, globalBufferName, $1, $3 ? *$3 : statementsPtr());
+	  class Rule *rule = new Rule(globalLineno, globalBufferName, *$1, $3 ? *$3 : statementsPtr());
 	  rule->addDefaults();
 	  synthesizer.getGrammar().addRule(rule);
 	  if (!synthesizer.getGrammar().getStartTerm()){
-	    synthesizer.getGrammar().setStartTerm($1);
+	    synthesizer.getGrammar().setStartTerm(*$1);
 	  }
 	  if ($3)
 	    free($3);
@@ -416,13 +417,13 @@ terms_vector:
 	terms_vector terms { 
 	  DBUGPRT("term_vector");
 	  $$=$1;
-	  $$->push_back($2);
+	  $$->push_back(*$2);
 	}
 
 	|terms { 
 	  DBUGPRT("term_vector"); 
-	  $$ = new std::vector< class Terms*>;
-	  $$->push_back($1);
+	  $$ = new std::vector< termsPtr >;
+	  $$->push_back(*$1);
 	};
 	
 terms:
@@ -433,22 +434,22 @@ terms:
 
 	|TOKEN_LBRACKET terms_disj TOKEN_RBRACKET { 
 	  DBUGPRT("term");
-	  $$=$2;
-	  $$->setOptional();
+	  $$ = $2;
+	  (*$$)->setOptional();
 	};
 
 terms_disj:
 	terms_disj TOKEN_PIPE term
 	{ 
 	  DBUGPRT("term_disj");
-	  $$=$1;
-	  $$->push_back($3);
+	  $$ = $1;
+	  (*$$)->push_back(*$3);
 	}
 
 	|term
 	{ 
 	  DBUGPRT("term_disj"); 
-	  $$ = new Terms($1);
+	  $$ = new termsPtr(Terms::create(*$1));
 	};
 	
 term:
@@ -456,7 +457,7 @@ term:
 	{ 
 	  DBUGPRT("term_id");
 	  unsigned int code = Vartable::strToInt(*$1);
-	  $$ = new Term(code);
+	  $$ = new termPtr(Term::create(code));
 	  free($1);
 	}
 
@@ -464,7 +465,7 @@ term:
 	{ 
 	  DBUGPRT("term_id");
 	  unsigned int code=Vartable::strToInt(*$1);
-	  $$ = new Term(code);
+	  $$ = new termPtr(Term::create(code));
 	  free($1);
 	};
 
@@ -1186,19 +1187,19 @@ feature_value:
 	|TOKEN_NIL
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::_nil);
+	  $$ = new valuePtr(Value::NIL);
 	}
 
 	|TOKEN_TRUE
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::_true);
+	  $$ = new valuePtr(Value::TRUE);
 	}
 
 	|TOKEN_ANONYMOUS
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::_anonymous);
+	  $$ = new valuePtr(Value::ANONYMOUS_VARIABLE);
 	};
 
 constant:
@@ -1244,7 +1245,7 @@ list:
 	|TOKEN_LT TOKEN_GT
 	{
 	  DBUGPRT("list");
-	  $$ = new listPtr(List::nil);
+	  $$ = new listPtr(List::NILLIST);
 	}
 
 	|TOKEN_LT list_elements TOKEN_DOUBLECOLON list_element TOKEN_GT
@@ -1256,6 +1257,16 @@ list:
 	    $$ = new listPtr(List::create(*$2, *$4));
 	  free($2);
 	  free($4);
+	}
+
+	|TOKEN_LT list_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
+	{
+	  DBUGPRT("list");
+	  if ((*$2)->isPairp() && (*$2)->cdr()->isNil())
+	    $$ = new listPtr(List::create((*$2)->car(), List::NILLIST));
+	  else
+	    $$ = new listPtr(List::create(*$2, List::NILLIST));
+	  free($2);
 	};
 
 list_elements:
@@ -1270,7 +1281,7 @@ list_elements:
 	|list_element
 	{
 	  DBUGPRT("list_elements");
-	  $$ = new listPtr(List::create(*$1, List::nil));
+	  $$ = new listPtr(List::create(*$1, List::NILLIST));
 	  free($1);
 	};
 

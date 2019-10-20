@@ -63,13 +63,13 @@ public:
     IF,
     THENELSE,
     FOREACH,
-	IN,
-	STMS,
+    IN,
+    STMS,
     STR,
     LIST,
     DOUBLE,
     FCT,
-	SEARCH,
+    SEARCH,
     FINISHED
   };
 

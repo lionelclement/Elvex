@@ -30,25 +30,25 @@
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int code, unsigned int codePred, std::string form, featuresPtr features)
+Entry::Entry(unsigned int code, unsigned int codePred, std::string form, featuresPtr features): Id(0)
 {
-  NEW;
   this->code = code;
   this->codePred = codePred;
   this->form = form;
   this->features = features;
+  NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr features)
+Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr features): Id(0)
 {
-  NEW;
   this->code = code;
   this->codePred = Vartable::strToInt(pred);
   this->form = form;
   this->features = features;
+  NEW;
 }
 
 /* **************************************************
@@ -56,9 +56,9 @@ Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr 
  ************************************************** */
 Entry::~Entry()
 {
+	  DELETE;
   if (features)
     features.reset();
-  DELETE;
 }
 
 /* **************************************************

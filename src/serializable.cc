@@ -26,7 +26,6 @@
  *
  ************************************************** */
 Serializable::Serializable(){
-  NEW;
   serialHashCode = 0;
   serialString = std::string();
 }
@@ -35,7 +34,6 @@ Serializable::Serializable(){
  *
  ************************************************** */
 Serializable::~Serializable(){
-  DELETE;
 }
 
 /* **************************************************

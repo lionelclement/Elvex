@@ -71,19 +71,24 @@ private:
     s_statements = true,
     s_environment = true;
 
-  Item (class Rule *,
-	unsigned int,
-	unsigned int,
-	statementsPtr);
+  Item (class Rule *rule, 
+	unsigned int index,
+	statementsPtr statements);
   
-  Item (class Rule *,
-	unsigned int,
-	std::vector<unsigned int> &,
-	statementsPtr);
+  Item (class Rule *rule, 
+	unsigned int index,
+	unsigned int indexTerm,
+	statementsPtr statements);
+  
+  Item (class Rule *rule, 
+	unsigned int index,
+	std::vector<unsigned int>& indexTerms,
+	statementsPtr statements);
+  
   void makeSerialString(void);
   
 public:
-  virtual ~Item();
+  ~Item();
   static itemPtr create(class Rule *,
 			unsigned int=UINT_MAX,
 			unsigned int=0,
@@ -96,10 +101,10 @@ public:
   
   const unsigned int getLineno() const;
   const std::string &getFilename() const;
-  class Term *getCurrentTerm(void) const;
-  class Terms *getCurrentTerms() const;
-  class Terms *getTerms(unsigned int) const;
-  void setCurrentTerms(class Terms *);
+  termPtr getCurrentTerm(void) const;
+  termsPtr getCurrentTerms() const;
+  termsPtr getTerms(unsigned int) const;
+  void setCurrentTerms(termsPtr );
   
   class Rule *getRule(void) const;
   void setRule(class Rule *);
@@ -107,8 +112,8 @@ public:
   void setIndex(unsigned int);
   std::vector<unsigned int> &getIndexTerms(void);
   
-  class Term *getLhs(void) const;
-  std::vector<class Terms*> &getRhs(void) const;
+  termPtr getLhs(void) const;
+  std::vector<termsPtr > &getRhs(void) const;
   
   statementsPtr getStatements(void);
   

@@ -27,34 +27,36 @@
 #endif
 #include "ipointer.hh"
 
-class Entries:
-  public std::enable_shared_from_this< class Entries > {
+class Entries: public std::enable_shared_from_this<class Entries> {
 
-private:
-  std::vector< entryPtr > entries;
+	public:
+		typedef std::vector<entryPtr> list;
 
-  Entries();
-  Entries(entryPtr);
-  Entries(const std::vector< entryPtr >&);
-  Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string form);
+	private:
+		list entries;
 
-public:
-  ~Entries();
-  static entriesPtr create();
-  static entriesPtr create(entryPtr);
-  static entriesPtr create(const std::vector<entryPtr> &);
-  static entriesPtr create(unsigned int codePos, const unsigned int codeLemma, const std::string form);
+		Entries();
+		Entries(entryPtr);
+		Entries(const list&);
+		Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string form);
 
-  const size_t size() const;
-  std::vector<entryPtr >::const_iterator begin() const;
-  std::vector<entryPtr >::const_iterator end() const;
-  entryPtr get(const unsigned int) const;
+	public:
+		~Entries();
+		static entriesPtr create();
+		static entriesPtr create(entryPtr);
+		static entriesPtr create(const list &);
+		static entriesPtr create(unsigned int codePos, const unsigned int codeLemma, const std::string form);
 
-  void add(const entryPtr);
+		const size_t size() const;
+		list::const_iterator begin() const;
+		list::const_iterator end() const;
+		entryPtr get(const unsigned int) const;
+
+		void add(const entryPtr);
 #ifdef OUTPUT_XML
-  void toXML(xmlNodePtr) const;
+		void toXML(xmlNodePtr) const;
 #endif
-  void print(std::ostream &) const;
+		void print(std::ostream &) const;
 };
 
 #endif // ENTRIES_H

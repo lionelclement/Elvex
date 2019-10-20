@@ -26,7 +26,7 @@ class Serializable {
 
 private:
   int serialHashCode;
-  virtual void makeSerialString(void)=0;
+  virtual void makeSerialString(void) = 0;
 
 protected:
   std::string serialString;

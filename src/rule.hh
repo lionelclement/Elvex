@@ -33,26 +33,28 @@ class Rule:
   public Id::Id {
   
 private:
-  class Term *lhs;
-  std::vector<class Terms *> rhs;
+  termPtr lhs;
+  std::vector<termsPtr > rhs;
   statementsPtr statements;
   unsigned int usages;
   std::string filename;
   unsigned int lineno;
 
 public:
-  Rule(unsigned int, std::string, class Term *, std::vector<class Terms *> &rhs, statementsPtr statements=statementsPtr());
-  Rule(unsigned int, std::string, class Term *lhs, statementsPtr statements=statementsPtr());
+  Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+  Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+  Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr > &rhs, statementsPtr statements = statementsPtr());
+  Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr > &rhs, statementsPtr statements = statementsPtr());
   ~Rule();
   
 
-  class Term *getLhs(void) const;
-  std::vector <class Terms *> &getRhs(void);
+  termPtr getLhs(void) const;
+  std::vector <termsPtr > &getRhs(void);
 
-  class Term *getCurrentTerm(void) const;
-  class Terms *getCurrentTerms() const;
-  class Terms *getTerms(unsigned int) const;
-  void setCurrentTerms(class Terms *);
+  termPtr getCurrentTerm(void) const;
+  termsPtr getCurrentTerms() const;
+  termsPtr getTerms(unsigned int) const;
+  void setCurrentTerms(termsPtr );
 
   statementsPtr getStatements(void) const;
   void incUsages(class Synthesizer *);
