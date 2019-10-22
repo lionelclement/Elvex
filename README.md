@@ -31,7 +31,7 @@ The language of **Elvex** is not under licence (it belongs to the public domain)
 What you can't do with Elvex
 -----------------------------
 
-You should ask **Elvex** to interpret exactly what you expect. **Elvex** will translate your request but will not be in the position to understand the meaning of it.
+**Elvex** will translate your request in Natural Language but will not be in the position to understand the meaning of it.
 
 What you can do with Elvex
 -----------------------------
@@ -60,6 +60,8 @@ Practically speaking: to build a robust Text Generator with Elvex
 Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process (several months for one person in a restricted domain).
 
 The grammar is more complex, but shorter to write (several weeks).
+
+Without this job, a text generator cannot be robust and reliable.
 
 Sample: Causal clauses in a little French Grammar first
 -----------------------------------------------
