@@ -52,16 +52,24 @@ Theoretical aspects
 -Systemic Functional Grammar (M. Halliday 1994).
 
 It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon but not with learning data.
-I don’t explain the algorithms here. It’s efficient and monotonic (each rule add something and never delete the effects of another rule).
+I don’t explain the algorithms here. It’s efficient and monotonic (each rule adds something and never removes the effect of another rule).
 
 Practically speaking: to build a robust Text Generator with Elvex
 --------------------
 
 Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process (several months for one person in a restricted domain).
 
+Without this job, a text generator cannot be robust and reliable.
+
 The grammar is more complex, but shorter to write (several weeks).
 
-Without this job, a text generator cannot be robust and reliable.
+One of the most difficult stuff already done with Elvex
+-----------------------------------------------
+
+- Past participle aggrement in French with transitive verbs
+- Adjective order in English
+- Anaphora resolution process between sentences with pronouns, synonyms and hypernyms
+- Lexical choice depending on language level
 
 Sample: Causal clauses in a little French Grammar first
 -----------------------------------------------
