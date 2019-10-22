@@ -67,9 +67,9 @@ One of the most difficult stuff already done with Elvex
 -----------------------------------------------
 
 - Past participle aggrement in French with transitive verbs
-- Adjective order in English
+- Adjective order in English (big yellow squared stuff, not squared yellow big stuff)
 - Anaphora resolution process between sentences with pronouns, synonyms and hypernyms
-- Lexical choice depending on language level
+- Complex idiomatic phrases (not always contiguous)
 
 Sample: Causal clauses in a little French Grammar first
 -----------------------------------------------
