@@ -52,11 +52,11 @@ private:
   environmentPtr environment;
   
   bool
-    s_id = true,
+    s_id = false,
     s_ruleId = false,
     s_rule = false,
     s_flags = false,
-    s_refs = true,
+    s_refs = false,
     s_seen = false,
     s_item = true,
     s_index = false,
@@ -160,7 +160,7 @@ public:
   void addStatements(statementsPtr);
   
   void print(std::ostream &) const;
-  itemPtr clone(const std::bitset<NBRFLAGS> &savedFlags);
+  itemPtr clone(const std::bitset<FLAGS> &savedFlags);
   bool isCompleted(void);
   bool isStarted(void);
   void successor(itemSetPtr, class Synthesizer *, bool &);

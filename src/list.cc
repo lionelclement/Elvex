@@ -26,8 +26,7 @@
 #include "grammar.hh"
 #include "statement.hh"
 
-listPtr List::NILLIST = List::create();
-bitsetPtr List::gwith;
+listPtr List::NIL_LIST = List::create();
 
 /* **************************************************
  *
@@ -38,6 +37,7 @@ List::List(enum List::Type type, valuePtr value, listPtr car, listPtr cdr): Id(0
   this->value = value;
   this->pairp.car = car;
   this->pairp.cdr = cdr;
+  this->variable = 0;
   NEW;
 }
 
@@ -88,6 +88,14 @@ List::Type List::getType(void) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
+void List::setType(Type type)
+{
+  this->type = type;
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
 valuePtr List::getValue(void) const 
 {
   return value;
@@ -104,15 +112,23 @@ void List::setValue(valuePtr value)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::car(void) const 
+listPtr List::getCar(void) const 
 {
-  return pairp.car;
+  return this->pairp.car;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::cdr(void) const 
+void List::setCar(listPtr car) 
+{
+  this->pairp.car = car;
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+listPtr List::getCdr(void) const 
 {
   return pairp.cdr;
 }
@@ -120,7 +136,15 @@ listPtr List::cdr(void) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::cadr(void) const 
+void List::setCdr(listPtr cdr)
+{
+  this->pairp.cdr = cdr;
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+listPtr List::getCadr(void) const 
 {
   return pairp.cdr->pairp.car;
 }
@@ -128,7 +152,7 @@ listPtr List::cadr(void) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::cddr(void) const 
+listPtr List::getCddr(void) const 
 {
   return pairp.cdr->pairp.cdr;
 }
@@ -136,7 +160,7 @@ listPtr List::cddr(void) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::caar(void) const 
+listPtr List::getCaar(void) const 
 {
   return pairp.car->pairp.car;
 }
@@ -144,7 +168,7 @@ listPtr List::caar(void) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::cdar(void) const 
+listPtr List::getCdar(void) const 
 {
   return pairp.car->pairp.cdr;
 }
@@ -160,9 +184,17 @@ bool List::isNil(void) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isAtom(void) const 
+bool List::isAtomic(void) const
 {
   return (this->type == List::ATOM);
+}
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+bool List::isVariable(void) const
+{
+  return (this->type == List::ATOM) && (this->value->isVariable());
 }
 
 /* ************************************************************
@@ -171,33 +203,6 @@ bool List::isAtom(void) const
 bool List::isPairp(void) const 
 {
   return (this->type == PAIRP);
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-bitsetPtr
-List::getBits() const
-{
-  return value->getBits();
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-featuresPtr 
-List::getfeaturePtrs(void) const
-{
-  return value->getFeatures();
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-unsigned int
-List::getIdentifier(void) const
-{
-  return value->getIdentifier();
 }
 
 /* **************************************************
@@ -214,18 +219,74 @@ List::makeSerialString(void)
     serialString  =  value->peekSerialString();
     break;
   case PAIRP:
-    serialString  =  '<' + car()->peekSerialString();
-    if (cdr()->isAtom()){
-      serialString += ':' + cdr()->peekSerialString();
+    serialString  =  '<' + getCar()->peekSerialString();
+    if (getCdr()->isAtomic()){
+      serialString += ':' + getCdr()->peekSerialString();
     }
-    else if (cdr()->isNil()){
+    else if (getCdr()->isNil()){
     }
     else{
-      serialString += ',' + cdr()->peekSerialString();
+      serialString += ',' + getCdr()->peekSerialString();
     }
     serialString += '>';
     break;
   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool
+List::containsVariable(void)
+{
+	  /***
+	  std::cerr << "<H4>List::containsVariable</H4>" << std::endl;
+	  std::cerr << "<table border = \"1\"><tr><th>this</th></tr>";
+	  std::cerr << "<tr><td>";
+	  this->flatPrint(std::cerr, true);
+	  std::cerr << "</td><td>";
+	  std::cerr << "</td></tr></table>";
+	  ***/
+	bool result = false;
+	if (variable) {
+		result = (variable == 1);
+	}
+	else {
+		switch (type){
+			case NIL:
+				variable = 2;
+				result = false;
+				break;
+			case ATOM:
+				if (isVariable()) {
+					variable = 1;
+					result = true;
+				}
+				else if (this->getValue()->getFeatures()->containsVariable()) {
+						variable = 1;
+						result = true;
+				} else {
+					variable = 2;
+					result = false;
+				}
+				break;
+			case PAIRP:
+				if (getCar()->containsVariable() || getCdr()->containsVariable()) {
+					variable = 1;
+					result = true;
+				} else {
+					variable = 2;
+					result = false;
+				}
+				break;
+		}
+	}
+	  /***
+	  std::cerr << "<H4>List::containsVariable done</H4>" << std::endl;
+	  std::cerr << (result ? "TRUE" : "FALSE");
+	   ***/
+
+	return result;
 }
 
 /* **************************************************
@@ -236,19 +297,19 @@ List::print(std::ostream& outStream) const
 {
   switch (type){
   case NIL:
-    outStream << "NIL";
+    outStream << "<>";
     break;
   case ATOM:
     value->print(outStream);
     break;
   case PAIRP:
-    car()->print(outStream);
-    if (cdr()->isAtom()){
+    getCar()->print(outStream);
+    if (getCdr()->isAtomic()){
       outStream << "::";
-      cdr()->print(outStream);
+      getCdr()->print(outStream);
     }
-    else if (!cdr()->isNil()){
-      cdr()->print(outStream);
+    else if (!getCdr()->isNil()){
+      getCdr()->print(outStream);
     }
     break;
   }
@@ -262,28 +323,33 @@ List::flatPrint(std::ostream& outStream, bool par) const
 {
   switch (type){
   case NIL:
-    outStream << "NIL";
+	  outStream << "NIL";
+    outStream << "<>";
     break;
+
   case ATOM:
+	  outStream << "ATOM";
     value->flatPrint(outStream);
     break;
+
   case PAIRP:
-	    if (par || cdr()->isAtom()){
-		outStream << "&lt;";
-	    }
-	    car()->flatPrint(outStream, true);
-	    if (cdr()->isAtom()){
-	      outStream << "::";
-	      cdr()->flatPrint(outStream, true);
-	    }
-	    else if (!cdr()->isNil()){
-	      outStream << ",";
-	      cdr()->flatPrint(outStream, false);
-	    }
-	    if (par || cdr()->isAtom()){
-	      outStream << "&gt;";
-	    }
-	    break;
+	  outStream << "PAIRP";
+	  if (par || getCdr()->isAtomic()){
+		  outStream << "&lt;";
+	  }
+	  getCar()->flatPrint(outStream, true);
+	  if (getCdr()->isAtomic()){
+		  outStream << "::";
+		  getCdr()->flatPrint(outStream, true);
+	  }
+	  else if (!getCdr()->isNil()){
+		  outStream << ",";
+		  getCdr()->flatPrint(outStream, false);
+	  }
+	  if (par || getCdr()->isAtomic()){
+		  outStream << "&gt;";
+	  }
+	  break;
   }
 }
 
@@ -296,7 +362,7 @@ List::buildEnvironment(environmentPtr environment, listPtr otherList, bool accep
   bool ret = true;
   /***
   std::cerr << "<H4>List::buildEnvironment</H4>" << std::endl;
-  std::cerr << "<table border = \"1\"><tr><th>this</th><th>list</th><th>Environment</th></tr>";
+  std::cerr << "<table border = \"1\"><tr><th>this</th><th>otherList</th><th>Environment</th></tr>";
   std::cerr << "<tr><td>";
   this->flatPrint(std::cerr, true);
   std::cerr << "</td><td>";
@@ -307,25 +373,27 @@ List::buildEnvironment(environmentPtr environment, listPtr otherList, bool accep
    ***/
   
   switch (this->type){
+
 	  case NIL:
-		  if (otherList->type == NIL){
-			  ret=true;
+		  if (otherList->isNil()){
+			  ret = true;
 		  }
-		  else if ((otherList->type == ATOM) && (otherList->value->getType() == Value::VARIABLE)){
-			  environment->add(otherList->value->getBits(), Value::NIL);
+		  else if ((otherList->isAtomic()) && (otherList->value->isVariable())){
+			  environment->add(otherList->value->getBits(), Value::NIL_VALUE);
 		  }
 		  else {
 			  ret = false;
 		  }
 		  break;
+
 	  case ATOM:
-		  if (this->value->getType() == Value::VARIABLE){
+		  if (this->value->isVariable()){
 			  if (!otherList){
 				  FATAL_ERROR;
 			  } else {
 				  switch (otherList->getType()){
 					  case NIL:
-						  environment->add(this->value->getBits(), Value::NIL);
+						  environment->add(this->value->getBits(), Value::NIL_VALUE);
 						  break;
 					  case ATOM:
 						  environment->add(this->value->getBits(), otherList->getValue());
@@ -339,8 +407,8 @@ List::buildEnvironment(environmentPtr environment, listPtr otherList, bool accep
 		  else if (!otherList){
 			  ret = false;
 		  }
-		  else if (otherList->getType() == ATOM){
-			  if (otherList->value->getType() == Value::VARIABLE)
+		  else if (otherList->isAtomic()){
+			  if (otherList->value->isVariable())
 				  environment->add(otherList->value->getBits(), this->getValue());
 			  else if (!this->value->buildEnvironment(environment, otherList->value, acceptToFilterNULLVariables, root))
 				  ret = false;
@@ -348,17 +416,20 @@ List::buildEnvironment(environmentPtr environment, listPtr otherList, bool accep
 		  else
 			  ret = false;
 		  break;
+
 	  case PAIRP:
-		  if (otherList->getType() == PAIRP) {
-			  if ((this->car()->getType() == NIL) && (otherList->car()->getType() == NIL)) {
+		  if (otherList->isPairp()) {
+			  if ((this->getCar()->isNil()) && (otherList->getCar()->isNil())) {
 				  ret = true;
-			  } else if (!this->car()->buildEnvironment(environment, otherList->car(), acceptToFilterNULLVariables, root)){
+			  } else if (!this->getCar()->buildEnvironment(environment, otherList->getCar(), acceptToFilterNULLVariables, root)){
 				  ret = false;
-			  } else if ((this->cdr()->getType() == NIL) && (otherList->cdr()->getType() == NIL)) {
+			  } else if ((this->getCdr()->isNil()) && (otherList->getCdr()->isNil())) {
 				  ret = true;
-			  } else if (!this->cdr()->buildEnvironment(environment, otherList->cdr(), acceptToFilterNULLVariables, root)){
+			  } else if (!this->getCdr()->buildEnvironment(environment, otherList->getCdr(), acceptToFilterNULLVariables, root)){
 				  ret = false;
 			  }
+		  }
+		  else if (otherList->isAtomic()){
 		  }
 		  else
 			  ret = false;
@@ -389,8 +460,8 @@ List::deleteAnonymousVariables()
       value->deleteAnonymousVariables();
     break;
   case PAIRP:
-    car()->deleteAnonymousVariables();
-    cdr()->deleteAnonymousVariables();
+    getCar()->deleteAnonymousVariables();
+    getCdr()->deleteAnonymousVariables();
     break;
   }
 }
@@ -410,8 +481,8 @@ List::renameVariables(unsigned int i)
       if (value->renameVariables(i)) effect = true;
     break;
   case PAIRP:
-    if (car()->renameVariables(i)) effect = true;
-    if (cdr()->renameVariables(i)) effect  =  true;
+    if (getCar()->renameVariables(i)) effect = true;
+    if (getCdr()->renameVariables(i)) effect  =  true;
     break;
   }
   return effect;
@@ -433,8 +504,8 @@ List::toXML(xmlNodePtr nodeRoot)
     value->toXML(l);
     break;
   case PAIRP:
-    car()->toXML(l);
-    cdr()->toXML(l);
+    getCar()->toXML(l);
+    getCdr()->toXML(l);
     break;
   }
 }
@@ -448,14 +519,14 @@ List::clone() const
 {
   switch (type){
   case NIL:
-    return NILLIST;
+    return NIL_LIST;
     break;
   case ATOM:
     if (value)
       return create(value->clone());
     break;
   case PAIRP:
-    return create(car()->clone(), cdr()->clone());
+    return create(getCar()->clone(), getCdr()->clone());
     break;
   }
   return listPtr();
@@ -491,9 +562,9 @@ List::subsumes(listPtr o, environmentPtr environment)
   case PAIRP:
     if (o->getType() != PAIRP)
       return false;
-    else if (!car()->subsumes(o->car(), environment))
+    else if (!getCar()->subsumes(o->getCar(), environment))
       return false;
-    else if (!cdr()->subsumes(o->cdr(), environment))
+    else if (!getCdr()->subsumes(o->getCdr(), environment))
       return false;
     break;
   }
@@ -540,9 +611,9 @@ List::pushBack(valuePtr value)
     {
       listPtr m = this->clone();
       listPtr n = m;
-      while (n->cdr() != List::NILLIST)
-	n = n->cdr();
-      n->pairp.cdr = create(create(value), List::NILLIST);
+      while (n->getCdr() != List::NIL_LIST)
+	n = n->getCdr();
+      n->pairp.cdr = create(create(value), List::NIL_LIST);
       return m;
       break;
     }
@@ -563,10 +634,10 @@ List::enable(statementPtr root, itemPtr item, bool &effect, bool on)
     value->enable(root, item, effect, on);
     break;
   case PAIRP:
-    if (car())
-      car()->enable(root, item, effect, on);
-    if (cdr())
-      cdr()->enable(root, item, effect, on);
+    if (getCar())
+      getCar()->enable(root, item, effect, on);
+    if (getCdr())
+      getCdr()->enable(root, item, effect, on);
     break;
   }
 }
@@ -585,9 +656,9 @@ List::findVariable(bitsetPtr variable)
       return true;
     break;
   case PAIRP:
-    if (car() && car()->findVariable(variable))
+    if (getCar() && getCar()->findVariable(variable))
       return true;
-    if (cdr() && cdr()->findVariable(variable))
+    if (getCdr() && getCdr()->findVariable(variable))
       return true;
     break;
   }
@@ -597,19 +668,19 @@ List::findVariable(bitsetPtr variable)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body)
+void List::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body)
 {
   switch (type){
   case NIL:
     break;
   case ATOM:
-    value->apply(item, synthesizer, result, effect, trace, variable, body->clone(0));
+    value->apply(item, synthesizer, trace, variable, body->clone(0));
     break;
   case PAIRP:
-    if (car())
-      car()->apply(item, synthesizer, result, effect, trace, variable, body);
-    if (cdr())
-      cdr()->apply(item, synthesizer, result, effect, trace, variable, body);
+    if (getCar())
+      getCar()->apply(item, synthesizer, trace, variable, body);
+    if (getCdr())
+      getCdr()->apply(item, synthesizer, trace, variable, body);
     break;
   }
 }

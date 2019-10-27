@@ -636,7 +636,7 @@ void Synthesizer::printState(std::ostream& outStream, itemSetPtr state) {
  ************************************************** */
 itemPtr Synthesizer::createItem(itemPtr item, unsigned int row) {
   itemPtr it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
-			    item->getStatements() ? item->getStatements()->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED) : statementsPtr());
+		  	  item->getStatements() ? item->getStatements()->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED) : statementsPtr());
   it->addRanges(item->getRanges());
   it->addRanges(row);
   it->addForestIdentifiers(item->getForestIdentifiers());
@@ -1034,6 +1034,8 @@ void Synthesizer::close(itemSetPtr state, unsigned int row) {
 		    nodePtr node = Node::create();
 		    for (unsigned int k = 0; k < (*actualItem)->getForestIdentifiers().size(); ++k) {
 		      ForestMap::map::const_iterator forestMapIt = forestMap.find((*actualItem)->getForestIdentifiers()[k]);
+		      if (forestMapIt == forestMap.end())
+		    	  	  FATAL_ERROR;
 		      forestPtr forest = (*forestMapIt).second;
 		      node->getForests().push_back(forest);
 		    }
@@ -1300,8 +1302,9 @@ bool Synthesizer::shift(itemSetPtr state, unsigned int row) {
 			    int found = entry->getForm().find('$');
 			    if (found != std::string::npos) {
 			      bool effect = false;
+			      it->getEnvironment()->replaceVariables(entry->getForm(), effect);
 			      word = Entry::create(entry->getCode(), entry->getCodePred(),
-						   it->getEnvironment()->replaceVariables(entry->getForm(), effect), resultFeatures);
+						   entry->getForm(), resultFeatures);
 			    }
 			    else
 			      word = Entry::create(entry->getCode(), entry->getCodePred(), entry->getForm(), resultFeatures);

@@ -500,7 +500,7 @@ list_statement:
 
 	|list_statement statement {
 	  DBUGPRT("list_statement");
-	  $$=$1;
+	  $$ = $1;
 	  (*$$)->addStatement(*$2);
 	  free($2);
 	};
@@ -627,20 +627,44 @@ statement:
 
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement %prec TOKEN_NOELSE {
 	  DBUGPRT("statement");
+	  statementPtr stm;
+	  if (!(*$5)->isStms()) {
+	    statementsPtr stms = Statements::create();
+	    stms->addStatement(*$5);
+	    stm = Statement::create(ruleslineno, Statement::STMS, stms);
+	  }
+	  else
+	    stm = *$5;
 	  $$ = new statementPtr(Statement::create(ruleslineno, 
 						Statement::IF,
-						(*$3), 
-						Statement::create(ruleslineno, Statement::THENELSE, (*$5), statementPtr())));
+						  *$3, 
+						  Statement::create(ruleslineno, Statement::THENELSE, stm, statementPtr())));
 	  free($3);
 	  free($5);
 	}
 
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement TOKEN_ELSE statement {
 	  DBUGPRT("statement");
+	  statementPtr stm1;
+	  statementPtr stm2;
+	  if (!(*$5)->isStms()) {
+	    statementsPtr stms = Statements::create();
+	    stms->addStatement(*$5);
+	    stm1 = Statement::create(ruleslineno, Statement::STMS, stms);
+	  }
+	  else
+	    stm1 = *$5;
+	  if (!(*$7)->isStms()) {
+	    statementsPtr stms = Statements::create();
+	    stms->addStatement(*$7);
+	    stm2 = Statement::create(ruleslineno, Statement::STMS, stms);
+	  }
+	  else
+	    stm2 = *$7;
 	  $$ = new statementPtr(Statement::create(ruleslineno, 
 						  Statement::IF, 
 						  (*$3), 
-						  Statement::create(ruleslineno, Statement::THENELSE, (*$5), (*$7))));
+						  Statement::create(ruleslineno, Statement::THENELSE, stm1, stm2)));
 	  free($3);
 	  free($5);
 	  free($7);
@@ -648,10 +672,18 @@ statement:
 
 	|TOKEN_FOREACH variable TOKEN_IN expression_statement statement {
 	  DBUGPRT("statement");
+	  statementPtr stm;
+	  if (!(*$5)->isStms()) {
+	    statementsPtr stms = Statements::create();
+	    stms->addStatement(*$5);
+	    stm = Statement::create(ruleslineno, Statement::STMS, stms);
+	  }
+	  else
+	    stm = *$5;
 	  $$ = new statementPtr(Statement::create(ruleslineno, 
 						  Statement::FOREACH,
 						  Statement::create(ruleslineno, Statement::VARIABLE, (*$2)),
-						  Statement::create(ruleslineno, Statement::IN, (*$4), (*$5))));
+						  Statement::create(ruleslineno, Statement::IN, (*$4), stm)));
 	  free($2);
 	  free($4);
 	  free($5);
@@ -1187,19 +1219,19 @@ feature_value:
 	|TOKEN_NIL
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::NIL);
+	  $$ = new valuePtr(Value::NIL_VALUE);
 	}
 
 	|TOKEN_TRUE
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::TRUE);
+	  $$ = new valuePtr(Value::TRUE_VALUE);
 	}
 
 	|TOKEN_ANONYMOUS
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::ANONYMOUS_VARIABLE);
+	  $$ = new valuePtr(Value::ANONYMOUS_VALUE);
 	};
 
 constant:
@@ -1245,14 +1277,14 @@ list:
 	|TOKEN_LT TOKEN_GT
 	{
 	  DBUGPRT("list");
-	  $$ = new listPtr(List::NILLIST);
+	  $$ = new listPtr(List::NIL_LIST);
 	}
 
 	|TOKEN_LT list_elements TOKEN_DOUBLECOLON list_element TOKEN_GT
 	{
 	  DBUGPRT("list");
-	  if ((*$2)->isPairp() && (*$2)->cdr()->isNil())
-	    $$ = new listPtr(List::create((*$2)->car(), *$4));
+	  if ((*$2)->isPairp() && (*$2)->getCdr()->isNil())
+	    $$ = new listPtr(List::create((*$2)->getCar(), *$4));
 	  else
 	    $$ = new listPtr(List::create(*$2, *$4));
 	  free($2);
@@ -1262,10 +1294,10 @@ list:
 	|TOKEN_LT list_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
 	{
 	  DBUGPRT("list");
-	  if ((*$2)->isPairp() && (*$2)->cdr()->isNil())
-	    $$ = new listPtr(List::create((*$2)->car(), List::NILLIST));
+	  if ((*$2)->isPairp() && (*$2)->getCdr()->isNil())
+	    $$ = new listPtr(List::create((*$2)->getCar(), List::NIL_LIST));
 	  else
-	    $$ = new listPtr(List::create(*$2, List::NILLIST));
+	    $$ = new listPtr(List::create(*$2, List::NIL_LIST));
 	  free($2);
 	};
 
@@ -1281,7 +1313,7 @@ list_elements:
 	|list_element
 	{
 	  DBUGPRT("list_elements");
-	  $$ = new listPtr(List::create(*$1, List::NILLIST));
+	  $$ = new listPtr(List::create(*$1, List::NIL_LIST));
 	  free($1);
 	};
 

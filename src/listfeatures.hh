@@ -26,26 +26,27 @@
 #include "flags.hh"
 #include "id.hh"
 
-class ListFeatures:
-  public Id,
-  public Flags,
-  public std::enable_shared_from_this< class ListFeatures > {
-  
- private:
-  std::vector< featuresPtr > listFeatures;
-  ListFeatures(void);
-  
- public:
-  ~ListFeatures();
-  static listFeaturesPtr create(void);
-  void push_back( featuresPtr );
-  void add(unsigned int, featuresPtr);
-  void clear(void);
-  std::vector< featuresPtr >::const_iterator begin(void) const;
-  std::vector< featuresPtr >::const_iterator end(void) const;
-  size_t size() const;
-  listFeaturesPtr clone(void);
-  featuresPtr operator[](unsigned int);
+class ListFeatures: public Id, public Flags, public std::enable_shared_from_this<class ListFeatures> {
+
+	public:
+
+		typedef std::vector<featuresPtr> vector;
+
+	private:
+		vector listFeatures;
+		ListFeatures(void);
+
+	public:
+		~ListFeatures();
+		static listFeaturesPtr create(void);
+		void push_back(featuresPtr);
+		void add(unsigned int, featuresPtr);
+		void clear(void);
+		vector::const_iterator begin(void) const;
+		vector::const_iterator end(void) const;
+		size_t size() const;
+		listFeaturesPtr clone(void);
+		featuresPtr operator[](unsigned int);
 };
 
 #endif // LISTFEATURES_H

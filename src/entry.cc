@@ -104,7 +104,8 @@ const unsigned int Entry::getCodePred(void) const
 /* **************************************************
  *
  ************************************************** */
-const std::string Entry::getForm(void) const 
+std::string &
+Entry::getForm(void)
 {
   return form;
 }

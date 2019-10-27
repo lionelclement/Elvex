@@ -33,17 +33,19 @@ class List:
   public Id {
   
 public:
-  enum Type {ATOM, PAIRP, NIL};
-  static listPtr NILLIST;
+		enum Type {ATOM,
+			PAIRP,
+			NIL};
+  static listPtr NIL_LIST;
 
 private:
-  static bitsetPtr gwith;
   enum Type type;
   valuePtr value;
   struct {
     listPtr car;
     listPtr cdr;
   } pairp;
+  int variable; // 0: none 1:true 2:false
 
   List (enum Type type, valuePtr value=valuePtr(), listPtr car=listPtr(), listPtr cdr=listPtr());
 
@@ -56,28 +58,29 @@ public:
   static listPtr create(listPtr car, listPtr cdr);
 
   Type getType(void) const;
+  void setType(Type type);
   valuePtr getValue(void) const;
   void setValue(valuePtr value);
-  listPtr car(void) const;
-  listPtr cdr(void) const;
-  listPtr cadr(void) const;
-  listPtr cddr(void) const;
-  listPtr caar(void) const;
-  listPtr cdar(void) const;
+  listPtr getCar(void) const;
+  void setCar(listPtr car);
+  listPtr getCdr(void) const;
+  void setCdr(listPtr cdr);
+  listPtr getCadr(void) const;
+  listPtr getCddr(void) const;
+  listPtr getCaar(void) const;
+  listPtr getCdar(void) const;
   bool isNil(void) const;
-  bool isAtom(void) const;
-  bool isPairp(void) const;
-
-  bitsetPtr getBits(void) const;
-  featuresPtr getfeaturePtrs(void) const;
-  unsigned int getIdentifier(void) const;
+  bool isAtomic(void) const;
+  bool isVariable(void) const;
+      bool isPairp(void) const;
+    bool containsVariable(void);
 
   void print(std::ostream &) const;
   void flatPrint(std::ostream &, bool par) const;
-  bool buildEnvironment(environmentPtr, listPtr , bool, bool);
+  bool buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root);
   void deleteAnonymousVariables(void);
   bool renameVariables(unsigned int);
-  void apply(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace, statementPtr variable, statementPtr body);
+  void apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body);
 #ifdef OUTPUT_XML
   void toXML(xmlNodePtr);
 #endif

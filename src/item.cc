@@ -775,12 +775,12 @@ Item::print(std::ostream& out) const
  *
  ************************************************** */
 itemPtr 
-Item::clone(const std::bitset<NBRFLAGS> &savedFlags)
+Item::clone(const std::bitset<FLAGS> &protectedFlags)
 {
   itemPtr it = Item::create(this->rule,
 			      this->index,
 			      this->indexTerms,
-			    this->statements ? this->statements->clone(savedFlags) : statementsPtr()
+			    this->statements ? this->statements->clone(protectedFlags) : statementsPtr()
 			      );
   it->environment = (this->environment) ? this->environment->clone() : environmentPtr();
   it->addRanges(this->ranges);
@@ -835,31 +835,34 @@ Item::successor(itemSetPtr state, class Synthesizer *synthesizer, bool &effect)
 void
 Item::apply(itemSetPtr state, class Synthesizer *synthesizer)
 {
-  if (statements){
-    unsigned int k=1;
-    bool effect = true;
-    while(effect){
+	if (statements){
+		unsigned int k = 1;
+		bool effect = true;
+		while(effect){
+			if (isSetFlags(Flags::BOTTOM))
+				break;
+			if (statements->isSetFlags(Flags::SEEN))
+				break;
+
 #ifdef TRACE
-      if (synthesizer->getTraceAction()){
-	std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
-	print(std::cout);
-	std::cout << std::endl;
-      }
+			if (synthesizer->getTraceAction()){
+				std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
+				print(std::cout);
+				std::cout << std::endl;
+			}
 #endif
-      if (isSetFlags(Flags::BOTTOM))
-	return;
-      effect = false;
-      statements->apply(shared_from_this(), synthesizer, effect, synthesizer->getTrace());
-      ++k;
+			effect = false;
+			statements->apply(shared_from_this(), synthesizer/*, effect*/, synthesizer->getTrace());
+			++k;
 #ifdef TRACE
-      if (synthesizer->getTraceAction()){
-	std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
-	print(std::cout);
-	std::cout << std::endl;
-      }
+			if (synthesizer->getTraceAction()){
+				std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
+				print(std::cout);
+				std::cout << std::endl;
+			}
 #endif
-    }
-  }
+		}
+	}
 }
 
 /* **************************************************

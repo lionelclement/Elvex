@@ -46,7 +46,7 @@ Features::Features(featurePtr feature): Id(0)
 Features::~Features()
 {
   DELETE;
-  for (listFeatures::iterator j  =  features.begin();
+  for (list::iterator j  =  features.begin();
        j  !=  features.end();
        ++j) {
     featurePtr tmp  =  *j;
@@ -69,7 +69,7 @@ featuresPtr Features::create(featurePtr feature)
 featuresPtr Features::createBottom(void)
 {
   featuresPtr fs  =  create();
-  fs->setFlags(Flags::BOTTOM);
+  fs->addFlags(Flags::BOTTOM);
   return fs;
 }
 
@@ -79,7 +79,7 @@ featuresPtr Features::createBottom(void)
 featuresPtr Features::createNil(void)
 {
   featuresPtr fs  =  create();
-  fs->setFlags(Flags::NIL);
+  fs->addFlags(Flags::NIL);
   return fs;
 }
 
@@ -99,7 +99,7 @@ void Features::add(featurePtr feature, bool front)
  ************************************************** */
 void Features::add(featuresPtr features, bool front)
 {
-  for (listFeatures::const_iterator j = features->begin();
+  for (list::const_iterator j = features->begin();
        j != features->end();
        ++j)
     if (front)
@@ -111,7 +111,7 @@ void Features::add(featuresPtr features, bool front)
 /* **************************************************
  *
  ************************************************** */
-Features::listFeatures::iterator Features::erase(Features::listFeatures::iterator i)
+Features::list::iterator Features::erase(Features::list::iterator i)
 {
   return features.erase(i);
 }
@@ -127,7 +127,7 @@ const size_t Features::size(void) const
 /* **************************************************
  *
  ************************************************** */
-Features::listFeatures::iterator Features::begin(void)
+Features::list::iterator Features::begin(void)
 {
   return features.begin();
 }
@@ -135,7 +135,7 @@ Features::listFeatures::iterator Features::begin(void)
 /* **************************************************
  *
  ************************************************** */
-Features::listFeatures::iterator Features::end(void)
+Features::list::iterator Features::end(void)
 {
   return features.end();
 }
@@ -151,7 +151,7 @@ featurePtr Features::front(void) const
 /* **************************************************
  *
  ************************************************** */
-const bool Features::isNil(void) const
+bool Features::isNil(void) const
 {
   return isSetFlags(Flags::NIL);
 }
@@ -159,7 +159,7 @@ const bool Features::isNil(void) const
 /* **************************************************
  *
  ************************************************** */
-const bool Features::isBottom(void) const
+bool Features::isBottom(void) const
 {
   return isSetFlags(Flags::BOTTOM);
 }
@@ -179,7 +179,7 @@ Features::print(std::ostream& outStream) const
     outStream << "<TBODY align = \"left\"><TR><TD><TABLE border = \"0\">";
     if (features.size()){
       for (int t = Feature::first_type ; t <= Feature::last_type ; ++t){
-	for (Features::listFeatures::const_iterator f = features.begin();
+	for (Features::list::const_iterator f = features.begin();
 	     f != features.end();
 	     ++f){
 	  if ((*f)->getType()  ==  t){
@@ -212,7 +212,7 @@ Features::flatPrint(std::ostream& outStream) const
     outStream << '[';
     bool first  =  true;
     for (int t = Feature::first_type ; t <= Feature::last_type ; ++t){
-      for (Features::listFeatures::const_iterator f = features.begin();
+      for (Features::list::const_iterator f = features.begin();
 	   f != features.end();
 	   ++f){
 	if ((*f)->getType()  ==  t){
@@ -239,7 +239,7 @@ Features::makeSerialString()
     serialString  =  '[';
     if (features.size()){
       bool first = true;
-      for (Features::listFeatures::const_iterator f  =  features.begin();
+      for (Features::list::const_iterator f  =  features.begin();
 	   f  !=  features.end();
 	   ++f){
 	if (first)
@@ -255,13 +255,13 @@ Features::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-const unsigned int
+unsigned int
 Features::assignPred()
 {
   unsigned int ret  =  UINT_MAX;
   if (this->pred)
     return this->pred;
-  for (Features::listFeatures::const_iterator f  =  features.begin();
+  for (Features::list::const_iterator f  =  features.begin();
        f  !=  features.end();
        ++f) {
     // […, PRED = …, …]
@@ -282,7 +282,7 @@ Features::assignForm()
 {
   if (form.size()>0)
     return form;
-  for (Features::listFeatures::const_iterator f = features.begin();
+  for (Features::list::const_iterator f = features.begin();
        f != features.end();
        ++f){
     if ((*f)->getType() == Feature::FORM){
@@ -303,7 +303,7 @@ Features::toXML(xmlNodePtr nodeRoot)
   xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"FS", NULL);
   xmlSetProp(f, (xmlChar*)"id", (xmlChar*)std::to_string(this->getId()).c_str());
   if (features.size())
-    for (Features::listFeatures::const_iterator i = features.begin();
+    for (Features::list::const_iterator i = features.begin();
 	 i != features.end();
 	 ++i)
       (*i)->toXML(f);
@@ -321,7 +321,7 @@ Features::clone(void) const
   if (isBottom())
     return BOTTOM;
   featuresPtr result  =  Features::create();
-  for (Features::listFeatures::const_iterator i = features.begin();
+  for (Features::list::const_iterator i = features.begin();
        i != features.end();
        ++i)
     result->features.push_back((*i)->clone());
@@ -336,7 +336,7 @@ Features::clone(void) const
 valuePtr 
 Features::find(bitsetPtr code) const
 {
-  for (Features::listFeatures::const_iterator i1 = features.begin();
+  for (Features::list::const_iterator i1 = features.begin();
        i1 != features.end();
        ++i1){
     if (((*(*i1)->getAttribute()) & *code).any()){
@@ -349,7 +349,22 @@ Features::find(bitsetPtr code) const
 /* **************************************************
  *
  ************************************************** */
-const bool
+bool
+Features::containsVariable(void) const
+{
+  for (Features::list::const_iterator iterator = features.begin();
+       iterator != features.end();
+       ++iterator){
+    if ((*iterator)->getValue() && ((*iterator)->getValue()->containsVariable()))
+    		return true;
+  }
+  return false;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool
 Features::buildEnvironment(environmentPtr environment, featuresPtr features, bool acceptToFilterNULLVariables, bool root)
 {
   bool ret = true;
@@ -379,18 +394,18 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
    ***/
   
   // Traite tous les attributs constants
-  for (Features::listFeatures::const_iterator i1 = begin();
+  for (Features::list::const_iterator i1 = begin();
        i1 != end();
        ++i1){
     if (((*i1)->getType() == Feature::PRED)
 	|| ((*i1)->getType() == Feature::CONSTANT)){
-      Features::listFeatures::const_iterator i2 = features->begin();
+      Features::list::const_iterator i2 = features->begin();
       while (i2 != features->end()){
 	// Si deux constantes matchent
 	// ou deux PRED matchent
 	if ((((*i2)->getType() == Feature::CONSTANT) && ((*i1)->getType() == Feature::CONSTANT) && ((*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()))
 	    || (((*i1)->getType() == Feature::PRED) && ((*i2)->getType() == Feature::PRED))){
-	  (*i2)->addFlags(SEEN);
+	  (*i2)->addFlags(Flags::SEEN);
 	  // Si les deux valeurs sont NIL
 	  if (((*i1)->getValue()->isNil()) && ((*i2)->getValue()->isNil())){
 	  }
@@ -415,7 +430,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
 	  if ((*i1)->getValue()->getType() == Value::VARIABLE){
 	    //  = > $X = NIL
 	    if (acceptToFilterNULLVariables){
-	      environment->add((*i1)->getValue()->getBits(), Value::ANONYMOUS_VARIABLE);
+	      environment->add((*i1)->getValue()->getBits(), Value::ANONYMOUS_VALUE);
 	    }
 	    else {
 	      ret = false;
@@ -428,7 +443,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
 	    if (!acceptToFilterNULLVariables){
 	      ret = false;
 	    } else {
-	      if (!(*i1)->getValue()->buildEnvironment(environment, Value::ANONYMOUS_VARIABLE, acceptToFilterNULLVariables, false)){
+	      if (!(*i1)->getValue()->buildEnvironment(environment, Value::ANONYMOUS_VALUE, acceptToFilterNULLVariables, false)){
 		CERR_LINE;
 		ret = false;
 	      }
@@ -440,7 +455,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
   }
 
   // traite les variables de structures
-  for (Features::listFeatures::const_iterator i1 = begin();
+  for (Features::list::const_iterator i1 = begin();
        i1 != end();
        ++i1){
     // i1: X
@@ -451,7 +466,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
 	//ret = false;
 	//}
 	featuresPtr nFeatures = Features::create();
-	Features::listFeatures::const_iterator i2 = features->begin();
+	Features::list::const_iterator i2 = features->begin();
 	while(i2 != features->end()){
 	  if ((*i2)->isUnsetFlags(Flags::SEEN)){
 	    (*i2)->addFlags(Flags::SEEN);
@@ -463,7 +478,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
       }
       else {
 	featuresPtr nFeatures = Features::create();
-	Features::listFeatures::const_iterator i2 = features->begin();
+	Features::list::const_iterator i2 = features->begin();
 	while(i2 != features->end()){
 	  if ((*i2)->isUnsetFlags(Flags::SEEN)){
 	    (*i2)->addFlags(Flags::SEEN);
@@ -475,7 +490,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
       }
     }
   }
-  features->subFlags(SEEN);
+  features->subFlags(Flags::SEEN);
 
   /***
        if (root) {
@@ -493,7 +508,7 @@ Features::buildEnvironment(environmentPtr environment, featuresPtr features, boo
  *true if this subsumes o
  *if it does, change variables in this
  ************************************************** */
-const bool
+bool
 Features::subsumes(featuresPtr o, environmentPtr environment)
 {
   /***
@@ -527,8 +542,8 @@ Features::subsumes(featuresPtr o, environmentPtr environment)
     ret = false;
   }
   else {
-    Features::listFeatures::const_iterator i1;
-    Features::listFeatures::const_iterator i2;
+    Features::list::const_iterator i1;
+    Features::list::const_iterator i2;
     for (i1 = begin(); i1 != end(); ++i1){
       for (i2 = o->begin(); i2 != o->end(); ++i2){
 	// [PRED:X]  < [PRED:Y]
@@ -560,9 +575,9 @@ Features::subsumes(featuresPtr o, environmentPtr environment)
  *
  ************************************************** */
 void
-Features::subFlags(const std::bitset<NBRFLAGS>& flags)
+Features::subFlags(const std::bitset<FLAGS>& flags)
 {
-  for (Features::listFeatures::const_iterator i = begin();
+  for (Features::list::const_iterator i = begin();
        i != end();
        ++i)
     (*i)->subFlags(flags);
@@ -571,11 +586,11 @@ Features::subFlags(const std::bitset<NBRFLAGS>& flags)
 /* **************************************************
  *
  ************************************************** */
-const bool
+bool
 Features::renameVariables(unsigned int i)
 {
   bool effect = false;
-  for (Features::listFeatures::iterator feature = features.begin(); feature != features.end(); ++feature) {
+  for (Features::list::iterator feature = features.begin(); feature != features.end(); ++feature) {
     if ((*feature)->renameVariables(i))
       effect = true;
   }
@@ -590,7 +605,7 @@ Features::renameVariables(unsigned int i)
 void
 Features::enable(statementPtr root, itemPtr item, bool &effect, bool on)
 {
-  for (Features::listFeatures::iterator feature = features.begin(); feature != features.end(); ++feature)
+  for (Features::list::iterator feature = features.begin(); feature != features.end(); ++feature)
     (*feature)->enable(root, item, effect, on);
 }
 
@@ -601,7 +616,7 @@ void
 Features::deleteAnonymousVariables()
 {
  redo:
-  for (Features::listFeatures::iterator feature = features.begin(); feature != features.end(); ++feature){
+  for (Features::list::iterator feature = features.begin(); feature != features.end(); ++feature){
     switch ((*feature)->getType()){
     case Feature::FORM:
     case Feature::PRED:
@@ -623,10 +638,10 @@ Features::deleteAnonymousVariables()
 /* **************************************************
  *
  ************************************************** */
-const bool
+bool
 Features::findVariable(bitsetPtr variable)
 {
-  for (Features::listFeatures::iterator feature = features.begin(); feature != features.end(); ++feature)
+  for (Features::list::iterator feature = features.begin(); feature != features.end(); ++feature)
     if ((*feature)->findVariable(variable))
       return true;
   return false;

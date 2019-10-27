@@ -28,7 +28,7 @@
 /* **************************************************
  *
  ************************************************** */
-Statements::Statements(statementPtr statement): Id(0)
+Statements::Statements(statementPtr statement): Id(0), Flags()
 {
   if (statement)
     statements.push_front(statement);
@@ -41,7 +41,7 @@ Statements::Statements(statementPtr statement): Id(0)
 Statements::~Statements()
 { 
 	  DELETE;
-  for (std::list<statementPtr >::iterator i = statements.begin(); i != statements.end(); ++i)
+  for (list::iterator i = statements.begin(); i != statements.end(); ++i)
     i->reset();
 }
 
@@ -56,15 +56,6 @@ statementsPtr Statements::create (statementPtr statement)
 /* **************************************************
  *
  ************************************************** */
-std::list<statementPtr >&  Statements::getStatements(void)
-{
-  return this->statements;
-}
-
-
-/* **************************************************
- *
- ************************************************** */
 size_t Statements::size(void)
 {
   return this->statements.size();
@@ -73,7 +64,7 @@ size_t Statements::size(void)
 /* **************************************************
  *
  ************************************************** */
-std::list<statementPtr >::const_iterator Statements::begin(void) const 
+Statements::list::const_iterator Statements::begin(void) const
 {
   return this->statements.begin();
 }
@@ -81,7 +72,7 @@ std::list<statementPtr >::const_iterator Statements::begin(void) const
 /* **************************************************
  *
  ************************************************** */
-std::list<statementPtr >::const_iterator Statements::end(void) const 
+Statements::list::const_iterator Statements::end(void) const
 {
   return this->statements.end();
 }
@@ -102,21 +93,35 @@ Statements::addStatement(statementPtr statement)
  *
  ************************************************** */
 void 
-Statements::print(std::ostream& outStream, unsigned int tabulation) const
+Statements::print(std::ostream& outStream, unsigned int tabulation, int yetColored) const
 {
-  for (unsigned int j=1 ; j<=tabulation ; ++j)
-    outStream << "&nbsp;";
-  outStream << "{<DIV>";
-  tabulation+=3;
-  if (guard)
-    guard->print(outStream, tabulation);
-  for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i)
-    (*i)->print(outStream, tabulation);
-  tabulation-=3;
-  for (unsigned int j=1 ; j<=tabulation ; ++j)
-    outStream << "&nbsp;";
-  outStream << "}</DIV>";
-}
+	int color = yetColored;
+		if (isSetFlags(Flags::SEEN)) {
+			color |= 0x0000FF;
+		}
+		if (isSetFlags(Flags::DISABLED)) {
+			color |= 0xC0C0C0;
+		}
+		if (isSetFlags(Flags::BOTTOM)) {
+			color |= 0xFF0000;
+		}
+	if (color != 0)
+	  outStream << "<div style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";
+	else
+	outStream << "<div>";
+	tabulation+=3;
+	for (unsigned int j=1 ; j<=tabulation ; ++j)
+		outStream << "&nbsp;";
+	outStream << "{<BR>";
+	if (guard)
+		guard->print(outStream, tabulation, yetColored | color);
+	for (list::const_iterator i = statements.begin(); i != statements.end(); ++i)
+		(*i)->print(outStream, tabulation, yetColored | color);
+	for (unsigned int j=1 ; j<=tabulation ; ++j)
+		outStream << "&nbsp;";
+	outStream << "}";
+	outStream << "</div>";
+	}
 
 /* **************************************************
  *
@@ -127,7 +132,7 @@ Statements::makeSerialString()
   serialString = '{';
   if (guard)
     serialString += guard->peekSerialString() + ';';
-  for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i)
+  for (list::const_iterator i = statements.begin(); i != statements.end(); ++i)
     serialString += (*i)->peekSerialString() + ';';
   serialString += '}';
 }
@@ -136,12 +141,13 @@ Statements::makeSerialString()
  *
  ************************************************** */
 statementsPtr  
-Statements::clone(const std::bitset<NBRFLAGS>& savedFlags) const 
+Statements::clone(const std::bitset<Flags::FLAGS> &protectedFlags)
 {
   statementsPtr statements = Statements::create();
-  statements->guard = (guard) ? guard->clone(savedFlags) : statementPtr();
-  for (std::list<statementPtr >::const_iterator i = this->statements.begin(); i != this->statements.end(); ++i)
-    statements->addStatement((*i)->clone(savedFlags));
+  statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
+  for (list::const_iterator i = this->statements.begin(); i != this->statements.end(); ++i)
+    statements->addStatement((*i)->clone(protectedFlags));
+  statements->addFlags(protectedFlags & this->getFlags());
   return statements;
 }
 
@@ -153,7 +159,7 @@ Statements::renameVariables(unsigned int i)
 {
   if (guard)
     guard->renameVariables(i);
-  for (std::list<statementPtr >::const_iterator j = this->statements.begin(); j != this->statements.end(); ++j)
+  for (list::const_iterator j = this->statements.begin(); j != this->statements.end(); ++j)
     (*j)->renameVariables(i);
 }
 
@@ -161,53 +167,52 @@ Statements::renameVariables(unsigned int i)
  * Applique l'ensemble des instructions
  ************************************************** */
 void
-Statements::apply(itemPtr item, Synthesizer *synthesizer, bool &effect, bool trace)
+Statements::apply(itemPtr item, Synthesizer *synthesizer, bool trace)
 {
-  if (item->isSetFlags(Flags::BOTTOM))
-    return;
+	if (item->isSetFlags(Flags::BOTTOM))
+		return;
 
-  if (guard){
-    // Look for guard
-    bool change = false;
-    guard->enable(guard, item, change, false);
-    if (change)
-      guard->enable(guard, item, change, true);
-    if (!guard->isSetFlags(Flags::SEEN | DISABLED)){
-      bool result = true;
-      guard->apply(item, synthesizer, result, effect, trace);
-      if (!result){
-	guard->addFlags(Flags::BOTTOM);
-	item->addFlags(Flags::BOTTOM);
-      }
-    }
-  }
-  
-  if (item->isUnsetFlags(Flags::BOTTOM)){
-    // continue
-    for (std::list<statementPtr >::iterator statement = statements.begin();
-	 statement != statements.end();
-	 ++statement){
-      if (isUnsetFlags(Flags::SEEN)){
-	bool change = false;
-	(*statement)->enable(*statement, item, change, false);
-	if (change)
-	  (*statement)->enable(*statement, item, change, true);
-	if ((*statement)->isSetFlags(Flags::SEEN | DISABLED))
-	  continue;
-	if (item->getEnvironment() && item->getEnvironment()->size()==0){
-	  item->getEnvironment().reset();
-	  item->setEnvironment(environmentPtr());
-	  }
-	bool result = true;
-	(*statement)->apply(item, synthesizer, result, effect, trace);
-	if (!result){
-	  (*statement)->addFlags(Flags::BOTTOM);
-	  item->addFlags(Flags::BOTTOM);
-	  break;
+	if (guard){
+		if (guard->isUnsetFlags(Flags::SEEN)) {
+		  guard->apply(item, synthesizer, trace);
+			guard->addFlags(Flags::SEEN);
+			if (guard->isSetFlags(Flags::BOTTOM)){
+				//this->addFlags(Flags::BOTTOM);
+				item->addFlags(Flags::BOTTOM);
+				return;
+			}
+		}
 	}
-      }
-    }
-  }
+
+	bool allDone = true;
+	for (list::iterator statement = statements.begin();
+			statement != statements.end();
+			++statement){
+		if ((*statement)->isUnsetFlags(Flags::SEEN)){
+			bool effect = false;
+			(*statement)->enable(*statement, item, effect, false);
+			if (effect)
+				(*statement)->enable(*statement, item, effect, true);
+			if (effect)
+				allDone = false;
+			if ((*statement)->isSetFlags(Flags::DISABLED)) {
+				allDone = false;
+				continue;
+			}
+			if (!item->getEnvironment() || item->getEnvironment()->size() == 0){
+				item->setEnvironment(environmentPtr());
+			}
+			(*statement)->apply(item, synthesizer, trace);
+			if ((*statement)->isSetFlags(Flags::BOTTOM)){
+				//this->addFlags(Flags::BOTTOM);
+				item->addFlags(Flags::BOTTOM);
+				break;
+			}
+		}
+	}
+	if (allDone)
+	  this->addFlags(Flags::SEEN);
+
 }
 
 /* **************************************************
@@ -217,7 +222,7 @@ void
 Statements::lookingForAssignedInheritedSonFeatures(std::vector< bool > &assignedInheritedSonFeatures)
 {
   FATAL_ERROR;
-  for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i){
+  for (list::const_iterator i = statements.begin(); i != statements.end(); ++i){
     std::cerr << '.';
     (*i)->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
   }
@@ -231,8 +236,7 @@ Statements::enable(itemPtr item, bool &effect, bool on)
 {
   if (guard)
     guard->enable(guard, item, effect, on);
-  for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i){
-    //std::cerr << '.';
+  for (list::const_iterator i = statements.begin(); i != statements.end(); ++i){
     (*i)->enable(*i, item, effect, on);
   }
 }
@@ -243,7 +247,7 @@ Statements::enable(itemPtr item, bool &effect, bool on)
 bool
 Statements::findVariableElsewhere(statementPtr o, bitsetPtr variable){
   FATAL_ERROR;
-  for (std::list<statementPtr >::const_iterator i = statements.begin(); i != statements.end(); ++i){
+  for (list::const_iterator i = statements.begin(); i != statements.end(); ++i){
     if ((*i) == o)
       continue;
     if ((*i)->findVariable(variable))

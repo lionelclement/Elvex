@@ -58,7 +58,7 @@
     const bitsetPtr getAttribute(void) const;
   void setAttribute(const bitsetPtr);
   const valuePtr getValue(void) const;
-  void setValue(const valuePtr );
+  void setValue(const valuePtr);
   const Type getType(void) const;
   void setType(const enum Type);
 

@@ -35,6 +35,7 @@ public:
 
 private:
   map data;
+  static int nb;
 
 public:
   ForestMap(void);

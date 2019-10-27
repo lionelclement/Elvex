@@ -37,12 +37,12 @@ class Features:
   public std::enable_shared_from_this< class Features > {
   
 public:
-  typedef std::list< featurePtr > listFeatures;
+  typedef std::list< featurePtr > list;
   static featuresPtr NIL;
   static featuresPtr BOTTOM;
 
 private:
-  listFeatures features;
+  list features;
   unsigned int pred;
   std::string form;
   
@@ -61,11 +61,11 @@ public:
 
   void add(featurePtr, bool=false);
   void add(featuresPtr, bool=false);
-  listFeatures::iterator erase(listFeatures::iterator i);
+  list::iterator erase(list::iterator i);
 
   const size_t size(void) const;
-  listFeatures::iterator begin(void);
-  listFeatures::iterator end(void);
+  list::iterator begin(void);
+  list::iterator end(void);
   featurePtr front(void) const;
 
   void print(std::ostream &) const;
@@ -77,17 +77,18 @@ public:
   featuresPtr clone(void) const;
   valuePtr find(bitsetPtr) const;
 
-  const bool buildEnvironment(environmentPtr, featuresPtr, bool, bool);
-  void subFlags(const std::bitset< NBRFLAGS > &);
-  const unsigned int assignPred(void);
+  bool buildEnvironment(environmentPtr, featuresPtr, bool, bool);
+  void subFlags(const std::bitset< FLAGS > &);
+  unsigned int assignPred(void);
   std::string assignForm(void);
-  const bool renameVariables(unsigned int);
-  const bool isNil(void) const;
-  const bool isBottom(void) const;
+  bool containsVariable(void) const;
+  bool renameVariables(unsigned int);
+  bool isNil(void) const;
+  bool isBottom(void) const;
   void enable(statementPtr, itemPtr, bool &, bool);
-  const bool subsumes(featuresPtr, environmentPtr);
+  bool subsumes(featuresPtr, environmentPtr);
   void deleteAnonymousVariables(void);
-  const bool findVariable(bitsetPtr);
+  bool findVariable(bitsetPtr);
 };
 
 #endif // FEATURES_H

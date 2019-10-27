@@ -20,14 +20,14 @@
 #include "flags.hh"
 #include "messages.hh"
 
-const std::bitset<Flags::NBRFLAGS> Flags::SEEN 			= 	std::bitset<Flags::NBRFLAGS>(1ul<<1);
-const std::bitset<Flags::NBRFLAGS> Flags::XML	 		= 	std::bitset<Flags::NBRFLAGS>(1ul<<2);
-const std::bitset<Flags::NBRFLAGS> Flags::GEN 			= 	std::bitset<Flags::NBRFLAGS>(1ul<<3);
-const std::bitset<Flags::NBRFLAGS> Flags::DISABLED		= 	std::bitset<Flags::NBRFLAGS>(1ul<<4);
-const std::bitset<Flags::NBRFLAGS> Flags::NIL			= 	std::bitset<Flags::NBRFLAGS>(1ul<<5);
-const std::bitset<Flags::NBRFLAGS> Flags::BOTTOM		= 	std::bitset<Flags::NBRFLAGS>(1ul<<6);
-const std::bitset<Flags::NBRFLAGS> Flags::CHOOSEN		= 	std::bitset<Flags::NBRFLAGS>(1ul<<7);
-const std::bitset<Flags::NBRFLAGS> Flags::REJECTED		= 	std::bitset<Flags::NBRFLAGS>(1ul<<8);
+const std::bitset<Flags::FLAGS> Flags::SEEN 			= 	std::bitset<Flags::FLAGS>(1ul<<1);
+const std::bitset<Flags::FLAGS> Flags::XML	 		= 	std::bitset<Flags::FLAGS>(1ul<<2);
+const std::bitset<Flags::FLAGS> Flags::GEN 			= 	std::bitset<Flags::FLAGS>(1ul<<3);
+const std::bitset<Flags::FLAGS> Flags::DISABLED		= 	std::bitset<Flags::FLAGS>(1ul<<4);
+const std::bitset<Flags::FLAGS> Flags::NIL			= 	std::bitset<Flags::FLAGS>(1ul<<5);
+const std::bitset<Flags::FLAGS> Flags::BOTTOM		= 	std::bitset<Flags::FLAGS>(1ul<<6);
+const std::bitset<Flags::FLAGS> Flags::CHOOSEN		= 	std::bitset<Flags::FLAGS>(1ul<<7);
+const std::bitset<Flags::FLAGS> Flags::REJECTED		= 	std::bitset<Flags::FLAGS>(1ul<<8);
 
 /* **************************************************
  *
@@ -40,7 +40,7 @@ Flags::Flags(void)
 /* **************************************************
  *
  ************************************************** */
-Flags::Flags(const std::bitset<Flags::NBRFLAGS> &flags)
+Flags::Flags(const std::bitset<Flags::FLAGS> &flags)
 {
   this->flags = flags;
 }
@@ -52,18 +52,18 @@ Flags::Flags(const std::bitset<Flags::NBRFLAGS> &flags)
 //{
 //}
 
+///* **************************************************
+// *
+// ************************************************** */
+//void Flags::setFlags(const std::bitset<Flags::FLAGS> &flags)
+//{
+//  this->flags = flags;
+//}
+//
 /* **************************************************
  *
  ************************************************** */
-void Flags::setFlags(const std::bitset<Flags::NBRFLAGS> &flags)
-{
-  this->flags=flags;
-}
-
-/* **************************************************
- *
- ************************************************** */
-std::bitset<Flags::NBRFLAGS>& Flags::getFlags(void)
+std::bitset<Flags::FLAGS> &Flags::getFlags(void)
 {
   return this->flags;
 }
@@ -73,13 +73,13 @@ std::bitset<Flags::NBRFLAGS>& Flags::getFlags(void)
  ************************************************** */
 void Flags::resetFlags(void)
 {
-  this->flags=0;
+  this->flags = 0;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Flags::isSetFlags(const std::bitset<Flags::NBRFLAGS> &cmp) const
+bool Flags::isSetFlags(const std::bitset<Flags::FLAGS> &cmp) const
 {
   return (this->flags & cmp).any();
 }
@@ -87,7 +87,7 @@ bool Flags::isSetFlags(const std::bitset<Flags::NBRFLAGS> &cmp) const
 /* **************************************************
  *
  ************************************************** */
-bool Flags::isUnsetFlags(const std::bitset<Flags::NBRFLAGS> &cmp) const
+bool Flags::isUnsetFlags(const std::bitset<Flags::FLAGS> &cmp) const
 {
   return (this->flags & cmp).none();
 }
@@ -95,7 +95,7 @@ bool Flags::isUnsetFlags(const std::bitset<Flags::NBRFLAGS> &cmp) const
 /* **************************************************
  *
  ************************************************** */
-void Flags::addFlags(const std::bitset<Flags::NBRFLAGS> &f)
+void Flags::addFlags(const std::bitset<Flags::FLAGS> &f)
 {
   this->flags |= f;
 }
@@ -103,7 +103,7 @@ void Flags::addFlags(const std::bitset<Flags::NBRFLAGS> &f)
 /* **************************************************
  *
  ************************************************** */
-void Flags::subFlags(const std::bitset<Flags::NBRFLAGS>& f)
+void Flags::subFlags(const std::bitset<Flags::FLAGS> &f)
 {
   this->flags &= ~f;
 }
@@ -114,7 +114,7 @@ void Flags::subFlags(const std::bitset<Flags::NBRFLAGS>& f)
 void 
 Flags::printFlags(std::ostream &outStream) const
 {
-  if (isSetFlags(SEEN))
+  if (isSetFlags(Flags::SEEN))
     outStream << "SEEN ";
   if (isSetFlags(XML))
     outStream << "XML ";

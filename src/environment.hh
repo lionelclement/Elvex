@@ -30,15 +30,15 @@ class Environment:
   public std::enable_shared_from_this< class Environment > {
 
 public:
-  typedef std::unordered_map< std::string const, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
+  typedef std::unordered_map< const std::string, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
   
 private:
   Environment();
   
 private:
   unordered_map env;
-  void add(std::string const, valuePtr=valuePtr());
-  void remove(std::string const);
+  void add(const std::string, valuePtr=valuePtr());
+  void remove(const std::string);
 
 public:
   ~Environment();
@@ -55,10 +55,10 @@ public:
   void print(std::ostream &) const;
   environmentPtr clone(void) const;
   valuePtr find(bitsetPtr) const;
-  valuePtr replaceVariables(valuePtr, bool &);
-  void replaceVariables(featuresPtr, bool &);
-  void replaceVariables(listFeaturesPtr, bool &);
-  void replaceVariables(listPtr, bool &);
-  std::string replaceVariables(const std::string, bool &);
+  void replaceVariables(valuePtr value, bool &);
+  void replaceVariables(featuresPtr features, bool &);
+  void replaceVariables(listFeaturesPtr listFeatures, bool &);
+  void replaceVariables(listPtr list, bool &);
+  void replaceVariables(std::string &string, bool &);
 };
 #endif // ENVIRONMENT_H

@@ -55,7 +55,7 @@ public:
   void setCode(const unsigned int code);
   const unsigned int getCodePred(void) const;
   void setForm(const std::string form);
-  const std::string getForm(void) const;
+  std::string &getForm(void);
   const featuresPtr getFeatures(void) const;
   
 #ifdef OUTPUT_XML

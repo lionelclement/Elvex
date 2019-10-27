@@ -25,31 +25,31 @@
 class Flags {
 
 public:
-  static const int NBRFLAGS=8;
-  static const std::bitset<NBRFLAGS> SEEN;
-  static const std::bitset<NBRFLAGS> XML;
-  static const std::bitset<NBRFLAGS> GEN;
-  static const std::bitset<NBRFLAGS> DISABLED;
-  static const std::bitset<NBRFLAGS> NIL;
-  static const std::bitset<NBRFLAGS> BOTTOM;
-  static const std::bitset<NBRFLAGS> REJECTED;
-  static const std::bitset<NBRFLAGS> CHOOSEN;
+  static const int FLAGS = 8;
+  static const std::bitset<FLAGS> SEEN;
+  static const std::bitset<FLAGS> XML;
+  static const std::bitset<FLAGS> GEN;
+  static const std::bitset<FLAGS> DISABLED;
+  static const std::bitset<FLAGS> NIL;
+  static const std::bitset<FLAGS> BOTTOM;
+  static const std::bitset<FLAGS> REJECTED;
+  static const std::bitset<FLAGS> CHOOSEN;
   
 private:
-  std::bitset<NBRFLAGS> flags;
+  std::bitset<FLAGS> flags;
   
 public:
   Flags(void);
-  Flags(const std::bitset<NBRFLAGS> &flags);
+  Flags(const std::bitset<FLAGS> &flags);
   //~Flags(void);
   
-  std::bitset<NBRFLAGS> &getFlags(void);
-  bool isSetFlags(const std::bitset<NBRFLAGS>&  cmp) const;
-  bool isUnsetFlags(const std::bitset<NBRFLAGS>&  cmp) const;
-  void setFlags(const std::bitset<NBRFLAGS> &flags);
+  std::bitset<FLAGS> &getFlags(void);
+  //void setFlags(const std::bitset<FLAGS> &flags);
+    bool isSetFlags(const std::bitset<FLAGS>& cmp) const;
+  bool isUnsetFlags(const std::bitset<FLAGS>& cmp) const;
   void resetFlags(void);
-  void addFlags(const std::bitset<NBRFLAGS>& f);
-  void subFlags(const std::bitset<NBRFLAGS>& f);
+  void addFlags(const std::bitset<FLAGS> &f);
+  void subFlags(const std::bitset<FLAGS> &f);
   void printFlags(std::ostream&) const;
   
 };

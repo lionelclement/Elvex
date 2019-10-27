@@ -112,7 +112,7 @@ public:
   static statementPtr create (unsigned int lineno, type op, arithmetic_op fct, statementPtr lhs=statementPtr(), statementPtr rhs=statementPtr());
   static statementPtr create (unsigned int lineno, type op, listPtr );
   static statementPtr create (unsigned int lineno, type op, statementsPtr );
-  static statementPtr _create (unsigned int lineno, type op, double);
+  static statementPtr create (unsigned int lineno, type op, double);
   static statementPtr create ();
 
   const bool isAff(void) const;
@@ -151,25 +151,26 @@ public:
   const double getNumber(void) const;
   const unsigned int getLineno(void) const;
 
-  void print(std::ostream &, unsigned int=0) const;
+  void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
   featuresPtr evalFeatures(itemPtr, class Synthesizer *synthesizer, bool);
   listPtr evalList(itemPtr, bool);
   valuePtr evalValue(itemPtr, class Synthesizer *synthesizer, bool);
   featuresPtr unif(featuresPtr, featuresPtr, itemPtr);
-  statementPtr clone(const std::bitset<NBRFLAGS> &savedFlags=std::bitset<NBRFLAGS>());
-  void buildInheritedSonFeatures(itemPtr, class Synthesizer *synthesizer, bool &);
-  void buildSynthesizedFeatures(itemPtr, class Synthesizer *synthesizer, bool &);
-  void buildEnvironmentWithInherited(itemPtr, class Synthesizer *synthesizer, bool &);
-  void buildEnvironmentWithSynthesize(itemPtr, class Synthesizer *synthesizer, bool &);
-  void buildEnvironmentWithValue(itemPtr, class Synthesizer *synthesizer, bool &);
-  void stmAttest(itemPtr, class Synthesizer *synthesizer, bool &);
-  void stmGuard(itemPtr, bool &, bool);
-  void stmForeach(itemPtr item, class Synthesizer *synthesizer, bool &result, bool &effect, bool trace);
+  statementPtr clone(const std::bitset<Flags::FLAGS> &savedFlags=std::bitset<Flags::FLAGS>());
+  void buildInheritedSonFeatures(itemPtr, class Synthesizer *synthesizer);
+  void buildSynthesizedFeatures(itemPtr, class Synthesizer *synthesizer);
+  void buildEnvironmentWithInherited(itemPtr, class Synthesizer *synthesizer);
+  void buildEnvironmentWithSynthesize(itemPtr, class Synthesizer *synthesizer);
+  void buildEnvironmentWithValue(itemPtr, class Synthesizer *synthesizer);
+  void stmAttest(itemPtr, class Synthesizer *synthesizer);
+  void stmGuard(itemPtr, bool);
+  void stmForeach(itemPtr item, class Synthesizer *synthesizer, bool trace);
+  void stmIf(itemPtr item, class Synthesizer *synthesizer, bool trace);
   void stmPrint(itemPtr, class Synthesizer *synthesizer);
   void stmPrintln(itemPtr, class Synthesizer *synthesizer);
   void renameVariables(unsigned int);
   void enable(statementPtr, itemPtr, bool&, bool);
-  void apply(itemPtr, class Synthesizer *, bool &, bool &, bool);
+  void apply(itemPtr, class Synthesizer *, bool);
   void lookingForAssignedInheritedSonFeatures(std::vector< bool > &);
   const bool findVariable(bitsetPtr);
 
