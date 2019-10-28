@@ -7,5 +7,5 @@
 // How to use this files:
 // In fr-1.0.3.input, uncomment a line begining with //text[...
 // and within this directory data, call ../src/elvex like this:
-// ../src/elvex  -maxCardinal 1000000 -maxUsages 100000 -compactDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.3.grammar -lexiconFile fr-1.0.3.local-lexicon -inputFile fr-1.0.3.input | ../src/elvexpostedition | sed 's/^ *//'
+// ../src/elvex -compactDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.3.grammar -lexiconFile fr-1.0.3.local-lexicon -inputFile fr-1.0.3.input | ../src/elvexpostedition | sed 's/^ *//'
 
