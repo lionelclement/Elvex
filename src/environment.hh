@@ -29,36 +29,36 @@
 class Environment:
 		public std::enable_shared_from_this<class Environment> {
 
-	public:
-		typedef std::unordered_map<const std::string, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
+public:
+	typedef std::unordered_map<const std::string, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
 
-	private:
-		Environment();
+private:
+	Environment();
 
-	private:
-		unordered_map env;
-		void add(const std::string, valuePtr = valuePtr());
-		void remove(const std::string);
+private:
+	unordered_map env;
+	void add(const std::string, valuePtr = valuePtr());
+	void remove(const std::string);
 
-	public:
-		~Environment();
-		static environmentPtr create(void);
+public:
+	~Environment();
+	static environmentPtr create(void);
 
-		void add(const bitsetPtr, valuePtr = valuePtr());
-		void add(const environmentPtr);
-		void add(const environmentPtr, const environmentPtr);
-		void remove(const bitsetPtr);
-		unordered_map::const_iterator begin() const;
-		unordered_map::const_iterator end() const;
-		const size_t size() const;
+	void add(const bitsetPtr, valuePtr = valuePtr());
+	void add(const environmentPtr);
+	void add(const environmentPtr, const environmentPtr);
+	void remove(const bitsetPtr);
+	unordered_map::const_iterator begin() const;
+	unordered_map::const_iterator end() const;
+	const size_t size() const;
 
-		void print(std::ostream &) const;
-		environmentPtr clone(void) const;
-		valuePtr find(bitsetPtr) const;
-		void replaceVariables(valuePtr value, bool &);
-		void replaceVariables(featuresPtr features, bool &);
-		void replaceVariables(listFeaturesPtr listFeatures, bool &);
-		void replaceVariables(listPtr list, bool &);
-		void replaceVariables(std::string &string, bool &);
+	void print(std::ostream &) const;
+	environmentPtr clone(void) const;
+	valuePtr find(bitsetPtr) const;
+	void replaceVariables(valuePtr value, bool &);
+	void replaceVariables(featuresPtr features, bool &);
+	void replaceVariables(listFeaturesPtr listFeatures, bool &);
+	void replaceVariables(listPtr list, bool &);
+	void replaceVariables(std::string &string, bool &);
 };
 #endif // ENVIRONMENT_H

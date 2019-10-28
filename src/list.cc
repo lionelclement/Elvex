@@ -31,8 +31,8 @@ listPtr List::NIL_LIST = List::create();
 /* **************************************************
  *
  ************************************************** */
-List::List(enum List::Type type, valuePtr value, listPtr car, listPtr cdr) :
-		Id(0) {
+List::List(enum List::Type type, valuePtr value, listPtr car, listPtr cdr)
+		: Id(0) {
 	this->type = type;
 	this->value = value;
 	this->pairp.car = car;
@@ -598,13 +598,13 @@ void List::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, state
  ************************************************** */
 bool List::containsVariable(void) {
 	/***
-	std::cerr << "<H4>List::containsVariable</H4>" << std::endl;
-	std::cerr << "<table border = \"1\"><tr><th>this</th></tr>";
-	std::cerr << "<tr><td>";
-	this->flatPrint(std::cerr, true);
-	std::cerr << "</td><td>";
-	std::cerr << "</td></tr></table>";
-	***/
+	 std::cerr << "<H4>List::containsVariable</H4>" << std::endl;
+	 std::cerr << "<table border = \"1\"><tr><th>this</th></tr>";
+	 std::cerr << "<tr><td>";
+	 this->flatPrint(std::cerr, true);
+	 std::cerr << "</td><td>";
+	 std::cerr << "</td></tr></table>";
+	 ***/
 	if (this->variableFlag.containsVariable())
 		return true;
 	bool result = false;
@@ -637,9 +637,9 @@ bool List::containsVariable(void) {
 	else
 		this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
 	/***
-	std::cerr << "<H4>List::containsVariable done</H4>" << std::endl;
-	std::cerr << (result ? "TRUE" : "FALSE");
-	***/
+	 std::cerr << "<H4>List::containsVariable done</H4>" << std::endl;
+	 std::cerr << (result ? "TRUE" : "FALSE");
+	 ***/
 	return result;
 }
 

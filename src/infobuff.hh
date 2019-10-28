@@ -24,17 +24,17 @@
 
 struct InfoBuff {
 private:
-  unsigned long int next;
-  unsigned long int offset;
+	unsigned long int next;
+	unsigned long int offset;
 
 public:
-  InfoBuff(unsigned long int next, unsigned long int offset);
-  InfoBuff(void);
-  unsigned long int getOffset() const;
-  unsigned long int getNext() const;
-  bool isNext() const;
-  bool isOffset() const;
-  void print(std::ostream&) const;
-    
+	InfoBuff(unsigned long int next, unsigned long int offset);
+	InfoBuff(void);
+	unsigned long int getOffset() const;
+	unsigned long int getNext() const;
+	bool isNext() const;
+	bool isOffset() const;
+	void print(std::ostream&) const;
+
 };
 #endif // INFOBUFF_H

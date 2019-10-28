@@ -22,16 +22,16 @@
 
 #include <cstddef>
 
-class Id {  
-  
+class Id {
+
 private:
-  static std::size_t uniqId;
-  std::size_t id;
-  
+	static std::size_t uniqId;
+	std::size_t id;
+
 public:
-  Id(size_t id);
-  std::size_t getId(void) const;
-  
+	Id(size_t id);
+	std::size_t getId(void) const;
+
 };
 
 #endif // ID_H

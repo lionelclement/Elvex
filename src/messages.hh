@@ -39,6 +39,4 @@
 
 #define FATAL_ERROR {FATAL_ERROR_MSG("");}
 
-
-
 #endif // MESSAGES_H

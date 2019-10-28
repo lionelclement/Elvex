@@ -21,21 +21,21 @@
 #define VARIABLE_FLAG_H
 
 class VariableFlag {
-  
-	public:
 
-		enum flagValues {
-			DOES_CONTAIN,
-			DOES_NOT_CONTAIN,
-			NONE
-		};
-private:
-  enum flagValues flag;
-  
 public:
-  VariableFlag(void) noexcept;
-  bool containsVariable(void);
-  void setFlag(enum flagValues flag);
+
+	enum flagValues {
+		DOES_CONTAIN,
+		DOES_NOT_CONTAIN,
+		NONE
+	};
+private:
+	enum flagValues flag;
+
+public:
+	VariableFlag(void) noexcept;
+	bool containsVariable(void);
+	void setFlag(enum flagValues flag);
 };
 
 #endif // VARIABLE_FLAG_H

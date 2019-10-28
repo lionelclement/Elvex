@@ -25,45 +25,43 @@
 /* **************************************************
  *
  ************************************************** */
-Serializable::Serializable(){
-  serialHashCode = 0;
-  serialString = std::string();
+Serializable::Serializable() {
+	serialHashCode = 0;
+	serialString = std::string();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Serializable::~Serializable(){
+Serializable::~Serializable() {
 }
 
 /* **************************************************
  *
  ************************************************** */
-const size_t Serializable::hashCode()
-{
-  if (serialHashCode == 0) {
-    makeSerialString();
-    serialHashCode = std::hash<std::string>()(serialString);
-  }
-  return serialHashCode;
+const size_t Serializable::hashCode() {
+	if (serialHashCode == 0) {
+		makeSerialString();
+		serialHashCode = std::hash<std::string>()(serialString);
+	}
+	return serialHashCode;
 }
 
 /* **************************************************
  *
  ************************************************** */
-const std::string Serializable::peekSerialString()
-{
-  if (serialString.size()==0) {
-    makeSerialString();
-    serialHashCode = std::hash<std::string>()(serialString);
-  }
-  return serialString;
+const std::string Serializable::peekSerialString() {
+	if (serialString.size() == 0) {
+		makeSerialString();
+		serialHashCode = std::hash<std::string>()(serialString);
+	}
+	return serialString;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Serializable::resetSerial(){
-  serialHashCode = 0;
-  serialString = std::string();
+void Serializable::resetSerial() {
+	serialHashCode = 0;
+	serialString = std::string();
 }

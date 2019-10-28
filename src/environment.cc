@@ -198,7 +198,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
 				}
 				else
 					FATAL_ERROR
-					;
+				;
 				break;
 			case Feature::VARIABLE: {
 				if ((*feature)->getValue()) {
@@ -239,7 +239,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
 					FATAL_ERROR_MSG("environment: variable substitution failed");
 				}
 			}
-			break;
+				break;
 		}
 		features->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
 	}
@@ -387,7 +387,8 @@ void Environment::replaceVariables(std::string &str, bool &effect) {
 	this->print(std::cerr);
 	std::cerr << "</td></tr></table>";
 	/* ***/
-	FATAL_ERROR;
+	FATAL_ERROR
+	;
 	std::string pattern =
 			std::string(
 					"(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");

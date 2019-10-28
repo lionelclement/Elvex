@@ -37,18 +37,18 @@ extern class Entry *localEntry;
 class Lex {
 
 public:
-  char *buffer;
-  struct Fsa *fsa;         // table fsa
-  struct InfoBuff *info;   //table des info
-  unsigned long int init;
-  class Tree *lexiconInit;
+	char *buffer;
+	struct Fsa *fsa;         // table fsa
+	struct InfoBuff *info;   //table des info
+	unsigned long int init;
+	class Tree *lexiconInit;
 
-  void printResults (std::ostream &, unsigned long int index, bool sep) const;
-  unsigned long int searchStatic(unsigned long int index, std::string) const;
-  bool saveFsa(FILE *file);
-  bool loadFsa(FILE *file);
-  bool build(char *directory, char *prefix, std::istream *input);
-  bool load(char *directory, char *prefix);
-  bool consult(std::string inputFileName);
+	void printResults(std::ostream &, unsigned long int index, bool sep) const;
+	unsigned long int searchStatic(unsigned long int index, std::string) const;
+	bool saveFsa(FILE *file);
+	bool loadFsa(FILE *file);
+	bool build(char *directory, char *prefix, std::istream *input);
+	bool load(char *directory, char *prefix);
+	bool consult(std::string inputFileName);
 };
 #endif // LEX_H

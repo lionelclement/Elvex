@@ -33,23 +33,23 @@ class Vartable {
 
 public:
 
-  static const unsigned int _END_ = 0;
-  static const unsigned int _STARTTERM_ = 1;
-  static const unsigned int _EMPTY_ = 2;
-  static const unsigned int _OPEN_ = 3;
-  static const unsigned int _FIRSTID_ = 4;
-  
+	static const unsigned int _END_ = 0;
+	static const unsigned int _STARTTERM_ = 1;
+	static const unsigned int _EMPTY_ = 2;
+	static const unsigned int _OPEN_ = 3;
+	static const unsigned int _FIRSTID_ = 4;
+
 public:
-  static unsigned int intToStrIndex;
-  static std::bitset<MAXBITS> varTableIndex;
-  static std::unordered_map<std::string, bitsetPtr > varTable;
-  static std::map< unsigned int, std::string > intToStrTable;
-  static std::unordered_map<std::string, unsigned int > strToIntTable;
-  
-  static void init();
-  static bitsetPtr varTableAdd(std::string); // string -> bit
-  static unsigned int strToInt(std::string); // string -> integer
-  static std::string intToStr(unsigned int);
+	static unsigned int intToStrIndex;
+	static std::bitset<MAXBITS> varTableIndex;
+	static std::unordered_map<std::string, bitsetPtr> varTable;
+	static std::map<unsigned int, std::string> intToStrTable;
+	static std::unordered_map<std::string, unsigned int> strToIntTable;
+
+	static void init();
+	static bitsetPtr varTableAdd(std::string); // string -> bit
+	static unsigned int strToInt(std::string); // string -> integer
+	static std::string intToStr(unsigned int);
 };
 
 #endif // VARTABLE_H

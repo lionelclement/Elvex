@@ -30,36 +30,33 @@
 #include "ipointer.hh"
 
 class Statements:
-  public Id,
-  public Flags,
-  public Serializable,
-  public std::enable_shared_from_this< class Statements > {
+		public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Statements> {
 
 public:
-		typedef std::list< statementPtr > list;
+	typedef std::list<statementPtr> list;
 
 private:
-  statementPtr guard;
-  list statements;
-  Statements(statementPtr);
-  void makeSerialString(void);
-  
+	statementPtr guard;
+	list statements;
+	Statements(statementPtr);
+	void makeSerialString(void);
+
 public:
-  ~Statements();
-  static statementsPtr create(statementPtr = statementPtr());
-  
-  size_t size(void);
-  list::const_iterator begin(void) const;
-  list::const_iterator end(void) const;
-  
-  void addStatement(statementPtr);
-  void renameVariables(unsigned int);
-  void print(std::ostream &, unsigned int tabulation = 0, int yetColored=0) const;
-  statementsPtr clone(const std::bitset<Flags::FLAGS> &savedFlags);
-  void apply(itemPtr, class Synthesizer *, bool);
-  void lookingForAssignedInheritedSonFeatures(std::vector< bool > &);
-  void enable(itemPtr, bool &, bool);
-  bool findVariableElsewhere(statementPtr, bitsetPtr);
+	~Statements();
+	static statementsPtr create(statementPtr = statementPtr());
+
+	size_t size(void);
+	list::const_iterator begin(void) const;
+	list::const_iterator end(void) const;
+
+	void addStatement(statementPtr);
+	void renameVariables(unsigned int);
+	void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
+	statementsPtr clone(const std::bitset<Flags::FLAGS> &savedFlags);
+	void apply(itemPtr, class Synthesizer *, bool);
+	void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
+	void enable(itemPtr, bool &, bool);
+	bool findVariableElsewhere(statementPtr, bitsetPtr);
 };
 
 #endif // STATEMENTS_H

@@ -24,20 +24,20 @@
 
 class Info {
 private:
-  class Info *next;
-  unsigned long int offset;
-  unsigned long int address;
+	class Info *next;
+	unsigned long int offset;
+	unsigned long int address;
 
 public:
-  Info(class Info *next = NULL, unsigned long int offset = 0);
-  ~Info();
+	Info(class Info *next = NULL, unsigned long int offset = 0);
+	~Info();
 
-  class Info *getNext(void) const;
-  unsigned long int getOffset(void) const;
-  unsigned long int getAddress(void) const;
-  void setAddress(unsigned long int);
+	class Info *getNext(void) const;
+	unsigned long int getOffset(void) const;
+	unsigned long int getAddress(void) const;
+	void setAddress(unsigned long int);
 
-  void printStatic(FILE *) const;
+	void printStatic(FILE *) const;
 };
 
 #endif // INFO_H

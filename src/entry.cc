@@ -30,8 +30,8 @@
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int code, unsigned int codePred, std::string form, featuresPtr features) :
-		Id(0) {
+Entry::Entry(unsigned int code, unsigned int codePred, std::string form, featuresPtr features)
+		: Id(0) {
 	this->code = code;
 	this->codePred = codePred;
 	this->form = form;
@@ -42,8 +42,8 @@ Entry::Entry(unsigned int code, unsigned int codePred, std::string form, feature
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr features) :
-		Id(0) {
+Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr features)
+		: Id(0) {
 	this->code = code;
 	this->codePred = Vartable::strToInt(pred);
 	this->form = form;

@@ -28,8 +28,8 @@
 /* ************************************************************
  * 
  ************************************************************ */
-Feature::Feature(enum Feature::Type type, bitsetPtr attribute, valuePtr value) :
-		Id(0) {
+Feature::Feature(enum Feature::Type type, bitsetPtr attribute, valuePtr value)
+		: Id(0) {
 	this->type = type;
 	this->attribute = attribute;
 	this->value = value;

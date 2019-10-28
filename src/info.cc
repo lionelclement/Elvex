@@ -23,55 +23,49 @@
 /* **************************************************
  *
  ************************************************** */
-Info::Info(class Info *next, unsigned long int offset)
-{
-  this->address = 0;
-  this->next = next;
-  this->offset = offset;
-  NEW;
+Info::Info(class Info *next, unsigned long int offset) {
+	this->address = 0;
+	this->next = next;
+	this->offset = offset;
+	NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Info::~Info()
-{
-	  DELETE;
-  if (next) {
-    delete(next);
-    next = NULL;
-  }
+Info::~Info() {
+	DELETE;
+	if (next) {
+		delete (next);
+		next = NULL;
+	}
 }
 
 /* **************************************************
  *
  ************************************************** */
-class Info *Info::getNext(void) const
-{
-  return next;
+class Info *Info::getNext(void) const {
+	return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int Info::getOffset(void) const 
-{
-  return offset;
+unsigned long int Info::getOffset(void) const {
+	return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int Info::getAddress(void) const 
-{
-  return address;
+unsigned long int Info::getAddress(void) const {
+	return address;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Info::setAddress(unsigned long int address)
-{
-  this->address=address;
+void Info::setAddress(unsigned long int address) {
+	this->address = address;
 }
 

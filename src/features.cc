@@ -31,8 +31,8 @@ featuresPtr Features::NIL = createNil();
 /* **************************************************
  *
  ************************************************** */
-Features::Features(featurePtr feature) :
-		Id(0) {
+Features::Features(featurePtr feature)
+		: Id(0) {
 	if (feature)
 		features.push_front(feature);
 	this->pred = 0;

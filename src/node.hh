@@ -30,35 +30,33 @@
 #include "id.hh"
 #include "ipointer.hh"
 
-class Node: 
-  public Flags,
-  public Id,
-  public std::enable_shared_from_this<class Node> {
+class Node:
+		public Flags, public Id, public std::enable_shared_from_this<class Node> {
 
 private:
-  unsigned int nbrCS;
-  std::vector< forestPtr > forests;
-  std::vector< std::string > output;
-  
-  Node(void);
-  void generate(std::vector< forestPtr >::const_iterator);
+	unsigned int nbrCS;
+	std::vector<forestPtr> forests;
+	std::vector<std::string> output;
+
+	Node(void);
+	void generate(std::vector<forestPtr>::const_iterator);
 
 public:
-  ~Node();
-  static nodePtr create(void);
+	~Node();
+	static nodePtr create(void);
 
-  std::vector< forestPtr > &getForests(void);
-  const std::vector<std::string> &getOutput(void) const;
-  
-  void addForest(forestPtr);
-  forestPtr getForest(unsigned int) const;
-  
+	std::vector<forestPtr> &getForests(void);
+	const std::vector<std::string> &getOutput(void) const;
+
+	void addForest(forestPtr);
+	forestPtr getForest(unsigned int) const;
+
 #ifdef OUTPUT_XML
-  void toXML(xmlNodePtr, xmlNodePtr) const;
+	void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
-  void generate(bool);
+	void generate(bool);
 
 };
 
 #endif // NODE_H
- 
+

@@ -23,78 +23,74 @@
  *
  ************************************************** */
 Fsa::Fsa(unsigned long int child, unsigned long int sibling, unsigned long int info, char letter) {
-  this->child = child;
-  this->sibling = sibling;
-  this->info = info;
-  this->letter = letter;
+	this->child = child;
+	this->sibling = sibling;
+	this->info = info;
+	this->letter = letter;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Fsa::Fsa(void) {
-  this->child = (unsigned long int)~0UL;
-  this->sibling =  (unsigned long int)~0UL;
-  this->info =  (unsigned long int)~0UL;
-  this->letter =  (char)~0;
+	this->child = (unsigned long int)~0UL;
+	this->sibling = (unsigned long int)~0UL;
+	this->info = (unsigned long int)~0UL;
+	this->letter = (char)~0;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Fsa::print(std::ostream& out) const
-{
-  out << (long int)child << ' ' << (long int)sibling << ' ' << (long int)info << ' ' << (int)letter << std::endl;
+void Fsa::print(std::ostream& out) const {
+	out << (long int)child << ' ' << (long int)sibling << ' ' << (long int)info << ' ' << (int)letter << std::endl;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Fsa::isChild() const
-{
-  return child != (unsigned long int)(~0UL);
+bool Fsa::isChild() const {
+	return child != (unsigned long int)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Fsa::isSibling() const
-{
-  return sibling != (unsigned long int)(~0UL);
+bool Fsa::isSibling() const {
+	return sibling != (unsigned long int)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Fsa::isInfo() const
-{
-  return info != (unsigned long int)(~0UL);
+bool Fsa::isInfo() const {
+	return info != (unsigned long int)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned long int Fsa::getChild(void) {
-  return child;
+	return child;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned long int Fsa::getSibling(void) {
-  return sibling;
+	return sibling;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned long int Fsa::getInfo(void) {
-  return info;
+	return info;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool Fsa::isLetter(char letter) {
-  return letter == this->letter;
+	return letter == this->letter;
 }

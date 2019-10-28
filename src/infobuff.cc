@@ -23,55 +23,50 @@
  *
  ************************************************** */
 InfoBuff::InfoBuff(unsigned long int next, unsigned long int offset) {
-  this->next = next;
-  this->offset = offset;
+	this->next = next;
+	this->offset = offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
 InfoBuff::InfoBuff(void) {
-  this->next = (unsigned long int)(~0UL);
-  this->offset = (unsigned long int)(~0UL);
+	this->next = (unsigned long int)(~0UL);
+	this->offset = (unsigned long int)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int InfoBuff::getOffset() const
-{
-  return offset;
+unsigned long int InfoBuff::getOffset() const {
+	return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int InfoBuff::getNext() const
-{
-  return next;
+unsigned long int InfoBuff::getNext() const {
+	return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool InfoBuff::isNext() const
-{
-  return next != (unsigned long int)(~0UL);
+bool InfoBuff::isNext() const {
+	return next != (unsigned long int)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool InfoBuff::isOffset() const
-{
-  return offset != (unsigned long int)(~0UL);
+bool InfoBuff::isOffset() const {
+	return offset != (unsigned long int)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void InfoBuff::print(std::ostream& out) const
-{
-  out << (long int)next << ' ' << (long int)offset << std::endl;
+void InfoBuff::print(std::ostream& out) const {
+	out << (long int)next << ' ' << (long int)offset << std::endl;
 }
 

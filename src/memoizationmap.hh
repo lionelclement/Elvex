@@ -28,18 +28,18 @@
 #include <string>
 
 class MemoizationMap:
-  public std::enable_shared_from_this< class MemoizationMap > {
-  
+		public std::enable_shared_from_this<class MemoizationMap> {
+
 public:
-  typedef std::unordered_map<std::string, std::list< memoizationValuePtr > > unordered_map;
+	typedef std::unordered_map<std::string, std::list<memoizationValuePtr> > unordered_map;
 
 private:
-  unordered_map map;
+	unordered_map map;
 
 public:
-  unordered_map::const_iterator end(void) const;
-  unordered_map::const_iterator find(const std::string) const;
-  void insert(std::string, featuresPtr, forestIdentifierPtr);
-  
-};  
+	unordered_map::const_iterator end(void) const;
+	unordered_map::const_iterator find(const std::string) const;
+	void insert(std::string, featuresPtr, forestIdentifierPtr);
+
+};
 #endif // MEMOIZATIONMAP_H

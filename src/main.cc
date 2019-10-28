@@ -54,7 +54,8 @@ xmlDocPtr document;
  ************************************************** */
 void Usage(char **argv) {
 	std::cerr << "Usage: " << PACKAGE_NAME << " [options] [<input>]*\n";
-	std::cerr << "\
+	std::cerr
+			<< "\
 options\n\
 \t--help|-h                   print this\n\
 \t--version|-v                print version\n\
@@ -69,7 +70,8 @@ options\n\
 \t--traceReduce\n\
 \t--traceAction\n";
 #endif
-	std::cerr << "\
+	std::cerr
+			<< "\
 \t-maxLength <number>         max number of length\n\
 \t-maxUsages <number>         max number of rule usage\n\
 \t-maxCardinal <number>       max number of items per set\n\
@@ -106,21 +108,19 @@ void generate(void) {
 		std::vector<forestPtr>::const_iterator forestIt = synthesizer.getNodeRoot()->getForests().begin();
 		forestPtr forest;
 		if (synthesizer.getRandom()) {
-			int rv = std::rand()/((RAND_MAX + 1u)/synthesizer.getNodeRoot()->getForests().size());
+			int rv = std::rand() / ((RAND_MAX + 1u) / synthesizer.getNodeRoot()->getForests().size());
 			forest = synthesizer.getNodeRoot()->getForests().at(rv);
 		}
 		while (forestIt != synthesizer.getNodeRoot()->getForests().end()) {
 			if (!synthesizer.getRandom())
 				forest = *forestIt;
-			for (std::vector<std::string>::const_iterator i = forest->getOutput().begin();
-					i != forest->getOutput().end();
-					++i){
+			for (std::vector<std::string>::const_iterator i = forest->getOutput().begin(); i != forest->getOutput().end(); ++i) {
 #ifdef TRACE
-std::cout << "<li>" << std::endl;
+				std::cout << "<li>" << std::endl;
 #endif
-std::cout << *i << std::endl;
+				std::cout << *i << std::endl;
 #ifdef TRACE
-std::cout << "</li>" << std::endl;
+				std::cout << "</li>" << std::endl;
 #endif
 			}
 			if (synthesizer.getRandom())
@@ -150,27 +150,27 @@ int main(int argn, char **argv) {
 			return EXIT_SUCCESS;
 		}
 		else {
-			for (unsigned int arg = 1;argv[arg];++arg) {
+			for (unsigned int arg = 1; argv[arg]; ++arg) {
 				if (argv[arg][0] == '-') {
-					if (!strcmp(argv[arg]+1, "v") || !strcmp(argv[arg] + 1, "-version")) {
+					if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
 						std::cout << PACKAGE_VERSION << std::endl;
 						return EXIT_SUCCESS;
 					}
 
-					else if (!strcmp(argv[arg]+1, "h") || !strcmp(argv[arg] + 1, "-help")) {
+					else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
 						Usage(argv);
 						return EXIT_SUCCESS;
 					}
 
-					else if (!strcmp(argv[arg]+1, "t") || !strcmp(argv[arg] + 1, "-trace")) {
+					else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace")) {
 						synthesizer.setTrace(true);
 					}
 
-					else if (!strcmp(argv[arg]+1, "a") || !strcmp(argv[arg] + 1, "-reduceAll")) {
+					else if (!strcmp(argv[arg] + 1, "a") || !strcmp(argv[arg] + 1, "-reduceAll")) {
 						synthesizer.setReduceAll(true);
 					}
 
-					else if (!strcmp(argv[arg]+1, "r") || !strcmp(argv[arg] + 1, "-random")) {
+					else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random")) {
 						std::srand(time(nullptr));
 						synthesizer.setRandom(true);
 					}
@@ -199,7 +199,7 @@ int main(int argn, char **argv) {
 #endif
 
 					else if (!strcmp(argv[arg] + 1, "lexiconFile")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setLexiconFileName(argv[++arg]);
 						else {
 							Usage(argv);
@@ -208,7 +208,7 @@ int main(int argn, char **argv) {
 					}
 
 					else if (!strcmp(argv[arg] + 1, "grammarFile")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setGrammarFileName(argv[++arg]);
 						else {
 							Usage(argv);
@@ -217,7 +217,7 @@ int main(int argn, char **argv) {
 					}
 
 					else if (!strcmp(argv[arg] + 1, "inputFile")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setInputFileName(argv[++arg]);
 						else {
 							Usage(argv);
@@ -226,7 +226,7 @@ int main(int argn, char **argv) {
 					}
 
 					else if (!strcmp(argv[arg] + 1, "maxLength")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setMaxLength(atoi(argv[++arg]));
 						else {
 							Usage(argv);
@@ -235,7 +235,7 @@ int main(int argn, char **argv) {
 					}
 
 					else if (!strcmp(argv[arg] + 1, "maxUsages")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setMaxUsages(atoi(argv[++arg]));
 						else {
 							Usage(argv);
@@ -244,7 +244,7 @@ int main(int argn, char **argv) {
 					}
 
 					else if (!strcmp(argv[arg] + 1, "maxCardinal")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setMaxCardinal(atoi(argv[++arg]));
 						else {
 							Usage(argv);
@@ -253,18 +253,19 @@ int main(int argn, char **argv) {
 					}
 
 					else if (!strcmp(argv[arg] + 1, "maxTime")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-')) {
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-')) {
 							signal(SIGALRM, seq);
 							alarm(atoi(argv[++arg]));
 							time(&start);
-						} else {
+						}
+						else {
 							Usage(argv);
 							return EXIT_FAILURE;
 						}
 					}
 
 					else if (!strcmp(argv[arg] + 1, "compactDirectory")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setCompactDirectoryName(argv[++arg]);
 						else {
 							Usage(argv);
@@ -273,7 +274,7 @@ int main(int argn, char **argv) {
 					}
 
 					else if (!strcmp(argv[arg] + 1, "compactLexiconFile")) {
-						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-'))
+						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setCompactLexiconFileName(argv[++arg]);
 						else {
 							Usage(argv);
@@ -285,7 +286,8 @@ int main(int argn, char **argv) {
 					else if (!strcmp (argv[arg]+1, "xml")) {
 						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0]!='-')) {
 							synthesizer.setOutXML(strdup(argv[++arg]));
-						} else {
+						}
+						else {
 							Usage(argv);
 							return EXIT_FAILURE;
 						}
@@ -293,7 +295,8 @@ int main(int argn, char **argv) {
 #endif
 
 					else {
-						CERR_LINE;
+						CERR_LINE
+						;
 						std::cerr << "Unknown argument: " << argv[arg] + 1 << std::endl;
 						Usage(argv);
 						return EXIT_FAILURE;
@@ -324,9 +327,7 @@ int main(int argn, char **argv) {
 				std::cerr << "load compact lexicon" << "<BR>" << std::endl;
 #endif
 				synthesizer.setCompactLexicon(new Lex());
-				char *dir = strdup((synthesizer.getCompactDirectoryName().length() > 0) ?
-						synthesizer.getCompactDirectoryName().c_str() :
-						".");
+				char *dir = strdup((synthesizer.getCompactDirectoryName().length() > 0) ? synthesizer.getCompactDirectoryName().c_str() : ".");
 				char *file = strdup(synthesizer.getCompactLexiconFileName().c_str());
 				if (!synthesizer.getCompactLexicon()->load(dir, file))
 					return EXIT_FAILURE;
@@ -341,7 +342,7 @@ int main(int argn, char **argv) {
 #endif
 
 		}
-		srand (time(NULL));
+		srand(time(NULL));
 		if (synthesizer.getInputFileName().length() > 0) {
 #ifdef TRACE_INIT
 			std::cerr << "load input" << "<BR>" << std::endl;
@@ -350,7 +351,7 @@ int main(int argn, char **argv) {
 			generate();
 		}
 
-		for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin() ; i != synthesizer.getInputs().end() ; ++i) {
+		for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin(); i != synthesizer.getInputs().end(); ++i) {
 			synthesizer.parseString("@input " + *i, std::string("Input"));
 			generate();
 		}
@@ -365,9 +366,11 @@ int main(int argn, char **argv) {
 #ifdef TRACE_INIT
 		std::cerr << std::endl << "EXIT_SUCCESS" << "<BR>" << std::endl;
 #endif
-	} catch (std::string &message) {
+	}
+	catch (std::string &message) {
 		std::cerr << message << std::endl;
-	} catch (char const *message) {
+	}
+	catch (char const *message) {
 		std::cerr << message << std::endl;
 	}
 #ifdef TRACE

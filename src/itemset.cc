@@ -26,140 +26,119 @@
 /* **************************************************
  *
  ************************************************** */
-ItemSet::ItemSet (unsigned int id)
-{
-  this->id = id;
-  NEW;
+ItemSet::ItemSet(unsigned int id) {
+	this->id = id;
+	NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::~ItemSet()
-{
-	  DELETE;
-  for (iterator it = items.begin();
-       it != items.end();
-       ++it){
-    itemPtr tmp = *it;
-    if (tmp)
-      (tmp).reset();
-  }
-  items.clear();
+ItemSet::~ItemSet() {
+	DELETE;
+	for (iterator it = items.begin(); it != items.end(); ++it) {
+		itemPtr tmp = *it;
+		if (tmp)
+			(tmp).reset();
+	}
+	items.clear();
 }
 
 /* **************************************************
  *
  ************************************************** */
-itemSetPtr ItemSet::create (unsigned int id)
-{
-  return itemSetPtr( new ItemSet(id) );
+itemSetPtr ItemSet::create(unsigned int id) {
+	return itemSetPtr(new ItemSet(id));
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int ItemSet::getId(void)
-{
-  return id;
+unsigned int ItemSet::getId(void) {
+	return id;
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::set &ItemSet::getItems(void)
-{
-  return items;
+ItemSet::set &ItemSet::getItems(void) {
+	return items;
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::begin(void) const 
-{
-  return items.begin();
+ItemSet::const_iterator ItemSet::begin(void) const {
+	return items.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::end(void) const 
-{
-  return items.end();
+ItemSet::const_iterator ItemSet::end(void) const {
+	return items.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::find(itemPtr item) const 
-{
-  return items.find(item);
+ItemSet::const_iterator ItemSet::find(itemPtr item) const {
+	return items.find(item);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer)
-{
-  if (items.size() > synthesizer->getMaxCardinal()){
-    FATAL_ERROR_MSG("maxCardinal");
-  }
+bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer) {
+	if (items.size() > synthesizer->getMaxCardinal()) {
+		FATAL_ERROR_MSG("maxCardinal");
+	}
 #ifdef TRACE_INSERT
-  std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
-  item->print(std::cout);
-  std::cout << std::endl;
+	std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
+	item->print(std::cout);
+	std::cout << std::endl;
 #endif
-  return items.insert(item).second;
+	return items.insert(item).second;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void ItemSet::erase(itemPtr item)
-{
-  items.erase(item);
+void ItemSet::erase(itemPtr item) {
+	items.erase(item);
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t ItemSet::size(void) const
-{
-  return items.size();
+size_t ItemSet::size(void) const {
+	return items.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void
-ItemSet::resetUsages()
-{
-  for (iterator item=items.begin();
-       item!=items.end();
-       item++){
-    (*item)->getRule()->resetUsages();
+void ItemSet::resetUsages() {
+	for (iterator item = items.begin(); item != items.end(); item++) {
+		(*item)->getRule()->resetUsages();
 
-  }
+	}
 }
 
 /* **************************************************
  *
  ************************************************** */
-void
-ItemSet::print(std::ostream& oss)
-{
-  oss << "<TABLE border=\"0\">";
-  for (iterator item=items.begin();
-       item!=items.end();
-       item++){
-    oss << "<TR>";
-    oss << "<TD align=\"LEFT\">";
-    (*item)->print(oss);
-    oss << "</TD>";
-    oss << "</TR>";
+void ItemSet::print(std::ostream& oss) {
+	oss << "<TABLE border=\"0\">";
+	for (iterator item = items.begin(); item != items.end(); item++) {
+		oss << "<TR>";
+		oss << "<TD align=\"LEFT\">";
+		(*item)->print(oss);
+		oss << "</TD>";
+		oss << "</TR>";
 
-  }
-  oss << "</TABLE>";
+	}
+	oss << "</TABLE>";
 }
 
 #ifdef OUTPUT_XML
@@ -169,20 +148,20 @@ ItemSet::print(std::ostream& oss)
 void
 ItemSet::toXML(xmlNodePtr node)
 {
-  xmlNodePtr s=xmlNewChild(node, NULL, (const xmlChar*)"STATE", NULL);
-  xmlSetProp(s, (xmlChar*)"id", (xmlChar*)(std::to_string(this->id)).c_str());
-  xmlSetProp(s, (xmlChar*)"fillcolor", (xmlChar*)"WHITE");
-  xmlSetProp(s, (xmlChar*)"color", (xmlChar*)"BLACK");
-  std::ostringstream oss;
-  oss << "<TABLE BORDER=\"0\">";
-  oss << "<TR><TD><FONT COLOR=\"BLUE\" FACE=\"Times-Roman\" POINT-SIZE=\"16\">Q" << id << "</FONT></TD></TR>";
-  oss << "<TR>";
-  oss << "<TD ALIGN=\"LEFT\">";
-  print(oss);
-  oss << "</TD>";
-  oss << "</TR>";
-  oss << "</TABLE>";
-  xmlSetProp(s, (xmlChar*)"rule", (xmlChar*)(oss.str().c_str()));
+	xmlNodePtr s=xmlNewChild(node, NULL, (const xmlChar*)"STATE", NULL);
+	xmlSetProp(s, (xmlChar*)"id", (xmlChar*)(std::to_string(this->id)).c_str());
+	xmlSetProp(s, (xmlChar*)"fillcolor", (xmlChar*)"WHITE");
+	xmlSetProp(s, (xmlChar*)"color", (xmlChar*)"BLACK");
+	std::ostringstream oss;
+	oss << "<TABLE BORDER=\"0\">";
+	oss << "<TR><TD><FONT COLOR=\"BLUE\" FACE=\"Times-Roman\" POINT-SIZE=\"16\">Q" << id << "</FONT></TD></TR>";
+	oss << "<TR>";
+	oss << "<TD ALIGN=\"LEFT\">";
+	print(oss);
+	oss << "</TD>";
+	oss << "</TR>";
+	oss << "</TABLE>";
+	xmlSetProp(s, (xmlChar*)"rule", (xmlChar*)(oss.str().c_str()));
 }
 #endif
 

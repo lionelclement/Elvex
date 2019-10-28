@@ -25,18 +25,16 @@ std::size_t Id::uniqId = 1;
 /* **************************************************
  *
  ************************************************** */
-Id::Id(size_t id)
-{
-  if (id)
-    this->id = id;
-  else
-    this->id = ++uniqId;
+Id::Id(size_t id) {
+	if (id)
+		this->id = id;
+	else
+		this->id = ++uniqId;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::size_t Id::getId(void) const
-{
-  return this->id;
+std::size_t Id::getId(void) const {
+	return this->id;
 }

@@ -25,8 +25,7 @@
 /* **************************************************
  *
  ************************************************** */
-Terms::Terms(std::vector<termPtr >& terms, bool optional)
-{
+Terms::Terms(std::vector<termPtr>& terms, bool optional) {
 	this->terms = terms;
 	this->optional = optional;
 	NEW;
@@ -35,8 +34,7 @@ Terms::Terms(std::vector<termPtr >& terms, bool optional)
 /* **************************************************
  *
  ************************************************** */
-Terms::Terms(termPtr term, bool optional)
-{
+Terms::Terms(termPtr term, bool optional) {
 	this->terms.push_back(term);
 	this->optional = optional;
 	NEW;
@@ -45,8 +43,7 @@ Terms::Terms(termPtr term, bool optional)
 /* **************************************************
  *
  ************************************************** */
-Terms::Terms()
-{
+Terms::Terms() {
 	this->optional = false;
 	NEW;
 }
@@ -54,8 +51,7 @@ Terms::Terms()
 /* **************************************************
  *
  ************************************************** */
-Terms::~Terms()
-{
+Terms::~Terms() {
 	DELETE;
 	// for (termPtr t : terms){
 	// 	t.reset();
@@ -65,108 +61,97 @@ Terms::~Terms()
 /* **************************************************
  *
  ************************************************** */
-termsPtr Terms::create(std::vector<termPtr >& terms, bool optional)
-{
+termsPtr Terms::create(std::vector<termPtr>& terms, bool optional) {
 	return termsPtr(new Terms(terms, optional));
 }
 
 /* **************************************************
  *
  ************************************************** */
-termsPtr Terms::create(termPtr term, bool optional)
-{
+termsPtr Terms::create(termPtr term, bool optional) {
 	return termsPtr(new Terms(term, optional));
 }
 
 /* **************************************************
  *
  ************************************************** */
-termsPtr Terms::create()
-{
-  return termsPtr(new Terms());
+termsPtr Terms::create() {
+	return termsPtr(new Terms());
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Terms::isOptional(void) const 
-{
+bool Terms::isOptional(void) const {
 	return optional;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Terms::setOptional()
-{
+void Terms::setOptional() {
 	this->optional = true;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Terms::unsetOptional()
-{
+void Terms::unsetOptional() {
 	this->optional = false;
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Terms::size(void) const 
-{
+size_t Terms::size(void) const {
 	return terms.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<termPtr>::const_iterator Terms::begin(void) const
-{
+std::vector<termPtr>::const_iterator Terms::begin(void) const {
 	return terms.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<termPtr>::const_iterator Terms::end(void) const
-{
+std::vector<termPtr>::const_iterator Terms::end(void) const {
 	return terms.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Terms::erase(std::vector<termPtr>::iterator begin, std::vector<termPtr>::iterator end)
-{
+void Terms::erase(std::vector<termPtr>::iterator begin, std::vector<termPtr>::iterator end) {
 	terms.erase(begin, end);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Terms::push_back(termPtr term)
-{
+void Terms::push_back(termPtr term) {
 	terms.push_back(term);
 }
 
 /* **************************************************
  *
  ************************************************** */
-const bool Terms::Less::operator () (const termsPtr t1, const termsPtr t2) const
-{
+const bool Terms::Less::operator ()(const termsPtr t1, const termsPtr t2) const {
 	if (t1->optional != t2->optional)
 		return (t1->optional < t2->optional);
 
 	if (t1->size() != t2->size())
 		return (t1->size() < t2->size());
 
-	std::vector<termPtr>::const_iterator s1=t1->begin();
-	std::vector<termPtr>::const_iterator s2=t2->begin();
-	while (s1!=t1->end()){
+	std::vector<termPtr>::const_iterator s1 = t1->begin();
+	std::vector<termPtr>::const_iterator s2 = t2->begin();
+	while (s1 != t1->end()) {
 		if ((*s1) != (*s2))
 			return ((*s1) < (*s2));
-		++s1; ++s2;
+		++s1;
+		++s2;
 	}
 	return false;
 }
@@ -174,16 +159,12 @@ const bool Terms::Less::operator () (const termsPtr t1, const termsPtr t2) const
 /* **************************************************
  *
  ************************************************** */
-void
-Terms::print(std::ostream& outStream)
-{
+void Terms::print(std::ostream& outStream) {
 	if (optional)
 		outStream << '[';
-	if (size()>1){
+	if (size() > 1) {
 		bool first = true;
-		for (std::vector< termPtr >::const_iterator term = begin();
-				term != end();
-				++term){
+		for (std::vector<termPtr>::const_iterator term = begin(); term != end(); ++term) {
 			if (first)
 				first = false;
 			else
@@ -191,7 +172,7 @@ Terms::print(std::ostream& outStream)
 			(*term)->print(outStream);
 		}
 	}
-	else{
+	else {
 		terms[0]->print(outStream);
 	}
 	if (optional)
@@ -201,19 +182,13 @@ Terms::print(std::ostream& outStream)
 /* **************************************************
  *
  ************************************************** */
-termsPtr
-Terms::clone(void)  const
-{
-	std::vector<termPtr > new_terms;
-	for (std::vector<termPtr>::const_iterator t = begin();
-			t != end();
-			++t)
+termsPtr Terms::clone(void) const {
+	std::vector<termPtr> new_terms;
+	for (std::vector<termPtr>::const_iterator t = begin(); t != end(); ++t)
 		new_terms.push_back((*t)->clone());
 	return Terms::create(new_terms, optional);
 }
 
-termPtr
-Terms::operator[] (unsigned int i)
-{
+termPtr Terms::operator[](unsigned int i) {
 	return terms[i];
 }

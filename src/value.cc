@@ -28,15 +28,15 @@
 #include "ipointer.hh"
 #include "synthesizer.hh"
 
-valuePtr Value::NIL_VALUE = Value::create(Value::BOOL, (unsigned int) 0);
-valuePtr Value::TRUE_VALUE = Value::create(Value::BOOL, (unsigned int) 1);
+valuePtr Value::NIL_VALUE = Value::create(Value::BOOL, (unsigned int)0);
+valuePtr Value::TRUE_VALUE = Value::create(Value::BOOL, (unsigned int)1);
 valuePtr Value::ANONYMOUS_VALUE = Value::create(Value::ANONYMOUS);
 
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, std::string str) :
-		Id(0) {
+Value::Value(Value::Type const type, std::string str)
+		: Id(0) {
 	this->type = type;
 	this->integer = 0;
 	this->number = 0;
@@ -53,8 +53,8 @@ Value::Value(Value::Type const type, std::string str) :
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr bits, featuresPtr features, listPtr list) :
-		Id(0) {
+Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr bits, featuresPtr features, listPtr list)
+		: Id(0) {
 	this->type = type;
 	this->integer = integer;
 	this->number = number;

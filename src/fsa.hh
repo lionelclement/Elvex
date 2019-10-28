@@ -24,22 +24,22 @@
 
 struct Fsa {
 private:
-  unsigned long int child;
-  unsigned long int sibling;
-  unsigned long int info;
-  char letter;
+	unsigned long int child;
+	unsigned long int sibling;
+	unsigned long int info;
+	char letter;
 
 public:
-  Fsa(unsigned long int, unsigned long int, unsigned long int, char);
-  Fsa();
-  void print(std::ostream&) const;
-  bool isChild() const;
-  bool isInfo() const;
-  bool isSibling() const;
-  unsigned long int getChild(void);
-  unsigned long int getSibling(void);
-  unsigned long int getInfo(void);
-  bool isLetter(char);
-  
+	Fsa(unsigned long int, unsigned long int, unsigned long int, char);
+	Fsa();
+	void print(std::ostream&) const;
+	bool isChild() const;
+	bool isInfo() const;
+	bool isSibling() const;
+	unsigned long int getChild(void);
+	unsigned long int getSibling(void);
+	unsigned long int getInfo(void);
+	bool isLetter(char);
+
 };
 #endif // FSA_H

@@ -30,47 +30,46 @@
 #include "serializable.hh"
 
 class Rule:
-  public Id::Id {
-  
+		public Id::Id {
+
 private:
-  termPtr lhs;
-  std::vector<termsPtr > rhs;
-  statementsPtr statements;
-  unsigned int usages;
-  std::string filename;
-  unsigned int lineno;
+	termPtr lhs;
+	std::vector<termsPtr> rhs;
+	statementsPtr statements;
+	unsigned int usages;
+	std::string filename;
+	unsigned int lineno;
 
 public:
-  Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
-  Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
-  Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr > &rhs, statementsPtr statements = statementsPtr());
-  Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr > &rhs, statementsPtr statements = statementsPtr());
-  ~Rule();
-  
+	Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+	Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+	Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements = statementsPtr());
+	Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements = statementsPtr());
+	~Rule();
 
-  termPtr getLhs(void) const;
-  std::vector <termsPtr > &getRhs(void);
+	termPtr getLhs(void) const;
+	std::vector<termsPtr> &getRhs(void);
 
-  termPtr getCurrentTerm(void) const;
-  termsPtr getCurrentTerms() const;
-  termsPtr getTerms(unsigned int) const;
-  void setCurrentTerms(termsPtr );
+	termPtr getCurrentTerm(void) const;
+	termsPtr getCurrentTerms() const;
+	termsPtr getTerms(unsigned int) const;
+	void setCurrentTerms(termsPtr);
 
-  statementsPtr getStatements(void) const;
-  void incUsages(class Synthesizer *);
-  void resetUsages(void);
+	statementsPtr getStatements(void) const;
+	void incUsages(class Synthesizer *);
+	void resetUsages(void);
 
-  const unsigned int getLineno(void) const;
-  const std::string &getFilename(void) const;
-  
-  class Rule *clone() const;
-  void print(std::ostream &, unsigned int=UINT_MAX, bool=false, bool=true) const;
+	const unsigned int getLineno(void) const;
+	const std::string &getFilename(void) const;
+
+	class Rule *clone() const;
+	void print(std::ostream &, unsigned int = UINT_MAX, bool = false, bool = true) const;
 
 #ifdef OUTPUT_XML
-  void toXML(xmlNodePtr);
+	void toXML(xmlNodePtr);
 #endif
-  void addDefaults(void);
-  
+	void addDefaults(void);
+
 };
 
 #endif // RULE_H

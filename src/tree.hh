@@ -24,22 +24,22 @@
 
 class Tree {
 private:
-  Tree *child;
-  Tree *sibling;
-  class Info *info;
-  char letter;
-  unsigned long int address;
-  
+	Tree *child;
+	Tree *sibling;
+	class Info *info;
+	char letter;
+	unsigned long int address;
+
 public:
-  Tree(Tree *child, Tree *sibling, class Info *info, const char letter);
-  ~Tree();
-  
-  void setChild( Tree*);
-  Tree *getChild() const;
-  void add(char *, unsigned long int);
-  void setIndexStaticFSA(unsigned long int &);
-  void printStaticFSA(FILE *, class Lex *) const;
-  void setIndexStaticInfo(unsigned long int &);
-  void printStaticInfo(FILE *) const;
+	Tree(Tree *child, Tree *sibling, class Info *info, const char letter);
+	~Tree();
+
+	void setChild(Tree*);
+	Tree *getChild() const;
+	void add(char *, unsigned long int);
+	void setIndexStaticFSA(unsigned long int &);
+	void printStaticFSA(FILE *, class Lex *) const;
+	void setIndexStaticInfo(unsigned long int &);
+	void printStaticInfo(FILE *) const;
 };
 #endif // TREE_H
