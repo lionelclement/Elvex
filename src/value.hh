@@ -25,6 +25,7 @@
 #include "vartable.hh"
 #include "ipointer.hh"
 #include "serializable.hh"
+#include "variableflag.hh"
 
 class Value:
   public Id,
@@ -51,6 +52,7 @@ private:
   listPtr list;
   std::string str;
   double number;
+		VariableFlag variableFlag;
 
 public:
   static valuePtr NIL_VALUE;
@@ -110,7 +112,8 @@ public:
   bool lt(valuePtr ) const;
   bool findVariable(bitsetPtr);
   void apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body);
-  bool containsVariable(void) const;
+  bool containsVariable(void);
+  void setVariableFlag(enum VariableFlag::flagValues flag);
 };
 
 #endif // VALUE_H

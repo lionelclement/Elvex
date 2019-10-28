@@ -25,72 +25,73 @@
 #include "vartable.hh"
 #include "serializable.hh"
 #include "ipointer.hh"
+#include "variableflag.hh"
 
 class List:
-  public std::enable_shared_from_this< List >,
-  public Serializable,
-  public Flags,
-  public Id {
-  
-public:
-		enum Type {ATOM,
-			PAIRP,
-			NIL};
-  static listPtr NIL_LIST;
+		public Serializable,
+		public Flags,
+		public Id,
+		public std::enable_shared_from_this<List> {
 
-private:
-  enum Type type;
-  valuePtr value;
-  struct {
-    listPtr car;
-    listPtr cdr;
-  } pairp;
-  int variable; // 0: none 1:true 2:false
+	public:
+		enum Type {
+			ATOM, PAIRP, NIL
+		};
+		static listPtr NIL_LIST;
 
-  List (enum Type type, valuePtr value=valuePtr(), listPtr car=listPtr(), listPtr cdr=listPtr());
+	private:
+		enum Type type;
+		valuePtr value;
+		struct {
+				listPtr car;
+				listPtr cdr;
+		} pairp;
 
-  static listPtr create(void);
-  void makeSerialString(void);
+		List(enum Type type, valuePtr value = valuePtr(), listPtr car = listPtr(), listPtr cdr = listPtr());
 
-public:
-  ~List();
-  static listPtr create(valuePtr value);
-  static listPtr create(listPtr car, listPtr cdr);
+		static listPtr create(void);
+		void makeSerialString(void);
+		VariableFlag variableFlag;
 
-  Type getType(void) const;
-  void setType(Type type);
-  valuePtr getValue(void) const;
-  void setValue(valuePtr value);
-  listPtr getCar(void) const;
-  void setCar(listPtr car);
-  listPtr getCdr(void) const;
-  void setCdr(listPtr cdr);
-  listPtr getCadr(void) const;
-  listPtr getCddr(void) const;
-  listPtr getCaar(void) const;
-  listPtr getCdar(void) const;
-  bool isNil(void) const;
-  bool isAtomic(void) const;
-  bool isVariable(void) const;
-      bool isPairp(void) const;
-    bool containsVariable(void);
+	public:
+		~List();
+		static listPtr create(valuePtr value);
+		static listPtr create(listPtr car, listPtr cdr);
 
-  void print(std::ostream &) const;
-  void flatPrint(std::ostream &, bool par) const;
-  bool buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root);
-  void deleteAnonymousVariables(void);
-  bool renameVariables(unsigned int);
-  void apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body);
+		Type getType(void) const;
+		void setType(Type type);
+		valuePtr getValue(void) const;
+		void setValue(valuePtr value);
+		listPtr getCar(void) const;
+		void setCar(listPtr car);
+		listPtr getCdr(void) const;
+		void setCdr(listPtr cdr);
+		listPtr getCadr(void) const;
+		listPtr getCddr(void) const;
+		listPtr getCaar(void) const;
+		listPtr getCdar(void) const;
+		bool isNil(void) const;
+		bool isAtomic(void) const;
+		bool isVariable(void) const;
+		bool isPairp(void) const;
+		void print(std::ostream &) const;
+		void flatPrint(std::ostream &, bool par) const;
+		bool buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root);
+		void deleteAnonymousVariables(void);
+		bool renameVariables(unsigned int);
+		void apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body);
 #ifdef OUTPUT_XML
-  void toXML(xmlNodePtr);
+		void toXML(xmlNodePtr);
 #endif
-  listPtr clone(void) const;
-  void enable(statementPtr, itemPtr, bool &, bool);
-  bool subsumes(listPtr , environmentPtr );
+		listPtr clone(void) const;
+		void enable(statementPtr, itemPtr, bool &, bool);
+		bool subsumes(listPtr, environmentPtr);
 
-  listPtr pushFront(valuePtr value);
-  listPtr pushBack(valuePtr value);
-  bool findVariable(bitsetPtr);
+		listPtr pushFront(valuePtr value);
+		listPtr pushBack(valuePtr value);
+		  bool containsVariable(void);
+		  bool findVariable(bitsetPtr);
+		  void setVariableFlag(enum VariableFlag::flagValues flag);
 };
 
 #endif // LIST_H

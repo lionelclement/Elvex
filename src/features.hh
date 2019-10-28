@@ -29,6 +29,7 @@
 #include "id.hh"
 #include "ipointer.hh"
 #include "vartable.hh"
+#include "variableflag.hh"
 
 class Features:
   public Id,
@@ -45,6 +46,7 @@ private:
   list features;
   unsigned int pred;
   std::string form;
+  VariableFlag variableFlag;
   
   Features(featurePtr);
 
@@ -55,7 +57,6 @@ private:
 public:
   ~Features();
   static featuresPtr create(featurePtr=featurePtr());
-
 
   void putId(unsigned int id);
 
@@ -81,14 +82,15 @@ public:
   void subFlags(const std::bitset< FLAGS > &);
   unsigned int assignPred(void);
   std::string assignForm(void);
-  bool containsVariable(void) const;
   bool renameVariables(unsigned int);
   bool isNil(void) const;
   bool isBottom(void) const;
   void enable(statementPtr, itemPtr, bool &, bool);
   bool subsumes(featuresPtr, environmentPtr);
   void deleteAnonymousVariables(void);
+  bool containsVariable(void);
   bool findVariable(bitsetPtr);
+  void setVariableFlag(enum VariableFlag::flagValues flag);
 };
 
 #endif // FEATURES_H

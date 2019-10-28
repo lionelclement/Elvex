@@ -66,6 +66,7 @@ terms.cc\
 tree.cc\
 value.cc\
 list.cc\
+variableflag.cc\
 vartable.cc
 
 elvex_OPTIONS =
@@ -118,6 +119,7 @@ term.cc\
 terms.cc\
 tree.cc\
 value.cc\
+variableflag.cc\ 
 vartable.cc 
 
 elvexdebug_OPTIONS =

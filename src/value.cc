@@ -28,34 +28,33 @@
 #include "ipointer.hh"
 #include "synthesizer.hh"
 
-valuePtr Value::NIL_VALUE = Value::create(Value::BOOL, (unsigned int)0);
-valuePtr Value::TRUE_VALUE = Value::create(Value::BOOL, (unsigned int)1);
+valuePtr Value::NIL_VALUE = Value::create(Value::BOOL, (unsigned int) 0);
+valuePtr Value::TRUE_VALUE = Value::create(Value::BOOL, (unsigned int) 1);
 valuePtr Value::ANONYMOUS_VALUE = Value::create(Value::ANONYMOUS);
 
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, std::string str): Id(0)
-{
+Value::Value(Value::Type const type, std::string str) :
+		Id(0) {
 	this->type = type;
 	this->integer = 0;
 	this->number = 0;
 	unsigned int found = 0;
-	if (type == IDENTIFIER){
+	if (type == IDENTIFIER) {
 		found = Vartable::strToInt(str);
 		this->integer = found;
 	}
-	else if (type == STR){
+	else if (type == STR) {
 		this->str = str;
-	}
-	NEW;
+	}NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr bits, featuresPtr features, listPtr list): Id(0)
-{
+Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr bits, featuresPtr features, listPtr list) :
+		Id(0) {
 	this->type = type;
 	this->integer = integer;
 	this->number = number;
@@ -68,8 +67,7 @@ Value::Value(Value::Type const type, unsigned int integer, double number, bitset
 /* **************************************************
  *
  ************************************************** */
-Value::~Value()
-{
+Value::~Value() {
 	DELETE;
 	if (bits)
 		bits.reset();
@@ -80,219 +78,191 @@ Value::~Value()
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type)
-{
+valuePtr Value::create(const enum Type type) {
 	return valuePtr(new Value(type));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, double number)
-{
+valuePtr Value::create(const enum Type type, double number) {
 	return valuePtr(new Value(type, 0, number));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, unsigned int integer)
-{
+valuePtr Value::create(const enum Type type, unsigned int integer) {
 	return valuePtr(new Value(type, integer));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, std::string str)
-{
+valuePtr Value::create(const enum Type type, std::string str) {
 	return valuePtr(new Value(type, str));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, bitsetPtr bits)
-{
+valuePtr Value::create(const enum Type type, bitsetPtr bits) {
 	return valuePtr(new Value(type, 0, 0, bits));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, featuresPtr features)
-{
+valuePtr Value::create(const enum Type type, featuresPtr features) {
 	return valuePtr(new Value(type, 0, 0, bitsetPtr(), features));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, listPtr lst)
-{
+valuePtr Value::create(const enum Type type, listPtr lst) {
 	return valuePtr(new Value(type, 0, 0, bitsetPtr(), featuresPtr(), lst));
 }
 
 /* **************************************************
  *
  ************************************************** */
-Value::Type Value::getType(void) const 
-{
+Value::Type Value::getType(void) const {
 	return type;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bitsetPtr Value::getBits(void) const 
-{
+bitsetPtr Value::getBits(void) const {
 	return bits;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Value::getIdentifier(void) const
-{
+unsigned int Value::getIdentifier(void) const {
 	return integer;
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Value::getFeatures(void) const 
-{
+featuresPtr Value::getFeatures(void) const {
 	return features;
 }
 
 /* **************************************************
  *
  ************************************************** */
-double Value::getDouble(void) const 
-{
+double Value::getDouble(void) const {
 	return number;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Value::getStr(void) const 
-{
+std::string Value::getStr(void) const {
 	return str;
 }
 
 /* **************************************************
  *
  ************************************************** */
-listPtr Value::getList(void) const 
-{
+listPtr Value::getList(void) const {
 	return list;
 }
-
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isNil(void) const 
-{
+bool Value::isNil(void) const {
 	return (type == Value::BOOL && integer == 0);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isFalse(void) const 
-{
-	return ((type == Value::BOOL && integer == 0)
-			|| (type == Value::ANONYMOUS));
+bool Value::isFalse(void) const {
+	return ((type == Value::BOOL && integer == 0) || (type == Value::ANONYMOUS));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isTrue(void) const 
-{
+bool Value::isTrue(void) const {
 	return (type == Value::BOOL && integer == 1);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isAnonymous(void) const 
-{
+bool Value::isAnonymous(void) const {
 	return (type == Value::ANONYMOUS);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isDouble(void) const 
-{
+bool Value::isDouble(void) const {
 	return getType() == DOUBLE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isStr(void) const 
-{
+bool Value::isStr(void) const {
 	return getType() == STR;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isFeatures(void) const 
-{
+bool Value::isFeatures(void) const {
 	return getType() == FEATURES;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isConstant(void) const 
-{
+bool Value::isConstant(void) const {
 	return getType() == CONSTANT;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isVariable(void) const 
-{
+bool Value::isVariable(void) const {
 	return getType() == VARIABLE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isIdentifier(void) const 
-{
+bool Value::isIdentifier(void) const {
 	return getType() == IDENTIFIER;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isList(void) const 
-{
+bool Value::isList(void) const {
 	return getType() == LIST;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void 
-Value::print(std::ostream& outStream) const 
-{
+void Value::print(std::ostream& outStream) const {
 	if (isNil())
 		outStream << "NIL";
 	else if (isTrue())
 		outStream << "TRUE";
 	else
-		switch(type){
+		switch (type) {
 			case BOOL:
-				FATAL_ERROR;
+				FATAL_ERROR
+				;
 				break;
 			case CONSTANT:
 				outStream << getBits()->toString();
@@ -324,17 +294,16 @@ Value::print(std::ostream& outStream) const
 /* **************************************************
  *
  ************************************************** */
-void
-Value::flatPrint(std::ostream& outStream) const
-{
+void Value::flatPrint(std::ostream& outStream) const {
 	if (isNil())
 		outStream << "NIL";
 	else if (isTrue())
 		outStream << "TRUE";
 	else
-		switch(type){
+		switch (type) {
 			case BOOL:
-				FATAL_ERROR;
+				FATAL_ERROR
+				;
 				break;
 			case CONSTANT:
 				outStream << getBits()->toString();
@@ -366,23 +335,23 @@ Value::flatPrint(std::ostream& outStream) const
 /* **************************************************
  *
  ************************************************** */
-void
-Value::makeSerialString(void)
-{
+void Value::makeSerialString(void) {
 	if (isNil())
 		serialString = 'N';
 	else if (isTrue())
 		serialString = 'T';
 	else
-		switch(type){
+		switch (type) {
 			case BOOL:
-				FATAL_ERROR;
+				FATAL_ERROR
+				;
 				break;
 			case CONSTANT:
 				serialString = getBits()->peekSerialString();
 				break;
 			case VARIABLE:
-				serialString = '$' + getBits()->peekSerialString();;
+				serialString = '$' + getBits()->peekSerialString();
+				;
 				break;
 			case ANONYMOUS:
 				serialString = '_';
@@ -410,50 +379,50 @@ Value::makeSerialString(void)
 /* **************************************************
  *
  ************************************************** */
-void 
+void
 Value::toXML(xmlNodePtr nodeRoot) const
 {
 	xmlNodePtr v = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"VAL", NULL);
-	switch(type){
+	switch(type) {
 		case BOOL:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"bool");
-			if (isNil())
-				xmlSetProp(v, (xmlChar*)"value", (const xmlChar*)"NIL");
-			else
-				xmlSetProp(v, (xmlChar*)"value", (const xmlChar*)"TRUE");
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"bool");
+		if (isNil())
+		xmlSetProp(v, (xmlChar*)"value", (const xmlChar*)"NIL");
+		else
+		xmlSetProp(v, (xmlChar*)"value", (const xmlChar*)"TRUE");
+		break;
 		case CONSTANT:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"constant");
-			getBits()->toXML(v);
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"constant");
+		getBits()->toXML(v);
+		break;
 		case VARIABLE:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"variable");
-			getBits()->toXML(v);
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"variable");
+		getBits()->toXML(v);
+		break;
 		case ANONYMOUS:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"anonymous");
-			getBits()->toXML(v);
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"anonymous");
+		getBits()->toXML(v);
+		break;
 		case IDENTIFIER:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"identifier");
-			xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)Vartable::intToStr(getIdentifier()).c_str());
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"identifier");
+		xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)Vartable::intToStr(getIdentifier()).c_str());
+		break;
 		case DOUBLE:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"double");
-			xmlSetProp(v, (xmlChar*)"value",(const xmlChar*)std::to_string(getDouble()).c_str());
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"double");
+		xmlSetProp(v, (xmlChar*)"value",(const xmlChar*)std::to_string(getDouble()).c_str());
+		break;
 		case STR:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"str");
-			xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)getStr().c_str());
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"str");
+		xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)getStr().c_str());
+		break;
 		case FEATURES:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"fs");
-			getFeatures()->toXML(v);
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"fs");
+		getFeatures()->toXML(v);
+		break;
 		case LIST:
-			xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"list");
-			getList()->toXML(v);
-			break;
+		xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"list");
+		getList()->toXML(v);
+		break;
 
 	}
 }
@@ -462,11 +431,9 @@ Value::toXML(xmlNodePtr nodeRoot) const
 /* **************************************************
  *
  ************************************************** */
-valuePtr 
-Value::clone(void)
-{
+valuePtr Value::clone(void) {
 	valuePtr result = valuePtr();
-	switch(type){
+	switch (type) {
 		case BOOL:
 		case CONSTANT:
 		case IDENTIFIER:
@@ -491,27 +458,25 @@ Value::clone(void)
 /* ************************************************************
  *
  ************************************************************ */
-bool
-Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptToFilterNULLVariables, bool root)
-{
+bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptToFilterNULLVariables, bool root) {
 	/***
-  CERR_LINE;
-  std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
-  std::cerr << "<table border=\"1\"><tr><th></th><th></th><th>Environment</th></tr>";
-  std::cerr << "<tr><td>";
-  this->print(std::cerr);
-  std::cerr << "</td><td>";
-  if (value)
-    value->print(std::cerr);
-  else
-    std::cerr << "NULL";
-  std::cerr << "</td><td>";
-  environment->print(std::cerr);
-  std::cerr << "</td></tr></table>";
+	 CERR_LINE;
+	 std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
+	 std::cerr << "<table border=\"1\"><tr><th></th><th></th><th>Environment</th></tr>";
+	 std::cerr << "<tr><td>";
+	 this->print(std::cerr);
+	 std::cerr << "</td><td>";
+	 if (value)
+	 value->print(std::cerr);
+	 else
+	 std::cerr << "NULL";
+	 std::cerr << "</td><td>";
+	 environment->print(std::cerr);
+	 std::cerr << "</td></tr></table>";
 	 ***/
 
 	bool ret = true;
-	switch(type){
+	switch (type) {
 		case BOOL:
 			if (value->type == VARIABLE)
 				environment->add(value->getBits(), shared_from_this());
@@ -519,11 +484,11 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
 				ret = false;
 			break;
 		case FEATURES:
-			if (value->type == FEATURES){
+			if (value->type == FEATURES) {
 				if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(), acceptToFilterNULLVariables, root))
 					ret = false;
 			}
-			else if (value->type == ANONYMOUS){
+			else if (value->type == ANONYMOUS) {
 				if (!this->getFeatures()->buildEnvironment(environment, Features::create(), acceptToFilterNULLVariables, root))
 					ret = false;
 			}
@@ -533,20 +498,21 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
 		case CONSTANT:
 			if (value->type == VARIABLE)
 				environment->add(value->getBits(), shared_from_this());
-			else if (value->type == CONSTANT){
+			else if (value->type == CONSTANT) {
 				if ((*getBits() & *value->getBits()).none())
 					ret = false;
 			}
-			else if (value->type == IDENTIFIER){
+			else if (value->type == IDENTIFIER) {
 				if (Vartable::intToStr(getIdentifier()) != getBits()->toString())
 					ret = false;
 			}
-			else if (value->type == ANONYMOUS){
+			else if (value->type == ANONYMOUS) {
 			}
 			else {
 				this->print(std::cerr);
 				std::cerr << std::endl << value->type << std::endl;
-				FATAL_ERROR;
+				FATAL_ERROR
+				;
 			}
 			break;
 		case IDENTIFIER:
@@ -568,7 +534,7 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
 				ret = false;
 			break;
 		case LIST:
-			if (value->type == LIST){
+			if (value->type == LIST) {
 				if (!this->getList()->buildEnvironment(environment, value->getList(), acceptToFilterNULLVariables, root))
 					ret = false;
 			}
@@ -589,11 +555,11 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
 			break;
 	}
 	/***
-  std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
-  std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-  std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-  environment->print(std::cerr);
-  std::cerr << "</td></tr></table>";
+	 std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
+	 std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+	 std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+	 environment->print(std::cerr);
+	 std::cerr << "</td></tr></table>";
 	 ***/
 	return ret;
 }
@@ -601,30 +567,28 @@ Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptT
 /* ************************************************************
  * this < o
  ************************************************************ */
-bool
-Value::subsumes(valuePtr o, environmentPtr environment)
-{
+bool Value::subsumes(valuePtr o, environmentPtr environment) {
 	bool ret = true;
 	/***
-      std::cerr << "<DIV>";
-      std::cerr << "Value::subsumes (" << this << ")";
-      std::cerr << "<TABLE><TR>";
-      std::cerr << "<TD>";
-      this->print(std::cerr);
-      std::cerr << "</TD>&lt;<TD>";
-      o->print(std::cerr);
-      std::cerr << "</TD>";
-      std::cerr << "</TR></TABLE>";
-      std::cerr << "</DIV>";
+	 std::cerr << "<DIV>";
+	 std::cerr << "Value::subsumes (" << this << ")";
+	 std::cerr << "<TABLE><TR>";
+	 std::cerr << "<TD>";
+	 this->print(std::cerr);
+	 std::cerr << "</TD>&lt;<TD>";
+	 o->print(std::cerr);
+	 std::cerr << "</TD>";
+	 std::cerr << "</TR></TABLE>";
+	 std::cerr << "</DIV>";
 	 ***/
 
 	// X < …
-	if (type == VARIABLE){
+	if (type == VARIABLE) {
 		environment->add(getBits(), o);
 	}
 
 	// … < X
-	else if (o->type == VARIABLE){
+	else if (o->type == VARIABLE) {
 		//FATAL_ERROR;
 		environment->add(o->getBits(), shared_from_this());
 		//FATAL_ERROR;
@@ -632,38 +596,36 @@ Value::subsumes(valuePtr o, environmentPtr environment)
 	}
 
 	// NIL < NIL
-	else if (isNil() && o->isNil()){
+	else if (isNil() && o->isNil()) {
 
 	}
 
 	// NIL < …
 	// … < NIL
-	else if (isNil() || o->isNil()){
+	else if (isNil() || o->isNil()) {
 		//FATAL_ERROR;
 
 	}
 
 	// TRUE < TRUE
-	else if (isTrue() && o->isTrue()){
+	else if (isTrue() && o->isTrue()) {
 
 	}
 
 	// TRUE < …
 	// … < TRUE
-	else if (isTrue() || o->isTrue()){
-		ret = false;
-
-
-	}
-
-	else if ((type != o->type)){
+	else if (isTrue() || o->isTrue()) {
 		ret = false;
 
 	}
 
-	else
-	{
-		switch (o->type){
+	else if ((type != o->type)) {
+		ret = false;
+
+	}
+
+	else {
+		switch (o->type) {
 			// a < a
 			case IDENTIFIER:
 				if (getIdentifier() != o->getIdentifier())
@@ -690,16 +652,17 @@ Value::subsumes(valuePtr o, environmentPtr environment)
 			case BOOL:
 			case VARIABLE:
 			case ANONYMOUS:
-				FATAL_ERROR;
+				FATAL_ERROR
+				;
 				break;
 
 		}
 
 	}
 	/***
-      std::cerr << "<DIV>";
-      std::cerr << "result: (" << shared_from_this() << ")";
-      std::cerr << "</DIV>";
+	 std::cerr << "<DIV>";
+	 std::cerr << "result: (" << shared_from_this() << ")";
+	 std::cerr << "</DIV>";
 	 ***/
 	return ret;
 }
@@ -707,15 +670,13 @@ Value::subsumes(valuePtr o, environmentPtr environment)
 /* ************************************************************
  *
  ************************************************************ */
-bool
-Value::eq(valuePtr o) const
-{
+bool Value::eq(valuePtr o) const {
 	/***
-       STD::CERR_LINE;
-       this->print(std::cerr);
-       std::cerr << " = ";
-       o->print(std::cerr);
-       std::cerr << std::endl;
+	 STD::CERR_LINE;
+	 this->print(std::cerr);
+	 std::cerr << " = ";
+	 o->print(std::cerr);
+	 std::cerr << std::endl;
 	 ***/
 
 	bool ret = false;
@@ -729,10 +690,11 @@ Value::eq(valuePtr o) const
 	else if (o->type == ANONYMOUS || this->type == ANONYMOUS)
 		ret = true;
 
-	else{
-		switch (o->type){
+	else {
+		switch (o->type) {
 			case BOOL:
-				FATAL_ERROR;
+				FATAL_ERROR
+				;
 				break;
 			case IDENTIFIER:
 				if ((type == IDENTIFIER) && ((getIdentifier() == o->getIdentifier())))
@@ -758,7 +720,8 @@ Value::eq(valuePtr o) const
 				break;
 			default:
 				std::cerr << "###" << o->type << std::endl;
-				FATAL_ERROR;
+				FATAL_ERROR
+				;
 				break;
 		}
 	}
@@ -768,31 +731,28 @@ Value::eq(valuePtr o) const
 /* ************************************************************
  *
  ************************************************************ */
-bool
-Value::lt(valuePtr o) const
-{
+bool Value::lt(valuePtr o) const {
 	bool ret = false;
 	/***
-      STD::CERR_LINE;
-      this->print(std::cerr);
-      std::cerr << " < ";
-      o->print(std::cerr);
-      std::cerr << std::endl;
+	 STD::CERR_LINE;
+	 this->print(std::cerr);
+	 std::cerr << " < ";
+	 o->print(std::cerr);
+	 std::cerr << std::endl;
 	 ***/
 	if (isDouble() && o->isDouble())
 		return (getDouble() < o->getDouble());
 	else
-		FATAL_ERROR;
+		FATAL_ERROR
+	;
 	return ret;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-void
-Value::deleteAnonymousVariables()
-{
-	switch(type){
+void Value::deleteAnonymousVariables() {
+	switch (type) {
 		case BOOL:
 		case IDENTIFIER:
 		case CONSTANT:
@@ -813,11 +773,9 @@ Value::deleteAnonymousVariables()
 /* **************************************************
  *
  ************************************************** */
-bool
-Value::renameVariables(unsigned int i)
-{
+bool Value::renameVariables(unsigned int i) {
 	bool effect = false;
-	switch(type){
+	switch (type) {
 		case CONSTANT:
 		case IDENTIFIER:
 		case STR:
@@ -825,8 +783,7 @@ Value::renameVariables(unsigned int i)
 		case DOUBLE:
 		case ANONYMOUS:
 			break;
-		case VARIABLE:
-		{
+		case VARIABLE: {
 			std::ostringstream oss;
 			oss << getBits()->toString() << "_" << i;
 			std::string str = oss.str();
@@ -835,14 +792,16 @@ Value::renameVariables(unsigned int i)
 			resetSerial();
 			effect = true;
 		}
-		break;
+			break;
 		case FEATURES:
 			if (getFeatures())
-				if (getFeatures()->renameVariables(i)) effect = true;
+				if (getFeatures()->renameVariables(i))
+					effect = true;
 			break;
 		case LIST:
 			if (getList())
-				if (getList()->renameVariables(i)) effect = true;
+				if (getList()->renameVariables(i))
+					effect = true;
 			break;
 	}
 	return effect;
@@ -851,10 +810,8 @@ Value::renameVariables(unsigned int i)
 /* **************************************************
  *
  ************************************************** */
-void 
-Value::enable(statementPtr root, itemPtr item, bool &effect, bool on)
-{
-	switch(type){
+void Value::enable(statementPtr root, itemPtr item, bool &effect, bool on) {
+	switch (type) {
 		case BOOL:
 		case IDENTIFIER:
 		case STR:
@@ -863,9 +820,8 @@ Value::enable(statementPtr root, itemPtr item, bool &effect, bool on)
 		case ANONYMOUS:
 			break;
 		case VARIABLE:
-			if (on){
-				if ((!item->getEnvironment())
-						|| (!item->getEnvironment()->find(getBits()))){
+			if (on) {
+				if ((!item->getEnvironment()) || (!item->getEnvironment()->find(getBits()))) {
 					root->addFlags(Flags::DISABLED);
 					effect = true;
 				}
@@ -887,10 +843,8 @@ Value::enable(statementPtr root, itemPtr item, bool &effect, bool on)
 /* **************************************************
  *
  ************************************************** */
-bool 
-Value::findVariable(bitsetPtr variable)
-{
-	switch(type){
+bool Value::findVariable(bitsetPtr variable) {
+	switch (type) {
 		case BOOL:
 		case IDENTIFIER:
 		case STR:
@@ -917,9 +871,8 @@ Value::findVariable(bitsetPtr variable)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body)
-{
-	switch(type){
+void Value::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body) {
+	switch (type) {
 		case BOOL:
 		case IDENTIFIER:
 		case STR:
@@ -928,7 +881,8 @@ void Value::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, stat
 		case ANONYMOUS:
 		case VARIABLE:
 		case LIST:
-			FATAL_ERROR;
+			FATAL_ERROR
+			;
 			break;
 		case FEATURES:
 			item->getEnvironment()->add(variable->getBits(), shared_from_this());
@@ -941,10 +895,11 @@ void Value::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, stat
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool
-Value::containsVariable(void) const
-{
-	switch(type){
+bool Value::containsVariable(void) {
+	bool result = false;
+	if (variableFlag.containsVariable())
+		return true;
+	switch (type) {
 		case BOOL:
 		case IDENTIFIER:
 		case STR:
@@ -953,16 +908,29 @@ Value::containsVariable(void) const
 		case ANONYMOUS:
 			break;
 		case VARIABLE:
-			return true;
+			result = true;
 			break;
 		case LIST:
-			if (this->getList()->containsVariable())
-				return true;
+			if (this->getList()->containsVariable()) {
+				result = true;
+			}
 			break;
 		case FEATURES:
-			if (this->getFeatures()->containsVariable())
-				return true;
+			if (this->getFeatures()->containsVariable()) {
+				result = true;
+			}
 			break;
 	}
-	return false;
+	if (result)
+		this->variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+	else
+		this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+	return result;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Value::setVariableFlag(enum VariableFlag::flagValues flag) {
+	this->variableFlag.setFlag(flag);
 }

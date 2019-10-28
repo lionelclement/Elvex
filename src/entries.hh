@@ -27,7 +27,8 @@
 #endif
 #include "ipointer.hh"
 
-class Entries: public std::enable_shared_from_this<class Entries> {
+class Entries:
+		public std::enable_shared_from_this<class Entries> {
 
 	public:
 		typedef std::vector<entryPtr> list;

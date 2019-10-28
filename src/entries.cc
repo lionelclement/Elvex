@@ -96,39 +96,35 @@ entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::st
  *
  ************************************************** */
 const size_t Entries::size(void) const {
-  return this->entries.size();
+	return this->entries.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::list::const_iterator Entries::begin(void) const
-{
-  return this->entries.begin();
+Entries::list::const_iterator Entries::begin(void) const {
+	return this->entries.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::list::const_iterator Entries::end(void) const
-{
-  return this->entries.end();
+Entries::list::const_iterator Entries::end(void) const {
+	return this->entries.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Entries::add(entryPtr entry)
-{
-  this->entries.push_back(entry);
+void Entries::add(entryPtr entry) {
+	this->entries.push_back(entry);
 }
 
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entries::get(unsigned int i) const
-{
-  return this->entries.at(i);
+entryPtr Entries::get(unsigned int i) const {
+	return this->entries.at(i);
 }
 
 /* **************************************************
@@ -138,7 +134,6 @@ entryPtr Entries::get(unsigned int i) const
 //{
 //  return this->entries[index];
 //}
-
 #ifdef OUTPUT_XML
 /* **************************************************
  *

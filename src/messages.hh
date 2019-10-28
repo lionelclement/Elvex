@@ -35,9 +35,9 @@
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
 #define WARNING_MSG(msg)  {std::cerr << "WARNING: " << msg << std::endl;}
-#define FATAL_ERROR_MSG(msg)  {std::cerr << "error: " << msg << std::endl; throw "";}
+#define FATAL_ERROR_MSG(msg)  {std::cerr << "FATAL ERROR" << std::endl; throw msg;}
 
-#define FATAL_ERROR {CERR_LINE; throw "FATAL ERROR";}
+#define FATAL_ERROR {FATAL_ERROR_MSG("");}
 
 
 

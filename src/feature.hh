@@ -26,55 +26,57 @@
 #include "vartable.hh"
 #include "ipointer.hh"
 #include "serializable.hh"
+#include "variableflag.hh"
 
-  class Feature:
-  public Id,
-  public Flags,
-  public Serializable,
-  public std::enable_shared_from_this< class Feature > {
-    
-  public:
-  enum Type {
-    PRED = 0,
-    CONSTANT,
-    FORM,
-    VARIABLE,
-  };
-    
-    static const Type first_type = PRED;
-    static const Type last_type = VARIABLE;
-    
-  private:
-    enum Type type;
-    bitsetPtr attribute;
-    valuePtr value;
-    Feature(Type, bitsetPtr, valuePtr);
-    void makeSerialString(void);
-    
-  public:
-    ~Feature();
-    static featurePtr create(enum Type type = CONSTANT, bitsetPtr attribute=bitsetPtr(), valuePtr value = valuePtr());
-    
-    const bitsetPtr getAttribute(void) const;
-  void setAttribute(const bitsetPtr);
-  const valuePtr getValue(void) const;
-  void setValue(const valuePtr);
-  const Type getType(void) const;
-  void setType(const enum Type);
+class Feature:
+		public Id,
+		public Flags,
+		public Serializable,
+		public std::enable_shared_from_this<class Feature> {
 
-  std::string attributeToString(void) const;
+	public:
+		enum Type {
+			PRED = 0, CONSTANT, FORM, VARIABLE,
+		};
 
-  featurePtr clone(void) const;
-  void print(std::ostream &) const;
-  void flatPrint(std::ostream &) const;
-  
+		static const Type first_type = PRED;
+		static const Type last_type = VARIABLE;
+
+	private:
+		enum Type type;
+		bitsetPtr attribute;
+		valuePtr value;
+		Feature(Type, bitsetPtr, valuePtr);
+		void makeSerialString(void);
+		VariableFlag variableFlag;
+
+	public:
+		~Feature();
+		static featurePtr create(enum Type type = CONSTANT, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
+
+		const bitsetPtr getAttribute(void) const;
+		void setAttribute(const bitsetPtr);
+		const valuePtr getValue(void) const;
+		void setValue(const valuePtr);
+		const enum Type getType(void) const;
+		void setType(const enum Type);
+
+		std::string attributeToString(void) const;
+
+		featurePtr clone(void) const;
+		void print(std::ostream &) const;
+		void flatPrint(std::ostream &) const;
+
 #ifdef OUTPUT_XML
-  void toXML(xmlNodePtr nodeRoot);
+		void toXML(xmlNodePtr nodeRoot);
 #endif
-  const bool renameVariables(const unsigned int);
-  void enable(statementPtr, itemPtr, bool &, bool);
-  const bool findVariable(const bitsetPtr) const;
-  
+		bool renameVariables(const unsigned int);
+		void enable(statementPtr, itemPtr, bool &, bool);
+		bool findVariable(const bitsetPtr) const;
+		bool containsVariable(void);
+		bool findVariable(bitsetPtr);
+		  void setVariableFlag(enum VariableFlag::flagValues flag);
+
 };
 
 #endif // FEATURE_H
