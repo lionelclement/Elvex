@@ -7,6 +7,7 @@
  ************************************************** */
 text → rhetoricalStructure {
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct] ⊂ ↑;
+  attest $pred != paragraph;
   if (!$vform)
     $vform = tensed;
   if (!$mode)
@@ -24,12 +25,12 @@ text → rhetoricalStructure {
   if (!$modality)
     $modality = neutral;
   ↓1 = ↑ ∪ [vform:$vform, mode:$mode, rhet:$rhet, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct];
-  ⇑ = [];
+  ⇑ = ⇓1;
 }
 
 /* **************************************************
  ************************************************** */
-paragraph → texts {
+text → texts {
   [PRED:paragraph, $rest];
   ↓1 = $rest;
   ⇑ = [];
@@ -37,10 +38,57 @@ paragraph → texts {
 
 /* **************************************************
  ************************************************** */
-texts → text texts {
-  [texts:<$head::$tail>];
-  ↓1 = $head;
-  ↓2 = [texts:$tail];
+texts → paragraph texts {
+  [texts: <$car :: <$cadr :: $cddr> >];
+  ↓1 = $car;
+  [i:[id:$id_i1], ii:[id:$id_ii1], iii:[id:$id_iii1]] ⊂ $car;
+  [i:[id:$id_i2], ii:[id:$id_ii2], iii:[id:$id_iii2]] ⊂ $cadr;
+  
+  // Jean ronfle. Il s'endort.
+  if ($id_i1 && ($id_i1 == $id_i2)) {
+    [i:[PRED:$predi, $m_i]] ⊂ ⇓1;
+    $i = [PRED:_pro, $m_i];
+  }
+  // Jean parle à Marie. Elle s'endort.
+  else if ($id_ii1 && ($id_ii1 == $id_i2)) {
+    [ii:[PRED:$predii, $m_ii]] ⊂ ⇓1;
+    $i = [PRED:_pro, $m_ii];
+  }
+  // Jean parle à Marie des fleurs. Elles fannent.
+  else if ($id_iii1 && ($id_iii1 == $id_i2)) {
+    [iii:[PRED:$prediii, $m_iii]] ⊂ ⇓1;
+    $i = [PRED:_pro, $m_iii];
+  } else {
+    [i:$i] ⊂ $cadr;
+  }
+  
+  // Jean parle à Marie. Luc lui parle.
+  if ($id_ii1 && ($id_ii1 == $id_ii2)) {
+    [ii:[PRED:$predii, $m_ii]] ⊂ ⇓1;
+    $ii = [PRED:_pro, $m_ii];
+  } else {
+    [ii:$ii] ⊂ $cadr;
+  }
+
+  if ($id_i1 && ($id_i1 == $id_iii2)) {
+    [i:[PRED:$predi, $m_i]] ⊂ ⇓1;
+    $iii = [PRED:_pro, $m_i];
+  }
+  else  if ($id_iii1 && ($id_iii1 == $id_iii2)) {
+    [iii:[PRED:$prediii, $m_iii]] ⊂ ⇓1;
+    $iii = [PRED:_pro, $m_iii];
+  } else {
+    [iii:$iii] ⊂ $cadr;
+  }
+
+  [i:_, ii:_, iii:_, $rest] ⊂ $cadr;
+  ↓2 = [texts:<[i:$i, ii:$ii, iii:$iii, $rest] :: $cddr>];
+  ⇑ = [];
+}
+
+texts → paragraph {
+  [texts:<$car>];
+  ↓1 = $car;
   ⇑ = [];
 }
 
@@ -49,13 +97,19 @@ texts → {
   ⇑ = [];
 }
 
+paragraph → text newline {
+  ↓1 = ↑;
+  ↓2 = [];
+  ⇑ = ⇓1;
+}
+
 /* **************************************************
  * Greetings, hello, etc
  ************************************************** */
 letter → dear name comma newParagraph text newParagraph regards newline signature {
   [PRED:letter, i:$i, ii:$ii, iii:$iii];
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct] ⊂ ↑;
-  if (!$vform)
+  if (!$vform) 
     $vform = tensed;
   if (!$mode)
     $mode = indicative;
@@ -85,17 +139,8 @@ letter → dear name comma newParagraph text newParagraph regards newline signat
 /* **************************************************
  ************************************************** */
 text → text text [text] [text] [text] [text] [text] [text] [text] [text] {
-  [PRED:succ,
-   i:$i,
-   ii:$ii,
-   iii:$iii,
-   iv:$iv,
-   v:$v,
-   vi:$vi,
-   vii:$vii,
-   viii:$viii,
-   ix:$ix,
-   x:$x];
+  [PRED:succ, i:$i, ii:$ii];
+  [iii:$iii, iv:$iv, v:$v,  vi:$vi, vii:$vii, viii:$viii, ix:$ix, x:$x] ⊂ ↑;
   ↓1 = $i;
   ↓2 = $ii;
   if ($iii) {
@@ -131,4 +176,3 @@ text → text text [text] [text] [text] [text] [text] [text] [text] [text] {
     ↓10 = $x;
   }
 }
-

@@ -2,7 +2,7 @@
 
 cher dear [gender:ms, number:sg];
 chers dear [gender:ms, number:pl];
-chère dear [gender:fm, number:pl];
+chère dear [gender:fm, number:sg];
 chères dear [gender:fm, number:pl];
 FORM name;
 salutations regards;
@@ -23,8 +23,6 @@ FORM signature;
 "!" exclamativeDot;
 ","	comma;
 "ERREUR"	error;
-
-
 
 "$V1-$V2-$V3" verbCat[vtense:$V1, mode:$V2, vform:$V3];
 "tag-$Line" tag[line:$Line];
@@ -64,6 +62,7 @@ me	cld [PRED:_ego, number:sg, person:one];
 me	cld [PRED:_pro, number:sg, person:one];
 te	cld [PRED:_pro, number:sg, person:two];
 lui	cld [PRED:_pro, number:sg, person:three];
+en	cld [PRED:_pro, number:sg, person:three, proReal:en];
 nous	cld [PRED:_pro, number:pl, person:one];
 vous	cld [PRED:_pro, number:pl, person:two];
 leur	cld [PRED:_pro, number:pl, person:three];

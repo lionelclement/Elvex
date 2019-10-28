@@ -85,7 +85,6 @@ tensedClause → timeClause {
       ↓1 = [vtense:$tense, aspect:$aspect, $rest];
   }
 
-
   else if ($mode==subjonctive) {
     // $Present
     if ($tense==present){

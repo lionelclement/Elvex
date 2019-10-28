@@ -90,6 +90,15 @@ argumentClause → sentence {
   ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, $RestSynt];
 }
 
+// X parle de Y à Z
+argumentClause → sentence {
+  [i:$I, ii:$II, iii:$III, iv:NIL, $Rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:$I, prep_obj:$II, prep_obj2:$III, iiReal:prep_obj, iiiReal:prep_obj, voice:active, $Rest];
+  [subj:$iSynt, prep_obj:$iiSynt, prep_obj2:$iiiSynt, $RestSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, $RestSynt];
+}
+
 // Y est livré à Z par X
 // Y est coupé avec Z par X
 argumentClause → sentence {

@@ -51,9 +51,10 @@ rhetoricalStructure → [que] premise [que] conclusion {
   [PRED:cause, i:$I, ii:$II, $rest];
   [i:[ii:[id:$ID_I_II]], ii:[i:[idref:$ID]]] ⊂ ↑;
   [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;
-  attest ($ID_I_II != $ID && $ID_I_I != $ID);
 
-  if (($language_register == slang) && ($illocutionaryII != ask)) {
+  attest ($ID ⇒ (($ID_I_II ≠ $ID) ∧ ($ID_I_I ≠ $ID)));
+
+  if (($language_register == slang) ∧ ($illocutionaryII ≠ ask)) {
     ↓1 = [];
     ↓3 = [];
     attest (#1);
@@ -61,19 +62,19 @@ rhetoricalStructure → [que] premise [que] conclusion {
   }
 
   [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ ↑;
-  if (!$aspect)
+  if (¬ $aspect)
      $aspect = neutral;
   [modality:$modalityI, lexFct:$lexFctI] ⊂ $I;
-  if (!$modalityI) 
+  if (¬ $modalityI) 
     $modalityI = neutral;
-  if (!$lexFctI) 
+  if (¬ $lexFctI) 
     $lexFctI = none;
   [modality:$modalityII, lexFct:$lexFctII, illocutionary:$illocutionaryII] ⊂ $II;
-  if (!$modalityII)
+  if (¬ $modalityII)
     $modalityII = neutral;
-  if (!$lexFctII) 
+  if (¬ $lexFctII) 
     $lexFctII = none;
-  if (!$illocutionaryII)
+  if (¬ $illocutionaryII)
     $illocutionaryII = neutral;
 
   ↓2 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modalityI, lexFct:$lexFctI, language_register:$language_register, modSType:$modSType, modS:$modS];
@@ -82,35 +83,36 @@ rhetoricalStructure → [que] premise [que] conclusion {
 }
 
   
-/* **************************************************
- * Cause
- ************************************************** */
-rhetoricalStructure → conclusion premise zzz {
-  [PRED:cause, i:$I, ii:$II, $rest];
-  [i:[ii:[id:$ID_I_II]], ii:[i:[idref:$ID]]] ⊂ ↑;
-  [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;
-  attest ($ID_I_II != $ID && $ID_I_I != $ID);
+// /* **************************************************
+//  * Cause
+//  ************************************************** */
+// rhetoricalStructure → conclusion premise {
+//   [PRED:cause, i:$I, ii:$II, $rest];
+//   [language_register:neutral] ⊂ ↑;
+//   [i:[ii:[id:$ID_I_II]], ii:[i:[idref:$ID]]] ⊂ ↑;
+//   [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;
+//   if ($ID) attest ($ID_I_II ≠ $ID ∧ $ID_I_I ≠ $ID);
 
-  [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ ↑;
-  if (!$aspect)
-     $aspect = neutral;
-  [modality:$modalityI, lexFct:$lexFctI] ⊂ $I;
-  if (!$modalityI) 
-    $modalityI = neutral;
-  if (!$lexFctI) 
-    $lexFctI = none;
-  [modality:$modalityII, lexFct:$lexFctII, illocutionary:$illocutionaryII] ⊂ $II;
-  if (!$modalityII)
-    $modalityII = neutral;
-  if (!$lexFctII) 
-    $lexFctII = none;
-  if (!$illocutionaryII)
-    $illocutionaryII = neutral;
+//   [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ ↑;
+//   if (¬ $aspect)
+//      $aspect = neutral;
+//   [modality:$modalityI, lexFct:$lexFctI] ⊂ $I;
+//   if (¬ $modalityI) 
+//     $modalityI = neutral;
+//   if (¬ $lexFctI) 
+//     $lexFctI = none;
+//   [modality:$modalityII, lexFct:$lexFctII, illocutionary:$illocutionaryII] ⊂ $II;
+//   if (¬ $modalityII)
+//     $modalityII = neutral;
+//   if (¬ $lexFctII) 
+//     $lexFctII = none;
+//   if (¬ $illocutionaryII)
+//     $illocutionaryII = neutral;
 
-  ↓2 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modalityI, lexFct:$lexFctI, language_register:$language_register, modSType:$modSType, modS:$modS];
-  ↓1 = $II ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, lexFct:$lexFctII, language_register:$language_register];
+//   ↓2 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modalityI, lexFct:$lexFctI, language_register:$language_register, modSType:$modSType, modS:$modS];
+//   ↓1 = $II ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, lexFct:$lexFctII, language_register:$language_register];
  
-}
+// }
 
   
 /* **************************************************
@@ -126,19 +128,19 @@ rhetoricalStructure → premise conclusion {
   [i:$iSynt, ii:$iiSynt] ⊂ ⇓1;
 
   [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ ↑;
-  if (!$aspect)
+  if (¬ $aspect)
      $aspect = neutral;
   [modality:$modalityI, lexFct:$lexFctI] ⊂ $I;
-  if (!$modalityI) 
+  if (¬ $modalityI) 
     $modalityI = neutral;
-  if (!$lexFctI) 
+  if (¬ $lexFctI) 
     $lexFctI = none;
   [modality:$modalityII, lexFct:$lexFctII, illocutionary:$illocutionaryII] ⊂ $II;
-  if (!$modalityII)
+  if (¬ $modalityII)
     $modalityII = neutral;
-  if (!$lexFctII) 
+  if (¬ $lexFctII) 
     $lexFctII = none;
-  if (!$illocutionaryII)
+  if (¬ $illocutionaryII)
     $illocutionaryII = neutral;
 
   [PRED:$pred, def:$iiD, gender:$iiG, number:$iiN, person:$iiP] ⊂ $iiSynt;
@@ -147,7 +149,7 @@ rhetoricalStructure → premise conclusion {
   if ($iiD == no){
     $inhII = [i:[PRED:$pred, gender:$iiG, number:$iiN, def:yes, sem:hyper], vform:tensed, $iiRest];
   }
-  else if ($iN != $iiN || $iG != $iiG)
+  else if ($iN ≠ $iiN || $iG ≠ $iiG)
     $inhII = [i:[PRED:_pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
   else 
     $inhII = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
@@ -164,10 +166,10 @@ premise → si modalClause comma {
   [language_register:neutral] ⊂ ↑;
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
   $mode = indicative;
-  if (!$aspect)
+  if (¬ $aspect)
      $aspect = neutral;
   [modality:$modalityI, lexFct:$lexFctI] ⊂ ↑;
-  if (!$tense || ($tense == present)) { 
+  if (¬ $tense || ($tense == present)) { 
     if ($aspect == continuous) {
       $tense = present;
     }
@@ -193,9 +195,9 @@ premise → si modalClause comma {
   }
   
   [modality:$modality, lexFct:$lexFct] ⊂ ↑;
-  if (!$modality) 
+  if (¬ $modality) 
     $modality = neutral;
-  if (!$lexFct) 
+  if (¬ $lexFct) 
     $lexFct = none;
   ↓1 = [];
   ↓2 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modality, lexFct:$lexFct, language_register:$language_register, modSType:$modSType, modS:$modS];
@@ -209,10 +211,10 @@ premise → si modalClause comma {
 premise → modalClause comma {
   [language_register:in_house|slang] ⊂ ↑;
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
-  if (!$aspect)
+  if (¬ $aspect)
      $aspect = neutral;
   [modality:$modality, lexFct:$lexFct] ⊂ ↑;
-  if (!$tense || ($tense == present) || ($tense == future)) { 
+  if (¬ $tense || ($tense == present) || ($tense == future)) { 
     if ($aspect == continuous) {
       $mode = conditional; $tense = present; $aspect = continuous;
     }
@@ -231,9 +233,9 @@ premise → modalClause comma {
     }
   }
   
-  if (!$modality) 
+  if (¬ $modality) 
     $modality = neutral;
-  if (!$lexFct) 
+  if (¬ $lexFct) 
     $lexFct = none;
   ↓1 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modality, lexFct:$lexFct, language_register:$language_register, modSType:$modSType, modS:$modS];
   ↓2 = [];
@@ -255,9 +257,9 @@ premise → modalClause comma {
 conclusion → illocutionaryAct {
   [language_register:neutral] ⊂ ↑;
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
-  if (!$aspect)
+  if (¬ $aspect)
      $aspect = neutral;
-  if (!$tense || ($tense == present)) { 
+  if (¬ $tense || ($tense == present)) { 
     if ($aspect == continuous) {
       $mode = indicative; $tense  = future; $aspect = neutral;
     }
@@ -284,11 +286,11 @@ conclusion → illocutionaryAct {
   }
   
   [modality:$modality, lexFct:$lexFct, illocutionary:$illocutionary] ⊂ ↑;
-  if (!$modality)
+  if (¬ $modality)
     $modality = neutral;
-  if (!$lexFct) 
+  if (¬ $lexFct) 
     $lexFct = none;
-  if (!$illocutionary)
+  if (¬ $illocutionary)
     $illocutionary = neutral;
   
   ↓1 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionary, modality:$modality, lexFct:$lexFct, language_register:$language_register];
@@ -301,7 +303,7 @@ conclusion → illocutionaryAct {
 conclusion → illocutionaryAct {
   [language_register:in_house|slang] ⊂ ↑;
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
-  if (!$tense || ($tense == present)) { 
+  if (¬ $tense || ($tense == present)) { 
     if ($aspect == continuous) {
       $mode = conditional; $tense  = present; $aspect = neutral;
     }
@@ -329,11 +331,11 @@ conclusion → illocutionaryAct {
   }
   
   [modality:$modality, lexFct:$lexFct, illocutionary:$illocutionary] ⊂ ↑;
-  if (!$modality)
+  if (¬ $modality)
     $modality = neutral;
-  if (!$lexFct) 
+  if (¬ $lexFct) 
     $lexFct = none;
-  if (!$illocutionary)
+  if (¬ $illocutionary)
     $illocutionary = neutral;
   
   ↓1 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionary, modality:$modality, lexFct:$lexFct, language_register:$language_register];
@@ -384,7 +386,7 @@ rhetoricalStructure → TimeClause comma form illocutionaryAct {
   // indéfinie => hypéronyme défini
   if ($iiD == no)
     ↓4 = [i:[PRED:$pred, gender:$iiG, number:$iiN, def:yes, sem:hyper], vform:tensed, $iiRest];
-  else if ($iN != $iiN || $iG != $iiG)
+  else if ($iN ≠ $iiN || $iG ≠ $iiG)
     ↓4 = [i:[PRED:_pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
   else 
     ↓4 = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
