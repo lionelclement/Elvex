@@ -3,9 +3,9 @@ Elvex
 
 **Elvex** is a **Natural Text Generator**
 
-It is written by Lionel Clément at Bordeaux - France and released by LaBRI under GNU GPL License.
+It is written by Lionel Clément at Bordeaux University - France and released by LaBRI under GNU GPL License.
 
-The system is using handwritten *lexicon* and *grammar* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the concept. The "concept" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc. 
+The system is using handwritten *lexicon* and *grammar* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the "concept". The "concept" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc. 
 
 programming language used
 -------
@@ -54,14 +54,12 @@ Theoretical aspects
 It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon but not with learning data.
 I don’t explain the algorithms here. It’s efficient and monotonic (each rule adds something and never removes the effect of another rule).
 
-Practically speaking: to build a robust Text Generator with Elvex
+Practically speaking: to build Text Generator with Elvex for an application (Chatbot, Letter-writer, etc)
 --------------------
 
-Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process (several months for one person in a restricted domain).
+Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process to write all the simple words, compounds and idiomatic phrases (several months for one person in a restricted domain).
 
-Without this job, a text generator cannot be robust and reliable.
-
-The grammar is more complex, but shorter to write (several weeks).
+The grammar is more complex, but shorter to write (several weeks). In order to help grammar-writers, I am presently writing a grammar design-pattern.
 
 One of the most difficult stuff already done with Elvex
 -----------------------------------------------
