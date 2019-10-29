@@ -241,17 +241,14 @@ void List::print(std::ostream& outStream) const {
 void List::flatPrint(std::ostream& outStream, bool par) const {
 	switch (type) {
 		case NIL:
-			outStream << "NIL";
 			outStream << "<>";
 			break;
 
 		case ATOM:
-			outStream << "ATOM";
 			value->flatPrint(outStream);
 			break;
 
 		case PAIRP:
-			outStream << "PAIRP";
 			if (par || getCdr()->isAtomic()) {
 				outStream << "&lt;";
 			}
