@@ -80,7 +80,7 @@ elvex_OPTIONS += -DMAXCARDINAL=10000
 elvex_OPTIONS += -DMAXATTEMPTS=10000
 elvex_OPTIONS += -DMAXBITS=512
 
-elvex_CXXFLAGS = -g -std=c++11 -O5 -Wall $(elvex_OPTIONS)
+elvex_CXXFLAGS = -std=c++11 -O5 -Wall $(elvex_OPTIONS)
 elvex_LDADD =
 
 elvexdebug_SOURCES =\
@@ -119,7 +119,7 @@ term.cc\
 terms.cc\
 tree.cc\
 value.cc\
-variableflag.cc\ 
+variableflag.cc\
 vartable.cc 
 
 elvexdebug_OPTIONS =
@@ -132,6 +132,7 @@ elvexdebug_OPTIONS += -DTRACE
 #elvexdebug_OPTIONS += -DTRACE_UNHIDE
 #elvexdebug_OPTIONS += -DTRACE_UNFOLD
 #elvexdebug_OPTIONS += -DTRACE_EVAL
+#elvexdebug_OPTIONS += -DTRACE_APPLY
 #elvexdebug_OPTIONS += -DTRACE_ACTION
 #elvexdebug_OPTIONS += -DTRACE_LEXICON
 #elvexdebug_OPTIONS += -DTRACE_MEMOIZATION

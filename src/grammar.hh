@@ -24,7 +24,7 @@
 #include <list>
 #include "rule.hh"
 
-typedef std::list<class Rule *> ruleList;
+typedef std::list<rulePtr> ruleList;
 
 class Grammar {
 private:
@@ -32,7 +32,7 @@ private:
 	std::set<unsigned int> nonTerminals;
 	ruleList rules;
 	termPtr startTerm;
-	class Rule *firstRule;
+	rulePtr firstRule;
 	unsigned int idMax;
 
 public:
@@ -43,13 +43,13 @@ public:
 	std::set<unsigned int> &getNonTerminals(void);
 	const ruleList &getRules(void) const;
 	termPtr getStartTerm(void) const;
-	class Rule *getFirstRule(void) const;
+	rulePtr getFirstRule(void) const;
 	const unsigned int *getRefIdMax(void) const;
 	void setStartTerm(termPtr startTerm);
 
 	ruleList::const_iterator rulesBegin(void) const;
 	ruleList::const_iterator rulesEnd(void) const;
-	void addRule(class Rule *rule);
+	void addRule(rulePtr);
 	void addNewStartTerm(bool);
 	void addNonTerminal(unsigned int);
 	void addTerminal(unsigned int);
@@ -60,7 +60,7 @@ public:
 #ifdef OUTPUT_XML
 	void toXML(xmlNodePtr);
 #endif
-	std::list<class Rule *> *findRules(termPtr lhs);
+	std::list<rulePtr> *findRules(termPtr lhs);
 };
 
 #endif // GRAMMAR_H

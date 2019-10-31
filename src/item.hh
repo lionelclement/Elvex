@@ -34,7 +34,7 @@ class Item:
 		public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Item> {
 
 private:
-	class Rule *rule;
+	rulePtr rule;
 	unsigned int index; // the \bullet position
 	std::vector<unsigned int> indexTerms; // which term in a disjunction
 	statementsPtr statements;
@@ -52,19 +52,19 @@ private:
 			s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true, s_inheritedSonFeatures = true, s_synthesizedFeatures = true, s_synthesizedSonFeatures = true,
 			s_statements = true, s_environment = true;
 
-	Item(class Rule *rule, unsigned int index, statementsPtr statements);
+	Item(rulePtr rule, unsigned int index, statementsPtr statements);
 
-	Item(class Rule *rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
+	Item(rulePtr rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
 
-	Item(class Rule *rule, unsigned int index, std::vector<unsigned int>& indexTerms, statementsPtr statements);
+	Item(rulePtr rule, unsigned int index, std::vector<unsigned int>& indexTerms, statementsPtr statements);
 
 	void makeSerialString(void);
 
 public:
 	~Item();
-	static itemPtr create(class Rule *, unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
+	static itemPtr create(rulePtr , unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
 
-	static itemPtr create(class Rule *, unsigned int, std::vector<unsigned int> &, statementsPtr);
+	static itemPtr create(rulePtr , unsigned int, std::vector<unsigned int> &, statementsPtr);
 
 	const unsigned int getLineno() const;
 	const std::string &getFilename() const;
@@ -73,8 +73,8 @@ public:
 	termsPtr getTerms(unsigned int) const;
 	void setCurrentTerms(termsPtr);
 
-	class Rule *getRule(void) const;
-	void setRule(class Rule *);
+	rulePtr getRule(void) const;
+	void setRule(rulePtr );
 	unsigned int getIndex(void) const;
 	void setIndex(unsigned int);
 	std::vector<unsigned int> &getIndexTerms(void);

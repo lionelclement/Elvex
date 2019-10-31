@@ -2609,7 +2609,7 @@ void Statement::enable(statementPtr root, itemPtr item, bool &effect, bool on) {
  * true if effect
  ************************************************** */
 void Statement::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
-#ifdef TRACE
+#ifdef TRACE_APPLY
 	if (synthesizer->getTraceAction()) {
 		std::cout << "<H3>####################### APPLY #######################</H3>" << std::endl;
 		print(std::cout);
@@ -2728,7 +2728,7 @@ void Statement::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
 		FATAL_ERROR_STM;
 	}
 
-#ifdef TRACE
+#ifdef TRACE_APPLY
 	if (synthesizer->getTraceAction()) {
 		std::cout << "<H3>####################### APPLY DONE #######################</H3>" << std::endl;
 		item->print(std::cout);

@@ -1384,9 +1384,9 @@ void Synthesizer::generate() {
 	std::ofstream outfile;
 	nodeRoot = Node::create();
 	itemSetPtr initState = ItemSet::create(0);
-	std::list<class Rule *> *rules = this->grammar.findRules(getStartTerm());
+	std::list<rulePtr> *rules = this->grammar.findRules(getStartTerm());
 	itemPtr it;
-	for (std::list<class Rule *>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule) {
+	for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule) {
 		(*rule)->incUsages(this);
 		it = Item::create(*rule, UINT_MAX, 0, (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
 		it->addRanges(0);

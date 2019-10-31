@@ -53,9 +53,9 @@ Terms::Terms() {
  ************************************************** */
 Terms::~Terms() {
 	DELETE;
-	// for (termPtr t : terms){
-	// 	t.reset();
-	// }
+	for (termPtr t : terms) {
+		t.reset();
+	}
 }
 
 /* **************************************************

@@ -35,7 +35,9 @@
 #define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
 
 class Statement:
-		public Flags, public Serializable, public std::enable_shared_from_this<class Statement> {
+		public Flags,
+		public Serializable,
+		public std::enable_shared_from_this<class Statement> {
 
 public:
 	enum type {

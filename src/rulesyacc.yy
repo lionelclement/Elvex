@@ -389,7 +389,7 @@ rule:
 	term TOKEN_RIGHTARROW terms_vector structure_statement
 	{
 	  DBUGPRT("rule");
-	  class Rule *rule = new Rule(globalLineno, globalBufferName, *$1, *$3, $4 ? *$4 : statementsPtr());
+	  rulePtr rule = Rule::create(globalLineno, globalBufferName, *$1, *$3, $4 ? *$4 : statementsPtr());
 	  rule->addDefaults();
 	  synthesizer.getGrammar().addRule(rule);
 	  if (!synthesizer.getGrammar().getStartTerm()){
@@ -403,7 +403,7 @@ rule:
 	|term TOKEN_RIGHTARROW structure_statement
 	{
 	  DBUGPRT("Rule");
-	  class Rule *rule = new Rule(globalLineno, globalBufferName, *$1, $3 ? *$3 : statementsPtr());
+	  rulePtr rule = Rule::create(globalLineno, globalBufferName, *$1, $3 ? *$3 : statementsPtr());
 	  rule->addDefaults();
 	  synthesizer.getGrammar().addRule(rule);
 	  if (!synthesizer.getGrammar().getStartTerm()){
@@ -554,8 +554,9 @@ statement:
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::AFF, *$1, *$3));
 	  // <X, …> = <…>
 	  // <X, …> = Z
-	  if (((*$1)->isList()) && (((*$3)->isList())||((*$3)->isVariable())))
-	    ;	  
+	  if (((*$1)->isList()) && (((*$3)->isList())||((*$3)->isVariable()))) {
+	    FATAL_ERROR;	  
+	    }
 	  // ↓i = $X
 	  // ↓i = […]
 	  // ↓i = ↑

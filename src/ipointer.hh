@@ -36,6 +36,7 @@ typedef std::shared_ptr<class List> listPtr;
 typedef std::shared_ptr<class ListFeatures> listFeaturesPtr;
 typedef std::shared_ptr<class MemoizationValue> memoizationValuePtr;
 typedef std::shared_ptr<class Node> nodePtr;
+typedef std::shared_ptr<class Rule> rulePtr;
 typedef std::shared_ptr<class Statement> statementPtr;
 typedef std::shared_ptr<class Statements> statementsPtr;
 typedef std::shared_ptr<class Term> termPtr;

@@ -56,7 +56,6 @@ Rule::Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, st
  ************************************************************ */
 Rule::Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
 		: Rule(0, lineno, filename, lhs, rhs, statements) {
-	NEW;
 }
 
 /* ************************************************************
@@ -64,32 +63,56 @@ Rule::Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<t
  ************************************************************ */
 Rule::Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements)
 		: Rule(0, lineno, filename, lhs, statements) {
-	NEW;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+rulePtr
+Rule::create(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements) {
+  return rulePtr(new Rule(id, lineno, filename, lhs, rhs, statements));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+rulePtr
+Rule::create(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements) {
+  return rulePtr(new Rule(id, lineno, filename, lhs, statements));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+rulePtr
+Rule::create(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements) {
+  return rulePtr(new Rule(lineno, filename, lhs, rhs, statements));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+rulePtr
+Rule::create(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements) {
+  return rulePtr(new Rule(lineno, filename, lhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
 Rule::~Rule() {
-	DELETE;
-	/*
-	 for (std::vector <termsPtr >::iterator term=rhs.begin();
-	 term != rhs.end();
-	 term++)
-	 if (*term)
-	 delete *term;
-	 rhs.clear();
-	 if(lhs){
-	 delete lhs;
-	 lhs=NULL;
-
-	 }
-	 if (statements){
-	 delete statements;
-	 statements=NULL;
-
-	 }
-	 */
+  DELETE;
+  for (std::vector <termsPtr >::iterator term=rhs.begin();
+       term != rhs.end();
+       term++)
+    if (*term)
+      term->reset();
+  if (lhs){
+    lhs.reset();
+  }
+  if (statements){
+    statements.reset();
+  }
 }
 
 /* ************************************************************
@@ -180,12 +203,12 @@ void Rule::print(std::ostream& outStream, unsigned int index, bool withSemantic,
 /***************************
  *
  ***************************/
-class Rule *
+rulePtr
 Rule::clone() const {
 	std::vector<termsPtr> rhsCopy;
 	for (unsigned int i = 0; i < rhs.size(); ++i)
 		rhsCopy.push_back(rhs[i]->clone());
-	class Rule *rule = new Rule(this->getId(), this->lineno, this->filename, lhs, rhsCopy, statements);
+	rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, lhs, rhsCopy, statements);
 	rule->usages = usages;
 	return rule;
 }

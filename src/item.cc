@@ -38,7 +38,7 @@
 /* **************************************************
  *
  ************************************************** */
-Item::Item(class Rule *rule, unsigned int index, statementsPtr statements)
+Item::Item(rulePtr rule, unsigned int index, statementsPtr statements)
 		: Id(0) {
 	this->rule = rule;
 	this->index = index;
@@ -54,7 +54,7 @@ Item::Item(class Rule *rule, unsigned int index, statementsPtr statements)
 /* **************************************************
  *
  ************************************************** */
-Item::Item(class Rule *rule, unsigned int index, unsigned int indexTerm, statementsPtr statements)
+Item::Item(rulePtr rule, unsigned int index, unsigned int indexTerm, statementsPtr statements)
 		: Item(rule, index, statements) {
 	std::vector<termsPtr> terms = rule->getRhs();
 	unsigned j = 0;
@@ -73,7 +73,7 @@ Item::Item(class Rule *rule, unsigned int index, unsigned int indexTerm, stateme
 /* **************************************************
  *
  ************************************************** */
-Item::Item(class Rule *rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
+Item::Item(rulePtr rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
 		: Item(rule, index, statements) {
 	this->indexTerms = indexTerms;
 	std::vector<termsPtr> terms = rule->getRhs();
@@ -118,28 +118,28 @@ Item::~Item() {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Item::create(class Rule *rule, unsigned int index, unsigned int indexTerm, statementsPtr statements) {
+itemPtr Item::create(rulePtr rule, unsigned int index, unsigned int indexTerm, statementsPtr statements) {
 	return itemPtr(new Item(rule, index, indexTerm, statements));
 }
 
 /* **************************************************
  *
  ************************************************** */
-itemPtr Item::create(class Rule *rule, unsigned int index, std::vector<unsigned int>& indexTerms, statementsPtr statements) {
+itemPtr Item::create(rulePtr rule, unsigned int index, std::vector<unsigned int>& indexTerms, statementsPtr statements) {
 	return itemPtr(new Item(rule, index, indexTerms, statements));
 }
 
 /* **************************************************
  *
  ************************************************** */
-class Rule *Item::getRule(void) const {
+rulePtr Item::getRule(void) const {
 	return rule;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setRule(class Rule *rule) {
+void Item::setRule(rulePtr rule) {
 	this->rule = rule;
 }
 

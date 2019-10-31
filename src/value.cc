@@ -71,6 +71,8 @@ Value::~Value() {
 	DELETE;
 	if (bits)
 		bits.reset();
+	if (features)
+		features.reset();
 	if (list)
 		list.reset();
 }

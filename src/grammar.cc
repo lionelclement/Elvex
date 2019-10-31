@@ -44,17 +44,16 @@ Grammar::~Grammar(void) {
 	terminals.clear();
 	nonTerminals.clear();
 	for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
-		class Rule *tmp = *iterRules;
+		rulePtr tmp = *iterRules;
 		if (tmp)
-			delete (tmp);
+		  tmp.reset();
 	}
 	rules.clear();
 	if (startTerm) {
 		startTerm.reset();
 	}
 	if (firstRule) {
-		delete firstRule;
-		firstRule = NULL;
+	  firstRule.reset();
 	}
 }
 
@@ -89,7 +88,7 @@ termPtr Grammar::getStartTerm(void) const {
 /* **************************************************
  *
  ************************************************** */
-class Rule *Grammar::getFirstRule(void) const {
+rulePtr Grammar::getFirstRule(void) const {
 	return firstRule;
 }
 
@@ -124,7 +123,7 @@ ruleList::const_iterator Grammar::rulesEnd(void) const {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addRule(class Rule *rule) {
+void Grammar::addRule(rulePtr rule) {
 	rules.push_back(rule);
 	//std::pair<ruleList::iterator, bool> result = rules.insert(rule);
 	//return result.second;
@@ -134,7 +133,7 @@ void Grammar::addRule(class Rule *rule) {
  *
  ************************************************** */
 void Grammar::addNewStartTerm(bool addENDTerminal) {
-	class Rule *r;
+	rulePtr r;
 	std::vector<termsPtr> rhs;
 
 	if (addENDTerminal) {
@@ -151,7 +150,7 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
 
 	termPtr startTerm = Term::create(Vartable::_STARTTERM_);
 	std::string fileName = "";
-	r = new Rule(0, fileName, startTerm, rhs);
+	r = Rule::create(0, fileName, startTerm, rhs);
 	setStartTerm(startTerm);
 	rules.push_back(r);
 	firstRule = r;
@@ -293,15 +292,14 @@ Grammar::toXML(xmlNodePtr nodeRoot)
 
 /* **************************************************
  *
- ************************************************** */
-std::list<class Rule*> *
+% ************************************************** */
+std::list<rulePtr> *
 Grammar::findRules(termPtr lhs) {
-	std::list<class Rule*> *result = new std::list<class Rule*>;
+	std::list<rulePtr> *result = new std::list<rulePtr>;
 	ruleList::const_iterator iterRules;
 	for (iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++) {
 		if (lhs->getCode() == (*iterRules)->getLhs()->getCode()) {
 			result->push_back(*iterRules);
-
 		}
 	}
 	return result;

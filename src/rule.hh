@@ -30,7 +30,8 @@
 #include "serializable.hh"
 
 class Rule:
-		public Id::Id {
+		public Id::Id,
+		public std::enable_shared_from_this<class Rule> {
 
 private:
 	termPtr lhs;
@@ -39,12 +40,16 @@ private:
 	unsigned int usages;
 	std::string filename;
 	unsigned int lineno;
-
-public:
 	Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
 	Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
 	Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements = statementsPtr());
 	Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements = statementsPtr());
+
+public:
+	static rulePtr create(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+	static rulePtr create(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+	static rulePtr create(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements = statementsPtr());
+	static rulePtr create(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements = statementsPtr());
 	~Rule();
 
 	termPtr getLhs(void) const;
@@ -62,7 +67,7 @@ public:
 	const unsigned int getLineno(void) const;
 	const std::string &getFilename(void) const;
 
-	class Rule *clone() const;
+	rulePtr clone() const;
 	void print(std::ostream &, unsigned int = UINT_MAX, bool = false, bool = true) const;
 
 #ifdef OUTPUT_XML
