@@ -64,10 +64,13 @@ The grammar is more complex, but shorter to write (several weeks). In order to h
 One of the most difficult stuff already done with Elvex
 -----------------------------------------------
 
-- Past participle aggrement in French with transitive verbs
 - Adjective order in English (big yellow squared stuff, not squared yellow big stuff)
 - Anaphora resolution process between sentences with pronouns, synonyms and hypernyms
 - Complex idiomatic phrases (not always contiguous)
+- Past participle aggrement in French with transitive verbs
+- Lexical functions (à la Mel'čuk)
+In progress:
+- Coordinations with Right-Node Raising and Gapping
 
 Sample: Causal clauses in a little French Grammar first
 -----------------------------------------------
