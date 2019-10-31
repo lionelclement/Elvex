@@ -4,31 +4,39 @@
 * Elvex grammar
 ************************************************** */
 
-// [PRED:figure, adj:<[PRED:yellow], [PRED:big], [PRED:square]>]
-N → [ADJ] [ADJ] [ADJ] [ADJ] N
+N → [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] N
 {
   [adjunct:$List, $Rest];
   foreach $i in $List {
     [type:$type] ⊂ search($i);
-    if ($type == size) 
+    if ($type == number) {
       ↓1 = $i;
-    else if ($type == shape)
+    } else if ($type == quality) {
       ↓2 = $i;
-    else if ($type == color)
+    } else if ($type == size) {
       ↓3 = $i;
-    else if ($type == material)
+    } else if ($type == age) {
       ↓4 = $i;
+    } else if ($type == shape) {
+      ↓5 = $i;
+    } else if ($type == color) {
+      ↓6 = $i;
+    } else if ($type == proper) {
+      ↓7 = $i;
+    } else if ($type == purpose) {
+      ↓8 = $i;
+    }
   }
-  if (↓1)
-    attest #1;
-  if (↓2)
-    attest #2;
-  if (↓3)
-    attest #3;
-  if (↓4)
-    attest #4;
-  ↓5 = $Rest;
-  ⇑ = ⇓5;
+  attest (↓1 => #1);
+  attest (↓2 => #2);
+  attest (↓3 => #3);
+  attest (↓4 => #4);
+  attest (↓5 => #5);
+  attest (↓6 => #6);
+  attest (↓7 => #7);
+  attest (↓8 => #8);
+  ↓9 = $Rest;
+  ⇑ = ⇓9;
 }
 
 ADJ → adj
