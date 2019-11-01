@@ -68,7 +68,7 @@ One of the most difficult stuff already done with Elvex
 - Anaphora resolution process between sentences with pronouns, synonyms and hypernyms
 - Complex idiomatic phrases (not always contiguous)
 - Past participle aggrement in French with transitive verbs
-- Lexical functions (à la Mel'čuk)
+- Lexical functions (based on Mel'čuk theory)
 In progress:
 - Coordinations with Right-Node Raising and Gapping
 
