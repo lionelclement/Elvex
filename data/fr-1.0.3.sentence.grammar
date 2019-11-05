@@ -6,7 +6,7 @@ sentence → S {
   [subj:$subj, modS:NIL];
   attest ($subj);
   [voice:$voice] ⊂ ↑;
-  if (!$voice)
+  if ((¬ $voice))
     $voice = active;
   ↓1 = ↑ U [voice:$voice];
   ⇑ = ⇓1;
@@ -15,7 +15,7 @@ sentence → S {
 sentence → VP {
   [subj:NIL, modS:NIL, $rest];
   [voice:$voice] ⊂ ↑;
-  if (!$voice)
+  if ((¬ $voice))
     $voice=active;
   ↓1 = [$rest, voice:$voice];
   ⇑ = ⇓1;

@@ -6,7 +6,7 @@ NP → [det|detNum|detForm] N [form] {
   //print __FILE__; print " ("; print __LINE__; println ")";
   //println ↓2;
   [sem:$sem, $Rest] ⊂ ↑;
-  if (!$sem)
+  if (¬ $sem)
     $sem=default;
   ↓2 = [sem:$sem, $Rest];
   if (#3) {

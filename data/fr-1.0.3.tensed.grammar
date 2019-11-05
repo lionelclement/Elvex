@@ -1,14 +1,15 @@
 /* **************************************************
 * Temps verbal
 ************************************************** */
+
 tensedClause → timeClause {
   [vform:_, mode:_];
   [tense:$tense, aspect:$aspect, $rest] ⊂ ↑;
   [mode:$mode] ⊂ ↑;
-  if (!$tense)
+  if (¬ $tense)
     $tense=present;
 
-  if (!$aspect)
+  if (¬ $aspect)
     $aspect=neutral;
 
   if ($mode==indicative) {

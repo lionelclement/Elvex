@@ -14,20 +14,20 @@ VP → V [NP] [PP] [ADJ] [ADVM] {
     attest $objSynt;
     [objC:$objInherited] ⊂ ↑;
     [lexFct:$lexFctInherited] ⊂ $objInherited;
-    if (!$lexFctInherited)
+    if ((¬ $lexFctInherited))
       ↓2 = [neg:$neg, $objSynt, language_register:$language_register];
     else
       ↓2 = [neg:$neg, fct:$lexFctInherited, $objSynt, language_register:$language_register];
   }
   else {
-    attest ¬$objSynt;
+    attest (¬$objSynt);
   }
   if (#3) {
     attest $pObjSynt;
     ↓3 = $pObjSynt ∪ [language_register:$language_register];
   }
   else {
-    attest ¬$pObjSynt;
+    attest (¬$pObjSynt);
   }
   if (#4) {
     attest $adjSynt;
@@ -37,14 +37,14 @@ VP → V [NP] [PP] [ADJ] [ADVM] {
     ↓4 = [number:$nh, gender:$gh, language_register:$language_register] ∪ $adjSynt;
   }
   else {
-    attest ¬$adjSynt;
+    attest (¬$adjSynt);
   }
   if (#5) {
     attest $modSynt;
     ↓5 = [modV:$modSynt, language_register:$language_register];
   }
   else {
-    attest ¬$modSynt;
+    attest (¬$modSynt);
   }
   ⇑ = ⇓1 ∪ [fct:$fctH];
 }
@@ -89,7 +89,7 @@ VP → VP [PP] {
   else {
     attest ($pred == _pro);
     //[person:$person, gender:$gender, number:$number] ⊂ $pObj ;
-    //if (!$person)
+    //if ((¬ $person))
     //$person = three;
     //↓1 = [prep_objCl:$pObj, $rest] ∪ [prep_objCl:[person:$person]];
     ↓1 = [prep_objCl:$pObj, $rest];
@@ -115,7 +115,7 @@ VP → VP PP {
 VP → VP SComp {
   [scomp:$sComp, $rest];
   [conc:$conc, language_register:$language_register] ⊂ ↑;
-  if (!$conc)
+  if ((¬ $conc))
     $conc = simul;
   ↓1 = $rest;
 
@@ -235,7 +235,7 @@ V → [clneg] [advneg] CLITICS v [clint] [advneg] [ADVM] {
   attest (#2 ∨ #6) ⇔ #1;
   attest ¬(#2 ∧ #6);
   [i:$obj, scomp:$scomp, neg:$neg, $rest] ⊂ ↑;
-  if (!$neg)
+  if ((¬ $neg))
     $neg=$negC;
 
   if (#7) {

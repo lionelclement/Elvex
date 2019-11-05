@@ -1,5 +1,3 @@
-@lexicon
-
 @big: [type:size] ;
 @large: [type:size] ;
 

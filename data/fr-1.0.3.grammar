@@ -1,5 +1,3 @@
-@grammar 
-
 #include fr-1.0.3.rhetoric.grammar
 
 /* **************************************************
@@ -8,23 +6,31 @@
 text → rhetoricalStructure {
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct] ⊂ ↑;
   attest $pred != paragraph;
-  if (!$vform)
+  if (¬ $vform)
     $vform = tensed;
-  if (!$mode)
+  if (¬ $mode)
     $mode = indicative;
-  if (!$language_register)
+  if (¬ $language_register || ($language_register == _))
     $language_register = neutral;
-  if (!$lexFct)
+  if (¬ $lexFct)
     $lexFct = none;
   if (($pred != cause) && ($pred != succ) && ($pred != hello) && ($pred != see_you_soon))
     $rhet = neutral;
   else
     $rhet = $pred;
-  if (!$illocutionary)
+  if (¬ $illocutionary)
     $illocutionary = neutral;
-  if (!$modality)
+  if (¬ $modality)
     $modality = neutral;
   ↓1 = ↑ ∪ [vform:$vform, mode:$mode, rhet:$rhet, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct];
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Start with an NP or a Narative Sentence
+ ************************************************** */
+text → NP {
+  ↓1 = ↑;
   ⇑ = ⇓1;
 }
 
@@ -109,21 +115,21 @@ paragraph → text newline {
 letter → dear name comma newParagraph text newParagraph regards newline signature {
   [PRED:letter, i:$i, ii:$ii, iii:$iii];
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct] ⊂ ↑;
-  if (!$vform) 
+  if (¬ $vform) 
     $vform = tensed;
-  if (!$mode)
+  if (¬ $mode)
     $mode = indicative;
-  if (!$language_register)
+  if (¬ $language_register)
     $language_register = neutral;
-  if (!$lexFct)
+  if (¬ $lexFct)
     $lexFct = none;
   if (($pred != cause) && ($pred != succ))
     $rhet = neutral;
   else
     $rhet = $pred;
-  if (!$illocutionary)
+  if (¬ $illocutionary)
     $illocutionary = neutral;
-  if (!$modality)
+  if (¬ $modality)
     $modality = neutral;
   ↓1 = $i;
   ↓2 = $i;

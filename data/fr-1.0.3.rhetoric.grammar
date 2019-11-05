@@ -52,7 +52,8 @@ rhetoricalStructure → [que] premise [que] conclusion {
   [i:[ii:[id:$ID_I_II]], ii:[i:[idref:$ID]]] ⊂ ↑;
   [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;
 
-  attest ($ID ⇒ (($ID_I_II ≠ $ID) ∧ ($ID_I_I ≠ $ID)));
+  //  attest ($ID ⇒ (($ID_I_II ≠ $ID) ∧ ($ID_I_I ≠ $ID)));
+  attest (((¬ $ID) || $ID == _)  ∨ (($ID_I_II ≠ $ID) ∧ ($ID_I_I ≠ $ID)));
 
   if (($language_register == slang) ∧ ($illocutionaryII ≠ ask)) {
     ↓1 = [];
@@ -370,7 +371,7 @@ rhetoricalStructure → illocutionaryAct illocutionaryAct {
 /* **************************************************
  * Succession
  ************************************************** */
-rhetoricalStructure → TimeClause comma form illocutionaryAct {
+rhetoricalStructure → timeClause comma form illocutionaryAct {
   [PRED:succ, i:[ii:[id:$ID]], ii:[i:[idref:$ID]]];
   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
   ↓1 = $I ∪ [vform:tensed];
@@ -392,7 +393,7 @@ rhetoricalStructure → TimeClause comma form illocutionaryAct {
     ↓4 = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
 }
 
-rhetoricalStructure → TimeClause comma form illocutionaryAct {
+rhetoricalStructure → timeClause comma form illocutionaryAct {
   [PRED:succ, i:[i:[id:$ID]], ii:[i:[idref:$ID]]];
   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
   ↓1 = $I ∪ [vform:tensed];
