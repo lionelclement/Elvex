@@ -34,8 +34,8 @@
 #define CERR_LINE  {std::cerr << __FILE__ << "(" << std::dec <<  __LINE__ << ")" << "<br>" << std::endl;}
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
-#define WARNING_MSG(msg)  {std::cerr << "WARNING: " << msg << std::endl;}
-#define FATAL_ERROR_MSG(msg)  {std::cerr << "FATAL ERROR" << std::endl; throw msg;}
+#define WARNING_MSG(msg)  {CERR_LINE; std::cerr << "WARNING: " << msg << std::endl;}
+#define FATAL_ERROR_MSG(msg)  {CERR_LINE; std::cerr << "FATAL ERROR" << std::endl; throw msg;}
 
 #define FATAL_ERROR {FATAL_ERROR_MSG("");}
 

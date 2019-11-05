@@ -186,7 +186,7 @@ bool Value::isNil(void) const {
  *
  ************************************************** */
 bool Value::isFalse(void) const {
-	return ((type == Value::BOOL && integer == 0) || (type == Value::ANONYMOUS));
+  return ((type == Value::BOOL && integer == 0)) || (type == Value::ANONYMOUS);
 }
 
 /* **************************************************
@@ -461,109 +461,138 @@ valuePtr Value::clone(void) {
  *
  ************************************************************ */
 bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptToFilterNULLVariables, bool root) {
-	/***
-	 CERR_LINE;
-	 std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
-	 std::cerr << "<table border=\"1\"><tr><th></th><th></th><th>Environment</th></tr>";
-	 std::cerr << "<tr><td>";
-	 this->print(std::cerr);
-	 std::cerr << "</td><td>";
-	 if (value)
-	 value->print(std::cerr);
-	 else
-	 std::cerr << "NULL";
-	 std::cerr << "</td><td>";
-	 environment->print(std::cerr);
-	 std::cerr << "</td></tr></table>";
-	 ***/
+  /***
+  CERR_LINE;
+  std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
+  std::cerr << "<table border=\"1\"><tr><th>this</th><th>value</th><th>Environment</th></tr>";
+  std::cerr << "<tr><td>";
+  this->print(std::cerr);
+  std::cerr << "</td><td>";
+  if (value)
+    value->print(std::cerr);
+  else
+    std::cerr << "NULL";
+  std::cerr << "</td><td>";
+  environment->print(std::cerr);
+  std::cerr << "</td></tr></table>";
+  ***/
 
-	bool ret = true;
-	switch (type) {
-		case BOOL:
-			if (value->type == VARIABLE)
-				environment->add(value->getBits(), shared_from_this());
-			else if (this->isNil() || value->isNil())
-				ret = false;
-			break;
-		case FEATURES:
-			if (value->type == FEATURES) {
-				if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(), acceptToFilterNULLVariables, root))
-					ret = false;
-			}
-			else if (value->type == ANONYMOUS) {
-				if (!this->getFeatures()->buildEnvironment(environment, Features::create(), acceptToFilterNULLVariables, root))
-					ret = false;
-			}
-			else
-				ret = false;
-			break;
-		case CONSTANT:
-			if (value->type == VARIABLE)
-				environment->add(value->getBits(), shared_from_this());
-			else if (value->type == CONSTANT) {
-				if ((*getBits() & *value->getBits()).none())
-					ret = false;
-			}
-			else if (value->type == IDENTIFIER) {
-				if (Vartable::intToStr(getIdentifier()) != getBits()->toString())
-					ret = false;
-			}
-			else if (value->type == ANONYMOUS) {
-			}
-			else {
-				this->print(std::cerr);
-				std::cerr << std::endl << value->type << std::endl;
-				FATAL_ERROR
-				;
-			}
-			break;
-		case IDENTIFIER:
-			if (value->type == VARIABLE)
-				environment->add(value->getBits(), shared_from_this());
-			else if (getIdentifier() != value->getIdentifier())
-				ret = false;
-			break;
-		case DOUBLE:
-			if (value->type == VARIABLE)
-				environment->add(value->getBits(), shared_from_this());
-			else if (getDouble() != value->getDouble())
-				ret = false;
-			break;
-		case STR:
-			if (value->type == VARIABLE)
-				environment->add(value->getBits(), shared_from_this());
-			else if (getStr() != value->getStr())
-				ret = false;
-			break;
-		case LIST:
-			if (value->type == LIST) {
-				if (!this->getList()->buildEnvironment(environment, value->getList(), acceptToFilterNULLVariables, root))
-					ret = false;
-			}
-			else if (value->type == VARIABLE)
-				environment->add(value->getBits(), shared_from_this());
-			else if (value->type == ANONYMOUS)
-				environment->add(value->getBits(), shared_from_this());
-			else
-				ret = false;
-			break;
-		case VARIABLE:
-			if (!value)
-				environment->add(this->getBits(), NIL_VALUE);
-			else
-				environment->add(this->getBits(), value);
-			break;
-		case ANONYMOUS:
-			break;
-	}
-	/***
-	 std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
-	 std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-	 std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-	 environment->print(std::cerr);
-	 std::cerr << "</td></tr></table>";
-	 ***/
-	return ret;
+  bool ret = true;
+  switch (type) {
+
+  case BOOL:
+    if (value->type == VARIABLE)
+      environment->add(value->getBits(), shared_from_this());
+    else if (this->isNil() || value->isNil())
+      ret = false;
+    else
+      FATAL_ERROR;
+    break;
+
+  case FEATURES:
+    if (value->type == FEATURES) {
+      if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(), acceptToFilterNULLVariables, root))
+	ret = false;
+    }
+    else if (value->type == ANONYMOUS) {
+      if (!this->getFeatures()->buildEnvironment(environment, Features::create(), acceptToFilterNULLVariables, root))
+	ret = false;
+    }
+    else {
+      FATAL_ERROR;
+      ret = false;
+    }
+    break;
+    
+  case CONSTANT:
+    if (value->type == VARIABLE) {
+      environment->add(value->getBits(), shared_from_this());
+    }
+    else if (value->type == CONSTANT) {
+      if ((*getBits() & *value->getBits()).none())
+	ret = false;
+    }
+    else if (value->type == IDENTIFIER) {
+      if (Vartable::intToStr(getIdentifier()) != getBits()->toString())
+	ret = false;
+    }
+    else if (value->type == ANONYMOUS) {
+    }
+    else {
+      ret = false;
+    }
+    break;
+    
+  case IDENTIFIER:
+    if (value->type == VARIABLE){
+      environment->add(value->getBits(), shared_from_this());
+    }
+    else if (getIdentifier() != value->getIdentifier()){
+      ret = false;
+    }
+    else {
+    }
+    break;
+
+  case DOUBLE:
+    if (value->type == VARIABLE) {
+      environment->add(value->getBits(), shared_from_this());
+    }
+    else if (getDouble() != value->getDouble()) {
+      ret = false;
+    }
+    else {
+      FATAL_ERROR;
+    }
+    break;
+
+  case STR:
+    if (value->type == VARIABLE) {
+      environment->add(value->getBits(), shared_from_this());
+    }
+    else if (getStr() != value->getStr()) {
+      ret = false;
+    }
+    else {
+      FATAL_ERROR;
+    }
+    break;
+    
+  case LIST:
+    if (value->type == LIST) {
+      if (!this->getList()->buildEnvironment(environment, value->getList(), acceptToFilterNULLVariables, root))
+	ret = false;
+    }
+    else if (value->type == VARIABLE) {
+      environment->add(value->getBits(), shared_from_this());
+    }
+    else if (value->type == ANONYMOUS) {
+    }
+    else {
+      ret = false;
+    }
+    break;
+
+  case VARIABLE:
+    if (!value) {
+      environment->add(this->getBits(), NIL_VALUE);
+    }
+    else {
+      environment->add(this->getBits(), value);
+    }
+    break;
+
+  case ANONYMOUS:
+    break;
+  }
+  /***
+  std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
+  std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+  std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+  environment->print(std::cerr);
+  std::cerr << "</td></tr></table>";
+  ***/
+  return ret;
 }
 
 /* ************************************************************

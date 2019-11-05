@@ -56,7 +56,8 @@ Synthesizer::Synthesizer(void) {
 	this->nodeRoot = nodePtr();
 	this->startFeatures = featuresPtr();
 	this->startTerm = NULL;
-	this->localEntry = entryPtr();
+	//this->localEntry = entryPtr();
+	this->localFeatures = featuresPtr();
 	this->lexiconFileName = std::string();
 	this->grammarFileName = std::string();
 	this->inputFileName = std::string();
@@ -67,6 +68,7 @@ Synthesizer::Synthesizer(void) {
 	this->trace = false;
 	this->warning = false;
 	this->random = false;
+	this->verbose = false;
 	NEW;
 }
 
@@ -345,6 +347,20 @@ bool Synthesizer::getRandom(void) const {
 	return this->random;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
+void Synthesizer::setVerbose(const bool verbose) {
+	this->verbose = verbose;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Synthesizer::getVerbose(void) const {
+	return this->verbose;
+}
+
 #ifdef OUTPUT_XML
 /* **************************************************
  *
@@ -494,15 +510,15 @@ Synthesizer::entries_map_map::const_iterator Synthesizer::endLexicon(void) const
 /* **************************************************
  *
  ************************************************** */
-entryPtr Synthesizer::getLocalEntry(void) const {
-	return localEntry;
+featuresPtr Synthesizer::getLocalFeatures(void) const {
+	return localFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setLocalEntry(entryPtr localEntry) {
-	this->localEntry = localEntry;
+void Synthesizer::setLocalFeatures(featuresPtr localFeatures) {
+	this->localFeatures = localFeatures;
 }
 
 /* **************************************************
@@ -1441,32 +1457,21 @@ void Synthesizer::generate() {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::parseFile(std::string fileName) {
-	init_buffer();
-	pushBufferName(fileName);
-	rulesin = fopen(fileName.c_str(), "r");
-	if (!rulesin) {
-		std::cerr << "*** error..." << fileName << std::endl;
-		exit(1);
-	}
-	push_buffer();
-	rulesparse();
-	delete_buffer();
-	fclose(rulesin);
-	popBufferName();
+unsigned int Synthesizer::parseFile(std::string prefix, std::string fileName) {
+  return parseString(prefix + "\n#include " + fileName);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::parseString(std::string str, std::string buffer) {
-	init_buffer();
-	pushBufferName(buffer);
-	scan_string(str);
-	unsigned int result = rulesparse();
-	delete_buffer();
-	popBufferName();
-	return result;
+unsigned int Synthesizer::parseString(std::string buffer) {
+  init_buffer();
+  pushBufferName(buffer);
+  scan_string(buffer);
+  unsigned int result = rulesparse();
+  delete_buffer();
+  popBufferName();
+  return result;
 }
 
 /* **************************************************
@@ -1489,34 +1494,37 @@ const entriesPtr Synthesizer::findCompactLexicon(const unsigned int code, const 
 	if (info != ~0UL) {
 		entriesPtr entries = Entries::create();
 		while (info != ~0UL) {
-			std::string result = compactLexicon->buffer + (compactLexicon->info[info].getOffset());
-			std::string form = result.substr(0, result.find("#"));
-			std::string data = result.substr(result.find("#"), -1);
-			unsigned int rulesresult = parseString(data, std::string("Lexicon"));
-			if (rulesresult == 0) {
-				if (localEntry) {
-					localEntry->setCode(code);
-					localEntry->setForm(form);
-					std::string localEntrySerialString = localEntry->peekSerialString();
-					entry_map::iterator found = mapLocalEntry.find(localEntrySerialString);
-					if (found != mapLocalEntry.end()) {
-						entries->add(found->second);
-					}
-					else {
-						mapLocalEntry.insert(std::make_pair(localEntrySerialString, localEntry));
-						entries->add(localEntry);
-					}
-				}
-			}
-			else {
-				std::cerr << "Illegal lexical entry: " << form << " " << Vartable::intToStr(code) << " " << result.substr(result.find("#") + 1, -1) << std::endl;
-				FATAL_ERROR
-				;
-			}
-			if ((compactLexicon->info[info].isNext()))
-				info = compactLexicon->info[info].getNext();
-			else
-				info = (unsigned long int)(~(0UL));
+		  std::string result = compactLexicon->buffer + (compactLexicon->info[info].getOffset());
+		  std::string form = result.substr(0, result.find("#"));
+		  std::string data = result.substr(result.find("#"), -1);
+		  unsigned int rulesresult = parseString(data);
+		  if (rulesresult == 0) {
+		    if (localFeatures) {
+		      unsigned int pred = localFeatures->assignPred();
+		      entryPtr localEntry = Entry::create(0, pred, std::string(), localFeatures);
+
+		      localEntry->setCode(code);
+		      localEntry->setForm(form);
+		      std::string localEntrySerialString = localEntry->peekSerialString();
+		      entry_map::iterator found = mapLocalEntry.find(localEntrySerialString);
+		      if (found != mapLocalEntry.end()) {
+			entries->add(found->second);
+		      }
+		      else {
+			mapLocalEntry.insert(std::make_pair(localEntrySerialString, localEntry));
+			entries->add(localEntry);
+		      }
+		    }
+		  }
+		  else {
+		    std::cerr << "Illegal lexical entry: " << form << " " << Vartable::intToStr(code) << " " << result.substr(result.find("#") + 1, -1) << std::endl;
+		    FATAL_ERROR
+		      ;
+		  }
+		  if ((compactLexicon->info[info].isNext()))
+		    info = compactLexicon->info[info].getNext();
+		  else
+		    info = (unsigned long int)(~(0UL));
 		}
 		return entries;
 	}

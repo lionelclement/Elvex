@@ -59,6 +59,7 @@ void Usage(char **argv) {
 options\n\
 \t--help|-h                   print this\n\
 \t--version|-v                print version\n\
+\t--verbose|-V                verbose mode\n\
 \t--reduceAll|-a              reduce all rules\n\
 \t--trace|-t                  trace the generation process\n\
 \t--random|-r                 outputs one sentence randomly selected\n";
@@ -152,13 +153,18 @@ int main(int argn, char **argv) {
 		else {
 			for (unsigned int arg = 1; argv[arg]; ++arg) {
 				if (argv[arg][0] == '-') {
-					if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
+				  if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
 						std::cout << PACKAGE_VERSION << std::endl;
 						return EXIT_SUCCESS;
 					}
 
-					else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
-						Usage(argv);
+				if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose")) {
+				  						synthesizer.setVerbose(true);
+
+				}
+				
+				else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
+				  Usage(argv);
 						return EXIT_SUCCESS;
 					}
 
@@ -295,8 +301,6 @@ int main(int argn, char **argv) {
 #endif
 
 					else {
-						CERR_LINE
-						;
 						std::cerr << "Unknown argument: " << argv[arg] + 1 << std::endl;
 						Usage(argv);
 						return EXIT_FAILURE;
@@ -304,7 +308,7 @@ int main(int argn, char **argv) {
 				}
 
 				else {
-					//synthesizer.addInput(argv[arg]);
+				  synthesizer.addInput(argv[arg]);
 				}
 			}
 
@@ -312,14 +316,14 @@ int main(int argn, char **argv) {
 #ifdef TRACE_INIT
 				std::cerr << "load lexicon" << "<BR>" << std::endl;
 #endif
-				synthesizer.parseFile(synthesizer.getLexiconFileName());
+				synthesizer.parseFile("@lexicon", synthesizer.getLexiconFileName());
 			}
 
 			if (synthesizer.getGrammarFileName().length() > 0) {
 #ifdef TRACE_INIT
 				std::cerr << "load grammar" << "<BR>" << std::endl;
 #endif
-				synthesizer.parseFile(synthesizer.getGrammarFileName());
+				synthesizer.parseFile("@grammar", synthesizer.getGrammarFileName());
 			}
 
 			if (synthesizer.getCompactLexiconFileName().length() > 0) {
@@ -345,14 +349,14 @@ int main(int argn, char **argv) {
 		srand(time(NULL));
 		if (synthesizer.getInputFileName().length() > 0) {
 #ifdef TRACE_INIT
-			std::cerr << "load input" << "<BR>" << std::endl;
+		  std::cerr << "load input" << "<BR>" << std::endl;
 #endif
-			synthesizer.parseFile(synthesizer.getInputFileName());
+		  synthesizer.parseFile("@input", synthesizer.getInputFileName());
 			generate();
 		}
 
 		for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin(); i != synthesizer.getInputs().end(); ++i) {
-			synthesizer.parseString("@input " + *i, std::string("Input"));
+			synthesizer.parseString("@input " + *i);
 			generate();
 		}
 
@@ -368,7 +372,7 @@ int main(int argn, char **argv) {
 #endif
 	}
 	catch (std::string &message) {
-		std::cerr << message << std::endl;
+	  std::cerr << message << std::endl;
 	}
 	catch (char const *message) {
 		std::cerr << message << std::endl;

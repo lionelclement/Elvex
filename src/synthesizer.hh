@@ -72,7 +72,7 @@ private:
 	featuresPtr startFeatures;
 	termPtr startTerm;
 	class Lex *compactLexicon;
-	entryPtr localEntry; //flying lexical entry
+	featuresPtr localFeatures;
 	entry_map mapLocalEntry;
 	unsigned int maxLength;
 	unsigned int maxUsages;
@@ -97,6 +97,7 @@ private:
 	bool trace;
 	bool warning;
 	bool random;
+  bool verbose;
 
 #ifdef TRACE
 	bool traceStage;
@@ -195,8 +196,8 @@ public:
 	entries_map_map::const_iterator beginLexicon(void) const;
 	entries_map_map::const_iterator endLexicon(void) const;
 
-	entryPtr getLocalEntry(void) const;
-	void setLocalEntry(entryPtr);
+	featuresPtr getLocalFeatures(void) const;
+	void setLocalFeatures(featuresPtr);
 
 	void printLexicon(std::ostream &) const;
 
@@ -206,20 +207,20 @@ public:
 
 	const bool getTrace(void) const;
 	void setTrace(const bool);
-	const bool getVerbose(void) const;
-	void setVerbose(const bool);
-	const bool getReduceAll(void) const;
+  	const bool getReduceAll(void) const;
 	void setReduceAll(bool);
 	void setRandom(bool);
 	bool getRandom(void) const;
+	void setVerbose(bool);
+	bool getVerbose(void) const;
 
 	void printState(std::ostream &, itemSetPtr);
 	void close(itemSetPtr, unsigned int);
 	bool shift(itemSetPtr, unsigned int);
 
 	itemPtr createItem(itemPtr, unsigned int);
-	void parseFile(std::string);
-	unsigned int parseString(std::string, std::string);
+  unsigned int parseFile(std::string prefix, std::string fileName);
+	unsigned int parseString(std::string buffer);
 	void generate(void);
 	const entriesPtr findCompactLexicon(const unsigned int code, const unsigned int pred);
 #ifdef MEMOIZATION

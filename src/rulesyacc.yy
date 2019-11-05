@@ -77,10 +77,6 @@
     }
   }
   
-  std::list< std::string> argsCat;
-  std::list< std::string> argsPred;
-  unsigned int codeString; 
-  
   unsigned int globalLineno;
   std::string globalBufferName;
   %}
@@ -109,23 +105,21 @@
 
 // PAR
 %token TOKEN_LPAR TOKEN_RPAR 
-%token TOKEN_LBRACE TOKEN_RBRACE TOKEN_LBRACKET TOKEN_RBRACKET TOKEN_LEFT_DOUBLE_ANGLE_QUOTATION_MARK TOKEN_RIGHT_DOUBLE_ANGLE_QUOTATION_MARK
+%token TOKEN_LBRACE TOKEN_RBRACE TOKEN_LBRACKET TOKEN_RBRACKET
 
 // PONCT
 %token TOKEN_DASH
 %token TOKEN_AROBASE
-%token TOKEN_SEMI TOKEN_COLON TOKEN_DOUBLECOLON TOKEN_COMMA TOKEN_DOT
+%token TOKEN_SEMI TOKEN_COLON TOKEN_DOUBLECOLON TOKEN_COMMA
 
 // KEYWORDS
-%token TOKEN_GRAMMAR TOKEN_INPUT TOKEN_LEXICON TOKEN_INPUTVALENCY
+%token TOKEN_GRAMMAR TOKEN_INPUT TOKEN_LEXICON
 %token TOKEN_PRED TOKEN_FORM
 %token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN
 %token TOKEN_IF TOKEN_ELSE
 %token TOKEN_NIL TOKEN_TRUE
 %token TOKEN_FOREACH TOKEN_IN
 %token TOKEN_SEARCH
-%token TOKEN_SORT TOKEN_WITH TOKEN_REVERSE
-%token TOKEN_COMBINATION
 %token TOKEN_RAND
 
 // OPERATORS
@@ -161,7 +155,6 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_inset_statement right_hand_side_inset_statement left_hand_side_aff_statement right_hand_side_aff_statement up down updouble downdouble dash_statement
 %type<statement_slot> expression_statement
 
-//%nonassoc TOKEN_SEARCH
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
 %left TOKEN_OR
 %left TOKEN_AND
@@ -178,19 +171,19 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %%
 
 axiom:
-	declaration {
+	begin {
 	  DBUGPRT("axiom done...");
 	  YYACCEPT;
 	};
 
-declaration:
+begin:
 	TOKEN_GRAMMAR rules {
-	  DBUGPRT("declaration grammar");
+	  DBUGPRT("begin grammar");
 	  synthesizer.getGrammar().analyseTerms(synthesizer);
 	}
 
 	|TOKEN_INPUT term features {
-	  DBUGPRT("declaration input");
+	  DBUGPRT("begin input");
 	  synthesizer.setStartTerm(*$2);
 	  (*$3)->renameVariables((*$3)->getId());
 	  synthesizer.setStartFeatures(*$3);
@@ -198,20 +191,21 @@ declaration:
 	}
 
 	|TOKEN_INPUT term {
-	  DBUGPRT("declaration input");
+	  DBUGPRT("begin input");
 	  synthesizer.setStartTerm(*$2);
 	  synthesizer.setStartFeatures(Features::create());
 	 }
 
 	|TOKEN_LEXICON dictionary {      
-	  DBUGPRT("declaration lexicon");
+	  DBUGPRT("begin lexicon");
 	}
 
 	|TOKEN_DASH features
 	{
-	  DBUGPRT("declaration features");
-	  unsigned int pred = (*$2)->assignPred();
-	  synthesizer.setLocalEntry(Entry::create(0, pred, std::string(), *$2));
+	  DBUGPRT("begin features");
+	  //unsigned int pred = (*$2)->assignPred();
+	  //synthesizer.setLocalEntry(Entry::create(0, pred, std::string(), *$2));
+	  synthesizer.setLocalFeatures(*$2);
 	  free($2);
 	};
 
@@ -831,7 +825,7 @@ expression_statement:
 	  free($3);
 	}
 	
-		|expression_statement TOKEN_LT expression_statement { 
+	|expression_statement TOKEN_LT expression_statement { 
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::LT, (*$1), (*$3))); 
 	  free($1);
@@ -979,6 +973,12 @@ expression_statement:
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::CONSTANT, *$1));
 	  free($1);
+	}
+
+	|TOKEN_ANONYMOUS
+	{
+	  DBUGPRT("expression_statement");
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::ANONYMOUS, Value::ANONYMOUS_VALUE));
 	}
 
 	|variable {

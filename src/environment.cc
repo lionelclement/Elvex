@@ -158,7 +158,7 @@ void Environment::print(std::ostream &out) const {
 		else
 			out << "</TR><TR>";
 		out << "<TD>";
-		out << "env:" << (*i).first;
+		out << (*i).first;
 		if ((*i).second) {
 			out << ":</TD><TD>";
 			(*i).second->print(out);
@@ -197,8 +197,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
 					replaceVariables((*feature)->getValue(), effect);
 				}
 				else
-					FATAL_ERROR
-				;
+					FATAL_ERROR;
 				break;
 			case Feature::VARIABLE: {
 				if ((*feature)->getValue()) {

@@ -51,6 +51,7 @@ public:
 		DOWN2,
 		FEATURES,
 		VARIABLE,
+		ANONYMOUS,
 		CONSTANT,
 		NIL,
 		NOT_NIL,

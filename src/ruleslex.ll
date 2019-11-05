@@ -114,10 +114,12 @@ downDoubleArrow "⇓"
 	  synthesizer.pushBufferName(yytext);
 	  synthesizer.pushLineno(ruleslineno);
 	  ruleslineno=1;
+	  if (synthesizer.getVerbose()) {
+	    std::cerr << "open " << yytext << std::endl;
+	  }
 	  yyin = fopen( yytext, "r" );
 	  if ( ! yyin ){
-	    std::cerr << "*** error -" << yytext << "- not found" << std::endl;
-	    exit(1);
+	    throw "*** error: can't open " + std::string(yytext);
 	  }
 	  push_buffer();
 	  BEGIN(INITIAL);
@@ -126,14 +128,17 @@ downDoubleArrow "⇓"
 }
 
 <<EOF>> {
-    yypop_buffer_state();
-    if ( !YY_CURRENT_BUFFER ) {
-      yyterminate();
+  yypop_buffer_state();
+  if ( !YY_CURRENT_BUFFER ) {
+    yyterminate();
+  }
+  else {
+    if (synthesizer.getVerbose()) {
+      std::cerr << "close " << synthesizer.getTopBufferName() << std::endl;
     }
-    else {
-      synthesizer.popBufferName();
-      ruleslineno = synthesizer.popLineno();
-    }
+    synthesizer.popBufferName();
+    ruleslineno = synthesizer.popLineno();
+  }
 }
 
 <INITIAL>{
@@ -216,11 +221,6 @@ downDoubleArrow "⇓"
   ";" {
     DBUGPRT("TOKEN_SEMI\n");
     return TOKEN_SEMI;
-  }
-  
-  "." {
-    DBUGPRT("TOKEN_DOT\n");
-    return TOKEN_DOT;
   }
   
   "::" {
@@ -333,29 +333,9 @@ downDoubleArrow "⇓"
     return TOKEN_SEARCH;
   }
   
-  "sort" {
-    DBUGPRT("TOKEN_SORT\n");
-    return TOKEN_SORT;
-  }
-  
-  "reverse" {
-    DBUGPRT("TOKEN_REVERSE\n");
-    return TOKEN_REVERSE;
-  }
-  
   "rand" {
     DBUGPRT("TOKEN_RAND\n");
     return TOKEN_RAND;
-  }
-  
-  "with" {
-    DBUGPRT("TOKEN_WITH\n");
-    return TOKEN_WITH;
-  }
-  
-  "combination" {
-    DBUGPRT("TOKEN_COMBINATION\n");
-    return TOKEN_COMBINATION;
   }
   
   "foreach" {
