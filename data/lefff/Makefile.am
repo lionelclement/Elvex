@@ -1,55 +1,63 @@
-SUFFIXES: .poslemma .formmorpho .lemma2 .lemmamorpho .elvex .complete .lefff .pattern .lefff.bz2
+# ##################################################
+#
+# ELVEX
+#
+# Copyright 2019 LABRI, 
+# CNRS (UMR 5800), the University of Bordeaux,
+# and the Bordeaux INP
+#
+# Author: 
+# Lionel Clément
+# LaBRI -- Université Bordeaux 
+# 351, cours de la Libération
+# 33405 Talence Cedex - France
+# lionel.clement@labri.fr
+# 
+# This file is part of ELVEX.
+#
+################################################## #
+
+SUFFIXES: .fsa .tbl .pattern .lefff.bz2
 
 CLEANFILES = lefff.fsa lefff.tbl
 BUILDLEXICON = ../../src/elvexbuildlexicon
 
-all:
-	@make lefff.fsa
+all: lefff.pattern lefff.fsa
 
-%.poslemma: %.pos %.lemma
-	@echo "build $@"
-	@paste $^ | tr '\t' '#' > $@
+%.fsa: %.lefff %.manual.pattern
+	@echo "build $@ with $^"
+	$(BUILDLEXICON) -compactLexiconDirectory . -compactLexiconFile $* -patternFile $*.manual.pattern build $<
 
-%.formmorpho: %.form %.predmorpho
-	@echo "build $@"
-	@paste $^ | tr '\t' '#' > $@
-
-%.pred: %.lemma
-	@echo "build $@"
-	@sed -e 's/^\(.*\)/PRED:\1,/' < $^ > $@
-
-%.predmorpho: %.pred %.morpho
-	@echo "build $@"
-	@paste $*.pred $*.morpho | sed -e 's/	//' -e 's/\(.*\)/[\1]/' -e 's/,]/]/' > $@
-
-%.elvex: %.poslemma %.formmorpho
-	@echo "build $@"
-	@paste $^ | sort -u > $@
-
-%.fsa: %.elvex
-	@echo "build $@"
-	@$(BUILDLEXICON) -d . -f $* build $<
-
-%.form: %.complete
-	@echo "build $@"
+%.form: %.lefff
+	@echo "build $@ with $^"
 	@grep -v '^//' < $< | cut -f1 > $@
 
-%.pos: %.complete
-	@echo "build $@"
+%.pos: %.lefff
+	@echo "build $@ with $^"
 	@grep -v '^//' < $< | cut -f2 > $@
 
-%.lemma: %.complete
-	@echo "build $@"
+%.lemma: %.lefff
+	@echo "build $@ with $^"
 	@grep -v '^//' < $< | cut -f3 > $@
 
-%.morpho: %.complete
-	@echo "build $@"
+%.morpho: %.lefff
+	@echo "build $@ with $^"
 	@grep -v '^//' < $< | cut -f4 > $@
 
-%.complete: %.lefff %.pattern
-	@echo "build $@"
+%.complete: %.lefff %.pattern completeLefff.pl 
+	@echo "build $@ with $^"
 	@perl completeLefff.pl $*.lefff $*.pattern > $@
 
 %.lefff: %.lefff.bz2
 	@echo "unzip $@"
 	@bunzip2 -c $< > $@
+
+%.lemma2: %.lemma
+	@echo "build $@ with $^"
+	@tr '-' '_' < $< > $@
+
+%.pattern: %.form %.pos %.lemma2 %.morpho
+	@echo "build $@ with $^"
+	paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	PRED:_\3]/' | grep '^\(n\|v\|adj\|adv\)	' | grep '_[[:alpha:]][[:alpha:]]*\]' | sed 's/\]//' | sort -u > $@
+	paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	/' | grep -v '^\(n\|v\|adj\|adv\)	' | sort -u >> $@
+
