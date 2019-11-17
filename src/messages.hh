@@ -20,8 +20,7 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-#include <iostream>     // cout
-#include <sstream>      // ostringstream
+#include <iostream>
 
 #ifdef TRACE_MALLOC
 #define NEW {std::cerr << "$$$ New " << __FILE__ << std::endl; }

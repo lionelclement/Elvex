@@ -17,6 +17,11 @@
  *
  ************************************************** */
 
+#include <cmath>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+
 #include "statement.hh"
 #include "environment.hh"
 #include "statements.hh"
@@ -30,7 +35,10 @@
 #include "ipointer.hh"
 #include "listfeatures.hh"
 #include "rule.hh"
-#include "synthesizer.hh"
+//#include "synthesizer.hh"
+#include "parser.hh"
+#include "bitset.hh"
+#include "vartable.hh"
 
 /* **************************************************
  *
@@ -922,7 +930,7 @@ statementPtr Statement::clone(const std::bitset<Flags::FLAGS>& protectedFlags) {
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Statement::evalFeatures(itemPtr item, Synthesizer *synthesizer, bool replaceVariables) {
+featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, bool replaceVariables) {
 #ifdef TRACE_EVAL
   std::cout << "####################### EVAL FEATURES #######################" << std::endl;
   std::cout << "<div>" << std::endl;
@@ -993,8 +1001,8 @@ featuresPtr Statement::evalFeatures(itemPtr item, Synthesizer *synthesizer, bool
 
   case UNIF:
     {
-      featuresPtr fs1=lhs->evalFeatures(item, synthesizer, replaceVariables);
-      featuresPtr fs2=rhs->evalFeatures(item, synthesizer, replaceVariables);
+      featuresPtr fs1=lhs->evalFeatures(item, parser, replaceVariables);
+      featuresPtr fs2=rhs->evalFeatures(item, parser, replaceVariables);
       if ((!fs1) || (!fs2)) {
 	resultFeatures = featuresPtr();
       }
@@ -1011,11 +1019,11 @@ featuresPtr Statement::evalFeatures(itemPtr item, Synthesizer *synthesizer, bool
     break;
   case SEARCH:
     {
-      featuresPtr fs = lhs->evalFeatures(item, synthesizer, replaceVariables);
+      featuresPtr fs = lhs->evalFeatures(item, parser, replaceVariables);
       if (!fs) {
 	resultFeatures = featuresPtr();
       }
-      resultFeatures = synthesizer->findMacros(Vartable::intToStr(fs->assignPred()));
+      resultFeatures = parser.findMacros(Vartable::intToStr(fs->assignPred()));
     }
     break;
 
@@ -1121,7 +1129,7 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
 /* **************************************************
  *
  ************************************************** */
-valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool replaceVariables) {
+valuePtr Statement::evalValue(itemPtr item, Parser &parser, bool replaceVariables) {
 #ifdef TRACE_EVAL
   std::cout << "####################### EVAL VALUE #######################" << std::endl;
   std::cout << "<div>" << std::endl;
@@ -1240,13 +1248,13 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 
   case UNIF:
     {
-      featuresPtr fs1 = lhs->evalFeatures(item, synthesizer, replaceVariables);
+      featuresPtr fs1 = lhs->evalFeatures(item, parser, replaceVariables);
       if (!fs1) {
 	resultValue = valuePtr();
 	goto valueBuilt;
       }
       else {
-	featuresPtr fs2=rhs->evalFeatures(item, synthesizer, replaceVariables);
+	featuresPtr fs2=rhs->evalFeatures(item, parser, replaceVariables);
 	if (!fs2) {
 	  resultValue = valuePtr();
 	  goto valueBuilt;
@@ -1277,7 +1285,7 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case PLUS:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
 	bool isv1astring = false;
 	std::string v1str;
 	if (v1) {
@@ -1291,7 +1299,7 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 	  else
 	    isv1astring = false;
 	}
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	bool isv2astring = false;
 	std::string v2str;
 	if (v2) {
@@ -1332,8 +1340,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 
     case MINUS:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
@@ -1346,8 +1354,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 
     case TIMES:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
@@ -1359,8 +1367,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case DIVIDE:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
@@ -1372,8 +1380,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case MODULO:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
@@ -1385,7 +1393,7 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case MINUS_U:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
 	if (!v1)
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()))
@@ -1398,8 +1406,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 
     case AND:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isFalse()) || (v2->isFalse()))
@@ -1412,8 +1420,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 
     case OR:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isFalse()) && (v2->isFalse()))
@@ -1425,8 +1433,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case EQ:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) && (!v2))
 	  resultValue = Value::TRUE_VALUE;
 
@@ -1450,8 +1458,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case DIFF:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	if ((!v1) && (!v2)) {
 	  resultValue = Value::NIL_VALUE;
 	}
@@ -1478,8 +1486,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case LT:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
 	  resultValue = Value::NIL_VALUE;
@@ -1493,8 +1501,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case LE:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
 	  resultValue = Value::NIL_VALUE;
@@ -1508,8 +1516,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case GT:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
 	  resultValue = Value::NIL_VALUE;
@@ -1523,8 +1531,8 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
       break;
     case GE:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
-	valuePtr v2=rhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
+	valuePtr v2=rhs->evalValue(item, parser, replaceVariables);
 	// si l'une est variable libre
 	if ((!v1) || (!v2)) {
 	  resultValue = Value::NIL_VALUE;
@@ -1539,7 +1547,7 @@ valuePtr Statement::evalValue(itemPtr item, Synthesizer *synthesizer, bool repla
 
     case NOT:
       {
-	valuePtr v1=lhs->evalValue(item, synthesizer, replaceVariables);
+	valuePtr v1=lhs->evalValue(item, parser, replaceVariables);
 	if (!v1
 	    || v1->isFalse())
 	  resultValue = Value::TRUE_VALUE;
@@ -1936,13 +1944,13 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 /* ************************************************************
  * ↓1 = … 
  ************************************************************ */
-void Statement::buildInheritedSonFeatures(itemPtr item, class Synthesizer *synthesizer) {
+void Statement::buildInheritedSonFeatures(itemPtr item, Parser &parser) {
   /***
       std::cerr << "buildInheritedSonFeatures: ";
       print(std::cerr);
       std::cerr << std::endl;
   ***/
-  featuresPtr features = rhs->evalFeatures(item, synthesizer, true);
+  featuresPtr features = rhs->evalFeatures(item, parser, true);
   if (features->isNil())
     addFlags(Flags::BOTTOM);
   else
@@ -1952,12 +1960,12 @@ void Statement::buildInheritedSonFeatures(itemPtr item, class Synthesizer *synth
 /* ************************************************************
  * ⇑ = …
  ************************************************************ */
-void Statement::buildSynthesizedFeatures(itemPtr item, Synthesizer *synthesizer) {
+void Statement::buildSynthesizedFeatures(itemPtr item, Parser &parser) {
   if (!item->getSynthesizedFeatures()->isNil()) {
     this->print(std::cerr);
     FATAL_ERROR_STM;
   }
-  featuresPtr features = rhs->evalFeatures(item, synthesizer, true);
+  featuresPtr features = rhs->evalFeatures(item, parser, true);
   if (features->isNil())
     addFlags(Flags::BOTTOM);
   else {
@@ -1969,7 +1977,7 @@ void Statement::buildSynthesizedFeatures(itemPtr item, Synthesizer *synthesizer)
  * [ … $X … ] ⊂ ⇓1;
  * $X = ⇓1;
  ************************************************************ */
-void Statement::buildEnvironmentWithSynthesize(itemPtr item, Synthesizer *synthesizer) {
+void Statement::buildEnvironmentWithSynthesize(itemPtr item, Parser &parser) {
   switch (this->op) {
   case AFF: {
     // $X = ⇓1;
@@ -1981,7 +1989,7 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Synthesizer *synthe
       environment = Environment::create();
       item->setEnvironment(environment);
     }
-    featuresPtr sonSynth = rhs->evalFeatures(item, synthesizer, true);
+    featuresPtr sonSynth = rhs->evalFeatures(item, parser, true);
     if (sonSynth) {
       environment->add(lhs->getBits(), Value::create(Value::FEATURES, sonSynth));
     }
@@ -1993,7 +2001,7 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Synthesizer *synthe
   case SUBSUME: {
     // [ … $X … ] ⊂ ⇓1;
 		  
-    featuresPtr left = lhs->evalFeatures(item, synthesizer, false);
+    featuresPtr left = lhs->evalFeatures(item, parser, false);
     if (!left) {
 		    
       WARNING_STM;
@@ -2009,7 +2017,7 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Synthesizer *synthe
 	item->setEnvironment(environment);
       }
 		    
-      featuresPtr sonSynth = rhs->evalFeatures(item, synthesizer, true);
+      featuresPtr sonSynth = rhs->evalFeatures(item, parser, true);
 		    
       if (sonSynth) {
 		    
@@ -2036,7 +2044,7 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Synthesizer *synthe
  * [ … $X … ] ⊂ ↑;
  * $X = ↑;
  ************************************************************ */
-void Statement::buildEnvironmentWithInherited(itemPtr item, Synthesizer *synthesizer) {
+void Statement::buildEnvironmentWithInherited(itemPtr item, Parser &parser) {
   /***
       std::cerr << "<DIV>buildEnvironmentWithInherited ";
       this->print(std::cerr, "", TRUE_ROOT);
@@ -2045,7 +2053,7 @@ void Statement::buildEnvironmentWithInherited(itemPtr item, Synthesizer *synthes
   switch (this->op) {
   case AFF: {
     // $X = ↑;
-    featuresPtr right = rhs->evalFeatures(item, synthesizer, true);
+    featuresPtr right = rhs->evalFeatures(item, parser, true);
     if (!right) {
       WARNING_STM
 	;
@@ -2065,13 +2073,13 @@ void Statement::buildEnvironmentWithInherited(itemPtr item, Synthesizer *synthes
     break;
 
   case SUBSUME: {
-    featuresPtr left = lhs->evalFeatures(item, synthesizer, false);
+    featuresPtr left = lhs->evalFeatures(item, parser, false);
     if (!left) {
       WARNING_STM
 	;
     }
     else {
-      featuresPtr right = rhs->evalFeatures(item, synthesizer, true);
+      featuresPtr right = rhs->evalFeatures(item, parser, true);
       if (!right) {
 	WARNING_STM
 	  ;
@@ -2113,7 +2121,7 @@ void Statement::buildEnvironmentWithInherited(itemPtr item, Synthesizer *synthes
  * < … > = reverse $X;
  * < … > = $X;
  ************************************************************ */
-void Statement::buildEnvironmentWithValue(itemPtr item, Synthesizer *synthesizer) {
+void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser) {
   /***
       std::cerr << "<DIV>buildEnvironmentWithValue</DIV>";
       std::cerr << "<DIV>";
@@ -2132,7 +2140,7 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Synthesizer *synthesizer
     // 	 $X = reverse $X;
 
     if (lhs->isVariable()) {
-      valuePtr right = rhs->evalValue(item, synthesizer, true);
+      valuePtr right = rhs->evalValue(item, parser, true);
       if (!right) {
 	this->print(std::cerr, 0);
 	WARNING_STM
@@ -2192,14 +2200,14 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Synthesizer *synthesizer
 
   case SUBSUME:
     {
-      featuresPtr right = rhs->evalFeatures(item, synthesizer, true);
+      featuresPtr right = rhs->evalFeatures(item, parser, true);
       if (!right) {
 	WARNING_STM;
       }
       else {
 	if (right->isNil())
 	  {} // empty
-	featuresPtr left = lhs->evalFeatures(item, synthesizer, false);
+	featuresPtr left = lhs->evalFeatures(item, parser, false);
 	if (left) {
 	  environmentPtr environment;
 	  if (item->getEnvironment()) {
@@ -2226,7 +2234,7 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Synthesizer *synthesizer
 /* ************************************************************
  * attest
  ************************************************************ */
-void Statement::stmAttest(itemPtr item, class Synthesizer *synthesizer) {
+void Statement::stmAttest(itemPtr item, Parser &parser) {
   /***
       std::cerr << "<DIV>*** attest</DIV>";
       std::cerr << "<DIV>";
@@ -2235,7 +2243,7 @@ void Statement::stmAttest(itemPtr item, class Synthesizer *synthesizer) {
   ***/
   switch (this->op) {
   case ATTEST: {
-    valuePtr res = lhs->evalValue(item, synthesizer, true);
+    valuePtr res = lhs->evalValue(item, parser, true);
     if ((!res) || (res == Value::NIL_VALUE) || (res == Value::ANONYMOUS_VALUE) || ((res->getType() == Value::FEATURES) && (res->getFeatures()->isBottom()))) {
       addFlags(Flags::BOTTOM);
     }
@@ -2296,7 +2304,7 @@ void Statement::stmGuard(itemPtr item, bool trace) {
 /* ************************************************************
  * foreach
  ************************************************************ */
-void Statement::stmForeach(itemPtr item, Synthesizer *synthesizer, bool trace) {
+void Statement::stmForeach(itemPtr item, Parser &parser, bool trace) {
   /***
       std::cerr << "<DIV>foreach";
       item->print(std::cerr);
@@ -2305,12 +2313,12 @@ void Statement::stmForeach(itemPtr item, Synthesizer *synthesizer, bool trace) {
   ***/
 
   statementPtr variable = getLhs();
-  valuePtr value = getRhs()->getLhs()->evalValue(item, synthesizer, true);
+  valuePtr value = getRhs()->getLhs()->evalValue(item, parser, true);
   statementPtr body = getRhs()->getRhs();
   if (!value->isList())
     FATAL_ERROR_MSG_STM("foreach does'nt apply a list");
   listPtr list = value->getList();
-  list->apply(item, synthesizer, trace, variable, body);
+  list->apply(item, parser, trace, variable, body);
 
   /***
       std::cerr << "<DIV>foreach done";
@@ -2322,7 +2330,7 @@ void Statement::stmForeach(itemPtr item, Synthesizer *synthesizer, bool trace) {
 /* ************************************************************
  * if
  ************************************************************ */
-void Statement::stmIf(itemPtr item, Synthesizer *synthesizer, bool trace) {
+void Statement::stmIf(itemPtr item, Parser &parser, bool trace) {
   statementPtr lhs = getRhs()->getLhs();
   statementPtr rhs = getRhs()->getRhs();
 
@@ -2332,7 +2340,7 @@ void Statement::stmIf(itemPtr item, Synthesizer *synthesizer, bool trace) {
   else if (rhs && rhs->isSetFlags(Flags::CHOOSEN))
     resif = 2;
   else {
-    valuePtr res = getLhs()->evalValue(item, synthesizer, true);
+    valuePtr res = getLhs()->evalValue(item, parser, true);
     if (!res)
       resif = 0;
     else if (res == Value::NIL_VALUE || res == Value::ANONYMOUS_VALUE) {
@@ -2351,7 +2359,7 @@ void Statement::stmIf(itemPtr item, Synthesizer *synthesizer, bool trace) {
   //bool localResult = true;
   switch (resif) {
   case 1:
-    lhs->apply(item, synthesizer, trace);
+    lhs->apply(item, parser, trace);
     if (lhs->isSetFlags(Flags::BOTTOM)) {
       this->addFlags(Flags::BOTTOM);
     }
@@ -2360,7 +2368,7 @@ void Statement::stmIf(itemPtr item, Synthesizer *synthesizer, bool trace) {
     break;
   case 2:
     if (rhs) {
-      rhs->apply(item, synthesizer, trace);
+      rhs->apply(item, parser, trace);
       if (rhs->isSetFlags(Flags::BOTTOM))
 	this->addFlags(Flags::BOTTOM);
       if (rhs->isSetFlags(Flags::SEEN))
@@ -2376,13 +2384,13 @@ void Statement::stmIf(itemPtr item, Synthesizer *synthesizer, bool trace) {
 /* ************************************************************
  * print
  ************************************************************ */
-void Statement::stmPrint(itemPtr item, class Synthesizer *synthesizer) {
+void Statement::stmPrint(itemPtr item, Parser &parser) {
   addFlags(Flags::SEEN);
   if (lhs->isStr()) {
     std::cout << lhs->getStr();
   }
   else {
-    valuePtr value = lhs->evalValue(item, synthesizer, true);
+    valuePtr value = lhs->evalValue(item, parser, true);
     value->print(std::cout);
   }
 }
@@ -2390,8 +2398,8 @@ void Statement::stmPrint(itemPtr item, class Synthesizer *synthesizer) {
 /* ************************************************************
  * println
  ************************************************************ */
-void Statement::stmPrintln(itemPtr item, class Synthesizer *synthesizer) {
-  stmPrint(item, synthesizer);
+void Statement::stmPrintln(itemPtr item, Parser &parser) {
+  stmPrint(item, parser);
   std::cout << std::endl;
 }
 
@@ -2630,7 +2638,7 @@ void Statement::enable(statementPtr root, itemPtr item, bool &effect, bool on) {
 /* **************************************************
  * 
  ************************************************** */
-void Statement::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
+void Statement::apply(itemPtr item, Parser &parser, bool trace) {
 #ifdef TRACE_APPLY
   if (synthesizer->getTraceAction()) {
     std::cout << "<H3>####################### APPLY #######################</H3>" << std::endl;
@@ -2647,12 +2655,12 @@ void Statement::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
 
   // if
   if (isIf()) {
-    stmIf(item, synthesizer, trace);
+    stmIf(item, parser, trace);
   }
 
   // foreach $i in $list
   else if (isForeach()) {
-    stmForeach(item, synthesizer, trace);
+    stmForeach(item, parser, trace);
     addFlags(Flags::SEEN);
   }
 
@@ -2664,21 +2672,21 @@ void Statement::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
 
   // ↓1 = …
   else if ((isAff()) && (getLhs()->isDown())) {
-    buildInheritedSonFeatures(item, synthesizer);
+    buildInheritedSonFeatures(item, parser);
     addFlags(Flags::SEEN);
   }
 
   // [ … $X … ] ⊂ ⇓1
   // $X = ⇓1
   else if (((isSubsume()) && (getRhs()->isDown2()) && (getLhs()->isFeatures())) || ((isAff()) && (getRhs()->isDown2()) && (getLhs()->isVariable()))) {
-    buildEnvironmentWithSynthesize(item, synthesizer);
+    buildEnvironmentWithSynthesize(item, parser);
     addFlags(Flags::SEEN);
   }
 
   // [ … $X … ] ⊂ ↑
   // $X = ↑
   else if (((isSubsume()) && (getRhs()->isUp()) && (getLhs()->isFeatures())) || ((isAff()) && (getRhs()->isUp()) && (getLhs()->isVariable()))) {
-    buildEnvironmentWithInherited(item, synthesizer);
+    buildEnvironmentWithInherited(item, parser);
     addFlags(Flags::SEEN);
   }
 
@@ -2705,37 +2713,37 @@ void Statement::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
 	    && ((getRhs()->isConstant()) || (getRhs()->isVariable()) || (getRhs()->isUnif()) || (getRhs()->isFeatures()) || (getRhs()->isDouble()) || (getRhs()->isFct())
 		|| (getRhs()->isList()) || (getRhs()->isSearch()))) || ((isAff()) && (getLhs()->isList()) && ((getRhs()->isVariable()) || (getRhs()->isList())))
 	   || ((isSubsume()) && (getLhs()->isFeatures()) && ((getRhs()->isVariable()) || (getRhs()->isFeatures()) || (getRhs()->isSearch())))) {
-    buildEnvironmentWithValue(item, synthesizer);
+    buildEnvironmentWithValue(item, parser);
     addFlags(Flags::SEEN);
   }
 
   // ⇑ = …
   else if ((isAff()) && (getLhs()->isUp2())) {
-    buildSynthesizedFeatures(item, synthesizer);
+    buildSynthesizedFeatures(item, parser);
     addFlags(Flags::SEEN);
   }
 
   // attest …
   else if (isAttest()) {
-    stmAttest(item, synthesizer);
+    stmAttest(item, parser);
     addFlags(Flags::SEEN);
   }
 
   // print
   else if (isPrint()) {
-    stmPrint(item, synthesizer);
+    stmPrint(item, parser);
     addFlags(Flags::SEEN);
   }
 
   // println
   else if (isPrintln()) {
-    stmPrintln(item, synthesizer);
+    stmPrintln(item, parser);
     addFlags(Flags::SEEN);
   }
 
   // statements
   else if (isStms()) {
-    this->statements->apply(item, synthesizer, trace);
+    this->statements->apply(item, parser, trace);
     if (this->statements->isSetFlags(Flags::BOTTOM))
       this->addFlags(Flags::BOTTOM);
     if (this->statements->isSetFlags(Flags::SEEN))

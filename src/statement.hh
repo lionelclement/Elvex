@@ -22,13 +22,9 @@
 
 #include <climits>
 #include <vector>
-
 #include "flags.hh"
-#include "id.hh"
-#include "vartable.hh"
 #include "ipointer.hh"
 #include "serializable.hh"
-#include "grammar.hh"
 
 #define FATAL_ERROR_STM {std::ostringstream oss; oss << "fatal error with statement line " << getLineno(); FATAL_ERROR;}
 #define FATAL_ERROR_MSG_STM(msg) {std::ostringstream oss; oss << "fatal error with statement line " << getLineno(); FATAL_ERROR_MSG(msg);}
@@ -169,25 +165,25 @@ public:
 	const unsigned int getLineno(void) const;
 
 	void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
-	featuresPtr evalFeatures(itemPtr, class Synthesizer *synthesizer, bool);
+	featuresPtr evalFeatures(itemPtr, class Parser &parser, bool);
 	listPtr evalList(itemPtr, bool);
-	valuePtr evalValue(itemPtr, class Synthesizer *synthesizer, bool);
+	valuePtr evalValue(itemPtr, class Parser &parser, bool);
 	featuresPtr unif(featuresPtr, featuresPtr, itemPtr);
 	statementPtr clone(const std::bitset<Flags::FLAGS> &savedFlags = std::bitset<Flags::FLAGS>());
-	void buildInheritedSonFeatures(itemPtr, class Synthesizer *synthesizer);
-	void buildSynthesizedFeatures(itemPtr, class Synthesizer *synthesizer);
-	void buildEnvironmentWithInherited(itemPtr, class Synthesizer *synthesizer);
-	void buildEnvironmentWithSynthesize(itemPtr, class Synthesizer *synthesizer);
-	void buildEnvironmentWithValue(itemPtr, class Synthesizer *synthesizer);
-	void stmAttest(itemPtr, class Synthesizer *synthesizer);
+	void buildInheritedSonFeatures(itemPtr, class Parser &parser);
+	void buildSynthesizedFeatures(itemPtr, class Parser &parser);
+	void buildEnvironmentWithInherited(itemPtr, class Parser &parser);
+	void buildEnvironmentWithSynthesize(itemPtr, class Parser &parser);
+	void buildEnvironmentWithValue(itemPtr, class Parser &parser);
+	void stmAttest(itemPtr, class Parser &parser);
 	void stmGuard(itemPtr, bool);
-	void stmForeach(itemPtr item, class Synthesizer *synthesizer, bool trace);
-	void stmIf(itemPtr item, class Synthesizer *synthesizer, bool trace);
-	void stmPrint(itemPtr, class Synthesizer *synthesizer);
-	void stmPrintln(itemPtr, class Synthesizer *synthesizer);
+	void stmForeach(itemPtr item, class Parser &parser, bool trace);
+	void stmIf(itemPtr item, class Parser &parser, bool trace);
+	void stmPrint(itemPtr, class Parser &parser);
+	void stmPrintln(itemPtr, class Parser &parser);
 	void renameVariables(unsigned int);
 	void enable(statementPtr, itemPtr, bool&, bool);
-	void apply(itemPtr, class Synthesizer *, bool);
+	void apply(itemPtr, class Parser &, bool);
 	void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 	const bool findVariable(bitsetPtr);
 

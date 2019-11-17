@@ -31,12 +31,12 @@
 /* **************************************************
  *
  ************************************************** */
-Tree::Tree(Tree *child, Tree *sibling, class Info *info, char letter) {
+Tree::Tree(Tree *child, Tree *sibling, class Info *info, char character) {
 	this->address = 0;
 	this->child = child;
 	this->sibling = sibling;
 	this->info = info;
-	this->letter = letter;
+	this->character = character;
 	NEW;
 }
 
@@ -84,7 +84,7 @@ void Tree::printStaticFSA(FILE *out, class Lex *lex) const {
 	for (lexiconSy = this; lexiconSy; lexiconSy = lexiconSy->sibling) {
 		struct Fsa *elt = new Fsa((lexiconSy->child == NULL) ? (unsigned long int)~0UL : lexiconSy->child->address,
 				(lexiconSy->sibling == NULL) ? (unsigned long int)~0UL : lexiconSy->sibling->address, (lexiconSy->info == NULL) ? (unsigned long int)~0UL : lexiconSy->info->getAddress(),
-				lexiconSy->letter);
+				lexiconSy->character);
 		if (!fwrite(elt, sizeof(struct Fsa), 1, out)) {
 			FATAL_ERROR
 			;
@@ -101,16 +101,17 @@ void Tree::printStaticFSA(FILE *out, class Lex *lex) const {
 /* **************************************************
  // Calculate offsets of the array
  ************************************************** */
-void Tree::setIndexStaticInfo(unsigned long int &index) {
-	for (Tree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->sibling) {
-		if (lexiconSy->child)
-			lexiconSy->child->setIndexStaticInfo(index);
-	}
-	for (Tree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->sibling) {
-		for (Info *infoSy = lexiconSy->info; infoSy != NULL; infoSy = infoSy->getNext()) {
-			infoSy->setAddress(index++);
-		}
-	}
+void Tree::setIndexStaticInfo(unsigned long int &index)
+{
+  for (Tree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->sibling) {
+    if (lexiconSy->child)
+      lexiconSy->child->setIndexStaticInfo(index);
+  }
+  for (Tree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->sibling) {
+    for (Info *infoSy = lexiconSy->info; infoSy != NULL; infoSy = infoSy->getNext()) {
+      infoSy->setAddress(index++);
+    }
+  }
 }
 
 /* **************************************************
@@ -139,9 +140,9 @@ void Tree::printStaticInfo(FILE *out) const {
 /* **************************************************
  // add a word
  ************************************************** */
-void Tree::add(char *str, unsigned long int offset) {
-	if (!this->letter) {
-		this->letter = str[0];
+void Tree::add(const char *str, unsigned long int offset) {
+	if (!this->character) {
+		this->character = str[0];
 		if (!str[1]) {
 			this->info = new Info(this->info, offset);
 		}
@@ -151,7 +152,7 @@ void Tree::add(char *str, unsigned long int offset) {
 			this->child->add((char *)str + 1, offset);
 		}
 	}
-	else if (this->letter == str[0]) {
+	else if (this->character == str[0]) {
 		if (!str[1]) {
 			this->info = new Info(this->info, offset);
 		}

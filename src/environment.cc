@@ -18,8 +18,9 @@
  ************************************************** */
 
 #include <regex>
-#include <iterator>
-#include <iostream>
+//#include <iterator>
+//#include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <list>
@@ -31,6 +32,8 @@
 #include "value.hh"
 #include "ipointer.hh"
 #include "listfeatures.hh"
+#include "bitset.hh"
+#include "messages.hh"
 
 /* **************************************************
  *
@@ -319,65 +322,63 @@ void Environment::replaceVariables(valuePtr value, bool &effect) {
  *
  ************************************************** */
 void Environment::replaceVariables(listPtr list, bool &effect) {
-	/***
-	 std::cerr << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
-	 std::cerr << "<table border=\"1\"><tr><th>List</th><th>Environment</th></tr>";
-	 std::cerr << "<tr><td>";
-	 list->flatPrint(std::cerr, 0);
-	 std::cerr << "</td><td>";
-	 this->print(std::cerr);
-	 std::cerr << "</	td></tr></table>";
-	 ***/
-	if (!list->containsVariable())
-		return;
-	switch (list->getType()) {
-		case List::ATOM:
-			if (list->isVariable()) {
-				valuePtr value = this->find(list->getValue()->getBits());
-				if (value->isList()) {
-					*list = *(value->getList());
-				}
-				else if (value->isNil()) {
-					*list = *List::NIL_LIST;
-					;
-				}
-				else {
-					FATAL_ERROR
-					;
-				}
-			}
-			else
-				//if (list->containsVariable())
-				replaceVariables(list->getValue(), effect);
-			break;
+  /*** 
+  std::cerr << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
+  std::cerr << "<table border=\"1\"><tr><th>List</th><th>Environment</th></tr>";
+  std::cerr << "<tr><td>";
+  list->flatPrint(std::cerr, 0);
+  std::cerr << "</td><td>";
+  this->print(std::cerr);
+  std::cerr << "</	td></tr></table>";
+  ***/
+  if (!list->containsVariable())
+    return;
+  switch (list->getType()) {
+  case List::ATOM:
+    if (list->isVariable()) {
+      valuePtr value = this->find(list->getValue()->getBits());
+      if (value->isList()) {
+	*list = *(value->getList());
+      }
+      else if (value->isNil()) {
+	*list = *List::NIL_LIST;
+      }
+      else {
+	list->setValue(value);
+      }
+    }
+    else
+      //if (list->containsVariable())
+      replaceVariables(list->getValue(), effect);
+    break;
 
-		case List::PAIRP:
-			//if (list->getCar()->containsVariable())
-			replaceVariables(list->getCar(), effect);
-			//if (list->getCdr()->containsVariable())
-			replaceVariables(list->getCdr(), effect);
-			break;
+  case List::PAIRP:
+    //if (list->getCar()->containsVariable())
+    replaceVariables(list->getCar(), effect);
+    //if (list->getCdr()->containsVariable())
+    replaceVariables(list->getCdr(), effect);
+    break;
 
-		case List::NIL:
-			break;
-	}
-	list->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
-	/***
-	 std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
-	 std::cerr << "<table border=\"1\"><tr><th>List</th></tr>";
-	 std::cerr << "<tr><td>";
-	 list->flatPrint(std::cerr, 0);
-	 std::cerr << "</td></tr></table>";
-	 ***/
-	if (effect)
-		list->resetSerial();
+  case List::NIL:
+    break;
+  }
+  list->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
+  /***
+      std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
+      std::cerr << "<table border=\"1\"><tr><th>List</th></tr>";
+      std::cerr << "<tr><td>";
+      list->flatPrint(std::cerr, 0);
+      std::cerr << "</td></tr></table>";
+  ***/
+  if (effect)
+    list->resetSerial();
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Environment::replaceVariables(std::string &str, bool &effect) {
-	/*** */
+	/***
 	std::cerr << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
 	std::cerr << "<table border=\"1\"><tr><th>std::string</th><th>Environment</th></tr>";
 	std::cerr << "<tr><td>";
@@ -385,9 +386,7 @@ void Environment::replaceVariables(std::string &str, bool &effect) {
 	std::cerr << "</td><td>";
 	this->print(std::cerr);
 	std::cerr << "</td></tr></table>";
-	/* ***/
-	FATAL_ERROR
-	;
+	***/
 	std::string pattern =
 			std::string(
 					"(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
@@ -413,14 +412,13 @@ void Environment::replaceVariables(std::string &str, bool &effect) {
 	catch (const std::regex_error& e) {
 		std::cout << "regex_error caught: " << e.what() << '(' << e.code() << ')' << std::regex_constants::error_brack << '\n';
 	}
-	/*** */
+	/***
 	std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
 	std::cerr << "<table border=\"1\"><tr><th>Std::List</th></tr>";
 	std::cerr << "<tr><td>";
 	this->print(std::cerr);
 	std::cerr << "</td></tr></table>";
-	/* ***/
-	//return result;
+	***/
 }
 
 /* **************************************************

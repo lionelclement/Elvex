@@ -24,6 +24,8 @@
 #include "statements.hh"
 #include "messages.hh"
 #include "item.hh"
+#include "bitset.hh"
+#include "vartable.hh"
 
 /* ************************************************************
  * 

@@ -21,7 +21,6 @@
 #define LISTFEATURES_H
 
 #include <vector>
-
 #include "ipointer.hh"
 #include "flags.hh"
 #include "id.hh"
@@ -30,7 +29,6 @@ class ListFeatures:
 		public Id, public Flags, public std::enable_shared_from_this<class ListFeatures> {
 
 public:
-
 	typedef std::vector<featuresPtr> vector;
 
 private:

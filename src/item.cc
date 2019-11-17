@@ -599,7 +599,7 @@ void Item::print(std::ostream& out) const {
 	}
 	if (s_ranges) {
 		out << "<td>"; //<center>Ranges</center><br>";
-		unsigned int old = -1;
+		int old = -1;
 		bool first = true;
 		for (std::vector<unsigned int>::const_iterator i = ranges.begin(); i != ranges.end(); i++) {
 			if (old != -1) {
@@ -728,7 +728,11 @@ void Item::successor(itemSetPtr state, class Synthesizer *synthesizer, bool &eff
 /* **************************************************
  *
  ************************************************** */
-void Item::apply(itemSetPtr state, class Synthesizer *synthesizer) {
+void Item::apply(itemSetPtr state, Parser &parser, bool trace
+#ifdef TRACE
+		 , bool traceAction
+#endif
+		 ) {
 	if (statements) {
 		unsigned int k = 1;
 		bool effect = true;
@@ -739,17 +743,17 @@ void Item::apply(itemSetPtr state, class Synthesizer *synthesizer) {
 				break;
 
 #ifdef TRACE
-			if (synthesizer->getTraceAction()) {
+			if (traceAction) {
 				std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
 				print(std::cout);
 				std::cout << std::endl;
 			}
 #endif
 			effect = false;
-			statements->apply(shared_from_this(), synthesizer/*, effect*/, synthesizer->getTrace());
+			statements->apply(shared_from_this(), parser, trace);
 			++k;
 #ifdef TRACE
-			if (synthesizer->getTraceAction()) {
+			if (traceAction) {
 				std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
 				print(std::cout);
 				std::cout << std::endl;

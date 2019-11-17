@@ -25,7 +25,6 @@
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
-#include "flags.hh"
 #include "ipointer.hh"
 
 class Terms:

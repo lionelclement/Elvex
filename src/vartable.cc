@@ -22,6 +22,7 @@
 #include <map>
 #include <unordered_map>
 #include "vartable.hh"
+#include "messages.hh"
 
 const unsigned int Vartable::_END_;
 const unsigned int Vartable::_STARTTERM_;
@@ -34,11 +35,12 @@ std::bitset<MAXBITS> Vartable::varTableIndex;
 std::unordered_map<std::string, bitsetPtr> Vartable::varTable;
 std::map<unsigned int, std::string> Vartable::intToStrTable;
 std::unordered_map<std::string, unsigned int> Vartable::strToIntTable;
+Vartable vartable;
 
 /* **************************************************
  *
  ************************************************** */
-void Vartable::init() {
+Vartable::Vartable() {
 	intToStrTable[_END_] = "_END_";
 	intToStrTable[_STARTTERM_] = "_STARTTERM_";
 	intToStrTable[_EMPTY_] = "_EMPTY_";
@@ -59,21 +61,19 @@ bitsetPtr Vartable::varTableAdd(std::string str) {
 	std::unordered_map<std::string, bitsetPtr>::const_iterator varTableIt;
 	varTableIt = varTable.find(str);
 	if (varTableIt == varTable.end()) {
-		result = Bitset::create(varTableIndex);
+	result = Bitset::create(varTableIndex);
 		varTable.insert(std::make_pair(str, result));
-
 		size_t i = 0;
 		while ((i < varTableIndex.size()) && !varTableIndex.test(i))
 			++i;
 		Bitset::bitsToStrTable[i] = str;
 		varTableIndex <<= 1;
-
 		if (varTableIndex.none())
 			throw "Too much values";
-
 	}
-	else
-		result = varTableIt->second;
+	else {
+	  result = varTableIt->second;
+	}
 	return result;
 }
 

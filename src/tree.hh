@@ -20,23 +20,21 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include <string>
-
 class Tree {
 private:
 	Tree *child;
 	Tree *sibling;
 	class Info *info;
-	char letter;
+	char character;
 	unsigned long int address;
 
 public:
-	Tree(Tree *child, Tree *sibling, class Info *info, const char letter);
+	Tree(Tree *child, Tree *sibling, class Info *info, const char character);
 	~Tree();
 
 	void setChild(Tree*);
 	Tree *getChild() const;
-	void add(char *, unsigned long int);
+	void add(const char *, unsigned long int);
 	void setIndexStaticFSA(unsigned long int &);
 	void printStaticFSA(FILE *, class Lex *) const;
 	void setIndexStaticInfo(unsigned long int &);

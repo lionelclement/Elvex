@@ -56,6 +56,8 @@ main.cc\
 memoizationvalue.cc\
 memoizationmap.cc\
 node.cc\
+parser.cc\
+pattern.cc\
 rule.cc\
 serializable.cc\
 statement.cc\
@@ -74,10 +76,10 @@ elvex_OPTIONS =
 elvex_OPTIONS += -DMEMOIZATION
 elvex_OPTIONS += -DMEMOIZATION_SHIFT
 elvex_OPTIONS += -DMEMOIZATION_REDUCE
-elvex_OPTIONS += -DMAXLENGTH=10000
+elvex_OPTIONS += -DMAXLENGTH=1000
 elvex_OPTIONS += -DMAXUSAGES=10000
-elvex_OPTIONS += -DMAXCARDINAL=10000
-elvex_OPTIONS += -DMAXATTEMPTS=10000
+elvex_OPTIONS += -DMAXCARDINAL=1000000
+elvex_OPTIONS += -DMAXATTEMPTS=1000
 elvex_OPTIONS += -DMAXBITS=512
 
 elvex_CXXFLAGS = -std=c++11 -O5 -Wall $(elvex_OPTIONS)
@@ -110,6 +112,8 @@ main.cc\
 memoizationmap.cc\
 memoizationvalue.cc\
 node.cc\
+pattern.cc\
+parser.cc\
 rule.cc\
 serializable.cc\
 statement.cc\
@@ -126,7 +130,6 @@ elvexdebug_OPTIONS =
 elvexdebug_OPTIONS += -DTRACE
 #elvexdebug_OPTIONS += -DTRACE_DIFF
 #elvexdebug_OPTIONS += -DTRACE_MALLOC
-#elvexdebug_OPTIONS += -DTRACE_INIT
 #elvexdebug_OPTIONS += -DTRACE_SUCCESSOR
 #elvexdebug_OPTIONS += -DTRACE_INSERT
 #elvexdebug_OPTIONS += -DTRACE_UNHIDE
@@ -149,7 +152,45 @@ elvexdebug_OPTIONS += -DMAXBITS=512
 elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` $(elvexdebug_OPTIONS)
 elvexdebug_LDADD = -lxml2
 
-elvexbuildlexicon_SOURCES = fsa.cc lex.cc info.cc infobuff.cc tree.cc buildlexicon.cc
+elvexbuildlexicon_SOURCES = \
+buildlexicon.cc\
+bitset.cc\
+entries.cc\
+entry.cc\
+environment.cc\
+feature.cc\
+features.cc\
+flags.cc\
+fsa.cc\
+forest.cc\
+forestidentifier.cc\
+forestmap.cc\
+grammar.cc\
+id.cc\
+info.cc\
+infobuff.cc\
+item.cc\
+itemset.cc\
+lex.cc\
+list.cc\
+listfeatures.cc\
+node.cc\
+parser.cc\
+pattern.cc\
+rule.cc\
+rulesyacc.cc\
+ruleslex.cc\
+serializable.cc\
+statement.cc\
+statements.cc\
+synthesizer.cc\
+term.cc\
+terms.cc\
+tree.cc\
+value.cc\
+variableflag.cc\
+vartable.cc 
+
 elvexbuildlexicon_OPTIONS =
 #elvexbuildlexicon_OPTIONS += -DTRACE_DIFF
 elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O5 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)

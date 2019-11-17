@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <sstream>
 #include "itemset.hh"
 #include "messages.hh"
 #include "item.hh"
@@ -91,7 +92,8 @@ ItemSet::const_iterator ItemSet::find(itemPtr item) const {
  ************************************************** */
 bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer) {
 	if (items.size() > synthesizer->getMaxCardinal()) {
-		FATAL_ERROR_MSG("maxCardinal");
+		throw "*** error: too much items build";
+		exit(1);
 	}
 #ifdef TRACE_INSERT
 	std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;

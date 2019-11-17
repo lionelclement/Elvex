@@ -21,15 +21,12 @@
 #define FOREST_H
 
 #include <vector>
-
 #include "id.hh"
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 #include "flags.hh"
-#include "node.hh"
 #include "ipointer.hh"
-#include "synthesizer.hh"
 
 class Forest:
 		public Id, public Flags, public std::enable_shared_from_this<class Forest> {

@@ -34,7 +34,7 @@ public:
 	unsigned long int getNext() const;
 	bool isNext() const;
 	bool isOffset() const;
-	void print(std::ostream&) const;
+	void print(std::ostream &) const;
 
 };
 #endif // INFOBUFF_H

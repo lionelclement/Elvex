@@ -18,21 +18,14 @@
  *
  ************************************************** */
 
-#include <iostream>
-#include <string>
-#include <vector>
-#include <list>
-#include <unordered_map>
-#include <bitset>
-#include "id.hh"
+#include <sstream>
 #include "vartable.hh"
-#include "bitset.hh"
-#include "grammar.hh"
 #include "term.hh"
 #include "terms.hh"
 #include "entry.hh"
 #include "entries.hh"
-#include "synthesizer.hh"
+#include "parser.hh"
+#include "bitset.hh"
 #include "value.hh"
 #include "feature.hh"
 #include "features.hh"
@@ -41,6 +34,7 @@
 #include "statement.hh"
 #include "terms.hh"
 #include "messages.hh"
+#include "rule.hh"
 #include "ipointer.hh"
 
 #if false
@@ -53,12 +47,13 @@
   
  extern unsigned int ruleslineno;
  extern unsigned int ruleslex();
- extern Synthesizer synthesizer;
+ extern Parser parser;
+ unsigned int headLineno;
    
-  void ruleserror(const char *str){
+  void ruleserror(const char *str) {
     try {
       std::ostringstream oss;
-      oss << "error: " << str << " " << synthesizer.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
+      oss << "error: " << str << " " << parser.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
       throw oss.str();
     }
     catch (std::string msg) {
@@ -69,7 +64,7 @@
   void yywarning(const char *str){
     try {
       std::ostringstream oss;
-      oss << "warning: " << str << " " << synthesizer.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
+      oss << "warning: " << str << " " << parser.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
       throw oss.str();	     
     }
     catch (std::string msg) {
@@ -77,8 +72,6 @@
     }
   }
   
-  unsigned int globalLineno;
-  std::string globalBufferName;
   %}
 
 %union{
@@ -179,21 +172,20 @@ axiom:
 begin:
 	TOKEN_GRAMMAR rules {
 	  DBUGPRT("begin grammar");
-	  synthesizer.getGrammar().analyseTerms(synthesizer);
 	}
 
 	|TOKEN_INPUT term features {
 	  DBUGPRT("begin input");
-	  synthesizer.setStartTerm(*$2);
+	  parser.setStartTerm(*$2);
 	  (*$3)->renameVariables((*$3)->getId());
-	  synthesizer.setStartFeatures(*$3);
+	  parser.setStartFeatures(*$3);
 	  free($3);
 	}
 
 	|TOKEN_INPUT term {
 	  DBUGPRT("begin input");
-	  synthesizer.setStartTerm(*$2);
-	  synthesizer.setStartFeatures(Features::create());
+	  parser.setStartTerm(*$2);
+	  parser.setStartFeatures(Features::create());
 	 }
 
 	|TOKEN_LEXICON dictionary {      
@@ -203,9 +195,7 @@ begin:
 	|TOKEN_DASH features
 	{
 	  DBUGPRT("begin features");
-	  //unsigned int pred = (*$2)->assignPred();
-	  //synthesizer.setLocalEntry(Entry::create(0, pred, std::string(), *$2));
-	  synthesizer.setLocalFeatures(*$2);
+	  parser.setLocalFeatures(*$2);
 	  free($2);
 	};
 
@@ -237,15 +227,15 @@ dictionary_line:
 	  unsigned int code=Vartable::strToInt(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  Synthesizer::entries_map_map::iterator foundCode = synthesizer.getLexicon().find(code);
-	  Synthesizer::entries_map *zeroToEntries;
-	  if (foundCode != synthesizer.getLexicon().end()){
+	  Parser::entries_map_map::iterator foundCode = parser.getLexicon().find(code);
+	  Parser::entries_map *zeroToEntries;
+	  if (foundCode != parser.getLexicon().end()){
 	    zeroToEntries = foundCode->second;
 	  } else {
-	    zeroToEntries = new Synthesizer::entries_map();
-	    synthesizer.getLexicon().insert(std::make_pair(code, zeroToEntries));
+	    zeroToEntries = new Parser::entries_map();
+	    parser.getLexicon().insert(std::make_pair(code, zeroToEntries));
 	  }
-	  Synthesizer::entries_map::iterator foundPred=zeroToEntries->find(0);
+	  Parser::entries_map::iterator foundPred=zeroToEntries->find(0);
 	  entriesPtr lp;
 	  if (foundPred!=zeroToEntries->end()){
 	    lp=foundPred->second;
@@ -262,15 +252,15 @@ dictionary_line:
 	  unsigned int code=Vartable::strToInt(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  Synthesizer::entries_map_map::iterator foundCode=synthesizer.getLexicon().find(code);
-	  Synthesizer::entries_map *zeroToEntries;
-	  if (foundCode!=synthesizer.getLexicon().end()) {
+	  Parser::entries_map_map::iterator foundCode=parser.getLexicon().find(code);
+	  Parser::entries_map *zeroToEntries;
+	  if (foundCode!=parser.getLexicon().end()) {
 	    zeroToEntries=foundCode->second;
 	  } else {
-	    zeroToEntries = new Synthesizer::entries_map;
-	    synthesizer.getLexicon().insert(std::make_pair(code, zeroToEntries));
+	    zeroToEntries = new Parser::entries_map;
+	    parser.getLexicon().insert(std::make_pair(code, zeroToEntries));
 	  }
-	  Synthesizer::entries_map::iterator foundPred=zeroToEntries->find(0);
+	  Parser::entries_map::iterator foundPred=zeroToEntries->find(0);
 	  entriesPtr lp;
 	  if (foundPred!=zeroToEntries->end()){
 	    lp=foundPred->second;
@@ -295,16 +285,16 @@ dictionary_line:
 	    //    entry != (*$2)->end();
 	    //   ++entry){
 	    entriesPtr lp;
-	    Synthesizer::entries_map *predToEntries;
+	    Parser::entries_map *predToEntries;
 	    //std::cerr << (*entry)->getCode() << std::endl;
-	    Synthesizer::entries_map_map::iterator foundCode = synthesizer.getLexicon().find((*entry)->getCode());
-	    if (foundCode != synthesizer.getLexicon().end()){
+	    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find((*entry)->getCode());
+	    if (foundCode != parser.getLexicon().end()){
 	      predToEntries = foundCode->second;
 	    } else {
-	      predToEntries = new Synthesizer::entries_map;
-	      synthesizer.getLexicon().insert(std::make_pair((*entry)->getCode(), predToEntries));
+	      predToEntries = new Parser::entries_map;
+	      parser.getLexicon().insert(std::make_pair((*entry)->getCode(), predToEntries));
 	    }
-	    Synthesizer::entries_map::iterator foundPred = predToEntries->find((*entry)->getCodePred());
+	    Parser::entries_map::iterator foundPred = predToEntries->find((*entry)->getCodePred());
 	    if (foundPred != predToEntries->end()){
 	      lp = foundPred->second;
 	    } else {
@@ -321,7 +311,7 @@ dictionary_line:
 	|TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_COLON features TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  synthesizer.addMacros(*$2, *$4);
+	  parser.addMacros(*$2, *$4);
 	  free($2);
 	  free($4);
 	  
@@ -369,12 +359,12 @@ lexical_entry:
 // RULES
 //////////////////////////
 rules:
-	{globalLineno = ruleslineno; globalBufferName=synthesizer.getTopBufferName();} rule rules
+	{headLineno = ruleslineno;} rule rules
 	{
 	  DBUGPRT("rules"); 
 	}
 	
-	|{globalLineno = ruleslineno; globalBufferName=synthesizer.getTopBufferName();} /*empty*/
+	|{headLineno = ruleslineno;} /*empty*/
 	{
 	  DBUGPRT("rules"); 
 	};
@@ -383,11 +373,11 @@ rule:
 	term TOKEN_RIGHTARROW terms_vector structure_statement
 	{
 	  DBUGPRT("rule");
-	  rulePtr rule = Rule::create(globalLineno, globalBufferName, *$1, *$3, $4 ? *$4 : statementsPtr());
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$1, *$3, $4 ? *$4 : statementsPtr());
 	  rule->addDefaults();
-	  synthesizer.getGrammar().addRule(rule);
-	  if (!synthesizer.getGrammar().getStartTerm()){
-	    synthesizer.getGrammar().setStartTerm(*$1);
+	  parser.getGrammar().addRule(rule);
+	  if (!parser.getGrammar().getStartTerm()){
+	    parser.getGrammar().setStartTerm(*$1);
 	  }
 	  free($3);
 	  if ($4)
@@ -397,11 +387,11 @@ rule:
 	|term TOKEN_RIGHTARROW structure_statement
 	{
 	  DBUGPRT("Rule");
-	  rulePtr rule = Rule::create(globalLineno, globalBufferName, *$1, $3 ? *$3 : statementsPtr());
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$1, $3 ? *$3 : statementsPtr());
 	  rule->addDefaults();
-	  synthesizer.getGrammar().addRule(rule);
-	  if (!synthesizer.getGrammar().getStartTerm()){
-	    synthesizer.getGrammar().setStartTerm(*$1);
+	  parser.getGrammar().addRule(rule);
+	  if (!parser.getGrammar().getStartTerm()){
+	    parser.getGrammar().setStartTerm(*$1);
 	  }
 	  if ($3)
 	    free($3);
@@ -461,6 +451,11 @@ term:
 	  unsigned int code=Vartable::strToInt(*$1);
 	  $$ = new termPtr(Term::create(code));
 	  free($1);
+	}
+
+	|error 
+	{
+	  YYABORT;
 	};
 
 ///////////////////////////////////////////////
@@ -1093,7 +1088,7 @@ features_components:
 	|features_components TOKEN_COMMA TOKEN_AROBASE TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("features_components");
-	  featuresPtr found = synthesizer.findMacros(*$4);
+	  featuresPtr found = parser.findMacros(*$4);
 	  free($4);
 	  if (!(found)){
 	    yyerror((char*)"syntax error");
@@ -1106,7 +1101,7 @@ features_components:
 	|TOKEN_AROBASE TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("features_components");
-	  featuresPtr found = synthesizer.findMacros(*$2);
+	  featuresPtr found = parser.findMacros(*$2);
 	  free($2);
 	  if (!(found)){
 	    yyerror((char*)"syntax error");
@@ -1254,7 +1249,7 @@ identifier:
 	{
 	  DBUGPRT("identifier");
  	  $$ = new bitsetPtr(Bitset::create(Vartable::varTableAdd(*$1)));
-	  free($1);
+ 	  free($1);
 	};
 
 variable:
@@ -1272,7 +1267,7 @@ list:
 	TOKEN_LT list_elements TOKEN_GT
 	{
 	  DBUGPRT("list");
-	  $$=$2;
+	  $$ = $2;
 	}
 
 	|TOKEN_LT TOKEN_GT

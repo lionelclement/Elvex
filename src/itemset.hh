@@ -20,7 +20,6 @@
 #ifndef ITEMSET_H
 #define ITEMSET_H
 
-#include <set>
 #include <unordered_set>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>

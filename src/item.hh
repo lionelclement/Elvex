@@ -21,10 +21,8 @@
 #define ITEM_H
 
 #include <set>
-#include <list>
-#include <fstream>
-#include <climits>
-#include "features.hh"
+#include <vector>
+#include <unordered_map>
 #include "flags.hh"
 #include "id.hh"
 #include "ipointer.hh"
@@ -132,7 +130,11 @@ public:
 	bool isStarted(void);
 	void successor(itemSetPtr, class Synthesizer *, bool &);
 	void defaultInheritedSonFeatures(void);
-	void apply(itemSetPtr, class Synthesizer *);
+  void apply(itemSetPtr state, class Parser &parser, bool trace
+#ifdef TRACE
+	     , bool traceAction
+#endif
+	     );
 
 	struct hash {
 		size_t operator()(itemPtr const) const;

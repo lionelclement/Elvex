@@ -20,16 +20,12 @@
 #ifndef ENTRY_H
 #define ENTRY_H
 
-#include <iostream>
-#include <bitset>
-#include <list>
-#include <climits>
-#include <cstdint>
-#include <string>
-
 #include "id.hh"
-#include "vartable.hh"
+#include "serializable.hh"
 #include "ipointer.hh"
+#ifdef OUTPUT_XML
+#include <libxml/tree.h>
+#endif
 
 class Entry:
 		public Id, public Serializable, public std::enable_shared_from_this<class Entry> {

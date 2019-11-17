@@ -20,14 +20,13 @@
 #ifndef RULE_H
 #define RULE_H
 
-#include <climits>
-#include <ostream>
+#include <string>
+#include <vector>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 #include "id.hh"
 #include "ipointer.hh"
-#include "serializable.hh"
 
 class Rule:
 		public Id::Id,
@@ -68,7 +67,8 @@ public:
 	const std::string &getFilename(void) const;
 
 	rulePtr clone() const;
-	void print(std::ostream &, unsigned int = UINT_MAX, bool = false, bool = true) const;
+	void print(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
+  std::string toString() const;
 
 #ifdef OUTPUT_XML
 	void toXML(xmlNodePtr);

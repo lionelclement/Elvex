@@ -20,7 +20,6 @@
 #ifndef ENTRIES_H
 #define ENTRIES_H
 
-#include <iostream>
 #include <vector>
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>

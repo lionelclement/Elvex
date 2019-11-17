@@ -20,12 +20,10 @@
 #ifndef MEMOIZATIONMAP_H
 #define MEMOIZATIONMAP_H
 
-#include "memoizationvalue.hh"
-#include "ipointer.hh"
-#include <list>
-#include <map>
-#include <unordered_map>
 #include <string>
+#include <list>
+#include <unordered_map>
+#include "memoizationvalue.hh"
 
 class MemoizationMap:
 		public std::enable_shared_from_this<class MemoizationMap> {

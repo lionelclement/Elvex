@@ -20,8 +20,6 @@
 #ifndef INFO_H
 #define INFO_H
 
-#include <string>
-
 class Info {
 private:
 	class Info *next;
@@ -29,15 +27,13 @@ private:
 	unsigned long int address;
 
 public:
-	Info(class Info *next = NULL, unsigned long int offset = 0);
+	Info(class Info *next = nullptr, unsigned long int offset = 0);
 	~Info();
 
 	class Info *getNext(void) const;
 	unsigned long int getOffset(void) const;
 	unsigned long int getAddress(void) const;
 	void setAddress(unsigned long int);
-
-	void printStatic(FILE *) const;
 };
 
 #endif // INFO_H

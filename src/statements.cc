@@ -17,6 +17,9 @@
  *
  ************************************************** */
 
+#include <iostream>     // std::cout, std::endl
+#include <iomanip>
+
 #include "statements.hh"
 #include "environment.hh"
 #include "messages.hh"
@@ -151,13 +154,13 @@ void Statements::renameVariables(unsigned int i) {
 /* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
-void Statements::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
+void Statements::apply(itemPtr item, Parser &parser, bool trace) {
 	if (item->isSetFlags(Flags::BOTTOM))
 		return;
 
 	if (guard) {
 		if (guard->isUnsetFlags(Flags::SEEN)) {
-			guard->apply(item, synthesizer, trace);
+			guard->apply(item, parser, trace);
 			guard->addFlags(Flags::SEEN);
 			if (guard->isSetFlags(Flags::BOTTOM)) {
 				//this->addFlags(Flags::BOTTOM);
@@ -183,7 +186,7 @@ void Statements::apply(itemPtr item, Synthesizer *synthesizer, bool trace) {
 			if (!item->getEnvironment() || item->getEnvironment()->size() == 0) {
 				item->setEnvironment(environmentPtr());
 			}
-			(*statement)->apply(item, synthesizer, trace);
+			(*statement)->apply(item, parser, trace);
 			if ((*statement)->isSetFlags(Flags::BOTTOM)) {
 				//this->addFlags(Flags::BOTTOM);
 				item->addFlags(Flags::BOTTOM);

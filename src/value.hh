@@ -22,10 +22,12 @@
 
 #include "flags.hh"
 #include "id.hh"
-#include "vartable.hh"
 #include "ipointer.hh"
 #include "serializable.hh"
 #include "variableflag.hh"
+#ifdef OUTPUT_XML
+#include <libxml/tree.h>
+#endif
 
 class Value:
 		public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Value> {
@@ -108,7 +110,7 @@ public:
 	bool eq(valuePtr) const;
 	bool lt(valuePtr) const;
 	bool findVariable(bitsetPtr);
-	void apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body);
+	void apply(itemPtr item, class Parser &parser, bool trace, statementPtr variable, statementPtr body);
 	bool containsVariable(void);
 	void setVariableFlag(enum VariableFlag::flagValues flag);
 };

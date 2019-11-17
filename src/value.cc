@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <sstream>
 #include "value.hh"
 #include "environment.hh"
 #include "list.hh"
@@ -27,6 +28,7 @@
 #include "item.hh"
 #include "ipointer.hh"
 #include "synthesizer.hh"
+#include "vartable.hh"
 
 valuePtr Value::NIL_VALUE = Value::create(Value::BOOL, (unsigned int)0);
 valuePtr Value::TRUE_VALUE = Value::create(Value::BOOL, (unsigned int)1);
@@ -902,7 +904,7 @@ bool Value::findVariable(bitsetPtr variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body) {
+void Value::apply(itemPtr item, Parser &parser, bool trace, statementPtr variable, statementPtr body) {
 	switch (type) {
 		case BOOL:
 		case IDENTIFIER:
@@ -917,7 +919,7 @@ void Value::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, stat
 			break;
 		case FEATURES:
 			item->getEnvironment()->add(variable->getBits(), shared_from_this());
-			body->apply(item, synthesizer, trace);
+			body->apply(item, parser, trace);
 			item->getEnvironment()->remove(variable->getBits());
 			break;
 	}

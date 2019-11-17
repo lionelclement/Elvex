@@ -22,11 +22,15 @@
 
 #include <set>
 #include <list>
-#include "rule.hh"
-
-typedef std::list<rulePtr> ruleList;
+#include "ipointer.hh"
+#ifdef OUTPUT_XML
+#include <libxml/tree.h>
+#endif
 
 class Grammar {
+public:
+  typedef std::list<rulePtr> ruleList;
+
 private:
 	std::set<unsigned int> terminals;
 	std::set<unsigned int> nonTerminals;
@@ -53,10 +57,10 @@ public:
 	void addNewStartTerm(bool);
 	void addNonTerminal(unsigned int);
 	void addTerminal(unsigned int);
-	void print(std::ostream &, class Gitem *) const;
+	void print(std::ostream &) const;
 	bool isTerminal(termPtr) const;
 	bool isNonTerminal(termPtr) const;
-	void analyseTerms(class Synthesizer&);
+	void analyseTerms(class Parser &);
 #ifdef OUTPUT_XML
 	void toXML(xmlNodePtr);
 #endif

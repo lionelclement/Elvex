@@ -19,6 +19,7 @@
 
 #include <map>
 #include <bitset>
+#include <sstream>
 
 #include "bitset.hh"
 #include "flags.hh"
@@ -131,7 +132,7 @@ void Bitset::makeSerialString() {
  ************************************************************ */
 void Bitset::toXML(xmlNodePtr nodeRoot)
 {
-	xmlNodePtr f=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ALT", NULL);
+	xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ALT", NULL);
 	map::const_iterator varTableIt;
 	size_t c=this->count();
 	size_t sz=this->size();

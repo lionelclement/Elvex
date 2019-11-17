@@ -22,11 +22,12 @@
 
 #include "flags.hh"
 #include "id.hh"
-
-#include "vartable.hh"
 #include "ipointer.hh"
 #include "serializable.hh"
 #include "variableflag.hh"
+#ifdef OUTPUT_XML
+#include <libxml/tree.h>
+#endif
 
 class Feature:
 		public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Feature> {

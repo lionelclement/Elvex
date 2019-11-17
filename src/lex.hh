@@ -20,14 +20,14 @@
 #ifndef LEX_H
 #define LEX_H
 
-#include <string>
-#include <map>
-
-#define MAXSTRING 1000000
+#define MAXSTRING 10000
 #define SEP_PREF ""
 #define SEP_UW "UNKNOWN"
 #define SEP_SUFF "\n"
 #define SEP_OR "|"
+
+//#include <iostream>
+#include <string>
 
 extern bool isLexString;
 extern char *lexString;
@@ -42,13 +42,14 @@ public:
 	struct InfoBuff *info;   //table des info
 	unsigned long int init;
 	class Tree *lexiconInit;
+	Lex(void);
 
 	void printResults(std::ostream &, unsigned long int index, bool sep) const;
 	unsigned long int searchStatic(unsigned long int index, std::string) const;
 	bool saveFsa(FILE *file);
 	bool loadFsa(FILE *file);
-	bool build(char *directory, char *prefix, std::istream *input);
-	bool load(char *directory, char *prefix);
+	bool build(std::string &directory, std::string &prefix, std::istream &inputStream, class Pattern &pattern);
+	bool load(const std::string &directory, const std::string &prefix);
 	bool consult(std::string inputFileName);
 };
 #endif // LEX_H

@@ -20,12 +20,12 @@
 #ifndef FORESTIDENTIFIER_H
 #define FORESTIDENTIFIER_H
 
-#include <ostream>
 #include "serializable.hh"
 #include "ipointer.hh"
 
 class ForestIdentifier:
-		public Serializable, public std::enable_shared_from_this<ForestIdentifier> {
+		public Serializable,
+		public std::enable_shared_from_this<ForestIdentifier> {
 
 private:
 

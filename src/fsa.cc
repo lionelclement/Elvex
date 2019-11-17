@@ -22,11 +22,11 @@
 /* **************************************************
  *
  ************************************************** */
-Fsa::Fsa(unsigned long int child, unsigned long int sibling, unsigned long int info, char letter) {
+Fsa::Fsa(unsigned long int child, unsigned long int sibling, unsigned long int info, char character) {
 	this->child = child;
 	this->sibling = sibling;
 	this->info = info;
-	this->letter = letter;
+	this->character = character;
 }
 
 /* **************************************************
@@ -36,14 +36,14 @@ Fsa::Fsa(void) {
 	this->child = (unsigned long int)~0UL;
 	this->sibling = (unsigned long int)~0UL;
 	this->info = (unsigned long int)~0UL;
-	this->letter = (char)~0;
+	this->character = (char)~0;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Fsa::print(std::ostream& out) const {
-	out << (long int)child << ' ' << (long int)sibling << ' ' << (long int)info << ' ' << (int)letter << std::endl;
+	out << (long int)child << ' ' << (long int)sibling << ' ' << (long int)info << ' ' << (int)character << std::endl;
 }
 
 /* **************************************************
@@ -70,27 +70,27 @@ bool Fsa::isInfo() const {
 /* **************************************************
  *
  ************************************************** */
-unsigned long int Fsa::getChild(void) {
+unsigned long int Fsa::getChild(void) const {
 	return child;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int Fsa::getSibling(void) {
+unsigned long int Fsa::getSibling(void) const {
 	return sibling;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int Fsa::getInfo(void) {
+unsigned long int Fsa::getInfo(void) const {
 	return info;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Fsa::isLetter(char letter) {
-	return letter == this->letter;
+bool Fsa::isThisChar(char character) const {
+	return character == this->character;
 }

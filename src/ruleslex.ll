@@ -19,14 +19,8 @@
  ************************************************** */
 
 #include <iostream>
-#include <sstream>
-#include <string>
 #include <bitset>
-#include <vector>
-#include <list>
-#include "ipointer.hh"
-#include "vartable.hh"
-#include "synthesizer.hh"
+#include "parser.hh"
 #include "rulesyacc.hh"
 #include "messages.hh"
 
@@ -41,7 +35,7 @@
   
   extern char *lexString;
   extern bool stringInput;
-  extern Synthesizer synthesizer;
+  extern Parser parser;
   
   std::string *str;
   int comments;
@@ -91,8 +85,8 @@ downDoubleArrow "⇓"
 %%
 
 ^.+$ {
-  DBUGPRTARG("••••••••••••••• ", yytext);
-  REJECT;
+	DBUGPRTARG("••••••••••••••• ", yytext);
+	REJECT;
 }
 
 "//".*\n {
@@ -111,10 +105,10 @@ downDoubleArrow "⇓"
 	[ \t]* {}
 	[^ \t\n]+ {
 	  DBUGPRT("TOKEN_#INCLUDE\n");
-	  synthesizer.pushBufferName(yytext);
-	  synthesizer.pushLineno(ruleslineno);
-	  ruleslineno=1;
-	  if (synthesizer.getVerbose()) {
+	  parser.pushBufferName(yytext);
+	  parser.pushLineno(ruleslineno);
+	  ruleslineno = 1;
+	  if (parser.getVerbose()) {
 	    std::cerr << "open " << yytext << std::endl;
 	  }
 	  yyin = fopen( yytext, "r" );
@@ -133,11 +127,11 @@ downDoubleArrow "⇓"
     yyterminate();
   }
   else {
-    if (synthesizer.getVerbose()) {
-      std::cerr << "close " << synthesizer.getTopBufferName() << std::endl;
+    if (parser.getVerbose()) {
+      std::cerr << "close " << parser.getTopBufferName() << std::endl;
     }
-    synthesizer.popBufferName();
-    ruleslineno = synthesizer.popLineno();
+    parser.popBufferName();
+    ruleslineno = parser.popLineno();
   }
 }
 
@@ -438,7 +432,7 @@ downDoubleArrow "⇓"
   
   "__FILE__" {
     DBUGPRTARG("TOKEN_STRING ", yytext);
-    ruleslval.string_slot = new std::string(synthesizer.getTopBufferName());
+    ruleslval.string_slot = new std::string(parser.getTopBufferName());
     return TOKEN_STRING;
   }
   

@@ -180,13 +180,14 @@ void Features::print(std::ostream& outStream) const {
 /* **************************************************
  *
  ************************************************** */
-void Features::flatPrint(std::ostream& outStream) const {
+void Features::flatPrint(std::ostream& outStream, bool par) const {
   if (isNil())
     outStream << "NIL";
   else if (isBottom())
     outStream << "⊥";
   else {
-    outStream << '[';
+    if (par)
+    	outStream << '[';
     bool first = true;
     for (int t = Feature::first_type; t <= Feature::last_type; ++t) {
       for (Features::list::const_iterator f = features.begin(); f != features.end(); ++f) {
@@ -194,13 +195,14 @@ void Features::flatPrint(std::ostream& outStream) const {
 	  if (first)
 	    first = false;
 	  else
-	    outStream << ", ";
+	    outStream << ',';
 	  (*f)->flatPrint(outStream);
 	}
       }
     }
   }
-  outStream << ']';
+  if (par)
+  		outStream << ']';
 }
 
 /* **************************************************
@@ -397,7 +399,7 @@ bool Features::buildEnvironment(environmentPtr environment, featuresPtr features
     // i1: X
     if ((*i1)->getType() == Feature::VARIABLE) {
       if ((*i1)->getValue()) {
-	throw "A variable attribute is not allowed in this context";
+	throw "*** error: A variable attribute is not allowed in this context: " + (*i1)->getAttribute()->toString();
 	//if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(), acceptToFilterNULLVariables, false)){
 	//ret = false;
 	//}

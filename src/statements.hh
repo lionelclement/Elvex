@@ -21,9 +21,6 @@
 #define STATEMENTS_H
 
 #include <list>
-#include <bitset>
-#include <vector>
-
 #include "flags.hh"
 #include "id.hh"
 #include "serializable.hh"
@@ -53,7 +50,7 @@ public:
 	void renameVariables(unsigned int);
 	void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 	statementsPtr clone(const std::bitset<Flags::FLAGS> &savedFlags);
-	void apply(itemPtr, class Synthesizer *, bool);
+	void apply(itemPtr, class Parser &, bool);
 	void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 	void enable(itemPtr, bool &, bool);
 	bool findVariableElsewhere(statementPtr, bitsetPtr);

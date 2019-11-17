@@ -28,11 +28,13 @@
 #include "serializable.hh"
 #include "id.hh"
 #include "ipointer.hh"
-#include "vartable.hh"
 #include "variableflag.hh"
 
 class Features:
-		public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Features> {
+  public Id,
+  public Flags,
+  public Serializable,
+  public std::enable_shared_from_this<class Features> {
 
 public:
 	typedef std::list<featurePtr> list;
@@ -67,7 +69,7 @@ public:
 	featurePtr front(void) const;
 
 	void print(std::ostream &) const;
-	void flatPrint(std::ostream &) const;
+	void flatPrint(std::ostream &, bool par=true) const;
 
 #ifdef OUTPUT_XML
 	void toXML(xmlNodePtr);

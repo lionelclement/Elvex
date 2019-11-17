@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <sstream>
 #include "rule.hh"
 #include "term.hh"
 #include "terms.hh"
@@ -147,9 +148,10 @@ statementsPtr Rule::getStatements(void) const {
  *
  ************************************************************ */
 void Rule::incUsages(class Synthesizer *synthesizer) {
-	if (++usages > synthesizer->getMaxUsages()) {
-		FATAL_ERROR_MSG("maxUsages");
-	}
+  if (++usages > synthesizer->getMaxUsages()) {
+    throw "*** error: too much usages of the same rule: " + this->toString();
+    exit(EXIT_FAILURE);
+  }
 }
 
 /* ************************************************************
@@ -171,33 +173,6 @@ const unsigned int Rule::getLineno(void) const {
  ************************************************************ */
 const std::string &Rule::getFilename(void) const {
 	return filename;
-}
-
-/* ************************************************************
- *
- ************************************************************ */
-void Rule::print(std::ostream& outStream, unsigned int index, bool withSemantic, bool html) const {
-	std::string space = (html ? "&nbsp;" : " ");
-	bool first = true;
-	lhs->print(outStream);
-	outStream << space << (html ? "→" : "->") << space;
-	for (unsigned int i = 0; i < rhs.size(); i++) {
-		if (first)
-			first = false;
-		else
-			outStream << space;
-		if (index == i)
-			outStream << (html ? "•" : ".") << space;
-		rhs[i]->print(outStream);
-	}
-	if (index == rhs.size())
-		outStream << space << (html ? "•" : ".");
-	if (withSemantic) {
-		statementsPtr stms = getStatements();
-		if (stms)
-			stms->print(outStream);
-		outStream << (html ? "<BR>" : "\n");
-	}
 }
 
 /***************************
@@ -244,3 +219,38 @@ void Rule::addDefaults() {
 		downs.push_back(0);
 }
 
+/* ************************************************************
+ *
+ ************************************************************ */
+void Rule::print(std::ostream& outStream, unsigned int index, bool withSemantic, bool html) const {
+	std::string space = (html ? "&nbsp;" : " ");
+	bool first = true;
+	lhs->print(outStream);
+	outStream << space << (html ? "→" : "->") << space;
+	for (unsigned int i = 0; i < rhs.size(); i++) {
+		if (first)
+			first = false;
+		else
+			outStream << space;
+		if (index == i)
+			outStream << (html ? "•" : ".") << space;
+		rhs[i]->print(outStream);
+	}
+	if (index == rhs.size())
+		outStream << space << (html ? "•" : ".");
+	if (withSemantic) {
+		statementsPtr stms = getStatements();
+		if (stms)
+			stms->print(outStream);
+		outStream << (html ? "<BR>" : "\n");
+	}
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+std::string Rule::toString() const {
+  std::stringstream s;
+  print(s, UINT_MAX, false, false);
+  return s.str();
+}

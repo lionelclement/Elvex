@@ -21,7 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <map>
+//#include <map>
+#include <sstream>
 
 #include "lex.hh"
 #include "messages.hh"
@@ -31,6 +32,22 @@
 #include "fsa.hh"
 #include "infobuff.hh"
 #include "tree.hh"
+#include "pattern.hh"
+#include "parser.hh"
+#include "statement.hh"
+
+
+/* **************************************************
+ *
+ ************************************************** */
+Lex::Lex()
+{
+	buffer = NULL;
+	fsa = NULL;
+	info = NULL;
+	init = 0;
+	lexiconInit = 0;
+}
 
 /* **************************************************
  *
@@ -71,13 +88,13 @@ unsigned long int Lex::searchStatic(unsigned long int index, std::string s) cons
 	// for each letter of the suffix
 	while (*str) {
 		// parse the brothers while founding the actual char
-		while (!fsa[index].isLetter(*str)) {
+		while (!fsa[index].isThisChar(*str)) {
 			if (fsa[index].isSibling())
 				index = fsa[index].getSibling();
 			else
 				return (unsigned long int)(~0UL);
 		}
-		if (!fsa[index].isLetter(*str))
+		if (!fsa[index].isThisChar(*str))
 			return ((unsigned long int)(~0UL));
 		if (*(str + 1)) {
 			if (fsa[index].isChild())
@@ -103,14 +120,14 @@ bool Lex::saveFsa(FILE *file) {
 	// encodage des offsets (16 ou 32 bits)
 	if (!fwrite(&nbrBytes, sizeof(nbrBytes), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
 	unsigned long int maxSize = (unsigned long int)~0UL;
 	if (!fwrite(&maxSize, sizeof(maxSize), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
@@ -119,7 +136,7 @@ bool Lex::saveFsa(FILE *file) {
 	lexiconInit->setIndexStaticFSA(sizeFsa);
 	if (!fwrite(&sizeFsa, sizeof(sizeFsa), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
@@ -132,7 +149,7 @@ bool Lex::saveFsa(FILE *file) {
 	lexiconInit->setIndexStaticInfo(sizeInfo);
 	if (!fwrite(&sizeInfo, sizeof(sizeInfo), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
@@ -155,7 +172,7 @@ bool Lex::saveFsa(FILE *file) {
 	fflush(file);
 	if (!fwrite(&init, sizeof(init), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
@@ -170,14 +187,14 @@ bool Lex::loadFsa(FILE *file) {
 	int nbrBytes;
 	if (!fread(&nbrBytes, sizeof(nbrBytes), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
 	unsigned long int maxSize;
 	if (!fread(&maxSize, sizeof(maxSize), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
@@ -189,14 +206,14 @@ bool Lex::loadFsa(FILE *file) {
 	unsigned long int sizeFsa;
 	if (!fread(&sizeFsa, sizeof(sizeFsa), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
 	unsigned long int sizeInfo;
 	if (!fread(&sizeInfo, sizeof(sizeInfo), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
@@ -207,7 +224,7 @@ bool Lex::loadFsa(FILE *file) {
 	fsa = new Fsa[sizeFsa + 1]();
 	if (!fread(fsa, sizeof(Fsa), sizeFsa, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	for(unsigned long int sizeSy=0;sizeSy<sizeFsa;sizeSy++) {
 		fsa[sizeSy].print(std::cout);
@@ -220,7 +237,7 @@ bool Lex::loadFsa(FILE *file) {
 	info = new InfoBuff[sizeInfo + 1]();
 	if (!fread(info, sizeof(InfoBuff), sizeInfo, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	for(unsigned long int sizeSy=0;sizeSy<sizeInfo;sizeSy++) {
 		std::cout << sizeSy << ' ';
@@ -229,7 +246,7 @@ bool Lex::loadFsa(FILE *file) {
 #endif //TRACE_DIFF
 	if (!fread(&init, sizeof(init), 1, file))
 		FATAL_ERROR
-	;
+		;
 #ifdef TRACE_DIFF
 	std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
@@ -239,86 +256,195 @@ bool Lex::loadFsa(FILE *file) {
 /* **************************************************
  *
  ************************************************** */
-bool Lex::build(char *directory, char *prefix, std::istream *input) {
+bool Lex::build(std::string &directory, std::string &prefix, std::istream &inputStream, Pattern &pattern)
+{
 	bool result = true;
 	FILE *fsaFile;
 	FILE *tableFile;
-	char str[MAXSTRING];
-	char graphie[MAXSTRING];
-	char oldStr[MAXSTRING];
-	unsigned int i;
+	char line[MAXSTRING];
+	std::string oldOutput;
 	unsigned int range;
 	unsigned long int offset;
+	std::ostringstream oss;
 
 	offset = 0;
 	range = 0;
 
-	std::ostringstream oss;
 	oss << directory << "/" << prefix << ".tbl";
 	std::string osss = oss.str();
 	tableFile = fopen(osss.c_str(), "w"); //tableFileName.c_str(), "w");
 	if (tableFile == NULL) {
 		std::cerr << "Unable to open file " << osss << " for writing" << std::endl;
 		result = false;
-
 	}
 	else {
 
-		input->seekg(0, std::ios::end);
-		long int size = (int)input->tellg();
-		input->seekg(0, std::ios::beg);
+		inputStream.seekg(0, std::ios::end);
+		size_t size = inputStream.tellg();
+		inputStream.seekg(0, std::ios::beg);
 
-		class Tree *lexicon;
+		Tree *lexicon;
 		lexicon = new Tree(NULL, NULL, NULL, '\0');
 		lexicon->setChild(new Tree(NULL, NULL, NULL, '\0'));
 		lexiconInit = lexicon;
 		lexicon = lexicon->getChild();
 
 		int nbrItem = 0;
-		while (input->getline(str, MAXSTRING)) {
-			if (!*str)
+		while (inputStream.getline(line, MAXSTRING)) {
+			if (!*line)
 				continue;
-			for (i = 0; i <= strlen(str) && (!strchr("\t", str[i])); i++)
-				/* empty */;
-			strcpy(graphie, str);
-			graphie[i] = 0;
-			if (i < strlen(str)) {
-				graphie[i] = 0;
-				if (!strcmp(str + i + 1, oldStr)) {
-					lexicon->add(graphie, offset);
+			if (strchr(line, '#'))
+				continue;
+			//std::cout << "/line:/" << line << '/' << std::endl;
+			char form[MAXSTRING];
+			strcpy(form, line);
+			char *rhs = strchr(form, '\t');
+			*rhs = 0;
 
+			char line2[MAXSTRING];
+			strcpy(line2, line);
+			char *pos = strchr(line2, '\t') + 1;
+			rhs = strchr(pos, '\t');
+			*rhs = 0;
+
+			char line3[MAXSTRING];
+			char line4[MAXSTRING];
+			strcpy(line3, line);
+			char *lemma = strchr(line3, '\t') + 1;
+			lemma = strchr(lemma, '\t') + 1;
+			rhs = strchr(lemma, '\t');
+			char *fs = NULL;
+			if (rhs) {
+				*rhs = 0;
+				strcpy(line4, line);
+				fs = strchr(line4, '\t') + 1;
+				fs = strchr(fs, '\t') + 1;
+				fs = strchr(fs, '\t') + 1;
+			}
+
+			//std::cerr << "/line:/" << line << '/' << std::endl;
+			//std::cerr << "/form:/" << form << '/' << std::endl;
+			//std::cerr << "/pos:/" << pos << '/' << std::endl;
+			//std::cerr << "/lemma:/" << lemma << '/' << std::endl;
+			//std::cerr << "/fs:/" << (fs ? fs : "NULL") << '/' << std::endl;
+
+			std::stringstream input2Stream;
+			input2Stream << pos << "#_" << lemma;
+			std::string input = std::string(input2Stream.str());
+
+			extern Parser parser;
+			featuresPtr features;
+			if (fs && fs[0]) {
+				std::stringstream fsStream;
+				fsStream << '[' << fs << ']';
+				std::string fsString = fsStream.str();
+				if (parser.parseBuffer("#", fsString, "features"))
+					std::cerr << "*** error in lexicon: " << line << std::endl;
+				features = parser.getLocalFeatures();
+			}
+			else
+				features = featuresPtr();
+
+			std::stringstream outputStream;
+			outputStream << form << "#[";
+			if (fs && fs[0]) {
+						parser.getLocalFeatures()->flatPrint(outputStream, false);
+			}
+			outputStream << ']';
+			std::string output = outputStream.str();
+
+			//CERR_LINE;
+			//std::cerr << input << std::endl;
+			  
+			std::list<const std::string> *o = pattern.find(input);
+			if (o->size()) {
+				//features->flatPrint(std::cerr);
+
+				for (std::list<const std::string>::const_iterator it = o->begin();
+						it != o->end();
+						++it) {
+
+					//CERR_LINE;
+					//std::cerr << "aaa" << input << std::endl;
+					//std::cerr << "bbb" << *it << std::endl;
+
+					char predicatePattern[MAXSTRING];
+					strcpy(predicatePattern, it->c_str());
+					char *rhs = strchr(predicatePattern, '#');
+					*rhs = 0;
+
+					char fsPatternLine[MAXSTRING];
+					strcpy(fsPatternLine, it->c_str());
+					char *fsPattern = strchr(fsPatternLine, '#')+1;
+					std::stringstream fsPatternStream;
+					fsPatternStream << '[' << fsPattern << ']';
+					std::string fsPatternString = fsPatternStream.str();
+					if (parser.parseBuffer("#", fsPatternString, "features"))
+						std::cerr << "*** error in pattern: " << fsPatternString << std::endl;
+					featuresPtr featuresPattern = parser.getLocalFeatures();
+
+					std::stringstream input3Stream;
+					input3Stream << pos << "#_" << predicatePattern;
+					std::string input3 = std::string(input3Stream.str());
+
+					statementPtr statement;
+					featuresPtr unif;
+					if (features && featuresPattern) {
+							unif = statement->unif(features, featuresPattern, itemPtr());
+					}
+					else if (featuresPattern) {
+						unif = featuresPattern;
+					}
+					else {
+						unif = features;
+					}
+
+					//CERR_LINE;
+				  //unif->flatPrint(std::cerr);
+				  //std::cerr << std::endl;
+				  if (!unif->isBottom()) {
+				  	offset = ftell(tableFile);
+				  	lexicon->add(input3.c_str(), offset);
+				  	std::stringstream output2Stream;
+				  	output2Stream << form << '#' << '[';
+				  	unif->flatPrint(output2Stream, false);
+				  	output2Stream << ']';
+				  	std::string output2 = output2Stream.str();
+				  	fprintf(tableFile, "%s%c", output2.c_str(), 0);
+				  }
+
+					//std::cout << "/Inputzzz:/" << input << '/' << std::endl;
+					//std::cout << "/Outputzzz:/" << output2 << '/' << std::endl;
+
+					//std::cerr << "/OK/" << input << " -> " << output2.c_str() << std::endl;
 				}
-				else {
-					// Adds one entry
-					offset = ftell(tableFile);
-					lexicon->add(graphie, offset);
-					fprintf(tableFile, "%s%c", str + i + 1, 0);
-
-				}
-				strcpy(oldStr, str + i + 1);
-
+				//	std::cerr << "/line:/" << line << '/' << std::endl;
+				//	std::cerr << "/pos:/" << pos << '/' << std::endl;
+				//	std::cerr << "/predicate:/" << predicate << '/' << std::endl;
+				//	std::cerr << "/form:/" << form << '/' << std::endl;
+				//	std::cerr << "/fs:/" << fs << '/' << std::endl;
 			}
 			else {
-				// the entry of one word without any information is the same as the previous:
-				// aaa info_of_aaa
-				// bbb
-				//
-				// bbb -> info_of_aaa
-				lexicon->add(graphie, offset);
-
-			}
-			nbrItem += strlen(str) + 1;
-			if (!(range++ % 1357)) {
-				int k = (100 * (unsigned long int)(input->tellg())) / (unsigned long int)size;
-				std::cerr << " " << k << "%\r";
-
+				offset = ftell(tableFile);
+				lexicon->add(input.c_str(), offset);
+				fprintf(tableFile, "%s%c", output.c_str(), 0);
 			}
 
+			nbrItem += strlen(line) + 1;
+			if (!(range++ % 997)) {
+				int k = (40 * (unsigned long int)(inputStream.tellg())) / (unsigned long int)size;
+				std::cerr << " " << round(2.5*k) << "%[";
+				int i = 0 ;
+				for ( ; i <= k ; i++)
+				  std::cerr << '#';
+				for ( ; i <= 40 ; i++)
+				  std::cerr << ' ';
+				std::cerr << ']' << "\r";
+			}
 		}
 		fclose(tableFile);
 
 	}
-
 	oss.str("");
 	oss << directory << "/" << prefix << ".fsa";
 	osss = oss.str();
@@ -327,13 +453,11 @@ bool Lex::build(char *directory, char *prefix, std::istream *input) {
 	if (fsaFile == NULL) {
 		std::cerr << "Unable to open file " << osss << " for writing" << std::endl;
 		result = false;
-
 	}
 	else {
 		if (!saveFsa(fsaFile))
 			result = false;
 		fclose(fsaFile);
-
 	}
 	return result;
 }
@@ -341,9 +465,8 @@ bool Lex::build(char *directory, char *prefix, std::istream *input) {
 /* **************************************************
  *
  ************************************************** */
-bool Lex::load(char *directory, char *prefix) {
+bool Lex::load(const std::string &directory, const std::string &prefix) {
 	unsigned long int size;
-
 	std::ostringstream oss;
 	oss << directory << "/" << prefix << ".fsa";
 	std::string osss = oss.str();
@@ -351,16 +474,12 @@ bool Lex::load(char *directory, char *prefix) {
 	if (fsaFile == NULL) {
 		std::cerr << "File " << osss << " not found" << std::endl;
 		exit(EXIT_FAILURE);
-
 	}
 	else {
 		if (!loadFsa(fsaFile)) {
 			return false;
-
 		}
-
 		fclose(fsaFile);
-
 	}
 	oss.str("");
 	oss << directory << "/" << prefix << ".tbl";
@@ -373,23 +492,18 @@ bool Lex::load(char *directory, char *prefix) {
 	}
 	else {
 		//cerr << "*** Load buffer in memory" << endl;
-
 		struct stat *statbuf;
 		statbuf = (struct stat *)malloc(sizeof(struct stat));
 		stat(osss.c_str(), statbuf);
 		size = statbuf->st_size;
 		free(statbuf);
-
 		buffer = new char[size];
 		buffer[0] = 0;
-
 		if (!fread(buffer, 1, size, tableFile))
 			FATAL_ERROR
-		;
+			;
 		fclose(tableFile);
-
 	}
-
 	return true;
 }
 
@@ -424,7 +538,6 @@ bool Lex::consult(std::string inputFileName) {
 		fclose(inputFile);
 
 	}
-
 	return true;
 }
 

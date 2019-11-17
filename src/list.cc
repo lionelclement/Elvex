@@ -250,7 +250,7 @@ void List::flatPrint(std::ostream& outStream, bool par) const {
 
 		case PAIRP:
 			if (par || getCdr()->isAtomic()) {
-				outStream << "&lt;";
+				outStream << '<';
 			}
 			getCar()->flatPrint(outStream, true);
 			if (getCdr()->isAtomic()) {
@@ -262,7 +262,7 @@ void List::flatPrint(std::ostream& outStream, bool par) const {
 				getCdr()->flatPrint(outStream, false);
 			}
 			if (par || getCdr()->isAtomic()) {
-				outStream << "&gt;";
+				outStream << '>';
 			}
 			break;
 	}
@@ -574,18 +574,18 @@ bool List::findVariable(bitsetPtr variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body) {
+void List::apply(itemPtr item, Parser &parser, bool trace, statementPtr variable, statementPtr body) {
 	switch (type) {
 		case NIL:
 			break;
 		case ATOM:
-			value->apply(item, synthesizer, trace, variable, body->clone(0));
+			value->apply(item, parser, trace, variable, body->clone(0));
 			break;
 		case PAIRP:
 			if (getCar())
-				getCar()->apply(item, synthesizer, trace, variable, body);
+				getCar()->apply(item, parser, trace, variable, body);
 			if (getCdr())
-				getCdr()->apply(item, synthesizer, trace, variable, body);
+				getCdr()->apply(item, parser, trace, variable, body);
 			break;
 	}
 }

@@ -26,6 +26,7 @@
 #include <iostream>
 #include <sstream>
 #include "lex.hh"
+#include "parser.hh"
 #include "synthesizer.hh"
 #include "vartable.hh"
 #include "node.hh"
@@ -40,10 +41,10 @@
 #define PACKAGE_VERSION "?.?.?"
 #endif
 
-Synthesizer synthesizer;
+Parser parser;
+Synthesizer synthesizer = Synthesizer();
 
-time_t start, end;
-Vartable vartable;
+time_t before, after;
 #ifdef OUTPUT_XML
 xmlNodePtr xmlNodeRoot;
 xmlDocPtr document;
@@ -65,6 +66,7 @@ options\n\
 \t--random|-r                 outputs one sentence randomly selected\n";
 #ifdef TRACE
 	std::cerr << "\
+\t--traceInit\n\
 \t--traceStage\n\
 \t--traceClose\n\
 \t--traceShift\n\
@@ -80,7 +82,7 @@ options\n\
 \t-grammarFile <file>\n\
 \t-lexiconFile <file>\n\
 \t-inputFile <file>\n\
-\t-compactDirectory <directory>\n\
+\t-compactLexiconDirectory <directory>\n\
 \t-compactLexiconFile <file>\n\
 ";
 #ifdef OUTPUT_XML
@@ -100,8 +102,9 @@ void seq(int i) {
  *
  ************************************************** */
 void generate(void) {
-	if (synthesizer.getStartTerm())
-		synthesizer.generate();
+	if (parser.getStartTerm()) {
+		synthesizer.generate(parser);
+	}
 #ifdef TRACE
 	std::cout << "<ul>" << std::endl;
 #endif
@@ -142,7 +145,6 @@ int main(int argn, char **argv) {
 	std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
 #endif
 	try {
-		vartable.init();
 #ifdef OUTPUT_XML
 		synthesizer.setOutXML(NULL);
 #endif
@@ -153,18 +155,18 @@ int main(int argn, char **argv) {
 		else {
 			for (unsigned int arg = 1; argv[arg]; ++arg) {
 				if (argv[arg][0] == '-') {
-				  if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
+					if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
 						std::cout << PACKAGE_VERSION << std::endl;
 						return EXIT_SUCCESS;
 					}
 
-				if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose")) {
-				  						synthesizer.setVerbose(true);
+					if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose")) {
+						parser.setVerbose(true);
 
-				}
-				
-				else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
-				  Usage(argv);
+					}
+
+					else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
+						Usage(argv);
 						return EXIT_SUCCESS;
 					}
 
@@ -182,6 +184,10 @@ int main(int argn, char **argv) {
 					}
 
 #ifdef TRACE
+					else if (!strcmp(argv[arg] + 1, "-traceInit")) {
+						synthesizer.setTraceInit(true);
+					}
+
 					else if (!strcmp(argv[arg] + 1, "-traceStage")) {
 						synthesizer.setTraceStage(true);
 					}
@@ -262,7 +268,7 @@ int main(int argn, char **argv) {
 						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-')) {
 							signal(SIGALRM, seq);
 							alarm(atoi(argv[++arg]));
-							time(&start);
+							time(&before);
 						}
 						else {
 							Usage(argv);
@@ -270,7 +276,7 @@ int main(int argn, char **argv) {
 						}
 					}
 
-					else if (!strcmp(argv[arg] + 1, "compactDirectory")) {
+					else if (!strcmp(argv[arg] + 1, "compactLexiconDirectory")) {
 						if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
 							synthesizer.setCompactDirectoryName(argv[++arg]);
 						else {
@@ -308,28 +314,23 @@ int main(int argn, char **argv) {
 				}
 
 				else {
-				  synthesizer.addInput(argv[arg]);
+					synthesizer.addInput(argv[arg]);
 				}
 			}
 
 			if (synthesizer.getLexiconFileName().length() > 0) {
-#ifdef TRACE_INIT
-				std::cerr << "load lexicon" << "<BR>" << std::endl;
-#endif
-				synthesizer.parseFile("@lexicon", synthesizer.getLexiconFileName());
+				if (parser.parseFile("@lexicon", synthesizer.getLexiconFileName()))
+					return EXIT_FAILURE;
 			}
 
 			if (synthesizer.getGrammarFileName().length() > 0) {
-#ifdef TRACE_INIT
-				std::cerr << "load grammar" << "<BR>" << std::endl;
-#endif
-				synthesizer.parseFile("@grammar", synthesizer.getGrammarFileName());
+				if (parser.parseFile("@grammar", synthesizer.getGrammarFileName())) {
+					return EXIT_FAILURE;
+				}
+				parser.getGrammar().analyseTerms(parser);
 			}
 
 			if (synthesizer.getCompactLexiconFileName().length() > 0) {
-#ifdef TRACE_INIT
-				std::cerr << "load compact lexicon" << "<BR>" << std::endl;
-#endif
 				synthesizer.setCompactLexicon(new Lex());
 				char *dir = strdup((synthesizer.getCompactDirectoryName().length() > 0) ? synthesizer.getCompactDirectoryName().c_str() : ".");
 				char *file = strdup(synthesizer.getCompactLexiconFileName().c_str());
@@ -346,18 +347,21 @@ int main(int argn, char **argv) {
 #endif
 
 		}
-		srand(time(NULL));
+		//srand(time(NULL));
 		if (synthesizer.getInputFileName().length() > 0) {
-#ifdef TRACE_INIT
-		  std::cerr << "load input" << "<BR>" << std::endl;
-#endif
-		  synthesizer.parseFile("@input", synthesizer.getInputFileName());
-			generate();
+			if (!parser.parseFile("@input", synthesizer.getInputFileName()))
+				generate();
+			else
+				return EXIT_FAILURE;
 		}
 
 		for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin(); i != synthesizer.getInputs().end(); ++i) {
-			synthesizer.parseString("@input " + *i);
-			generate();
+			if (!parser.parseBuffer("@input", *i, "input")) {
+				generate();
+			}
+			else {
+				return EXIT_FAILURE;
+			}
 		}
 
 #ifdef OUTPUT_XML
@@ -367,12 +371,9 @@ int main(int argn, char **argv) {
 		}
 #endif
 
-#ifdef TRACE_INIT
-		std::cerr << std::endl << "EXIT_SUCCESS" << "<BR>" << std::endl;
-#endif
 	}
 	catch (std::string &message) {
-	  std::cerr << message << std::endl;
+		std::cerr << message << std::endl;
 	}
 	catch (char const *message) {
 		std::cerr << message << std::endl;

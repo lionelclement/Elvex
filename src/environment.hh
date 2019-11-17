@@ -20,10 +20,7 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-#include <bitset>
 #include <unordered_map>
-#include <vector>
-#include "vartable.hh"
 #include "ipointer.hh"
 
 class Environment:

@@ -2,36 +2,32 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2019 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
 
-#ifndef ID_H
-#define ID_H
+#ifndef BUILDLEXICON_HH_
+#define BUILDLEXICON_HH_
 
-#include <cstddef>
-
-class Id {
-
-private:
-	static size_t uniqId;
-	size_t id;
-
-public:
-	Id(size_t id);
-	size_t getId(void) const;
+namespace Buildlexicon {
+	enum Choice {
+		BUILD,
+		CONSULT,
+		TEST,
+		NONE
+	};
 
 };
 
-#endif // ID_H
+#endif /* BUILDLEXICON_HH_ */

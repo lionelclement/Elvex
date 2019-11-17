@@ -25,7 +25,7 @@
 #endif
 
 #include <unordered_map>
-#include <map>
+//#include <map>
 #include <bitset>
 
 #include "ipointer.hh"
@@ -37,7 +37,7 @@
 class Bitset:
 		public std::bitset<MAXBITS>, public Serializable, public std::enable_shared_from_this<Bitset> {
 
-	typedef std::map<unsigned int, std::string> map;
+	typedef std::unordered_map<unsigned int, std::string> map;
 
 private:
 	static const std::bitset<MAXBITS> LEXBITSET;

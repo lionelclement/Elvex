@@ -20,19 +20,16 @@
 #ifndef VARTABLE_H
 #define VARTABLE_H
 
+#include <string>
 #include <bitset>
 #include <unordered_map>
 #include <map>
-#ifdef OUTPUT_XML
-#include <libxml/tree.h>
-#endif
 #include "bitset.hh"
 #include "ipointer.hh"
 
 class Vartable {
 
 public:
-
 	static const unsigned int _END_ = 0;
 	static const unsigned int _STARTTERM_ = 1;
 	static const unsigned int _EMPTY_ = 2;
@@ -46,7 +43,7 @@ public:
 	static std::map<unsigned int, std::string> intToStrTable;
 	static std::unordered_map<std::string, unsigned int> strToIntTable;
 
-	static void init();
+	Vartable();
 	static bitsetPtr varTableAdd(std::string); // string -> bit
 	static unsigned int strToInt(std::string); // string -> integer
 	static std::string intToStr(unsigned int);

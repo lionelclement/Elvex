@@ -22,7 +22,7 @@
 #include "terms.hh"
 #include "vartable.hh"
 #include "messages.hh"
-#include "synthesizer.hh"
+#include "parser.hh"
 #include "entries.hh"
 #include "rule.hh"
 
@@ -30,38 +30,38 @@
  *
  ************************************************** */
 Grammar::Grammar(void) {
-	this->firstRule = NULL;
-	this->startTerm = NULL;
-	this->idMax = 0;
-	NEW;
+  this->firstRule = NULL;
+  this->startTerm = NULL;
+  this->idMax = 0;
+  NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Grammar::~Grammar(void) {
-	DELETE;
-	terminals.clear();
-	nonTerminals.clear();
-	for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
-		rulePtr tmp = *iterRules;
-		if (tmp)
-		  tmp.reset();
-	}
-	rules.clear();
-	if (startTerm) {
-		startTerm.reset();
-	}
-	if (firstRule) {
-	  firstRule.reset();
-	}
+  DELETE;
+  terminals.clear();
+  nonTerminals.clear();
+  for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    rulePtr tmp = *iterRules;
+    if (tmp)
+      tmp.reset();
+  }
+  rules.clear();
+  if (startTerm) {
+    startTerm.reset();
+  }
+  if (firstRule) {
+    firstRule.reset();
+  }
 }
 
 /* **************************************************
  *
  ************************************************** */
 std::set<unsigned int> &Grammar::getTerminals(void) {
-	return terminals;
+  return terminals;
 }
 
 /* **************************************************
@@ -74,7 +74,7 @@ std::set<unsigned int> &Grammar::getNonTerminals(void) {
 /* **************************************************
  *
  ************************************************** */
-const ruleList &Grammar::getRules(void) const {
+const Grammar::ruleList &Grammar::getRules(void) const {
 	return rules;
 }
 
@@ -109,14 +109,14 @@ void Grammar::setStartTerm(termPtr startTerm) {
 /* **************************************************
  *
  ************************************************** */
-ruleList::const_iterator Grammar::rulesBegin(void) const {
+Grammar::ruleList::const_iterator Grammar::rulesBegin(void) const {
 	return rules.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ruleList::const_iterator Grammar::rulesEnd(void) const {
+Grammar::ruleList::const_iterator Grammar::rulesEnd(void) const {
 	return rules.end();
 }
 
@@ -159,9 +159,9 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::print(std::ostream &outStream, class Gitem *gitem) const {
-	outStream << "<table><tr><td>";
-	outStream << "Terminals={";
+void Grammar::print(std::ostream &outStream) const {
+	outStream << "<table border=\"1\"><tr><td>";
+	outStream << "Terminals</td><td>";
 	std::set<unsigned int>::const_iterator iter;
 	bool first = true;
 	for (iter = terminals.begin(); iter != terminals.end(); ++iter) {
@@ -169,37 +169,35 @@ void Grammar::print(std::ostream &outStream, class Gitem *gitem) const {
 			first = false;
 		else
 			outStream << ", ";
-		outStream << Vartable::intToStrTable[*iter] /***<< "(" << *iter << ")"***/;
+		outStream << Vartable::intToStrTable[*iter];
 
 	}
-	outStream << "}" << std::endl;
 	outStream << "</td></tr><tr><td>";
-	outStream << "NonTerminals={";
+	outStream << "NonTerminals</td><td>";
 	first = true;
-	for (iter = nonTerminals.begin(); iter != nonTerminals.end(); iter++) {
+	for (iter = nonTerminals.begin(); iter != nonTerminals.end(); ++iter) {
 		if (first)
 			first = false;
 		else
 			outStream << ", ";
-		outStream << Vartable::intToStrTable[*iter] /***<< "(" << *iter << ")"***/;
+		outStream << Vartable::intToStrTable[*iter];
 
 	}
-	outStream << "}" << std::endl;
 	outStream << "</td></tr><tr><td>";
-	outStream << "StartTerm=";
+	outStream << "StartTerm</td><td>";
 	if (startTerm)
 		startTerm->print(outStream);
 	else
 		outStream << "NULL";
 	outStream << std::endl;
-	outStream << "</td></tr><tr><td>Rules</td></tr>";
-	for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++) {
-		outStream << "<tr><td>";
-		(*iterRules)->print(outStream, -1, true);
-		outStream << "</td></tr>";
-
+	outStream << "</td></tr><tr><td>Rules</td><td><table>";
+	for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+	  outStream << "<tr><td>";
+	  (*iterRules)->print(outStream, -1, true);
+	  outStream << "</td></tr>";
+	  
 	}
-	outStream << "</table>";
+	outStream << "</table></td></tr></td></table>";
 	outStream << std::endl;
 }
 
@@ -236,10 +234,9 @@ bool Grammar::isNonTerminal(termPtr t) const {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::analyseTerms(class Synthesizer &synthesizer) {
+void Grammar::analyseTerms(class Parser &parser) {
 	nonTerminals.clear();
 	terminals.clear();
-
 	ruleList::const_iterator iterRules;
 	for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
 		nonTerminals.insert((*iterRules)->getLhs()->getCode());
@@ -252,12 +249,12 @@ void Grammar::analyseTerms(class Synthesizer &synthesizer) {
 					unsigned long int code = (*term)->getCode();
 					terminals.insert(code);
 
-					std::map<unsigned int, entriesPtr> *predToEntries;
-					std::map<unsigned int, std::map<unsigned int, entriesPtr>*>::iterator foundCode = synthesizer.getLexicon().find(code);
-					if (foundCode == synthesizer.getLexicon().end()) {
+					Parser::entries_map *predToEntries;
+					Parser::entries_map_map::iterator foundCode = parser.getLexicon().find(code);
+					if (foundCode == parser.getLexicon().end()) {
 						predToEntries = new std::map<unsigned int, entriesPtr>;
 						predToEntries->insert(std::make_pair(code, Entries::create()));
-						synthesizer.getLexicon().insert(std::make_pair(code, predToEntries));
+						parser.getLexicon().insert(std::make_pair(code, predToEntries));
 					}
 				}
 			}

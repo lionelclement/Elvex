@@ -21,11 +21,8 @@
 #define FORESTMAP_H
 
 #include <unordered_map>
-
+#include "ipointer.hh"
 #include "forestidentifier.hh"
-#ifdef OUTPUT_XML
-#include <libxml/tree.h>
-#endif
 
 class ForestMap {
 

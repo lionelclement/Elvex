@@ -22,10 +22,11 @@
 
 #include "flags.hh"
 #include "id.hh"
-#include "vartable.hh"
 #include "serializable.hh"
-#include "ipointer.hh"
 #include "variableflag.hh"
+#ifdef OUTPUT_XML
+#include <libxml/tree.h>
+#endif
 
 class List:
 		public Serializable, public Flags, public Id, public std::enable_shared_from_this<List> {
@@ -78,7 +79,7 @@ public:
 	bool buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root);
 	void deleteAnonymousVariables(void);
 	bool renameVariables(unsigned int);
-	void apply(itemPtr item, class Synthesizer *synthesizer, bool trace, statementPtr variable, statementPtr body);
+	void apply(itemPtr item, class Parser &parser, bool trace, statementPtr variable, statementPtr body);
 #ifdef OUTPUT_XML
 	void toXML(xmlNodePtr);
 #endif

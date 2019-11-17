@@ -26,6 +26,7 @@
 #include "entry.hh"
 #include "features.hh"
 #include "value.hh"
+#include "vartable.hh"
 
 /* **************************************************
  *
