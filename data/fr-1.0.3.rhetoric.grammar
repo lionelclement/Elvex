@@ -53,7 +53,7 @@ rhetoricalStructure → [que] premise [que] conclusion {
   [i:[i:[id:$ID_I_I]], ii:[i:[idref:$ID]]] ⊂ ↑;
 
   //  attest ($ID ⇒ (($ID_I_II ≠ $ID) ∧ ($ID_I_I ≠ $ID)));
-  attest (((¬ $ID) || $ID == _)  ∨ (($ID_I_II ≠ $ID) ∧ ($ID_I_I ≠ $ID)));
+  attest (((¬ $ID) ∨ $ID == _)  ∨ (($ID_I_II ≠ $ID) ∧ ($ID_I_I ≠ $ID)));
 
   if (($language_register == slang) ∧ ($illocutionaryII ≠ ask)) {
     ↓1 = [];
@@ -150,8 +150,8 @@ rhetoricalStructure → premise conclusion {
   if ($iiD == no){
     $inhII = [i:[PRED:$pred, gender:$iiG, number:$iiN, def:yes, sem:hyper], vform:tensed, $iiRest];
   }
-  else if ($iN ≠ $iiN || $iG ≠ $iiG)
-    $inhII = [i:[PRED:_pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
+  else if ($iN ≠ $iiN ∨ $iG ≠ $iiG)
+    $inhII = [i:[PRED:__pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
   else 
     $inhII = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
   ↓1 = $inhI ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:neutral, modality:$modalityI, lexFct:$lexFctI, language_register:$language_register, modSType:$modSType, modS:$modS];
@@ -170,7 +170,7 @@ premise → si modalClause comma {
   if (¬ $aspect)
      $aspect = neutral;
   [modality:$modalityI, lexFct:$lexFctI] ⊂ ↑;
-  if (¬ $tense || ($tense == present)) { 
+  if (¬ $tense ∨ ($tense == present)) { 
     if ($aspect == continuous) {
       $tense = present;
     }
@@ -210,12 +210,12 @@ premise → si modalClause comma {
  * je gagnerais
  ************************************************** */
 premise → modalClause comma {
-  [language_register:in_house|slang] ⊂ ↑;
+  [language_register:familiar|slang] ⊂ ↑;
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
   if (¬ $aspect)
      $aspect = neutral;
   [modality:$modality, lexFct:$lexFct] ⊂ ↑;
-  if (¬ $tense || ($tense == present) || ($tense == future)) { 
+  if (¬ $tense ∨ ($tense == present) ∨ ($tense == future)) { 
     if ($aspect == continuous) {
       $mode = conditional; $tense = present; $aspect = continuous;
     }
@@ -260,7 +260,7 @@ conclusion → illocutionaryAct {
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
   if (¬ $aspect)
      $aspect = neutral;
-  if (¬ $tense || ($tense == present)) { 
+  if (¬ $tense ∨ ($tense == present)) { 
     if ($aspect == continuous) {
       $mode = indicative; $tense  = future; $aspect = neutral;
     }
@@ -302,9 +302,9 @@ conclusion → illocutionaryAct {
  * Je gagnerais le pactole
  ************************************************** */
 conclusion → illocutionaryAct {
-  [language_register:in_house|slang] ⊂ ↑;
+  [language_register:familiar|slang] ⊂ ↑;
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
-  if (¬ $tense || ($tense == present)) { 
+  if (¬ $tense ∨ ($tense == present)) { 
     if ($aspect == continuous) {
       $mode = conditional; $tense  = present; $aspect = neutral;
     }
@@ -365,7 +365,7 @@ rhetoricalStructure → illocutionaryAct illocutionaryAct {
       ↓2 = [i:[PRED:$pred, number:$N, def:yes, sem:hyper], vform:tensed, $iiRest];
   }
   else
-    ↓2 = [i:[PRED:_pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
+    ↓2 = [i:[PRED:__pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
 }
 
 /* **************************************************
@@ -387,8 +387,8 @@ rhetoricalStructure → timeClause comma form illocutionaryAct {
   // indéfinie => hypéronyme défini
   if ($iiD == no)
     ↓4 = [i:[PRED:$pred, gender:$iiG, number:$iiN, def:yes, sem:hyper], vform:tensed, $iiRest];
-  else if ($iN ≠ $iiN || $iG ≠ $iiG)
-    ↓4 = [i:[PRED:_pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
+  else if ($iN ≠ $iiN ∨ $iG ≠ $iiG)
+    ↓4 = [i:[PRED:__pro, gender:$iiG, number:$iiN, person:$iiP], vform:tensed, $iiRest];
   else 
     ↓4 = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
 }
@@ -414,7 +414,7 @@ rhetoricalStructure → timeClause comma form illocutionaryAct {
       ↓4 = [i:[PRED:$pred, number:$N, def:yes, sem:hyper], vform:tensed, $iiRest];
   }
   else
-    ↓4 = [i:[PRED:_pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
+    ↓4 = [i:[PRED:__pro, gender:$G, number:$N, person:$P], vform:tensed, $iiRest];
 }
 
 /* **************************************************

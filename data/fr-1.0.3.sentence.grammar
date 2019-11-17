@@ -1,6 +1,6 @@
 #include fr-1.0.3.verb.grammar
 #include fr-1.0.3.clitics.grammar
-#include fr-1.0.3.name.grammar
+#include fr-1.0.3.noun.grammar
 
 sentence → S {
   [subj:$subj, modS:NIL];
@@ -34,7 +34,7 @@ S → [NP|cln] VP {
   [aggrSubjSCompSubj:$aggrSubjSCompSubj, inv:$inv, mode:$mode, language_register:$language_register] ⊂ ↑;
   [PRED:$predSubj] ⊂ $subj;
   if (#1){
-    attest ($mode != imperative) ∧ (($inv != yes) ∨ ($predSubj != _pro));
+    attest ($mode != imperative) ∧ (($inv != yes) ∨ ($predSubj != __pro));
     ↓1 = $subj ∪ [det:yes, language_register:$language_register];
     $subjSynt = ⇓1;
     [number:$N, gender:$G, person:$P] ⊂ ⇓1;
@@ -45,7 +45,7 @@ S → [NP|cln] VP {
     }
   }
   else {
-    attest ($mode == imperative) ∨ (($inv == yes) ∧ ($predSubj == _pro));
+    attest ($mode == imperative) ∨ (($inv == yes) ∧ ($predSubj == __pro));
     [number:$N, gender:$G, person:$P] ⊂ $subj;
     $subjSynt = [];
     if ($aggrSubjSCompSubj == yes){

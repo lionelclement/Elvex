@@ -169,7 +169,7 @@ argumentClause → sentence {
   [i:[id:$ID], ii:[i:[idref:$ID]], iii:[idref:NIL]];
   [i:$I, ii:[i:_, $RestComp], iii:[id:_, $III], $Rest] ⊂ ↑;
   [subj:[number:$N, gender:$G, person:$P], scomp:[i:[number:$N, gender:$G, person:$P]]] ⊂ ⇓1;
-  ↓1 = [subj:$I, scomp:[i:[PRED:_pro], real:scomp, $RestComp], iiReal:icomp|scomp, prep_obj:$III, iiiReal:prep_obj, $Rest];
+  ↓1 = [subj:$I, scomp:[i:[PRED:__pro], real:scomp, $RestComp], iiReal:icomp|scomp, prep_obj:$III, iiiReal:prep_obj, $Rest];
   [subj:$iSynt, scomp:$iiSynt, $RestSynt] ⊂ ⇓1;
   ⇑ = [i:$iSynt, ii:$iiSynt, $RestSynt];
 }

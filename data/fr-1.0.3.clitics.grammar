@@ -1,7 +1,7 @@
 // me le lui en y
 CLITICS → [clr] [cld] [cla] [cld] [clg] [cll] {
   if (#1) {
-    [objRefl:[PRED:_pro]];
+    [objRefl:[PRED:__pro]];
     [objRefl:$Obj];
     [mode:$mode] ⊂ ↑;
     ↓1 = $Obj ∪ [mode:$mode];
@@ -11,12 +11,12 @@ CLITICS → [clr] [cld] [cla] [cld] [clg] [cll] {
 
   //attest ¬(#2 ∧ #4);
   if (#2) {
-    [prep_objCl:[PRED:_pro]];
+    [prep_objCl:[PRED:__pro]];
     [prep_objCl:$AObj] ⊂ ↑;
     ↓2 = $AObj ∪ [person:one|two];
   }
   else if (#4) {
-    [prep_objCl:[PRED:_pro]];
+    [prep_objCl:[PRED:__pro]];
     [prep_objCl:$AObj] ⊂ ↑;
     ↓4 = $AObj ∪ [person:three];
   }
@@ -25,7 +25,7 @@ CLITICS → [clr] [cld] [cla] [cld] [clg] [cll] {
   }
   
   if (#3) {
-    [objCl:[PRED:_pro]];
+    [objCl:[PRED:__pro]];
     [objCl:$Obj] ⊂ ↑;
     ↓3 = $Obj;
   }
@@ -35,7 +35,7 @@ CLITICS → [clr] [cld] [cla] [cld] [clg] [cll] {
   
   if (#5) {
     // de
-    [genCl:[PRED:_pro]];
+    [genCl:[PRED:__pro]];
     [genCl:$DeObj];
     ↓5 = $DeObj;
   }

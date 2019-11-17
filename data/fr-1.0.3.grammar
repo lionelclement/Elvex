@@ -5,16 +5,12 @@
  ************************************************** */
 text → rhetoricalStructure {
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexFct:$lexFct] ⊂ ↑;
-  attest $pred != paragraph;
-  if (¬ $vform)
-    $vform = tensed;
-  if (¬ $mode)
-    $mode = indicative;
-  if (¬ $language_register || ($language_register == _))
+  attest $pred ≠ paragraph;
+  if (¬ $language_register)
     $language_register = neutral;
   if (¬ $lexFct)
     $lexFct = none;
-  if (($pred != cause) && ($pred != succ) && ($pred != hello) && ($pred != see_you_soon))
+  if (($pred ≠ cause) ∧ ($pred ≠ succ) ∧ ($pred ≠ hello) ∧ ($pred ≠ see_you_soon))
     $rhet = neutral;
   else
     $rhet = $pred;
@@ -51,38 +47,38 @@ texts → paragraph texts {
   [i:[id:$id_i2], ii:[id:$id_ii2], iii:[id:$id_iii2]] ⊂ $cadr;
   
   // Jean ronfle. Il s'endort.
-  if ($id_i1 && ($id_i1 == $id_i2)) {
+  if ($id_i1 ∧ ($id_i1 == $id_i2)) {
     [i:[PRED:$predi, $m_i]] ⊂ ⇓1;
-    $i = [PRED:_pro, $m_i];
+    $i = [PRED:__pro, $m_i];
   }
   // Jean parle à Marie. Elle s'endort.
-  else if ($id_ii1 && ($id_ii1 == $id_i2)) {
+  else if ($id_ii1 ∧ ($id_ii1 == $id_i2)) {
     [ii:[PRED:$predii, $m_ii]] ⊂ ⇓1;
-    $i = [PRED:_pro, $m_ii];
+    $i = [PRED:__pro, $m_ii];
   }
   // Jean parle à Marie des fleurs. Elles fannent.
-  else if ($id_iii1 && ($id_iii1 == $id_i2)) {
+  else if ($id_iii1 ∧ ($id_iii1 == $id_i2)) {
     [iii:[PRED:$prediii, $m_iii]] ⊂ ⇓1;
-    $i = [PRED:_pro, $m_iii];
+    $i = [PRED:__pro, $m_iii];
   } else {
     [i:$i] ⊂ $cadr;
   }
   
   // Jean parle à Marie. Luc lui parle.
-  if ($id_ii1 && ($id_ii1 == $id_ii2)) {
+  if ($id_ii1 ∧ ($id_ii1 == $id_ii2)) {
     [ii:[PRED:$predii, $m_ii]] ⊂ ⇓1;
-    $ii = [PRED:_pro, $m_ii];
+    $ii = [PRED:__pro, $m_ii];
   } else {
     [ii:$ii] ⊂ $cadr;
   }
 
-  if ($id_i1 && ($id_i1 == $id_iii2)) {
+  if ($id_i1 ∧ ($id_i1 == $id_iii2)) {
     [i:[PRED:$predi, $m_i]] ⊂ ⇓1;
-    $iii = [PRED:_pro, $m_i];
+    $iii = [PRED:__pro, $m_i];
   }
-  else  if ($id_iii1 && ($id_iii1 == $id_iii2)) {
+  else  if ($id_iii1 ∧ ($id_iii1 == $id_iii2)) {
     [iii:[PRED:$prediii, $m_iii]] ⊂ ⇓1;
-    $iii = [PRED:_pro, $m_iii];
+    $iii = [PRED:__pro, $m_iii];
   } else {
     [iii:$iii] ⊂ $cadr;
   }
@@ -123,7 +119,7 @@ letter → dear name comma newParagraph text newParagraph regards newline signat
     $language_register = neutral;
   if (¬ $lexFct)
     $lexFct = none;
-  if (($pred != cause) && ($pred != succ))
+  if (($pred ≠ cause) ∧ ($pred ≠ succ))
     $rhet = neutral;
   else
     $rhet = $pred;

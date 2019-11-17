@@ -1,247 +1,266 @@
+/* **************************************************
+ * verbal tense & inflexion
+ ************************************************** */
+
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:present]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:past]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:future]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:past, aspect:imperfect]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:past, aspect:continuous]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:recent_past]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:present, aspect:continuous]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:near_future]
+//text [PRED:_marcher, i:[PRED:_Léon, id:45], tense:future, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:present]
+//text [PRED:_partir, i:[PRED:_Léon], tense:past]
+//text [PRED:_partir, i:[PRED:_Micheline], tense:past]
+//text [PRED:_partir, i:[PRED:_boucher], tense:past]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:future]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:past, aspect:imperfect]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:past, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:recent_past]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:present, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:near_future]
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:future, aspect:continuous]
+
+/* **************************************************
+ * Arguments
+ ************************************************** */
+
+//text [PRED:_ronfler, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes]]
+//text [PRED:_réparer, i:[PRED:_horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], tense:past]
+//text [PRED:_réparer, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:__pro, number:sg, gender:fm, person:three]]
+//text [PRED:_livrer, i:[PRED:_horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, genr:ms], tense:past]
+text [PRED:_livrer, i:[PRED:_horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:_client, number:sg, gender:ms, def:yes], tense:past]
+//text [PRED:_livrer, i:[PRED:__ego], ii:[PRED:__pro], iii:[PRED:__pro]]
+//text [PRED:_couper, i:[PRED:_boucher, number:sg, def:yes], ii:[PRED:_poulet, number:sg, def:yes], iii:[PRED:_ciseaux, def:yes]]
+//text [PRED:_dire, i:[PRED:_boucher, number:sg, gender:ms, def:yes], ii:[PRED:_ânerie, number:sg, def:no], iii:[PRED:_client, gender:ms, number:sg, def:yes]]
+//text [PRED:_transporter, i:[PRED:_camion, number:sg, gender:ms, def:yes], ii:[PRED:_viande, number:sg, def:yes], iii:[FORM:"Rungis"], iv:[PRED:_boucherie, number:sg, def:yes]]
+//text [PRED:_arrêter, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes]]
+//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], iii:[PRED:_soupe, number:sg, def:no], tense:past]
+//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], ii:[PRED:_cochon, gender:ms, number:pl, def:yes], iii:[PRED:_soupe, number:sg, part:yes], tense:past]
+//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], ii:[PRED:_cochon, gender:ms, number:pl, def:yes], iii:[PRED:_soupe, number:sg, part:yes], tense:past, aspect:neutral, illocutnary:ask, neg:yes]
+
+
 /*
 se prendre une sacrée tôle
 subir un échec cuisant
 échouer
 */
 
-//text [PRED:échouer, i:[PRED:Léon], language_register:slang]
-text [PRED:échouer, i:[PRED:Léon], language_register:slang, lexFct:magn]
-//text [PRED:échouer, i:[PRED:Léon], language_register:neutral]
-//text [PRED:manger, i:[PRED:chat], ii:[PRED:souris], tense:$t]
 
-/***  
-letter [PRED:letter,
+
+//text [PRED:_lettre]
+//text [PRED:_lettre, mod:<[PRED:_beau]>]
+//text [PRED:_ciseaux]
+//text [PRED:_couper, i:[PRED:_boucher, gender:ms, number:sg], ii:[PRED:_poulet, gender:ms, number:sg], iii:[PRED:_ciseaux, number:pl]]
+  	    
+//text [PRED:_échouer, i:[PRED:_Léon]]
+//text [PRED:_échouer, i:[PRED:_Léon], lexFct:magn]
+//text [PRED:_échouer, i:[PRED:_Léon], language_register:slang]
+//text [PRED:_échouer, i:[PRED:_Léon], language_register:slang, lexFct:magn]
+//text [PRED:_parler, i:[PRED:_horloger], ii:[PRED:_Léon]]
+//text [PRED:_parler, i:[PRED:_horloger], ii:[PRED:_Léon], iii:[FORM:"la pluie et du beau temps"]]
+
+// Bugs
+//text [PRED:_partir, i:[PRED:_Léon, id:45], tense:past]
+//text [PRED:_soupe, part:no]
+//text [PRED:_soupe, number:sg]
+
+
+/***
+letter [PRED:_letter,
   	i:[FORM:"Madame Bertrand", gender:fm, number:sg],
-  	ii:[PRED:paragraph,
+  	ii:[PRED:_paragraph,
   	    texts:<
 
-  	    [PRED:ronfler, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes]],
-  	    [PRED:dormir, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes]],
+  	    [PRED:_ronfler, i:[PRED:_horloger, numbr:sg, gender:ms, id:46]],
+	    [PRED:_dormir, i:[PRED:_horloger, numbr:sg, gender:ms, id:46]],
 
-  	    [PRED:parler, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:chat, id:65]],
-  	    [PRED:dormir, i:[PRED:Marie, id:65]],
+  	    [PRED:_parler, i:[PRED:_horloger, numbr:sg, gender:ms], ii:[PRED:_chat, gender:ms]],
+  	    [PRED:_dormir, i:[PRED:_Marie, id:65]],
 	    
-  	    [PRED:parler, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:Marie, id:65], iii:[PRED:Léon, id:78]],
-	    //[PRED:parler, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:Marie, id:65], iii:[PRED:Léon, id:79]],
-	    //[PRED:parler, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:Marie, id:65], iii:[PRED:Léon, id:78]],
-  	    [PRED:dormir, i:[PRED:Marie, id:65]],
-	    //[PRED:marcher, i:[PRED:Léon, id:45], tense:present],
-  	    [PRED:livrer, i:[PRED:horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:montre, id:47, number:sg, def:yes], iii:[PRED:Léon, id:45], tense:past],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:past],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:future],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:past, aspect:imperfect],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:past, aspect:continuous],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:recent_past],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:present, aspect:continuous],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:near_future],
-  	    [PRED:marcher, i:[PRED:Léon, id:45], tense:future, aspect:continuous],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:present],
-  	    ////[PRED:partir, i:[PRED:Léon, id:45], tense:past],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:future],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:past, aspect:imperfect],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:past, aspect:continuous],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:recent_past],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:present, aspect:continuous],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:near_future],
-  	    [PRED:partir, i:[PRED:Léon, id:45], tense:future, aspect:continuous],
-  	    [PRED:ronfler, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes]],
-  	    [PRED:réparer, i:[PRED:horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:montre, id:47, number:sg, def:yes], tense:past],
-  	    [PRED:livrer, i:[PRED:horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:montre, id:47, number:sg, def:yes], iii:[PRED:client, id:48, number:sg, gender:ms, def:yes], tense:past],
-  	    [PRED:couper, i:[PRED:boucher, id:49, number:sg, gender:ms, def:yes], ii:[PRED:poulet, number:sg, gender:ms, def:yes], iii:[PRED:ciseaux, def:yes], tense:present],
-  	    [PRED:dire, i:[PRED:boucher, id:49, number:sg, gender:ms, def:yes], ii:[PRED:ânerie, number:sg, def:no], iii:[PRED:client, id:48, gender:ms, number:sg, def:yes]],
-  	    //[PRED:dire, i:[PRED:boucher, id:49, number:sg, gender:ms, def:yes], ii:[PRED:ânerie, number:sg, def:no], iii:[PRED:client, id:48, gender:ms, number:sg, def:yes]],
-  	    //[PRED:transporter, i:[PRED:camionneur, number:sg, gender:ms, def:yes, id:camion], ii:[PRED:viande, number:sg, def:yes, id:viande], iii:[FORM:"Rungis"], iv:[PRED:boucherie, number:sg, def:yes]],
-  	    //[PRED:transporter, i:[PRED:camionneur, number:sg, gender:ms, def:yes, id:camion], ii:[PRED:viande, number:sg, def:yes, id:viande], iii:[FORM:"Rungis"], iv:[PRED:boucherie, number:sg, def:yes]],
-  	    //[PRED:arrêter, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:montre, id:47, number:sg, def:yes]],
-  	    //[PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], iii:[PRED:soupe, number:sg, def:no], tense:past],
-  	    [PRED:alimenter, i:[PRED:dame, number:pl, def:yes, id:69], ii:[PRED:cochon, gender:ms, number:sg, def:yes, id:68], iii:[PRED:soupe, number:sg, part:yes]],
-  	    [PRED:alimenter, i:[id:69], ii:[id:68], iii:[PRED:croquette, number:pl, def:no], aspect:neutral, illocutnary:ask, neg:yes],
-  	    [PRED:alimenter, i:[PRED:dame, number:sg, def:yes, id:169], ii:[PRED:cochon, gender:ms, number:pl, def:yes, id:168], iii:[PRED:soupe, number:sg, part:yes]],
-  	    [PRED:alimenter, i:[PRED:dame, number:sg, def:yes, id:169], ii:[PRED:cochon, gender:ms, number:pl, def:yes, id:168], iii:[PRED:croquette, number:pl, def:no], aspect:neutral, illocutnary:ask, neg:yes]
+  	    [PRED:_parler, i:[PRED:_horloger, gender:ms, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_Marie, id:65], iii:[PRED:_Léon, id:78]],
+	    [PRED:_parler, i:[PRED:_horloger, gender:ms, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_Marie, id:65], iii:[PRED:_Léon, id:79]],
+	    [PRED:_parler, i:[PRED:_horloger, gender:ms, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_Marie, id:65], iii:[PRED:_Léon, id:78]],
+  	    [PRED:_dormir, i:[PRED:_Marie, id:65]],
+	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:present],
+  	    [PRED:_livrer, i:[PRED:_horloger, gender:ms, id:46, def:yes, gender:ms, number:sg], ii:[PRED:_montre, id:47, number:sg, def:yes], iii:[PRED:_Léon, id:45], tense:past],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:past],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:future],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:past, aspect:imperfect],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:past, aspect:continuous],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:recent_past],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:present, aspect:continuous],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:near_future],
+  	    [PRED:_marcher, i:[PRED:_Léon, id:45], tense:future, aspect:continuous],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:present],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:future],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:past, aspect:imperfect],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:past, aspect:continuous],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:recent_past],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:present, aspect:continuous],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:near_future],
+  	    [PRED:_partir, i:[PRED:_Léon, id:45], tense:future, aspect:continuous],
+  	    [PRED:_ronfler, i:[PRED:_horloger, gender:ms, id:46, number:sg, gender:ms, def:yes]],
+  	    [PRED:_réparer, i:[PRED:_horloger, gender:ms, id:46, def:yes, gender:ms, number:sg], ii:[PRED:_montre, id:47, number:sg, def:yes], tense:past],
+  	    [PRED:_livrer, i:[PRED:_horloger, gender:ms, id:46, def:yes, gender:ms, number:sg], ii:[PRED:_montre, id:47, number:sg, def:yes], iii:[PRED:_client, id:48, number:sg, gender:ms, def:yes], tense:past],
+  	    [PRED:_couper, i:[PRED:_boucher, gender:ms], ii:[PRED:_poulet, gender:ms], iii:[PRED:_ciseaux]],
+  	    [PRED:_dire, i:[PRED:_boucher, id:49, number:sg, gender:ms, def:yes], ii:[PRED:_ânerie, number:sg, def:no], iii:[PRED:_client, id:48, gender:ms, number:sg, def:yes]],
+  	    [PRED:_dire, i:[PRED:_boucher, id:49, number:sg, gender:ms, def:yes], ii:[PRED:_ânerie, number:sg, def:no], iii:[PRED:_client, id:48, gender:ms, number:sg, def:yes]],
+  	    [PRED:_transporter, i:[PRED:_camionneur, number:sg, gender:ms, def:yes, id:camion], ii:[PRED:_viande, number:sg, def:yes, id:viande], iii:[FORM:"Rungis"], iv:[PRED:_boucherie, number:sg, def:yes]],
+  	    [PRED:_transporter, i:[PRED:_camionneur, number:sg, gender:ms, def:yes, id:camion], ii:[PRED:_viande, number:sg, def:yes, id:viande], iii:[FORM:"Rungis"], iv:[PRED:_boucherie, number:sg, def:yes]],
+  	    [PRED:_arrêter, i:[PRED:_horloger, gender:ms, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_montre, id:47, number:sg, def:yes]],
+  	    [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], iii:[PRED:_soupe, number:sg, def:no], tense:past],
+  	    [PRED:_alimenter, i:[PRED:_dame, number:pl, def:yes, id:69], ii:[PRED:_cochon, gender:ms, number:sg, def:yes, id:68], iii:[PRED:_soupe, number:sg]],
+  	    ///[PRED:_alimenter, i:[PRED:_dame, number:pl, def:yes, id:69], ii:[PRED:_cochon, gender:ms, number:sg, def:yes, id:68], iii:[PRED:_soupe, part:yes]],
+  	    ///[PRED:_alimenter, i:[id:69], ii:[id:68], iii:[PRED:_croquette, number:pl, def:no], aspect:neutral, illocutnary:ask, neg:yes],
+  	    ///[PRED:_alimenter, i:[PRED:_dame, number:sg, def:yes, id:169], ii:[PRED:_cochon, gender:ms, number:pl, def:yes, id:168], iii:[PRED:_soupe, number:sg, part:yes]],
+  	    [PRED:_alimenter, i:[PRED:_dame, number:sg, def:yes, id:169], ii:[PRED:_cochon, gender:ms, number:pl, def:yes, id:168], iii:[PRED:_croquette, number:pl, def:no], aspect:neutral, illocutnary:ask, neg:yes]
   	    >
   	    ],
-  	iii:[FORM:"Lionel Clément"]]
+  	iii:[FORM:"Lionel Clément"]
+	]
 ***/
 
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, language_register:neutral]
+///text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
+///text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, language_register:neutral]
 
 /*** 
-     text [PRED:succ,
-     i:[PRED:succ,
-     i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-	ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     text [PRED:_succ,
+     i:[PRED:_succ,
+     i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+	ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      ],
       
-     ii:[PRED:succ,
-     i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-	 ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     ii:[PRED:_succ,
+     i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+	 ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
 	 ],
       
-     iii:[PRED:succ,
-     	   i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     iii:[PRED:_succ,
+     	   i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      	   ],
       
-     iv:[PRED:succ,
-     	  i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     iv:[PRED:_succ,
+     	  i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      	  ],
       
-     v:[PRED:succ,
-     	 i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     v:[PRED:_succ,
+     	 i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      	 ],
       
-     vi:[PRED:succ,
-     	  i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     vi:[PRED:_succ,
+     	  i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      	  ],
       
-     vii:[PRED:succ,
-     	   i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	   x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     vii:[PRED:_succ,
+     	   i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	   x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      	   ],
       
-     viii:[PRED:succ,
-     	    i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	    x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     viii:[PRED:_succ,
+     	    i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	    x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      	    ],
       
-     ix:[PRED:succ,
-     	  i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	  x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     ix:[PRED:_succ,
+     	  i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	  x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
      	  ],
       
-     x:[PRED:succ,
-     	 i:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 ii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 iii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 iv:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 v:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 vi:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 vii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 viii:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 ix:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house],
-     	 x:[PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+     x:[PRED:_succ,
+     	 i:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 ii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 iii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 iv:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 v:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 vi:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 vii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 viii:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 ix:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house],
+     	 x:[PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
 	 
      	 ]
      ]
 
 ***/
-
-/* **************************************************
- * verbal tense & inflexion
- ************************************************** */
-
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:present]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:past]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:future]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:past, aspect:imperfect]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:past, aspect:continuous]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:recent_past]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:present, aspect:continuous]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:near_future]
-//text [PRED:marcher, i:[PRED:Léon, id:45], tense:future, aspect:continuous]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:present]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:past]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:future]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:past, aspect:imperfect]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:past, aspect:continuous]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:recent_past]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:present, aspect:continuous]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:near_future]
-//text [PRED:partir, i:[PRED:Léon, id:45], tense:future, aspect:continuous]
-
-/* **************************************************
- * Arguments
- ************************************************** */
-
-//text [PRED:ronfler, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes]]
-//text [PRED:réparer, i:[PRED:horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:montre, number:sg, def:yes], tense:past]
-//text [PRED:réparer, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]]
-//text [PRED:livrer, i:[PRED:horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, genr:ms], tense:past]
-//text [PRED:livrer, i:[PRED:horloger, id:46, def:yes, gender:ms, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:client, number:sg, gender:ms, def:yes], tense:past]
-//text [PRED:livrer, i:[PRED:_ego], ii:[PRED:_pro], iii:[PRED:_pro]]
-//text [PRED:couper, i:[PRED:boucher, number:sg, def:yes], ii:[PRED:poulet, number:sg, def:yes], iii:[PRED:ciseaux, def:yes]]
-//text [PRED:dire, i:[PRED:boucher, number:sg, gender:ms, def:yes], ii:[PRED:ânerie, number:sg, def:no], iii:[PRED:client, gender:ms, number:sg, def:yes]]
-//text [PRED:transporter, i:[PRED:camion, number:sg, gender:ms, def:yes], ii:[PRED:viande, number:sg, def:yes], iii:[FORM:"Rungis"], iv:[PRED:boucherie, number:sg, def:yes]]
-//text [PRED:arrêter, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes]]
-//text [PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], iii:[PRED:soupe, number:sg, def:no], tense:past]
-//text [PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], ii:[PRED:cochon, gender:ms, number:pl, def:yes], iii:[PRED:soupe, number:sg, part:yes], tense:past]
-//text [PRED:alimenter, i:[PRED:vieillard, number:sg, gender:ms, def:yes], ii:[PRED:cochon, gender:ms, number:pl, def:yes], iii:[PRED:soupe, number:sg, part:yes], tense:past, aspect:neutral, illocutnary:ask, neg:yes]
 
 /* **********************************************************
  * Rhetorical Structure
@@ -250,142 +269,143 @@ letter [PRED:letter,
 
 // language_register:neutral
 // present
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>]
 //past
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:hier]>]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:_hier]>]
 // future
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>]
 
 // language_register:in_house
 // present
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:in_house]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:in_house]
 //past
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:hier]>, language_register:in_house]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:_hier]>, language_register:in_house]
 // future
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>, language_register:in_house]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>, language_register:in_house]
 
 // language_register:slang
 // present
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:slang]
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:aujourd_hui]>, language_register:slang]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:slang]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:present, modSType:time, modS:<[PRED:_aujourd_hui]>, language_register:slang]
 //past
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:hier]>, language_register:slang]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], tense:past, modSType:time, modS:<[PRED:_hier]>, language_register:slang]
 // future
-//text [PRED:cause, i:[PRED:pleuvoir], ii:[PRED:prendre, illocutionary:ask, i:[PRED:_pro, number:sg, person:two], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>, language_register:slang]
+//text [PRED:_cause, i:[PRED:_pleuvoir], ii:[PRED:_prendre, illocutionary:ask, i:[PRED:__pro, number:sg, person:two], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg]], modSType:time, modS:<[FORM:"demain"]>, language_register:slang]
 
 
 //
 // Anaphores and causal clauses
 //
-//text [PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg, id:1], tense:past]
-//text [PRED:rouler, i:[PRED:voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg, id:1]]
-//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1], tense:present], ii:[PRED:rouler, i:[idref:1]], modSType:time, modS:<[PRED:aujourd_hui]>, tense:present]
-//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:rouler, i:[idref:1]], tense:past ]
-//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:camion, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:rouler, i:[idref:1]] , tense:past ]
-//text [PRED:cause, i:[PRED:réparer, i:[PRED:garagiste, number:sg, def:yes], ii:[PRED:voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:rouler, i:[idref:1]], modSType:time, modS:<[PRED:demain]>, tense:future] ]
+//text [PRED:_réparer, i:[PRED:_garagiste, number:sg, def:yes], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg, id:1], tense:past]
+//text [PRED:_rouler, i:[PRED:_voiture, number:sg, poss:yes, personPoss:two, numberPoss:sg, id:1]]
+//text [PRED:_cause, i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, def:yes], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1], tense:present], ii:[PRED:_rouler, i:[idref:1]], modSType:time, modS:<[PRED:_aujourd_hui]>, tense:present]
+//text [PRED:_cause, i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, def:yes], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:_rouler, i:[idref:1]], tense:past ]
+//text [PRED:_cause, i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, def:yes], ii:[PRED:_camion, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:_rouler, i:[idref:1]] , tense:past ]
+//text [PRED:_cause, i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, def:yes], ii:[PRED:_voiture, number:sg, poss:yes, personPoss:one, numberPoss:sg, id:1]], ii:[PRED:_rouler, i:[idref:1]], modSType:time, modS:<[PRED:_demain]>, tense:future] ]
 
 /* **************************************************
  * Copule
  ************************************************** */
-//text [PRED:facteur]
-//text [PRED:facteur, i:[PRED:Pierre]]
-//text [PRED:facteur, i:[PRED:Pierre], tense:past, illocutionary:ask]
-//text [PRED:facteur, i:[PRED:Pierre], tense:present]
-//text [PRED:facteur, i:[PRED:Pierre], neg:yes, tense:past, illocutionary:ask]
-//text [PRED:facteur, i:[PRED:Pierre], tense:past, illocutionary:ask]
-//NP [PRED:facteur]
+//text [PRED:_facteur]
+//text [PRED:_facteur, i:[PRED:_Pierre]]
+//text [PRED:_facteur, i:[PRED:_Pierre], tense:past, illocutionary:ask]
+//text [PRED:_facteur, i:[PRED:_Pierre], tense:present]
+//text [PRED:_facteur, i:[PRED:_Pierre], neg:yes, tense:past, illocutionary:ask]
+//text [PRED:_facteur, i:[PRED:_Pierre], tense:past, illocutionary:ask]
+//NP [PRED:_facteur]
 
-//text [PRED:sale, i:[PRED:voiture, number:sg, def:yes]]
-//text [PRED:sale, i:[PRED:voiture, number:sg, def:yes], tense:past]
-//text [PRED:court, i:[PRED:histoire, number:sg, def:yes], tense:past]
+//text [PRED:_sale, i:[PRED:_voiture, number:sg, def:yes]]
+//text [PRED:_sale, i:[PRED:_voiture, number:sg, def:yes], tense:past]
+//text [PRED:_court, i:[PRED:_histoire, number:sg, def:yes], tense:past]
 
 /* **************************************************
  * Modality (be able to, may, should, etc)
  ************************************************** */
-///text [PRED:marcher, modality:pouvoir, i:[PRED:_ego], tense:future]
-///text [PRED:réparer, tense:past, neg:yes, modality:pouvoir, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
-////text [PRED:réparer, neg:yes, modality:devoir, i:[PRED:_ego], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
-////text [PRED:réparer, tense:past, neg:yes, modality:savoir, i:[PRED:_ego], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
-////text [PRED:réparer, tense:past, neg:yes, modality:vouloir, i:[PRED:_ego], ii:[PRED:coucou, number:sg, def:yes, mod:<[PRED:cassé]>]]
+///text [PRED:_marcher, modality:pouvoir, i:[PRED:__ego], tense:future]
+///text [PRED:_réparer, tense:past, neg:yes, modality:pouvoir, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_coucou, number:sg, def:yes, mod:<[PRED:_cassé]>]]
+////text [PRED:_réparer, neg:yes, modality:devoir, i:[PRED:__ego], ii:[PRED:_coucou, number:sg, def:yes, mod:<[PRED:_cassé]>]]
+////text [PRED:_réparer, tense:past, neg:yes, modality:savoir, i:[PRED:__ego], ii:[PRED:_coucou, number:sg, def:yes, mod:<[PRED:_cassé]>]]
+////text [PRED:_réparer, tense:past, neg:yes, modality:vouloir, i:[PRED:__ego], ii:[PRED:_coucou, number:sg, def:yes, mod:<[PRED:_cassé]>]]
 
 /* **************************************************
  * Illocutionary acts (ask, excl)
  ************************************************** */
-//text [PRED:parler, i:[PRED:Marie], ii:[PRED:Pierre], illocutionary:assert]
-//text [PRED:parler, i:[PRED:Marie], ii:[PRED:Pierre], illocutionary:ask]
+//text [PRED:_parler, i:[PRED:_Marie], ii:[PRED:_Pierre], illocutionary:assert]
+//text [PRED:_parler, i:[PRED:_Marie], ii:[PRED:_Pierre], illocutionary:ask]
 
-//text [PRED:taire, i:[PRED:_pro, person:two, number:sg], illocutionary:assert]
-//text [PRED:taire, i:[PRED:_pro, person:two, number:sg], illocutionary:ask]
-//text [PRED:taire, i:[PRED:_pro, person:two, number:sg], illocutionary:order]
-//text [PRED:taire, i:[PRED:_pro, person:two, number:sg], illocutionary:ask]
+//text [PRED:_taire, i:[PRED:__pro, person:two, number:sg], illocutionary:assert]
+//text [PRED:_taire, i:[PRED:__pro, person:two, number:sg], illocutionary:ask]
+//text [PRED:_taire, i:[PRED:__pro, person:two, number:sg], illocutionary:ask, language_register:in_house]
+//text [PRED:_taire, i:[PRED:__pro, person:two, number:sg], illocutionary:order]
+//text [PRED:_taire, i:[PRED:__pro, person:two, number:sg], illocutionary:it_seems_to_me]
 
-//text [PRED:dormir, i:[PRED:_pro, person:two, number:sg], illocutionary:order]
-//text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms]]
-//text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:assert]
-//text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:order]
-//text [PRED:livrer, i:[PRED:_pro, person:two, number:sg], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:ask]
-////text [PRED:livrer, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], illocutionary:a]
-//text [PRED:livrer, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:past, neg:yes, illocutionary:ask]
-//text [PRED:livrer, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:past, neg:yes, illocutionary:it_seems_to_me]
+//text [PRED:_dormir, i:[PRED:__pro, person:two, number:sg], illocutionary:order]
+//text [PRED:_livrer, i:[PRED:__pro, person:two, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms]]
+//text [PRED:_livrer, i:[PRED:__pro, person:two, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], illocutionary:assert]
+//text [PRED:_livrer, i:[PRED:__pro, person:two, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], illocutionary:order]
+//text [PRED:_livrer, i:[PRED:__pro, person:two, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], illocutionary:ask]
+////text [PRED:_livrer, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], illocutionary:a]
+//text [PRED:_livrer, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], tense:past, neg:yes, illocutionary:ask]
+//text [PRED:_livrer, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], tense:past, neg:yes, illocutionary:it_seems_to_me]
 
 
 /* **************************************************
  * Diathesis
  ************************************************** */
-//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], tense:$t]
-//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], diathesis:passive, tense:$t]
-//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], tense:past]
-//text [PRED:casser, i:[PRED:éléphant, number:sg, def:yes, gender:ms], ii:[PRED:carafe, number:sg, def:yes], diathesis:passive, tense:past]
-//text [PRED:casser, i:[PRED:carafe, number:sg, def:yes], diathesis:middle, tense:present]
-//text [PRED:livrer, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:$t]
-//text [PRED:livrer, i:[PRED:horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:montre, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, gender:ms], tense:$t, diathesis:passive, illocutionary:ask]
+//text [PRED:_casser, i:[PRED:_éléphant, number:sg, def:yes, gender:ms], ii:[PRED:_carafe, number:sg, def:yes], tense:$t]
+//text [PRED:_casser, i:[PRED:_éléphant, number:sg, def:yes, gender:ms], ii:[PRED:_carafe, number:sg, def:yes], diathesis:passive, tense:$t]
+//text [PRED:_casser, i:[PRED:_éléphant, number:sg, def:yes, gender:ms], ii:[PRED:_carafe, number:sg, def:yes], tense:past]
+//text [PRED:_casser, i:[PRED:_éléphant, number:sg, def:yes, gender:ms], ii:[PRED:_carafe, number:sg, def:yes], diathesis:passive, tense:past]
+//text [PRED:_casser, i:[PRED:_carafe, number:sg, def:yes], diathesis:middle, tense:present]
+//text [PRED:_livrer, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], tense:$t]
+//text [PRED:_livrer, i:[PRED:_horloger, id:46, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, gender:ms], tense:$t, diathesis:passive, illocutionary:ask]
 
 /* **************************************************
  * Literal Adjuncts
  ************************************************** */
-//text [PRED:pleuvoir, tense:future, modSType:time, modS:<[FORM:"lundi 18 mars 2013", type:time]>]
-//text [PRED:pleuvoir, tense:future, modSType:lap_deixis, modS:<[FORM:"lundi", type:time], [FORM:"jeudi", type:time]>]
-//text [PRED:pleuvoir, tense:future, modSType:lap_date, modS:<[FORM:"lundi 18 mars 2013", type:time], [FORM:"mercredi 20 mars 2013", type:time]>]
+//text [PRED:_pleuvoir, tense:future, modSType:time, modS:<[FORM:"lundi 18 mars 2013", type:time]>]
+//text [PRED:_pleuvoir, tense:future, modSType:lap_deixis, modS:<[FORM:"lundi", type:time], [FORM:"jeudi", type:time]>]
+//text [PRED:_pleuvoir, tense:future, modSType:lap_date, modS:<[FORM:"lundi 18 mars 2013", type:time], [FORM:"mercredi 20 mars 2013", type:time]>]
 
 /* **************************************************
  * Locution
  ************************************************** */
-//text [PRED:se_moquer, i:[PRED:Marie]]
-//text [PRED:se_moquer, i:[PRED:Marie], language_register:slang]
-//text [PRED:se_moquer, i:[PRED:Marie], ii:[PRED:Jean]]
-//text [PRED:se_moquer, i:[PRED:Marie], ii:[PRED:Jean], language_register:slang, tense:recent_past]
-//text [PRED:se_moquer, i:[PRED:Jean], tense:present, aspect:continuous]
-//text [PRED:se_moquer, i:[PRED:Jean], tense:past]
-//text [PRED:se_moquer, i:[PRED:_pro], tense:$tense, aspect:$aspect]
+//text [PRED:_se_moquer, i:[PRED:_Marie]]
+//text [PRED:_se_moquer, i:[PRED:_Marie], language_register:slang]
+//text [PRED:_se_moquer, i:[PRED:_Marie], ii:[PRED:_Jean]]
+//text [PRED:_se_moquer, i:[PRED:_Marie], ii:[PRED:_Jean], language_register:slang, tense:recent_past]
+//text [PRED:_se_moquer, i:[PRED:_Jean], tense:present, aspect:continuous]
+//text [PRED:_se_moquer, i:[PRED:_Jean], tense:past]
+//text [PRED:_se_moquer, i:[PRED:__pro], tense:$tense, aspect:$aspect]
 
 /* **************************************************
  * Modifieurs
  ************************************************** */
-//text [PRED:casser, i:[PRED:Jean], ii:[PRED:carafe, number:sg, def:yes, mod:<[PRED:petit],[PRED:blanc]>], diathesis:passive, tense:past, neg:yes, modV:<[PRED:brutalement]>]
-//text [PRED:casser, i:[PRED:Jean], ii:[PRED:carafe, number:sg, def:yes, mod:<[PRED:blanc],[PRED:petit]>], tense:past, neg:yes, modV:<[PRED:brutalement]>]
+//text [PRED:_casser, i:[PRED:_Jean], ii:[PRED:_carafe, number:sg, def:yes, mod:<[PRED:_petit],[PRED:_blanc]>], diathesis:passive, tense:past, neg:yes, modV:<[PRED:_brutalement]>]
+//text [PRED:_casser, i:[PRED:_Jean], ii:[PRED:_carafe, number:sg, def:yes, mod:<[PRED:_blanc],[PRED:_petit]>], tense:past, neg:yes, modV:<[PRED:_brutalement]>]
 
 /* **************************************************
  * Phraséologie
  ************************************************** */
-//text [PRED:pleuvoir]
-//text [PRED:pleuvoir, ii:[PRED:grenouille, number:pl, def:no], tense:$t]
-//text [PRED:pleuvoir, lexFct:few]
-//text [PRED:pleuvoir, lexFct:not_much, tense:$t]
-//text [PRED:pleuvoir, lexFct:few, tense:future]
-//text [PRED:pleuvoir, lexFct:$l, tense:past, language_register:$lr]
-//text [PRED:pleuvoir, lexFct:none, tense:future]
-//text [PRED:pleuvoir, lexFct:much, tense:future]
-//text [PRED:pleuvoir, lexFct:very_much, tense:future]
-//text [PRED:pleuvoir, lexFct:a_lot]
-//text [PRED:pleuvoir, lexFct:very_much]
-//text [PRED:pleuvoir, tense:present, lexFct:$f]
-//text [PRED:pleuvoir, tense:$t, aspect:$a, lexFct:few]
-//text [PRED:pleuvoir, tense:$t, aspect:$a, lexFct:not_much]
-//text [PRED:pleuvoir, tense:$t, aspect:$a, lexFct:much]
-//text [PRED:pleuvoir, tense:$t, aspect:$a, lexFct:a_lot]
-//text [PRED:pleuvoir, tense:$t, aspect:$a, lexFct:very_much]
-//text [PRED:pleuvoir, tense:future, lexFct:very_much]
-//text [PRED:pleuvoir, lexFct:very_much, language_register:$slang]
-//text [PRED:évanouir, i:[PRED:Louise], neg:yes, modality:devoir, modV:<[PRED:souvent]>]
-//text [PRED:tomber_à_terre, i:[PRED:Louise]]
-//text [PRED:tomber_en_amour, i:[PRED:horloger, gender:fm, number:sg, def:yes], ii:[PRED:Jean], tense:past]
+//text [PRED:_pleuvoir]
+//text [PRED:_pleuvoir, ii:[PRED:_grenouille, number:pl, def:no]]
+//text [PRED:_pleuvoir, lexFct:few]
+///text [PRED:_pleuvoir, lexFct:not_much]
+//text [PRED:_pleuvoir, lexFct:few, tense:future]
+//text [PRED:_pleuvoir, lexFct:$l, tense:past, language_register:$lr]
+//text [PRED:_pleuvoir, lexFct:none, tense:future]
+//text [PRED:_pleuvoir, lexFct:much, tense:future]
+//text [PRED:_pleuvoir, lexFct:very_much, tense:future]
+///text [PRED:_pleuvoir, lexFct:a_lot]
+//text [PRED:_pleuvoir, lexFct:very_much]
+//text [PRED:_pleuvoir, tense:present, lexFct:$f]
+//text [PRED:_pleuvoir, tense:$t, aspect:$a, lexFct:few]
+///text [PRED:_pleuvoir, tense:$t, aspect:$a, lexFct:not_much]
+//text [PRED:_pleuvoir, tense:$t, aspect:$a, lexFct:much]
+///text [PRED:_pleuvoir, tense:$t, aspect:$a, lexFct:a_lot]
+//text [PRED:_pleuvoir, tense:$t, aspect:$a, lexFct:very_much]
+//text [PRED:_pleuvoir, tense:future, lexFct:very_much]
+//text [PRED:_pleuvoir, lexFct:very_much, language_register:$slang]
+//text [PRED:_évanouir, i:[PRED:_Louise], neg:yes, modality:devoir, modV:<[PRED:_souvent]>]
+//text [PRED:_tomber_à_terre, i:[PRED:_Louise]]
+//text [PRED:_tomber_en_amour, i:[PRED:_horloger, gender:fm, number:sg, def:yes], ii:[PRED:_Jean], tense:past]

@@ -60,7 +60,7 @@ VP → VP [NP] {
     ⇑ = ⇓1 ∪ [obj:$objSynt];
   }
   else {
-    attest ($predObj == _pro);
+    attest ($predObj == __pro);
     if ($part && $part == yes)
       ↓1 = [genCl:$obj, resObjEx:yes, resObjExNumber:$n, resObjExGender:$g, resObj:yes, $rest];
     else
@@ -77,7 +77,7 @@ VP → VP [PP] {
   [prep_obj:$prep_objSynt] ⊂ ⇓1;
   [pcas:$pcasSynt] ⊂ $prep_objSynt;
   if (#2){
-    //attest $p ≠ _pro; 
+    //attest $p ≠ __pro; 
     ↓1 = $rest;
     if ($prep_objSynt && $pcasSynt)
       ↓2 = [pcas:$pcas, $pObj, language_register:$language_register] ∪ [pcas:$pcasSynt];
@@ -87,7 +87,7 @@ VP → VP [PP] {
     ⇑ = ⇓1 ∪ [prep_obj:$prepObjSynt];
   }
   else {
-    attest ($pred == _pro);
+    attest ($pred == __pro);
     //[person:$person, gender:$gender, number:$number] ⊂ $pObj ;
     //if ((¬ $person))
     //$person = three;
@@ -103,7 +103,7 @@ VP → VP PP {
   [pcas:$pcasSynt] ⊂ $prep_objSynt;
   [pcas:$pcas] ⊂ $pObj;
   [prep_obj2:[PRED:$p], language_register:$language_register] ⊂ ↑;
-  attest $p ≠ _pro; 
+  attest $p ≠ __pro; 
   ↓1 = $rest;
   if ($prep_objSynt && $pcasSynt)
     ↓2 = [pcas:$pcas, $pObj, language_register:$language_register] ∪ [pcas:$pcasSynt];
@@ -275,9 +275,9 @@ V → [clneg] [advneg] CLITICS v [clint] [advneg] [ADVM] {
     [subj:[number:$n, gender:$g, person:$p]] ⊂ ↑;
     [vform:$vF] ⊂ ⇓4;
     if ($vF == infinitive)
-      ↓3 = ↑ ∪ ⇓4 ∪ [objRefl:[PRED:_pro, number:sg, gender:ms, person:three], language_register:$language_register];
+      ↓3 = ↑ ∪ ⇓4 ∪ [objRefl:[PRED:__pro, number:sg, gender:ms, person:three], language_register:$language_register];
     else
-      ↓3 = ↑ ∪ ⇓4 ∪ [objRefl:[PRED:_pro, number:$n, gender:$g, person:$p], language_register:$language_register];
+      ↓3 = ↑ ∪ ⇓4 ∪ [objRefl:[PRED:__pro, number:$n, gender:$g, person:$p], language_register:$language_register];
   }
   else {
     ↓3 = ↑ ∪ ⇓4 ∪ [language_register:$language_register];
@@ -339,9 +339,9 @@ V → [clneg] [advneg] v CLITICS [clint] [advneg] [ADVM] {
     [subj:[number:$n, gender:$g, person:$p]] ⊂ ↑;
     [vform:$vF] ⊂ ⇓3;
     if ($vF == infinitive)
-      ↓4 = ↑ ∪ ⇓3 ∪ [objRefl:[PRED:_pro, number:sg, gender:ms, person:three]];
+      ↓4 = ↑ ∪ ⇓3 ∪ [objRefl:[PRED:__pro, number:sg, gender:ms, person:three]];
     else
-      ↓4 = ↑ ∪ ⇓3 ∪ [objRefl:[PRED:_pro, number:$n, gender:$g, person:$p]];
+      ↓4 = ↑ ∪ ⇓3 ∪ [objRefl:[PRED:__pro, number:$n, gender:$g, person:$p]];
   }
   else {
     ↓4 = ↑ ∪ ⇓3;
@@ -397,22 +397,23 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] v {
   
   // être
   if (#3:1){
-    ↓7 = [vform:participle, vtense:past, $rest];
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓7 = [vform:participle, vtense:past, number:$nsubj, gender:$gsubj, $rest];
     // On récupère les informations du verbe
     // Verbe pronominal et pas d'objet réalisé (ie "la montre s'est arrêtée")
     if (⇓7){
       [number:$npart, gender:$gpart, aux:$aux, refl:$refl, $rest] ⊂ ⇓7;
+      attest ($aux == être);
+      // Pronom réflexif s'accorde avec sujet
       if (($refl == yes) ∧ ($resObj ≠ yes)){
-	// Pronom réflexif s'accorde avec sujet
-	[subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
-	↓2 = [objRefl:[PRED:_pro, number:$nsubj, gender:$gsubj, person:$psubj], refl:yes, $rest];
+	//[subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+	↓2 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], refl:yes, $rest];
       }
       // Verbe intransitif
       else {
-	attest ($aux == être);
 	attest ($resObj ≠ yes);
 	[subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
-	↓2 = $rest;
+	↓2 = [$rest];
       }
       [subj:[number:$npart, gender:$gpart]] ⊂ ↑;
       ↓3 = ↑ ∪ [voice:active];
@@ -551,7 +552,7 @@ V → [clneg] CLITICS aux_avoir [clint] [advneg] aux_être [ADVM] v {
 // périphrase être en train de
 // n'est pas en train de souvent lui en donner
 V → [clneg] aux_être [clint] [advneg] en_train_de [ADVM] CLITICS v {
-  [vtense:past_progressive|present_progressive|future_progressive];
+  [vtense:past__progressive|present__progressive|future__progressive];
   [subj:$subj, inv:$inv, vform:_, mode:_, finite:_, voice:active|middle, $rest] ⊂ ↑;
   attest #1 ⇔ #4;
   if (#4) {
@@ -579,7 +580,7 @@ V → [clneg] aux_être [clint] [advneg] en_train_de [ADVM] CLITICS v {
   [resObj:$resObj] ⊂ ↑;
   if (($refl == yes) ∧ ($resObj ≠ yes)){
     [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
-    ↓7 = [objRefl:[PRED:_pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
+    ↓7 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
   }
   else 
     ↓7 = ⇓8;
@@ -627,7 +628,7 @@ V → [clneg] aux_aller [clint] [advneg] [ADVM] CLITICS v {
   [resObj:$resObj] ⊂ ↑;
   if (($refl == yes) ∧ ($resObj ≠ yes)){
     [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
-    ↓6 = [objRefl:[PRED:_pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
+    ↓6 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
   }
   else 
     ↓6 = ⇓7;
@@ -676,7 +677,7 @@ V → [clneg] aux_venir [clint] [advneg] [ADVM] de CLITICS v {
   [resObj:$resObj] ⊂ ↑;
   if (($refl == yes) ∧ ($resObj ≠ yes)){
     [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
-    ↓7 = [objRefl:[PRED:_pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
+    ↓7 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
   }
   else 
     ↓7 = ⇓8;
