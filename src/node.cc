@@ -29,37 +29,37 @@
  *                                                            *
  ************************************************************ */
 Node::Node(void)
-		: Id(0) {
-	this->nbrCS = 0;
-	NEW;
+      : Id(0) {
+   this->nbrCS = 0;
+   NEW;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 Node::~Node() {
-	DELETE;
+   DELETE;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 nodePtr Node::create(void) {
-	return nodePtr(new Node());
+   return nodePtr(new Node());
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 std::vector<forestPtr> &Node::getForests(void) {
-	return forests;
+   return forests;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 void Node::addForest(forestPtr forest) {
-	forests.push_back(forest);
+   forests.push_back(forest);
 }
 
 /* **************************************************
@@ -67,7 +67,7 @@ void Node::addForest(forestPtr forest) {
  ************************************************** */
 const std::vector<std::string> &
 Node::getOutput(void) const {
-	return this->output;
+   return this->output;
 }
 
 #ifdef OUTPUT_XML
@@ -77,23 +77,23 @@ Node::getOutput(void) const {
 void
 Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 {
-	xmlNodePtr node=xmlNewChild(nodeFather, NULL, (const xmlChar*)"NODE", NULL);
-	xmlSetProp(node, (xmlChar*)"id", (xmlChar*)(std::to_string(this->getId())).c_str());
-	for (std::vector< forestPtr >::const_iterator s=forests.begin();
-			s!=forests.end();
-			++s) {
-		if ((*s)->isUnsetFlags(Flags::XML))
-		(*s)->toXML(nodeRoot, false);
-		xmlNodePtr forest=xmlNewChild(node, NULL, (const xmlChar*)"SON", NULL);
-		xmlSetProp(forest, (xmlChar*)"from", (xmlChar*)std::to_string((*s)->getFrom()).c_str());
-		xmlSetProp(forest, (xmlChar*)"to", (xmlChar*)std::to_string((*s)->getTo()).c_str());
-		xmlSetProp(forest, (xmlChar*)"idref", (xmlChar*)(std::to_string((*s)->getId())).c_str());
-	}
-	if (output.size()) {
-		xmlNodePtr o=xmlNewChild(node, NULL, (const xmlChar*)"OUTPUT", NULL);
-		for(std::vector<std::string>::const_iterator s=output.begin(); s!=output.end(); ++s)
-		xmlNewChild(o, NULL, (const xmlChar*)"S", (xmlChar*)(*s).c_str());
-	}
+   xmlNodePtr node=xmlNewChild(nodeFather, NULL, (const xmlChar*)"NODE", NULL);
+   xmlSetProp(node, (xmlChar*)"id", (xmlChar*)(std::to_string(this->getId())).c_str());
+   for (std::vector< forestPtr >::const_iterator s=forests.begin();
+         s!=forests.end();
+         ++s) {
+      if ((*s)->isUnsetFlags(Flags::XML))
+      (*s)->toXML(nodeRoot, false);
+      xmlNodePtr forest=xmlNewChild(node, NULL, (const xmlChar*)"SON", NULL);
+      xmlSetProp(forest, (xmlChar*)"from", (xmlChar*)std::to_string((*s)->getFrom()).c_str());
+      xmlSetProp(forest, (xmlChar*)"to", (xmlChar*)std::to_string((*s)->getTo()).c_str());
+      xmlSetProp(forest, (xmlChar*)"idref", (xmlChar*)(std::to_string((*s)->getId())).c_str());
+   }
+   if (output.size()) {
+      xmlNodePtr o=xmlNewChild(node, NULL, (const xmlChar*)"OUTPUT", NULL);
+      for(std::vector<std::string>::const_iterator s=output.begin(); s!=output.end(); ++s)
+      xmlNewChild(o, NULL, (const xmlChar*)"S", (xmlChar*)(*s).c_str());
+   }
 }
 
 #endif
@@ -102,40 +102,40 @@ Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
  *
  ************************************************** */
 void Node::generate(std::vector<forestPtr>::const_iterator forest) {
-	if ((*forest)->getOutput().size() > 0) {
-		for (std::vector<std::string>::const_iterator s = (*forest)->getOutput().begin(); s != (*forest)->getOutput().end(); ++s) {
-			if (output.size() == 0) {
-				output.push_back(*s);
-			}
-			else {
-				for (std::vector<std::string>::iterator o = output.begin(); o != output.end(); ++o) {
-					if (o->size() != 0 && s->size() != 0) {
-						*o = *o + ' ' + *s;
-					}
-					else if (s->size() != 0) {
-						*o = *s;
-					}
-				}
-			}
-		}
-	}
-	forest++;
-	if (forest != forests.end())
-		generate(forest);
+   if ((*forest)->getOutput().size() > 0) {
+      for (std::vector<std::string>::const_iterator s = (*forest)->getOutput().begin(); s != (*forest)->getOutput().end(); ++s) {
+         if (output.size() == 0) {
+            output.push_back(*s);
+         }
+         else {
+            for (std::vector<std::string>::iterator o = output.begin(); o != output.end(); ++o) {
+               if (o->size() != 0 && s->size() != 0) {
+                  *o = *o + ' ' + *s;
+               }
+               else if (s->size() != 0) {
+                  *o = *s;
+               }
+            }
+         }
+      }
+   }
+   forest++;
+   if (forest != forests.end())
+      generate(forest);
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Node::generate(bool random) {
-	if (isUnsetFlags(Flags::GEN)) {
-		addFlags(Flags::GEN);
-		for (std::vector<forestPtr>::const_iterator forestIterator = forests.begin(); forestIterator != forests.end(); ++forestIterator) {
-			if ((*forestIterator)->isUnsetFlags(Flags::GEN))
-				(*forestIterator)->generate(random);
-		}
-		if (forests.size() > 0)
-			generate(forests.begin());
-	}
+   if (isUnsetFlags(Flags::GEN)) {
+      addFlags(Flags::GEN);
+      for (std::vector<forestPtr>::const_iterator forestIterator = forests.begin(); forestIterator != forests.end(); ++forestIterator) {
+         if ((*forestIterator)->isUnsetFlags(Flags::GEN))
+            (*forestIterator)->generate(random);
+      }
+      if (forests.size() > 0)
+         generate(forests.begin());
+   }
 }
 

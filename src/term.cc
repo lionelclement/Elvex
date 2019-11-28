@@ -25,57 +25,57 @@
  *
  ************************************************** */
 Term::Term(unsigned int code) {
-	this->code = code;
-	NEW;
+   this->code = code;
+   NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Term::~Term() {
-	DELETE;
+   DELETE;
 }
 
 /* **************************************************
  *
  ************************************************** */
 termPtr Term::create(unsigned int code) {
-	return termPtr(new Term(code));
+   return termPtr(new Term(code));
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned int Term::getCode(void) const {
-	return code;
+   return code;
 }
 
 /* **************************************************
  *
  ************************************************** */
 const bool Term::Less::operator()(const termPtr t1, const termPtr t2) const {
-	if (t1->getCode() != t2->getCode())
-		return (t1->getCode() < t2->getCode());
-	return false;
+   if (t1->getCode() != t2->getCode())
+      return (t1->getCode() < t2->getCode());
+   return false;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Term::print(std::ostream& outStream) const {
-	outStream << Vartable::intToStr(code);
+   outStream << Vartable::intToStr(code);
 }
 
 /* **************************************************
  *
  ************************************************** */
 std::string Term::toString() const {
-	return Vartable::intToStr(code);
+   return Vartable::intToStr(code);
 }
 
 /* **************************************************
  *
  ************************************************** */
 termPtr Term::clone() const {
-	return create(code);
+   return create(code);
 }

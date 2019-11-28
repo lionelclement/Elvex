@@ -25,22 +25,22 @@
  ************************************************** */
 VariableFlag::VariableFlag() noexcept
 {
-	flag = NONE;
-	NEW;
+   flag = NONE;
+   NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void VariableFlag::setFlag(enum flagValues flag) {
-	this->flag = flag;
+   this->flag = flag;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool VariableFlag::containsVariable(void) {
-	if (flag != 0)
-		return (flag == 1);
-	return false;
+   if (flag != 0)
+      return (flag == 1);
+   return false;
 }

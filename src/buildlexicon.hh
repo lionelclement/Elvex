@@ -21,13 +21,14 @@
 #define BUILDLEXICON_HH_
 
 namespace Buildlexicon {
-	enum Choice {
-		BUILD,
-		CONSULT,
-		TEST,
-		NONE
-	};
+   enum Choice {
+      BUILD,
+      CONSULT,
+      TEST,
+      NONE
+   };
 
-};
+}
+;
 
 #endif /* BUILDLEXICON_HH_ */

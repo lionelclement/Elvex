@@ -31,6 +31,7 @@
 #include "features.hh"
 #include "list.hh"
 #include "statements.hh"
+
 #include "statement.hh"
 #include "terms.hh"
 #include "messages.hh"
@@ -49,6 +50,7 @@
  extern unsigned int ruleslex();
  extern Parser parser;
  unsigned int headLineno;
+ bool headTrace;
    
   void ruleserror(const char *str) {
     try {
@@ -114,6 +116,7 @@
 %token TOKEN_FOREACH TOKEN_IN
 %token TOKEN_SEARCH
 %token TOKEN_RAND
+%token TOKEN_TRACE
 
 // OPERATORS
 %token TOKEN_UNION TOKEN_SUBSUME TOKEN_INSET TOKEN_AFF TOKEN_PIPE TOKEN_NOT TOKEN_OR TOKEN_AND TOKEN_IMPLICATION TOKEN_EQUIV
@@ -177,7 +180,7 @@ begin:
 	|TOKEN_INPUT term features {
 	  DBUGPRT("begin input");
 	  parser.setStartTerm(*$2);
-	  (*$3)->renameVariables((*$3)->getId());
+	  (*$3)->_renameVariables((*$3)->getId());
 	  parser.setStartFeatures(*$3);
 	  free($3);
 	}
@@ -369,32 +372,46 @@ rules:
 	  DBUGPRT("rules"); 
 	};
 
-rule:
-	term TOKEN_RIGHTARROW terms_vector structure_statement
+pref_rule:
+	TOKEN_TRACE
 	{
-	  DBUGPRT("rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$1, *$3, $4 ? *$4 : statementsPtr());
-	  rule->addDefaults();
-	  parser.getGrammar().addRule(rule);
-	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm(*$1);
-	  }
-	  free($3);
-	  if ($4)
-	     free($4);
+	  DBUGPRT("pref_rule");
+	  headTrace = true;
 	}
 
-	|term TOKEN_RIGHTARROW structure_statement
+	| /* empty */ {
+	  DBUGPRT("pref_rule");
+	  headTrace = false;
+	};
+
+rule:
+	pref_rule term TOKEN_RIGHTARROW terms_vector structure_statement
 	{
-	  DBUGPRT("Rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$1, $3 ? *$3 : statementsPtr());
+	  DBUGPRT("rule");
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$2, *$4, $5 ? *$5 : statementsPtr());
 	  rule->addDefaults();
+	  rule->setTrace(headTrace);
 	  parser.getGrammar().addRule(rule);
 	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm(*$1);
+	    parser.getGrammar().setStartTerm(*$2);
 	  }
-	  if ($3)
-	    free($3);
+	  free($4);
+	  if ($5)
+	     free($5);
+	}
+
+	|pref_rule term TOKEN_RIGHTARROW structure_statement
+	{
+	  DBUGPRT("Rule");
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$2, $4 ? *$4 : statementsPtr());
+	  rule->addDefaults();
+	  rule->setTrace(headTrace);
+	  parser.getGrammar().addRule(rule);
+	  if (!parser.getGrammar().getStartTerm()){
+	    parser.getGrammar().setStartTerm(*$2);
+	  }
+	  if ($4)
+	    free($4);
 	};
 
 terms_vector:
@@ -448,7 +465,7 @@ term:
 	|TOKEN_VARIABLE
 	{ 
 	  DBUGPRT("term_id");
-	  unsigned int code=Vartable::strToInt(*$1);
+	  unsigned int code = Vartable::strToInt(*$1);
 	  $$ = new termPtr(Term::create(code));
 	  free($1);
 	}
@@ -544,7 +561,6 @@ statement:
 	  // <X, …> = <…>
 	  // <X, …> = Z
 	  if (((*$1)->isList()) && (((*$3)->isList())||((*$3)->isVariable()))) {
-	    FATAL_ERROR;	  
 	    }
 	  // ↓i = $X
 	  // ↓i = […]
@@ -1003,7 +1019,6 @@ expression_statement:
 	  $$ = new statementPtr(Statement::create(ruleslineno, 
 						  Statement::SEARCH, 
 						  *$3));
-	  FATAL_ERROR;
 	  free($3);
 	 };
 
@@ -1158,7 +1173,6 @@ feature:
 	|variable TOKEN_COLON feature_value
 	{
 	  DBUGPRT("feature");
-	  //FATAL_ERROR;
 	  $$ = new featurePtr(Feature::create(Feature::VARIABLE, *$1, *$3));
 	  free($1);
 	  free($3);

@@ -297,6 +297,11 @@ downDoubleArrow "⇓"
     return TOKEN_LEXICON;
   }
   
+  "@trace" {
+    DBUGPRT("TOKEN_TRACE\n");
+    return TOKEN_TRACE;
+  }
+  
   "attest" {
     DBUGPRT("TOKEN_ATTEST\n");
     return TOKEN_ATTEST;

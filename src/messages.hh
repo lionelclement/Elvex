@@ -21,6 +21,7 @@
 #define MESSAGES_H
 
 #include <iostream>
+#include <string>
 
 #ifdef TRACE_MALLOC
 #define NEW {std::cerr << "$$$ New " << __FILE__ << std::endl; }
@@ -33,9 +34,8 @@
 #define CERR_LINE  {std::cerr << __FILE__ << "(" << std::dec <<  __LINE__ << ")" << "<br>" << std::endl;}
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
-#define WARNING_MSG(msg)  {CERR_LINE; std::cerr << "WARNING: " << msg << std::endl;}
-#define FATAL_ERROR_MSG(msg)  {CERR_LINE; std::cerr << "FATAL ERROR" << std::endl; throw msg;}
-
-#define FATAL_ERROR {FATAL_ERROR_MSG("");}
+#define UNEXPECTED {CERR_LINE; throw "*** unexpected";}
+#define ERROR(msg) {std::ostringstream oss; oss << "*** " << msg; throw oss.str();}
+#define WARNING(msg) {std::cerr << "*** " << msg << std::endl;}
 
 #endif // MESSAGES_H

@@ -25,18 +25,18 @@
 class Serializable {
 
 private:
-	int serialHashCode;
-	virtual void makeSerialString(void) = 0;
+   int serialHashCode;
+   virtual void makeSerialString(void) = 0;
 
 protected:
-	std::string serialString;
+   std::string serialString;
 
 public:
-	Serializable();
-	virtual ~Serializable();
-	const std::string peekSerialString(void);
-	const size_t hashCode(void);
-	void resetSerial(void);
+   Serializable();
+   virtual ~Serializable();
+   const std::string peekSerialString(void);
+   const size_t hashCode(void);
+   void resetSerial(void);
 
 };
 

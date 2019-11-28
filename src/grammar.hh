@@ -29,42 +29,42 @@
 
 class Grammar {
 public:
-  typedef std::list<rulePtr> ruleList;
+   typedef std::list<rulePtr> ruleList;
 
 private:
-	std::set<unsigned int> terminals;
-	std::set<unsigned int> nonTerminals;
-	ruleList rules;
-	termPtr startTerm;
-	rulePtr firstRule;
-	unsigned int idMax;
+   std::set<unsigned int> terminals;
+   std::set<unsigned int> nonTerminals;
+   ruleList rules;
+   termPtr startTerm;
+   rulePtr firstRule;
+   unsigned int idMax;
 
 public:
-	Grammar(void);
-	~Grammar(void);
+   Grammar(void);
+   ~Grammar(void);
 
-	std::set<unsigned int> &getTerminals(void);
-	std::set<unsigned int> &getNonTerminals(void);
-	const ruleList &getRules(void) const;
-	termPtr getStartTerm(void) const;
-	rulePtr getFirstRule(void) const;
-	const unsigned int *getRefIdMax(void) const;
-	void setStartTerm(termPtr startTerm);
+   std::set<unsigned int> &getTerminals(void);
+   std::set<unsigned int> &getNonTerminals(void);
+   const ruleList &getRules(void) const;
+   termPtr getStartTerm(void) const;
+   rulePtr getFirstRule(void) const;
+   const unsigned int *getRefIdMax(void) const;
+   void setStartTerm(termPtr startTerm);
 
-	ruleList::const_iterator rulesBegin(void) const;
-	ruleList::const_iterator rulesEnd(void) const;
-	void addRule(rulePtr);
-	void addNewStartTerm(bool);
-	void addNonTerminal(unsigned int);
-	void addTerminal(unsigned int);
-	void print(std::ostream &) const;
-	bool isTerminal(termPtr) const;
-	bool isNonTerminal(termPtr) const;
-	void analyseTerms(class Parser &);
+   ruleList::const_iterator rulesBegin(void) const;
+   ruleList::const_iterator rulesEnd(void) const;
+   void addRule(rulePtr);
+   void addNewStartTerm(bool);
+   void addNonTerminal(unsigned int);
+   void addTerminal(unsigned int);
+   void print(std::ostream &) const;
+   bool isTerminal(termPtr) const;
+   bool isNonTerminal(termPtr) const;
+   void analyseTerms(class Parser &);
 #ifdef OUTPUT_XML
-	void toXML(xmlNodePtr);
+   void toXML(xmlNodePtr);
 #endif
-	std::list<rulePtr> *findRules(termPtr lhs);
+   std::list<rulePtr> *findRules(termPtr lhs);
 };
 
 #endif // GRAMMAR_H

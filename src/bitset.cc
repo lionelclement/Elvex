@@ -38,92 +38,92 @@ Bitset::map Bitset::bitsToStrTable;
  *                                                            *
  ************************************************************ */
 Bitset::Bitset(unsigned int data)
-		: std::bitset< MAXBITS>(data) {
-	NEW;
+      : std::bitset< MAXBITS>(data) {
+   NEW;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 Bitset::Bitset(std::bitset< MAXBITS>& data)
-		: std::bitset< MAXBITS>(data) {
-	NEW;
+      : std::bitset< MAXBITS>(data) {
+   NEW;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 Bitset::Bitset(bitsetPtr bitset)
-		: std::bitset< MAXBITS>(*bitset) {
-	NEW;
+      : std::bitset< MAXBITS>(*bitset) {
+   NEW;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 Bitset::~Bitset() {
-	DELETE;
+   DELETE;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 bitsetPtr Bitset::create(unsigned int data) {
-	return bitsetPtr(new Bitset(data));
+   return bitsetPtr(new Bitset(data));
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 bitsetPtr Bitset::create(std::bitset< MAXBITS> data) {
-	return bitsetPtr(new Bitset(data));
+   return bitsetPtr(new Bitset(data));
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 bitsetPtr Bitset::create(bitsetPtr bs) {
-	return bitsetPtr(new Bitset(bs));
+   return bitsetPtr(new Bitset(bs));
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 const std::string Bitset::toString() const {
-	std::stringstream s;
-	size_t c = this->count();
-	size_t sz = this->size();
-	bool first = true;
-	for (size_t i = 0; i < sz && c > 0; ++i) {
-		if ((*this)[i]) {
-			--c;
-			if (first)
-				first = false;
-			else
-				s << '|';
-			s << bitsToStrTable[i];
-		}
-	}
-	return s.str();
+   std::stringstream s;
+   size_t c = this->count();
+   size_t sz = this->size();
+   bool first = true;
+   for (size_t i = 0; i < sz && c > 0; ++i) {
+      if ((*this)[i]) {
+         --c;
+         if (first)
+            first = false;
+         else
+            s << '|';
+         s << bitsToStrTable[i];
+      }
+   }
+   return s.str();
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 void Bitset::makeSerialString() {
-	serialString = std::string();
-	std::stringstream s;
-	size_t c = this->count();
-	size_t sz = this->size();
-	for (size_t i = 0; i < sz && c > 0; ++i) {
-		if ((*this)[i]) {
-			--c;
-			serialString += std::to_string(i);
-			if (c > 0)
-				serialString += ',';
-			//std::to_string(i);
-		}
-	}
+   serialString = std::string();
+   std::stringstream s;
+   size_t c = this->count();
+   size_t sz = this->size();
+   for (size_t i = 0; i < sz && c > 0; ++i) {
+      if ((*this)[i]) {
+         --c;
+         serialString += std::to_string(i);
+         if (c > 0)
+            serialString += ',';
+         //std::to_string(i);
+      }
+   }
 }
 
 #ifdef OUTPUT_XML
@@ -132,16 +132,16 @@ void Bitset::makeSerialString() {
  ************************************************************ */
 void Bitset::toXML(xmlNodePtr nodeRoot)
 {
-	xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ALT", NULL);
-	map::const_iterator varTableIt;
-	size_t c=this->count();
-	size_t sz=this->size();
-	for(unsigned int i = 0; i < sz && c > 0; ++i)
-	if (this->test(i)) {
-		--c;
-		varTableIt = bitsToStrTable.find(i);
-		if (varTableIt != bitsToStrTable.end())
-		xmlNewChild(f, NULL, (const xmlChar*)"OPT", (const xmlChar*)varTableIt->second.c_str());
-	}
+   xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ALT", NULL);
+   map::const_iterator varTableIt;
+   size_t c=this->count();
+   size_t sz=this->size();
+   for(unsigned int i = 0; i < sz && c > 0; ++i)
+   if (this->test(i)) {
+      --c;
+      varTableIt = bitsToStrTable.find(i);
+      if (varTableIt != bitsToStrTable.end())
+      xmlNewChild(f, NULL, (const xmlChar*)"OPT", (const xmlChar*)varTableIt->second.c_str());
+   }
 }
 #endif

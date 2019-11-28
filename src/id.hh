@@ -25,12 +25,12 @@
 class Id {
 
 private:
-	static size_t uniqId;
-	size_t id;
+   static size_t uniqId;
+   size_t id;
 
 public:
-	Id(size_t id);
-	size_t getId(void) const;
+   Id(size_t id);
+   size_t getId(void) const;
 
 };
 

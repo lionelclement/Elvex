@@ -25,106 +25,106 @@
  *
  ************************************************** */
 Entries::Entries(void) {
-	NEW;
+   NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entries::Entries(entryPtr entry) {
-	this->entries.insert(this->entries.begin(), entry);
-	NEW;
+   this->entries.insert(this->entries.begin(), entry);
+   NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entries::Entries(const list &entries) {
-	this->entries = entries;
-	NEW;
+   this->entries = entries;
+   NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entries::Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string form) {
-	this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
-	NEW;
+   this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
+   NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entries::~Entries() {
-	DELETE;
-	for (list::iterator i = entries.begin(); i != entries.end(); i++) {
-		entryPtr tmp = *i;
-		if (tmp)
-			tmp.reset();
-	}
+   DELETE;
+   for (list::iterator i = entries.begin(); i != entries.end(); i++) {
+      entryPtr tmp = *i;
+      if (tmp)
+         tmp.reset();
+   }
 }
 
 /* **************************************************
  *
  ************************************************** */
 entriesPtr Entries::create(void) {
-	return entriesPtr(new Entries());
+   return entriesPtr(new Entries());
 }
 
 /* **************************************************
  *
  ************************************************** */
 entriesPtr Entries::create(entryPtr entry) {
-	return entriesPtr(new Entries(entry));
+   return entriesPtr(new Entries(entry));
 }
 
 /* **************************************************
  *
  ************************************************** */
 entriesPtr Entries::create(const list &entries) {
-	return entriesPtr(new Entries(entries));
+   return entriesPtr(new Entries(entries));
 }
 
 /* **************************************************
  *
  ************************************************** */
 entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string form) {
-	return entriesPtr(new Entries(codePos, codeLemma, form));
+   return entriesPtr(new Entries(codePos, codeLemma, form));
 }
 
 /* **************************************************
  *
  ************************************************** */
 const size_t Entries::size(void) const {
-	return this->entries.size();
+   return this->entries.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entries::list::const_iterator Entries::begin(void) const {
-	return this->entries.begin();
+   return this->entries.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entries::list::const_iterator Entries::end(void) const {
-	return this->entries.end();
+   return this->entries.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Entries::add(entryPtr entry) {
-	this->entries.push_back(entry);
+   this->entries.push_back(entry);
 }
 
 /* **************************************************
  *
  ************************************************** */
 entryPtr Entries::get(unsigned int i) const {
-	return this->entries.at(i);
+   return this->entries.at(i);
 }
 
 /* **************************************************
@@ -141,11 +141,11 @@ entryPtr Entries::get(unsigned int i) const {
 void
 Entries::toXML(xmlNodePtr nodeRoot) const
 {
-	xmlNodePtr node=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRIES", NULL);
-	for (list::const_iterator i=entries.begin();
-			i!=entries.end();
-			++i)
-	(*i)->toXML(node);
+   xmlNodePtr node=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRIES", NULL);
+   for (list::const_iterator i=entries.begin();
+         i!=entries.end();
+         ++i)
+   (*i)->toXML(node);
 }
 #endif
 
@@ -153,6 +153,6 @@ Entries::toXML(xmlNodePtr nodeRoot) const
  *
  ************************************************** */
 void Entries::print(std::ostream& out) const {
-	for (list::const_iterator i = entries.begin(); i != entries.end(); ++i)
-		(*i)->print(out);
+   for (list::const_iterator i = entries.begin(); i != entries.end(); ++i)
+      (*i)->print(out);
 }
