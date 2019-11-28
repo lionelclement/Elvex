@@ -31,6 +31,8 @@ CXXFLAGS = -g -std=c++11 -O3 -Wall -Wno-unused-label -Wno-unneeded-internal-decl
 bin_PROGRAMS = elvex elvexdebug elvexbuildlexicon elvexpostedition
 
 elvex_SOURCES=\
+rulesyacc.cc\
+ruleslex.cc\
 bitset.cc\
 compact-lexicon-buffer.cc\
 compact-lexicon-fsa.cc\
@@ -59,8 +61,6 @@ memoization-value.cc\
 node.cc\
 parser.cc\
 rule.cc\
-ruleslex.cc\
-rulesyacc.cc\
 serializable.cc\
 statement.cc\
 statements.cc\
@@ -83,6 +83,8 @@ elvex_CXXFLAGS = -std=c++11 -O5 -Wall $(elvex_OPTIONS)
 elvex_LDADD =
 
 elvexdebug_SOURCES =\
+rulesyacc.cc\
+ruleslex.cc\
 bitset.cc\
 compact-lexicon-buffer.cc\
 compact-lexicon-fsa.cc\
@@ -111,8 +113,6 @@ memoization-value.cc\
 node.cc\
 parser.cc\
 rule.cc\
-ruleslex.cc\
-rulesyacc.cc\
 serializable.cc\
 statement.cc\
 statements.cc\
@@ -147,6 +147,8 @@ elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` $(elvexdebug_O
 elvexdebug_LDADD = -lxml2
 
 elvexbuildlexicon_SOURCES = \
+rulesyacc.cc\
+ruleslex.cc\
 bitset.cc\
 buildlexicon.cc\
 compact-lexicon-buffer.cc\
@@ -173,8 +175,6 @@ listfeatures.cc\
 node.cc\
 parser.cc\
 rule.cc\
-ruleslex.cc\
-rulesyacc.cc\
 serializable.cc\
 statement.cc\
 statements.cc\
