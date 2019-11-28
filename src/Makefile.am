@@ -72,7 +72,6 @@ variableflag.cc\
 vartable.cc
 
 elvex_OPTIONS =
-#elvex_OPTIONS += -DTRACE_MALLOC
 elvex_OPTIONS += -DMEMOIZATION
 elvex_OPTIONS += -DMAXLENGTH=1000
 elvex_OPTIONS += -DMAXUSAGES=10000
@@ -142,7 +141,7 @@ elvexdebug_OPTIONS += -DMAXLENGTH=10000
 elvexdebug_OPTIONS += -DMAXUSAGES=10000
 elvexdebug_OPTIONS += -DMAXCARDINAL=1000000
 elvexdebug_OPTIONS += -DMAXATTEMPTS=100
-#elvexdebug_OPTIONS += -DMAXBITS=512
+elvexdebug_OPTIONS += -DMAXBITS=512
 
 elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` $(elvexdebug_OPTIONS)
 elvexdebug_LDADD = -lxml2
