@@ -57,7 +57,7 @@ Parser parser;
  ************************************************** */
 void usage() {
    std::cerr
-         << "Usage: buildlexiconmain [global-option] <build|consult|test> <input>\n\
+         << "Usage: buildlexiconmain [global-option] <build|consult> <input>\n\
 \tGlobal options:\n\
 \t-h|--help                              print this\n\
 \t-v|--version                           print version\n\
@@ -114,8 +114,6 @@ int main(int argn, char** argv) {
                   mode = Buildlexicon::BUILD;
                else if (!strcmp(argv[arg], "consult"))
                   mode = Buildlexicon::CONSULT;
-               else if (!strcmp(argv[arg], "test"))
-                  mode = Buildlexicon::TEST;
                else
                   inputFileName = argv[arg];
             }
