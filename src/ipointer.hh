@@ -20,7 +20,7 @@
 #ifndef IPOINTER_H
 #define IPOINTER_H
 
-#include <memory>
+#include <memory> 
 
 typedef std::shared_ptr<class Bitset> bitsetPtr;
 typedef std::shared_ptr<class Entries> entriesPtr;
