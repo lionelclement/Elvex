@@ -482,6 +482,12 @@ void CompactLexicon::buildFormEntries(Lexicon &lexicon) {
          std::cerr << ']' << "\r";
       }
    }
+         std::cerr << " 100%[";
+         int i = 0;
+         for (; i <= 40; i++)
+            std::cerr << '#';
+         std::cerr << ']' << std::endl;
+
 }
 
 /* **************************************************
