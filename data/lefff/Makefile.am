@@ -52,7 +52,7 @@ all: lefff.pattern lefff.fsa
 	@echo "unzip $@"
 	@bunzip2 -c $< > $@
 
-%.manual.pattern: %..manual.pattern.bz2
+%.manual.pattern: %.manual.pattern.bz2
 	@echo "unzip $@"
 	@bunzip2 -c $< > $@
 
