@@ -26,7 +26,7 @@ all: lefff.pattern lefff.fsa
 
 %.fsa: %.lefff %.manual.pattern
 	@echo "build $@ with $^"
-	$(BUILDLEXICON) -compactLexiconDirectory . -compactLexiconFile $* -patternFile $*.manual.pattern build $<
+	@$(BUILDLEXICON) -compactLexiconDirectory . -compactLexiconFile $* -patternFile $*.manual.pattern build $<
 
 %.form: %.lefff
 	@echo "build $@ with $^"
@@ -58,6 +58,6 @@ all: lefff.pattern lefff.fsa
 
 %.pattern: %.form %.pos %.lemma2 %.morpho
 	@echo "build $@ with $^"
-	paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	PRED:_\3]/' | grep '^\(n\|v\|adj\|adv\)	' | grep '_[[:alpha:]][[:alpha:]]*\]' | sed 's/\]//' | sort -u > $@
-	paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	/' | grep -v '^\(n\|v\|adj\|adv\)	' | sort -u >> $@
+	@paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	PRED:_\3]/' | grep '^\(n\|v\|adj\|adv\)	' | grep '_[[:alpha:]][[:alpha:]]*\]' | sed 's/\]//' | sort -u > $@
+	@paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	/' | grep -v '^\(n\|v\|adj\|adv\)	' | sort -u >> $@
 
