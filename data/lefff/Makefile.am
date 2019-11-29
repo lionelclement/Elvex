@@ -17,7 +17,7 @@
 #
 ################################################## #
 
-SUFFIXES: .fsa .tbl .pattern .lefff.bz2
+SUFFIXES: .fsa .tbl .pattern .lefff.bz2 .manual.pattern .manual.pattern.bz2
 
 CLEANFILES = lefff.fsa lefff.tbl
 BUILDLEXICON = ../../src/elvexbuildlexicon
@@ -49,6 +49,10 @@ all: lefff.pattern lefff.fsa
 	@perl completeLefff.pl $*.lefff $*.pattern > $@
 
 %.lefff: %.lefff.bz2
+	@echo "unzip $@"
+	@bunzip2 -c $< > $@
+
+%.manual.pattern: %..manual.pattern.bz2
 	@echo "unzip $@"
 	@bunzip2 -c $< > $@
 
