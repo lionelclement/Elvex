@@ -31,7 +31,7 @@ The language of **Elvex** is not under licence (it belongs to the public domain)
 What you can't do with Elvex
 -----------------------------
 
-**Elvex** will translate your request in Natural Language but will not be in the position to understand the meaning of it.
+**Elvex** can write a text that sounds natural, but does not really understand what it is saying.
 
 What you can do with Elvex
 -----------------------------
