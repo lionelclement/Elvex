@@ -105,7 +105,7 @@
 // PONCT
 %token TOKEN_DASH
 %token TOKEN_AROBASE
-%token TOKEN_SEMI TOKEN_COLON TOKEN_DOUBLECOLON TOKEN_COMMA
+%token TOKEN_SEMI TOKEN_DOT TOKEN_COLON TOKEN_DOUBLECOLON TOKEN_COMMA
 
 // KEYWORDS
 %token TOKEN_GRAMMAR TOKEN_INPUT TOKEN_LEXICON
@@ -1042,7 +1042,7 @@ down:
 	};
 
 dash_statement:
-	TOKEN_DASH TOKEN_INTEGER TOKEN_COLON TOKEN_INTEGER
+	TOKEN_DASH TOKEN_INTEGER TOKEN_DOT TOKEN_INTEGER
 	{ 
 	  DBUGPRT("dash_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DASH, (unsigned int)($2-1), (unsigned int)($4-1))); 

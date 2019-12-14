@@ -186,7 +186,7 @@ variableflag.cc\
 vartable.cc 
 
 elvexbuildlexicon_OPTIONS =
-#elvexbuildlexicon_OPTIONS += -DTRACE_DIFF
+elvexbuildlexicon_OPTIONS += -DTRACE_DIFF
 elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O5 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
 elvexbuildlexicon_LDADD =
 

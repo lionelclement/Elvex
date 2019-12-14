@@ -628,7 +628,7 @@ void Statement::print(std::ostream &outStream, unsigned int tabulation, int yetC
       case DASH:
          outStream << '#' << getFirst() + 1;
          if (getSecond() != UINT_MAX) {
-            outStream << ":" << getSecond() + 1;
+            outStream << "." << getSecond() + 1;
          }
          break;
       case DOWN:
@@ -823,7 +823,7 @@ void Statement::makeSerialString() {
       case DASH:
          serialString = '#' + std::to_string(getFirst() + 1);
          if (getSecond() != UINT_MAX)
-            serialString += ":" + std::to_string(getSecond() + 1);
+            serialString += "." + std::to_string(getSecond() + 1);
          break;
       case DOWN:
          serialString = "↓" + std::to_string(getFirst() + 1);

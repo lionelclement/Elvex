@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <climits>
 #include <stack>
 #include <string>
 #include "parser.hh"

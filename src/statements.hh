@@ -21,6 +21,7 @@
 #define STATEMENTS_H
 
 #include <list>
+#include <vector>
 #include "flags.hh"
 #include "id.hh"
 #include "serializable.hh"

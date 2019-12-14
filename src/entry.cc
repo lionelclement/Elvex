@@ -21,6 +21,7 @@
 #include <iterator>
 #include <iostream>
 #include <string>
+#include <climits>
 
 #include "messages.hh"
 #include "entry.hh"

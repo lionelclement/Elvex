@@ -17,23 +17,23 @@
  *
  ************************************************** */
 
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sstream>
+//#include <sys/stat.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
+// #include <sstream>
 
-#include <iostream>
-#include <cstdlib>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <map>
-#include <cmath>
-#include <sys/stat.h>
+// #include <iostream>
+// #include <cstdlib>
+// #include <fstream>
+// #include <sstream>
+// #include <string>
+// #include <map>
+// #include <cmath>
+// //#include <sys/stat.h>
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+// #include <stdio.h>
+// #include <stdlib.h>
 
 #include "buildlexicon.hh"
 #include "compact-lexicon.hh"

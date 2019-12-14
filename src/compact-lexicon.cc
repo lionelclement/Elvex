@@ -17,26 +17,27 @@
  *
  ************************************************** */
 
-#include <iostream>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
+//#include <iostream>
+//#include <sys/types.h>
+//#include <sys/stat.h>
+//#include <fcntl.h>
 
 #include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include <string.h>
-#include <sstream>
+//#include <sstream>
 
-#include <iostream>
-#include <cstdlib>
-#include <fstream>
-#include <sstream>
-#include <string>
+// #include <iostream>
+// #include <cstdlib>
+// #include <fstream>
+// #include <sstream>
+// #include <string>
 
-#include <iostream>     // std::cout
-#include <fstream>
-#include <sstream>
+// #include <iostream>     // std::cout
+// #include <fstream>
+// #include <sstream>
+#include <cmath>
 
 #include "compact-lexicon.hh"
 #include "compact-lexicon-tree.hh"
@@ -320,7 +321,7 @@ void CompactLexicon::buildPredEntries(Lexicon &lexicon) {
    for (Lexicon::Unordered_map::const_iterator it = lexicon.unordered_map.begin(); it != lexicon.unordered_map.end(); ++it) {
       offset = ftell(dataFile);
       compactLexicon->add(it->first.c_str(), offset);
-      for (std::list<const std::string>::const_iterator it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
+      for (std::list<std::string>::const_iterator it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
          std::stringstream fsStream;
          fsStream << '[' << *it2 << "]";
          if (parser._parseBuffer("#", fsStream.str().c_str(), "features")) {
@@ -406,11 +407,11 @@ void CompactLexicon::buildFormEntries(Lexicon &lexicon) {
       stringStream << ']';
       std::string output = stringStream.str();
 
-      std::list<const std::string> *o = lexicon.find(input);
+      std::list<std::string> *o = lexicon.find(input);
       if (o->size()) {
          //features->flatPrint(std::cerr);
 
-         for (std::list<const std::string>::const_iterator it = o->begin(); it != o->end(); ++it) {
+         for (std::list<std::string>::const_iterator it = o->cbegin(); it != o->cend(); ++it) {
 
             char predicatePattern[MAXSTRING];
             strcpy(predicatePattern, it->c_str());

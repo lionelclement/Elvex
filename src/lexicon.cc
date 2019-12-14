@@ -25,7 +25,7 @@
 #include <sstream>
 #include "messages.hh"
 
-std::list<const std::string> *Lexicon::emptyList = new std::list<const std::string>();
+std::list<std::string> *Lexicon::emptyList = new std::list<std::string>();
 
 /* **************************************************
  *
@@ -42,7 +42,7 @@ void Lexicon::add(std::string key, const std::string value) {
    if (it != unordered_map.end())
       (*it).second->push_back(value);
    else {
-      std::list<const std::string> *list = new std::list<const std::string>();
+      std::list<std::string> *list = new std::list<std::string>();
       list->push_back(value);
       unordered_map[key] = list;
    }
@@ -51,7 +51,7 @@ void Lexicon::add(std::string key, const std::string value) {
 /* **************************************************
  *
  ************************************************** */
-std::list<const std::string> *Lexicon::find(const std::string key) {
+std::list<std::string> *Lexicon::find(const std::string key) {
    Unordered_map::const_iterator it = unordered_map.find(key);
    if (it != unordered_map.end()) {
       return (*it).second;

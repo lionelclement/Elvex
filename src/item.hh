@@ -20,6 +20,7 @@
 #ifndef ITEM_H
 #define ITEM_H
 
+#include <climits>
 #include <set>
 #include <vector>
 #include <unordered_map>

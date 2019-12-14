@@ -1080,8 +1080,8 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
 #endif
 
                                  if (trace && it->getTrace()) {
-                                    std::cout << "*** Shift \n";
-                                    it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
+                                    std::cout << "*** Shift " << entry->getForm() << std::endl;;
+				    it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
                                     std::cout << " ... ";
                                     it->getRule()->print(std::cout, it->getIndex(), false, false);
                                     std::cout << std::endl;

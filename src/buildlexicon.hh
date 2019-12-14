@@ -27,7 +27,6 @@ namespace Buildlexicon {
       NONE
    };
 
-}
-;
+};
 
 #endif /* BUILDLEXICON_HH_ */

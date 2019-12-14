@@ -20,6 +20,7 @@
 #ifndef RULE_H
 #define RULE_H
 
+#include <climits>
 #include <string>
 #include <vector>
 #ifdef OUTPUT_XML

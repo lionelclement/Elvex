@@ -227,6 +227,11 @@ downDoubleArrow "⇓"
     return TOKEN_COLON;
   }
   
+  \. {
+    DBUGPRT("TOKEN_DOT\n");
+    return TOKEN_DOT;
+  }
+  
   \# {
     DBUGPRT("TOKEN_DASH");
     return TOKEN_DASH;
@@ -382,9 +387,7 @@ downDoubleArrow "⇓"
     return TOKEN_INSET;
   }
   
-
-
-"," {
+  "," {
     DBUGPRT("TOKEN_COMMA\n");
     return TOKEN_COMMA;
   }
@@ -464,9 +467,9 @@ downDoubleArrow "⇓"
     return TOKEN_INTEGER;
   }
   
-  {double} {
+  d{double} {
     DBUGPRTARG("TOKEN_DOUBLE ", yytext);
-    sscanf(yytext, "%lf", &ruleslval.double_slot);
+    sscanf(yytext+1, "%lf", &ruleslval.double_slot);
     return TOKEN_DOUBLE;
   }
   
