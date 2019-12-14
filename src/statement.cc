@@ -2424,7 +2424,7 @@ void Statement::stmPrintln(itemPtr item, Parser &parser, Synthesizer *synthesize
 /* **************************************************
  *
  ************************************************** */
-void Statement::_renameVariables(size_t i) {
+void Statement::renameVariables(size_t i) {
    switch (this->op) {
       case VARIABLE: {
          std::string str = getBits()->toString() + "_" + std::to_string(i);
@@ -2458,21 +2458,21 @@ void Statement::_renameVariables(size_t i) {
       case THENELSE:
       case IN:
          if (lhs)
-            lhs->_renameVariables(i);
+            lhs->renameVariables(i);
          if (rhs)
-            rhs->_renameVariables(i);
+            rhs->renameVariables(i);
          break;
       case FOREACH:
          break;
       case FEATURES:
       case GUARD:
-         getFeatures()->_renameVariables(i);
+         getFeatures()->renameVariables(i);
          break;
       case LIST:
-         getList()->_renameVariables(i);
+         getList()->renameVariables(i);
          break;
       case STMS:
-         getStatements()->_renameVariables(i);
+         getStatements()->renameVariables(i);
          break;
    }
 }

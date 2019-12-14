@@ -519,10 +519,10 @@ void Features::subFlags(const std::bitset<FLAGS>& flags) {
 /* **************************************************
  *
  ************************************************** */
-bool Features::_renameVariables(size_t i) {
+bool Features::renameVariables(size_t i) {
    bool effect = false;
    for (Features::list::iterator feature = features.begin(); feature != features.end(); ++feature) {
-      if ((*feature)->_renameVariables(i))
+      if ((*feature)->renameVariables(i))
          effect = true;
    }
    if (effect)

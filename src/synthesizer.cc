@@ -1037,12 +1037,12 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                        bool effect = false;
                                        it->getEnvironment()->replaceVariables(resultFeatures, effect);
                                     }
-                                    resultFeatures->_renameVariables(entry->getId());
+                                    resultFeatures->renameVariables(entry->getId());
                                  }
 
                                  it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(), resultFeatures);
                                  if (entryStatements)
-                                    entryStatements->_renameVariables(entry->getId());
+                                    entryStatements->renameVariables(entry->getId());
                                  entryPtr word;
                                  if (stage == 2)
                                     word = Entry::create(entry->getCode(), UINT_MAX, form, resultFeatures);

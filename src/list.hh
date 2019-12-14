@@ -78,7 +78,7 @@ public:
    void flatPrint(std::ostream &, bool par) const;
    bool buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root);
    void deleteAnonymousVariables(void);
-   bool _renameVariables(size_t);
+   bool renameVariables(size_t);
    void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, statementPtr variable, statementPtr body);
 #ifdef OUTPUT_XML
    void toXML(xmlNodePtr);

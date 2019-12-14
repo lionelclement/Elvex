@@ -144,11 +144,11 @@ statementsPtr Statements::clone(const std::bitset<Flags::FLAGS> &protectedFlags)
 /* **************************************************
  *
  ************************************************** */
-void Statements::_renameVariables(size_t i) {
+void Statements::renameVariables(size_t i) {
    if (guard)
-      guard->_renameVariables(i);
+      guard->renameVariables(i);
    for (list::const_iterator j = this->statements.begin(); j != this->statements.end(); ++j)
-      (*j)->_renameVariables(i);
+      (*j)->renameVariables(i);
 }
 
 /* **************************************************

@@ -825,6 +825,6 @@ bool Item::equal_to::operator()(itemPtr const i1, itemPtr const i2) const {
 /* **************************************************
  *
  ************************************************** */
-void Item::_renameVariables(size_t k) {
-   this->statements->_renameVariables(k);
+void Item::renameVariables(size_t k) {
+   this->statements->renameVariables(k);
 }

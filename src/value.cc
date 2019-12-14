@@ -795,7 +795,7 @@ void Value::deleteAnonymousVariables() {
 /* **************************************************
  *
  ************************************************** */
-bool Value::_renameVariables(size_t i) {
+bool Value::renameVariables(size_t i) {
    bool effect = false;
    switch (type) {
       case CONSTANT:
@@ -817,12 +817,12 @@ bool Value::_renameVariables(size_t i) {
          break;
       case FEATURES:
          if (getFeatures())
-            if (getFeatures()->_renameVariables(i))
+            if (getFeatures()->renameVariables(i))
                effect = true;
          break;
       case LIST:
          if (getList())
-            if (getList()->_renameVariables(i))
+            if (getList()->renameVariables(i))
                effect = true;
          break;
    }

@@ -71,7 +71,7 @@ public:
 #ifdef OUTPUT_XML
    void toXML(xmlNodePtr nodeRoot);
 #endif
-   bool _renameVariables(size_t);
+   bool renameVariables(size_t);
    void enable(statementPtr, itemPtr, class Synthesizer *synthesizer, bool &, bool);
    bool findVariable(const bitsetPtr) const;
    bool containsVariable(void);

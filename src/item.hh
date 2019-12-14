@@ -130,7 +130,7 @@ public:
 
    void print(std::ostream &) const;
    itemPtr clone(const std::bitset<FLAGS> &savedFlags);
-   void _renameVariables(size_t);
+   void renameVariables(size_t);
    bool isCompleted(void);
    bool isStarted(void);
    void successor(itemSetPtr, class Synthesizer *, bool &);

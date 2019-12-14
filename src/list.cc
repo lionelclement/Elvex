@@ -384,20 +384,20 @@ void List::deleteAnonymousVariables() {
 /* **************************************************
  *
  ************************************************** */
-bool List::_renameVariables(size_t i) {
+bool List::renameVariables(size_t i) {
    bool effect = false;
    switch (type) {
       case NIL:
          break;
       case ATOM:
          if (value)
-            if (value->_renameVariables(i))
+            if (value->renameVariables(i))
                effect = true;
          break;
       case PAIRP:
-         if (pairp.car->_renameVariables(i))
+         if (pairp.car->renameVariables(i))
             effect = true;
-         if (pairp.cdr->_renameVariables(i))
+         if (pairp.cdr->renameVariables(i))
             effect = true;
          break;
    }

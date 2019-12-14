@@ -180,7 +180,7 @@ public:
    void stmIf(itemPtr item, class Parser &parser, class Synthesizer *synthesizer);
    void stmPrint(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
    void stmPrintln(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
-   void _renameVariables(size_t);
+   void renameVariables(size_t);
    void enable(statementPtr root, itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
    void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer);
    void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);

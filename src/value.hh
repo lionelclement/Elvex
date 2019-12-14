@@ -94,7 +94,7 @@ public:
    bool subsumes(valuePtr, environmentPtr);
    valuePtr clone(void);
    void deleteAnonymousVariables(void);
-   bool _renameVariables(size_t);
+   bool renameVariables(size_t);
    bool isNil(void) const;
    bool isFalse(void) const;
    bool isTrue(void) const;

@@ -48,7 +48,7 @@ public:
    list::const_iterator end(void) const;
 
    void addStatement(statementPtr);
-   void _renameVariables(size_t);
+   void renameVariables(size_t);
    void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
    statementsPtr clone(const std::bitset<Flags::FLAGS> &savedFlags);
    void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer);

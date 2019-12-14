@@ -78,7 +78,7 @@ public:
    void subFlags(const std::bitset<FLAGS> &);
    unsigned int assignPred(void);
    std::string assignForm(void);
-   bool _renameVariables(size_t);
+   bool renameVariables(size_t);
    bool isNil(void) const;
    bool isBottom(void) const;
    void enable(statementPtr, itemPtr, class Synthesizer *synthesizer, bool &, bool);

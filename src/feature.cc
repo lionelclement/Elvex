@@ -244,13 +244,13 @@ featurePtr Feature::clone() const {
 /* **************************************************
  *
  ************************************************** */
-bool Feature::_renameVariables(size_t i) {
+bool Feature::renameVariables(size_t i) {
    bool effect = false;
    switch (type) {
       case Feature::PRED:
       case Feature::CONSTANT:
          if (value)
-            if (value->_renameVariables(i))
+            if (value->renameVariables(i))
                effect = true;
          break;
       case Feature::FORM:
@@ -260,7 +260,7 @@ bool Feature::_renameVariables(size_t i) {
          bitsetPtr variableBits = Vartable::varTableAdd(str);
          attribute = variableBits;
          if (value)
-            value->_renameVariables(i);
+            value->renameVariables(i);
          resetSerial();
          effect = true;
       }

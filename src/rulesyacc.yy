@@ -180,7 +180,7 @@ begin:
 	|TOKEN_INPUT term features {
 	  DBUGPRT("begin input");
 	  parser.setStartTerm(*$2);
-	  (*$3)->_renameVariables((*$3)->getId());
+	  (*$3)->renameVariables((*$3)->getId());
 	  parser.setStartFeatures(*$3);
 	  free($3);
 	}
