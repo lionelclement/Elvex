@@ -17,51 +17,44 @@
 #
 ################################################## #
 
-SUFFIXES: .fsa .tbl .pattern .lefff.bz2 .manual.pattern .manual.pattern.bz2
-
 CLEANFILES = lefff.fsa lefff.tbl
 BUILDLEXICON = ../../src/elvexbuildlexicon
 
-all: lefff.pattern lefff.fsa
+all: lefff.fsa
 
-%.fsa: %.lefff %.manual.pattern
-	@echo "build $@ with $^"
-	@$(BUILDLEXICON) -compactLexiconDirectory . -compactLexiconFile $* -patternFile $*.manual.pattern build $<
+%.fsa: %.formPosLemmaFeatures %.pattern
+	@echo "build $@ from $*.formPosLemmaFeatures $*.pattern"
+	$(BUILDLEXICON) -compactLexiconDirectory . -compactLexiconFile $* -patternFile $*.pattern -morphoFile $*.formPosLemmaFeatures build
 
-%.form: %.lefff
-	@echo "build $@ with $^"
+%.morpho: %.bz2 %.slang.bz2
+	@echo "build $@ from $^"
+	@bunzip2 -c $^ |sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' | sort -u > $@
+
+%.formPosLemmaFeatures: %.form %.pos %.lemma %.features
+	@echo "build $@ from $^"
+	@paste $*.form $*.pos $*.lemma $*.features > $@
+
+%.form: %.morpho
+	@echo "build $@ from $^"
 	@grep -v '^//' < $< | cut -f1 > $@
 
-%.pos: %.lefff
-	@echo "build $@ with $^"
+%.pos: %.morpho
+	@echo "build $@ from $^"
 	@grep -v '^//' < $< | cut -f2 > $@
 
-%.lemma: %.lefff
-	@echo "build $@ with $^"
-	@grep -v '^//' < $< | cut -f3 > $@
+%.lemma: %.morpho
+	@echo "build $@ from $^"
+	@cut -f3 < $< | tr '\-/\.' '____' > $@
 
-%.morpho: %.lefff
-	@echo "build $@ with $^"
-	@grep -v '^//' < $< | cut -f4 > $@
+%.features: %.morpho
+	@echo "build $@ from $^"
+	@cut -f4 < $< | tr '\-/\.' '____' > $@
 
-%.complete: %.lefff %.pattern completeLefff.pl 
-	@echo "build $@ with $^"
-	@perl completeLefff.pl $*.lefff $*.pattern > $@
+%.pattern: %.general.pattern.bz2 %.slang.pattern.bz2 %.phaseology.pattern.bz2 %.weather.pattern.bz2
+	@echo "build $@ from $^"
+	@bunzip2 -c $^ | sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' | tr '\-/\.' '____' | sort -u > $@
 
-%.lefff: %.lefff.bz2
-	@echo "unzip $@"
-	@bunzip2 -c $< > $@
-
-%.manual.pattern: %.manual.pattern.bz2
-	@echo "unzip $@"
-	@bunzip2 -c $< > $@
-
-%.lemma2: %.lemma
-	@echo "build $@ with $^"
-	@tr '-' '_' < $< > $@
-
-%.pattern: %.form %.pos %.lemma2 %.morpho
-	@echo "build $@ with $^"
-	@paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	PRED:_\3]/' | grep '^\(n\|v\|adj\|adv\)	' | grep '_[[:alpha:]][[:alpha:]]*\]' | sed 's/\]//' | sort -u > $@
-	@paste $*.form $*.pos $*.lemma2 $*.morpho | grep -v '#' | sed 's/^\([^	]*\)	\([^	]*\)	\([^	]*\)	\([^	]*\)/\2	\3	\3	/' | grep -v '^\(n\|v\|adj\|adv\)	' | sort -u >> $@
-
+%.auto.pattern: %.lemma %.pos
+	@echo "build $@ from $^"
+	@paste $*.lemma $*.pos | sed 's/^\([^	]*\)	\([^	]*\)/\1#\2	\1	PRED:_\1/' | grep '#\(n\|pn\|v\|adj\|adv\)	' | sort -u > $@
+	@paste $*.lemma $*.pos | sed 's/^\([^	]*\)Je ce	\([^	]*\)/\1#\2	\1	/' | grep -v '#\(n\|pn\|v\|adj\|adv\)	' | sort -u >> $@
