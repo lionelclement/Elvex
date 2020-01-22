@@ -1,0 +1,184 @@
+/* **************************************************
+ * noun
+ ************************************************** */
+// Nom et déterminant
+// det:[number:sg|pl, gender:ms|fm, def:yes|no, poss:yes|no, persotextoss:one|two|three, numberPoss:sg|pl, part:yes|no, dem:yes|no]
+// detNum
+// detForm
+
+//***
+//text [PRED:_voiture, number:sg, def:yes]
+// ***
+//text [PRED:_voiture, number:sg, def:yes, language_register:slang]
+
+//text [PRED:_voiture, number:sg, def:no]
+//text [PRED:_voiture, number:sg, dem:yes]
+//text [PRED:_voiture, number:sg, poss:yes, numberPoss:sg, persoPoss:two]
+
+//text [PRED:_voiture, number:pl, detNum:[PRED:_num, value:15000]]
+//text [PRED:_voiture, number:pl, detForm:[FORM:"La grande majorité des"]]
+//text [PRED:_voiture, number:pl, detLex:_beaucoup_de, language_register:slang]
+
+//text [PRED:_voiture, det:no]
+//text [PRED:_voiture, number:pl, det:no]
+
+//text [PRED:_Marcel]
+
+//NP [FORM:"tel"]
+
+//text [PRED:__pro]
+
+//text [PRED:_et, i:[PRED:_Marcel], ii:[PRED:__pro]]
+
+//text [PRED:_voiture, language_register:slang]
+//text [PRED:_voiture, language_register:slang, number:sg, mod:<[PRED:_cassé]>]
+
+//text [PRED:_homme, language_register:slang]
+
+//text [PRED:_voiture, mod:<[PRED:_petit]>]
+//text [PRED:_voiture, mod:<[PRED:_rose]>]
+//text [PRED:_voiture, mod:<[PRED:_rose],[PRED:_petit]>]
+//text [PRED:_voiture, mod:<[PRED:_rose],[PRED:_petit],[PRED:_amusant]>]
+//text [PRED:_voiture, number:sg, mod:<[PRED:_rose],[PRED:_petit],[PRED:_cassé],[PRED:_cabosser]>]
+
+//text [PRED:_voiture, mod:<[PRED:_petit, mod:<[PRED:_très]>]>]
+
+//text [PRED:_visage, language_register:slang, mod:<[PRED:_joli]>]
+
+//text [PRED:_importun, gender:fm, number:sg]
+//text [PRED:_importun, language_register:slang, gender:fm, number:sg]
+//text [PRED:_importun, language_register:slang, gender:ms, number:sg]
+//text [PRED:_importun, language_register:slang, lexical_function:magn]
+
+//PP [PRED:_voiture, language_register:neutral, lexical_function:none, pcas:de]
+
+//text [PRED:_voiture, def:yes, number:sg, à_obj:[PRED:_Marcel]]
+
+/* **************************************************
+ * verbal tense & inflexion
+ ************************************************** */
+
+//text [PRED:_marcher, i:[PRED:_Léon], tense:present]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:future]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:imperfect]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:continuous]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:recent_past]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:present, aspect:continuous]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:near_future]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:future, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon], tense:present]
+//text [PRED:_partir, i:[PRED:_Léon], tense:past]
+//text [PRED:_partir, i:[PRED:_Micheline], tense:past]
+//text [PRED:_partir, i:[PRED:_boucher], tense:past]
+//text [PRED:_partir, i:[PRED:_Léon], tense:future]
+//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:imperfect]
+//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon], tense:recent_past]
+//text [PRED:_partir, i:[PRED:_Léon], tense:present, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon], tense:near_future]
+//text [PRED:_partir, i:[PRED:_Léon], tense:future, aspect:continuous]
+
+//text [PRED:_marcher, i:[PRED:__pro, person:one, number:sg], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:two, number:sg], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:three, number:sg], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:one, number:pl], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:two, number:pl], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:three, number:pl], tense:past]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:one, number:sg], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:two, number:sg], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:three, number:sg], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:one, number:pl], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:two, number:pl], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:three, number:pl], tense:past]
+
+/* **************************************************
+ * Verbal Arguments
+ ************************************************** */
+
+//text [PRED:_ronfler, i:[PRED:_horloger, number:sg, gender:ms, def:yes]]
+//text [PRED:_réparer, i:[PRED:_horloger, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], tense:past]
+//text [PRED:_réparer, i:[PRED:_horloger, number:sg, gender:ms, def:yes], ii:[PRED:__pro, number:sg, gender:fm, person:three]]
+//text [PRED:_livrer, i:[PRED:_horloger, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, genr:ms], tense:past]
+//text [PRED:_livrer, i:[PRED:_horloger, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:_client, number:sg, gender:ms, def:yes], tense:past]
+//text [PRED:_livrer, i:[PRED:__pro, person:one, number:sg], ii:[PRED:__pro, person:three, number:sg], iii:[PRED:__pro, person:three, number:sg]]
+//text [PRED:_couper, i:[PRED:_boucher, number:sg, gender:ms, def:yes], ii:[PRED:_poulet, number:sg, gender:ms, def:yes], iii:[PRED:_ciseaux, def:yes]]
+//text [PRED:_dire, i:[PRED:_boucher, number:sg, gender:ms, def:yes], ii:[PRED:_ânerie, number:sg, def:no], iii:[PRED:_client, gender:ms, number:sg, def:yes]]
+//text [PRED:_transporter, i:[PRED:_camion, number:sg, gender:ms, def:yes], ii:[PRED:_viande, number:sg, def:yes], iii:[FORM:"Rungis"], iv:[PRED:_boucherie, number:sg, def:yes]]
+//text [PRED:_transporter, i:[PRED:_camion, number:sg, gender:ms, def:yes], ii:[PRED:_viande, number:sg, def:yes], iii:[PRED:_boutique, number:sg], iv:[PRED:_boucherie, number:sg, def:yes]]
+//text [PRED:_arrêter, i:[PRED:_horloger, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes]]
+//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], iii:[PRED:_soupe, number:sg, def:no]]
+//text [PRED:_alimenter, i:[PRED:__pro, number:pl, person:one], iii:[PRED:_soupe, number:sg, def:no], tense:past]
+//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], ii:[PRED:_cochon, gender:ms, number:pl, def:yes], iii:[PRED:_soupe, number:sg, part:yes], tense:near_future]
+//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], ii:[PRED:_cochon, gender:ms, number:pl, def:yes], iii:[PRED:_soupe, number:sg, part:yes], tense:past, aspect:neutral, illocutnary:ask, neg:yes]
+//text [PRED:_dire, i:[PRED:_Léon], ii:[PRED:_couper, i:[PRED:_boucher, number:sg, def:yes], ii:[PRED:_poulet, number:sg, def:yes], iii:[PRED:_ciseaux, def:yes]], iii:[PRED:_client, gender:ms, number:sg, def:yes]]
+
+//***
+//text [PRED:_importun, number:sg, gender:ms]
+//text [PRED:_importun, number:sg, gender:ms, lexical_function:magn]
+
+//***
+//text [PRED:_importun, number:sg, gender:ms, language_register:slang]
+//text [PRED:_importun, number:sg, gender:ms, language_register:slang, lexical_function:magn]
+
+//***
+//text [PRED:_vendre, i:[PRED:_délinquant, number:sg], ii:[PRED:_voiture, mod:<[PRED:_cassé]>, number:sg], iii:[PRED:_importun, number:sg, gender:ms, lexical_function:magn], tense:past]
+//text [PRED:_vendre, i:[PRED:_délinquant, number:sg], ii:[PRED:_voiture, mod:<[PRED:_cassé]>, number:sg], iii:[PRED:_importun, number:sg, gender:ms, lexical_function:magn], tense:past, language_register:slang]
+
+//***
+//text [PRED:_ennuyer, i:[PRED:_idiot, number:sg, gender:ms], ii:[PRED:_femme, number:sg]]
+//text [PRED:_ennuyer, i:[PRED:_idiot, number:sg, gender:ms], ii:[PRED:_femme, number:sg], language_register:slang]
+
+//***
+// text [PRED:cause,
+// 	i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, gender:ms, def:yes], ii:[PRED:_voiture, number:sg, def:yes, id:45]],
+//	ii:[PRED:_rouler, i:[idref:45, PRED:_voiture, number:sg, def:yes]],
+// language_register:slang]
+
+// text [PRED:cause,
+// i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, gender:ms, def:yes], ii:[PRED:_voiture, number:sg, def:yes, id:45]],
+// ii:[PRED:_rouler, i:[PRED:_voiture, number:sg, def:yes]],
+// language_register:slang]
+
+//text [PRED:_gagner_de_l_argent, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn]]
+//text [PRED:_gagner_de_l_argent, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn],language_register:slang]
+//text [PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn], ii:[PRED:_voiture, number:sg], iii:[PRED:_femme, number:sg]]
+//text [PRED:_gagner_de_l_argent, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn],language_register:slang, lexical_function:magn]
+
+// text [PRED:_être_rancunier, i:[PRED:_professeur, def:yes, number:sg], iii:[PRED:_élève, dem:yes, number:sg, gender:ms], neg:yes]
+
+// text [PRED:cause,
+//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, dem:yes, number:sg, gender:ms]],
+//       ii:[PRED:_enrichir, i:[idref:45]],
+//       tense:present
+//       //,language_register:slang
+// ]
+
+// text [PRED:cause,
+//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, number:sg, gender:ms]],
+//       ii:[PRED:_enrichir, i:[idref:45]],
+//       tense:present,
+//       language_register:neutral
+// ]
+
+// text [PRED:cause,
+//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, number:sg, gender:ms]],
+//       ii:[PRED:_gagner_de_l_argent, i:[idref:45],lexical_function:magn],
+//       tense:present
+// ]
+
+// text [PRED:cause,
+//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, number:sg, gender:ms]],
+//       ii:[PRED:_gagner_de_l_argent, i:[idref:45],lexical_function:magn],
+//       language_register:slang
+// ]
+
+//text [PRED:_neiger]
+//text [PRED:_pleuvoir]
+//text [PRED:_pleuvoir, lexical_function:very_much]
+//text [PRED:_pleuvoir, language_register:slang]
+//text [PRED:_pleuvoir, lexical_function:very_much, language_register:slang]
+
+text [PRED:_faire_froid]
+text [PRED:_faire_froid, language_register:slang]

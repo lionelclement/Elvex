@@ -1,0 +1,118 @@
+#include fr-1.0.4.time.grammar
+
+/* **************************************************
+* Temps verbal
+************************************************** */
+@trace
+tensedClause → timeClause {
+  //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+  //println ↑;
+  [vform:_, mode:_];
+  [tense:$tense, aspect:$aspect, mode:$mode, language_register:$language_register] ⊂ ↑;
+	attest $pred ≠ paragraph;
+
+if (¬ $tense)
+    $tense=present;
+
+  if (¬ $aspect)
+    $aspect=neutral;
+
+  if (¬ $mode)
+    $mode = indicative;
+
+  if ($mode == indicative) {
+    // $Present
+    if ($tense == present){
+      if ($aspect == continuous)
+        ↓1 = [vtense:present_progressive, language_register:$language_register] ∪ ↑;
+      else
+        ↓1 = [vtense:present, language_register:$language_register] ∪ ↑;
+    }
+    // Past
+    else if ($tense == past){
+      if ($aspect == continuous)
+        ↓1 = [vtense:past_progressive, language_register:$language_register] ∪ ↑;
+      else if ($aspect == imperfect)
+        ↓1 = [vtense:imperfect, language_register:$language_register] ∪ ↑;
+      else if ($aspect == pluperfect)
+        ↓1 = [vtense:pluperfect, language_register:$language_register] ∪ ↑;
+      else
+        ↓1 = [vtense:passe_compose, language_register:$language_register] ∪ ↑;
+    }
+    // Recent Present
+    else if (($tense == recent_present))
+      ↓1 = [vtense:recent_present, language_register:$language_register] ∪ ↑;
+    // Recent Past
+    else if (($tense == recent_past))
+      ↓1 = [vtense:recent_past, language_register:$language_register] ∪ ↑;
+    // Future
+    else if ($tense == future){
+      if ($aspect == continuous)
+        ↓1 = [vtense:future_progressive, language_register:$language_register] ∪ ↑;
+      else
+        ↓1 = [vtense:future, language_register:$language_register] ∪ ↑;
+    }
+    // Near Future
+    else if ($tense == near_future)
+      ↓1 = [vtense:near_future, language_register:$language_register] ∪ ↑;
+    // Else
+    else
+      ↓1 = [vtense:$tense, aspect:$aspect, language_register:$language_register] ∪ ↑;
+  }
+
+  else if ($mode == conditional) {
+    // $Present
+    if ($tense == present){
+      if ($aspect == continuous)
+        ↓1 = [vtense:present_progressive, language_register:$language_register] ∪ ↑;
+      else
+        ↓1 = [vtense:present] ∪ ↑;
+    }
+    // Past
+    else if ($tense == past){
+      if ($aspect == continuous)
+        ↓1 = [vtense:past_progressive, language_register:$language_register] ∪ ↑;
+      else
+        ↓1 = [vtense:past, language_register:$language_register] ∪ ↑;
+    }
+    /***
+    // Recent Past
+    else if (($tense == recent_past))
+      ↓1 = [vtense:recent_past, language_register:$language_register] ∪ ↑;
+
+    // Future
+    else if ($tense == future){
+      if ($aspect == continuous)
+        ↓1 = [vtense:future_progressive, language_register:$language_register] ∪ ↑;
+      else
+        ↓1 = [vtense:future, language_register:$language_register] ∪ ↑;
+    }
+
+    // Near Future
+    else if ($tense == near_future)
+      ↓1 = [vtense:near_future, language_register:$language_register] ∪ ↑;
+    ***/
+    // Else
+    else
+      ↓1 = [vtense:$tense, aspect:$aspect, language_register:$language_register] ∪ ↑;
+  }
+
+  else if ($mode == subjonctive) {
+    // $Present
+    if ($tense == present){
+      ↓1 = [vtense:present, language_register:$language_register] ∪ ↑;
+    }
+    // Past
+    else if ($tense == past){
+      ↓1 = [vtense:past, language_register:$language_register] ∪ ↑;
+    }
+    // Else
+    else
+      ↓1 = [vtense:$tense, aspect:$aspect, language_register:$language_register] ∪ ↑;
+  }
+  
+  else
+    ↓1 = [vtense:$tense, aspect:$aspect, language_register:$language_register] ∪ ↑;
+  
+  ⇑ = ⇓1;
+}
