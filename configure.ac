@@ -73,6 +73,5 @@ AC_CONFIG_FILES([Makefile
                  src/Makefile
 		 data/Makefile
 		 data/lefff/Makefile
-		 data/kalaba/Makefile
 		 ])
 AC_OUTPUT
