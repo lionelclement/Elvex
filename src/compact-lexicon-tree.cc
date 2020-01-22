@@ -17,12 +17,11 @@
  *
  ************************************************** */
 
-#include "compact-lexicon-tree.hh"
-
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "compact-lexicon.hh"
 #include "compact-lexicon-fsa.hh"
 #include "compact-lexicon-info.hh"

@@ -57,6 +57,7 @@ public:
    static valuePtr NIL_VALUE;
    static valuePtr ANONYMOUS_VALUE;
    static valuePtr TRUE_VALUE;
+   static valuePtr FALSE_VALUE;
 
    Type type;
    featuresPtr features; // pour encoder les SF

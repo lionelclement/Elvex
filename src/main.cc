@@ -365,7 +365,7 @@ int main(int argn, char **argv) {
       }
 
       for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin(); i != synthesizer.getInputs().end(); ++i) {
-         if (!parser._parseBuffer("@input", *i, "input")) {
+         if (!parser.parseBuffer("@input", *i, "input")) {
             generate();
          }
          else {

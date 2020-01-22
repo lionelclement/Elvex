@@ -112,7 +112,7 @@
 %token TOKEN_PRED TOKEN_FORM
 %token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN
 %token TOKEN_IF TOKEN_ELSE
-%token TOKEN_NIL TOKEN_TRUE
+%token TOKEN_NIL TOKEN_TRUE TOKEN_FALSE
 %token TOKEN_FOREACH TOKEN_IN
 %token TOKEN_SEARCH
 %token TOKEN_RAND
@@ -214,12 +214,18 @@ dictionary:
 stringOrIdentifier:
 	TOKEN_IDENTIFIER {
 	  DBUGPRT("stringOrIdentifier");
-	  $$=$1;
+	  $$ = $1;
 	}
 
 	|TOKEN_STRING {
 	  DBUGPRT("stringOrIdentifier");
-	  $$=$1;
+	  $$ = $1;
+	 }
+
+	|stringOrIdentifier TOKEN_PLUS TOKEN_STRING {
+	  DBUGPRT("string");
+	  $$ = $1;
+	  *$$ += *$3;
 	 };
 
 dictionary_line:
@@ -725,12 +731,14 @@ right_hand_side_subset_statement:
 	  free($1);
 	}
 
-	|TOKEN_SEARCH TOKEN_LPAR expression_statement TOKEN_RPAR  {
+	|TOKEN_SEARCH TOKEN_LPAR identifier TOKEN_COMMA expression_statement TOKEN_RPAR  {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, 
 						  Statement::SEARCH, 
-						  *$3));
+						  *$3,
+						  *$5));
 	  free($3);
+	  free($5);
 	 };
 	
 left_hand_side_inset_statement:
@@ -1149,7 +1157,7 @@ feature:
 	  free($3);
 	}
 
-	|TOKEN_FORM TOKEN_COLON TOKEN_STRING
+	|TOKEN_FORM TOKEN_COLON stringOrIdentifier
 	{
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::FORM, bitsetPtr(), Value::create(Value::STR, *$3)));
@@ -1236,6 +1244,12 @@ feature_value:
 	{
 	  DBUGPRT("feature_value");
 	  $$ = new valuePtr(Value::TRUE_VALUE);
+	}
+
+	|TOKEN_FALSE
+	{
+	  DBUGPRT("feature_value");
+	  $$ = new valuePtr(Value::FALSE_VALUE);
 	}
 
 	|TOKEN_ANONYMOUS

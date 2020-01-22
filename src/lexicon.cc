@@ -37,14 +37,35 @@ Lexicon::Lexicon(void) {
 /* **************************************************
  *
  ************************************************** */
+Lexicon::unordered_map::const_iterator Lexicon::cbegin(void) {
+   return the_map.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Lexicon::unordered_map::const_iterator Lexicon::cend(void) {
+   return the_map.cend();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+std::size_t Lexicon::size(void) {
+   return the_map.size();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 void Lexicon::add(std::string key, const std::string value) {
-   Unordered_map::iterator it = unordered_map.find(key);
-   if (it != unordered_map.end())
+   unordered_map::iterator it = the_map.find(key);
+   if (it != the_map.end())
       (*it).second->push_back(value);
    else {
       std::list<std::string> *list = new std::list<std::string>();
       list->push_back(value);
-      unordered_map[key] = list;
+      the_map[key] = list;
    }
 }
 
@@ -52,8 +73,8 @@ void Lexicon::add(std::string key, const std::string value) {
  *
  ************************************************** */
 std::list<std::string> *Lexicon::find(const std::string key) {
-   Unordered_map::const_iterator it = unordered_map.find(key);
-   if (it != unordered_map.end()) {
+   unordered_map::const_iterator it = the_map.find(key);
+   if (it != the_map.end()) {
       return (*it).second;
    }
    else {
@@ -64,10 +85,17 @@ std::list<std::string> *Lexicon::find(const std::string key) {
 /* **************************************************
  *
  ************************************************** */
+std::size_t Lexicon::count(const std::string key) {
+   return the_map.count(key);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 std::string &Lexicon::toString(void) const {
    static std::string result;
    std::ostringstream oss;
-   oss << unordered_map.size();
+   oss << the_map.size();
    result = oss.str();
    return result;
 }

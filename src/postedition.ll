@@ -62,24 +62,26 @@ mesure		mm|cm|m|dm|km|m2|m3|A|[oO]hm|V|VA|gr|[kK]g
 	
 <NEXT>{	
   \./[^0-9+-] {ECHO; BEGIN(INITIAL);}
-  [^[:alpha:]][nNdDjJlL][ea][[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << yytext[1] << '\'';}
-  [^[:alpha:]][mMtTsS][e][[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << yytext[1] << '\'';}
-  [^[:alpha:]][mMtTsS][a][[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << yytext[1] << "on ";}
-  [^[:alpha:]][qQ]ue[[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << "qu'";}
-  [^[:alpha:]][bB]eau[[:space:]]+[aeiouy] {std::cout << yytext[0] << yytext[1] << yytext[2] << "l " << yytext[yyleng-1];}
-  [^[:alpha:]][cC]e[[:space:]]+[aeiouy] {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-1];}
-  [^[:alpha:]][cC]e[[:space:]]+(é|è|ê|ë|î|ï|ô|ö|ù) {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-2] << yytext[yyleng-1];}
-  [^[:alpha:]][cC]e[[:space:]]+[hH][aeiouy] {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-2] << yytext[yyleng-1];}
-  [^[:alpha:]][cC]e[[:space:]]+[hH](é|è|ê|ë|î|ï|ô|ö|ù) {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-3] << yytext[yyleng-2] << yytext[yyleng-1];}
-  [^[:alpha:]][dD]e[[:space:]]+les/([[:space:]]|quel) {std::cout << yytext[0] << yytext[1] << "es";}
-  [^[:alpha:]](à|À)[[:space:]]+les/([[:space:]]|quel) {std::cout << yytext[0] << "aux";}
-  [^[:alpha:]][dD]e[[:space:]]+le/([[:space:]]|quel) {std::cout << yytext[0] << yytext[1] << 'u';}
-  [^[:alpha:]](à|À)[[:space:]]+le/[[:space:]] {std::cout << yytext[0] << "au";}
-  [^[:alpha:]](à|À)[[:space:]]+le/quel {std::cout << yytext[0] << "au";}
-  [^[:alpha:]](à|À)[[:space:]]+l[ea][[:space:]]+[hH]?/([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << "à l'";}
-  [^[:alpha:]][sS]i[[:space:]]+[i] {std::cout << yytext[0] << yytext[1] << '\'' << yytext[yyleng-1];}
-  [^[:alpha:]][dD]e[[:space:]]+des/[[:space:]] {std::cout << yytext[0] << yytext[1] << 'e';}
+  [[:space:]][nNdDjJlL][ea][[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << yytext[1] << '\'';}
+  [[:space:]][mMtTsS][e][[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << yytext[1] << '\'';}
+  [[:space:]][mMtTsS][a][[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << yytext[1] << "on ";}
+  [[:space:]][qQ]ue[[:space:]]+/[hH]?([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << "qu'";}
+  [[:space:]][bB]eau[[:space:]]+[aeiouy] {std::cout << yytext[0] << yytext[1] << yytext[2] << "l " << yytext[yyleng-1];}
+  [[:space:]][cC]e[[:space:]]+[aeiouy] {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-1];}
+  [[:space:]][cC]e[[:space:]]+(é|è|ê|ë|î|ï|ô|ö|ù) {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-2] << yytext[yyleng-1];}
+  [[:space:]][cC]e[[:space:]]+[hH][aeiouy] {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-2] << yytext[yyleng-1];}
+  [[:space:]][cC]e[[:space:]]+[hH](é|è|ê|ë|î|ï|ô|ö|ù) {std::cout << yytext[0] << yytext[1] << "et " << yytext[yyleng-3] << yytext[yyleng-2] << yytext[yyleng-1];}
+  [[:space:]][dD]e[[:space:]]+les/([[:space:]]|quel) {std::cout << yytext[0] << yytext[1] << "es";}
+  [[:space:]](à|À)[[:space:]]+les/([[:space:]]|quel) {std::cout << yytext[0] << "aux";}
+  [[:space:]][dD]e[[:space:]]+le/([[:space:]]|quel) {std::cout << yytext[0] << yytext[1] << 'u';}
+  [[:space:]](à|À)[[:space:]]+le/[[:space:]] {std::cout << yytext[0] << "au";}
+  [[:space:]](à|À)[[:space:]]+le/quel {std::cout << yytext[0] << "au";}
+  [[:space:]](à|À)[[:space:]]+l[ea][[:space:]]+[hH]?/([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << "à l'";}
+  [[:space:]][sS]i[[:space:]]+[i] {std::cout << yytext[0] << yytext[1] << '\'' << yytext[yyleng-1];}
+  [[:space:]][dD]e[[:space:]]+des/[[:space:]] {std::cout << yytext[0] << yytext[1] << 'e';}
+  [[:space:]][dD]e[[:space:]]+l[ea][[:space:]]+[hH]?/([aAeEiIoOuUyY]|â|Â|à|À|é|É|è|È|ê|Ê|ë|Ë|î|Î|ï|Ï|ö|Ö|ô|Ô|ü|Ü|û|Û) {std::cout << yytext[0] << "de l'";}
   [[:digit:]]+[[:space:]]/{mesure}[[:space:]] {yytext[yyleng-1]=0; ECHO;}
+  [-][[:space:]]+ {yytext[yyleng-1]=0; ECHO;}
   [ \t]+/[,.;:-] {}
   [ \t]+ {std::cout << ' ';}
   \n {ECHO; BEGIN(INITIAL);}

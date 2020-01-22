@@ -20,18 +20,18 @@
 #ifndef COMPACTLEXICON_H
 #define COMPACTLEXICON_H
 
-#define MAXSTRING 10000
+#define MAXSTRING 100000
 #define SEP_PREF ""
 #define SEP_UW "UNKNOWN"
 #define SEP_SUFF "\n"
 #define SEP_OR "|"
 
 #include <string>
-#include <iostream>     // std::cout
+#include <iostream>
 #include <fstream>
 #include <sstream>
-
 #include "compact-lexicon-tree.hh"
+#include "lexicon.hh"
 
 extern bool isLexString;
 extern char *lexString;
@@ -39,8 +39,6 @@ extern char *currentLexString;
 extern class Entry *localEntry;
 
 class CompactLexicon {
-
-   friend CompactLexiconTree;
 
 private:
 
@@ -50,9 +48,7 @@ private:
    std::string fsaFileName;
    FILE *dataFile;
    std::string dataFileName;
-   std::ifstream inputFile = std::ifstream();
    std::istream *inputStream = &std::cin;
-   size_t InputFileStreamSize;
    CompactLexiconTree *compactLexicon;
 
 public:
@@ -63,28 +59,18 @@ public:
    class CompactLexiconTree *lexiconInit;
 
 public:
-   CompactLexicon(std::string directoryName, std::string fileName, const std::string inputFileName);
    CompactLexicon(std::string directoryName, std::string fileName);
-   unsigned long int _getInit(void) const {
-      return init;
-   }
-   ;
-   char *_getBuffer(void) const {
-      return buffer;
-   }
-   ;
-   struct CompactLexiconBuffer *_getInfo(void) {
-      return info;
-   }
-   ;
    void printResults(std::ostream &, unsigned long int index, bool sep) const;
    unsigned long int searchStatic(unsigned long int index, std::string) const;
    void saveFsa();
    void loadFsa();
    void openFiles(std::string mode);
    void closeFiles();
-   void buildPredEntries(class Lexicon &pattern);
-   void buildFormEntries(class Lexicon &pattern);
+   std::string unif(std::string fs1, std::string fs2);
+   void addToData(std::string entry, std::string form, std::string features);
+   void addPattern(Lexicon &pattern, Lexicon &morpho, std::string input, std::string fs, std::string lemma, std::string pos);
+   void addForms(std::string input, std::string inputSearch, std::string features, Lexicon &pattern, Lexicon &morpho);
+   void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
    void loadData(void);
    void consult(void);
 };

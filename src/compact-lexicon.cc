@@ -17,26 +17,8 @@
  *
  ************************************************** */
 
-//#include <iostream>
-//#include <sys/types.h>
-//#include <sys/stat.h>
-//#include <fcntl.h>
-
 #include <sys/stat.h>
-//#include <stdio.h>
-//#include <stdlib.h>
 #include <string.h>
-//#include <sstream>
-
-// #include <iostream>
-// #include <cstdlib>
-// #include <fstream>
-// #include <sstream>
-// #include <string>
-
-// #include <iostream>     // std::cout
-// #include <fstream>
-// #include <sstream>
 #include <cmath>
 
 #include "compact-lexicon.hh"
@@ -63,32 +45,10 @@ CompactLexicon::CompactLexicon(std::string directoryName, std::string fileName) 
    this->fsa = NULL;
    this->info = NULL;
    this->init = 0;
-   this->InputFileStreamSize = 0;
    this->compactLexicon = new CompactLexiconTree(NULL, NULL, NULL, '\0');
    this->compactLexicon->setChild(new CompactLexiconTree(NULL, NULL, NULL, '\0'));
    this->lexiconInit = compactLexicon;
    this->compactLexicon = compactLexicon->getChild();
-}
-
-/* **************************************************
- *
- ************************************************** */
-CompactLexicon::CompactLexicon(std::string directoryName, std::string fileName, const std::string inputFileName)
-      : CompactLexicon(directoryName, fileName) {
-   if (inputFileName.size() == 0) {
-      std::cerr << "*** Searching from stdin" << std::endl;
-      this->inputStream = &std::cin;
-   }
-   else {
-      this->inputFile.open(inputFileName, std::ifstream::in);
-      if (!this->inputFile.is_open()) {
-         throw(new std::string("arg"));
-      }
-      this->inputStream = &this->inputFile;
-      this->inputFile.seekg(0, std::ios::end);
-      this->InputFileStreamSize = this->inputFile.tellg();
-      this->inputFile.seekg(0, std::ios::beg);
-   }
 }
 
 /* **************************************************
@@ -164,21 +124,21 @@ void CompactLexicon::saveFsa() {
    if (!fwrite(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "nbreBytes:" << nbrBytes << std::endl;
+      std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
    unsigned long int maxSize = (unsigned long int)~0UL;
    if (!fwrite(&maxSize, sizeof(maxSize), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "maxSize:" << maxSize << std::endl;
+      std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
-            // nombre d'offsets du fsa
+   // nombre d'offsets du fsa
    unsigned long int sizeFsa = 0;
    lexiconInit->setIndexStaticFSA(sizeFsa);
    if (!fwrite(&sizeFsa, sizeof(sizeFsa), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "sizeFsa:" << sizeFsa << std::endl;
+      std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
    if (sizeFsa == (unsigned long int)~0UL) {
       std::cerr << "*** Error: Lexicon too large" << std::endl;
@@ -189,7 +149,7 @@ void CompactLexicon::saveFsa() {
    if (!fwrite(&sizeInfo, sizeof(sizeInfo), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "sizeInfo:" << sizeInfo << std::endl;
+      std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
    if (sizeInfo == (unsigned long int)~0UL) {
       std::cerr << "*** Error: Data too large" << std::endl;
@@ -210,7 +170,7 @@ void CompactLexicon::saveFsa() {
    if (!fwrite(&init, sizeof(init), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "init:" << init << std::endl;
+      std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
 }
 
@@ -223,13 +183,13 @@ void CompactLexicon::loadFsa() {
    if (!fread(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "nbreBytes:" << nbrBytes << std::endl;
+      std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
    unsigned long int maxSize;
    if (!fread(&maxSize, sizeof(maxSize), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "maxSize:" << maxSize << std::endl;
+      std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
    if (nbrBytes != (sizeof(unsigned long int)) || (maxSize != (unsigned long int)~0UL)) {
       std::cerr << "*** lexicon compiled with an incompatible system" << std::endl;
@@ -239,43 +199,43 @@ void CompactLexicon::loadFsa() {
    if (!fread(&sizeFsa, sizeof(sizeFsa), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "sizeFsa:" << sizeFsa << std::endl;
+      std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
    unsigned long int sizeInfo;
    if (!fread(&sizeInfo, sizeof(sizeInfo), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "sizeInfo:" << sizeInfo << std::endl;
+      std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
 
 #ifdef TRACE_DIFF
-            std::cout << "---FSA---" << std::endl;
+   std::cout << "---FSA---" << std::endl;
 #endif //TRACE_DIFF
    fsa = new CompactLexiconFsa[sizeFsa + 1]();
    if (!fread(fsa, sizeof(CompactLexiconFsa), sizeFsa, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            for(unsigned long int sizeSy=0;sizeSy<sizeFsa;sizeSy++) {
-               fsa[sizeSy].print(std::cout);
-            }
+      for(unsigned long int sizeSy=0;sizeSy<sizeFsa;sizeSy++) {
+         fsa[sizeSy].print(std::cout);
+      }
 #endif //TRACE_DIFF
 
 #ifdef TRACE_DIFF
-            std::cout << "---Info---" << std::endl;
+   std::cout << "---Info---" << std::endl;
 #endif //TRACE_DIFF
    info = new CompactLexiconBuffer[sizeInfo + 1]();
    if (!fread(info, sizeof(CompactLexiconBuffer), sizeInfo, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            for(unsigned long int sizeSy=0;sizeSy<sizeInfo;sizeSy++) {
-               std::cout << sizeSy << ' ';
-               info[sizeSy].print(std::cout);
-            }
+      for(unsigned long int sizeSy=0;sizeSy<sizeInfo;sizeSy++) {
+         std::cout << sizeSy << ' ';
+         info[sizeSy].print(std::cout);
+      }
 #endif //TRACE_DIFF
    if (!fread(&init, sizeof(init), 1, fsaFile))
       UNEXPECTED
 #ifdef TRACE_DIFF
-            std::cout << "init:" << init << std::endl;
+      std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
 }
 
@@ -314,27 +274,122 @@ void CompactLexicon::closeFiles() {
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::buildPredEntries(Lexicon &lexicon) {
+std::string CompactLexicon::unif(std::string fs1, std::string fs2) {
    extern Parser parser;
-   std::stringstream inputStream;
+   std::stringstream stringStream;
+   featuresPtr features1;
+   if (fs1.size()) {
+      stringStream.str("");
+      stringStream << '[' << fs1 << ']';
+      std::string fsString = stringStream.str();
+      if (parser.parseBuffer("#", fsString, "morphology")) {
+         stringStream.str("");
+         stringStream << "error in lexicon: " << fs1 << std::endl;
+         ERROR(stringStream.str())
+      }
+      features1 = parser.getLocalFeatures();
+   }
+   else
+      features1 = featuresPtr();
+
+   featuresPtr features2;
+   if (fs2.size()) {
+      stringStream.str("");
+      stringStream << '[' << fs2 << ']';
+      std::string fsString = stringStream.str();
+      if (parser.parseBuffer("#", fsString, "morphology")) {
+         stringStream.str("");
+         stringStream << "error in lexicon: " << fs2 << std::endl;
+         ERROR(stringStream.str())
+      }
+      features2 = parser.getLocalFeatures();
+   }
+   else
+      features2 = featuresPtr();
+
+   statementPtr statement;
+   featuresPtr unif;
+   if (features1 && features2) {
+      unif = statement->unif(features1, features2, itemPtr());
+   }
+   else if (features1) {
+      unif = features1;
+   }
+   else {
+      unif = features2;
+   }
+   stringStream.str("");
+   if (unif && !unif->isBottom()) {
+      unif->flatPrint(stringStream, false);
+   }
+   return stringStream.str();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void CompactLexicon::addToData(std::string input, std::string form, std::string features) {
+   //std::cerr << "add:" << form << "[pos:" << pos << ",lemma:" << lemma << " with [" << lexemeFeatures << "] & [" << morphoFeatures << "]" << std::endl;
+   std::stringstream stringStream;
+   stringStream.str("");
+   stringStream << form << '#' << '[' << features << ']';
+   std::string output = stringStream.str();
    unsigned long int offset;
-   for (Lexicon::Unordered_map::const_iterator it = lexicon.unordered_map.begin(); it != lexicon.unordered_map.end(); ++it) {
-      offset = ftell(dataFile);
-      compactLexicon->add(it->first.c_str(), offset);
-      for (std::list<std::string>::const_iterator it2 = it->second->begin(); it2 != it->second->end(); ++it2) {
-         std::stringstream fsStream;
-         fsStream << '[' << *it2 << "]";
-         if (parser._parseBuffer("#", fsStream.str().c_str(), "features")) {
-            std::stringstream errorStream;
-            errorStream << "*** error in lexicon: " << it->first << " => " << fsStream.str() << std::endl;
-            throw std::string(errorStream.str());
-         }
-         featuresPtr features = parser.getLocalFeatures();
-         inputStream.str("");
-         inputStream << '[';
-         features->flatPrint(inputStream, false);
-         inputStream << ']';
-         fprintf(dataFile, "%s%c", inputStream.str().c_str(), 0);
+   offset = ftell(dataFile);
+   compactLexicon->add(input.c_str(), offset);
+   fprintf(dataFile, "%s%c", output.c_str(), 0);
+   //std::cerr << output.c_str() << std::endl;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void CompactLexicon::addForms(std::string input, std::string inputSearch, std::string patternFs, Lexicon &pattern, Lexicon &morpho) {
+   //std::cerr << "addForms " << inputSearch << std::endl;
+
+   std::list<std::string> *o = morpho.find(inputSearch);
+   for (std::list<std::string>::const_iterator it = o->begin(); it != o->end(); ++it) {
+
+      char form[MAXSTRING];
+      strcpy(form, it->c_str());
+      char *rhs = strchr(form, '#');
+      *rhs = 0;
+
+      char line[MAXSTRING];
+      strcpy(line, it->c_str());
+      char *morphoFs = strchr(line, '#') + 1;
+
+      //std::cerr << "addToData " << input << " => " << form << ' ' << unif(patternFs, morphoFs) << std::endl;
+      addToData("_" + input, form, unif(patternFs, morphoFs) );
+   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void CompactLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, std::string input, std::string patternFs, std::string lemma, std::string pos) {
+   //std::cerr << "addPattern with " << '(' << input << ',' << patternFs << ',' << lemma << ',' << pos << ')' << std::endl;
+   std::stringstream stringStream;
+   stringStream.str("");
+   stringStream << lemma << '#' << pos;
+   std::string inputSearch = std::string(stringStream.str());
+   if (morpho.count(inputSearch) ) {
+      //std::cerr << "addForms with " << inputSearch << '(' << input << ',' << lemma << ',' << pos << ',' << patternFs << ')' << std::endl;
+      addForms(input, inputSearch, patternFs, pattern, morpho);
+   }
+   else if (pattern.count(inputSearch)) {
+      std::list<std::string> *o = pattern.find(inputSearch);
+      for (std::list<std::string>::const_iterator it = o->begin(); it != o->end(); ++it) {
+         //std::cerr << "XXX: " << *it << std::endl;
+         char patternLemma[MAXSTRING];
+         strcpy(patternLemma, it->c_str());
+         char *rhs = strchr(patternLemma, '#');
+         *rhs = 0;
+         char line2[MAXSTRING];
+         strcpy(line2, it->c_str());
+         std::string pattern2Fs = strchr(line2, '#') + 1;
+         //std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << fs << ')' << std::endl;
+         addPattern(pattern, morpho, input, unif(patternFs, pattern2Fs), patternLemma, pos);
       }
    }
 }
@@ -342,138 +397,40 @@ void CompactLexicon::buildPredEntries(Lexicon &lexicon) {
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::buildFormEntries(Lexicon &lexicon) {
-   std::string line;
-   unsigned int range = 0;
-   unsigned long int offset;
-   while (std::getline(*this->inputStream, line)) {
-      if ((line.length() == 0) || (line.find('#') != std::string::npos))
-         continue;
-      //std::cout << "/line:/" << line << '/' << std::endl;
-      char form[MAXSTRING];
-      strcpy(form, line.c_str());
-      char *rhs = strchr(form, '\t');
-      *rhs = 0;
+void CompactLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
+   extern Parser parser;
+   std::stringstream inputStream;
+   std::size_t size = pattern.size();
+   std::size_t range = 0;
+   for (Lexicon::unordered_map::const_iterator patternIt = pattern.cbegin(); patternIt != pattern.cend(); ++patternIt) {
+      //std::cerr << "input:" << patternIt->first << std::endl;
+      for (std::list<std::string>::const_iterator it2 = patternIt->second->begin(); it2 != patternIt->second->end(); ++it2) {
 
-      char line2[MAXSTRING];
-      strcpy(line2, line.c_str());
-      char *pos = strchr(line2, '\t') + 1;
-      rhs = strchr(pos, '\t');
-      *rhs = 0;
-
-      char line3[MAXSTRING];
-      char line4[MAXSTRING];
-      strcpy(line3, line.c_str());
-      char *lemma = strchr(line3, '\t') + 1;
-      lemma = strchr(lemma, '\t') + 1;
-      rhs = strchr(lemma, '\t');
-      char *fs = NULL;
-      if (rhs) {
+         char lexeme[MAXSTRING];
+         strcpy(lexeme, patternIt->first.c_str());
+         char *rhs = strchr(lexeme, '#');
          *rhs = 0;
-         strcpy(line4, line.c_str());
-         fs = strchr(line4, '\t') + 1;
-         fs = strchr(fs, '\t') + 1;
-         fs = strchr(fs, '\t') + 1;
+
+         char line2[MAXSTRING];
+         strcpy(line2, patternIt->first.c_str());
+         char *pos = strchr(line2, '#') + 1;
+
+         char lemma[MAXSTRING];
+         strcpy(lemma, it2->c_str());
+         rhs = strchr(lemma, '#');
+         *rhs = 0;
+
+         char line4[MAXSTRING];
+         strcpy(line4, it2->c_str());
+         char *features = strchr(line4, '#') + 1;
+
+         std::string patternFs = ((*features) ? features : std::string());
+         addPattern(pattern, morpho, patternIt->first, patternFs, lemma, pos);
+
       }
 
-      //std::cerr << "/line:/" << line << '/' << std::endl;
-      //std::cerr << "/form:/" << form << '/' << std::endl;
-      //std::cerr << "/pos:/" << pos << '/' << std::endl;
-      //std::cerr << "/lemma:/" << lemma << '/' << std::endl;
-      //std::cerr << "/fs:/" << (fs ? fs : "NULL") << '/' << std::endl;
-
-      std::stringstream stringStream;
-      stringStream << pos << "#_" << lemma;
-      std::string input = std::string(stringStream.str());
-
-      extern Parser parser;
-      featuresPtr features;
-      if (fs && fs[0]) {
-         std::stringstream fsStream;
-         fsStream << '[' << fs << ']';
-         std::string fsString = fsStream.str();
-         if (parser._parseBuffer("#", fsString, "features"))
-            std::cerr << "*** error in lexicon: " << line << std::endl;
-         features = parser.getLocalFeatures();
-      }
-      else
-         features = featuresPtr();
-
-      stringStream.str("");
-      stringStream << form << "#[";
-      if (fs && fs[0]) {
-         parser.getLocalFeatures()->flatPrint(stringStream, false);
-      }
-      stringStream << ']';
-      std::string output = stringStream.str();
-
-      std::list<std::string> *o = lexicon.find(input);
-      if (o->size()) {
-         //features->flatPrint(std::cerr);
-
-         for (std::list<std::string>::const_iterator it = o->cbegin(); it != o->cend(); ++it) {
-
-            char predicatePattern[MAXSTRING];
-            strcpy(predicatePattern, it->c_str());
-            char *rhs = strchr(predicatePattern, '#');
-            *rhs = 0;
-
-            char fsPatternLine[MAXSTRING];
-            strcpy(fsPatternLine, it->c_str());
-            char *fsPattern = strchr(fsPatternLine, '#') + 1;
-            stringStream.str("");
-            stringStream << '[' << fsPattern << ']';
-            std::string fsPatternString = stringStream.str();
-            if (parser._parseBuffer("#", fsPatternString, "features"))
-               std::cerr << "*** error in pattern: " << fsPatternString << std::endl;
-            featuresPtr featuresPattern = parser.getLocalFeatures();
-
-            stringStream.str("");
-            stringStream << pos << "#_" << predicatePattern;
-            std::string input3 = std::string(stringStream.str());
-
-            statementPtr statement;
-            featuresPtr unif;
-            if (features && featuresPattern) {
-               unif = statement->unif(features, featuresPattern, itemPtr());
-            }
-            else if (featuresPattern) {
-               unif = featuresPattern;
-            }
-            else {
-               unif = features;
-            }
-
-            //unif->flatPrint(std::cerr);
-            //std::cerr << std::endl;
-            if (!unif->isBottom()) {
-               offset = ftell(dataFile);
-               compactLexicon->add(input3.c_str(), offset);
-               stringStream.str("");
-               stringStream << form << '#' << '[';
-               unif->flatPrint(stringStream, false);
-               stringStream << ']';
-               std::string output2 = stringStream.str();
-               fprintf(dataFile, "%s%c", output2.c_str(), 0);
-            }
-
-            //std::cerr << "/OK/" << input << " -> " << output2.c_str() << std::endl;
-         }
-         //	std::cerr << "/line:/" << line << '/' << std::endl;
-         //	std::cerr << "/pos:/" << pos << '/' << std::endl;
-         //	std::cerr << "/predicate:/" << predicate << '/' << std::endl;
-         //	std::cerr << "/form:/" << form << '/' << std::endl;
-         //	std::cerr << "/fs:/" << fs << '/' << std::endl;
-      }
-      else {
-         offset = ftell(dataFile);
-         compactLexicon->add(input.c_str(), offset);
-         fprintf(dataFile, "%s%c", output.c_str(), 0);
-      }
-
-      //nbrItem += strlen(line) + 1;
-      if (!(range++ % 997)) {
-         int k = (40 * (unsigned long int)(inputStream->tellg())) / (unsigned long int)this->InputFileStreamSize;
+      if (!(range++ % 1009)) {
+         int k = 40 * range / size;
          std::cerr << " " << round(2.5 * k) << "%[";
          int i = 0;
          for (; i <= k; i++)
@@ -482,13 +439,13 @@ void CompactLexicon::buildFormEntries(Lexicon &lexicon) {
             std::cerr << ' ';
          std::cerr << ']' << "\r";
       }
-   }
-         std::cerr << " 100%[";
-         int i = 0;
-         for (; i <= 40; i++)
-            std::cerr << '#';
-         std::cerr << ']' << std::endl;
 
+   }
+   std::cerr << " 100%[";
+   int i = 0;
+   for (; i <= 40; i++)
+      std::cerr << '#';
+   std::cerr << ']' << std::endl;
 }
 
 /* **************************************************
@@ -516,7 +473,6 @@ void CompactLexicon::consult() {
    while (!this->inputStream->eof()) {
       *this->inputStream >> str;
       info = searchStatic(init, str);
-      //std::cerr << info << std::endl;
       printResults(std::cout, info, 1);
       fflush(stdout);
    }

@@ -30,8 +30,9 @@
 #include "synthesizer.hh"
 #include "vartable.hh"
 
-valuePtr Value::NIL_VALUE = Value::create(Value::BOOL, (unsigned int)0);
+valuePtr Value::NIL_VALUE = Value::create(Value::BOOL, (unsigned int)0);//Value::create(Value::FEATURES);
 valuePtr Value::TRUE_VALUE = Value::create(Value::BOOL, (unsigned int)1);
+valuePtr Value::FALSE_VALUE = Value::create(Value::BOOL, (unsigned int)0);
 valuePtr Value::ANONYMOUS_VALUE = Value::create(Value::ANONYMOUS);
 
 /* **************************************************
@@ -488,13 +489,19 @@ bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool ac
          break;
 
       case FEATURES:
-         if (value->type == FEATURES) {
+         if (value->type == VARIABLE) {
+            environment->add(value->getBits(), shared_from_this());
+         }
+         else if (value->type == FEATURES) {
             if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(), acceptToFilterNULLVariables, root))
                ret = false;
          }
          else if (value->type == ANONYMOUS) {
             if (!this->getFeatures()->buildEnvironment(environment, Features::create(), acceptToFilterNULLVariables, root))
                ret = false;
+         }
+         else if (value->type == BOOL) {
+            environment->add(value->getBits(), shared_from_this());
          }
          else {
             UNEXPECTED

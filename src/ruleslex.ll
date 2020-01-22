@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <bitset>
+#include <string>
 #include "parser.hh"
 #include "rulesyacc.hh"
 #include "messages.hh"
@@ -427,15 +428,21 @@ downDoubleArrow "⇓"
     return TOKEN_TRUE;
   }
   
+  "FALSE" {
+    DBUGPRT("TOKEN_FALSE\n");
+    return TOKEN_FALSE;
+  }
+  
   "NIL" {
     DBUGPRT("TOKEN_NILL\n");
     return TOKEN_NIL;
   }
   
   "__LINE__" {
-    DBUGPRTARG("TOKEN_INTEGER ", yytext);
-    ruleslval.integer_slot = yylineno;
-    return TOKEN_INTEGER;
+    DBUGPRTARG("TOKEN_STRING ", yytext);
+    //ruleslval.integer_slot = yylineno;
+    ruleslval.string_slot = new std::string(std::to_string(yylineno));
+    return TOKEN_STRING;
   }
   
   "__FILE__" {
@@ -477,6 +484,7 @@ downDoubleArrow "⇓"
     DBUGPRTARG("TOKEN_STRING ", yytext);
     std::string s = yytext;
     ruleslval.string_slot = new std::string(s.substr(1, s.length()-2));
+    //ruleslval.string_slot = new std::string(s);
     return TOKEN_STRING;
   }
   

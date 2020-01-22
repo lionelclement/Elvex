@@ -27,7 +27,7 @@
 #include "serializable.hh"
 #include "synthesizer.hh"
 
-#define FATAL_ERROR_STM {std::ostringstream oss; oss << "*** fatal error with statement line " << getLineno(); throw oss.str();}
+#define FATAL_ERROR_STM {CERR_LINE; std::ostringstream oss; oss << "*** fatal error with statement line " << getLineno(); throw oss.str();}
 #define FATAL_ERROR_MSG_STM(msg) {std::ostringstream oss; oss << "*** fatal error: " << msg << " with statement line " << getLineno(); throw oss.str();}
 #define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "*** warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
 

@@ -17,7 +17,7 @@
  *
  ************************************************** */
 
-#ifndef PATTERN_H
+#ifndef LEXICON_H
 #define LEXICON_H
 
 #include <string>
@@ -27,20 +27,21 @@
 class Lexicon {
 
 public:
-   typedef std::unordered_map<const std::string,
-			      std::list<std::string> *,
-			      std::hash<std::string>,
-			      std::equal_to<std::string>,
-         std::allocator<std::pair<const std::string, std::list<std::string> *>>> Unordered_map;
-   Unordered_map unordered_map;
+   typedef std::unordered_map<const std::string, std::list<std::string> *, std::hash<std::string>, std::equal_to<std::string>,
+            std::allocator<std::pair<const std::string, std::list<std::string> *> > > unordered_map;
+   unordered_map the_map;
    static std::list<std::string> *emptyList;
 
    Lexicon(void);
+   unordered_map::const_iterator cbegin(void);
+   unordered_map::const_iterator cend(void);
+   std::size_t size(void);
    void add(const std::string key, std::string value);
    std::list<std::string> *find(const std::string key);
+   std::size_t count(const std::string key);
    std::string &toString(void) const;
 
 };
 
-#endif // PATTERN_H
+#endif // LEXICON_H
 

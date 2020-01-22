@@ -96,7 +96,7 @@ public:
 public:
    unsigned int parseFile(std::string prefix, std::string fileName);
 public:
-   unsigned int _parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
+   unsigned int parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
 private:
    unsigned int parseString(std::string buffer);
 };

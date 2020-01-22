@@ -267,7 +267,7 @@ unsigned int Parser::parseFile(std::string prefix, std::string fileName) {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::_parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
+unsigned int Parser::parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
    unsigned int result;
    pushBufferName(bufferName);
    result = parseString(prefix + "\n" + buffer);

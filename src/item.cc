@@ -18,7 +18,6 @@
  ************************************************** */
 
 #include <climits>
-
 #include "item.hh"
 #include "environment.hh"
 #include "messages.hh"

@@ -47,7 +47,8 @@ void usage() {
 \t-v|--version                           print version\n\
 \t-compactLexiconDirectory <directory>\n\
 \t-compactLexiconFile <file>\n\
-\t-patternFile <file>"
+\t-patternFile <file>\n\
+\t-morphoFile <file>"
          << std::endl;
    exit(EXIT_SUCCESS);
 }
@@ -63,8 +64,9 @@ int main(int argn, char** argv) {
       std::string prefix;
       std::string directory;
       std::string patternFile = std::string();
-      class Lexicon posPredLexicon = Lexicon();
-      class Lexicon predLexicon = Lexicon();
+      std::string morphoFile = std::string();
+      class Lexicon morpho = Lexicon();
+      class Lexicon pattern = Lexicon();
 
       if (argn > 1) {
          // generic options
@@ -92,6 +94,10 @@ int main(int argn, char** argv) {
                else if (!strcmp(argv[arg] + 1, "patternFile")) {
                   patternFile = std::string(argv[++arg]);
                }
+
+               else if (!strcmp(argv[arg] + 1, "morphoFile")) {
+                  morphoFile = std::string(argv[++arg]);
+               }
             }
             else {
                if (!strcmp(argv[arg], "build"))
@@ -104,97 +110,127 @@ int main(int argn, char** argv) {
          }
       }
 
-      if (patternFile.size()) {
+      if (morphoFile.size()) {
          std::ifstream inputFile;
-         inputFile.open(patternFile.c_str());
+         inputFile.open(morphoFile.c_str());
          char line[MAXSTRING];
          while (inputFile.getline(line, MAXSTRING)) {
-            if (strchr(line, '\t') && !strchr(line, '#')) {
-               char pos[MAXSTRING];
-               strcpy(pos, line);
-               char *rhs = strchr(pos, '\t');
+            if ((line[0] != '#') && strchr(line, '\t') ) {
+               char form[MAXSTRING];
+               strcpy(form, line);
+               char *rhs = strchr(form, '\t');
                *rhs = 0;
 
                char line2[MAXSTRING];
                strcpy(line2, line);
-               char *lemma = strchr(line2, '\t') + 1;
-               rhs = strchr(lemma, '\t');
+               char *pos = strchr(line2, '\t') + 1;
+               rhs = strchr(pos, '\t');
                *rhs = 0;
 
                char line3[MAXSTRING];
                strcpy(line3, line);
-               char *predicate = strchr(line3, '\t') + 1;
-               predicate = strchr(predicate, '\t') + 1;
-               rhs = strchr(predicate, '\t');
+               char *lemma = strchr(line3, '\t') + 1;
+               lemma = strchr(lemma, '\t') + 1;
+               rhs = strchr(lemma, '\t');
                *rhs = 0;
 
                char line4[MAXSTRING];
                strcpy(line4, line);
-               char *fs = strchr(line4, '\t') + 1;
-               fs = strchr(fs, '\t') + 1;
-               fs = strchr(fs, '\t') + 1;
+               char *features = strchr(line4, '\t') + 1;
+               features = strchr(features, '\t') + 1;
+               features = strchr(features, '\t') + 1;
 
+               //std::cerr << "/form:/" << form << '/' << std::endl;
                //std::cerr << "/pos:/" << pos << '/' << std::endl;
-               //std::cerr << "/predicate:/" << predicate << '/' << std::endl;
                //std::cerr << "/lemma:/" << lemma << '/' << std::endl;
-               //std::cerr << "/fs:/" << fs << '/' << std::endl;
+               //std::cerr << "/features:/" << features << '/' << std::endl;
 
                std::stringstream stream;
-               stream << pos << "#_" << predicate;
+               stream << lemma << '#' << pos;
                std::string input = stream.str();
 
                stream.str("");
-               stream << lemma << '#' << fs;
+               stream << form << '#' << features;
                std::string output = stream.str();
 
                //std::cerr << "/input:/" << input << '/' << std::endl;
                //std::cerr << "/output:/" << output << '/' << std::endl;
 
-               posPredLexicon.add(input, output);
-
-               stream.str("");
-               stream << "_" << predicate;
-               std::string input2 = stream.str();
-
-               stream.str("");
-               stream << fs;
-               std::string output2 = stream.str();
-
-               predLexicon.add(input2, output2);
+               morpho.add(input, output);
 
             }
          }
+         inputFile.close();
+      }
+
+      if (patternFile.size()) {
+         std::ifstream inputFile;
+         inputFile.open(patternFile.c_str());
+         char line[MAXSTRING];
+         while (inputFile.getline(line, MAXSTRING)) {
+            if ((line[0] != '#') && strchr(line, '\t') && strchr(line, '#')) {
+
+               char lexeme[MAXSTRING];
+               strcpy(lexeme, line);
+               char *rhs = strchr(lexeme, '#');
+               *rhs = 0;
+
+               char line2[MAXSTRING];
+               strcpy(line2, line);
+               char *pos = strchr(line2, '#') + 1;
+               rhs = strchr(pos, '\t');
+               *rhs = 0;
+
+               char line3[MAXSTRING];
+               strcpy(line3, line);
+               char *lemma = strchr(line3, '#') + 1;
+               lemma = strchr(lemma, '\t') + 1;
+               rhs = strchr(lemma, '\t');
+               *rhs = 0;
+
+               char line4[MAXSTRING];
+               strcpy(line4, line);
+               char *features = strchr(line4, '#') + 1;
+               features = strchr(features, '\t') + 1;
+               features = strchr(features, '\t') + 1;
+
+               //std::cerr << "/lexeme:/" << lexeme << '/' << std::endl;
+               //std::cerr << "/pos:/" << pos << '/' << std::endl;
+               //std::cerr << "/lemma:/" << lemma << '/' << std::endl;
+               //std::cerr << "/features:/" << features << '/' << std::endl;
+
+               std::stringstream stream;
+               stream << lexeme << '#' << pos;
+               std::string input = stream.str();
+
+               stream.str("");
+               stream << lemma << '#' << features;
+               std::string output = stream.str();
+
+               //std::cerr << "/input:/" << input << '/' << std::endl;
+               //std::cerr << "/output:/" << output << '/' << std::endl;
+
+              pattern.add(input, output);
+
+            }
+         }
+         inputFile.close();
       }
 
       switch (mode) {
 
          case Buildlexicon::BUILD: {
-            if (inputFileName != "") {
-               std::ifstream inputFile = std::ifstream();
-               inputFile.open(inputFileName.c_str());
-               if (inputFile.is_open()) {
-                  lex = new CompactLexicon(directory, prefix, inputFileName);
-                  lex->openFiles("w");
-                  lex->buildPredEntries(predLexicon);
-                  lex->buildFormEntries(posPredLexicon);
-                  lex->saveFsa();
-                  lex->closeFiles();
-                  inputFile.close();
-               }
-               else {
-                  std::cerr << "Unable to open file";
-                  return EXIT_FAILURE;
-               }
-            }
-            else {
-               UNEXPECTED
-            }
+            lex = new CompactLexicon(directory, prefix);
+            lex->openFiles("w");
+            lex->buildEntries(pattern, morpho);
+            lex->saveFsa();
+            lex->closeFiles();
             return EXIT_SUCCESS;
          }
             break;
 
          case Buildlexicon::CONSULT: {
-            lex = new CompactLexicon(directory, prefix, inputFileName);
+            lex = new CompactLexicon(directory, prefix);
             lex->openFiles("r");
             lex->loadFsa();
             lex->loadData();

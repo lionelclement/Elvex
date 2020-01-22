@@ -70,6 +70,7 @@ private:
    bool trace;
    bool warning;
    bool random;
+   int attempsRandom;
 
 #ifdef TRACE_OPTION
    bool traceInit;
@@ -161,7 +162,7 @@ public:
 
    itemPtr createItem(itemPtr, unsigned int);
    void generate(class Parser &);
-   const entriesPtr findCompactLexicon(class Parser &, const unsigned int code, const unsigned int pred);
+   const entriesPtr findCompactLexicon(class Parser &, unsigned int code, const std::string str, const unsigned int pred);
 #ifdef MEMOIZATION
    std::string keyMemoization(itemPtr const, itemPtr const);
 #endif

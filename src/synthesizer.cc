@@ -20,8 +20,8 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include "synthesizer.hh"
 
+#include "synthesizer.hh"
 #include "compact-lexicon.hh"
 #include "compact-lexicon-buffer.hh"
 #include "term.hh"
@@ -56,6 +56,7 @@ Synthesizer::Synthesizer() {
    this->reduceAll = false;
    this->warning = false;
    this->random = false;
+   this->attempsRandom = 1000;
    this->trace = false;
    NEW;
 }
@@ -987,7 +988,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                  entries = found->second;
                               else if (compactLexicon) {
                                  // Compact lexicon
-                                 entries = findCompactLexicon(parser, (*actualItem)->getCurrentTerm()->getCode(), pred);
+                                 entries = findCompactLexicon(parser, (*actualItem)->getCurrentTerm()->getCode(), std::string(), pred);
                               }
                               break;
                         }
@@ -999,7 +1000,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                            while (entryIt != entries->end()) {
                               entryPtr entry = *entryIt;
                               if (this->getRandom()) {
-                                 if (tryRandom++ > random)
+                                 if (tryRandom++ > attempsRandom)
                                     break;
                                  size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
                                  entry = entries->get(rv);
@@ -1040,7 +1041,8 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                     resultFeatures->renameVariables(entry->getId());
                                  }
 
-                                 it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(), resultFeatures);
+                                 //it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(), resultFeatures);
+                                 it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(), entryFeaturesCopy);
                                  if (entryStatements)
                                     entryStatements->renameVariables(entry->getId());
                                  entryPtr word;
@@ -1191,11 +1193,13 @@ void Synthesizer::generate(class Parser &parser) {
 /* **************************************************
  *
  ************************************************** */
-const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned int code, const unsigned int pred) {
+const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned int code, const std::string codeStr, const unsigned int pred) {
    unsigned long int info = ~0UL;
    std::string str;
    if (code)
-      str = Vartable::intToStr(code) + "#" + Vartable::intToStr(pred);
+      str = Vartable::intToStr(pred) + "#" + Vartable::intToStr(code);
+   else if (codeStr.size())
+      str = Vartable::intToStr(pred) + "#" + codeStr;
    else
       str = Vartable::intToStr(pred);
    info = compactLexicon->searchStatic(compactLexicon->init, str);
@@ -1214,12 +1218,9 @@ const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned 
       while (info != ~0UL) {
          std::string result = compactLexicon->buffer + (compactLexicon->info[info].getOffset());
          std::string form = result.substr(0, result.find("#"));
-         std::string data = result.substr(result.find("#") + 1, -1);
+         std::string features = result.substr(result.find("#") + 1, -1);
 
-         //CERR_LINE;
-         //std::cerr << data << std::endl;
-
-         if (!parser._parseBuffer("#", data, "features")) {
+         if (!parser.parseBuffer("#", features, "features")) {
             if (parser.getLocalFeatures()) {
                unsigned int pred = parser.getLocalFeatures()->assignPred();
                entryPtr localEntry = Entry::create(0, pred, std::string(), parser.getLocalFeatures());
