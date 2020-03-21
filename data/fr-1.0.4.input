@@ -1,4 +1,44 @@
 /* **************************************************
+ * verbal tense & inflexion
+ ************************************************** */
+
+text [PRED:_marcher, i:[PRED:_Léon], tense:present]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:future]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:imperfect]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:continuous]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:recent_past]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:present, aspect:continuous]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:near_future]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:future, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon], tense:present]
+//text [PRED:_partir, i:[PRED:_Léon], tense:past]
+//text [PRED:_partir, i:[PRED:_Micheline], tense:past]
+//text [PRED:_partir, i:[PRED:_boucher], tense:past]
+//text [PRED:_partir, i:[PRED:_Léon], tense:future]
+//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:imperfect]
+//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon], tense:recent_past]
+//text [PRED:_partir, i:[PRED:_Léon], tense:present, aspect:continuous]
+//text [PRED:_partir, i:[PRED:_Léon], tense:near_future]
+//text [PRED:_partir, i:[PRED:_Léon], tense:future, aspect:continuous]
+
+//text [PRED:_marcher, i:[PRED:__pro, person:one, number:sg], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:two, number:sg], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:three, number:sg], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:one, number:pl], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:two, number:pl], tense:past]
+//text [PRED:_marcher, i:[PRED:__pro, person:three, number:pl], tense:past]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:one, number:sg], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:two, number:sg], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:three, number:sg], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:one, number:pl], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:two, number:pl], tense:past]
+//text [PRED:_partir, i:[PRED:__pro, person:three, number:pl], tense:past]
+
+
+/* **************************************************
  * noun
  ************************************************** */
 // Nom et déterminant
@@ -7,7 +47,7 @@
 // detForm
 
 //***
-//text [PRED:_voiture, number:sg, def:yes]
+text [PRED:_voiture, number:sg, def:yes]
 // ***
 //text [PRED:_voiture, number:sg, def:yes, language_register:slang]
 
@@ -53,45 +93,6 @@
 //PP [PRED:_voiture, language_register:neutral, lexical_function:none, pcas:de]
 
 //text [PRED:_voiture, def:yes, number:sg, à_obj:[PRED:_Marcel]]
-
-/* **************************************************
- * verbal tense & inflexion
- ************************************************** */
-
-//text [PRED:_marcher, i:[PRED:_Léon], tense:present]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:future]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:imperfect]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:continuous]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:recent_past]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:present, aspect:continuous]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:near_future]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:future, aspect:continuous]
-//text [PRED:_partir, i:[PRED:_Léon], tense:present]
-//text [PRED:_partir, i:[PRED:_Léon], tense:past]
-//text [PRED:_partir, i:[PRED:_Micheline], tense:past]
-//text [PRED:_partir, i:[PRED:_boucher], tense:past]
-//text [PRED:_partir, i:[PRED:_Léon], tense:future]
-//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:imperfect]
-//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:continuous]
-//text [PRED:_partir, i:[PRED:_Léon], tense:recent_past]
-//text [PRED:_partir, i:[PRED:_Léon], tense:present, aspect:continuous]
-//text [PRED:_partir, i:[PRED:_Léon], tense:near_future]
-//text [PRED:_partir, i:[PRED:_Léon], tense:future, aspect:continuous]
-
-//text [PRED:_marcher, i:[PRED:__pro, person:one, number:sg], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:two, number:sg], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:three, number:sg], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:one, number:pl], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:two, number:pl], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:three, number:pl], tense:past]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:one, number:sg], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:two, number:sg], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:three, number:sg], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:one, number:pl], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:two, number:pl], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:three, number:pl], tense:past]
 
 /* **************************************************
  * Verbal Arguments
@@ -174,11 +175,3 @@
 //       language_register:slang
 // ]
 
-//text [PRED:_neiger]
-//text [PRED:_pleuvoir]
-//text [PRED:_pleuvoir, lexical_function:very_much]
-//text [PRED:_pleuvoir, language_register:slang]
-//text [PRED:_pleuvoir, lexical_function:very_much, language_register:slang]
-
-text [PRED:_faire_froid]
-text [PRED:_faire_froid, language_register:slang]
