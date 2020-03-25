@@ -1,3 +1,9 @@
+Ubuntu / Debian quick installation:
+. ./install-Elvex.sh
+
+
+
+
 The full compilation of Elvex requires the following programs on your computer:
 
 — g++
