@@ -1,0 +1,26 @@
+/***
+* I feel good.
+* You feel very bad.
+* He appreciates it.
+* I endure hope.
+* It feels the pain.
+* We enjoy his tenderness.
+* She suffers.
+* They endure pain.
+* We enjoy it.
+* He endures the sadness.
+* I feel a pain.
+* They enjoy our pain.
+* We appreciate the pain.
+* You appreciate tenderness.
+* Stay away!
+***/
+
+//S [PRED:TO_FEEL, i:[PRED:__EGO], ii:[PRED:BAD], lexical_function:magn]
+//S [PRED:TO_FEEL_BAD, i:[PRED:__YOU], lexical_function:magn]
+//S [PRED:TO_FEEL, i:[PRED:__EGO], ii:[PRED:HAPPY]]
+
+//S [PRED:TO_APPRECIATE, i:[PRED:__pro], ii:[PRED:JOHN]]
+//S [PRED:TO_APPRECIATE, i:[PRED:__pro, @_3ms], ii:[PRED:__pro, @_3s, human:false]]
+
+S [PRED:TO_ENJOY, i:[PRED:__pro, @_3ms], ii:[PRED:TENDERNESS, poss:true, owner:[@_3ms]]]
