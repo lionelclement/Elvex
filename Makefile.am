@@ -15,5 +15,5 @@
 #
 ################################################## #
 
-SUBDIRS = src data/lefff
+SUBDIRS = src
 AUTOMAKE_OPTIONS = foreign no-dependencies
