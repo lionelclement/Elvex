@@ -28,5 +28,8 @@ echo "--------------------------------------------------------"
 #../src/elvex -r -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-slang.grammar -lexiconFile fr-slang.local-lexicon -inputFile fr-slang.input | ../src/elvexpostedition |tr '@' "\n" |sed -e 's/^ *//' |tr '@' "\n"
 #../src/elvex -t -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.4.grammar -lexiconFile fr-1.0.4.local-lexicon -inputFile fr-1.0.4.input
 #../src/elvexdebug --traceShift -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.4.grammar -lexiconFile fr-1.0.4.local-lexicon -inputFile fr-1.0.4.input
+#../src/elvex -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
+#../src/elvex -t -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
+#../src/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 
 cd ..
