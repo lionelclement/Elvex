@@ -1,0 +1,157 @@
+//try it with "_lemma#pos"
+//form	pos	lemma	features
+// @id: features;
+/************************************************************
+* Patterns
+************************************************************/
+@m	gender:ms
+@f	gender:fm
+@_1	person:one
+@_2	person:two
+@_12	person:one|two
+@_3	person:three
+@s	number:sg
+@p	number:pl
+@_1s	person:one,number:sg
+@_2s	person:two,number:sg
+@_12s	person:one|two,number:sg
+@_3s	person:three,number:sg
+@_1p	person:one,number:pl
+@_2p	person:two,number:pl
+@_3p	person:three,number:pl
+@_3ms	person:three,number:sg,gender:ms
+@_3fs	person:three,number:sg,number:sg,gender:fm
+
+/************************************************************
+* Verbes
+************************************************************/
+feel	verb	TO_FEEL	vtense:present, SUBJECT:[@_12s]
+feel	verb	TO_FEEL	vtense:present, SUBJECT:[@_3p]
+feels	verb	TO_FEEL	vtense:present, SUBJECT:[@_3s]
+felt	verb	TO_FEEL	vtense:preterite
+felt	verb	TO_FEEL	vtense:past_participle
+feeling	verb	TO_FEEL	vtense:present_participle
+feel	verb	TO_FEEL	vtense:infinitive
+
+enjoy	verb	TO_ENJOY	vtense:present, SUBJECT:[person:one|two, number:sg]
+enjoy	verb	TO_ENJOY	vtense:present, SUBJECT:[person:three, number:pl]
+enjoys	verb	TO_ENJOY	vtense:present, SUBJECT:[person:three, number:sg]
+enjoyed	verb	TO_ENJOY	vtense:preterite
+enjoyed	verb	TO_ENJOY	vtense:past_participle
+enjoying	verb	TO_ENJOY	vtense:present_participle
+enjoy	verb	TO_ENJOY	vtense:infinitive
+
+appreciate	verb	TO_APPRECIATE	vtense:present, SUBJECT:[person:one|two, number:sg]
+appreciate	verb	TO_APPRECIATE	vtense:present, SUBJECT:[person:three, number:pl]
+appreciates	verb	TO_APPRECIATE	vtense:present, SUBJECT:[person:three, number:sg]
+appreciated	verb	TO_APPRECIATE	vtense:preterite
+appreciated	verb	TO_APPRECIATE	vtense:past_participle
+appreciating	verb	TO_APPRECIATE	vtense:present_participle
+appreciate	verb	TO_APPRECIATE	vtense:infinitive
+
+suffer	verb	TO_SUFFER	vtense:present, SUBJECT:[person:one|two, number:sg]
+suffer	verb	TO_SUFFER	vtense:present, SUBJECT:[person:three, number:pl]
+suffers	verb	TO_SUFFER	vtense:present, SUBJECT:[person:three, number:sg]
+suffered	verb	TO_SUFFER	vtense:preterite
+suffered	verb	TO_SUFFER	vtense:past_participle
+suffering	verb	TO_SUFFER	vtense:present_participle
+suffer	verb	TO_SUFFER	vtense:infinitive
+
+endure	verb	TO_ENDURE	vtense:present, SUBJECT:[person:one|two, number:sg]
+endure	verb	TO_ENDURE	vtense:present, SUBJECT:[person:three, number:pl]
+endures	verb	TO_ENDURE	vtense:present, SUBJECT:[person:three, number:sg]
+endured	verb	TO_ENDURE	vtense:preterite
+endured	verb	TO_ENDURE	vtense:past_participle
+enduring	verb	TO_ENDURE	vtense:present_participle
+endure	verb	TO_ENDURE	vtense:infinitive
+
+stay away	verb	TO_STAY_AWAY	vtense:present, SUBJECT:[person:one|two, number:sg]
+stay away	verb	TO_STAY_AWAY	vtense:present, SUBJECT:[person:three, number:pl]
+stays away	verb	TO_STAY_AWAY	vtense:present, SUBJECT:[person:three, number:sg]
+stayed away	verb	TO_STAY_AWAY	vtense:preterite
+stayed away	verb	TO_STAY_AWAY	vtense:past_participle
+staying away	verb	TO_STAY_AWAY	vtense:present_participle
+stay away	verb	TO_STAY_AWAY	vtense:infinitive
+
+call	verb	TO_CALL	vtense:present, SUBJECT:[person:one|two, number:sg]
+call	verb	TO_CALL	vtense:present, SUBJECT:[person:three, number:pl]
+calls	verb	TO_CALL	vtense:present, SUBJECT:[person:three, number:sg]
+called	verb	TO_CALL	vtense:preterite
+called	verb	TO_CALL	vtense:past_participle
+calling	verb	TO_CALL	vtense:present_participle
+call	verb	TO_CALL	vtense:infinitive
+
+// /************************************************************
+// * Noms propres
+// ************************************************************/
+// John	proper_noun [PRED:JOHN, number:sg, person:three, human:true]
+
+// /************************************************************
+// * Pronoms nominatifs
+// ************************************************************/
+// I	cln	_pro	number:sg, person:one, human:true, _case:nominative
+// I	cln	_EGO	number:sg, person:one, human:true, _case:nominative
+// you	cln	_pro	number:sg, person:two, human:true, _case:nominative
+// you	cln	_YOU	number:sg, person:two, human:true, _case:nominative
+// 	| cln [PRED:__YOU, number:sg, person:two, human:true, _case:nominative]
+// he	cln [PRED:__pro, number:sg, person:three, gender:ms, human:true, _case:nominative]
+// she	cln [PRED:__pro, number:sg, person:three, gender:fm, human:true, _case:nominative]
+// it	cln [PRED:__pro, number:sg, person:three, gender:fm, human:false, _case:nominative]
+// we	cln [PRED:__pro, number:pl, person:one, human:true, _case:nominative]
+// they	cln [PRED:__pro, number:pl, person:three, _case:nominative]
+
+// /************************************************************
+// * Pronoms accusatifs
+// ************************************************************/
+// me	pro [PRED:__pro, number:sg, person:one, human:true, _case:accusative]
+// you	pro [PRED:__pro, person:two, human:true, _case:accusative]
+// him	pro [PRED:__pro, number:sg, person:three, gender:ms, human:true, _case:accusative]
+// her	pro [PRED:__pro, number:sg, person:three, gender:fm, human:true, _case:accusative]
+// it	pro [PRED:__pro, number:sg, person:three, human:false, _case:accusative]
+// us	pro [PRED:__pro, number:pl, person:one, human:true, _case:accusative]
+// them	pro [PRED:__pro, number:pl, person:three, _case:accusative]
+
+// /************************************************************
+// * Pronoms réflexifs
+// ************************************************************/
+// myself	pro [PRED:__pro, number:sg, person:one, _case:reflexive]
+// yourself pro [PRED:__pro, number:sg, person:two, _case:reflexive]
+// himself pro [PRED:__pro, number:sg|pl, person:three, _case:reflexive]
+
+// // Déterminants
+
+// a	det	[number:sg, def:false, poss:false, part:false, dem:false]
+// ""	det	[number:pl, def:false, poss:false, part:false, dem:false]
+// the	det	[number:sg, def:true, poss:false, part:false, dem:false]
+
+// my	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_1s]]
+// your	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_2s]]
+// our	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_1p]]
+// their	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_3p]]
+// his	det [number:sg, gender:ms, def:false, poss:true, part:false, dem:false, owner:[@_3ms]]
+// her	det [number:sg, gender:fs, def:false, poss:true, part:false, dem:false, owner:[@_3fs]]
+
+// // Nouns
+// pain	common_noun	[PRED:PAIN, countable:false]
+// sadness	common_noun	[PRED:SADNESS, countable:false]
+// hope	common_noun	[PRED:HOPE, countable:false]
+// tenderness	common_noun	[PRED:TENDERNESS, countable:false]
+
+// // Adjectifs
+
+// // A voir ce que cela veut dire...
+// //@nice: [type:psy]
+// //@bad: [type:psy]
+// //@good: [type:psy]
+// //@psy: [type:psy]
+
+
+// nice	adj [PRED:NICE]
+// bad	adj [PRED:BAD,lexical_function:none]
+// 	| adj [PRED:BAD,lexical_function:magn,MOD:[PRED:VERY]]
+// good	adj [PRED:GOOD]
+// happy	adj [PRED:HAPPY]
+
+// // Adverbes
+
+// very adv [PRED:VERY]

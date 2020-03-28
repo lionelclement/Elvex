@@ -431,7 +431,7 @@ bool Features::buildEnvironment(environmentPtr environment, featuresPtr features
    }
    features->subFlags(Flags::SEEN);
 
-   /***
+   /*** 
     if (root) {
     std::cerr << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
     std::cerr << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";

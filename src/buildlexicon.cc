@@ -115,60 +115,99 @@ int main(int argn, char** argv) {
          inputFile.open(morphoFile.c_str());
          char line[MAXSTRING];
          while (inputFile.getline(line, MAXSTRING)) {
-            if ((line[0] != '#') && strchr(line, '\t') ) {
-               char form[MAXSTRING];
-               strcpy(form, line);
-               char *rhs = strchr(form, '\t');
-               *rhs = 0;
+            if ((line[0] != '#') && strchr(line, '\t')) {
+               //std::cerr << "/line:/" << line << '/' << std::endl;
+               std::string input;
+               std::string output;
 
-               char line2[MAXSTRING];
-               strcpy(line2, line);
-               char *pos = strchr(line2, '\t') + 1;
-               rhs = strchr(pos, '\t');
-               *rhs = 0;
+               if (line[0] == '@'){
+                  featuresPtr features;
 
-               char line3[MAXSTRING];
-               strcpy(line3, line);
-               char *lemma = strchr(line3, '\t') + 1;
-               lemma = strchr(lemma, '\t') + 1;
-               rhs = strchr(lemma, '\t');
-               *rhs = 0;
+                  char line2[MAXSTRING];
+                  strcpy(line2, line);
+                  char *form = strchr(line2, '@') + 1;
+                  char *rhs = strchr(form, '\t');
+                  *rhs = 0;
 
-               char line4[MAXSTRING];
-               strcpy(line4, line);
-               char *features = strchr(line4, '\t') + 1;
-               features = strchr(features, '\t') + 1;
-               features = strchr(features, '\t') + 1;
+                  char line4[MAXSTRING];
+                  strcpy(line4, line);
+                  char *f = strchr(line4, '\t') + 1;
 
-               //std::cerr << "/form:/" << form << '/' << std::endl;
-               //std::cerr << "/pos:/" << pos << '/' << std::endl;
-               //std::cerr << "/lemma:/" << lemma << '/' << std::endl;
-               //std::cerr << "/features:/" << features << '/' << std::endl;
+                  std::stringstream stream;
+                  stream << form;
+                  std::string input = stream.str();
 
-               std::stringstream stream;
-               stream << lemma << '#' << pos;
-               std::string input = stream.str();
+                  stream.str("");
+                  stream << form;
+                  std::string output = stream.str();
 
-               stream.str("");
-               stream << form << '#' << features;
-               std::string output = stream.str();
+                  stream.str("");
+                  stream << '[' << f << ']';
+                  std::string fsString = stream.str();
+                  if (parser.parseBuffer("#", fsString, "morphology")) {
+                     stream.str("");
+                     stream << "error in lexicon: " << f << std::endl;
+                     ERROR(stream.str())
+                     }
+                  features = parser.getLocalFeatures();
+                  parser.addMacros(input, features);
+               }
+               else {
+                  char form[MAXSTRING];
+                  strcpy(form, line);
+                  char *rhs = strchr(form, '\t');
+                  *rhs = 0;
 
-               //std::cerr << "/input:/" << input << '/' << std::endl;
-               //std::cerr << "/output:/" << output << '/' << std::endl;
+                  char line2[MAXSTRING];
+                  strcpy(line2, line);
+                  char *pos = strchr(line2, '\t') + 1;
+                  rhs = strchr(pos, '\t');
+                  *rhs = 0;
 
-               morpho.add(input, output);
+                  char line3[MAXSTRING];
+                  strcpy(line3, line);
+                  char *lemma = strchr(line3, '\t') + 1;
+                  lemma = strchr(lemma, '\t') + 1;
+                  rhs = strchr(lemma, '\t');
+                  *rhs = 0;
+
+                  char line4[MAXSTRING];
+                  strcpy(line4, line);
+                  char *features = strchr(line4, '\t') + 1;
+                  features = strchr(features, '\t') + 1;
+                  features = strchr(features, '\t') + 1;
+
+                  //std::cerr << "/form:/" << form << '/' << std::endl;
+                  //std::cerr << "/pos:/" << pos << '/' << std::endl;
+                  //std::cerr << "/lemma:/" << lemma << '/' << std::endl;
+                  //std::cerr << "/features:/" << features << '/' << std::endl;
+
+                  std::stringstream stream;
+                  stream << lemma << '#' << pos;
+                  std::string input = stream.str();
+
+                  stream.str("");
+                  stream << form << '#' << features;
+                  std::string output = stream.str();
+                  //std::cerr << "morpho/input:/" << input << '/' << std::endl;
+                  //std::cerr << "morpho/output:/" << output << '/' << std::endl;
+                  morpho.add(input, output);
+               }
 
             }
          }
          inputFile.close();
       }
 
+
       if (patternFile.size()) {
          std::ifstream inputFile;
          inputFile.open(patternFile.c_str());
          char line[MAXSTRING];
          while (inputFile.getline(line, MAXSTRING)) {
-            if ((line[0] != '#') && strchr(line, '\t') && strchr(line, '#')) {
+            if (strchr(line, '\t') && strchr(line, '#')) {
+
+               //std::cerr << "/line:/" << line << '/' << std::endl;
 
                char lexeme[MAXSTRING];
                strcpy(lexeme, line);
@@ -207,15 +246,16 @@ int main(int argn, char** argv) {
                stream << lemma << '#' << features;
                std::string output = stream.str();
 
-               //std::cerr << "/input:/" << input << '/' << std::endl;
-               //std::cerr << "/output:/" << output << '/' << std::endl;
+               //std::cerr << "pattern/input:/" << input << '/' << std::endl;
+               //std::cerr << "pattern/output:/" << output << '/' << std::endl;
 
-              pattern.add(input, output);
+               pattern.add(input, output);
 
             }
          }
          inputFile.close();
       }
+
 
       switch (mode) {
 

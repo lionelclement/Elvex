@@ -959,7 +959,6 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
   case AFF:
   case SUBSUME:
   case INSET:
-  case DOWN:
   case UP2:
   case LIST:
   case STMS:
@@ -967,7 +966,9 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
   case FCT:
   case FINISHED:
   case ANONYMOUS: {
-    FATAL_ERROR_STM}
+    std::cerr << this->op << std::endl;
+  FATAL_ERROR_STM
+      }
     break;
   case FEATURES:
   case GUARD: {
@@ -978,6 +979,7 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
     }
   }
     break;
+
   case UP: {
     resultFeatures = item->getInheritedFeatures()->clone();
     if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
@@ -985,6 +987,7 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
       item->getEnvironment()->replaceVariables(resultFeatures, effect);
     }}
     break;
+
   case VARIABLE: {
     if (item->getEnvironment()) {
       valuePtr value = item->getEnvironment()->find(getBits());
@@ -996,6 +999,15 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
     }
   }
     break;
+
+  case DOWN: {
+    resultFeatures=(*item->getInheritedSonFeatures())[getFirst()]->clone();
+    if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
+      bool effect = false;
+      item->getEnvironment()->replaceVariables(resultFeatures, effect);
+    }
+  }break;
+
   case DOWN2: {
     resultFeatures=(*item->getSynthesizedSonFeatures())[getFirst()]->clone();
     if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
@@ -2284,12 +2296,12 @@ void Statement::stmAttest(itemPtr item, Parser &parser, Synthesizer *synthesizer
  * guard
  ************************************************************ */
 void Statement::stmGuard(itemPtr item, Synthesizer *synthesizer) {
-  /***
-      CERR_LINE;
-      std::cerr << "<DIV>guard ";
-      item->print(std::cerr);
-      print(std::cerr);
-      std::cerr << "</DIV>";
+  /*** 
+       CERR_LINE;
+       std::cerr << "<DIV>guard ";
+       item->print(std::cerr);
+       print(std::cerr);
+       std::cerr << "</DIV>";
   ***/
   if (isSetFlags(Flags::DISABLED | Flags::SEEN)) {
     FATAL_ERROR_STM;

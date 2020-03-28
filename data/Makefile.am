@@ -19,9 +19,10 @@
 
 .PHONY: all output debug
 
-SUBDIRS = lefff
+SUBDIRS = lefff kalaba
 ELVEX = ../src/elvex
 ELVEXDEBUG = ../src/elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction 
+BUILDLEXICON = ../src/elvexbuildlexicon
 POSTEDITION = ../src/elvexpostedition
 CLEANFILES = $(patsubst %.input, %.output, $(wildcard *.input)) $(patsubst %.input, %.xml, $(wildcard *.input)) $(patsubst %.input, %.err, $(wildcard *.input)) $(patsubst %.input, %.html, $(wildcard *.input)) $(patsubst %.input, %.jpg, $(wildcard *.input))
 
@@ -51,3 +52,35 @@ p1: $(patsubst %.input, %.output, $(wildcard p1.input)) $(patsubst %.input, %.xm
 
 %.jpg: %.dot
 	dot -T jpg -o $@ $<
+
+%.fsa: %.formPosLemmaFeatures %.tmp-pattern
+	@echo "build $@ from $*.formPosLemmaFeatures $*.pattern"
+	$(BUILDLEXICON) -compactLexiconDirectory . -compactLexiconFile $* -patternFile $*.pattern -morphoFile $*.formPosLemmaFeatures build
+
+%.formPosLemmaFeatures: %.form %.pos %.lemma %.features
+	@echo "build $@ from $^"
+	@paste $*.form $*.pos $*.lemma $*.features > $@
+
+%.form: %.tmp-morpho
+	@echo "build $@ from $^"
+	@grep -v '^//' < $< | cut -f1 > $@
+
+%.pos: %.tmp-morpho
+	@echo "build $@ from $^"
+	@grep -v '^//' < $< | cut -f2 > $@
+
+%.lemma: %.tmp-morpho
+	@echo "build $@ from $^"
+	@cut -f3 < $< | tr '\-/\.' '____' > $@
+
+%.features: %.tmp-morpho
+	@echo "build $@ from $^"
+	@cut -f4 < $< | tr '\-/\.' '____' > $@
+
+%.tmp-pattern: %.pattern
+	@echo "build $@ from $^"
+	@sed -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | tr '\-/\.' '____' | sort -u > $@
+
+%.tmp-morpho: %.morpho
+	@echo "build $@ from $^"
+	@sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | sort -u > $@

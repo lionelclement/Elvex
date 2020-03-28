@@ -973,8 +973,10 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                               if (found != listPred->end()) {
                                  entries = found->second;
                               }
-                              else
-                                 break;
+                              else if (compactLexicon) {
+                                 // Compact lexicon
+                                 entries = findCompactLexicon(parser, (*actualItem)->getCurrentTerm()->getCode(), std::string(), 0);
+                              }
                               break;
                            case 2:
                               found = listPred->find(0);		// IDENTITY : 0 = > ...
@@ -1082,8 +1084,9 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
 #endif
 
                                  if (trace && it->getTrace()) {
-                                    std::cout << "*** Shift " << entry->getForm() << std::endl;;
-				    it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
+                                    std::cout << "*** Shift " << entry->getForm() << std::endl;
+                                    ;
+                                    it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
                                     std::cout << " ... ";
                                     it->getRule()->print(std::cout, it->getIndex(), false, false);
                                     std::cout << std::endl;
@@ -1196,12 +1199,22 @@ void Synthesizer::generate(class Parser &parser) {
 const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned int code, const std::string codeStr, const unsigned int pred) {
    unsigned long int info = ~0UL;
    std::string str;
-   if (code)
-      str = Vartable::intToStr(pred) + "#" + Vartable::intToStr(code);
-   else if (codeStr.size())
-      str = Vartable::intToStr(pred) + "#" + codeStr;
-   else
-      str = Vartable::intToStr(pred);
+   if (pred) {
+      if (code)
+         str = Vartable::intToStr(pred) + "#" + Vartable::intToStr(code);
+      else if (codeStr.size())
+         str = Vartable::intToStr(pred) + "#" + codeStr;
+      else
+         str = Vartable::intToStr(pred);
+   }
+   else {
+      if (code)
+         str = "_#" + Vartable::intToStr(code);
+      else if (codeStr.size())
+         str = "_#" + codeStr;
+      else
+         ERROR("pred and code null")
+   }
    info = compactLexicon->searchStatic(compactLexicon->init, str);
    // in : pos#lemma
    // out : form#fs

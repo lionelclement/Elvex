@@ -233,9 +233,14 @@ void Parser::printLexicon(std::ostream& out) const {
  *                                                            *
  ************************************************************ */
 void Parser::addMacros(std::string str, featuresPtr features) {
-   //CERR_LINE
-   //cerr << "insert @" << str << ":";
-   //features->printHTML(cerr);
+   /*CERR_LINE
+   std::cerr << "insert @" << str << ":";
+   if (features)
+      features->print(std::cerr);
+   else
+      std::cerr << "NULL";
+   std::cerr << std::endl;
+   */
    macros.insert(std::pair<std::string, featuresPtr>(str, features));
 }
 
@@ -243,8 +248,10 @@ void Parser::addMacros(std::string str, featuresPtr features) {
  *                                                            *
  ************************************************************ */
 featuresPtr Parser::findMacros(std::string str) {
-   //CERR_LINE
-   //cerr << "find @" << str << ":";
+   /*
+   CERR_LINE
+   std::cerr << "find @" << str << ":";
+   */
    std::unordered_map<std::string, featuresPtr>::const_iterator found;
    found = macros.find(str);
    if (found == macros.end()) {
