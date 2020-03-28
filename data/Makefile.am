@@ -19,7 +19,7 @@
 
 .PHONY: all output debug
 
-SUBDIRS = lefff kalaba
+SUBDIRS = lefff
 ELVEX = ../src/elvex
 ELVEXDEBUG = ../src/elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction 
 BUILDLEXICON = ../src/elvexbuildlexicon
