@@ -30,7 +30,7 @@ elvex -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1
 #elvex -t -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 #elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 
-#make greg-2.fsa
-#elvex -compactLexiconDirectory . -compactLexiconFile greg-2 -grammarFile greg-2.grammar -lexiconFile greg-2.lexicon -inputFile greg-2.input
+make en-1.0.0.fsa
+elvex -compactLexiconDirectory . -compactLexiconFile en-1.0.0 -grammarFile en-1.0.0.grammar -lexiconFile en-1.0.0.lexicon -inputFile en-1.0.0.input
 
 cd ..
