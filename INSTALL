@@ -2,7 +2,17 @@ Ubuntu / Debian quick installation:
 . ./install-Elvex.sh
 
 
+Standard installation:
+aclocal
+automake −a
+autoconf
+./configure
+make
+sudo make install
 
+Once you have downloaded Elvex execute these commands:
+
+. ./try-it.sh
 
 The full compilation of Elvex requires the following programs on your computer:
 
@@ -14,13 +24,3 @@ The full compilation of Elvex requires the following programs on your computer:
 — autoconf
 — libxml2-dev
 
-Once you have downloaded Elvex execute these commands:
-
-aclocal
-automake −a
-autoconf
-./configure
-make
-sudo make install
-
-. ./try-it.sh
