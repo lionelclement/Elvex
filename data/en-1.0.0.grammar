@@ -1,89 +1,110 @@
+T → S vtense {
+  ↓2 = ↑ ∪ ⇓1;
+  ↓1 = ↑;
+}
+
 /* **************************************************
- * Phrase
- * La réalisation du premier argument (i) est le sujet
+ * Sentence arguments
  ************************************************** */
-@trace
 S → S {
   [i:$i, ii:NIL, $REST];
   ↓1 = [SUBJECT:$i, $REST];
 }
 
-@trace
 S → S {
   [i:$i, ii:$ii, $REST];
   ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, $REST];
 }
 
-@trace
 S → S {
   [i:$i, ii:$ii, $REST];
   ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $REST];
 }
 
-@trace
 S → S {
   [i:$i, ii:$ii, $REST];
   ↓1 = [SUBJECT:$i, $OBJ_THETA:[pcase:$pcase, $ii], iiReal:$OBJ_THETA, ii_pcase:$pcase, $REST];
 }
 
-@trace
 S → S {
   [i:$i, ii:$ii, iii:$iii, $REST];
   ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, iiiReal:$OBJ_THETA, iii_pcase:$pcase, $OBJ_THETA:[pcase:$pcase, $iii], $REST];
 }
 
-@trace
-S → NP|cln VP {
-  [SUBJECT:$SUBJECT, $REST];
-  [SUBJECT:$expected_subject] ⊂ ⇓2;
+/* **************************************************
+ * Affirmative Sentence
+ ************************************************** */
+S → NP|cln VP strongPunct {
+  [SUBJECT:$SUBJECT, vtense:$vtense, $REST];
+  [verbal_constr:$verbal_constr] ⊂ ↑;
   ↓1 = $SUBJECT ∪ [_case:nominative];
-  // On récupère la personne et le nombre du sujet produit
-  $SynthSubject = ⇓1;
-  ↓2 = [SUBJECT:$SynthSubject, $REST];
-  attest $SynthSubject ∪ $expected_subject;
+  $Synth_Subject = ⇓1;
+
+  // not Interrogative form
+  attest ((¬ $verbal_constr) ∨ ($verbal_constr != int));
+  ↓2 = [SUBJECT:$Synth_Subject, vtense:$vtense, $REST];
+  [SUBJECT:$expected_subject] ⊂ ⇓2;
+  attest $Synth_Subject ∪ $expected_subject;
+  ↓3 = [form:dot];
 }
 
 /* **************************************************
- * Je fais remonter l'information lexicale du nom
- * le nom peut être modifié (complément de nom, relative, adjectif)
+ * Interrogative Sentence
  ************************************************** */
-@trace
+S → aux NP|cln VP strongPunct {
+  [SUBJECT:$SUBJECT, vtense:$vtense, $REST];
+  [verbal_constr:$verbal_constr] ⊂ ↑;
+  ↓2 = $SUBJECT ∪ [_case:nominative];
+  $Synth_Subject = ⇓2;
+
+  // Interrogative form
+  attest ((¬ $verbal_constr) ∨ ($verbal_constr == int));
+  ↓1 = ↑ ∪ [SUBJECT:$Synth_Subject];
+  [verbal_constr:$synth_verbal_constr, verb_vform:$verb_vform] ⊂ ⇓1;
+  ↓3 = $REST ∪ [vtense:$verb_vform];
+  
+  ↓4 = [form:int];
+
+}
+
+/* **************************************************
+ * Noun phrase
+ ************************************************** */
 NP → det N {
   ↓1 = ↑ ∪ ⇓2;
   ↓2 = ↑;
   ⇑ = ⇓2;
 }
 
-@trace
 NP → proper_noun {
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
 
-@trace
 NP → pro {
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
 
-@trace
 N → common_noun {
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
 
-@trace
 N → noun {
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
 
 /* **************************************************
- * Object
+ * Verb and its complements
  ************************************************** */
-@trace
-VP → VN [NP] [NP] [ADJ] [PP] [SCOMP|VCOMP] {
+VP → VN [NP] [NP] [AP] [PP] [SCOMP|VCOMP] {
+  // Given Arguments
   [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $REST] ⊂ ↑;
+  // Idiomatic Arguments
+  //  [OBJECT:$Synth_OBJECT, OBLIQUE:$Synth_OBLIQUE, OBJ_THETA:$Synth_OBJ_THETA, PRED_ADJ:$Synth_PRED_ADJ, SCOMP:$Synth_SCOMP, VCOMP:$Synth_VCOMP] ⊂ ⇓1;
+  [PRED_ADJ:$Synth_PRED_ADJ] ⊂ ⇓1;
   ↓1 = $REST;
   if (#2) 
     ↓2 = [_case:accusative, lexical_function:$lexical_function, $OBJECT];
@@ -93,10 +114,14 @@ VP → VN [NP] [NP] [ADJ] [PP] [SCOMP|VCOMP] {
     ↓3 = [lexical_function:$lexical_function, $OBLIQUE];
   else
     attest (¬ $OBLIQUE);
-  if (#4)
+  if (#4) {
+     if ($Synth_PRED_ADJ)
+          $PRED_ADJ = $PRED_ADJ ∪ $Synth_PRED_ADJ; 
     ↓4 = [lexical_function:$lexical_function, $PRED_ADJ];
-  else
-    attest (¬ $PRED_ADJ);
+  }
+  else {
+    attest ((¬ $PRED_ADJ) ∧ (¬ $Synth_PRED_ADJ));
+  }
   if (#5)
     ↓5 = [lexical_function:$lexical_function, $OBJ_THETA];
   else
@@ -111,88 +136,119 @@ VP → VN [NP] [NP] [ADJ] [PP] [SCOMP|VCOMP] {
 }
 
 /* **************************************************
- * Le verbe pourra être complété par la suite
- * Cette règle est finale: elle correspon au verbe sans ses compléments
- * VP -> VP NP // un complément objet
- * VP -> Verb  // plus de complément
+ * Verb 
  ************************************************** */
-@trace
-VN → VERB [ADJ] {
+VN → VERB {
   [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, PRED_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $REST];
-  [lexical_function:$lexical_function] ⊂ ↑;
-  [PRED_ADJ:$Synth_PRED_ADJ] ⊂ ⇓1;
-  if (#2) {
-    attest $objSynt;
-    ↓2 = [lexical_function:$lexical_function, $Synth_PRED_ADJ];
-  }  else {
-    attest (¬ $Synth_PRED_ADJ);
-  }
   ↓1 = $REST;
   ⇑ = ⇓1;
 }
 
-@trace
+/* **************************************************
+ * Simple Verb 
+ ************************************************** */
+// he feels good
 VERB → verb {
-  ↓1 = ↑ ∪ [vtense:present|preterite];
+  [verbal_constr:$verbal_constr] ⊂ ↑;
+  ↓1 = ↑ ∪ [vtense:present];
+  attest  ((¬ $verbal_constr) ∨ ($verbal_constr != neg));
   ⇑ = ⇓1;
 }
 
-@trace
+// he doesn't feel good
 VERB → aux [not] verb {
-  ↓1 = ↑ ∪ [vtense:present|present_continuous|present_perfect|future|past_continous|past_perfect];
+  ↓1 = ↑;
+  [verbal_constr:$verbal_constr] ⊂ ↑;
+  attest ((¬ $verbal_constr) ∨ ($verbal_constr == int|neg));
   [vtense:_, $rest] ⊂ ↑;
   [verbal_constr:$verbal_constr, verb_vform:$verb_vform] ⊂ ⇓1;
   if (#2) {
-    attest ($verbal_constr == neg);
+    attest   ((¬ $verbal_constr) ∨ ($verbal_constr == neg));
     ↓2 = [];
-    [neg:true];
   } else {
-    attest ($verbal_constr == none);
-    [neg:false] ⊂ ↑;
+    attest  ((¬ $verbal_constr) ∨ ($verbal_constr != neg));
   }
   ↓3 = $rest ∪ [vtense:$verb_vform];
   ⇑ = ⇓3;
 }
 
-@trace
-VERB → aux [not] have|be|been verb {
-  ↓1 = ↑ ∪ [vtense:future_perfect|future_continuous|present_perfect_continuous|past_perfect_continuous];
-  [vtense:_, $rest] ⊂ ↑;
-  [aux_form:$aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
-  if (#2) {
-    attest ($verbal_constr == neg);
-    ↓2 = [];
-    [neg:true];
-  } else {
-    attest ($verbal_constr == none);
-    [neg:false] ⊂ ↑;
-  }
-  ↓3 = [form:$aux_form];
-  ↓4 = $rest ∪ [vtense:$verb_vform];
-  ⇑ = ⇓4;
-}
+// VERB → [not] verb {
+//   [verbal_constr:$verbal_constr] ⊂ ↑;
+//   ↓2 = ↑;// ∪ [vtense:infinitive|present_participle|past_participle|present|preterite];
+//   [verbal_constr:$synth_verbal_constr] ⊂ ⇓2;
+//   if (#1) {
+//     attest   ((¬ $verbal_constr) ∨ ($verbal_constr == neg));
+//     ↓1 = [];
+//   } else {
+//     attest  ((¬ $verbal_constr) ∨ ($verbal_constr != neg));
+//   }
+//   ⇑ = ⇓2;
+// }
 
-@trace
-VERB → aux [not] have been verb {
-  ↓1 = ↑ ∪ [vtense:future_perfect_continuous];
-  [vtense:_, $rest] ⊂ ↑;
-  [aux_form:$aux_form, aux2_form:$aux2_form, verb_vform:$verb_vform] ⊂ ⇓1;
-  if (#2) {
-    attest ($verbal_constr == neg);
-    ↓2 = [];
-    [neg:true];
-  } else {
-    attest ($verbal_constr == none);
-    [neg:false] ⊂ ↑;
-  }
-  ↓3 = [form:$aux_form];
-  ↓4 = [form:$aux2_form];
-  ↓5 = $rest ∪ [vtense:$verb_vform];
-  ⇑ = ⇓5;
-}
+// /* **************************************************
+//  * Verb with an auxiliary 
+//  ************************************************** */
+// VERB → aux [not] verb {
+//   ↓1 = ↑;// ∪ [vtense:present|preterite|present_continuous|present_perfect|future|past_continous|past_perfect];
+//   [vtense:_, $rest] ⊂ ↑;
+//   [verbal_constr:$verbal_constr, verb_vform:$verb_vform] ⊂ ⇓1;
+//   if (#2) {
+//     attest ($verbal_constr == neg);
+//     ↓2 = [];
+//     [neg:true];
+//   } else {
+//     attest ($verbal_constr == none);
+//     [neg:false] ⊂ ↑;
+//   }
+//   ↓3 = $rest ∪ [vtense:$verb_vform];
+//   ⇑ = ⇓3;
+// }
 
-@trace
-ADJ → [adv] adj {
+// /* **************************************************
+//  * Verb with two auxiliaries
+//  ************************************************** */
+// VERB → aux [not] have|be|been verb {
+//   ↓1 = ↑ ∪ [vtense:future_perfect|future_continuous|present_perfect_continuous|past_perfect_continuous];
+//   [vtense:_, verbal_constr:$verbal_constr, $rest] ⊂ ↑;
+//   [aux_form:$aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
+//   if (#2) {
+//     attest ($verbal_constr == neg);
+//     ↓2 = [];
+//     [neg:true];
+//   } else {
+//     attest ($verbal_constr == int|none);
+//     [neg:false] ⊂ ↑;
+//   }
+//   ↓3 = [form:$aux_form];
+//   ↓4 = $rest ∪ [vtense:$verb_vform];
+//   ⇑ = ⇓4;
+// }
+
+// /* **************************************************
+//  * Verb with three auxiliaries
+//  ************************************************** */
+// VERB → aux [not] have been verb {
+//   ↓1 = ↑ ∪ [vtense:future_perfect_continuous];
+//   [vtense:_, $rest] ⊂ ↑;
+//   [aux_form:$aux_form, aux2_form:$aux2_form, verb_vform:$verb_vform] ⊂ ⇓1;
+//   if (#2) {
+//     attest ($verbal_constr == neg);
+//     ↓2 = [];
+//     [neg:true];
+//   } else {
+//     attest ($verbal_constr == int|none);
+//     [neg:false] ⊂ ↑;
+//   }
+//   ↓3 = [form:$aux_form];
+//   ↓4 = [form:$aux2_form];
+//   ↓5 = $rest ∪ [vtense:$verb_vform];
+//   ⇑ = ⇓5;
+// }
+
+/* **************************************************
+ * Adjective phrase
+ ************************************************** */
+AP → [adv] adj {
   ↓2 = ↑;
   [MOD:$Synth_MOD] ⊂ ⇓2;
   if (#1) {

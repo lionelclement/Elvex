@@ -19,30 +19,37 @@
 //may | might | can | could | shall | should | will | would | must | ought to
 
 
-//S [PRED:_TO_FEEL, vtense:present, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:preterite, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:present_continuous, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:present_perfect, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:future, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:past_continous, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:past_perfect, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:future_perfect, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:present_perfect_continuous, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:past_perfect_continuous, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
-//S [PRED:_TO_FEEL, vtense:future_perfect_continuous, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
+//T [PRED:_TO_FEEL, vtense:$vtense, i:[PRED:__pro, @_3ms], ii:[PRED:_BAD], lexical_function:magn, neg:$neg]
 
-//S [PRED:_TO_FEEL, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn]
-//S [PRED:_TO_FEEL, i:[PRED:_JOHN], ii:[PRED:_BAD], lexical_function:magn, neg:true]
+//T [PRED:_TO_FEEL, vtense:present, i:[PRED:__pro, @_3ms], verbal_constr:neg]
+//T [PRED:_TO_FEEL, vtense:present, i:[PRED:__pro, @_3ms], verbal_constr:int]
+//T [PRED:_TO_FEEL, vtense:present, i:[PRED:__pro, @_3ms], verbal_constr:int|neg]
+
+T [PRED:_TO_FEEL, vtense:present, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:preterite, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:present_continuous, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:present_perfect, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:future, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:past_continous, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:past_perfect, i:[PRED:__pro, @_3ms]]
+
+//T [PRED:_TO_FEEL, vtense:future_perfect, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:present_perfect_continuous, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:past_perfect_continuous, i:[PRED:__pro, @_3ms]]
+//T [PRED:_TO_FEEL, vtense:future_perfect_continuous, i:[PRED:__pro, @_3ms]]
+
+//S [PRED:_TO_FEEL, vtense:$vtense, i:[PRED:__pro, @_3ms], ii:[PRED:_BAD], lexical_function:magn]
+//S [PRED:_TO_FEEL, i:[PRED:__pro, @_3ms], ii:[PRED:_BAD], lexical_function:magn, neg:true]
 
 
-S [PRED:_TO_ENJOY, vtense:$vtense, i:[PRED:__pro, @_3ms], ii:[PRED:_TENDERNESS, poss:true, owner:[@_3ms]], neg:$neg]
-//S [PRED:_TO_ENJOY, vtense:present, i:[PRED:__pro, @_3ms], ii:[PRED:_TENDERNESS, poss:true, owner:[@_3ms]], neg:$neg]
+//S [PRED:_TO_ENJOY, vtense:$vtense, i:[PRED:__pro, @_3ms], ii:[PRED:_TENDERNESS, poss:true, owner:[@_3ms]]]
+//S [PRED:_TO_ENJOY, vtense:present, i:[PRED:__pro, @_3ms], ii:[PRED:_TENDERNESS, poss:true, owner:[@_3ms]]]
 //S [PRED:_TO_FEEL, i:[PRED:__pro], ii:[PRED:_BAD], lexical_function:magn]
 
 //S [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_BAD], lexical_function:magn]
 //S [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:HAPPY]]
 
-//S [PRED:_TO_APPRECIATE, i:[PRED:__pro], ii:[PRED:_JOHN], lexical_function:magn, neg:$neg]
+//S [PRED:_TO_APPRECIATE, i:[PRED:__pro], ii:[PRED:__pro, @_3ms], lexical_function:magn]
 //S [PRED:_TO_APPRECIATE, i:[PRED:__pro, @_3ms], ii:[PRED:__pro, @_3s, human:false]]
 
 //S [PRED:_TO_ENJOY, vtense:present, i:[PRED:__pro, @_3ms], ii:[PRED:_TENDERNESS, poss:true, owner:[@_3ms]]]
