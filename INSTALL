@@ -12,7 +12,7 @@ sudo make install
 
 Once you have downloaded Elvex execute these commands:
 
-. ./try-it.sh
+. ./try-me.sh
 
 The full compilation of Elvex requires the following programs on your computer:
 
