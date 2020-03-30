@@ -1,11 +1,12 @@
 // French Toy grammar demonstration (work in progress)
-// fr-X.X.X.xxx.grammar
+// fr-X.X.X.*
 
-// To appear
-// en-X.X.X.xxx.*
+// English Toy grammar
+// en-X.X.X.*
 
 // How to use this files:
-// In fr-1.0.3.input, uncomment a line begining with //text[...
-// and within this directory data, call ../src/elvex like this:
-// ../src/elvex -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.3.grammar -lexiconFile fr-1.0.3.local-lexicon -inputFile fr-1.0.3.input | ../src/elvexpostedition | sed 's/^ *//'
+// In *.input, uncomment a line begining with //text[...
+// and within this directory data, call elvex like this:
+// elvex -compactLexiconDirectory . -compactLexiconFile en-x.x.x -grammarFile en-x.x.x.grammar -lexiconFile en-x.x.x.lexicon -inputFile en-x.x.x.input | elvexpostedition_en | sed 's/^ *//'
+// elvex -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.3.grammar -lexiconFile fr-1.0.3.local-lexicon -inputFile fr-1.0.3.input | elvexpostedition_fr | sed 's/^ *//'
 
