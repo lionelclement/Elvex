@@ -19,7 +19,7 @@
 ################################################## #
 
 sudo apt-get update
-sudo apt-get install -y git bison flex libxml2-dev autoconf
+sudo apt-get install -y git g++ bison flex libxml2-dev autoconf
 apt-get autoclean
 if [ ! -d "Elvex" ]; then
     git clone https://github.com/lionelclement/Elvex.git
