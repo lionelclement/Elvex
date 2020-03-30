@@ -14,8 +14,7 @@ Once you have downloaded Elvex execute these commands:
 
 . ./try-me.sh
 
-The full compilation of Elvex requires the following programs on your computer:
-
+The full compilation of Elvex requires the following tools on your computer:
 — g++
 — flex (only if you need to recompile lex files)
 — bison (only if you need to recompile yacc file)
