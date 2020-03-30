@@ -28,7 +28,7 @@ YFLAGS = -v --defines --report=all
 LFLAGS = -8
 CXXFLAGS = -g -std=c++11 -O3 -Wall -Wno-unused-label -Wno-unneeded-internal-declaration -Wno-deprecated-register  
 
-bin_PROGRAMS = elvex elvexdebug elvexbuildlexicon elvexpostedition_fr elvexpostedition_en
+bin_PROGRAMS = elvex elvexdebug elvexbuildlexicon elvexedition_fr elvexpostedition_en
 
 elvex_SOURCES=\
 rulesyacc.cc\
@@ -190,7 +190,8 @@ elvexbuildlexicon_OPTIONS =
 elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O5 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
 elvexbuildlexicon_LDADD =
 
-elvexpostedition_SOURCES = postedition_en.cc postedition_fr.cc
+elvexpostedition_en_SOURCES = postedition_en.cc
+elvexpostedition_fr_SOURCES = postedition_fr.cc
 
 BUILT_SOURCES = 
 
