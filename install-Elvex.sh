@@ -13,4 +13,5 @@ autoconf
 ./configure
 make
 sudo make install
+./try-me.sh
 cd ..
