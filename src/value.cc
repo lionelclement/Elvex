@@ -920,11 +920,13 @@ bool Value::findVariable(bitsetPtr variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statementPtr variable, statementPtr body) {
+void Value::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statementPtr variable, statementPtr body, bool &effect) {
   switch (type) {
   case FEATURES:
+    CERR_LINE;
     item->getEnvironment()->add(variable->getBits(), shared_from_this());
-    body->apply(item, parser, synthesizer);
+    effect = true;
+    body->apply(item, parser, synthesizer, effect);
     item->getEnvironment()->remove(variable->getBits());
     break;
   default:

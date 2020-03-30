@@ -368,7 +368,7 @@ void CompactLexicon::addForms(std::string input, std::string inputSearch, std::s
  *
  ************************************************** */
 void CompactLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, std::string input, std::string patternFs, std::string lemma, std::string pos) {
-   //std::cerr << "addPattern with " << '(' << input << ',' << patternFs << ',' << lemma << ',' << pos << ')' << std::endl;
+  //std::cerr << "addPattern with " << '(' << input << ',' << patternFs << ',' << lemma << ',' << pos << ')' << std::endl;
    std::stringstream stringStream;
    stringStream.str("");
    stringStream << lemma << '#' << pos;
@@ -378,18 +378,21 @@ void CompactLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, std::string i
       addForms(input, inputSearch, patternFs, pattern, morpho);
    }
    else if (pattern.count(inputSearch)) {
-      std::list<std::string> *o = pattern.find(inputSearch);
-      for (std::list<std::string>::const_iterator it = o->begin(); it != o->end(); ++it) {
-         char patternLemma[MAXSTRING];
-         strcpy(patternLemma, it->c_str());
-         char *rhs = strchr(patternLemma, '#');
-         *rhs = 0;
-         char line2[MAXSTRING];
-         strcpy(line2, it->c_str());
-         std::string pattern2Fs = strchr(line2, '#') + 1;
-         //std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << patternFs << ')' << std::endl;
-         addPattern(pattern, morpho, input, unif(patternFs, pattern2Fs), patternLemma, pos);
-      }
+     //std::cerr << "find " << inputSearch << std::endl;
+     std::list<std::string> *o = pattern.find(inputSearch);
+     for (std::list<std::string>::const_iterator it = o->begin(); it != o->end(); ++it) {
+       char patternLemma[MAXSTRING];
+       strcpy(patternLemma, it->c_str());
+       char *rhs = strchr(patternLemma, '#');
+       *rhs = 0;
+       char line2[MAXSTRING];
+       strcpy(line2, it->c_str());
+       std::string pattern2Fs = strchr(line2, '#') + 1;
+       if (patternFs != pattern2Fs) {
+	 //std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << patternFs << '-' << pattern2Fs << ')' << std::endl;
+	 addPattern(pattern, morpho, input, unif(patternFs, pattern2Fs), patternLemma, pos);
+       }
+     }
    }
 }
 
@@ -402,11 +405,11 @@ void CompactLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
    std::size_t size = pattern.size();
    std::size_t range = 0;
    for (Lexicon::unordered_map::const_iterator patternIt = pattern.cbegin(); patternIt != pattern.cend(); ++patternIt) {
-      //std::cerr << "pattern:" << patternIt->first << std::endl;
+     //std::cerr << "pattern:" << patternIt->first << std::endl;
       for (std::list<std::string>::const_iterator it2 = patternIt->second->begin(); it2 != patternIt->second->end(); ++it2) {
-         //std::cerr << "str:" << *it2 << std::endl;
+	//std::cerr << "str:" << *it2 << std::endl;
 
-         char lexeme[MAXSTRING];
+	char lexeme[MAXSTRING];
          strcpy(lexeme, patternIt->first.c_str());
          char *rhs = strchr(lexeme, '#');
          *rhs = 0;

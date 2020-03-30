@@ -239,10 +239,10 @@ VERB → [not] have|be|been|have_been verb {
   [aux_form:have|be|been|have_been];
   [aux_form:_, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
   if (#1) {
-    attest ((¬ $verbal_constr) ∨ ($verbal_constr == neg));
+    attest (($verbal_constr == neg));
     ↓1 = [];
   } else {
-    attest ((¬ $verbal_constr) ∨ ($verbal_constr == no_neg));
+    attest (($verbal_constr == no_neg));
   }
   ↓3 = $REST ∪ [vtense:infinitive|past_participle|present_participle];
   [aux_form:$aux_form] ⊂ ↑;
@@ -268,14 +268,14 @@ VERB → [not] have|be|been|have_been verb {
 VERB → aux [not] [have|be|been|have_been] verb {
   ↓1 = ↑;
   [verbal_constr:$verbal_constr, aux_form:$aux_form] ⊂ ↑;
-  attest ((¬ $verbal_constr) ∨ ($verbal_constr == int|neg));
+  //attest ((¬ $verbal_constr) ∨ ($verbal_constr == int|neg));
   [vtense:_, tensed:_, $REST] ⊂ ↑;
-  [verbal_constr:$verbal_constr, aux_form:$synth_aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
+  [verbal_constr:$synth_verbal_constr, aux_form:$synth_aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
   if (#2) {
-    attest ((¬ $verbal_constr) ∨ ($verbal_constr == neg));
+    attest (($verbal_constr == neg));
     ↓2 = [];
   } else {
-    attest ((¬ $verbal_constr) ∨ ($verbal_constr == no_neg));
+    attest (($verbal_constr == no_neg));
   }
   if (#3) {
     attest ($synth_aux_form);

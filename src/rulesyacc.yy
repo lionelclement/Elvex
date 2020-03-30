@@ -1112,12 +1112,14 @@ features_components:
 	{
 	  DBUGPRT("features_components");
 	  featuresPtr found = parser.findMacros(*$4);
-	  free($4);
-	  if (!(found)){
-	    yyerror((char*)"syntax error");
-	  }
 	  $$ = $1; 
-	  (*$$)->add(found->clone());
+	  if (!(found)){
+	     std::ostringstream oss; oss << "unknown macro: @" << *$4;
+	     yyerror((char*)oss.str().c_str());
+	  } else {
+	    (*$$)->add(found->clone());
+	  }
+	  free($4);
 	}
 
 	//@identifier
@@ -1125,13 +1127,15 @@ features_components:
 	{
 	  DBUGPRT("features_components");
 	  featuresPtr found = parser.findMacros(*$2);
-	  free($2);
-	  if (!(found)){
-	    yyerror((char*)"syntax error");
-	  }
 	  $$ = new featuresPtr(Features::create());
-	  (*$$)->add(found->clone());
-	};
+	  if (!(found)){
+	    std::ostringstream oss; oss << "unknown macro: @" << *$2;
+	    yyerror((char*)oss.str().c_str());
+	  } else {
+	    (*$$)->add(found->clone());
+	  }
+	  free($2);
+	  };
 
 feature:
 	// PRED: predicate

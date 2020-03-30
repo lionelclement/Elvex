@@ -248,18 +248,18 @@ void Parser::addMacros(std::string str, featuresPtr features) {
  *                                                            *
  ************************************************************ */
 featuresPtr Parser::findMacros(std::string str) {
-   /*
-   CERR_LINE
-   std::cerr << "find @" << str << ":";
-   */
-   std::unordered_map<std::string, featuresPtr>::const_iterator found;
-   found = macros.find(str);
-   if (found == macros.end()) {
-      return featuresPtr();
-   }
-   else {
-      return found->second;
-   }
+  /* 
+     CERR_LINE
+     std::cerr << "find @" << str << ":";
+  */
+  std::unordered_map<std::string, featuresPtr>::const_iterator found;
+  found = macros.find(str);
+  if (found == macros.end()) {
+    return featuresPtr();
+  }
+  else {
+    return found->second;
+  }
 }
 
 /* **************************************************

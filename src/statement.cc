@@ -2338,7 +2338,7 @@ void Statement::stmGuard(itemPtr item, Synthesizer *synthesizer) {
 /* ************************************************************
  * foreach
  ************************************************************ */
-void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
   /***
       std::cerr << "<DIV>foreach";
       item->print(std::cerr);
@@ -2352,7 +2352,7 @@ void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesize
   if (!value->isList())
     FATAL_ERROR_MSG_STM("foreach does'nt apply a list");
   listPtr list = value->getList();
-  list->apply(item, parser, synthesizer, variable, body);
+  list->apply(item, parser, synthesizer, variable, body, effect);
   /***
       std::cerr << "<DIV>foreach done";
       item->print(std::cerr);
@@ -2363,7 +2363,7 @@ void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesize
 /* ************************************************************
  * if
  ************************************************************ */
-void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
   statementPtr lhs = getRhs()->getLhs();
   statementPtr rhs = getRhs()->getRhs();
 
@@ -2393,7 +2393,7 @@ void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
   //bool localResult = true;
   switch (resif) {
   case 1:
-    lhs->apply(item, parser, synthesizer);
+    lhs->apply(item, parser, synthesizer, effect);
     if (lhs->isSetFlags(Flags::BOTTOM)) {
       this->addFlags(Flags::BOTTOM);
     }
@@ -2402,7 +2402,7 @@ void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
     break;
   case 2:
     if (rhs) {
-      rhs->apply(item, parser, synthesizer);
+      rhs->apply(item, parser, synthesizer, effect);
       if (rhs->isSetFlags(Flags::BOTTOM))
 	this->addFlags(Flags::BOTTOM);
       if (rhs->isSetFlags(Flags::SEEN))
@@ -2652,19 +2652,6 @@ void Statement::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer
     }
     break;
 
-    /*case DOWN:
-      if (on) {
-      if ((*item->getInheritedSonFeatures())[getFirst()]->isNil()) {
-      root->addFlags(Flags::DISABLED);
-      effect = true;
-      }
-      }
-      else {
-      root->subFlags(Flags::DISABLED);
-      effect = true;
-      }
-      break;
-    */
   case DOWN:
   case CONSTANT:
   case ANONYMOUS:
@@ -2681,7 +2668,7 @@ void Statement::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer
 /* **************************************************
  * 
  ************************************************** */
-void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
 #ifdef TRACE_APPLY
   if (synthesizer->getTraceAction()) {
     std::cout << "<H3>####################### APPLY #######################</H3>" << std::endl;
@@ -2695,26 +2682,28 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
     UNEXPECTED
       }
 
+  // […]
+  if (isGuard()) {
+    stmGuard(item, synthesizer);
+    effect = true;
+    addFlags(Flags::SEEN);
+  }
+
   // if
-  if (isIf()) {
-    stmIf(item, parser, synthesizer);
+  else if (isIf()) {
+    stmIf(item, parser, synthesizer, effect);
   }
 
   // foreach $i in $list
   else if (isForeach()) {
-    stmForeach(item, parser, synthesizer);
-    addFlags(Flags::SEEN);
-  }
-
-  // […]
-  else if (isGuard()) {
-    stmGuard(item, synthesizer);
+    stmForeach(item, parser, synthesizer, effect);
     addFlags(Flags::SEEN);
   }
 
   // ↓1 = …
   else if ((isAff()) && (getLhs()->isDown())) {
     buildInheritedSonFeatures(item, parser, synthesizer);
+    effect = true;
     addFlags(Flags::SEEN);
   }
 
@@ -2722,6 +2711,7 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
   // $X = ⇓1
   else if (((isSubsume()) && (getRhs()->isDown2()) && (getLhs()->isFeatures())) || ((isAff()) && (getRhs()->isDown2()) && (getLhs()->isVariable()))) {
     buildEnvironmentWithSynthesize(item, parser, synthesizer);
+    effect = true;
     addFlags(Flags::SEEN);
   }
 
@@ -2729,6 +2719,7 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
   // $X = ↑
   else if (((isSubsume()) && (getRhs()->isUp()) && (getLhs()->isFeatures())) || ((isAff()) && (getRhs()->isUp()) && (getLhs()->isVariable()))) {
     buildEnvironmentWithInherited(item, parser, synthesizer);
+    effect = true;
     addFlags(Flags::SEEN);
   }
 
@@ -2756,12 +2747,14 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
 		|| (getRhs()->isList()) || (getRhs()->isSearch()))) || ((isAff()) && (getLhs()->isList()) && ((getRhs()->isVariable()) || (getRhs()->isList())))
 	   || ((isSubsume()) && (getLhs()->isFeatures()) && ((getRhs()->isVariable()) || (getRhs()->isFeatures()) || (getRhs()->isSearch())))) {
     buildEnvironmentWithValue(item, parser, synthesizer);
+    effect = true;
     addFlags(Flags::SEEN);
   }
 
   // ⇑ = …
   else if ((isAff()) && (getLhs()->isUp2())) {
     buildSynthesizedFeatures(item, parser, synthesizer);
+    effect = true;
     addFlags(Flags::SEEN);
   }
 
@@ -2785,7 +2778,7 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
 
   // statements
   else if (isStms()) {
-    this->statements->apply(item, parser, synthesizer);
+    this->statements->apply(item, parser, synthesizer, effect);
     if (this->statements->isSetFlags(Flags::BOTTOM))
       this->addFlags(Flags::BOTTOM);
     if (this->statements->isSetFlags(Flags::SEEN))
@@ -2799,7 +2792,7 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
 
 #ifdef TRACE_APPLY
   if (synthesizer->getTraceAction()) {
-    std::cout << "<H3>####################### APPLY DONE #######################</H3>" << std::endl;
+    std::cout << "<H3>####################### APPLY DONE " << effect << " #######################</H3>" << std::endl;
     item->print(std::cout);
     std::cout << std::endl;
   }

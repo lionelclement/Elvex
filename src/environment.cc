@@ -391,24 +391,24 @@ void Environment::replaceVariables(std::string &str, bool &effect) {
    std::cmatch match;
 
    try {
-      std::regex regexpression(pattern, std::regex_constants::ECMAScript);
-      while (std::regex_search(str.c_str(), match, regexpression, std::regex_constants::format_first_only)) {
-         const std::string key = match[1];
-         Environment::unordered_map::iterator i = this->env.find(key);
-         if (i == this->env.end()) {
-            std::cerr << "*** error variable " << match[1] << " not found" << std::endl;
-            exit(1);
-         }
-         else {
-            std::ostringstream oss;
-            i->second->print(oss);
-            str = std::regex_replace(str, regexpression, oss.str(), std::regex_constants::format_first_only);
-         }
-      }
+     std::regex regexpression(pattern, std::regex_constants::ECMAScript);
+     while (std::regex_search(str.c_str(), match, regexpression, std::regex_constants::format_first_only)) {
+       const std::string key = match[1];
+       Environment::unordered_map::iterator i = this->env.find(key);
+       if (i == this->env.end()) {
+	 //std::cerr << "*** error variable " << match[1] << " not found" << std::endl;
+	 str = std::regex_replace(str, regexpression, "?", std::regex_constants::format_first_only);
+       }
+       else {
+	 std::ostringstream oss;
+	 i->second->print(oss);
+	 str = std::regex_replace(str, regexpression, oss.str(), std::regex_constants::format_first_only);
+       }
+     }
    }
-
+   
    catch (const std::regex_error& e) {
-      std::cout << "regex_error caught: " << e.what() << '(' << e.code() << ')' << std::regex_constants::error_brack << '\n';
+     std::cout << "regex_error caught: " << e.what() << '(' << e.code() << ')' << std::regex_constants::error_brack << '\n';
    }
    /***
     std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;

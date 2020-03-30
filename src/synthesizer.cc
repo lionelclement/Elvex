@@ -619,7 +619,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                      (*iterRules)->incUsages(this);
                      it = Item::create((*iterRules)->clone(), 0, 0, (*iterRules)->getStatements() ? (*iterRules)->getStatements()->clone(0) : statementsPtr());
                      it->addRanges(row);
-                     //it->_renameVariables(it->getId());
+                     //it->renameVariables(it->getId());
                      it->setInheritedFeatures(inheritedSonFeatures->clone());
 
 #ifdef TRACE_OPTION
@@ -746,7 +746,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
 #ifdef MEMOIZATION
                         std::string key = keyMemoization(*actualItem, previousItem);
                         auto memItem = memoizedMap.find(key);
-                        // Is this shift action already done ?
+                        // Is this already done ?
                         if (memItem != memoizedMap.end()) {
                            std::list< memoizationValuePtr > result = memItem->second;
                            for (std::list< memoizationValuePtr >::const_iterator i = result.begin();
@@ -966,8 +966,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                          std::cerr << "pred : " << Vartable::intToStr(pred) << "<BR>" << std::endl;
                          std::cerr << "form : " << form << "<BR>" << std::endl;
                          **** */
-
-                        switch (stage) {
+			switch (stage) {
                            case 1:
                               found = listPred->find(UINT_MAX);		// Without pred : UINT_MAX = > ...
                               if (found != listPred->end()) {
@@ -985,12 +984,13 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                               break;
                            case 3:
                               found = listPred->find(pred);		// pred = > ...
-                              if (found != listPred->end())
-                                 // Local lexicon
-                                 entries = found->second;
-                              else if (compactLexicon) {
-                                 // Compact lexicon
-                                 entries = findCompactLexicon(parser, (*actualItem)->getCurrentTerm()->getCode(), std::string(), pred);
+                              if (found != listPred->end()) {
+			     	// Local lexicon
+				entries = found->second;
+                              }
+			      else if (compactLexicon) {
+				// Compact lexicon
+				entries = findCompactLexicon(parser, (*actualItem)->getCurrentTerm()->getCode(), std::string(), pred);
                               }
                               break;
                         }
@@ -1054,12 +1054,15 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                     size_t found = entry->getForm().find('$');
                                     if (found != std::string::npos) {
                                        bool effect = false;
-                                       it->getEnvironment()->replaceVariables(entry->getForm(), effect);
-                                       word = Entry::create(entry->getCode(), entry->getCodePred(), entry->getForm(), resultFeatures);
+				       std::string form = entry->getForm();
+                                       it->getEnvironment()->replaceVariables(form, effect);
+				       
+                                       word = Entry::create(entry->getCode(), entry->getCodePred(), form, resultFeatures);
                                     }
-                                    else
+                                    else {
                                        word = Entry::create(entry->getCode(), entry->getCodePred(), entry->getForm(), resultFeatures);
-                                 }
+				    }
+				 }
                                  forestIdentifierPtr fi = ForestIdentifier::create(word->getId(), resultFeatures->peekSerialString(), row - 1, row);
                                  ForestMap::map::const_iterator forestMapIt = forestMap.find(fi);
                                  if (forestMapIt != forestMap.end()) {

@@ -569,18 +569,18 @@ bool List::findVariable(bitsetPtr variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statementPtr variable, statementPtr body) {
+void List::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statementPtr variable, statementPtr body, bool &effect) {
    switch (type) {
       case NIL:
          break;
       case ATOM:
-         value->apply(item, parser, synthesizer, variable, body->clone(0));
+	value->apply(item, parser, synthesizer, variable, body->clone(0), effect);
          break;
       case PAIRP:
          if (pairp.car)
-            pairp.car->apply(item, parser, synthesizer, variable, body);
+	   pairp.car->apply(item, parser, synthesizer, variable, body, effect);
          if (pairp.cdr)
-            pairp.cdr->apply(item, parser, synthesizer, variable, body);
+	   pairp.cdr->apply(item, parser, synthesizer, variable, body, effect);
          break;
    }
 }

@@ -744,34 +744,31 @@ void Item::successor(itemSetPtr state, class Synthesizer *synthesizer, bool &eff
  *
  ************************************************** */
 void Item::apply(itemSetPtr state, Parser &parser, Synthesizer *synthesizer) {
-   if (statements) {
-      unsigned int k = 1;
-      bool effect = true;
-      while (effect) {
-         if (isSetFlags(Flags::BOTTOM))
-            break;
-         if (statements->isSetFlags(Flags::SEEN))
-            break;
-
+  if (statements) {
+    unsigned int k = 1;
+    bool effect = true;
+    if (isUnsetFlags(Flags::BOTTOM) 
+	&& statements->isUnsetFlags(Flags::SEEN)) {
+      
 #ifdef TRACE_OPTION
-         if (synthesizer->getTraceAction()) {
-            std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
-            print(std::cout);
-            std::cout << std::endl;
-         }
-#endif
-         effect = false;
-         statements->apply(shared_from_this(), parser, synthesizer);
-         ++k;
-#ifdef TRACE_OPTION
-         if (synthesizer->getTraceAction()) {
-            std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
-            print(std::cout);
-            std::cout << std::endl;
-         }
-#endif
+      if (synthesizer->getTraceAction()) {
+	std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
+	print(std::cout);
+	std::cout << std::endl;
       }
-   }
+#endif
+      effect = false;
+      statements->apply(shared_from_this(), parser, synthesizer, effect);
+      ++k;
+#ifdef TRACE_OPTION
+      if (synthesizer->getTraceAction()) {
+	std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
+	print(std::cout);
+	std::cout << std::endl;
+      }
+#endif
+    }
+  }
 }
 
 /* **************************************************

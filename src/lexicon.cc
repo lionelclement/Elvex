@@ -73,13 +73,13 @@ void Lexicon::add(std::string key, const std::string value) {
  *
  ************************************************** */
 std::list<std::string> *Lexicon::find(const std::string key) {
-   unordered_map::const_iterator it = the_map.find(key);
-   if (it != the_map.end()) {
-      return (*it).second;
-   }
-   else {
-      return emptyList;
-   }
+  unordered_map::const_iterator it = the_map.find(key);
+  if (it != the_map.end()) {
+    return (*it).second;
+  }
+  else {
+    return emptyList;
+  }
 }
 
 /* **************************************************

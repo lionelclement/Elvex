@@ -176,13 +176,13 @@ public:
    void buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesizer *synthesizer);
    void stmAttest(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
    void stmGuard(itemPtr, class Synthesizer *synthesizer);
-   void stmForeach(itemPtr item, class Parser &parser, class Synthesizer *synthesizer);
-   void stmIf(itemPtr item, class Parser &parser, class Synthesizer *synthesizer);
+  void stmForeach(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+  void stmIf(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
    void stmPrint(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
    void stmPrintln(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
    void renameVariables(size_t);
    void enable(statementPtr root, itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
-   void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer);
+  void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
    void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
    const bool findVariable(bitsetPtr);
 

@@ -111,7 +111,7 @@ public:
    bool eq(valuePtr) const;
    bool lt(valuePtr) const;
    bool findVariable(bitsetPtr);
-   void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, statementPtr variable, statementPtr body);
+  void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, statementPtr variable, statementPtr body, bool &effect);
    bool containsVariable(void);
    void setVariableFlag(enum VariableFlag::flagValues flag);
 };

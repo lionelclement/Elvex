@@ -29,6 +29,7 @@
 
 %s NEXT BEGINLINE
 
+space		[ ]
 weakPonct	[,;:()'-]
 strongPonct	[.!?/]
 mesure		mm|cm|m|dm|km|m2|m3|A|[oO]hm|V|VA|gr|[kK]g
@@ -61,14 +62,18 @@ mesure		mm|cm|m|dm|km|m2|m3|A|[oO]hm|V|VA|gr|[kK]g
 <BEGINLINE>. {yyless(0); unput(' '); BEGIN(NEXT);}
 	
 <NEXT>{	
-  \./[^0-9+-] {ECHO; BEGIN(INITIAL);}
-  [[:space:]][dD]oes[[:space:]]+not/([[:space:]]) {std::cout << yytext[0] << "oesn't";}
-  [[:digit:]]+[[:space:]]/{mesure}[[:space:]] {yytext[yyleng-1]=0; ECHO;}
-  [-][[:space:]]+ {yytext[yyleng-1]=0; ECHO;}
-  [ \t]+/[,.;:-] {}
-  [ \t]+ {std::cout << ' ';}
+  {space}+/[,?!.;:-] {}
+  {space}[dD]oes{space}+not { std::cout << yytext[0] << yytext[1] << "oesn't" ; }
+  {space}[dD]id{space}+not { std::cout << yytext[0] << yytext[1] << "idn't" ; }
+  {space}[iI]s{space}+not { std::cout << yytext[0] << yytext[1] << "sn't" ; }
+  {space}[wW]as{space}+not { std::cout << yytext[0] << yytext[1] << "asn't" ; }
+  {space}[wW]ere{space}+not { std::cout << yytext[0] << yytext[1] << "eren't" ; }
+  {space}[aA]re{space}+not { std::cout << yytext[0] << yytext[1] << "ren't" ; }
+  {space}[hH]ave{space}+not { std::cout << yytext[0] << yytext[1] << "aven't" ; }
+  {space}[hH]as{space}+not { std::cout << yytext[0] << yytext[1] << "asn't" ; }
+  {space}[hH]ad{space}+not { std::cout << yytext[0] << yytext[1] << "adn't" ; }
+  {space}[wW]ill{space}+not { std::cout << yytext[0] << yytext[1] << "on't" ; }
   \n {ECHO; BEGIN(INITIAL);}
-  . {ECHO;}
 }
 
 %%

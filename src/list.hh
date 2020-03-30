@@ -79,7 +79,7 @@ public:
    bool buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root);
    void deleteAnonymousVariables(void);
    bool renameVariables(size_t);
-   void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, statementPtr variable, statementPtr body);
+  void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, statementPtr variable, statementPtr body, bool &effect);
 #ifdef OUTPUT_XML
    void toXML(xmlNodePtr);
 #endif

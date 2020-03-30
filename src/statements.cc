@@ -154,44 +154,52 @@ void Statements::renameVariables(size_t i) {
 /* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
-void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
    if (item->isSetFlags(Flags::BOTTOM))
-      return;
-
+     return;
+   if (item->isSetFlags(Flags::SEEN)) {
+     UNEXPECTED
+       }
+   
    if (guard) {
-      if (guard->isUnsetFlags(Flags::SEEN)) {
-         guard->apply(item, parser, synthesizer);
-         guard->addFlags(Flags::SEEN);
-         if (guard->isSetFlags(Flags::BOTTOM)) {
-            //this->addFlags(Flags::BOTTOM);
-            item->addFlags(Flags::BOTTOM);
-            return;
-         }
-      }
+     if (guard->isUnsetFlags(Flags::SEEN)) {
+       guard->apply(item, parser, synthesizer, effect);
+       guard->addFlags(Flags::SEEN);
+       if (guard->isSetFlags(Flags::BOTTOM)) {
+	 item->addFlags(Flags::BOTTOM);
+	 return;
+       }
+     }
    }
-
+   
+ loopStatements:
    bool allDone = true;
    for (list::iterator statement = statements.begin(); statement != statements.end(); ++statement) {
-      if ((*statement)->isUnsetFlags(Flags::SEEN)) {
-         bool effect = false;
-         (*statement)->enable(*statement, item, synthesizer, effect, false);
-         if (effect)
-            (*statement)->enable(*statement, item, synthesizer, effect, true);
-         if (effect)
-            allDone = false;
-         if ((*statement)->isSetFlags(Flags::DISABLED)) {
-            allDone = false;
-            continue;
-         }
-         if (!item->getEnvironment() || item->getEnvironment()->size() == 0) {
-            item->setEnvironment(environmentPtr());
-         }
-         (*statement)->apply(item, parser, synthesizer);
-         if ((*statement)->isSetFlags(Flags::BOTTOM)) {
-            item->addFlags(Flags::BOTTOM);
-            break;
-         }
-      }
+     if ((*statement)->isUnsetFlags(Flags::SEEN)) {
+       bool enable_effect = false;
+       (*statement)->enable(*statement, item, synthesizer, enable_effect, false);
+       if (enable_effect)
+	 (*statement)->enable(*statement, item, synthesizer, enable_effect, true);
+       if (enable_effect)
+	 allDone = false;
+       if ((*statement)->isSetFlags(Flags::DISABLED)) {
+	 allDone = false;
+	 continue;
+       }
+       if (!item->getEnvironment() || item->getEnvironment()->size() == 0) {
+	 item->setEnvironment(environmentPtr());
+       }
+       effect = false;
+       (*statement)->apply(item, parser, synthesizer, effect);
+       if ((*statement)->isSetFlags(Flags::BOTTOM)) {
+	 item->addFlags(Flags::BOTTOM);
+	 break;
+       }
+       if (effect) {
+	 goto loopStatements;
+	 break;
+       }
+     }
    }
    if (allDone)
       this->addFlags(Flags::SEEN);
