@@ -190,7 +190,7 @@ elvexbuildlexicon_OPTIONS =
 elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O5 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
 elvexbuildlexicon_LDADD =
 
-elvexpostedition_SOURCES = postedition.cc
+elvexpostedition_SOURCES = postedition_en.cc postedition_fr.cc
 
 BUILT_SOURCES = 
 
@@ -198,7 +198,7 @@ DIST_COMMON = Makefile.in Makefile.am
 
 EXTRA_DIST = 	
 
-CLEANFILES = rulesyacc.cc rulesyacc.hh rulesyacc.output ruleslex.cc postedition.cc
+CLEANFILES = rulesyacc.cc rulesyacc.hh rulesyacc.output ruleslex.cc postedition_en.cc postedition_fr.cc
 
 $(elvex_OBJECTS): Makefile
 $(elvexdebug_OBJECTS): Makefile
