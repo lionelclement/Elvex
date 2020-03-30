@@ -18,7 +18,7 @@
 
 //Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD], verbal_constr:neg|no_neg|int|no_int|excl, vtense:$all]
 
-//Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD]]
+Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD]]
 //Text [PRED:_TO_FEEL, i:[PRED:__YOU], ii:[PRED:_BAD], lexical_function:magn]
 //Text [PRED:_TO_APPRECIATE, i:[PRED:__pro, @_3ms], ii:[PRED:__pro, @_3ms, animate:false]]
 //Text [PRED:_TO_ENDURE, i:[PRED:__EGO], ii:[PRED:_HOPE]]
