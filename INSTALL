@@ -1,6 +1,13 @@
 Ubuntu / Debian quick installation:
-. ./install-Elvex.sh
+a) Download install-Elvex.sh
+b) Exec the script: . ./install-Elvex.sh
 
+The directory Elvex will be created
+/usr/local/bin/elvex
+/usr/local/bin/elvexdebug
+/usr/local/bin/elvexbuildlexicon
+/usr/local/bin/elvexpostedition_fr
+/usr/local/bin/elvexpostedition_en
 
 Standard installation:
 aclocal
@@ -8,6 +15,7 @@ automake −a
 autoconf
 ./configure
 make
+make clean
 sudo make install
 
 Once you have downloaded Elvex execute these commands:
