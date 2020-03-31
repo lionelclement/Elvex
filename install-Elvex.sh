@@ -20,85 +20,79 @@
 
 if [ -x `which elvex` ];
 then
-    echo "*** Elvex is already installed on your system.";
-    read -r -p "Are you sure to reinstall it? [y/N] " install_resp
-    case "$install_resp" in
-	[yY][eE][sS]|[yY]) 
-            install='true'
-            ;;
-	*)
-            install='false'
-            ;;
-    esac
+    echo "ok"
 else
-    install='false'
+    echo "ko"
 fi
 
-if [ $install = 'true' ] && [ -d 'Elvex' ];
-then
-    download='false'
-    echo "*** Elvex is already dowloaded onto this directory.";
-    read -r -p "Do you want to update it? [y/N] " update_resp
-    case "$update_resp" in
-	[yY][eE][sS]|[yY])
-	    update='true'
-            ;;
-	*)
-	    update='false'
-	    ;;
-    esac
-else
-    update='false';
-    download='true'
-fi
+# if [ -x `which elvex` ];
+# then
+#     echo "*** Elvex is already installed on your system.";
+#     read -r -p "Are you sure to reinstall it? [y/N] " install_resp
+#     case "$install_resp" in
+# 	[yY][eE][sS]|[yY]) 
+#             install='true'
+#             ;;
+# 	*)
+#             install='false'
+#             ;;
+#     esac
+# else
+#     install='false'
+# fi
 
-if which 'git'2> /dev/null; then
-    git='true'
-else
-    echo "*** git isn't installed on your system.";
-    git='false'
-    read -r -p "Do you want to install it? [y/N] " install_git_resp
-    case "$install_git_resp" in
-	[yY][eE][sS]|[yY]) 
-            install_git='true'
-            ;;
-	*)
-            install_git='false'
-            ;;
-    esac
-fi
+# if [ $install = 'true' ] && [ -d 'Elvex' ];
+# then
+#     download='false'
+#     echo "*** Elvex is already dowloaded onto this directory.";
+#     read -r -p "Do you want to update it? [y/N] " update_resp
+#     case "$update_resp" in
+# 	[yY][eE][sS]|[yY])
+# 	    update='true'
+#             ;;
+# 	*)
+# 	    update='false'
+# 	    ;;
+#     esac
+# else
+#     update='false';
+#     download='true'
+# fi
 
-if [ $git = 'false' ] && [ $install_git = 'true' ]; then
-    apt-get install git
-fi
+# if which -s 'git'; then
+#     git='true'
+# else
+#     echo "*** git isn't installed on your system.";
+#     git='false'
+# fi
 
-if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
-    (cd Elvex; git pull)
-fi
+# if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
+#     (cd Elvex; git pull)
+# fi
 
-if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
-    git clone https://github.com/lionelclement/Elvex.git
-fi
+# if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
+#     git clone https://github.com/lionelclement/Elvex.git
+# fi
 
-if [ $install = 'true' ] && which 'g++'2> /dev/null && which 'bison'2> /dev/null && which 'flex'2> /dev/null && which 'xml2-config'2> /dev/null && which 'aclocal'2> /dev/null && which 'automake'2> /dev/null && which 'autoconf'2> /dev/null; then
-    (cd Elvex;
-     aclocal;
-     automake -a;
-     autoconf;
-     read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
-an installation prefix other than '/usr/local'? [y/N] " prefix_resp
-     case "$prefix_resp" in
-	 [yY][eE][sS]|[yY])
-	     prefix='/usr/local'
-	     read -r -p "Specify installation prefix [/usr/local] " prefix
-             ;;
-	 *)
-	     prefix='/usr/local'
-	     ;;
-     esac
-     echo "Configure..."
-     ./configure -q --prefix=$prefix;
-     make -j5 -s;
-     sudo make install;
-     . ./try-me.sh)
-fi
+# if [ $install = 'true' ] && which -s 'g++' && which -s 'bison' && which -s 'flex' && which -s 'xml2-config' && which -s 'aclocal' && which -s 'automake' && which -s 'autoconf'; then
+#     (cd Elvex;
+#      aclocal;
+#      automake -a;
+#      autoconf;
+#      read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
+# an installation prefix other than '/usr/local'? [y/N] " prefix_resp
+#      case "$prefix_resp" in
+# 	 [yY][eE][sS]|[yY])
+# 	     prefix='/usr/local'
+# 	     read -r -p "Specify installation prefix [/usr/local] " prefix
+#              ;;
+# 	 *)
+# 	     prefix='/usr/local'
+# 	     ;;
+#      esac
+#      echo "Configure..."
+#      ./configure -q --prefix=$prefix;
+#      make -j5 -s;
+#      sudo make install;
+#      . ./try-me.sh)
+# fi
