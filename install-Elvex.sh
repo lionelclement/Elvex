@@ -70,7 +70,7 @@ then
     fi
 
     install_gxx='false'
-    if test `which g++`; then
+    if ! test `which g++`; then
 	echo "*** g++ isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
@@ -83,21 +83,8 @@ then
 	esac
     fi
     
-    install_gxx='false'
-    if test `which g++`; then
-	echo "*** g++ isn't installed on your system.";
-	conf='false'
-	read -r -p "Do you want to install it? [y/N] " conf_resp
-	case "$conf_resp" in
-	    [yY][eE][sS]|[yY])
-		install_gxx=true;
-		;;
-	    *)
-		;;
-	esac
-    fi
     install_bison='false'
-    if test `which bison`; then
+    if ! test `which bison`; then
 	echo "*** bison isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
@@ -110,7 +97,7 @@ then
 	esac
     fi
     install_flex='false'
-    if test `which flex`; then
+    if ! test `which flex`; then
 	echo "*** flex isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
@@ -123,7 +110,7 @@ then
 	esac
     fi
     install_automake='false'
-    if test `which automake`; then
+    if ! test `which automake`; then
 	echo "*** automake isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
@@ -136,7 +123,7 @@ then
 	esac
     fi
     install_autoconf='false'
-    if test `which autoconf`; then
+    if ! test `which autoconf`; then
 	echo "*** autoconf isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
@@ -149,7 +136,7 @@ then
 	esac
     fi
     install_xml2_config='false'
-    if test `which xml2-config`; then
+    if ! test `which xml2-config`; then
 	echo "*** libxml2-dev isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
