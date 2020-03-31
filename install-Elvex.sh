@@ -37,23 +37,23 @@ fi
 if [ $install = 'true' ];
 then
     echo "ok"
-# if [ -d 'Elvex' ];
-# then
-#     download='false'
-#     echo "*** Elvex is already dowloaded onto this directory.";
-#     read -r -p "Do you want to update it? [y/N] " update_resp
-#     case "$update_resp" in
-# 	[yY][eE][sS]|[yY])
-# 	    update='true'
-#             ;;
-# 	*)
-# 	    update='false'
-# 	    ;;
-#     esac
-# else
-#     update='false';
-#     download='true'
-# fi
+    if [ -d 'Elvex' ];
+    then
+	download='false'
+	echo "*** Elvex is already dowloaded onto this directory.";
+	read -r -p "Do you want to update it? [y/N] " update_resp
+	case "$update_resp" in
+	    [yY][eE][sS]|[yY])
+		update='true'
+		;;
+	    *)
+		update='false'
+		;;
+	esac
+    else
+	update='false';
+	download='true'
+    fi
 
 # if `git --version 2&> /dev/null`; then
 #     git='true'
