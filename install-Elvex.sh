@@ -54,7 +54,7 @@ then
 	download='true'
     fi
 
-    if `git --version 2&> /dev/null`; then
+    if test `which git`; then
 	git='true'
     else
 	echo "*** git isn't installed on your system.";
@@ -70,7 +70,7 @@ then
     fi
 
     $conf='true'
-    if `g++ --version 2&> /dev/null`; then
+    if test `which g++`; then
 	echo "*** g++ isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
