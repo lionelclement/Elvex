@@ -34,7 +34,10 @@ else
     install='false'
 fi
 
-if [ $install = 'true' ] && [ -d 'Elvex' ];
+if [ $install = 'true' ];
+then
+
+if [ -d 'Elvex' ];
 then
     download='false'
     echo "*** Elvex is already dowloaded onto this directory.";
@@ -117,3 +120,5 @@ fi
 #      sudo make install;
 #      . ./try-me.sh)
 # fi
+
+fi
