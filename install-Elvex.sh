@@ -58,7 +58,16 @@ then
 	git='true'
     else
 	echo "*** git isn't installed on your system.";
-	git='false'
+	conf='false'
+	read -r -p "Do you want to install it? [y/N] " conf_resp
+	case "$conf_resp" in
+	    [yY][eE][sS]|[yY])
+		sudo apt install git
+		git='true'
+		;;
+	    *)
+		;;
+	esac
     fi
     
     if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
@@ -158,35 +167,35 @@ then
 
     if [ $install_gxx = 'true' ] || [ $install_bison = 'true' ] || [ $install_flex = 'true' ] || [ $install_automake = 'true' ] || [ $install_autoconf = 'true' ] ||[ $install_xml2_config = 'true' ];
     then
-	sudo apt-get update
+	sudo apt update
     fi
     if [ $install_gxx = 'true' ];
     then
-	sudo apt-get install g++
+	sudo apt install g++
     fi
     if [ $install_bison = 'true' ];
     then
-	sudo apt-get install bison
+	sudo apt install bison
     fi
     if [ $install_flex = 'true' ];
     then
-	sudo apt-get install flex
+	sudo apt install flex
     fi
     if [ $install_automake = 'true' ];
     then
-	sudo apt-get install automake
+	sudo apt install automake
     fi
     if [ $install_autoconf = 'true' ];
     then
-	sudo apt-get install autoconf
+	sudo apt install autoconf
     fi
     if [ $install_xml2_config = 'true' ];
     then
-	sudo apt-get install libxml2-dev
+	sudo apt install libxml2-dev
     fi
     if [ $install_gxx = 'true' ] || [ $install_bison = 'true' ] || [ $install_flex = 'true' ] || [ $install_automake = 'true' ] || [ $install_autoconf = 'true' ] ||[ $install_xml2_config = 'true' ];
     then
-	sudo apt-get clean
+	sudo apt clean
     fi
     if test `which g++` && test `which bison` && test `which flex` && test `which automake` && test `which autoconf` && test `which xml2-config`; then
 	(cd Elvex;
