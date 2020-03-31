@@ -87,33 +87,33 @@ if `bison --version 2&> /dev/null`; then
     esac
 fi
 
-if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
-    (cd Elvex; git pull)
-fi
+# if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
+#     (cd Elvex; git pull)
+# fi
 
-if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
-    git clone https://github.com/lionelclement/Elvex.git
-fi
+# if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
+#     git clone https://github.com/lionelclement/Elvex.git
+# fi
 
-if [ $install = 'true' ] && `g++ --version 2&> /dev/null` && `bison --version 2&> /dev/null` && `flex --version 2&> /dev/null` && `xml2-config --version 2&> /dev/null` && `aclocal --version 2&> /dev/null` && `automake --version 2&> /dev/null` && `autoconf --version 2&> /dev/null`; then
-    (cd Elvex;
-     aclocal;
-     automake -a;
-     autoconf;
-     read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
-an installation prefix other than '/usr/local'? [y/N] " prefix_resp
-     case "$prefix_resp" in
-	 [yY][eE][sS]|[yY])
-	     prefix='/usr/local'
-	     read -r -p "Specify installation prefix [/usr/local] " prefix
-             ;;
-	 *)
-	     prefix='/usr/local'
-	     ;;
-     esac
-     echo "Configure..."
-     ./configure -q --prefix=$prefix;
-     make -j5 -s;
-     sudo make install;
-     . ./try-me.sh)
-fi
+# if [ $install = 'true' ] && `g++ --version 2&> /dev/null` && `bison --version 2&> /dev/null` && `flex --version 2&> /dev/null` && `xml2-config --version 2&> /dev/null` && `aclocal --version 2&> /dev/null` && `automake --version 2&> /dev/null` && `autoconf --version 2&> /dev/null`; then
+#     (cd Elvex;
+#      aclocal;
+#      automake -a;
+#      autoconf;
+#      read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
+# an installation prefix other than '/usr/local'? [y/N] " prefix_resp
+#      case "$prefix_resp" in
+# 	 [yY][eE][sS]|[yY])
+# 	     prefix='/usr/local'
+# 	     read -r -p "Specify installation prefix [/usr/local] " prefix
+#              ;;
+# 	 *)
+# 	     prefix='/usr/local'
+# 	     ;;
+#      esac
+#      echo "Configure..."
+#      ./configure -q --prefix=$prefix;
+#      make -j5 -s;
+#      sudo make install;
+#      . ./try-me.sh)
+# fi
