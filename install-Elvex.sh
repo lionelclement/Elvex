@@ -18,19 +18,74 @@
 #
 ################################################## #
 
-sudo apt-get update
-sudo apt-get install -y git g++ bison flex libxml2-dev autoconf
-apt-get autoclean
-if [ ! -d "Elvex" ]; then
+if [ -x `which elvex` ];
+then
+    echo "*** Elvex is already installed on your system.";
+    read -r -p "Are you sure to reinstall it? [y/N] " install_resp
+    case "$install_resp" in
+	[yY][eE][sS]|[yY]) 
+            install='true'
+            ;;
+	*)
+            install='false'
+            ;;
+    esac
+else
+    install='false'
+fi
+
+if [ $install = 'true' ] && [ -d 'Elvex' ];
+then
+    download='false'
+    echo "*** Elvex is already dowloaded onto this directory.";
+    read -r -p "Do you want to update it? [y/N] " update_resp
+    case "$update_resp" in
+	[yY][eE][sS]|[yY])
+	    update='true'
+            ;;
+	*)
+	    update='false'
+	    ;;
+    esac
+else
+    update='false';
+    download='true'
+fi
+
+if which -s 'git'; then
+    git='true'
+else
+    echo "*** git isn't installed on your system.";
+    git='false'
+fi
+
+if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
+    (cd Elvex; git pull)
+fi
+
+if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
     git clone https://github.com/lionelclement/Elvex.git
 fi
-cd Elvex
-aclocal
-automake -af
-autoconf
-./configure
-make
-make clean
-sudo make install
-. ./try-me.sh
-cd ..
+
+if [ $install = 'true' ] && which -s 'g++' && which -s 'bison' && which -s 'flex' && which -s 'xml2-config' && which -s 'aclocal' && which -s 'automake' && which -s 'autoconf'; then
+    (cd Elvex;
+     aclocal;
+     automake -a;
+     autoconf;
+     read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
+an installation prefix other than '/usr/local'? [y/N] " prefix_resp
+     case "$prefix_resp" in
+	 [yY][eE][sS]|[yY])
+	     prefix='/usr/local'
+	     read -r -p "Specify installation prefix [/usr/local] " prefix
+             ;;
+	 *)
+	     prefix='/usr/local'
+	     ;;
+     esac
+     echo "Configure..."
+     ./configure -q --prefix=$prefix;
+     make -j5 -s;
+     sudo make install;
+     . ./try-me.sh)
+fi
