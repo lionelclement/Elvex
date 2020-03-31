@@ -123,4 +123,4 @@ echo "$install"
 #      . ./try-me.sh)
 # fi
 
-fi
+#fi
