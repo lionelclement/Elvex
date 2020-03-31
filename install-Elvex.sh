@@ -57,6 +57,19 @@ if which 'git'2> /dev/null; then
 else
     echo "*** git isn't installed on your system.";
     git='false'
+    read -r -p "Do you want to install it? [y/N] " install_git_resp
+    case "$install_git_resp" in
+	[yY][eE][sS]|[yY]) 
+            install_git='true'
+            ;;
+	*)
+            install_git='false'
+            ;;
+    esac
+fi
+
+if [ $git = 'false' ] && [ $install_git = 'true' ]; then
+    apt-get install git
 fi
 
 if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
