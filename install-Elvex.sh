@@ -36,7 +36,6 @@ fi
 
 if [ $install = 'true' ];
 then
-    echo "ok"
     if [ -d 'Elvex' ];
     then
 	download='false'
@@ -61,22 +60,31 @@ then
 	echo "*** git isn't installed on your system.";
 	git='false'
     fi
+    
+    if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
+        (cd Elvex; git pull)
+    fi
+    
+    if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
+        git clone https://github.com/lionelclement/Elvex.git
+    fi
 
-    echo "$download $update $git "
-    # $conf='true'
-# if `g++ --version 2&> /dev/null`; then
-#     echo "*** g++ isn't installed on your system.";
-#     conf='false'
-#     read -r -p "Do you want to install it? [y/N] " conf_resp
-#     case "$conf_resp" in
-# 	[yY][eE][sS]|[yY])
-# 	    apt-get install g++;
-# 	    conf='true'
-#             ;;
-# 	*)
-# 	    ;;
-#     esac
-# fi
+    $conf='true'
+    if `g++ --version 2&> /dev/null`; then
+	echo "*** g++ isn't installed on your system.";
+	conf='false'
+	read -r -p "Do you want to install it? [y/N] " conf_resp
+	case "$conf_resp" in
+	    [yY][eE][sS]|[yY])
+		apt-get install g++;
+		conf='true'
+		;;
+	    *)
+		;;
+	esac
+    fi
+    
+    echo "$conf"
 # if `bison --version 2&> /dev/null`; then
 #     echo "*** bison isn't installed on your system.";
 #     conf='false'
@@ -89,14 +97,6 @@ then
 # 	*)
 # 	    ;;
 #     esac
-# fi
-
-# if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
-#     (cd Elvex; git pull)
-# fi
-
-# if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
-#     git clone https://github.com/lionelclement/Elvex.git
 # fi
 
 # if [ $install = 'true' ] && `g++ --version 2&> /dev/null` && `bison --version 2&> /dev/null` && `flex --version 2&> /dev/null` && `xml2-config --version 2&> /dev/null` && `aclocal --version 2&> /dev/null` && `automake --version 2&> /dev/null` && `autoconf --version 2&> /dev/null`; then
