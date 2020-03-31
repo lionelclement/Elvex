@@ -34,11 +34,9 @@ else
     install='false'
 fi
 
-echo "$install"
-			  
-# if [ $install = 'true' ];
-# then
-
+if [ $install = 'true' ];
+then
+    echo "ok"
 # if [ -d 'Elvex' ];
 # then
 #     download='false'
@@ -123,4 +121,4 @@ echo "$install"
 #      . ./try-me.sh)
 # fi
 
-#fi
+fi
