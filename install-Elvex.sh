@@ -52,7 +52,7 @@ else
     download='true'
 fi
 
-if which 'git'; then
+if which 'git'2> /dev/null; then
     git='true'
 else
     echo "*** git isn't installed on your system.";
@@ -67,7 +67,7 @@ if [ $git = 'true' ] && [ $install = 'true' ] && [ $download = 'true' ]; then
     git clone https://github.com/lionelclement/Elvex.git
 fi
 
-if [ $install = 'true' ] && which 'g++' && which 'bison' && which 'flex' && which 'xml2-config' && which 'aclocal' && which 'automake' && which 'autoconf'; then
+if [ $install = 'true' ] && which 'g++'2> /dev/null && which 'bison'2> /dev/null && which 'flex'2> /dev/null && which 'xml2-config'2> /dev/null && which 'aclocal'2> /dev/null && which 'automake'2> /dev/null && which 'autoconf'2> /dev/null; then
     (cd Elvex;
      aclocal;
      automake -a;
