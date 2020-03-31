@@ -31,7 +31,7 @@ then
             ;;
     esac
 else
-    install='false'
+    install='true'
 fi
 
 if [ $install = 'true' ];
