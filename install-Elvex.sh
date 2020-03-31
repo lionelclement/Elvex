@@ -205,6 +205,8 @@ an installation pref	 ix other than '/usr/local'? [y/N] " prefix_resp
 	 make -j5 -s;
 	 sudo make install;
 	 . ./try-me.sh)
+    else
+	echo "*** You have to install g++, bison, flex, automake, autoconf and libxml2-dev to install Elvex"
     fi
     
 fi
