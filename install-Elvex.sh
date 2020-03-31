@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # ##################################################
 #
 # ELVEX
@@ -76,7 +76,7 @@ then
 	read -r -p "Do you want to install it? [y/N] " conf_resp
 	case "$conf_resp" in
 	    [yY][eE][sS]|[yY])
-		apt-get install g++;
+		#apt-get install g++;
 		conf='true'
 		;;
 	    *)
