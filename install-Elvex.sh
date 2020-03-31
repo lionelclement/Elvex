@@ -70,6 +70,7 @@ then
     fi
 
     install_gxx='false'
+    cont=true;
     if ! test `which g++`; then
 	echo "*** g++ isn't installed on your system.";
 	conf='false'
@@ -79,6 +80,7 @@ then
 		install_gxx=true;
 		;;
 	    *)
+		cont=false;
 		;;
 	esac
     fi
@@ -93,6 +95,7 @@ then
 		install_bison=true;
 		;;
 	    *)
+		cont=false;
 		;;
 	esac
     fi
@@ -106,6 +109,7 @@ then
 		install_flex=true;
 		;;
 	    *)
+		cont=false;
 		;;
 	esac
     fi
@@ -119,6 +123,7 @@ then
 		install_automake=true;
 		;;
 	    *)
+		cont=false;
 		;;
 	esac
     fi
@@ -132,6 +137,7 @@ then
 		install_autoconf=true;
 		;;
 	    *)
+		cont=false;
 		;;
 	esac
     fi
@@ -145,6 +151,7 @@ then
 		install_xml2_config=true;
 		;;
 	    *)
+		cont=false;
 		;;
 	esac
     fi
@@ -177,41 +184,27 @@ then
     then
 	echo "apt-get install libxml2-dev"
     fi
-# if `bison --version 2&> /dev/null`; then
-#     echo "*** bison isn't installed on your system.";
-#     conf='false'
-#     read -r -p "Do you want to install it? [y/N] " conf_resp
-#     case "$conf_resp" in
-# 	[yY][eE][sS]|[yY])
-# 	    apt-get install bison;
-# 	    conf='true'
-#             ;;
-# 	*)
-# 	    ;;
-#     esac
-# fi
-
-# if [ $install = 'true' ] && `g++ --version 2&> /dev/null` && `bison --version 2&> /dev/null` && `flex --version 2&> /dev/null` && `xml2-config --version 2&> /dev/null` && `aclocal --version 2&> /dev/null` && `automake --version 2&> /dev/null` && `autoconf --version 2&> /dev/null`; then
-#     (cd Elvex;
-#      aclocal;
-#      automake -a;
-#      autoconf;
-#      read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
-# an installation prefix other than '/usr/local'? [y/N] " prefix_resp
-#      case "$prefix_resp" in
-# 	 [yY][eE][sS]|[yY])
-# 	     prefix='/usr/local'
-# 	     read -r -p "Specify installation prefix [/usr/local] " prefix
-#              ;;
-# 	 *)
-# 	     prefix='/usr/local'
-# 	     ;;
-#      esac
-#      echo "Configure..."
-#      ./configure -q --prefix=$prefix;
-#      make -j5 -s;
-#      sudo make install;
-#      . ./try-me.sh)
-# fi
-
+    if test `which g++` && test `which bison` && test `which flex` && test `which automake` && test `which autoconf` && test `which xml2-config`; then
+	(cd Elvex;
+	 aclocal;
+	 automake -a;
+	 autoconf;
+	 read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
+an installation pref	 ix other than '/usr/local'? [y/N] " prefix_resp
+	 case "$prefix_resp" in
+	     [yY][eE][sS]|[yY])
+		 prefix='/usr/local'
+		 read -r -p "Specify installation prefix [/usr/local] " prefix
+		 ;;
+	     *)
+		 prefix='/usr/local'
+		 ;;
+	 esac
+	 echo "Configure..."
+	 ./configure -q --prefix=$prefix;
+	 make -j5 -s;
+	 sudo make install;
+	 . ./try-me.sh)
+    fi
+    
 fi
