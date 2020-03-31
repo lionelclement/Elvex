@@ -18,7 +18,7 @@
 #
 ################################################## #
 
-if [ -x `which elvex` ];
+if [ -x `which git` ];
 then
     echo "ok"
 else
