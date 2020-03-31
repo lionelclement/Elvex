@@ -215,7 +215,7 @@ an installation prefix other than '/usr/local'? [y/N] " prefix_resp
 	 esac
 	 echo "Configure..."
 	 ./configure -q --prefix=$prefix;
-	 make -j5 -s;
+	 make -s;
 	 sudo make install;
 	 . ./try-me.sh)
     else
