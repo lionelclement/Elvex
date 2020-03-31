@@ -62,7 +62,8 @@ then
 	git='false'
     fi
 
-# $conf='true'
+    echo "$download $update $git "
+    # $conf='true'
 # if `g++ --version 2&> /dev/null`; then
 #     echo "*** g++ isn't installed on your system.";
 #     conf='false'
