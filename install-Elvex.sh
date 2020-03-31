@@ -194,7 +194,7 @@ then
 	 automake -a;
 	 autoconf;
 	 read -r -p "*** By default, elvex will be installed in '/usr/local'. Do you want to specify
-an installation pref	 ix other than '/usr/local'? [y/N] " prefix_resp
+an installation prefix other than '/usr/local'? [y/N] " prefix_resp
 	 case "$prefix_resp" in
 	     [yY][eE][sS]|[yY])
 		 prefix='/usr/local'
