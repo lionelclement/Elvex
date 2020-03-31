@@ -55,12 +55,12 @@ then
 	download='true'
     fi
 
-# if `git --version 2&> /dev/null`; then
-#     git='true'
-# else
-#     echo "*** git isn't installed on your system.";
-#     git='false'
-# fi
+    if `git --version 2&> /dev/null`; then
+	git='true'
+    else
+	echo "*** git isn't installed on your system.";
+	git='false'
+    fi
 
 # $conf='true'
 # if `g++ --version 2&> /dev/null`; then
