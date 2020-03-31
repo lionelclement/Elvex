@@ -158,31 +158,35 @@ then
 
     if [ $install_gxx = 'true' ] || [ $install_bison = 'true' ] || [ $install_flex = 'true' ] || [ $install_automake = 'true' ] || [ $install_autoconf = 'true' ] ||[ $install_xml2_config = 'true' ];
     then
-	echo "apt-get update"
+	apt-get update
     fi
     if [ $install_gxx = 'true' ];
     then
-	echo "apt-get install g++"
+	apt-get install g++
     fi
     if [ $install_bison = 'true' ];
     then
-	echo "apt-get install bison"
+	apt-get install bison
     fi
     if [ $install_flex = 'true' ];
     then
-	echo "apt-get install flex"
+	apt-get install flex
     fi
     if [ $install_automake = 'true' ];
     then
-	echo "apt-get install automake"
+	apt-get install automake
     fi
     if [ $install_autoconf = 'true' ];
     then
-	echo "apt-get install autoconf"
+	apt-get install autoconf
     fi
     if [ $install_xml2_config = 'true' ];
     then
-	echo "apt-get install libxml2-dev"
+	apt-get install libxml2-dev
+    fi
+    if [ $install_gxx = 'true' ] || [ $install_bison = 'true' ] || [ $install_flex = 'true' ] || [ $install_automake = 'true' ] || [ $install_autoconf = 'true' ] ||[ $install_xml2_config = 'true' ];
+    then
+	apt-get clean
     fi
     if test `which g++` && test `which bison` && test `which flex` && test `which automake` && test `which autoconf` && test `which xml2-config`; then
 	(cd Elvex;
