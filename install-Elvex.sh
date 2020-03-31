@@ -63,10 +63,23 @@ $conf='true'
 if `g++ --version 2&> /dev/null`; then
     echo "*** g++ isn't installed on your system.";
     conf='false'
-    read -r -p "Do you want to update it? [y/N] " conf_resp
+    read -r -p "Do you want to install it? [y/N] " conf_resp
     case "$conf_resp" in
 	[yY][eE][sS]|[yY])
 	    apt-get install g++;
+	    conf='true'
+            ;;
+	*)
+	    ;;
+    esac
+fi
+if `bison --version 2&> /dev/null`; then
+    echo "*** bison isn't installed on your system.";
+    conf='false'
+    read -r -p "Do you want to install it? [y/N] " conf_resp
+    case "$conf_resp" in
+	[yY][eE][sS]|[yY])
+	    apt-get install bison;
 	    conf='true'
             ;;
 	*)
