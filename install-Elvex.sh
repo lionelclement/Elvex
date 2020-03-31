@@ -164,31 +164,31 @@ then
 
     if [ $install_gxx = 'true' ] || [ $install_bison = 'true' ] || [ $install_flex = 'true' ] || [ $install_automake = 'true' ] || [ $install_autoconf = 'true' ] ||[ $install_xml2_config = 'true' ];
     then
-	apt-get update
+	echo "apt-get update"
     fi
     if [ $install_gxx = 'true' ];
     then
-	apt-get install g++
+	echo "apt-get install g++"
     fi
     if [ $install_bison = 'true' ];
     then
-	apt-get install bison
+	echo "apt-get install bison"
     fi
     if [ $install_flex = 'true' ];
     then
-	apt-get install flex
+	echo "apt-get install flex"
     fi
     if [ $install_automake = 'true' ];
     then
-	apt-get install automake
+	echo "apt-get install automake"
     fi
     if [ $install_autoconf = 'true' ];
     then
-	apt-get install autoconf
+	echo "apt-get install autoconf"
     fi
     if [ $install_xml2_config = 'true' ];
     then
-	apt-get install libxml2-dev
+	echo "apt-get install libxml2-dev"
     fi
 # if `bison --version 2&> /dev/null`; then
 #     echo "*** bison isn't installed on your system.";
