@@ -98,7 +98,7 @@ then
     fi
     install_bison='false'
     if test `which bison`; then
-	echo "*** g++ isn't installed on your system.";
+	echo "*** bison isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
 	case "$conf_resp" in
@@ -111,7 +111,7 @@ then
     fi
     install_flex='false'
     if test `which flex`; then
-	echo "*** g++ isn't installed on your system.";
+	echo "*** flex isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
 	case "$conf_resp" in
@@ -124,7 +124,7 @@ then
     fi
     install_automake='false'
     if test `which automake`; then
-	echo "*** g++ isn't installed on your system.";
+	echo "*** automake isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
 	case "$conf_resp" in
@@ -137,7 +137,7 @@ then
     fi
     install_autoconf='false'
     if test `which autoconf`; then
-	echo "*** g++ isn't installed on your system.";
+	echo "*** autoconf isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
 	case "$conf_resp" in
@@ -150,7 +150,7 @@ then
     fi
     install_xml2_config='false'
     if test `which xml2-config`; then
-	echo "*** g++ isn't installed on your system.";
+	echo "*** libxml2-dev isn't installed on your system.";
 	conf='false'
 	read -r -p "Do you want to install it? [y/N] " conf_resp
 	case "$conf_resp" in
@@ -188,7 +188,7 @@ then
     fi
     if [ $install_xml2_config = 'true' ];
     then
-	apt-get install xml2lib-dev
+	apt-get install libxml2-dev
     fi
 # if `bison --version 2&> /dev/null`; then
 #     echo "*** bison isn't installed on your system.";
