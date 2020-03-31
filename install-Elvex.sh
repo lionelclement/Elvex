@@ -59,6 +59,21 @@ else
     git='false'
 fi
 
+$conf='true'
+if `g++ --version 2&> /dev/null`; then
+    echo "*** g++ isn't installed on your system.";
+    conf='false'
+    read -r -p "Do you want to update it? [y/N] " conf_resp
+    case "$conf_resp" in
+	[yY][eE][sS]|[yY])
+	    apt-get install g++;
+	    conf='true'
+            ;;
+	*)
+	    ;;
+    esac
+fi
+
 if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
     (cd Elvex; git pull)
 fi
