@@ -30,6 +30,7 @@ automake -af
 autoconf
 ./configure
 make
+make clean
 sudo make install
 . ./try-me.sh
 cd ..
