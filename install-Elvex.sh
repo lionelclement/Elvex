@@ -34,61 +34,63 @@ else
     install='false'
 fi
 
-if [ $install = 'true' ];
-then
+echo "$install"
+			  
+# if [ $install = 'true' ];
+# then
 
-if [ -d 'Elvex' ];
-then
-    download='false'
-    echo "*** Elvex is already dowloaded onto this directory.";
-    read -r -p "Do you want to update it? [y/N] " update_resp
-    case "$update_resp" in
-	[yY][eE][sS]|[yY])
-	    update='true'
-            ;;
-	*)
-	    update='false'
-	    ;;
-    esac
-else
-    update='false';
-    download='true'
-fi
+# if [ -d 'Elvex' ];
+# then
+#     download='false'
+#     echo "*** Elvex is already dowloaded onto this directory.";
+#     read -r -p "Do you want to update it? [y/N] " update_resp
+#     case "$update_resp" in
+# 	[yY][eE][sS]|[yY])
+# 	    update='true'
+#             ;;
+# 	*)
+# 	    update='false'
+# 	    ;;
+#     esac
+# else
+#     update='false';
+#     download='true'
+# fi
 
-if `git --version 2&> /dev/null`; then
-    git='true'
-else
-    echo "*** git isn't installed on your system.";
-    git='false'
-fi
+# if `git --version 2&> /dev/null`; then
+#     git='true'
+# else
+#     echo "*** git isn't installed on your system.";
+#     git='false'
+# fi
 
-$conf='true'
-if `g++ --version 2&> /dev/null`; then
-    echo "*** g++ isn't installed on your system.";
-    conf='false'
-    read -r -p "Do you want to install it? [y/N] " conf_resp
-    case "$conf_resp" in
-	[yY][eE][sS]|[yY])
-	    apt-get install g++;
-	    conf='true'
-            ;;
-	*)
-	    ;;
-    esac
-fi
-if `bison --version 2&> /dev/null`; then
-    echo "*** bison isn't installed on your system.";
-    conf='false'
-    read -r -p "Do you want to install it? [y/N] " conf_resp
-    case "$conf_resp" in
-	[yY][eE][sS]|[yY])
-	    apt-get install bison;
-	    conf='true'
-            ;;
-	*)
-	    ;;
-    esac
-fi
+# $conf='true'
+# if `g++ --version 2&> /dev/null`; then
+#     echo "*** g++ isn't installed on your system.";
+#     conf='false'
+#     read -r -p "Do you want to install it? [y/N] " conf_resp
+#     case "$conf_resp" in
+# 	[yY][eE][sS]|[yY])
+# 	    apt-get install g++;
+# 	    conf='true'
+#             ;;
+# 	*)
+# 	    ;;
+#     esac
+# fi
+# if `bison --version 2&> /dev/null`; then
+#     echo "*** bison isn't installed on your system.";
+#     conf='false'
+#     read -r -p "Do you want to install it? [y/N] " conf_resp
+#     case "$conf_resp" in
+# 	[yY][eE][sS]|[yY])
+# 	    apt-get install bison;
+# 	    conf='true'
+#             ;;
+# 	*)
+# 	    ;;
+#     esac
+# fi
 
 # if [ $git = 'true' ] && [ $install = 'true' ] && [ $update = 'true' ]; then
 #     (cd Elvex; git pull)
