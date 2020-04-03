@@ -161,7 +161,7 @@ void Environment::print(std::ostream &out) const {
       out << "<TD>";
       out << (*i).first;
       if ((*i).second) {
-         out << ":</TD><TD>";
+         out << "</TD><TD>";
          (*i).second->print(out);
       }
       out << "</TD>";
