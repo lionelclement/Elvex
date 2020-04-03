@@ -172,7 +172,7 @@ void Feature::flatPrint(std::ostream& outStream) const {
             outStream << "NIL";
          break;
       case Feature::VARIABLE:
-         outStream << attributeToString() << ':';
+         outStream << attributeToString();
          if (value && !value->isNil()) {
             value->flatPrint(outStream);
          }
