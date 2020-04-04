@@ -1,0 +1,138 @@
+/************************************************************
+* Patterns
+************************************************************/
+@m: [gender:ms];
+@f: [gender:fm];
+@_1: [person:one];
+@_2: [person:two];
+@_12: [person:one|two];
+@_13: [person:one|three];
+@_3: [person:three];
+@s: [number:sg];
+@p: [number:pl];
+@_1s: [@_1, @s];
+@_2s: [@_2, @s];
+@_12s: [@_12, @s];
+@_13s: [@_13, @s];
+@_3s: [@_3, @s];
+@_1p: [@_1, @p];
+@_2p: [@_2, @p];
+@_3p: [@_3, @p];
+@_3ms: [@_3s, @m];
+@_3fs: [@_3s, @f];
+@hum: [human:true];
+@nohum: [human:false];
+
+/************************************************************
+* Noms propres
+************************************************************/
+John	proper_noun [PRED:_JOHN, @_3s, @hum];
+Mary	proper_noun [PRED:_MARY, @_3s, @hum];
+
+/************************************************************
+* Pronoms nominatifs
+************************************************************/
+I	cln [PRED:__pro, @_1s, animate:true, @hum, _case:nominative]
+	| cln [PRED:__EGO, @_1s, animate:true, @hum, _case:nominative];
+you	cln [PRED:__pro, @_2s, animate:true, @hum, _case:nominative]
+	| cln [PRED:__YOU, @_2s, animate:true, @hum, _case:nominative];
+he	cln [PRED:__pro, @_3ms, animate:true, @hum, _case:nominative];
+she	cln [PRED:__pro, @_3fs, animate:true, @hum, _case:nominative];
+it	cln [PRED:__pro, @_3fs, @nohum, _case:nominative];
+we	cln [PRED:__pro, @_1p, animate:true, @hum, _case:nominative];
+they	cln [PRED:__pro, @_3p, _case:nominative];
+
+/************************************************************
+* Pronoms accusatifs
+************************************************************/
+me	pro [PRED:__pro, @_1s, animate:true, @hum, _case:accusative];
+you	pro [PRED:__pro, @_2, animate:true, @hum, _case:accusative];
+him	pro [PRED:__pro, @_3ms, animate:true, @hum, _case:accusative];
+her	pro [PRED:__pro, @_3fs, animate:true, @hum, _case:accusative];
+it	pro [PRED:__pro, @_3s, @nohum, _case:accusative];
+us	pro [PRED:__pro, @_1p, animate:true, @hum, _case:accusative];
+them	pro [PRED:__pro, @_3p, _case:accusative];
+
+/************************************************************
+* Pronoms réflexifs
+************************************************************/
+myself	pro [PRED:__pro, @_1s, _case:reflexive];
+yourself pro [PRED:__pro, @_2s, _case:reflexive];
+himself pro [PRED:__pro, @_3s, _case:reflexive];
+
+// Déterminants
+a	det	[number:sg, def:false, poss:false, part:false, dem:false];
+""	det	[number:pl, def:false, poss:false, part:false, dem:false];
+the	det	[number:sg, def:true, poss:false, part:false, dem:false];
+""	det	[def:none, poss:false, part:false, dem:false];
+
+my	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_1s]];
+your	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_2s]];
+our	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_1p]];
+their	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_3p]];
+his	det [number:sg, gender:ms, def:false, poss:true, part:false, dem:false, owner:[@_3ms]];
+her	det [number:sg, gender:fs, def:false, poss:true, part:false, dem:false, owner:[@_3fs]];
+
+/************************************************************
+* Auxiliaires verbaux
+************************************************************/
+// negative or interrogative forms 
+do	aux [vtense:present, tensed:true, SUBJECT:[@_12s], verb_vform:infinitive, verbal_constr:neg|int]
+	| aux [vtense:present, tensed:true, SUBJECT:[@p], verb_vform:infinitive, verbal_constr:neg|int];
+does	aux [vtense:present, tensed:true, SUBJECT:[@_3s], verb_vform:infinitive, verbal_constr:neg|int];
+
+did	aux [vtense:preterite, tensed:true, verb_vform:infinitive, verbal_constr:neg|int];
+
+// simple auxiliary
+am	aux [vtense:present_continuous, tensed:true, SUBJECT:[@_1s], verb_vform:present_participle];
+are	aux [vtense:present_continuous, tensed:true, SUBJECT:[@_2s], verb_vform:present_participle]
+	| aux [vtense:present_continuous, tensed:true, SUBJECT:[@p], verb_vform:present_participle];
+is	aux [vtense:present_continuous, tensed:true, SUBJECT:[@_3s], verb_vform:present_participle];
+
+have	aux [vtense:present_perfect, tensed:true, SUBJECT:[@_12s], verb_vform:past_participle]
+	| aux [vtense:present_perfect, tensed:true, SUBJECT:[@p], verb_vform:past_participle];
+has	aux [vtense:present_perfect, tensed:true, SUBJECT:[@_3s], verb_vform:past_participle];
+
+will	aux [vtense:future, tensed:true, verb_vform:infinitive];
+
+was	aux [vtense:past_continous, tensed:true, SUBJECT:[@_13s], verb_vform:present_participle];
+where	aux [vtense:past_continous, tensed:true, SUBJECT:[@_2s], verb_vform:present_participle]
+	| aux [vtense:past_continous, tensed:true, SUBJECT:[@p], verb_vform:present_participle];
+
+had	aux [vtense:past_perfect, tensed:true, verb_vform:past_participle];
+
+// complex auxiliary
+will	aux [vtense:future_perfect, tensed:true, aux_form:have, verb_vform:past_participle];
+
+will	aux [vtense:future_continuous, tensed:true, aux_form:be, verb_vform:present_participle];
+
+have	aux [vtense:present_perfect_continuous, tensed:true, SUBJECT:[@_12s], aux_form:been, verb_vform:present_participle]
+	| aux [vtense:present_perfect_continuous, tensed:true, SUBJECT:[@p], aux_form:been, verb_vform:present_participle];
+has	aux [vtense:present_perfect_continuous, tensed:true, SUBJECT:[@_3s], aux_form:been, verb_vform:present_participle];
+
+had	aux [vtense:past_perfect_continuous, tensed:true, aux_form:been, verb_vform:present_participle];
+
+will	aux [vtense:future_perfect_continuous, tensed:true, aux_form:have_been, verb_vform:present_participle];
+
+have	have [aux_form:have];
+be	be [aux_form:be];
+been	been [aux_form:been];
+"have been"	have [aux_form:have_been];
+not	not;
+
+"?"	strongPunct [punct:int];
+"."	strongPunct [punct:dot];
+"!"	strongPunct [punct:excl];
+
+"($vtense)"	features [vtense:$vtense];
+
+down	part [particle:down];
+
+to	prep [pcase:to];
+at	prep [pcase:at];
+on	prep [pcase:on];
+
+to	to [];
+
+that	csu [compl:that];
+if	csu [compl:if];

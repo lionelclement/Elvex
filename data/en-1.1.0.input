@@ -1,0 +1,99 @@
+/***
+* I feel good.
+* You feel very bad.
+* He appreciates it.
+* I endure hope.
+* It feels the pain.
+* We enjoy his tenderness.
+* She suffers.
+* They endure pain.
+* We enjoy it.
+* He endures the sadness.
+* I feel a pain. => rejeté par ma grammaire. Est-ce vraiment correct en anglais ? On dit "to feel the pain" ou "to feel pain" mais pas "to feel a pain"
+* They enjoy our pain.
+* We appreciate the pain.
+* You appreciate tenderness.
+* Stay away!
+*
+* John snores
+* John snored
+* John is snoring
+* John has snored.
+* John will snore.
+* John was snoring.
+* John had snored.
+* will have snored
+* has been snoring
+* had been snoring
+* will have been snoring
+*
+* John calls Mary.
+* John calls Mary down.
+* John calls a warning down to Mary.
+* John calls a divine blessings down on Mary.
+*
+* I want to sit on this chair
+*
+* I say that John sits on a chair.
+* I feel that John calls Mary.
+*
+* I would feel bad if I saw John.
+*
+***/
+
+//Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD]]
+//Text [PRED:_TO_FEEL, i:[PRED:__YOU], ii:[PRED:_BAD], lexical_function:magn]
+//Text [PRED:_TO_APPRECIATE, i:[PRED:__pro, @_3ms], ii:[PRED:__pro, @_3ms, animate:false]]
+//Text [PRED:_TO_ENDURE, i:[PRED:__EGO], ii:[PRED:_HOPE]]
+//Text [PRED:_TO_FEEL_THE_PAIN, i:[PRED:__pro, animate:false, @s]]
+//Text [PRED:_TO_ENJOY, i:[PRED:__pro, @_1p], ii:[PRED:_TENDERNESS, poss:true, owner:[@_3ms]]]
+//Text [PRED:_TO_SUFFER, i:[PRED:__pro, @_3fs, @hum]]
+//Text [PRED:_TO_ENDURE, i:[PRED:__pro, @_3p], ii:[PRED:_PAIN, def:none]]
+//Text [PRED:_TO_ENJOY, i:[PRED:__pro, @_1p], ii:[PRED:__pro, @nohum, @s]]
+//Text [PRED:_TO_ENDURE, i:[PRED:__pro, @_3ms], ii:[PRED:_SADNESS, def:true, @s]]
+///Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_PAIN, def:false, @s]] // rejeté
+//Text [PRED:_TO_ENJOY, i:[PRED:__pro, @_3p], ii:[PRED:_PAIN, poss:true, owner:[@_2s]]]
+//Text [PRED:_TO_APPRECIATE, i:[PRED:__pro, @_1p], ii:[PRED:_PAIN, def:true]]
+//Text [PRED:_TO_APPRECIATE, i:[PRED:__pro, @_2s], ii:[PRED:_TENDERNESS, def:none]]
+//Text [PRED:_TO_STAY_AWAY, i:[PRED:__pro, @_2s], verbal_constr:excl|no_neg]
+
+//John snores
+//Text_with_features [PRED:_TO_SNORE, vtense:present, i:[PRED:_JOHN]]
+//John snored
+//Text_with_features [PRED:_TO_SNORE, vtense:preterite, i:[PRED:_JOHN]]
+//John is snoring
+//Text_with_features [PRED:_TO_SNORE, vtense:present_continuous, i:[PRED:_JOHN]]
+//John has snored.
+//Text_with_features [PRED:_TO_SNORE, vtense:present_perfect, i:[PRED:_JOHN]]
+//John will snore.
+//Text_with_features [PRED:_TO_SNORE, vtense:future, i:[PRED:_JOHN]]
+//John was snoring.
+//Text_with_features [PRED:_TO_SNORE, vtense:past_continous, i:[PRED:_JOHN]]
+//John had snored.
+//Text_with_features [PRED:_TO_SNORE, vtense:past_perfect, i:[PRED:_JOHN]]
+//will have felt
+//Text_with_features [PRED:_TO_SNORE, vtense:future_perfect, i:[PRED:_JOHN]]
+//has been feeling
+//Text_with_features [PRED:_TO_SNORE, vtense:present_perfect_continuous, i:[PRED:_JOHN]]
+//had been feeling
+//Text_with_features [PRED:_TO_SNORE, vtense:past_perfect_continuous, i:[PRED:_JOHN]]
+//will have been feeling
+//Text_with_features [PRED:_TO_SNORE, vtense:future_perfect_continuous, i:[PRED:_JOHN]]
+
+//Text [PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]
+//Text [PRED:_TO_CALL_DOWN_1, i:[PRED:_JOHN], ii:[PRED:_MARY]]
+//Text [PRED:_TO_CALL_DOWN_2, i:[PRED:_JOHN], ii:[PRED:_WARNING, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
+//Text [PRED:_TO_CALL_DOWN_3, i:[PRED:_JOHN], ii:[PRED:_DIVINE_BLESSINGS, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
+
+
+//Text [PRED:_TO_WANT, i:[PRED:_JOHN, id:1], ii:[PRED:_TO_SIT, i:[idref:1], ii:[PRED:_CHAIR, def:false, poss:false, number:sg]]]
+
+//Text [PRED:_TO_SAY, i:[PRED:__EGO], ii:[PRED:_TO_SIT, i:[PRED:_JOHN], ii:[PRED:_CHAIR, def:false, poss:false, number:sg]], vtense:$vt]
+
+//Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD], verbal_constr:neg|no_neg|int|no_int|excl, vtense:$all]
+
+Text [PRED:_TO_TELL, i:[PRED:__EGO], ii:[PRED:_JOHN], iii:[PRED:_TO_CALL, i:[PRED:_CHAIR_MAN, def:true, @s], ii:[PRED:_MARY]]]
+
+//Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]]
+
+//ii:[PRED:_TO_SIT, i:[PRED:_JOHN], ii:[PRED:_CHAIR, def:false, poss:false, number:sg]], vtense:$vt]
