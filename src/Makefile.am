@@ -26,7 +26,7 @@ NAME= elvex
 
 YFLAGS = -v --defines --report=all
 LFLAGS = -8
-CXXFLAGS = -g -std=c++11 -O3 -Wall -Wno-unused-label -Wno-unneeded-internal-declaration -Wno-deprecated-register  
+CXXFLAGS = -std=c++11 -O3 -Wall -Wno-unused-label -Wno-unneeded-internal-declaration -Wno-deprecated-register  
 
 bin_PROGRAMS = elvex elvexdebug elvexbuildlexicon elvexpostedition_fr elvexpostedition_en
 
@@ -72,6 +72,7 @@ variableflag.cc\
 vartable.cc
 
 elvex_OPTIONS =
+elvex_OPTIONS += -DRESTORE_MEMORY
 elvex_OPTIONS += -DMEMOIZATION
 elvex_OPTIONS += -DMAXLENGTH=1000
 elvex_OPTIONS += -DMAXUSAGES=10000
@@ -79,7 +80,7 @@ elvex_OPTIONS += -DMAXCARDINAL=1000000
 elvex_OPTIONS += -DMAXATTEMPTS=100
 elvex_OPTIONS += -DMAXBITS=512
 
-elvex_CXXFLAGS = -std=c++11 -O5 -Wall $(elvex_OPTIONS)
+elvex_CXXFLAGS = -std=c++11 -O3 -Wall $(elvex_OPTIONS)
 elvex_LDADD =
 
 elvexdebug_SOURCES =\
@@ -135,6 +136,7 @@ elvexdebug_OPTIONS += -DTRACE_OPTION
 #elvexdebug_OPTIONS += -DTRACE_APPLY
 #elvexdebug_OPTIONS += -DTRACE_LEXICON
 #elvexdebug_OPTIONS += -DTRACE_MEMOIZATION
+elvexdebug_OPTIONS += -DRESTORE_MEMORY
 elvexdebug_OPTIONS += -DOUTPUT_XML
 elvexdebug_OPTIONS += -DMEMOIZATION
 elvexdebug_OPTIONS += -DMAXLENGTH=10000
@@ -187,7 +189,8 @@ vartable.cc
 
 elvexbuildlexicon_OPTIONS =
 #elvexbuildlexicon_OPTIONS += -DTRACE_DIFF
-elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O5 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
+elvexbuildlexicon_OPTIONS += -DRESTORE_MEMORY
+elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O3 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
 elvexbuildlexicon_LDADD =
 
 elvexpostedition_fr_SOURCES = postedition_fr.cc
