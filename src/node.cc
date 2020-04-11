@@ -121,21 +121,21 @@ void Node::generate(std::vector<forestPtr>::const_iterator forest) {
    }
    forest++;
    if (forest != forests.end())
-      generate(forest);
+     generate(forest);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Node::generate(bool random) {
+void Node::generate(bool random, bool one) {
    if (isUnsetFlags(Flags::GEN)) {
       addFlags(Flags::GEN);
       for (std::vector<forestPtr>::const_iterator forestIterator = forests.begin(); forestIterator != forests.end(); ++forestIterator) {
          if ((*forestIterator)->isUnsetFlags(Flags::GEN))
-            (*forestIterator)->generate(random);
+	   (*forestIterator)->generate(random, one);
       }
       if (forests.size() > 0)
-         generate(forests.begin());
+	generate(forests.begin());
    }
 }
 

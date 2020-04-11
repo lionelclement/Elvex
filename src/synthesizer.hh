@@ -70,6 +70,7 @@ private:
    bool trace;
    bool warning;
    bool random;
+   bool one;
    int attempsRandom;
 
 #ifdef TRACE_OPTION
@@ -154,6 +155,8 @@ public:
    void setReduceAll(bool);
    void setRandom(bool);
    bool getRandom(void) const;
+   void setOne(bool);
+   bool getOne(void) const;
 
    void printState(std::ostream &, itemSetPtr);
    void close(class Parser &, itemSetPtr, unsigned int);

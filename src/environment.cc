@@ -397,8 +397,7 @@ void Environment::replaceVariables(std::string &str, bool &effect) {
        Environment::unordered_map::iterator i = this->env.find(key);
        if (i == this->env.end()) {
 	 //std::cerr << "*** error variable " << match[1] << " not found" << std::endl;
-	 std::string s = "?";
-	 str = std::regex_replace(str, regexpression, s, std::regex_constants::format_first_only);
+	 str = std::regex_replace(str, regexpression, "?", std::regex_constants::format_first_only);
        }
        else {
 	 std::ostringstream oss;

@@ -57,7 +57,7 @@ public:
    void toXML(const xmlNodePtr, bool);
 #endif
 
-   void generate(bool);
+  void generate(bool random, bool one);
 
 };
 #endif // FOREST_H

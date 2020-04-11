@@ -100,6 +100,7 @@ bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer) {
    item->print(std::cout);
    std::cout << std::endl;
 #endif
+   //std::cerr << items.size() << std::endl;
    return items.insert(item).second;
 }
 

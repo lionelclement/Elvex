@@ -39,7 +39,7 @@ private:
    std::vector<std::string> output;
 
    Node(void);
-   void generate(std::vector<forestPtr>::const_iterator);
+  void generate(std::vector<forestPtr>::const_iterator);
 
 public:
    ~Node();
@@ -54,7 +54,7 @@ public:
 #ifdef OUTPUT_XML
    void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
-   void generate(bool);
+  void generate(bool random, bool one);
 
 };
 

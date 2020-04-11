@@ -28,7 +28,11 @@
 #define DELETE {std::cerr << "$$$ Delete " << __FILE__ << std::endl; }
 #else
 #define NEW
-#define DELETE
+#ifdef RESTORE_MEMORY
+#define DELETE {}
+#else
+#define DELETE  {return;}
+#endif
 #endif
 
 #define CERR_LINE  {std::cerr << __FILE__ << "(" << std::dec <<  __LINE__ << ")" << "<br>" << std::endl;}

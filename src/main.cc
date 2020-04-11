@@ -64,7 +64,8 @@ options\n\
 \t--verbose|-V                verbose mode\n\
 \t--reduceAll|-a              reduce all rules\n\
 \t--trace|-t                  trace the generation process\n\
-\t--random|-r                 outputs one sentence randomly selected\n";
+\t--random|-r                 outputs one sentence randomly selected\n\
+\t--one|-o                    outputs the first sentence\n";
 #ifdef TRACE_OPTION
    std::cerr << "\
 \t--traceInit\n\
@@ -187,6 +188,10 @@ int main(int argn, char **argv) {
                else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random")) {
                   std::srand(time(nullptr));
                   synthesizer.setRandom(true);
+               }
+
+               else if (!strcmp(argv[arg] + 1, "o") || !strcmp(argv[arg] + 1, "-one")) {
+                  synthesizer.setOne(true);
                }
 
 #ifdef TRACE_OPTION
@@ -324,7 +329,7 @@ int main(int argn, char **argv) {
             }
          }
 
-         if (synthesizer.getLexiconFileName().length() > 0) {
+	 if (synthesizer.getLexiconFileName().length() > 0) {
             if (parser.parseFile("@lexicon", synthesizer.getLexiconFileName()))
                return EXIT_FAILURE;
          }

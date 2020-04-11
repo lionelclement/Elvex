@@ -149,7 +149,7 @@ Forest::toXML(xmlNodePtr nodeRoot, bool root)
 /* **************************************************
  *
  ************************************************** */
-void Forest::generate(bool random) {
+void Forest::generate(bool random, bool one) {
    if (isUnsetFlags(Flags::GEN)) {
       addFlags(Flags::GEN);
       if (entry && entry->getForm().size() != 0) {
@@ -166,10 +166,10 @@ void Forest::generate(bool random) {
             if (!random)
                node = *nodeIt;
             if (node->isUnsetFlags(Flags::GEN))
-               node->generate(random);
+	      node->generate(random, one);
             for (std::vector<std::string>::const_iterator s = node->getOutput().begin(); s != node->getOutput().end(); ++s)
                output.push_back(*s);
-            if (random)
+            if (random || one)
                break;
             ++nodeIt;
          }

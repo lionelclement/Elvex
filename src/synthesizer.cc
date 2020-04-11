@@ -56,6 +56,7 @@ Synthesizer::Synthesizer() {
    this->reduceAll = false;
    this->warning = false;
    this->random = false;
+   this->one = false;
    this->attempsRandom = 1000;
    this->trace = false;
    NEW;
@@ -249,6 +250,20 @@ void Synthesizer::setRandom(const bool random) {
  ************************************************** */
 bool Synthesizer::getRandom(void) const {
    return this->random;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Synthesizer::setOne(const bool one) {
+   this->one = one;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Synthesizer::getOne(void) const {
+   return this->one;
 }
 
 #ifdef OUTPUT_XML
@@ -1188,7 +1203,7 @@ void Synthesizer::generate(class Parser &parser) {
       std::cerr << "Length : " << i << std::endl;
    }
 
-   nodeRoot->generate(this->getRandom());
+   nodeRoot->generate(this->getRandom(), this->getOne());
 #ifdef OUTPUT_XML
    if (outXML) {
       nodeRoot->toXML(xmlNodeRoot, xmlNodeRoot);
