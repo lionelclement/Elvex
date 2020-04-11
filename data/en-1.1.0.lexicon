@@ -28,6 +28,7 @@
 ************************************************************/
 John	proper_noun [PRED:_JOHN, @_3s, @hum];
 Mary	proper_noun [PRED:_MARY, @_3s, @hum];
+Elvex	proper_noun [PRED:_ELVEX, @_3s];
 
 /************************************************************
 * Pronoms nominatifs

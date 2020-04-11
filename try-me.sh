@@ -20,9 +20,9 @@
 
 cd data
 
-echo "--------------------------------------------------------"
-(cd data/lefff ; make -s -j7)
-elvex -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.4.grammar -lexiconFile fr-1.0.4.local-lexicon "letter [PRED:letter, from:[FORM:\"Lionel Clément\"], to:[FORM:\"`whoami`\", number:sg, gender:ms], body:[PRED:_installer, i:[PRED:__pro, number:pl, person:two], ii:[FORM:\"Elvex\"], tense:recent_past ]]" |tr '@' "\n" | elvexpostedition_fr | sed -e 's/^ *//' -e 's/  */ /g'
+#echo "--------------------------------------------------------"
+#(cd data/lefff ; make -s -j7)
+#elvex -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.4.grammar -lexiconFile fr-1.0.4.local-lexicon "letter [PRED:letter, from:[FORM:\"Lionel Clément\"], to:[FORM:\"`whoami`\", number:sg, gender:ms], body:[PRED:_installer, i:[PRED:__pro, number:pl, person:two], ii:[FORM:\"Elvex\"], tense:recent_past ]]" |tr '@' "\n" | elvexpostedition_fr | sed -e 's/^ *//' -e 's/  */ /g'
 
 #elvex -r -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-slang.grammar -lexiconFile fr-slang.local-lexicon -inputFile fr-slang.input | elvexpostedition_fr |tr '@' "\n" |sed -e 's/^ *//' |tr '@' "\n"
 #elvex -t -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.4.grammar -lexiconFile fr-1.0.4.local-lexicon -inputFile fr-1.0.4.input
@@ -31,7 +31,7 @@ elvex -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1
 #elvex -t -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 #elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 
-make en-1.0.0.fsa
-elvex -compactLexiconDirectory . -compactLexiconFile en-1.0.0 -grammarFile en-1.0.0.grammar -lexiconFile en-1.0.0.lexicon -inputFile en-1.0.0.input | elvexpostedition_en | sed 's/^ *//'
+make en-1.1.0.fsa
+elvex -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]' | elvexpostedition_en | sed 's/^ *//'
 
 cd ..
