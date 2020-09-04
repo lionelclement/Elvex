@@ -25,7 +25,7 @@
 #include "flags.hh"
 #include "id.hh"
 #include "serializable.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 class Statements:
       public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Statements> {

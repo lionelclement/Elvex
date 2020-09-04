@@ -26,7 +26,7 @@
 #include <unordered_map>
 #include "flags.hh"
 #include "id.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "serializable.hh"
 
 class Item:

@@ -28,7 +28,7 @@
 #include "feature.hh"
 #include "features.hh"
 #include "value.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "listfeatures.hh"
 #include "bitset.hh"
 #include "messages.hh"

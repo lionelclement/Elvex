@@ -27,7 +27,7 @@
 #include "flags.hh"
 #include "serializable.hh"
 #include "id.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "variableflag.hh"
 
 class Features:

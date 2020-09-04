@@ -32,7 +32,7 @@
 #include "list.hh"
 #include "messages.hh"
 #include "item.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "listfeatures.hh"
 #include "rule.hh"
 #include "synthesizer.hh"

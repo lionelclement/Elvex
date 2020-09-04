@@ -21,7 +21,7 @@
 #define FORESTMAP_H
 
 #include <unordered_map>
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "forestidentifier.hh"
 
 class ForestMap {

@@ -25,7 +25,7 @@
 #include "flags.hh"
 #include "vartable.hh"
 #include "messages.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 const std::bitset< MAXBITS> Bitset::LEXBITSET = 1ul;
 const std::bitset< MAXBITS> Bitset::ARGBITSET = Bitset::LEXBITSET << 1;

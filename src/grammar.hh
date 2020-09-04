@@ -22,7 +22,7 @@
 
 #include <set>
 #include <list>
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif

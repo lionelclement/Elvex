@@ -23,7 +23,7 @@
 #include "forest.hh"
 #include "messages.hh"
 #include "entry.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "node.hh"
 
 /* **************************************************

@@ -22,7 +22,7 @@
 
 #include "flags.hh"
 #include "id.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "serializable.hh"
 #include "variableflag.hh"
 #ifdef OUTPUT_XML

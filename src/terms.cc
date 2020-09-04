@@ -20,7 +20,7 @@
 #include "terms.hh"
 #include "term.hh"
 #include "messages.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 /* **************************************************
  *

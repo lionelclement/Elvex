@@ -25,7 +25,7 @@
 #include <libxml/tree.h>
 #endif
 #include "item.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 class ItemSet:
       public std::enable_shared_from_this<class ItemSet> {

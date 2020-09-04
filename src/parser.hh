@@ -25,7 +25,7 @@
 #include <map>
 #include <unordered_map>
 #include <deque>
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "grammar.hh"
 #include "entry.hh"
 #include "entries.hh"

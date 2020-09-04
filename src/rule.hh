@@ -27,7 +27,7 @@
 #include <libxml/tree.h>
 #endif
 #include "id.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 class Rule:
       public Id::Id, public std::enable_shared_from_this<class Rule> {

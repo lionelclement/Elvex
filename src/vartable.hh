@@ -25,7 +25,7 @@
 #include <unordered_map>
 #include <map>
 #include "bitset.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 class Vartable {
 

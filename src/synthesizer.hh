@@ -21,7 +21,7 @@
 #define SYNTHESIZER_H
 
 #include <map>
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "forestmap.hh"
 #include "memoization-map.hh"
 #include "parser.hh"

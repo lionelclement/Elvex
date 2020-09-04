@@ -22,7 +22,7 @@
 #include "environment.hh"
 #include "features.hh"
 #include "messages.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "grammar.hh"
 #include "statement.hh"
 

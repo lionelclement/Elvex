@@ -21,7 +21,7 @@
 #define LISTFEATURES_H
 
 #include <vector>
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "flags.hh"
 #include "id.hh"
 

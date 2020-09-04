@@ -21,7 +21,7 @@
 #define ENVIRONMENT_H
 
 #include <unordered_map>
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 class Environment:
       public std::enable_shared_from_this<class Environment> {

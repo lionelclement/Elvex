@@ -20,7 +20,7 @@
 #ifndef MEMOIZATIONVALUE_H
 #define MEMOIZATIONVALUE_H
 
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 class MemoizationValue:
       public std::enable_shared_from_this<class MemoizationValue> {

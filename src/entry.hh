@@ -22,7 +22,7 @@
 
 #include "id.hh"
 #include "serializable.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif

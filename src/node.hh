@@ -28,7 +28,7 @@
 
 #include "flags.hh"
 #include "id.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 class Node:
       public Flags, public Id, public std::enable_shared_from_this<class Node> {

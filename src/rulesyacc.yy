@@ -36,7 +36,7 @@
 #include "terms.hh"
 #include "messages.hh"
 #include "rule.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 
 #if false
 #define DBUG(x)x

@@ -20,7 +20,7 @@
 #include <climits>
 #include "listfeatures.hh"
 #include "features.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "messages.hh"
 
 /* **************************************************

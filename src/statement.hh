@@ -23,7 +23,7 @@
 #include <climits>
 #include <vector>
 #include "flags.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "serializable.hh"
 #include "synthesizer.hh"
 

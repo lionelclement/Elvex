@@ -27,7 +27,7 @@
 #include <unordered_map>
 #include <bitset>
 
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "serializable.hh"
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>

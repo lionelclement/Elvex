@@ -26,7 +26,7 @@
 #include "statements.hh"
 #include "messages.hh"
 #include "item.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "synthesizer.hh"
 #include "vartable.hh"
 

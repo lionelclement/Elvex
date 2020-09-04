@@ -25,7 +25,7 @@
 #include "entry.hh"
 #include "forestidentifier.hh"
 #include "itemset.hh"
-#include "ipointer.hh"
+#include "shared_ptr.hh"
 #include "listfeatures.hh"
 #include "rule.hh"
 #include "statement.hh"
