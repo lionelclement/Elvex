@@ -47,7 +47,7 @@ Entry::Entry(unsigned int code, unsigned int codePred, std::string form, feature
 Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr features)
       : Id(0) {
    this->code = code;
-   this->codePred = Vartable::strToInt(pred);
+   this->codePred = Vartable::identifierToCode(pred);
    this->form = form;
    this->features = features;
    NEW;
@@ -128,13 +128,13 @@ Entry::toXML(xmlNodePtr nodeRoot) const
 {
    xmlNodePtr entry = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRY", NULL);
    if (this->code!=(unsigned int)-1) {
-      xmlSetProp(entry, (xmlChar*)"code", (xmlChar*)Vartable::intToStr(this->code).c_str());
-      xmlSetProp(entry, (xmlChar*)"codeStr", (xmlChar*)Vartable::intToStr(this->code).c_str());
+      xmlSetProp(entry, (xmlChar*)"code", (xmlChar*)Vartable::codeToIdentifier(this->code).c_str());
+      xmlSetProp(entry, (xmlChar*)"codeStr", (xmlChar*)Vartable::codeToIdentifier(this->code).c_str());
 
    }
    if (this->codePred != (unsigned int)-1) {
-      xmlSetProp(entry, (xmlChar*)"codePred", (xmlChar*)Vartable::intToStr(this->codePred).c_str());
-      xmlSetProp(entry, (xmlChar*)"codePredStr", (xmlChar*)Vartable::intToStr(this->codePred).c_str());
+      xmlSetProp(entry, (xmlChar*)"codePred", (xmlChar*)Vartable::codeToIdentifier(this->codePred).c_str());
+      xmlSetProp(entry, (xmlChar*)"codePredStr", (xmlChar*)Vartable::codeToIdentifier(this->codePred).c_str());
 
    }
    if (this->form.size() != 0) {
@@ -150,9 +150,9 @@ Entry::toXML(xmlNodePtr nodeRoot) const
  *
  ************************************************** */
 void Entry::print(std::ostream& out) const {
-   out << "(id: " << this->getId() << ", code: " << Vartable::intToStr(this->code);
+   out << "(id: " << this->getId() << ", code: " << Vartable::codeToIdentifier(this->code);
    if ((this->codePred != UINT_MAX))
-      out << ", pred: " << Vartable::intToStr(this->codePred);
+      out << ", pred: " << Vartable::codeToIdentifier(this->codePred);
    if (this->form.size() != 0)
       out << ", form: " << this->form;
    out << ")";

@@ -233,7 +233,7 @@ dictionary_line:
 	TOKEN_FORM TOKEN_IDENTIFIER TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  unsigned int code=Vartable::strToInt(*$2);
+	  unsigned int code=Vartable::identifierToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
 	  Parser::entries_map_map::iterator foundCode = parser.getLexicon().find(code);
@@ -258,7 +258,7 @@ dictionary_line:
 	|TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  unsigned int code=Vartable::strToInt(*$2);
+	  unsigned int code=Vartable::identifierToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
 	  Parser::entries_map_map::iterator foundCode=parser.getLexicon().find(code);
@@ -290,7 +290,7 @@ dictionary_line:
 	       ++entry){
 	    (*entry)->setForm(*$1);
 	    //}
-	    //for (std::vector< entryPtr >::const_iterator entry = (*$2)->begin();
+	    //for (std::featuresVector< entryPtr >::const_iterator entry = (*$2)->begin();
 	    //    entry != (*$2)->end();
 	    //   ++entry){
 	    entriesPtr lp;
@@ -352,7 +352,7 @@ lexical_entry:
 	{
 	  DBUGPRT("lexical_entry");
 	  unsigned int pred = (*$2)->assignPred();
-	  $$ = new entryPtr(Entry::create(Vartable::strToInt(*$1), pred, std::string(), *$2));
+	  $$ = new entryPtr(Entry::create(Vartable::identifierToCode(*$1), pred, std::string(), *$2));
 	  free($1);
 	  free($2);
 	}
@@ -360,7 +360,7 @@ lexical_entry:
 	|TOKEN_IDENTIFIER 
 	{
 	  DBUGPRT("lexical_entry");
-	  $$ = new entryPtr(Entry::create(Vartable::strToInt(*$1), UINT_MAX, std::string(), Features::create()));
+	  $$ = new entryPtr(Entry::create(Vartable::identifierToCode(*$1), UINT_MAX, std::string(), Features::create()));
 	  free($1);
 	};
 
@@ -463,7 +463,7 @@ term:
 	TOKEN_IDENTIFIER
 	{ 
 	  DBUGPRT("term_id");
-	  unsigned int code = Vartable::strToInt(*$1);
+	  unsigned int code = Vartable::identifierToCode(*$1);
 	  $$ = new termPtr(Term::create(code));
 	  free($1);
 	}
@@ -471,7 +471,7 @@ term:
 	|TOKEN_VARIABLE
 	{ 
 	  DBUGPRT("term_id");
-	  unsigned int code = Vartable::strToInt(*$1);
+	  unsigned int code = Vartable::identifierToCode(*$1);
 	  $$ = new termPtr(Term::create(code));
 	  free($1);
 	}
@@ -931,13 +931,13 @@ expression_statement:
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOUBLE, $1));
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::NUMBER, $1));
 	}
 
 	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
- 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOUBLE, (double)$1));
+ 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::NUMBER, (double)$1));
 	}
 
 	|TOKEN_STRING
@@ -1142,7 +1142,7 @@ feature:
 	TOKEN_PRED TOKEN_COLON TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::IDENTIFIER, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::CODE, *$3)));
 	}
 
 	// PRED: $X
@@ -1215,13 +1215,13 @@ feature_value:
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new valuePtr(Value::create(Value::DOUBLE, $1));
+	  $$ = new valuePtr(Value::create(Value::NUMBER, $1));
 	}
 
 	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new valuePtr(Value::create(Value::DOUBLE, (double)$1));
+	  $$ = new valuePtr(Value::create(Value::NUMBER, (double)$1));
 	}
 
 	|list
@@ -1280,7 +1280,7 @@ identifier:
 	TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("identifier");
- 	  $$ = new bitsetPtr(Bitset::create(Vartable::varTableAdd(*$1)));
+ 	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(*$1)));
  	  free($1);
 	};
 
@@ -1291,7 +1291,7 @@ variable:
 	  std::ostringstream oss;
 	  oss << *$1;
   	  std::string str = oss.str();
-	  $$ = new bitsetPtr(Bitset::create(Vartable::varTableAdd(str)));
+	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(str)));
 	  free($1);
 	};
 	
@@ -1356,13 +1356,13 @@ list_element:
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new listPtr(List::create(Value::create(Value::DOUBLE, $1)));
+	  $$ = new listPtr(List::create(Value::create(Value::NUMBER, $1)));
 	}
 
  	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new listPtr(List::create(Value::create(Value::DOUBLE, (double)$1)));
+	  $$ = new listPtr(List::create(Value::create(Value::NUMBER, (double)$1)));
 	}
 
 	|constant

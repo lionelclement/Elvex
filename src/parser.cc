@@ -207,7 +207,7 @@ void Parser::printLexicon(std::ostream& out) const {
    out << "<ul>";
    for (entries_map_map::const_iterator i = beginLexicon(); i != endLexicon(); ++i) {
       out << "<li>";
-      out << Vartable::intToStr((*i).first);
+      out << Vartable::codeToIdentifier((*i).first);
       out << "<ul>";
       for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
          out << "<li>";
@@ -216,7 +216,7 @@ void Parser::printLexicon(std::ostream& out) const {
          else if ((*j).first == UINT_MAX)
             out << "UINT_MAX = &gt; ";
          else
-            out << Vartable::intToStr((*j).first) << " = &gt; ";
+            out << Vartable::codeToIdentifier((*j).first) << " = &gt; ";
 
          (*j).second->print(out);
          out << "</li>";

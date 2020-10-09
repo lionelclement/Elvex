@@ -17,10 +17,10 @@
  *
  ************************************************** */
 
-#ifndef IPOINTER_H
-#define IPOINTER_H
+#ifndef ELVEX_SHARED_PTR_H
+#define ELVEX_SHARED_PTR_H
 
-#include <memory> 
+#include <memory>
 
 typedef std::shared_ptr<class Bitset> bitsetPtr;
 typedef std::shared_ptr<class Entries> entriesPtr;
@@ -43,5 +43,5 @@ typedef std::shared_ptr<class Term> termPtr;
 typedef std::shared_ptr<class Terms> termsPtr;
 typedef std::shared_ptr<class Value> valuePtr;
 
-#endif // IPOINTER_H
+#endif // ELVEX_SHARED_PTR_H
 

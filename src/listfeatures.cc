@@ -78,14 +78,14 @@ void ListFeatures::clear() {
 /* **************************************************
  *
  ************************************************** */
-ListFeatures::vector::const_iterator ListFeatures::begin() const {
+ListFeatures::featuresVector::const_iterator ListFeatures::begin() const {
    return listFeatures.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ListFeatures::vector::const_iterator ListFeatures::end() const {
+ListFeatures::featuresVector::const_iterator ListFeatures::end() const {
    return listFeatures.end();
 }
 
@@ -101,7 +101,7 @@ size_t ListFeatures::size() const {
  ************************************************** */
 listFeaturesPtr ListFeatures::clone() {
    listFeaturesPtr lf = ListFeatures::create();
-   for (vector::const_iterator i = listFeatures.begin(); i != listFeatures.end(); ++i)
+   for (featuresVector::const_iterator i = listFeatures.begin(); i != listFeatures.end(); ++i)
       lf->push_back((*i)->clone());
    return lf;
 }

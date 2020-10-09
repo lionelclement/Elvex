@@ -21,11 +21,11 @@
 #define BUILDLEXICON_HH_
 
 namespace Buildlexicon {
-   enum Choice {
-      BUILD,
-      CONSULT,
-      NONE
-   };
+    enum Choice {
+        BUILD,
+        CONSULT,
+        NONE
+    };
 
 };
 

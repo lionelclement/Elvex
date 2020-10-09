@@ -17,21 +17,22 @@
  *
  ************************************************** */
 
-#ifndef ID_H
-#define ID_H
+#ifndef ELVEX_ID_H
+#define ELVEX_ID_H
 
 #include <cstddef>
 
 class Id {
 
 private:
-   static size_t uniqId;
-   size_t id;
+    static size_t uniqId;
+    size_t id;
 
 public:
-   Id(size_t id);
-   size_t getId(void) const;
+    Id(size_t id);
+
+    size_t getId(void) const;
 
 };
 
-#endif // ID_H
+#endif // ELVEX_ID_H

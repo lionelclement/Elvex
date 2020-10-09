@@ -257,7 +257,7 @@ bool Feature::renameVariables(size_t i) {
          break;
       case Feature::VARIABLE: {
          std::string str = attributeToString() + '_' + std::to_string(i);
-         bitsetPtr variableBits = Vartable::varTableAdd(str);
+         bitsetPtr variableBits = Vartable::createVariable(str);
          attribute = variableBits;
          if (value)
             value->renameVariables(i);

@@ -122,13 +122,13 @@ void CompactLexicon::saveFsa() {
    std::cerr << "*** Writing Finite State Automata " << std::endl;
    // encodage des offsets (16 ou 32 bits)
    if (!fwrite(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
    unsigned long int maxSize = (unsigned long int)~0UL;
    if (!fwrite(&maxSize, sizeof(maxSize), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
@@ -136,7 +136,7 @@ void CompactLexicon::saveFsa() {
    unsigned long int sizeFsa = 0;
    lexiconInit->setIndexStaticFSA(sizeFsa);
    if (!fwrite(&sizeFsa, sizeof(sizeFsa), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
@@ -147,7 +147,7 @@ void CompactLexicon::saveFsa() {
    unsigned long int sizeInfo = 0;
    lexiconInit->setIndexStaticInfo(sizeInfo);
    if (!fwrite(&sizeInfo, sizeof(sizeInfo), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
@@ -168,7 +168,7 @@ void CompactLexicon::saveFsa() {
    // table
    fflush(fsaFile);
    if (!fwrite(&init, sizeof(init), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
@@ -181,13 +181,13 @@ void CompactLexicon::loadFsa() {
    std::cerr << "*** Loading Finite State Automata" << std::endl;
    int nbrBytes;
    if (!fread(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
    unsigned long int maxSize;
    if (!fread(&maxSize, sizeof(maxSize), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
@@ -197,13 +197,13 @@ void CompactLexicon::loadFsa() {
    }
    unsigned long int sizeFsa;
    if (!fread(&sizeFsa, sizeof(sizeFsa), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
    unsigned long int sizeInfo;
    if (!fread(&sizeInfo, sizeof(sizeInfo), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
@@ -213,7 +213,7 @@ void CompactLexicon::loadFsa() {
 #endif //TRACE_DIFF
    fsa = new CompactLexiconFsa[sizeFsa + 1]();
    if (!fread(fsa, sizeof(CompactLexiconFsa), sizeFsa, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       for(unsigned long int sizeSy=0;sizeSy<sizeFsa;sizeSy++) {
          fsa[sizeSy].print(std::cout);
@@ -225,7 +225,7 @@ void CompactLexicon::loadFsa() {
 #endif //TRACE_DIFF
    info = new CompactLexiconBuffer[sizeInfo + 1]();
    if (!fread(info, sizeof(CompactLexiconBuffer), sizeInfo, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       for(unsigned long int sizeSy=0;sizeSy<sizeInfo;sizeSy++) {
          std::cout << sizeSy << ' ';
@@ -233,7 +233,7 @@ void CompactLexicon::loadFsa() {
       }
 #endif //TRACE_DIFF
    if (!fread(&init, sizeof(init), 1, fsaFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
       std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
@@ -285,7 +285,7 @@ std::string CompactLexicon::unif(std::string fs1, std::string fs2) {
       if (parser.parseBuffer("#", fsString, "morphology")) {
          stringStream.str("");
          stringStream << "error in lexicon: " << fs1 << std::endl;
-         ERROR(stringStream.str())
+         FATAL_ERROR(stringStream.str())
       }
       features1 = parser.getLocalFeatures();
    }
@@ -300,7 +300,7 @@ std::string CompactLexicon::unif(std::string fs1, std::string fs2) {
       if (parser.parseBuffer("#", fsString, "morphology")) {
          stringStream.str("");
          stringStream << "error in lexicon: " << fs2 << std::endl;
-         ERROR(stringStream.str())
+         FATAL_ERROR(stringStream.str())
       }
       features2 = parser.getLocalFeatures();
    }
@@ -465,7 +465,7 @@ void CompactLexicon::loadData() {
    buffer = new char[size];
    buffer[0] = 0;
    if (!fread(buffer, 1, size, dataFile))
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 }
 
 /* **************************************************

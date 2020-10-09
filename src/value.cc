@@ -44,8 +44,8 @@ Value::Value(Value::Type const type, std::string str)
   this->integer = 0;
   this->number = 0;
   unsigned int found = 0;
-  if (type == IDENTIFIER) {
-    found = Vartable::strToInt(str);
+  if (type == CODE) {
+    found = Vartable::identifierToCode(str);
     this->integer = found;
   }
   else if (type == STR) {
@@ -210,7 +210,7 @@ bool Value::isAnonymous(void) const {
  *
  ************************************************** */
 bool Value::isDouble(void) const {
-  return getType() == DOUBLE;
+  return getType() == NUMBER;
 }
 
 /* **************************************************
@@ -245,7 +245,7 @@ bool Value::isVariable(void) const {
  *
  ************************************************** */
 bool Value::isIdentifier(void) const {
-  return getType() == IDENTIFIER;
+  return getType() == CODE;
 }
 
 /* **************************************************
@@ -266,7 +266,7 @@ void Value::print(std::ostream& outStream) const {
   else
     switch (type) {
     case BOOL:
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 	break;
     case CONSTANT:
       outStream << getBits()->toString();
@@ -277,10 +277,10 @@ void Value::print(std::ostream& outStream) const {
     case ANONYMOUS:
       outStream << '_';
       break;
-    case IDENTIFIER:
-      outStream << Vartable::intToStr(getIdentifier());
+    case CODE:
+      outStream << Vartable::codeToIdentifier(getIdentifier());
       break;
-    case DOUBLE:
+    case NUMBER:
       outStream << getDouble();
       break;
     case STR:
@@ -306,7 +306,7 @@ void Value::flatPrint(std::ostream& outStream) const {
   else
     switch (type) {
     case BOOL:
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 	break;
     case CONSTANT:
       outStream << getBits()->toString();
@@ -317,10 +317,10 @@ void Value::flatPrint(std::ostream& outStream) const {
     case ANONYMOUS:
       outStream << '_';
       break;
-    case IDENTIFIER:
-      outStream << Vartable::intToStr(getIdentifier());
+    case CODE:
+      outStream << Vartable::codeToIdentifier(getIdentifier());
       break;
-    case DOUBLE:
+    case NUMBER:
       outStream << getDouble();
       break;
     case STR:
@@ -346,7 +346,7 @@ void Value::makeSerialString(void) {
   else
     switch (type) {
     case BOOL:
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 	break;
     case CONSTANT:
       serialString = getBits()->peekSerialString();
@@ -357,11 +357,11 @@ void Value::makeSerialString(void) {
     case ANONYMOUS:
       serialString = '_';
       break;
-    case IDENTIFIER:
+    case CODE:
       //serialString = std::to_string(getIdentifier());
-      serialString = Vartable::intToStr(getIdentifier());
+      serialString = Vartable::codeToIdentifier(getIdentifier());
       break;
-    case DOUBLE:
+    case NUMBER:
       serialString = getDouble();
       break;
     case STR:
@@ -404,11 +404,11 @@ Value::toXML(xmlNodePtr nodeRoot) const
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"anonymous");
     getBits()->toXML(v);
     break;
-  case IDENTIFIER:
+  case CODE:
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"identifier");
-    xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)Vartable::intToStr(getIdentifier()).c_str());
+    xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)Vartable::codeToIdentifier(getIdentifier()).c_str());
     break;
-  case DOUBLE:
+  case NUMBER:
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"double");
     xmlSetProp(v, (xmlChar*)"value",(const xmlChar*)std::to_string(getDouble()).c_str());
     break;
@@ -437,9 +437,9 @@ valuePtr Value::clone(void) {
   switch (type) {
   case BOOL:
   case CONSTANT:
-  case IDENTIFIER:
+  case CODE:
   case STR:
-  case DOUBLE:
+  case NUMBER:
   case ANONYMOUS:
     result = shared_from_this();
     break;
@@ -521,8 +521,8 @@ bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool ac
       if ((*getBits() & *value->getBits()).none())
 	ret = false;
     }
-    else if (value->type == IDENTIFIER) {
-      if (getBits()->toString() != Vartable::intToStr(value->getIdentifier()))
+    else if (value->type == CODE) {
+      if (getBits()->toString() != Vartable::codeToIdentifier(value->getIdentifier()))
 	ret = false;
     }
     else if (value->type == ANONYMOUS) {
@@ -532,15 +532,15 @@ bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool ac
     }
     break;
 	
-  case IDENTIFIER:
+  case CODE:
     if (value->type == VARIABLE) {
       environment->add(value->getBits(), shared_from_this());
     }
     else if (value->type == CONSTANT) {
-      if (Vartable::intToStr(getIdentifier()) != value->getBits()->toString())
+      if (Vartable::codeToIdentifier(getIdentifier()) != value->getBits()->toString())
 	ret = false;
     }
-    else if (value->type == IDENTIFIER) {
+    else if (value->type == CODE) {
       if (getIdentifier() != value->getIdentifier())
 	ret = false;
     }
@@ -551,11 +551,11 @@ bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool ac
     }
     break;
     
-  case DOUBLE:
+  case NUMBER:
     if (value->type == VARIABLE) {
       environment->add(value->getBits(), shared_from_this());
     }
-    else if (value->type == DOUBLE) {
+    else if (value->type == NUMBER) {
       if (getDouble() != value->getDouble()) {
 	ret = false;
       }
@@ -683,11 +683,11 @@ bool Value::subsumes(valuePtr o, environmentPtr environment) {
   else {
     switch (o->type) {
       // a < a
-    case IDENTIFIER:
+    case CODE:
       if (getIdentifier() != o->getIdentifier())
 	ret = false;
       break;
-    case DOUBLE:
+    case NUMBER:
       if (getDouble() != o->getDouble())
 	ret = false;
       break;
@@ -706,7 +706,7 @@ bool Value::subsumes(valuePtr o, environmentPtr environment) {
       ret = getList()->subsumes(o->getList(), environment);
       break;
     default:
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 	break;
 
     }
@@ -746,24 +746,24 @@ bool Value::eq(valuePtr o) const {
   else {
     switch (o->type) {
     case BOOL:
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 	break;
-    case IDENTIFIER:
-      if ((type == IDENTIFIER) && ((getIdentifier() == o->getIdentifier())))
+    case CODE:
+      if ((type == CODE) && ((getIdentifier() == o->getIdentifier())))
 	ret = true;
       break;
     case CONSTANT:
       if ((type == CONSTANT) && ((*getBits() & *o->getBits()).any()))
 	ret = true;
-      else if ((type == IDENTIFIER) && (o->getBits()->toString() == Vartable::intToStr(getIdentifier())))
+      else if ((type == CODE) && (o->getBits()->toString() == Vartable::codeToIdentifier(getIdentifier())))
 	ret = true;
       break;
     case STR:
       if ((type == STR) && (getStr() == o->getStr()))
 	ret = true;
       break;
-    case DOUBLE:
-      if ((type == DOUBLE) && (getDouble() == o->getDouble()))
+    case NUMBER:
+      if ((type == NUMBER) && (getDouble() == o->getDouble()))
 	ret = true;
       break;
     case FEATURES:
@@ -771,7 +771,7 @@ bool Value::eq(valuePtr o) const {
 	ret = true;
       break;
     default:
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
 	break;
     }
   }
@@ -793,7 +793,7 @@ bool Value::lt(valuePtr o) const {
   if (isDouble() && o->isDouble())
     return (getDouble() < o->getDouble());
   else
-    UNEXPECTED
+    FATAL_ERROR_UNEXPECTED
       return ret;
 }
 
@@ -803,12 +803,12 @@ bool Value::lt(valuePtr o) const {
 void Value::deleteAnonymousVariables() {
   switch (type) {
   case BOOL:
-  case IDENTIFIER:
+  case CODE:
   case CONSTANT:
   case STR:
   case VARIABLE:
   case ANONYMOUS:
-  case DOUBLE:
+  case NUMBER:
     break;
   case FEATURES:
     getFeatures()->deleteAnonymousVariables();
@@ -826,17 +826,17 @@ bool Value::renameVariables(size_t i) {
   bool effect = false;
   switch (type) {
   case CONSTANT:
-  case IDENTIFIER:
+  case CODE:
   case STR:
   case BOOL:
-  case DOUBLE:
+  case NUMBER:
   case ANONYMOUS:
     break;
   case VARIABLE: {
     std::ostringstream oss;
     oss << getBits()->toString() << "_" << i;
     std::string str = oss.str();
-    bitsetPtr variableBits = Vartable::varTableAdd(str);
+    bitsetPtr variableBits = Vartable::createVariable(str);
     this->bits = variableBits;
     resetSerial();
     effect = true;
@@ -862,10 +862,10 @@ bool Value::renameVariables(size_t i) {
 void Value::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, bool &effect, bool on) {
   switch (type) {
   case BOOL:
-  case IDENTIFIER:
+  case CODE:
   case STR:
   case CONSTANT:
-  case DOUBLE:
+  case NUMBER:
   case ANONYMOUS:
     break;
   case VARIABLE:
@@ -895,10 +895,10 @@ void Value::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, bo
 bool Value::findVariable(bitsetPtr variable) {
   switch (type) {
   case BOOL:
-  case IDENTIFIER:
+  case CODE:
   case STR:
   case CONSTANT:
-  case DOUBLE:
+  case NUMBER:
   case ANONYMOUS:
     break;
   case VARIABLE:
@@ -930,7 +930,7 @@ void Value::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statem
     item->getEnvironment()->remove(variable->getBits());
     break;
   default:
-    UNEXPECTED
+    FATAL_ERROR_UNEXPECTED
       break;
   }
 }
@@ -944,10 +944,10 @@ bool Value::containsVariable(void) {
     return true;
   switch (type) {
   case BOOL:
-  case IDENTIFIER:
+  case CODE:
   case STR:
   case CONSTANT:
-  case DOUBLE:
+  case NUMBER:
   case ANONYMOUS:
     break;
   case VARIABLE:

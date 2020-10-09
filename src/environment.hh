@@ -17,45 +17,62 @@
  *
  ************************************************** */
 
-#ifndef ENVIRONMENT_H
-#define ENVIRONMENT_H
+#ifndef ELVEX_ENVIRONMENT_H
+#define ELVEX_ENVIRONMENT_H
 
 #include <unordered_map>
 #include "shared_ptr.hh"
 
-class Environment:
-      public std::enable_shared_from_this<class Environment> {
+class Environment :
+        public std::enable_shared_from_this<class Environment> {
 
 public:
-   typedef std::unordered_map<const std::string, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
+    typedef std::unordered_map<const std::string, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
 
 private:
-   Environment();
+    Environment();
 
 private:
-   unordered_map env;
-   void add(const std::string, valuePtr = valuePtr());
-   void remove(const std::string);
+    unordered_map env;
+
+    void add(const std::string, valuePtr = valuePtr());
+
+    void remove(const std::string);
 
 public:
-   ~Environment();
-   static environmentPtr create(void);
+    ~Environment();
 
-   void add(const bitsetPtr, valuePtr = valuePtr());
-   void add(const environmentPtr);
-   void add(const environmentPtr, const environmentPtr);
-   void remove(const bitsetPtr);
-   unordered_map::const_iterator begin() const;
-   unordered_map::const_iterator end() const;
-   const size_t size() const;
+    static environmentPtr create(void);
 
-   void print(std::ostream &) const;
-   environmentPtr clone(void) const;
-   valuePtr find(bitsetPtr) const;
-   void replaceVariables(valuePtr value, bool &);
-   void replaceVariables(featuresPtr features, bool &);
-   void replaceVariables(listFeaturesPtr listFeatures, bool &);
-   void replaceVariables(listPtr list, bool &);
-   void replaceVariables(std::string &string, bool &);
+    void add(const bitsetPtr, valuePtr = valuePtr());
+
+    void add(const environmentPtr);
+
+    void add(const environmentPtr, const environmentPtr);
+
+    void remove(const bitsetPtr);
+
+    unordered_map::const_iterator begin() const;
+
+    unordered_map::const_iterator end() const;
+
+    const size_t size() const;
+
+    void print(std::ostream &) const;
+
+    environmentPtr clone(void) const;
+
+    valuePtr find(bitsetPtr) const;
+
+    void replaceVariables(valuePtr value, bool &);
+
+    void replaceVariables(featuresPtr features, bool &);
+
+    void replaceVariables(listFeaturesPtr listFeatures, bool &);
+
+    void replaceVariables(listPtr list, bool &);
+
+    void replaceVariables(std::string &string, bool &);
 };
-#endif // ENVIRONMENT_H
+
+#endif // ELVEX_ENVIRONMENT_H

@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef VARTABLE_H
-#define VARTABLE_H
+#ifndef ELVEX_VARTABLE_H
+#define ELVEX_VARTABLE_H
 
 #include <string>
 #include <bitset>
@@ -30,23 +30,34 @@
 class Vartable {
 
 public:
-   static const unsigned int _END_ = 0;
-   static const unsigned int _STARTTERM_ = 1;
-   static const unsigned int _EMPTY_ = 2;
-   static const unsigned int _OPEN_ = 3;
-   static const unsigned int _FIRSTID_ = 4;
+    static const unsigned int _END_ = 0;
+    static const unsigned int _STARTTERM_ = 1;
+    static const unsigned int _EMPTY_ = 2;
+    static const unsigned int _OPEN_ = 3;
+    static const unsigned int _FIRSTID_ = 4;
+
+private:
+    static unsigned int codeMapIndex;
+    static std::bitset<MAXBITS> variableMapIndex;
+    static std::unordered_map<std::string, bitsetPtr> variableMap;
+    static std::map<const unsigned int, std::string> codeMap;
+    static std::unordered_map<std::string, unsigned int> identifierMap;
+    static std::unordered_map<unsigned int, std::string> bitMap;
 
 public:
-   static unsigned int intToStrIndex;
-   static std::bitset<MAXBITS> varTableIndex;
-   static std::unordered_map<std::string, bitsetPtr> varTable;
-   static std::map<unsigned int, std::string> intToStrTable;
-   static std::unordered_map<std::string, unsigned int> strToIntTable;
+    Vartable();
 
-   Vartable();
-   static bitsetPtr varTableAdd(std::string); // string -> bit
-   static unsigned int strToInt(std::string); // string -> integer
-   static std::string intToStr(unsigned int);
+    static bitsetPtr createVariable(std::string); // variable -> bitset
+    static unsigned int identifierToCode(std::string); // identifier -> code
+    static std::string codeToIdentifier(unsigned int);
+
+    static std::string bitToVariable(unsigned int);
+
+    static void insertCodeMap(const unsigned int, std::string);
+
+    static std::unordered_map<unsigned int, std::string>::const_iterator bitMapFind(unsigned int);
+
+    static std::unordered_map<unsigned int, std::string>::const_iterator bitMapEnd(void);
 };
 
-#endif // VARTABLE_H
+#endif // ELVEX_VARTABLE_H

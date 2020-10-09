@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef FORESTMAP_H
-#define FORESTMAP_H
+#ifndef ELVEX_FORESTMAP_H
+#define ELVEX_FORESTMAP_H
 
 #include <unordered_map>
 #include "shared_ptr.hh"
@@ -27,22 +27,28 @@
 class ForestMap {
 
 public:
-   typedef std::unordered_map<const forestIdentifierPtr, forestPtr, ForestIdentifier::hash, ForestIdentifier::equal_to> map;
-   typedef std::pair<const forestIdentifierPtr, forestPtr> pair;
+    typedef std::unordered_map<const forestIdentifierPtr, forestPtr, ForestIdentifier::hash, ForestIdentifier::equal_to> map;
+    typedef std::pair<const forestIdentifierPtr, forestPtr> pair;
 
 private:
-   map data;
-   static int nb;
+    map data;
+    static int nb;
 
 public:
-   ForestMap(void);
-   ~ForestMap();
+    ForestMap(void);
 
-   const map::const_iterator find(const forestIdentifierPtr) const;
-   const map::const_iterator begin(void) const;
-   const map::const_iterator end(void) const;
-   void clear(void);
-   const bool insert(pair);
+    ~ForestMap();
+
+    const map::const_iterator find(const forestIdentifierPtr) const;
+
+    const map::const_iterator begin(void) const;
+
+    const map::const_iterator end(void) const;
+
+    void clear(void);
+
+    const bool insert(pair);
 
 };
-#endif // FORESTMAP_H
+
+#endif // ELVEX_FORESTMAP_H

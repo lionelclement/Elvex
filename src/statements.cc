@@ -158,7 +158,7 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
    if (item->isSetFlags(Flags::BOTTOM))
      return;
    if (item->isSetFlags(Flags::SEEN)) {
-     UNEXPECTED
+     FATAL_ERROR_UNEXPECTED
        }
    
    if (guard) {
@@ -210,7 +210,7 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
  *
  ************************************************** */
 void Statements::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assignedInheritedSonFeatures) {
-   UNEXPECTED
+   FATAL_ERROR_UNEXPECTED
    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
       std::cerr << '.';
       (*i)->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
@@ -232,7 +232,7 @@ void Statements::enable(itemPtr item, Synthesizer *synthesizer, bool &effect, bo
  *
  ************************************************** */
 bool Statements::findVariableElsewhere(statementPtr o, bitsetPtr variable) {
-   UNEXPECTED
+   FATAL_ERROR_UNEXPECTED
    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
       if ((*i) == o)
          continue;

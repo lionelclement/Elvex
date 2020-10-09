@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef ELVEX_PARSER_H
+#define ELVEX_PARSER_H
 
 #include <functional>
 #include <string>
@@ -34,71 +34,86 @@
 class Parser {
 
 public:
-   typedef std::unordered_map<std::string, entryPtr, std::hash<std::string>, std::equal_to<std::string> > entry_map;
-   // pos => (PRED => entries)
-   // verb => (manger => (mangions, mange|mange))
-   typedef std::map<unsigned int, entriesPtr> entries_map;
-   typedef std::map<unsigned int, entries_map *> entries_map_map;
-   typedef std::unordered_map<std::string, featuresPtr> features_map;
+    typedef std::unordered_map<std::string, entryPtr, std::hash<std::string>, std::equal_to<std::string> > entry_map;
+    // pos => (PRED => entries)
+    // verb => (manger => (mangions, mange|mange))
+    typedef std::map<unsigned int, entriesPtr> entries_map;
+    typedef std::map<unsigned int, entries_map *> entries_map_map;
+    typedef std::unordered_map<std::string, featuresPtr> features_map;
 
 private:
-   Grammar grammar;
-   entries_map_map lexicon;
-   entry_map mapLocalEntry;
-   features_map macros;
-   featuresPtr startFeatures;
-   termPtr startTerm;
-   bool verbose;
-   featuresPtr localFeatures;
-   std::deque<std::string> bufferNames;
-   std::deque<unsigned int> linenos;
+    Grammar grammar;
+    entries_map_map lexicon;
+    entry_map mapLocalEntry;
+    features_map macros;
+    featuresPtr startFeatures;
+    termPtr startTerm;
+    bool verbose;
+    featuresPtr localFeatures;
+    std::deque<std::string> bufferNames;
+    std::deque<unsigned int> linenos;
 
 public:
-   Parser(void);
-   ~Parser(void);
+    Parser(void);
 
-   void pushBufferName(std::string);
-   std::string popBufferName(void);
+    ~Parser(void);
 
-   void pushLineno(unsigned int);
-   unsigned int popLineno(void);
-   unsigned int getTopLineno(void);
+    void pushBufferName(std::string);
 
-   class Grammar &getGrammar(void);
+    std::string popBufferName(void);
 
-   std::string getTopBufferName(void);
+    void pushLineno(unsigned int);
 
-   termPtr getStartTerm(void) const;
-   void setStartTerm(termPtr);
+    unsigned int popLineno(void);
 
-   void setStartFeatures(featuresPtr);
-   featuresPtr getStartFeatures(void) const;
+    unsigned int getTopLineno(void);
 
-   featuresPtr getLocalFeatures(void) const;
-   void setLocalFeatures(featuresPtr);
+    class Grammar &getGrammar(void);
 
-   entries_map_map &getLexicon(void);
-   void setLexicon(entries_map_map &);
-   entries_map_map::const_iterator findLexicon(unsigned int i) const;
-   entries_map_map::const_iterator beginLexicon(void) const;
-   entries_map_map::const_iterator endLexicon(void) const;
+    std::string getTopBufferName(void);
 
-   void setVerbose(bool);
-   bool getVerbose(void) const;
+    termPtr getStartTerm(void) const;
 
-   entry_map &getMapLocalEntry(void);
+    void setStartTerm(termPtr);
 
-   void printLexicon(std::ostream &) const;
+    void setStartFeatures(featuresPtr);
 
-   void addMacros(std::string, featuresPtr);
-   featuresPtr findMacros(std::string);
+    featuresPtr getStartFeatures(void) const;
+
+    featuresPtr getLocalFeatures(void) const;
+
+    void setLocalFeatures(featuresPtr);
+
+    entries_map_map &getLexicon(void);
+
+    void setLexicon(entries_map_map &);
+
+    entries_map_map::const_iterator findLexicon(unsigned int i) const;
+
+    entries_map_map::const_iterator beginLexicon(void) const;
+
+    entries_map_map::const_iterator endLexicon(void) const;
+
+    void setVerbose(bool);
+
+    bool getVerbose(void) const;
+
+    entry_map &getMapLocalEntry(void);
+
+    void printLexicon(std::ostream &) const;
+
+    void addMacros(std::string, featuresPtr);
+
+    featuresPtr findMacros(std::string);
 
 public:
-   unsigned int parseFile(std::string prefix, std::string fileName);
+    unsigned int parseFile(std::string prefix, std::string fileName);
+
 public:
-   unsigned int parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
+    unsigned int parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
+
 private:
-   unsigned int parseString(std::string buffer);
+    unsigned int parseString(std::string buffer);
 };
 
-#endif // PARSER_H
+#endif // ELVEX_PARSER_H

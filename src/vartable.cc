@@ -30,45 +30,47 @@ const unsigned int Vartable::_EMPTY_;
 const unsigned int Vartable::_OPEN_;
 const unsigned int Vartable::_FIRSTID_;
 
-unsigned int Vartable::intToStrIndex;
-std::bitset<MAXBITS> Vartable::varTableIndex;
-std::unordered_map<std::string, bitsetPtr> Vartable::varTable;
-std::map<unsigned int, std::string> Vartable::intToStrTable;
-std::unordered_map<std::string, unsigned int> Vartable::strToIntTable;
+unsigned int Vartable::codeMapIndex;
+std::bitset<MAXBITS> Vartable::variableMapIndex;
+std::unordered_map<std::string, bitsetPtr> Vartable::variableMap;
+std::map<const unsigned int, std::string> Vartable::codeMap;
+std::unordered_map<std::string, unsigned int> Vartable::identifierMap;
+std::unordered_map<unsigned int, std::string> Vartable::bitMap;
+
 Vartable vartable;
 
-/* **************************************************
+/* ************************************************************
  *
- ************************************************** */
+ ************************************************************ */
 Vartable::Vartable() {
-   intToStrTable[_END_] = "_END_";
-   intToStrTable[_STARTTERM_] = "_STARTTERM_";
-   intToStrTable[_EMPTY_] = "_EMPTY_";
-   intToStrTable[_OPEN_] = "_OPEN_";
-   intToStrTable[_FIRSTID_] = "_FIRSTID_";
-   intToStrIndex = _FIRSTID_ + 1;
-   varTableIndex = 1;
+    codeMapIndex = 0;
+    variableMapIndex = 1;
+    insertCodeMap(_END_, "_END_");
+    insertCodeMap(_STARTTERM_, "_STARTTERM_");
+    insertCodeMap(_EMPTY_, "_EMPTY_");
+    insertCodeMap(_OPEN_, "_OPEN_");
+    insertCodeMap(_FIRSTID_, "_FIRSTID_");
 }
 
 /* ************************************************************
  * ajoute une nouvelle variable à la table
  * y associe un poids de bitset
- * bitsToStrTable[poids] := str
- * varTable[str] := bitset
+ * bitMap[poids] := str
+ * variableMap[str] := bitset
  ************************************************************ */
-bitsetPtr Vartable::varTableAdd(std::string str) {
+bitsetPtr Vartable::createVariable(std::string str) {
    bitsetPtr result = bitsetPtr();
    std::unordered_map<std::string, bitsetPtr>::const_iterator varTableIt;
-   varTableIt = varTable.find(str);
-   if (varTableIt == varTable.end()) {
-      result = Bitset::create(varTableIndex);
-      varTable.insert(std::make_pair(str, result));
+   varTableIt = variableMap.find(str);
+   if (varTableIt == variableMap.end()) {
+      result = Bitset::create(variableMapIndex);
+      variableMap.insert(std::make_pair(str, result));
       size_t i = 0;
-      while ((i < varTableIndex.size()) && !varTableIndex.test(i))
+      while ((i < variableMapIndex.size()) && !variableMapIndex.test(i))
          ++i;
-      Bitset::bitsToStrTable[i] = str;
-      varTableIndex <<= 1;
-      if (varTableIndex.none())
+      Vartable::bitMap[i] = str;
+       variableMapIndex <<= 1;
+      if (variableMapIndex.none())
          throw "Too much values";
    }
    else {
@@ -77,28 +79,59 @@ bitsetPtr Vartable::varTableAdd(std::string str) {
    return result;
 }
 
-/* **************************************************
+/* ************************************************************
  *
- ************************************************** */
-unsigned int Vartable::strToInt(std::string str) {
+ ************************************************************ */
+unsigned int Vartable::identifierToCode(std::string str ) {
    unsigned int code;
-   std::unordered_map<std::string, unsigned int>::const_iterator it(strToIntTable.find(str));
-   if (it == strToIntTable.end()) {
-      code = intToStrIndex;
-      strToIntTable[str] = intToStrIndex;
-      intToStrTable[intToStrIndex++] = str;
+   std::unordered_map<std::string, unsigned int>::const_iterator it(identifierMap.find(str));
+   if (it == identifierMap.end()) {
+      code = codeMapIndex;
+       identifierMap[str] = codeMapIndex;
+       codeMap[codeMapIndex++] = str;
    }
    else
       code = it->second;
    return code;
 }
 
-/* **************************************************
+/* ************************************************************
  *
- ************************************************** */
-std::string Vartable::intToStr(unsigned int i) {
+ ************************************************************ */
+std::string Vartable::codeToIdentifier(unsigned int i) {
    if (i != UINT_MAX)
-      return intToStrTable[i];
+      return codeMap[i];
    else
       return std::string("UINT_MAX");
 }
+
+/* ************************************************************
+ *
+ ************************************************************ */
+void Vartable::insertCodeMap(const unsigned int key, std::string value) {
+    codeMap[key] = value;
+    if (codeMapIndex <= key)
+        codeMapIndex = key+1;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+std::unordered_map<unsigned int, std::string>::const_iterator Vartable::bitMapFind(unsigned int key) {
+    return bitMap.find(key);
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+std::unordered_map<unsigned int, std::string>::const_iterator Vartable::bitMapEnd(void) {
+    return bitMap.end();
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+std::string Vartable::bitToVariable(unsigned int key) {
+    return bitMap[key];
+}
+

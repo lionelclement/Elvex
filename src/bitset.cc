@@ -28,11 +28,9 @@
 #include "shared_ptr.hh"
 
 const std::bitset< MAXBITS> Bitset::LEXBITSET = 1ul;
-const std::bitset< MAXBITS> Bitset::ARGBITSET = Bitset::LEXBITSET << 1;
-const std::bitset< MAXBITS> Bitset::SYSBITSET = Bitset::ARGBITSET << 1;
-const std::bitset< MAXBITS> Bitset::FIRSTBITSET = Bitset::SYSBITSET << 1;
-
-Bitset::map Bitset::bitsToStrTable;
+const std::bitset< MAXBITS> Bitset::ARGBITSET = 2ul;
+const std::bitset< MAXBITS> Bitset::SYSBITSET = 4ul;
+const std::bitset< MAXBITS> Bitset::FIRSTBITSET = 8ul;
 
 /* ************************************************************
  *                                                            *
@@ -101,7 +99,7 @@ const std::string Bitset::toString() const {
             first = false;
          else
             s << '|';
-         s << bitsToStrTable[i];
+         s << Vartable::bitToVariable(i);
       }
    }
    return s.str();
@@ -121,7 +119,6 @@ void Bitset::makeSerialString() {
          serialString += std::to_string(i);
          if (c > 0)
             serialString += ',';
-         //std::to_string(i);
       }
    }
 }
@@ -133,14 +130,14 @@ void Bitset::makeSerialString() {
 void Bitset::toXML(xmlNodePtr nodeRoot)
 {
    xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ALT", NULL);
-   map::const_iterator varTableIt;
+   std::unordered_map<unsigned int, std::string>::const_iterator varTableIt;
    size_t c=this->count();
    size_t sz=this->size();
    for(unsigned int i = 0; i < sz && c > 0; ++i)
    if (this->test(i)) {
       --c;
-      varTableIt = bitsToStrTable.find(i);
-      if (varTableIt != bitsToStrTable.end())
+      varTableIt = Vartable::bitMapFind(i);
+      if (varTableIt != Vartable::bitMapEnd())
       xmlNewChild(f, NULL, (const xmlChar*)"OPT", (const xmlChar*)varTableIt->second.c_str());
    }
 }

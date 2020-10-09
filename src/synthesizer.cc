@@ -538,7 +538,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
             std::cout << std::endl;
 #endif
             if (!state->insert(it, this)) {
-               UNEXPECTED
+               FATAL_ERROR_UNEXPECTED
             }
             else {
                insertItemMap(it);
@@ -553,7 +553,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
             std::cout << std::endl;
 #endif
             if (!state->insert(it, this)) {
-               UNEXPECTED
+               FATAL_ERROR_UNEXPECTED
             }
             else {
                insertItemMap(it);
@@ -588,7 +588,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                std::cout << std::endl;
 #endif
                if (!state->insert(it, this)) {
-                  UNEXPECTED
+                  FATAL_ERROR_UNEXPECTED
                }
                else {
                   insertItemMap(it);
@@ -654,7 +654,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                      else {
                         it->addRef((*actualItem)->getId());
                         if (!state->insert(it, this)) {
-                           UNEXPECTED
+                           FATAL_ERROR_UNEXPECTED
                         }
                         else {
                            insertItemMap(it);
@@ -679,14 +679,14 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
 #endif
             (*actualItem)->addFlags(Flags::SEEN);
             if (!(*actualItem)->getSynthesizedFeatures()) {
-               UNEXPECTED
+               FATAL_ERROR_UNEXPECTED
             }
             else {
                if ((*actualItem)->getSynthesizedFeatures()->isNil()) {
                   if (warning) {
                      std::ostringstream oss;
                      oss << "null synthesized feature structure " << (*actualItem)->getFilename() << '(' << (*actualItem)->getLineno() << ')' << std::endl;
-                     ERROR(oss.str());
+                     FATAL_ERROR(oss.str());
                   }
                   (*actualItem)->setSynthesizedFeatures(Features::create());
                }
@@ -713,7 +713,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                               std::cout << std::endl;
                            }
 #endif
-                           UNEXPECTED
+                           FATAL_ERROR_UNEXPECTED
                         }
                         (*actualItem)->getSynthesizedFeatures()->deleteAnonymousVariables();
                      }
@@ -746,7 +746,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                   for (std::set<unsigned int>::const_iterator ref = (*actualItem)->getRefs().begin(); ref != (*actualItem)->getRefs().end(); ++ref) {
                      itemPtr previousItem = getItemMap(*ref);
                      if (!previousItem) {
-                        UNEXPECTED
+                        FATAL_ERROR_UNEXPECTED
                      }
                      else {
 
@@ -797,7 +797,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                               }
                               else {
                                  if (!states[row]->insert(it, this)) {
-                                    UNEXPECTED
+                                    FATAL_ERROR_UNEXPECTED
                                  }
                                  else {
                                     insertItemMap(it);
@@ -830,7 +830,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                            for (unsigned int k = 0; k < (*actualItem)->getForestIdentifiers().size(); ++k) {
                               ForestMap::map::const_iterator forestMapIt = forestMap.find((*actualItem)->getForestIdentifiers()[k]);
                               if (forestMapIt == forestMap.end()) {
-                                 UNEXPECTED
+                                 FATAL_ERROR_UNEXPECTED
                               }
                               forestPtr forest = (*forestMapIt).second;
                               node->getForests().push_back(forest);
@@ -880,7 +880,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                               // record the item
                               it->setRefs(previousItem->getRefs());
                               if (!states[row]->insert(it, this)) {
-                                 UNEXPECTED
+                                 FATAL_ERROR_UNEXPECTED
                               }
                               else {
                                  insertItemMap(it);
@@ -954,7 +954,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                 std::cerr << std::endl;
                 std::cerr << "pred:" << pred << std::endl;
                 std::cerr << "form:" << form << std::endl;
-                //std::cerr << "POS : " << Vartable::intToStr((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
+                //std::cerr << "POS : " << Vartable::codeToIdentifier((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
                 */
                Parser::entries_map_map::const_iterator foundCode = parser.getLexicon().find((*actualItem)->getCurrentTerm()->getCode());
                if (foundCode != parser.getLexicon().end() && (foundCode->second->size() != 0)) {
@@ -978,7 +978,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
 
                         /*****
                          std::cerr << "stage : " << stage << "<BR>" << std::endl;
-                         std::cerr << "pred : " << Vartable::intToStr(pred) << "<BR>" << std::endl;
+                         std::cerr << "pred : " << Vartable::codeToIdentifier(pred) << "<BR>" << std::endl;
                          std::cerr << "form : " << form << "<BR>" << std::endl;
                          **** */
 			switch (stage) {
@@ -1084,7 +1084,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                     it->addForestIdentifiers((*actualItem)->getIndex(), (*forestMapIt).first);
                                     fi.reset();
                                     //std::cerr << "stage : " << stage << "<BR>" << std::endl;
-                                    //std::cerr << "pred : " << Vartable::intToStr(pred) << "<BR>" << std::endl;
+                                    //std::cerr << "pred : " << Vartable::codeToIdentifier(pred) << "<BR>" << std::endl;
                                     //std::cout << "form : " << form << "<BR>" << std::endl;
                                  }
                                  else {
@@ -1112,7 +1112,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
 
                                  // record the item
                                  if (!states[row]->insert(it, this)) {
-                                    UNEXPECTED
+                                    FATAL_ERROR_UNEXPECTED
                                  }
                                  insertItemMap(it);
                                  modification = true;
@@ -1197,7 +1197,7 @@ void Synthesizer::generate(class Parser &parser) {
    }
 
    if (i > maxLength) {
-      ERROR("maxLength");
+      FATAL_ERROR("maxLength");
    }
    if ((i % 121) == 0) {
       std::cerr << "Length : " << i << std::endl;
@@ -1219,19 +1219,19 @@ const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned 
    std::string str;
    if (pred) {
       if (code)
-         str = Vartable::intToStr(pred) + "#" + Vartable::intToStr(code);
+         str = Vartable::codeToIdentifier(pred) + "#" + Vartable::codeToIdentifier(code);
       else if (codeStr.size())
-         str = Vartable::intToStr(pred) + "#" + codeStr;
+         str = Vartable::codeToIdentifier(pred) + "#" + codeStr;
       else
-         str = Vartable::intToStr(pred);
+         str = Vartable::codeToIdentifier(pred);
    }
    else {
       if (code)
-         str = "_#" + Vartable::intToStr(code);
+         str = "_#" + Vartable::codeToIdentifier(code);
       else if (codeStr.size())
          str = "_#" + codeStr;
       else
-         ERROR("pred and code null")
+         FATAL_ERROR("pred and code null")
    }
    info = compactLexicon->searchStatic(compactLexicon->init, str);
    // in : pos#lemma
@@ -1271,7 +1271,7 @@ const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned 
          }
          else {
             std::ostringstream oss;
-            oss << "error: Illegal lexical entry: " << form << " " << Vartable::intToStr(code) << " " << result.substr(result.find("#") + 1, -1) << std::endl;
+            oss << "error: Illegal lexical entry: " << form << " " << Vartable::codeToIdentifier(code) << " " << result.substr(result.find("#") + 1, -1) << std::endl;
             throw oss.str();
          }
          if ((compactLexicon->info[info].isNext()))

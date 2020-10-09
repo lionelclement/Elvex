@@ -17,35 +17,45 @@
  *
  ************************************************** */
 
-#ifndef LISTFEATURES_H
-#define LISTFEATURES_H
+#ifndef ELVEX_LISTFEATURES_H
+#define ELVEX_LISTFEATURES_H
 
 #include <vector>
 #include "shared_ptr.hh"
 #include "flags.hh"
 #include "id.hh"
 
-class ListFeatures:
-      public Id, public Flags, public std::enable_shared_from_this<class ListFeatures> {
+class ListFeatures :
+        public Id, public Flags, public std::enable_shared_from_this<class ListFeatures> {
 
 public:
-   typedef std::vector<featuresPtr> vector;
+    typedef std::vector<featuresPtr> featuresVector;
 
 private:
-   vector listFeatures;
-   ListFeatures(void);
+    featuresVector listFeatures;
+
+    ListFeatures(void);
 
 public:
-   ~ListFeatures();
-   static listFeaturesPtr create(void);
-   void push_back(featuresPtr);
-   void add(unsigned int, featuresPtr);
-   void clear(void);
-   vector::const_iterator begin(void) const;
-   vector::const_iterator end(void) const;
-   size_t size() const;
-   listFeaturesPtr clone(void);
-   featuresPtr operator[](unsigned int);
+    ~ListFeatures();
+
+    static listFeaturesPtr create(void);
+
+    void push_back(featuresPtr);
+
+    void add(unsigned int, featuresPtr);
+
+    void clear(void);
+
+    featuresVector::const_iterator begin(void) const;
+
+    featuresVector::const_iterator end(void) const;
+
+    size_t size() const;
+
+    listFeaturesPtr clone(void);
+
+    featuresPtr operator[](unsigned int);
 };
 
-#endif // LISTFEATURES_H
+#endif // ELVEX_LISTFEATURES_H

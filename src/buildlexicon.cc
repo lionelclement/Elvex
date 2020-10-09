@@ -147,7 +147,7 @@ int main(int argn, char** argv) {
                   if (parser.parseBuffer("#", fsString, "morphology")) {
                      stream.str("");
                      stream << "error in lexicon: " << f << std::endl;
-                     ERROR(stream.str())
+                     FATAL_ERROR(stream.str())
                      }
                   features = parser.getLocalFeatures();
                   parser.addMacros(input, features);

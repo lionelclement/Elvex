@@ -318,7 +318,7 @@ const bool Statement::isList(void) const {
  *
  ************************************************** */
 const bool Statement::isDouble(void) const {
-  return op == DOUBLE;
+  return op == NUMBER;
 }
 
 /* **************************************************
@@ -680,7 +680,7 @@ void Statement::print(std::ostream &outStream, unsigned int tabulation, int yetC
   case STMS:
     getStatements()->print(outStream, tabulation);
     break;
-  case DOUBLE:
+  case NUMBER:
     outStream << getNumber();
     break;
   case SEARCH:
@@ -860,7 +860,7 @@ void Statement::makeSerialString() {
   case STMS:
     serialString = getStatements()->peekSerialString();
     break;
-  case DOUBLE:
+  case NUMBER:
     serialString = getNumber();
     break;
   case SEARCH:
@@ -884,7 +884,7 @@ statementPtr Statement::clone(const std::bitset<Flags::FLAGS>& protectedFlags) {
   case DOWN2:
   case CONSTANT:
   case STR:
-  case DOUBLE:
+  case NUMBER:
   case FINISHED:
   case ANONYMOUS:
     statement = shared_from_this();
@@ -962,7 +962,7 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
   case UP2:
   case LIST:
   case STMS:
-  case DOUBLE:
+  case NUMBER:
   case FCT:
   case FINISHED:
   case ANONYMOUS: {
@@ -1041,7 +1041,7 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
 	resultFeatures = featuresPtr();
       }
       if (!synthesizer->getCompactLexicon())
-	ERROR("search operator error: No compact lexicon defined.");
+	FATAL_ERROR("search operator error: No compact lexicon defined.");
       entriesPtr entries = synthesizer->findCompactLexicon(parser, 0, getBits()->toString(), fs->assignPred());
 	if (entries) {
 	  //if (entries->size() > 1) {
@@ -1054,14 +1054,14 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
          std::stringstream stringStream;
 	      fs->flatPrint(stringStream);
 	      if (parser.parseBuffer("#", stringStream.str(), stringStream.str()))
-	         UNEXPECTED
+	         FATAL_ERROR_UNEXPECTED
 		else {
             resultFeatures = parser.getLocalFeatures();
 	    }
 	  }
 	}
 	else
-	   ERROR("search operator error: No entry for " + Vartable::intToStr(fs->assignPred()));
+	   FATAL_ERROR("search operator error: No entry for " + Vartable::codeToIdentifier(fs->assignPred()));
 
     }
     break;
@@ -1116,7 +1116,7 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
   case DOWN2:
   case UNIF:
   case STMS:
-  case DOUBLE:
+  case NUMBER:
   case FCT:
   case FINISHED:
   case SEARCH:
@@ -1232,8 +1232,8 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
     }
     break;
 
-  case DOUBLE:
-    resultValue = Value::create(Value::DOUBLE, getNumber());
+  case NUMBER:
+    resultValue = Value::create(Value::NUMBER, getNumber());
     goto valueBuilt;
     break;
 
@@ -1332,7 +1332,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	  if (v1->isVariable())
 	    v1str = v1->getBits()->toString();
 	  else if (v1->isIdentifier())
-	    v1str = Vartable::intToStr(v1->getIdentifier());
+	    v1str = Vartable::codeToIdentifier(v1->getIdentifier());
 	  else if (v1->isStr())
 	    v1str = v1->getStr();
 	  else
@@ -1346,7 +1346,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	  if (v2->isVariable())
 	    v2str = v2->getBits()->toString();
 	  else if (v2->isIdentifier())
-	    v2str = Vartable::intToStr(v2->getIdentifier());
+	    v2str = Vartable::codeToIdentifier(v2->getIdentifier());
 	  else if (v2->isStr())
 	    v2str = v2->getStr();
 	  else
@@ -1357,7 +1357,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	  resultValue = valuePtr();
 
 	else if ((v1->isDouble()) && (v2->isDouble()))
-	  resultValue = Value::create(Value::DOUBLE, v1->getDouble() + v2->getDouble());
+	  resultValue = Value::create(Value::NUMBER, v1->getDouble() + v2->getDouble());
 
 	else if (isv1astring && isv2astring)
 	  resultValue = Value::create(Value::STR, v1str + v2str);
@@ -1368,7 +1368,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	}
 
 	else {
-	  UNEXPECTED
+	  FATAL_ERROR_UNEXPECTED
             }
 	goto valueBuilt;
       }
@@ -1381,7 +1381,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
-	  resultValue = Value::create(Value::DOUBLE, v1->getDouble() - v2->getDouble());
+	  resultValue = Value::create(Value::NUMBER, v1->getDouble() - v2->getDouble());
 	else
 	  resultValue = valuePtr();
 	goto valueBuilt;
@@ -1395,7 +1395,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
-	  resultValue = Value::create(Value::DOUBLE, v1->getDouble() * v2->getDouble());
+	  resultValue = Value::create(Value::NUMBER, v1->getDouble() * v2->getDouble());
 	else
 	  resultValue = valuePtr();
 	goto valueBuilt;
@@ -1408,7 +1408,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
-	  resultValue = Value::create(Value::DOUBLE, v1->getDouble() / v2->getDouble());
+	  resultValue = Value::create(Value::NUMBER, v1->getDouble() / v2->getDouble());
 	else
 	  resultValue = valuePtr();
 	goto valueBuilt;
@@ -1421,7 +1421,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	if ((!v1) || (!v2))
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()) && (v2->isDouble()))
-	  resultValue = Value::create(Value::DOUBLE, fmod(v1->getDouble(), v2->getDouble()));
+	  resultValue = Value::create(Value::NUMBER, fmod(v1->getDouble(), v2->getDouble()));
 	else
 	  resultValue = valuePtr();
 	goto valueBuilt;
@@ -1433,7 +1433,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 	if (!v1)
 	  resultValue = valuePtr();
 	else if ((v1->isDouble()))
-	  resultValue = Value::create(Value::DOUBLE, -v1->getDouble());
+	  resultValue = Value::create(Value::NUMBER, -v1->getDouble());
 	else
 	  resultValue = valuePtr();
 	goto valueBuilt;
@@ -1595,7 +1595,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 
     case RAND:
       {
-	resultValue = Value::create(Value::DOUBLE, (double)rand());
+	resultValue = Value::create(Value::NUMBER, (double)rand());
 	goto valueBuilt;
       }
       break;
@@ -1691,9 +1691,9 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	  (*i2)->addFlags(Flags::SEEN);
 	  switch ((*i1)->getValue()->getType()) {
 
-	  case Value::IDENTIFIER: {
+	  case Value::CODE: {
 	    switch ((*i2)->getValue()->getType()) {
-	    case Value::IDENTIFIER:
+	    case Value::CODE:
 	      if ((*i1)->getValue()->getIdentifier() != (*i2)->getValue()->getIdentifier()) {
 		result = Features::BOTTOM;
 		goto endUnif;
@@ -1829,16 +1829,16 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	    }
 	    break;
 
-	  case Value::DOUBLE:
+	  case Value::NUMBER:
 	    {
 	      switch ((*i2)->getValue()->getType()) {
-	      case Value::DOUBLE:
+	      case Value::NUMBER:
 		if ((*i1)->getValue()->getDouble() != (*i2)->getValue()->getDouble()) {
 		  result = Features::BOTTOM;
 		  goto endUnif;
 		}
 
-		result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), Value::create(Value::DOUBLE, (*i1)->getValue()->getDouble())));
+		result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), Value::create(Value::NUMBER, (*i1)->getValue()->getDouble())));
 		break;
 	      case Value::VARIABLE:
 		result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(), (*i1)->getValue()));
@@ -1853,16 +1853,16 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 	    }
 	    break;
 
-	  case Value::IDENTIFIER:
+	  case Value::CODE:
 	    {
 	      switch ((*i2)->getValue()->getType()) {
-	      case Value::IDENTIFIER:
+	      case Value::CODE:
 		if ((*i1)->getValue()->getIdentifier() != (*i2)->getValue()->getIdentifier()) {
 		  result = Features::BOTTOM;
 		  goto endUnif;
 		}
 
-		result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), Value::create(Value::IDENTIFIER, (*i1)->getValue()->getIdentifier())));
+		result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), Value::create(Value::CODE, (*i1)->getValue()->getIdentifier())));
 		break;
 	      case Value::VARIABLE:
 		result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(), (*i1)->getValue()));
@@ -2444,7 +2444,7 @@ void Statement::renameVariables(size_t i) {
   switch (this->op) {
   case VARIABLE: {
     std::string str = getBits()->toString() + "_" + std::to_string(i);
-    bitsetPtr variableBits = Vartable::varTableAdd(str);
+    bitsetPtr variableBits = Vartable::createVariable(str);
     bits = variableBits;
   }
     break;
@@ -2453,7 +2453,7 @@ void Statement::renameVariables(size_t i) {
   case NIL:
   case STR:
   case NOT_NIL:
-  case DOUBLE:
+  case NUMBER:
   case UP:
   case UP2:
   case DASH:
@@ -2659,7 +2659,7 @@ void Statement::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer
   case NOT_NIL:
   case STR:
   case FINISHED:
-  case DOUBLE:
+  case NUMBER:
     break;
   }
 
@@ -2679,7 +2679,7 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bo
 #endif
 
   if (isSetFlags(Flags::SEEN | Flags::DISABLED | Flags::BOTTOM)) {
-    UNEXPECTED
+    FATAL_ERROR_UNEXPECTED
       }
 
   // […]
@@ -2787,7 +2787,7 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bo
 
   // else error
   else {
-    UNEXPECTED
+    FATAL_ERROR_UNEXPECTED
       }
 
 #ifdef TRACE_APPLY
@@ -2913,7 +2913,7 @@ const bool Statement::findVariable(bitsetPtr variable) {
 
   case DOWN:
   case SEARCH: {
-    UNEXPECTED
+    FATAL_ERROR_UNEXPECTED
       }
     break;
 

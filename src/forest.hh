@@ -17,47 +17,58 @@
  *
  ************************************************** */
 
-#ifndef FOREST_H
-#define FOREST_H
+#ifndef ELVEX_FOREST_H
+#define ELVEX_FOREST_H
 
 #include <vector>
 #include "id.hh"
+
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
+
 #include "flags.hh"
 #include "shared_ptr.hh"
 
-class Forest:
-      public Id, public Flags, public std::enable_shared_from_this<class Forest> {
+class Forest :
+        public Id, public Flags, public std::enable_shared_from_this<class Forest> {
 
 public:
-   typedef std::vector<nodePtr> vectorNodes;
+    typedef std::vector<nodePtr> vectorNodes;
 
 private:
-   unsigned int from;
-   unsigned int to;
-   vectorNodes nodes;
-   bool empty;
-   entryPtr entry;
-   std::vector<std::string> output;
-   Forest(entryPtr entry, unsigned int from, unsigned int to);
+    unsigned int from;
+    unsigned int to;
+    vectorNodes nodes;
+    bool empty;
+    entryPtr entry;
+    std::vector<std::string> output;
+
+    Forest(entryPtr entry, unsigned int from, unsigned int to);
 
 public:
-   ~Forest();
-   static forestPtr create(entryPtr entry, unsigned int from, unsigned int to);
+    ~Forest();
 
-   const vectorNodes &getNodes(void) const;
-   unsigned int getFrom(void) const;
-   unsigned int getTo(void) const;
-   bool isEmpty(void) const;
-   const std::vector<std::string> &getOutput(void) const;
-   void addNode(nodePtr);
+    static forestPtr create(entryPtr entry, unsigned int from, unsigned int to);
+
+    const vectorNodes &getNodes(void) const;
+
+    unsigned int getFrom(void) const;
+
+    unsigned int getTo(void) const;
+
+    bool isEmpty(void) const;
+
+    const std::vector<std::string> &getOutput(void) const;
+
+    void addNode(nodePtr);
+
 #ifdef OUTPUT_XML
-   void toXML(const xmlNodePtr, bool);
+    void toXML(const xmlNodePtr, bool);
 #endif
 
-  void generate(bool random, bool one);
+    void generate(bool random, bool one);
 
 };
-#endif // FOREST_H
+
+#endif // ELVEX_FOREST_H

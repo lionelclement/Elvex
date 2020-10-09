@@ -17,48 +17,61 @@
  *
  ************************************************** */
 
-#ifndef ITEMSET_H
-#define ITEMSET_H
+#ifndef ELVEX_ITEMSET_H
+#define ELVEX_ITEMSET_H
 
 #include <unordered_set>
+
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
+
 #include "item.hh"
 #include "shared_ptr.hh"
 
-class ItemSet:
-      public std::enable_shared_from_this<class ItemSet> {
+class ItemSet :
+        public std::enable_shared_from_this<class ItemSet> {
 
 public:
-   typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to> set;
-   typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::const_iterator const_iterator;
-   typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::iterator iterator;
+    typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to> set;
+    typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::const_iterator const_iterator;
+    typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::iterator iterator;
 
 private:
-   unsigned int id;
-   set items;
-   ItemSet(unsigned int);
+    unsigned int id;
+    set items;
+
+    ItemSet(unsigned int);
 
 public:
-   ~ItemSet();
-   static itemSetPtr create(unsigned int);
+    ~ItemSet();
 
-   unsigned int getId(void);
-   set &getItems(void);
+    static itemSetPtr create(unsigned int);
 
-   const_iterator begin(void) const;
-   const_iterator end(void) const;
-   const_iterator find(itemPtr) const;
-   bool insert(itemPtr, class Synthesizer *);
-   void erase(itemPtr);
-   size_t size(void) const;
-   void resetUsages(void);
+    unsigned int getId(void);
 
-   void print(std::ostream &);
+    set &getItems(void);
+
+    const_iterator begin(void) const;
+
+    const_iterator end(void) const;
+
+    const_iterator find(itemPtr) const;
+
+    bool insert(itemPtr, class Synthesizer *);
+
+    void erase(itemPtr);
+
+    size_t size(void) const;
+
+    void resetUsages(void);
+
+    void print(std::ostream &);
+
 #ifdef OUTPUT_XML
-   void toXML(xmlNodePtr);
+    void toXML(xmlNodePtr);
 #endif
 
 };
+
 #endif // ITEM_H

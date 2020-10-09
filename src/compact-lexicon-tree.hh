@@ -23,22 +23,33 @@
 class CompactLexiconTree {
 
 private:
-   CompactLexiconTree *child;
-   CompactLexiconTree *sibling;
-   class CompactLexiconInfo *info;
-   char character;
-   unsigned long int address;
+    CompactLexiconTree *child;
+    CompactLexiconTree *sibling;
+
+    class CompactLexiconInfo *info;
+
+    char character;
+    unsigned long int address;
 
 public:
-   CompactLexiconTree(CompactLexiconTree *child, CompactLexiconTree *sibling, class CompactLexiconInfo *info, const char character);
-   ~CompactLexiconTree();
+    CompactLexiconTree(CompactLexiconTree *child, CompactLexiconTree *sibling, class CompactLexiconInfo *info,
+                       const char character);
 
-   void setChild(CompactLexiconTree*);
-   CompactLexiconTree *getChild() const;
-   void add(const char *, unsigned long int);
-   void setIndexStaticFSA(unsigned long int &);
-   void printStaticFSA(FILE *, class CompactLexicon *) const;
-   void setIndexStaticInfo(unsigned long int &);
-   void printStaticInfo(FILE *) const;
+    ~CompactLexiconTree();
+
+    void setChild(CompactLexiconTree *);
+
+    CompactLexiconTree *getChild() const;
+
+    void add(const char *, unsigned long int);
+
+    void setIndexStaticFSA(unsigned long int &);
+
+    void printStaticFSA(FILE *, class CompactLexicon *) const;
+
+    void setIndexStaticInfo(unsigned long int &);
+
+    void printStaticInfo(FILE *) const;
 };
+
 #endif // COMPACTLEXICONTREE_H

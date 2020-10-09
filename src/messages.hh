@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef MESSAGES_H
-#define MESSAGES_H
+#ifndef ELVEX_MESSAGES_H
+#define ELVEX_MESSAGES_H
 
 #include <iostream>
 #include <string>
@@ -38,8 +38,8 @@
 #define CERR_LINE  {std::cerr << __FILE__ << "(" << std::dec <<  __LINE__ << ")" << "<br>" << std::endl;}
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
-#define UNEXPECTED {CERR_LINE; throw "*** unexpected";}
-#define ERROR(msg) {std::ostringstream oss; oss << "*** " << msg; throw oss.str();}
+#define FATAL_ERROR_UNEXPECTED {CERR_LINE; throw "*** unexpected";}
+#define FATAL_ERROR(msg) {std::ostringstream oss; oss << "*** " << msg; throw oss.str();}
 #define WARNING(msg) {std::cerr << "*** " << msg << std::endl;}
 
-#endif // MESSAGES_H
+#endif // ELVEX_MESSAGES_H

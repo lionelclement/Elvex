@@ -17,11 +17,12 @@
  *
  ************************************************** */
 
-#ifndef NODE_H
-#define NODE_H
+#ifndef ELVEX_NODE_H
+#define ELVEX_NODE_H
 
 #include <vector>
 #include <list>
+
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
@@ -30,33 +31,38 @@
 #include "id.hh"
 #include "shared_ptr.hh"
 
-class Node:
-      public Flags, public Id, public std::enable_shared_from_this<class Node> {
+class Node :
+        public Flags, public Id, public std::enable_shared_from_this<class Node> {
 
 private:
-   unsigned int nbrCS;
-   std::vector<forestPtr> forests;
-   std::vector<std::string> output;
+    unsigned int nbrCS;
+    std::vector<forestPtr> forests;
+    std::vector<std::string> output;
 
-   Node(void);
-  void generate(std::vector<forestPtr>::const_iterator);
+    Node(void);
+
+    void generate(std::vector<forestPtr>::const_iterator);
 
 public:
-   ~Node();
-   static nodePtr create(void);
+    ~Node();
 
-   std::vector<forestPtr> &getForests(void);
-   const std::vector<std::string> &getOutput(void) const;
+    static nodePtr create(void);
 
-   void addForest(forestPtr);
-   forestPtr getForest(unsigned int) const;
+    std::vector<forestPtr> &getForests(void);
+
+    const std::vector<std::string> &getOutput(void) const;
+
+    void addForest(forestPtr);
+
+    forestPtr getForest(unsigned int) const;
 
 #ifdef OUTPUT_XML
-   void toXML(xmlNodePtr, xmlNodePtr) const;
+    void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
-  void generate(bool random, bool one);
+
+    void generate(bool random, bool one);
 
 };
 
-#endif // NODE_H
+#endif // ELVEX_NODE_H
 

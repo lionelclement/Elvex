@@ -442,7 +442,7 @@ void Item::addStatements(statementsPtr statements) {
       this->statements->addStatement(*i);
    }
    if (this->statements->size() == 0) {
-      UNEXPECTED
+      FATAL_ERROR_UNEXPECTED
    }
 }
 

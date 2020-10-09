@@ -17,54 +17,57 @@
  *
  ************************************************** */
 
-#ifndef FORESTIDENTIFIER_H
-#define FORESTIDENTIFIER_H
+#ifndef ELVEX_FORESTIDENTIFIER_H
+#define ELVEX_FORESTIDENTIFIER_H
 
 #include "serializable.hh"
 #include "shared_ptr.hh"
 
-class ForestIdentifier:
-      public Serializable, public std::enable_shared_from_this<ForestIdentifier> {
+class ForestIdentifier :
+        public Serializable, public std::enable_shared_from_this<ForestIdentifier> {
 
 private:
 
-   unsigned int code;
-   std::string featuresSerialString;
-   unsigned int from;
-   unsigned int to;
+    unsigned int code;
+    std::string featuresSerialString;
+    unsigned int from;
+    unsigned int to;
 
-   ForestIdentifier(unsigned int, const std::string, unsigned int, unsigned int);
+    ForestIdentifier(unsigned int, const std::string, unsigned int, unsigned int);
 
 public:
-   ~ForestIdentifier();
-   static forestIdentifierPtr create(unsigned int, const std::string, unsigned int, unsigned int);
+    ~ForestIdentifier();
 
-   void makeSerialString(void);
-   unsigned int getFrom(void) const {
-      return from;
-   }
-   ;
-   unsigned int getTo(void) const {
-      return to;
-   }
-   ;
-   unsigned int getCode(void) const {
-      return code;
-   }
-   ;
-   void print(std::ostream &) const;
+    static forestIdentifierPtr create(unsigned int, const std::string, unsigned int, unsigned int);
 
-   bool operator <(ForestIdentifier const &) const;
-   bool operator !=(ForestIdentifier const &) const;
+    void makeSerialString(void);
 
-   struct hash {
-      size_t operator()(const forestIdentifierPtr) const;
-   };
+    unsigned int getFrom(void) const {
+        return from;
+    };
 
-   struct equal_to {
-      bool operator()(const forestIdentifierPtr, const forestIdentifierPtr) const;
-   };
+    unsigned int getTo(void) const {
+        return to;
+    };
+
+    unsigned int getCode(void) const {
+        return code;
+    };
+
+    void print(std::ostream &) const;
+
+    bool operator<(ForestIdentifier const &) const;
+
+    bool operator!=(ForestIdentifier const &) const;
+
+    struct hash {
+        size_t operator()(const forestIdentifierPtr) const;
+    };
+
+    struct equal_to {
+        bool operator()(const forestIdentifierPtr, const forestIdentifierPtr) const;
+    };
 
 };
 
-#endif // FORESTIDENTIFIER_H
+#endif // ELVEX_FORESTIDENTIFIER_H

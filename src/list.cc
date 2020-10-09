@@ -302,7 +302,7 @@ bool List::buildEnvironment(environmentPtr environment, listPtr otherList, bool 
       case ATOM:
          if (this->value->isVariable()) {
             if (!otherList) {
-               UNEXPECTED
+               FATAL_ERROR_UNEXPECTED
             }
             else {
                switch (otherList->getType()) {

@@ -17,34 +17,39 @@
  *
  ************************************************** */
 
-#ifndef TERM_H
-#define TERM_H
+#ifndef ELVEX_TERM_H
+#define ELVEX_TERM_H
 
 #include <iostream>
 #include "flags.hh"
 #include "shared_ptr.hh"
 
-class Term:
-      public Flags, public std::enable_shared_from_this<class Term> {
+class Term :
+        public Flags, public std::enable_shared_from_this<class Term> {
 
 private:
-   unsigned int code;
-   Term(unsigned int code);
+    unsigned int code;
+
+    Term(unsigned int code);
 
 public:
-   ~Term();
-   static termPtr create(unsigned int code = 0);
+    ~Term();
 
-   unsigned int getCode(void) const;
-   void print(std::ostream &outStream = std::cout) const;
-   std::string toString() const;
-   termPtr clone() const;
+    static termPtr create(unsigned int code = 0);
 
-   // compare deux termes
-   struct Less {
-      const bool operator()(const termPtr t1, const termPtr t2) const;
-   };
+    unsigned int getCode(void) const;
+
+    void print(std::ostream &outStream = std::cout) const;
+
+    std::string toString() const;
+
+    termPtr clone() const;
+
+    // compare deux termes
+    struct Less {
+        const bool operator()(const termPtr t1, const termPtr t2) const;
+    };
 
 };
 
-#endif // TERM_H
+#endif // ELVEX_TERM_H

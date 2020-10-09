@@ -17,28 +17,32 @@
  *
  ************************************************** */
 
-#ifndef MEMOIZATIONMAP_H
-#define MEMOIZATIONMAP_H
+#ifndef ELVEX_MEMOIZATIONMAP_H
+#define ELVEX_MEMOIZATIONMAP_H
 
 #include <string>
 #include <list>
 #include <unordered_map>
 #include "memoization-value.hh"
 
-class MemoizationMap:
-      public std::enable_shared_from_this<class MemoizationMap> {
+class MemoizationMap :
+        public std::enable_shared_from_this<class MemoizationMap> {
 
 public:
-   typedef std::unordered_map<std::string, std::list<memoizationValuePtr> > unordered_map;
+    typedef std::unordered_map<std::string, std::list<memoizationValuePtr> > unordered_map;
 
 private:
-   unordered_map map;
+    unordered_map memoizationMap;
 
 public:
-   void clear(void);
-   unordered_map::const_iterator end(void) const;
-   unordered_map::const_iterator find(const std::string) const;
-   void insert(std::string, featuresPtr, forestIdentifierPtr);
+    void clear(void);
+
+    unordered_map::const_iterator end(void) const;
+
+    unordered_map::const_iterator find(const std::string) const;
+
+    void insert(std::string, featuresPtr, forestIdentifierPtr);
 
 };
-#endif // MEMOIZATIONMAP_H
+
+#endif // ELVEX_MEMOIZATIONMAP_H

@@ -27,9 +27,9 @@
  * 
  ************************************************************ */
 MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string const key) const {
-   auto memItem = map.find(key);
+   auto memItem = memoizationMap.find(key);
 #ifdef TRACE_MEMOIZATION
-   if (memItem != map.end()) {
+   if (memItem != memoizationMap.end()) {
       std::cout << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
       std::cout << "<BR>";
       std::cout << std::endl;
@@ -42,7 +42,7 @@ MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string c
  * 
  ************************************************************ */
 MemoizationMap::unordered_map::const_iterator MemoizationMap::end(void) const {
-   return map.end();
+   return memoizationMap.end();
 }
 
 /* ************************************************************
@@ -55,14 +55,14 @@ void MemoizationMap::insert(std::string const key, featuresPtr features, forestI
    std::cout << std::endl;
 #endif
    memoizationValuePtr value = MemoizationValue::create(features, forestIdentifier);
-   auto memItem = map.find(key);
-   if (memItem != map.end()) {
+   auto memItem = memoizationMap.find(key);
+   if (memItem != memoizationMap.end()) {
       memItem->second.push_back(value);
    }
    else {
       std::list<memoizationValuePtr> values;
       values.push_back(value);
-      map[key] = values;
+       memoizationMap[key] = values;
    }
 }
 
@@ -70,6 +70,6 @@ void MemoizationMap::insert(std::string const key, featuresPtr features, forestI
  *
  ************************************************************ */
 void MemoizationMap::clear(void) {
-   map.clear();
+   memoizationMap.clear();
 }
 

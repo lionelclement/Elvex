@@ -22,18 +22,23 @@
 
 class CompactLexiconInfo {
 private:
-   class CompactLexiconInfo *next;
-   unsigned long int offset;
-   unsigned long int address;
+    class CompactLexiconInfo *next;
+
+    unsigned long int offset;
+    unsigned long int address;
 
 public:
-   CompactLexiconInfo(class CompactLexiconInfo *next = nullptr, unsigned long int offset = 0);
-   ~CompactLexiconInfo();
+    CompactLexiconInfo(class CompactLexiconInfo *next = nullptr, unsigned long int offset = 0);
 
-   class CompactLexiconInfo *getNext(void) const;
-   unsigned long int getOffset(void) const;
-   unsigned long int getAddress(void) const;
-   void setAddress(unsigned long int);
+    ~CompactLexiconInfo();
+
+    class CompactLexiconInfo *getNext(void) const;
+
+    unsigned long int getOffset(void) const;
+
+    unsigned long int getAddress(void) const;
+
+    void setAddress(unsigned long int);
 };
 
 #endif // COMPACTLEXICONINFO_H

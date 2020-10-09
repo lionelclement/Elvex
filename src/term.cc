@@ -63,14 +63,14 @@ const bool Term::Less::operator()(const termPtr t1, const termPtr t2) const {
  *
  ************************************************** */
 void Term::print(std::ostream& outStream) const {
-   outStream << Vartable::intToStr(code);
+   outStream << Vartable::codeToIdentifier(code);
 }
 
 /* **************************************************
  *
  ************************************************** */
 std::string Term::toString() const {
-   return Vartable::intToStr(code);
+   return Vartable::codeToIdentifier(code);
 }
 
 /* **************************************************

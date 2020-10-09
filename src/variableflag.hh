@@ -17,25 +17,27 @@
  *
  ************************************************** */
 
-#ifndef VARIABLE_FLAG_H
-#define VARIABLE_FLAG_H
+#ifndef ELVEX_VARIABLE_FLAG_H
+#define ELVEX_VARIABLE_FLAG_H
 
 class VariableFlag {
 
 public:
 
-   enum flagValues {
-      DOES_CONTAIN,
-      DOES_NOT_CONTAIN,
-      NONE
-   };
+    enum flagValues {
+        DOES_CONTAIN,
+        DOES_NOT_CONTAIN,
+        NONE
+    };
 private:
-   enum flagValues flag;
+    enum flagValues flag;
 
 public:
-   VariableFlag(void) noexcept;
-   bool containsVariable(void);
-   void setFlag(enum flagValues flag);
+    VariableFlag(void) noexcept;
+
+    bool containsVariable(void);
+
+    void setFlag(enum flagValues flag);
 };
 
-#endif // VARIABLE_FLAG_H
+#endif // ELVEX_VARIABLE_FLAG_H

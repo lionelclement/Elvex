@@ -29,38 +29,41 @@
 
 #include "shared_ptr.hh"
 #include "serializable.hh"
+
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 
-class Bitset:
-      public std::bitset<MAXBITS>, public Serializable, public std::enable_shared_from_this<Bitset> {
-
-   typedef std::unordered_map<unsigned int, std::string> map;
+class Bitset :
+        public std::bitset<MAXBITS>, public Serializable, public std::enable_shared_from_this<Bitset> {
 
 private:
-   static const std::bitset<MAXBITS> LEXBITSET;
-   static const std::bitset<MAXBITS> ARGBITSET;
-   static const std::bitset<MAXBITS> SYSBITSET;
-   static const std::bitset<MAXBITS> FIRSTBITSET;
+    static const std::bitset<MAXBITS> LEXBITSET;
+    static const std::bitset<MAXBITS> ARGBITSET;
+    static const std::bitset<MAXBITS> SYSBITSET;
+    static const std::bitset<MAXBITS> FIRSTBITSET;
+
+    Bitset(unsigned int = 0);
+
+    Bitset(std::bitset<MAXBITS> &);
+
+    Bitset(bitsetPtr);
+
+    void makeSerialString();
 
 public:
-   static map bitsToStrTable;
+    ~Bitset();
 
-private:
-   Bitset(unsigned int = 0);
-   Bitset(std::bitset<MAXBITS> &);
-   Bitset(bitsetPtr);
-   void makeSerialString();
+    static bitsetPtr create(unsigned int = 0);
 
-public:
-   ~Bitset();
-   static bitsetPtr create(unsigned int = 0);
-   static bitsetPtr create(std::bitset<MAXBITS>);
-   static bitsetPtr create(bitsetPtr);
-   const std::string toString(void) const;
+    static bitsetPtr create(std::bitset<MAXBITS>);
+
+    static bitsetPtr create(bitsetPtr);
+
+    const std::string toString(void) const;
+
 #ifdef OUTPUT_XML
-   void toXML(xmlNodePtr);
+    void toXML(xmlNodePtr);
 #endif
 };
 

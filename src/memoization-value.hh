@@ -17,26 +17,29 @@
  *
  ************************************************** */
 
-#ifndef MEMOIZATIONVALUE_H
-#define MEMOIZATIONVALUE_H
+#ifndef ELVEX_MEMOIZATIONVALUE_H
+#define ELVEX_MEMOIZATIONVALUE_H
 
 #include "shared_ptr.hh"
 
-class MemoizationValue:
-      public std::enable_shared_from_this<class MemoizationValue> {
+class MemoizationValue :
+        public std::enable_shared_from_this<class MemoizationValue> {
 
 private:
-   featuresPtr features;
-   forestIdentifierPtr forestIdentifier;
-   MemoizationValue(featuresPtr, forestIdentifierPtr);
+    featuresPtr features;
+    forestIdentifierPtr forestIdentifier;
+
+    MemoizationValue(featuresPtr, forestIdentifierPtr);
 
 public:
-   ~MemoizationValue();
-   static memoizationValuePtr create(featuresPtr, forestIdentifierPtr);
+    ~MemoizationValue();
 
-public:
-   featuresPtr getFeatures(void) const;
-   forestIdentifierPtr getForestIdentifier(void) const;
+    static memoizationValuePtr create(featuresPtr, forestIdentifierPtr);
+
+    featuresPtr getFeatures(void) const;
+
+    forestIdentifierPtr getForestIdentifier(void) const;
 
 };
-#endif // MEMOIZATIONVALUE_H
+
+#endif // ELVEX_MEMOIZATIONVALUE_H

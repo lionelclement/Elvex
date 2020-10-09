@@ -211,7 +211,7 @@ Rule::toXML(xmlNodePtr nodeRoot)
    // lhs->toXML(hs);
    // hs=xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
    // for(unsigned int i=0; i<rhs.size(); i++){
-   //   for (vector <termsPtr >::const_iterator term=rhs[i]->begin();
+   //   for (featuresVector <termsPtr >::const_iterator term=rhs[i]->begin();
    // 	 term != rhs[i]->end();
    // 	 term++) {
    //     (*term)->toXML(hs);

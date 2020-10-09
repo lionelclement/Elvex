@@ -24,17 +24,24 @@
 
 struct CompactLexiconBuffer {
 private:
-   unsigned long int next;
-   unsigned long int offset;
+    unsigned long int next;
+    unsigned long int offset;
 
 public:
-   CompactLexiconBuffer(unsigned long int next, unsigned long int offset);
-   CompactLexiconBuffer(void);
-   unsigned long int getOffset() const;
-   unsigned long int getNext() const;
-   bool isNext() const;
-   bool isOffset() const;
-   void print(std::ostream &) const;
+    CompactLexiconBuffer(unsigned long int next, unsigned long int offset);
+
+    CompactLexiconBuffer(void);
+
+    unsigned long int getOffset() const;
+
+    unsigned long int getNext() const;
+
+    bool isNext() const;
+
+    bool isOffset() const;
+
+    void print(std::ostream &) const;
 
 };
+
 #endif // COMPACTLEXICONBUFFER_H

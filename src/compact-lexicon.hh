@@ -36,42 +36,59 @@
 extern bool isLexString;
 extern char *lexString;
 extern char *currentLexString;
+
 extern class Entry *localEntry;
 
 class CompactLexicon {
 
 private:
 
-   std::string directoryName;
-   std::string fileName;
-   FILE *fsaFile;
-   std::string fsaFileName;
-   FILE *dataFile;
-   std::string dataFileName;
-   std::istream *inputStream = &std::cin;
-   CompactLexiconTree *compactLexicon;
+    std::string directoryName;
+    std::string fileName;
+    FILE *fsaFile;
+    std::string fsaFileName;
+    FILE *dataFile;
+    std::string dataFileName;
+    std::istream *inputStream = &std::cin;
+    CompactLexiconTree *compactLexicon;
 
 public:
-   char *buffer;
-   struct CompactLexiconFsa *fsa;
-   struct CompactLexiconBuffer *info;
-   unsigned long int init;
-   class CompactLexiconTree *lexiconInit;
+    char *buffer;
+    struct CompactLexiconFsa *fsa;
+    struct CompactLexiconBuffer *info;
+    unsigned long int init;
+
+    class CompactLexiconTree *lexiconInit;
 
 public:
-   CompactLexicon(std::string directoryName, std::string fileName);
-   void printResults(std::ostream &, unsigned long int index, bool sep) const;
-   unsigned long int searchStatic(unsigned long int index, std::string) const;
-   void saveFsa();
-   void loadFsa();
-   void openFiles(std::string mode);
-   void closeFiles();
-   std::string unif(std::string fs1, std::string fs2);
-   void addToData(std::string entry, std::string form, std::string features);
-   void addPattern(Lexicon &pattern, Lexicon &morpho, std::string input, std::string fs, std::string lemma, std::string pos);
-   void addForms(std::string input, std::string inputSearch, std::string features, Lexicon &pattern, Lexicon &morpho);
-   void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
-   void loadData(void);
-   void consult(void);
+    CompactLexicon(std::string directoryName, std::string fileName);
+
+    void printResults(std::ostream &, unsigned long int index, bool sep) const;
+
+    unsigned long int searchStatic(unsigned long int index, std::string) const;
+
+    void saveFsa();
+
+    void loadFsa();
+
+    void openFiles(std::string mode);
+
+    void closeFiles();
+
+    std::string unif(std::string fs1, std::string fs2);
+
+    void addToData(std::string entry, std::string form, std::string features);
+
+    void addPattern(Lexicon &pattern, Lexicon &morpho, std::string input, std::string fs, std::string lemma,
+                    std::string pos);
+
+    void addForms(std::string input, std::string inputSearch, std::string features, Lexicon &pattern, Lexicon &morpho);
+
+    void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
+
+    void loadData(void);
+
+    void consult(void);
 };
+
 #endif // COMPACTLEXICON_H

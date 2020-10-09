@@ -140,7 +140,7 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
       terminals.insert(Vartable::_END_);
    }
 
-   Vartable::intToStrTable[Vartable::_STARTTERM_] = "_STARTTERM_";
+    Vartable::insertCodeMap(Vartable::_STARTTERM_, "_STARTTERM_");
    nonTerminals.insert(Vartable::_STARTTERM_);
 
    rhs.push_back(Terms::create(getStartTerm()));
@@ -169,7 +169,7 @@ void Grammar::print(std::ostream &outStream) const {
          first = false;
       else
          outStream << ", ";
-      outStream << Vartable::intToStrTable[*iter];
+      outStream << Vartable::codeToIdentifier(*iter);
 
    }
    outStream << "</td></tr><tr><td>";
@@ -180,7 +180,7 @@ void Grammar::print(std::ostream &outStream) const {
          first = false;
       else
          outStream << ", ";
-      outStream << Vartable::intToStrTable[*iter];
+      outStream << Vartable::codeToIdentifier(*iter);
 
    }
    outStream << "</td></tr><tr><td>";
@@ -273,11 +273,11 @@ Grammar::toXML(xmlNodePtr nodeRoot)
    xmlNodePtr t=xmlNewChild(g, NULL, (const xmlChar*)"TERMINALS", NULL);
    std::set<unsigned int>::const_iterator iter;
    for (iter=terminals.begin(); iter != terminals.end(); ++iter) {
-      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::intToStrTable[*iter].c_str()));
+      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
    }
    t=xmlNewChild(g, NULL, (const xmlChar*)"NON-TERMINALS", NULL);
    for (iter=nonTerminals.begin(); iter != nonTerminals.end(); ++iter) {
-      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::intToStrTable[*iter].c_str()));
+      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
    }
    xmlNodePtr r=xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
    ruleList::const_iterator iterRules;

@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef LEXICON_H
-#define LEXICON_H
+#ifndef ELVEX_LEXICON_H
+#define ELVEX_LEXICON_H
 
 #include <string>
 #include <list>
@@ -27,21 +27,28 @@
 class Lexicon {
 
 public:
-   typedef std::unordered_map<const std::string, std::list<std::string> *, std::hash<std::string>, std::equal_to<std::string>,
+    typedef std::unordered_map<const std::string, std::list<std::string> *, std::hash<std::string>, std::equal_to<std::string>,
             std::allocator<std::pair<const std::string, std::list<std::string> *> > > unordered_map;
-   unordered_map the_map;
-   static std::list<std::string> *emptyList;
+    unordered_map the_map;
+    static std::list<std::string> *emptyList;
 
-   Lexicon(void);
-   unordered_map::const_iterator cbegin(void);
-   unordered_map::const_iterator cend(void);
-   std::size_t size(void);
-   void add(const std::string key, std::string value);
-   std::list<std::string> *find(const std::string key);
-   std::size_t count(const std::string key);
-   std::string &toString(void) const;
+    Lexicon(void);
+
+    unordered_map::const_iterator cbegin(void);
+
+    unordered_map::const_iterator cend(void);
+
+    std::size_t size(void);
+
+    void add(const std::string key, std::string value);
+
+    std::list<std::string> *find(const std::string key);
+
+    std::size_t count(const std::string key);
+
+    std::string &toString(void) const;
 
 };
 
-#endif // LEXICON_H
+#endif // ELVEX_LEXICON_H
 

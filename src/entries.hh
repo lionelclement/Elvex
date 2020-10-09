@@ -21,42 +21,56 @@
 #define ENTRIES_H
 
 #include <vector>
+
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
+
 #include "shared_ptr.hh"
 
-class Entries:
-      public std::enable_shared_from_this<class Entries> {
+class Entries :
+        public std::enable_shared_from_this<class Entries> {
 
 public:
-   typedef std::vector<entryPtr> list;
+    typedef std::vector<entryPtr> list;
 
 private:
-   list entries;
+    list entries;
 
-   Entries();
-   Entries(entryPtr);
-   Entries(const list&);
-   Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string form);
+    Entries();
+
+    Entries(entryPtr);
+
+    Entries(const list &);
+
+    Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string form);
 
 public:
-   ~Entries();
-   static entriesPtr create();
-   static entriesPtr create(entryPtr);
-   static entriesPtr create(const list &);
-   static entriesPtr create(unsigned int codePos, const unsigned int codeLemma, const std::string form);
+    ~Entries();
 
-   const size_t size() const;
-   list::const_iterator begin() const;
-   list::const_iterator end() const;
-   entryPtr get(const unsigned int) const;
+    static entriesPtr create();
 
-   void add(const entryPtr);
+    static entriesPtr create(entryPtr);
+
+    static entriesPtr create(const list &);
+
+    static entriesPtr create(unsigned int codePos, const unsigned int codeLemma, const std::string form);
+
+    const size_t size() const;
+
+    list::const_iterator begin() const;
+
+    list::const_iterator end() const;
+
+    entryPtr get(const unsigned int) const;
+
+    void add(const entryPtr);
+
 #ifdef OUTPUT_XML
-   void toXML(xmlNodePtr) const;
+    void toXML(xmlNodePtr) const;
 #endif
-   void print(std::ostream &) const;
+
+    void print(std::ostream &) const;
 };
 
 #endif // ENTRIES_H

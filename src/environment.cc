@@ -198,7 +198,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
                replaceVariables((*feature)->getValue(), effect);
             }
             else
-               UNEXPECTED
+               FATAL_ERROR_UNEXPECTED
             break;
          case Feature::VARIABLE: {
             if ((*feature)->getValue()) {
@@ -236,7 +236,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
             }
 
             else {
-               ERROR("environment: variable substitution failed");
+               FATAL_ERROR("environment: variable substitution failed");
             }
          }
             break;
@@ -260,7 +260,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
  *
  ************************************************** */
 void Environment::replaceVariables(listFeaturesPtr listFeatures, bool &effect) {
-   for (ListFeatures::vector::const_iterator vf = listFeatures->begin(); vf != listFeatures->end(); ++vf)
+   for (ListFeatures::featuresVector::const_iterator vf = listFeatures->begin(); vf != listFeatures->end(); ++vf)
       //if (*vf)
       this->replaceVariables(*vf, effect);
 }
@@ -285,9 +285,9 @@ void Environment::replaceVariables(valuePtr value, bool &effect) {
          case Value::BOOL:
          case Value::STR:
          case Value::CONSTANT:
-         case Value::IDENTIFIER:
+         case Value::CODE:
          case Value::ANONYMOUS:
-         case Value::DOUBLE:
+         case Value::NUMBER:
             break;
          case Value::FEATURES:
             replaceVariables(value->getFeatures(), effect);
