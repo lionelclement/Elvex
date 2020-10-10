@@ -3,8 +3,7 @@ Ubuntu / Debian quick installation:
 - Exec the script: . ./install-Elvex.sh
 That it !
 
-
-Standard installation:
+autotool installation:
 aclocal
 automake −a
 autoconf
@@ -12,6 +11,12 @@ autoconf
 make
 make clean
 sudo make install
+
+cmake installation
+cmake .
+cmake --build .
+
+
 
 Once you have downloaded Elvex execute these commands:
 
