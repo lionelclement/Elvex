@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -34,68 +34,68 @@
  *
  ************************************************** */
 Entry::Entry(unsigned int code, unsigned int codePred, std::string form, featuresPtr features)
-      : Id(0) {
-   this->code = code;
-   this->codePred = codePred;
-   this->form = std::move(form);
-   this->features = std::move(features);
-   NEW;
+        : Id(0) {
+    this->code = code;
+    this->codePred = codePred;
+    this->form = std::move(form);
+    this->features = std::move(features);
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr features)
-      : Id(0) {
-   this->code = code;
-   this->codePred = Vartable::identifierToCode(std::move(pred));
-   this->form = std::move(form);
-   this->features = std::move(features);
-   NEW;
+        : Id(0) {
+    this->code = code;
+    this->codePred = Vartable::identifierToCode(std::move(pred));
+    this->form = std::move(form);
+    this->features = std::move(features);
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entry::~Entry() {
-   DELETE;
-   if (features)
-      features.reset();
+    DELETE;
+    if (features)
+        features.reset();
 }
 
 /* **************************************************
  *
  ************************************************** */
 entryPtr Entry::create(unsigned int code, unsigned int codePred, std::string form, featuresPtr features) {
-   return entryPtr(new Entry(code, codePred, std::move(form), std::move(features)));
+    return entryPtr(new Entry(code, codePred, std::move(form), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
 entryPtr Entry::create(unsigned int code, std::string pred, std::string form, featuresPtr features) {
-   return entryPtr(new Entry(code, std::move(pred), std::move(form), std::move(features)));
+    return entryPtr(new Entry(code, std::move(pred), std::move(form), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned int Entry::getCode() const {
-   return code;
+    return code;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Entry::setCode(unsigned int code) {
-   this->code = code;
+    this->code = code;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned int Entry::getCodePred() const {
-   return codePred;
+    return codePred;
 }
 
 /* **************************************************
@@ -103,21 +103,21 @@ unsigned int Entry::getCodePred() const {
  ************************************************** */
 std::string &
 Entry::getForm() {
-   return form;
+    return form;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Entry::setForm(std::string form) {
-   this->form = form;
+    this->form = form;
 }
 
 /* **************************************************
  *
  ************************************************** */
 featuresPtr Entry::getFeatures(void) const {
-   return features;
+    return features;
 }
 
 #ifdef OUTPUT_XML
@@ -150,22 +150,22 @@ Entry::toXML(xmlNodePtr nodeRoot) const
 /* **************************************************
  *
  ************************************************** */
-void Entry::print(std::ostream& out) const {
-   out << "(id: " << this->getId() << ", code: " << Vartable::codeToIdentifier(this->code);
-   if ((this->codePred != UINT_MAX))
-      out << ", pred: " << Vartable::codeToIdentifier(this->codePred);
-   if (!this->form.empty())
-      out << ", form: " << this->form;
-   out << ")";
+void Entry::print(std::ostream &out) const {
+    out << "(id: " << this->getId() << ", code: " << Vartable::codeToIdentifier(this->code);
+    if ((this->codePred != UINT_MAX))
+        out << ", pred: " << Vartable::codeToIdentifier(this->codePred);
+    if (!this->form.empty())
+        out << ", form: " << this->form;
+    out << ")";
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Entry::makeSerialString() {
-   serialString = std::to_string(code) + std::to_string(codePred) + '"' + form + '"';
-   if (features)
-      serialString += features->peekSerialString();
-   else
-      serialString += 'N';
+    serialString = std::to_string(code) + std::to_string(codePred) + '"' + form + '"';
+    if (features)
+        serialString += features->peekSerialString();
+    else
+        serialString += 'N';
 }

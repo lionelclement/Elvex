@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -30,64 +30,64 @@
  *
  ************************************************** */
 Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
-      : Id(0) {
-   this->entry = entry;
-   this->from = from;
-   this->to = to;
-   if (from == to)
-      this->empty = true;
-   else
-      this->empty = false;
-   NEW;
+        : Id(0) {
+    this->entry = entry;
+    this->from = from;
+    this->to = to;
+    if (from == to)
+        this->empty = true;
+    else
+        this->empty = false;
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 forestPtr Forest::create(entryPtr entry, unsigned int from, unsigned int to) {
-   return forestPtr(new Forest(entry, from, to));
+    return forestPtr(new Forest(entry, from, to));
 }
 
 /* **************************************************
  *
  ************************************************** */
 Forest::~Forest() {
-   DELETE;
-   for (vectorNodes::iterator n = nodes.begin(); n != nodes.end(); ++n) {
-      nodePtr tmp = *n;
-      if (tmp)
-         tmp.reset();
-   }
-   if (entry)
-      entry.reset();
+    DELETE;
+    for (vectorNodes::iterator n = nodes.begin(); n != nodes.end(); ++n) {
+        nodePtr tmp = *n;
+        if (tmp)
+            tmp.reset();
+    }
+    if (entry)
+        entry.reset();
 }
 
 /* **************************************************
  *
  ************************************************** */
 const Forest::vectorNodes &Forest::getNodes(void) const {
-   return nodes;
+    return nodes;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned int Forest::getFrom(void) const {
-   return from;
+    return from;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned int Forest::getTo(void) const {
-   return to;
+    return to;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool Forest::isEmpty(void) const {
-   return from == to;
+    return from == to;
 }
 
 /* **************************************************
@@ -95,15 +95,15 @@ bool Forest::isEmpty(void) const {
  ************************************************** */
 const std::vector<std::string> &
 Forest::getOutput(void) const {
-   return this->output;
+    return this->output;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Forest::addNode(nodePtr n) {
-   empty = false;
-   nodes.push_back(n);
+    empty = false;
+    nodes.push_back(n);
 }
 
 #ifdef OUTPUT_XML
@@ -150,30 +150,30 @@ Forest::toXML(xmlNodePtr nodeRoot, bool root)
  *
  ************************************************** */
 void Forest::generate(bool random, bool one) {
-   if (isUnsetFlags(Flags::GEN)) {
-      addFlags(Flags::GEN);
-      if (entry && entry->getForm().size() != 0) {
-         output.push_back(entry->getForm());
-      }
-      else if (nodes.size() != 0) {
-         Forest::vectorNodes::const_iterator nodeIt = nodes.begin();
-         nodePtr node;
-         if (random) {
-            size_t rv = std::rand() / ((RAND_MAX + 1u) / nodes.size());
-            node = nodes.at(rv);
-         }
-         while (nodeIt != nodes.end()) {
-            if (!random)
-               node = *nodeIt;
-            if (node->isUnsetFlags(Flags::GEN))
-	      node->generate(random, one);
-            for (std::vector<std::string>::const_iterator s = node->getOutput().begin(); s != node->getOutput().end(); ++s)
-               output.push_back(*s);
-            if (random || one)
-               break;
-            ++nodeIt;
-         }
-      }
-   }
+    if (isUnsetFlags(Flags::GEN)) {
+        addFlags(Flags::GEN);
+        if (entry && entry->getForm().size() != 0) {
+            output.push_back(entry->getForm());
+        } else if (nodes.size() != 0) {
+            Forest::vectorNodes::const_iterator nodeIt = nodes.begin();
+            nodePtr node;
+            if (random) {
+                size_t rv = std::rand() / ((RAND_MAX + 1u) / nodes.size());
+                node = nodes.at(rv);
+            }
+            while (nodeIt != nodes.end()) {
+                if (!random)
+                    node = *nodeIt;
+                if (node->isUnsetFlags(Flags::GEN))
+                    node->generate(random, one);
+                for (std::vector<std::string>::const_iterator s = node->getOutput().begin();
+                     s != node->getOutput().end(); ++s)
+                    output.push_back(*s);
+                if (random || one)
+                    break;
+                ++nodeIt;
+            }
+        }
+    }
 }
 

@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -27,22 +27,22 @@
  * 
  ************************************************************ */
 MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string const key) const {
-   auto memItem = memoizationMap.find(key);
+    auto memItem = memoizationMap.find(key);
 #ifdef TRACE_MEMOIZATION
-   if (memItem != memoizationMap.end()) {
-      std::cout << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
-      std::cout << "<BR>";
-      std::cout << std::endl;
-   }
+    if (memItem != memoizationMap.end()) {
+       std::cout << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
+       std::cout << "<BR>";
+       std::cout << std::endl;
+    }
 #endif
-   return memItem;
+    return memItem;
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
 MemoizationMap::unordered_map::const_iterator MemoizationMap::end(void) const {
-   return memoizationMap.end();
+    return memoizationMap.end();
 }
 
 /* ************************************************************
@@ -50,26 +50,25 @@ MemoizationMap::unordered_map::const_iterator MemoizationMap::end(void) const {
  ************************************************************ */
 void MemoizationMap::insert(std::string const key, featuresPtr features, forestIdentifierPtr forestIdentifier) {
 #ifdef TRACE_MEMOIZATION
-   std::cout << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
-   std::cout << "<BR>";
-   std::cout << std::endl;
+    std::cout << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
+    std::cout << "<BR>";
+    std::cout << std::endl;
 #endif
-   memoizationValuePtr value = MemoizationValue::create(features, forestIdentifier);
-   auto memItem = memoizationMap.find(key);
-   if (memItem != memoizationMap.end()) {
-      memItem->second.push_back(value);
-   }
-   else {
-      std::list<memoizationValuePtr> values;
-      values.push_back(value);
-       memoizationMap[key] = values;
-   }
+    memoizationValuePtr value = MemoizationValue::create(features, forestIdentifier);
+    auto memItem = memoizationMap.find(key);
+    if (memItem != memoizationMap.end()) {
+        memItem->second.push_back(value);
+    } else {
+        std::list<memoizationValuePtr> values;
+        values.push_back(value);
+        memoizationMap[key] = values;
+    }
 }
 
 /* ************************************************************
  *
  ************************************************************ */
 void MemoizationMap::clear(void) {
-   memoizationMap.clear();
+    memoizationMap.clear();
 }
 

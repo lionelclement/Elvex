@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -24,48 +24,48 @@
  *
  ************************************************** */
 CompactLexiconInfo::CompactLexiconInfo(class CompactLexiconInfo *next, unsigned long int offset) {
-   this->address = 0;
-   this->next = next;
-   this->offset = offset;
-   NEW;
+    this->address = 0;
+    this->next = next;
+    this->offset = offset;
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 CompactLexiconInfo::~CompactLexiconInfo() {
-   DELETE;
-   if (next) {
-      delete (next);
-      next = NULL;
-   }
+    DELETE;
+    if (next) {
+        delete (next);
+        next = NULL;
+    }
 }
 
 /* **************************************************
  *
  ************************************************** */
 class CompactLexiconInfo *CompactLexiconInfo::getNext(void) const {
-   return next;
+    return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned long int CompactLexiconInfo::getOffset(void) const {
-   return offset;
+    return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned long int CompactLexiconInfo::getAddress(void) const {
-   return address;
+    return address;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void CompactLexiconInfo::setAddress(unsigned long int address) {
-   this->address = address;
+    this->address = address;
 }
 

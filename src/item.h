@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -168,11 +168,11 @@ public:
 
     bool isStarted(void);
 
-    void successor(/*itemSetPtr, */class Synthesizer *, bool &);
+    void successor(/*itemSetPtr, *//*class Synthesizer *, */bool &);
 
     void defaultInheritedSonFeatures(void);
 
-    void apply(itemSetPtr state, class Parser &parser, class Synthesizer *synthesizer);
+    void apply(/*itemSetPtr state, */class Parser &parser, class Synthesizer *synthesizer);
 
     struct hash {
         size_t operator()(itemPtr const) const;

@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -23,24 +23,23 @@
 /* **************************************************
  *
  ************************************************** */
-VariableFlag::VariableFlag() noexcept
-{
-   flag = NONE;
-   NEW;
+VariableFlag::VariableFlag() noexcept {
+    flag = NONE;
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void VariableFlag::setFlag(enum flagValues flag) {
-   this->flag = flag;
+    this->flag = flag;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool VariableFlag::containsVariable(void) {
-   if (flag != 0)
-      return (flag == 1);
-   return false;
+    if (flag != 0)
+        return (flag == 1);
+    return false;
 }

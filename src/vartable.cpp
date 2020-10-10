@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -59,50 +59,48 @@ Vartable::Vartable() {
  * variableMap[str] := bitset
  ************************************************************ */
 bitsetPtr Vartable::createVariable(std::string str) {
-   bitsetPtr result = bitsetPtr();
-   std::unordered_map<std::string, bitsetPtr>::const_iterator varTableIt;
-   varTableIt = variableMap.find(str);
-   if (varTableIt == variableMap.end()) {
-      result = Bitset::create(variableMapIndex);
-      variableMap.insert(std::make_pair(str, result));
-      size_t i = 0;
-      while ((i < variableMapIndex.size()) && !variableMapIndex.test(i))
-         ++i;
-      Vartable::bitMap[i] = str;
-       variableMapIndex <<= 1;
-      if (variableMapIndex.none())
-         throw "Too much values";
-   }
-   else {
-      result = varTableIt->second;
-   }
-   return result;
+    bitsetPtr result = bitsetPtr();
+    std::unordered_map<std::string, bitsetPtr>::const_iterator varTableIt;
+    varTableIt = variableMap.find(str);
+    if (varTableIt == variableMap.end()) {
+        result = Bitset::create(variableMapIndex);
+        variableMap.insert(std::make_pair(str, result));
+        size_t i = 0;
+        while ((i < variableMapIndex.size()) && !variableMapIndex.test(i))
+            ++i;
+        Vartable::bitMap[i] = str;
+        variableMapIndex <<= 1;
+        if (variableMapIndex.none())
+            throw "Too much values";
+    } else {
+        result = varTableIt->second;
+    }
+    return result;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-unsigned int Vartable::identifierToCode(std::string str ) {
-   unsigned int code;
-   std::unordered_map<std::string, unsigned int>::const_iterator it(identifierMap.find(str));
-   if (it == identifierMap.end()) {
-      code = codeMapIndex;
-       identifierMap[str] = codeMapIndex;
-       codeMap[codeMapIndex++] = str;
-   }
-   else
-      code = it->second;
-   return code;
+unsigned int Vartable::identifierToCode(std::string str) {
+    unsigned int code;
+    std::unordered_map<std::string, unsigned int>::const_iterator it(identifierMap.find(str));
+    if (it == identifierMap.end()) {
+        code = codeMapIndex;
+        identifierMap[str] = codeMapIndex;
+        codeMap[codeMapIndex++] = str;
+    } else
+        code = it->second;
+    return code;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
 std::string Vartable::codeToIdentifier(unsigned int i) {
-   if (i != UINT_MAX)
-      return codeMap[i];
-   else
-      return std::string("UINT_MAX");
+    if (i != UINT_MAX)
+        return codeMap[i];
+    else
+        return std::string("UINT_MAX");
 }
 
 /* ************************************************************
@@ -111,7 +109,7 @@ std::string Vartable::codeToIdentifier(unsigned int i) {
 void Vartable::insertCodeMap(const unsigned int key, std::string value) {
     codeMap[key] = value;
     if (codeMapIndex <= key)
-        codeMapIndex = key+1;
+        codeMapIndex = key + 1;
 }
 
 /* ************************************************************

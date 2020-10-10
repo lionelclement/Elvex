@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -23,50 +23,50 @@
  *
  ************************************************** */
 CompactLexiconBuffer::CompactLexiconBuffer(unsigned long int next, unsigned long int offset) {
-   this->next = next;
-   this->offset = offset;
+    this->next = next;
+    this->offset = offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
 CompactLexiconBuffer::CompactLexiconBuffer(void) {
-   this->next = (unsigned long int)(~0UL);
-   this->offset = (unsigned long int)(~0UL);
+    this->next = (unsigned long int) (~0UL);
+    this->offset = (unsigned long int) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned long int CompactLexiconBuffer::getOffset() const {
-   return offset;
+    return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned long int CompactLexiconBuffer::getNext() const {
-   return next;
+    return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool CompactLexiconBuffer::isNext() const {
-   return next != (unsigned long int)(~0UL);
+    return next != (unsigned long int) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool CompactLexiconBuffer::isOffset() const {
-   return offset != (unsigned long int)(~0UL);
+    return offset != (unsigned long int) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactLexiconBuffer::print(std::ostream& out) const {
-   out << (long int)next << ' ' << (long int)offset << std::endl;
+void CompactLexiconBuffer::print(std::ostream &out) const {
+    out << (long int) next << ' ' << (long int) offset << std::endl;
 }
 

@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -24,35 +24,35 @@
  * 
  ************************************************************ */
 MemoizationValue::MemoizationValue(featuresPtr features, forestIdentifierPtr forestIdentifier) {
-   this->features = features;
-   this->forestIdentifier = forestIdentifier;
-   NEW;
+    this->features = features;
+    this->forestIdentifier = forestIdentifier;
+    NEW;
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
 MemoizationValue::~MemoizationValue() {
-   DELETE;
+    DELETE;
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
 memoizationValuePtr MemoizationValue::create(featuresPtr features, forestIdentifierPtr forestIdentifier) {
-   return memoizationValuePtr(new MemoizationValue(features, forestIdentifier));
+    return memoizationValuePtr(new MemoizationValue(features, forestIdentifier));
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
 featuresPtr MemoizationValue::getFeatures(void) const {
-   return this->features;
+    return this->features;
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
 forestIdentifierPtr MemoizationValue::getForestIdentifier(void) const {
-   return this->forestIdentifier;
+    return this->forestIdentifier;
 }

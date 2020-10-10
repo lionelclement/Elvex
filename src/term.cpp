@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -25,57 +25,57 @@
  *
  ************************************************** */
 Term::Term(unsigned int code) {
-   this->code = code;
-   NEW;
+    this->code = code;
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Term::~Term() {
-   DELETE;
+    DELETE;
 }
 
 /* **************************************************
  *
  ************************************************** */
 termPtr Term::create(unsigned int code) {
-   return termPtr(new Term(code));
+    return termPtr(new Term(code));
 }
 
 /* **************************************************
  *
  ************************************************** */
 unsigned int Term::getCode(void) const {
-   return code;
+    return code;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool Term::Less::operator()(const termPtr t1, const termPtr t2) const {
-   if (t1->getCode() != t2->getCode())
-      return (t1->getCode() < t2->getCode());
-   return false;
+    if (t1->getCode() != t2->getCode())
+        return (t1->getCode() < t2->getCode());
+    return false;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Term::print(std::ostream& outStream) const {
-   outStream << Vartable::codeToIdentifier(code);
+void Term::print(std::ostream &outStream) const {
+    outStream << Vartable::codeToIdentifier(code);
 }
 
 /* **************************************************
  *
  ************************************************** */
 std::string Term::toString() const {
-   return Vartable::codeToIdentifier(code);
+    return Vartable::codeToIdentifier(code);
 }
 
 /* **************************************************
  *
  ************************************************** */
 termPtr Term::clone() const {
-   return create(code);
+    return create(code);
 }

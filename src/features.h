@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -87,7 +87,7 @@ public:
 
     valuePtr find(bitsetPtr) const;
 
-    bool buildEnvironment(environmentPtr, featuresPtr, bool, bool);
+    bool buildEnvironment(environmentPtr, featuresPtr, bool/*, bool*/);
 
     void subFlags(const std::bitset<FLAGS> &);
 

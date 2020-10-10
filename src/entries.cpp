@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -88,7 +88,7 @@ entriesPtr Entries::create(const vector &entries) {
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, const std::string& form) {
+entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, const std::string &form) {
     return entriesPtr(new Entries(codePos, codeLemma, form));
 }
 
@@ -116,7 +116,7 @@ Entries::vector::const_iterator Entries::end() const {
 /* **************************************************
  *
  ************************************************** */
-void Entries::add(const entryPtr& entry) {
+void Entries::add(const entryPtr &entry) {
     this->entries.push_back(entry);
 }
 

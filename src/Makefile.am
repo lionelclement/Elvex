@@ -2,7 +2,7 @@
 #
 # ELVEX
 #
-# Copyright 2019 LABRI, 
+# Copyright 2014-2020 LABRI, 
 # CNRS (UMR 5800), the University of Bordeaux,
 # and the Bordeaux INP
 #
@@ -212,8 +212,9 @@ $(elvexpostedition_OBJECTS): Makefile
 $(elvexpostedition_fr_OBJECTS): Makefile
 $(elvexpostedition_en_OBJECTS): Makefile
 
-%.cpp: %.yy
+%.cpp: %.y
 	$(YACC) $(YFLAGS) -p rules -o $@ $<
+	mv $*.hpp $*.h
 
-%.cpp: %.ll
+%.cpp: %.l
 	$(LEX) $(LFLAGS) -Prules -o $@ $<

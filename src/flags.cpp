@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2019 LABRI, 
+ * Copyright 2014-2020 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -33,14 +33,14 @@ const std::bitset<Flags::FLAGS> Flags::REJECTED = std::bitset<Flags::FLAGS>(1ul 
  *
  ************************************************** */
 Flags::Flags(void) {
-   this->flags = 0;
+    this->flags = 0;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Flags::Flags(const std::bitset<Flags::FLAGS> &flags) {
-   this->flags = flags;
+    this->flags = flags;
 }
 
 /* **************************************************
@@ -61,62 +61,62 @@ Flags::Flags(const std::bitset<Flags::FLAGS> &flags) {
  *
  ************************************************** */
 std::bitset<Flags::FLAGS> &Flags::getFlags(void) {
-   return this->flags;
+    return this->flags;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Flags::resetFlags(void) {
-   this->flags = 0;
+    this->flags = 0;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool Flags::isSetFlags(const std::bitset<Flags::FLAGS> &cmp) const {
-   return (this->flags & cmp).any();
+    return (this->flags & cmp).any();
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool Flags::isUnsetFlags(const std::bitset<Flags::FLAGS> &cmp) const {
-   return (this->flags & cmp).none();
+    return (this->flags & cmp).none();
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Flags::addFlags(const std::bitset<Flags::FLAGS> &f) {
-   this->flags |= f;
+    this->flags |= f;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Flags::subFlags(const std::bitset<Flags::FLAGS> &f) {
-   this->flags &= ~f;
+    this->flags &= ~f;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Flags::printFlags(std::ostream &outStream) const {
-   if (isSetFlags(Flags::SEEN))
-      outStream << "SEEN ";
-   if (isSetFlags(XML))
-      outStream << "XML ";
-   if (isSetFlags(GEN))
-      outStream << "GEN ";
-   if (isSetFlags(DISABLED))
-      outStream << "DISABLED ";
-   if (isSetFlags(NIL))
-      outStream << "NIL ";
-   if (isSetFlags(BOTTOM))
-      outStream << "BOTTOM ";
-   if (isSetFlags(CHOOSEN))
-      outStream << "CHOOSEN ";
-   if (isSetFlags(REJECTED))
-      outStream << "REJECTED ";
+    if (isSetFlags(Flags::SEEN))
+        outStream << "SEEN ";
+    if (isSetFlags(XML))
+        outStream << "XML ";
+    if (isSetFlags(GEN))
+        outStream << "GEN ";
+    if (isSetFlags(DISABLED))
+        outStream << "DISABLED ";
+    if (isSetFlags(NIL))
+        outStream << "NIL ";
+    if (isSetFlags(BOTTOM))
+        outStream << "BOTTOM ";
+    if (isSetFlags(CHOOSEN))
+        outStream << "CHOOSEN ";
+    if (isSetFlags(REJECTED))
+        outStream << "REJECTED ";
 }
