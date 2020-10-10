@@ -20,7 +20,7 @@ cmake .
 make
 // make elvex/buildLexicon/postedition links on /usr/local/bin (or configure CMakeLists.txt)
 
-Once you have downloaded Elvex execute these commands:
+Once you have installed Elvex execute these commands:
 ####################
 
 . ./try-me.sh
@@ -33,4 +33,4 @@ The full compilation of Elvex requires the following tools on your computer:
 — automake 
 — autoconf
 — libxml2-dev
-
+- cmake
