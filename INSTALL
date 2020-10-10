@@ -14,13 +14,10 @@ make
 make clean
 sudo make install
 
-cmake installation
+cmake compilation
 ####################
 cmake .
 make
-sudo make install
-
-
 
 Once you have downloaded Elvex execute these commands:
 ####################
