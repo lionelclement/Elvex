@@ -18,6 +18,7 @@ cmake compilation
 ####################
 cmake .
 make
+// make elvex/buildLexicon/postedition links on /usr/local/bin (or configure CMakeLists.txt)
 
 Once you have downloaded Elvex execute these commands:
 ####################
