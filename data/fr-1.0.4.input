@@ -2,7 +2,7 @@
  * verbal tense & inflexion
  ************************************************** */
 
-text [PRED:_marcher, i:[PRED:_Léon], tense:present]
+//text [PRED:_marcher, i:[PRED:_Léon], tense:present]
 //text [PRED:_marcher, i:[PRED:_Léon], tense:past]
 //text [PRED:_marcher, i:[PRED:_Léon], tense:future]
 //text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:imperfect]
@@ -21,7 +21,7 @@ text [PRED:_marcher, i:[PRED:_Léon], tense:present]
 //text [PRED:_partir, i:[PRED:_Léon], tense:recent_past]
 //text [PRED:_partir, i:[PRED:_Léon], tense:present, aspect:continuous]
 //text [PRED:_partir, i:[PRED:_Léon], tense:near_future]
-//text [PRED:_partir, i:[PRED:_Léon], tense:future, aspect:continuous]
+text [PRED:_partir, i:[PRED:_Léon], tense:future, aspect:continuous]
 
 //text [PRED:_marcher, i:[PRED:__pro, person:one, number:sg], tense:past]
 //text [PRED:_marcher, i:[PRED:__pro, person:two, number:sg], tense:past]

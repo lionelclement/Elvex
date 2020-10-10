@@ -17,7 +17,7 @@
 #
 ################################################## #
 
-SUFFIXES = .cc .o .ll .yy
+SUFFIXES = .ll .yy
 #############################################
 # Do not edit
 AUTOMAKE_OPTIONS = foreign
@@ -31,45 +31,45 @@ CXXFLAGS = -std=c++11 -O3 -Wall -Wno-unused-label -Wno-unneeded-internal-declara
 bin_PROGRAMS = elvex elvexdebug elvexbuildlexicon elvexpostedition_fr elvexpostedition_en
 
 elvex_SOURCES=\
-rulesyacc.cc\
-ruleslex.cc\
-bitset.cc\
-compact-lexicon-buffer.cc\
-compact-lexicon-fsa.cc\
-compact-lexicon-info.cc\
-compact-lexicon-tree.cc\
-compact-lexicon.cc\
-entries.cc\
-entry.cc\
-environment.cc\
-feature.cc\
-features.cc\
-flags.cc\
-forest.cc\
-forestidentifier.cc\
-forestmap.cc\
-grammar.cc\
-id.cc\
-item.cc\
-itemset.cc\
-lexicon.cc\
-list.cc\
-listfeatures.cc\
-main.cc\
-memoization-map.cc\
-memoization-value.cc\
-node.cc\
-parser.cc\
-rule.cc\
-serializable.cc\
-statement.cc\
-statements.cc\
-synthesizer.cc\
-term.cc\
-terms.cc\
-value.cc\
-variableflag.cc\
-vartable.cc
+rulesyacc.cpp\
+ruleslex.cpp\
+bitset.cpp\
+compact-lexicon-buffer.cpp\
+compact-lexicon-fsa.cpp\
+compact-lexicon-info.cpp\
+compact-lexicon-tree.cpp\
+compact-lexicon.cpp\
+entries.cpp\
+entry.cpp\
+environment.cpp\
+feature.cpp\
+features.cpp\
+flags.cpp\
+forest.cpp\
+forestidentifier.cpp\
+forestmap.cpp\
+grammar.cpp\
+id.cpp\
+item.cpp\
+itemset.cpp\
+lexicon.cpp\
+list.cpp\
+listfeatures.cpp\
+main.cpp\
+memoization-map.cpp\
+memoization-value.cpp\
+node.cpp\
+parser.cpp\
+rule.cpp\
+serializable.cpp\
+statement.cpp\
+statements.cpp\
+synthesizer.cpp\
+term.cpp\
+terms.cpp\
+value.cpp\
+variableflag.cpp\
+vartable.cpp
 
 elvex_OPTIONS =
 elvex_OPTIONS += -DRESTORE_MEMORY
@@ -84,45 +84,45 @@ elvex_CXXFLAGS = -std=c++11 -O3 -Wall $(elvex_OPTIONS)
 elvex_LDADD =
 
 elvexdebug_SOURCES =\
-rulesyacc.cc\
-ruleslex.cc\
-bitset.cc\
-compact-lexicon-buffer.cc\
-compact-lexicon-fsa.cc\
-compact-lexicon-info.cc\
-compact-lexicon-tree.cc\
-compact-lexicon.cc\
-entries.cc\
-entry.cc\
-environment.cc\
-feature.cc\
-features.cc\
-flags.cc\
-forest.cc\
-forestidentifier.cc\
-forestmap.cc\
-grammar.cc\
-id.cc\
-item.cc\
-itemset.cc\
-lexicon.cc\
-list.cc\
-listfeatures.cc\
-main.cc\
-memoization-map.cc\
-memoization-value.cc\
-node.cc\
-parser.cc\
-rule.cc\
-serializable.cc\
-statement.cc\
-statements.cc\
-synthesizer.cc\
-term.cc\
-terms.cc\
-value.cc\
-variableflag.cc\
-vartable.cc 
+rulesyacc.cpp\
+ruleslex.cpp\
+bitset.cpp\
+compact-lexicon-buffer.cpp\
+compact-lexicon-fsa.cpp\
+compact-lexicon-info.cpp\
+compact-lexicon-tree.cpp\
+compact-lexicon.cpp\
+entries.cpp\
+entry.cpp\
+environment.cpp\
+feature.cpp\
+features.cpp\
+flags.cpp\
+forest.cpp\
+forestidentifier.cpp\
+forestmap.cpp\
+grammar.cpp\
+id.cpp\
+item.cpp\
+itemset.cpp\
+lexicon.cpp\
+list.cpp\
+listfeatures.cpp\
+main.cpp\
+memoization-map.cpp\
+memoization-value.cpp\
+node.cpp\
+parser.cpp\
+rule.cpp\
+serializable.cpp\
+statement.cpp\
+statements.cpp\
+synthesizer.cpp\
+term.cpp\
+terms.cpp\
+value.cpp\
+variableflag.cpp\
+vartable.cpp 
 
 elvexdebug_OPTIONS =
 elvexdebug_OPTIONS += -DTRACE_OPTION
@@ -149,43 +149,43 @@ elvexdebug_CXXFLAGS = -std=c++11 -Wall -O3 `xml2-config --cflags` $(elvexdebug_O
 elvexdebug_LDADD = -lxml2
 
 elvexbuildlexicon_SOURCES = \
-rulesyacc.cc\
-ruleslex.cc\
-bitset.cc\
-buildlexicon.cc\
-compact-lexicon-buffer.cc\
-compact-lexicon-fsa.cc\
-compact-lexicon-info.cc\
-compact-lexicon-tree.cc\
-compact-lexicon.cc\
-entries.cc\
-entry.cc\
-environment.cc\
-feature.cc\
-features.cc\
-flags.cc\
-forest.cc\
-forestidentifier.cc\
-forestmap.cc\
-grammar.cc\
-id.cc\
-item.cc\
-itemset.cc\
-lexicon.cc\
-list.cc\
-listfeatures.cc\
-node.cc\
-parser.cc\
-rule.cc\
-serializable.cc\
-statement.cc\
-statements.cc\
-synthesizer.cc\
-term.cc\
-terms.cc\
-value.cc\
-variableflag.cc\
-vartable.cc 
+rulesyacc.cpp\
+ruleslex.cpp\
+bitset.cpp\
+buildlexicon.cpp\
+compact-lexicon-buffer.cpp\
+compact-lexicon-fsa.cpp\
+compact-lexicon-info.cpp\
+compact-lexicon-tree.cpp\
+compact-lexicon.cpp\
+entries.cpp\
+entry.cpp\
+environment.cpp\
+feature.cpp\
+features.cpp\
+flags.cpp\
+forest.cpp\
+forestidentifier.cpp\
+forestmap.cpp\
+grammar.cpp\
+id.cpp\
+item.cpp\
+itemset.cpp\
+lexicon.cpp\
+list.cpp\
+listfeatures.cpp\
+node.cpp\
+parser.cpp\
+rule.cpp\
+serializable.cpp\
+statement.cpp\
+statements.cpp\
+synthesizer.cpp\
+term.cpp\
+terms.cpp\
+value.cpp\
+variableflag.cpp\
+vartable.cpp 
 
 elvexbuildlexicon_OPTIONS =
 #elvexbuildlexicon_OPTIONS += -DTRACE_DIFF
@@ -193,9 +193,9 @@ elvexbuildlexicon_OPTIONS += -DRESTORE_MEMORY
 elvexbuildlexicon_CXXFLAGS = -std=c++11 -Wall -O3 -Wno-deprecated-register -Wno-unneeded-internal-declaration $(elvexbuildlexicon_OPTIONS)
 elvexbuildlexicon_LDADD =
 
-elvexpostedition_fr_SOURCES = postedition_fr.cc
+elvexpostedition_fr_SOURCES = postedition_fr.cpp
 
-elvexpostedition_en_SOURCES = postedition_en.cc
+elvexpostedition_en_SOURCES = postedition_en.cpp
 
 BUILT_SOURCES = 
 
@@ -203,7 +203,7 @@ DIST_COMMON = Makefile.in Makefile.am
 
 EXTRA_DIST = 	
 
-CLEANFILES = rulesyacc.cc rulesyacc.hh rulesyacc.output ruleslex.cc postedition_fr.cc postedition_en.cc
+CLEANFILES = rulesyacc.cpp rulesyacc.h rulesyacc.output ruleslex.cpp postedition_fr.cpp postedition_en.cpp
 
 $(elvex_OBJECTS): Makefile
 $(elvexdebug_OBJECTS): Makefile
@@ -212,8 +212,8 @@ $(elvexpostedition_OBJECTS): Makefile
 $(elvexpostedition_fr_OBJECTS): Makefile
 $(elvexpostedition_en_OBJECTS): Makefile
 
-%.cc: %.yy
+%.cpp: %.yy
 	$(YACC) $(YFLAGS) -p rules -o $@ $<
 
-%.cc: %.ll
+%.cpp: %.ll
 	$(LEX) $(LFLAGS) -Prules -o $@ $<
