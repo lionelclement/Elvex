@@ -17,6 +17,7 @@ To use
 -------
 In *.input, uncomment a line begining with //text[...
 and within this directory data, call elvex like this:
+
 bin/elvex -compactLexiconDirectory data -compactLexiconFile en-x.x.x -grammarFile en-x.x.x.grammar -lexiconFile en-x.x.x.lexicon -inputFile en-x.x.x.input
 | bin/elvexpostedition | sed 's/^ *//'
 
