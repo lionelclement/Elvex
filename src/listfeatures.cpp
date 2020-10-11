@@ -17,7 +17,6 @@
  *
  ************************************************** */
 
-#include <climits>
 #include <utility>
 #include "listfeatures.h"
 #include "features.h"

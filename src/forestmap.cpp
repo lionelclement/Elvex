@@ -20,8 +20,6 @@
 #include "forestmap.h"
 #include "messages.h"
 
-int ForestMap::nb = 0;
-
 /* **************************************************
  *
  ************************************************** */
@@ -34,8 +32,8 @@ ForestMap::ForestMap() {
  ************************************************** */
 ForestMap::~ForestMap() {
     DELETE;
-    for (map::iterator i = data.begin(); i != data.end(); ++i) {
-        forestPtr tmp = i->second;
+    for (auto & i : data) {
+        forestPtr tmp = i.second;
         if (tmp)
             tmp.reset();
     }
@@ -44,28 +42,28 @@ ForestMap::~ForestMap() {
 /* **************************************************
  *
  ************************************************** */
-const ForestMap::map::const_iterator ForestMap::find(forestIdentifierPtr forestIdentifier) const {
+ForestMap::map::const_iterator ForestMap::find(const forestIdentifierPtr& forestIdentifier) const {
     return data.find(forestIdentifier);
 }
 
 /* **************************************************
  *
  ************************************************** */
-const ForestMap::map::const_iterator ForestMap::begin(void) const {
+ForestMap::map::const_iterator ForestMap::begin() const {
     return data.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-const ForestMap::map::const_iterator ForestMap::end(void) const {
+ForestMap::map::const_iterator ForestMap::end() const {
     return data.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void ForestMap::clear(void) {
+void ForestMap::clear() {
     return data.clear();
 }
 

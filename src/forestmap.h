@@ -32,20 +32,20 @@ public:
 
 private:
     map data;
-    static int nb;
+    __unused static int nb;
 
 public:
-    ForestMap(void);
+    ForestMap();
 
     ~ForestMap();
 
-    const map::const_iterator find(const forestIdentifierPtr) const;
+    map::const_iterator find(const forestIdentifierPtr&) const;
 
-    const map::const_iterator begin(void) const;
+    map::const_iterator begin() const;
 
-    const map::const_iterator end(void) const;
+    map::const_iterator end() const;
 
-    void clear(void);
+    void clear();
 
     bool insert(pair);
 
