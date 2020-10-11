@@ -27,11 +27,11 @@
 #define NEW {std::cerr << "$$$ New " << __FILE__ << std::endl; }
 #define DELETE {std::cerr << "$$$ Delete " << __FILE__ << std::endl; }
 #else
-#define NEW
+#define NEW {std::cout << "";};
 #ifdef RESTORE_MEMORY
 #define DELETE {}
 #else
-#define DELETE  {return;}
+#define DELETE {std::cout << "";}
 #endif
 #endif
 

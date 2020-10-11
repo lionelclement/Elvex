@@ -46,7 +46,7 @@ private:
     std::string form;
     VariableFlag variableFlag;
 
-    Features(featurePtr);
+    Features(const featurePtr&);
 
     static featuresPtr createBottom(void);
 
@@ -57,13 +57,13 @@ private:
 public:
     ~Features();
 
-    static featuresPtr create(featurePtr = featurePtr());
+    static featuresPtr create(const featurePtr& = featurePtr());
 
     void putId(unsigned int id);
 
-    void add(featurePtr, bool = false);
+    void add(const featurePtr&, bool = false);
 
-    void add(featuresPtr, bool = false);
+    void add(const featuresPtr&, bool = false);
 
     list::iterator erase(list::iterator i);
 
@@ -85,9 +85,9 @@ public:
 
     featuresPtr clone(void) const;
 
-    valuePtr find(bitsetPtr) const;
+    valuePtr find(const bitsetPtr&) const;
 
-    bool buildEnvironment(environmentPtr, featuresPtr, bool/*, bool*/);
+    bool buildEnvironment(const environmentPtr&, const featuresPtr&, bool/*, bool*/);
 
     void subFlags(const std::bitset<FLAGS> &);
 
@@ -101,15 +101,15 @@ public:
 
     bool isBottom(void) const;
 
-    void enable(statementPtr, itemPtr, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
 
-    bool subsumes(featuresPtr, environmentPtr);
+    bool subsumes(const featuresPtr&, const environmentPtr&);
 
     void deleteAnonymousVariables(void);
 
     bool containsVariable(void);
 
-    bool findVariable(bitsetPtr);
+    bool findVariable(const bitsetPtr&);
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 };

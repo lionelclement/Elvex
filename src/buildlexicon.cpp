@@ -17,7 +17,7 @@
  *
  ************************************************** */
 
-#include <string.h>
+#include <cstring>
 
 #include "buildlexicon.h"
 #include "compact-lexicon.h"
@@ -99,7 +99,7 @@ int main(int argn, char **argv) {
             }
         }
 
-        if (morphoFile.size()) {
+        if (!morphoFile.empty()) {
             std::ifstream inputFile;
             inputFile.open(morphoFile.c_str());
             char line[MAXSTRING];
@@ -124,11 +124,11 @@ int main(int argn, char **argv) {
 
                         std::stringstream stream;
                         stream << form;
-                        std::string input = stream.str();
+                        //std::string input = stream.str();
 
                         stream.str("");
                         stream << form;
-                        std::string output = stream.str();
+                        std::string _output = stream.str();
 
                         stream.str("");
                         stream << '[' << f << ']';
@@ -172,14 +172,14 @@ int main(int argn, char **argv) {
 
                         std::stringstream stream;
                         stream << lemma << '#' << pos;
-                        std::string input = stream.str();
+                        std::string _input = stream.str();
 
                         stream.str("");
                         stream << form << '#' << features;
-                        std::string output = stream.str();
+                        std::string _output = stream.str();
                         //std::cerr << "morpho/input:/" << input << '/' << std::endl;
                         //std::cerr << "morpho/output:/" << output << '/' << std::endl;
-                        morpho.add(input, output);
+                        morpho.add(_input, _output);
                     }
 
                 }
@@ -188,7 +188,7 @@ int main(int argn, char **argv) {
         }
 
 
-        if (patternFile.size()) {
+        if (!patternFile.empty()) {
             std::ifstream inputFile;
             inputFile.open(patternFile.c_str());
             char line[MAXSTRING];
@@ -255,7 +255,6 @@ int main(int argn, char **argv) {
                 lex->closeFiles();
                 return EXIT_SUCCESS;
             }
-                break;
 
             case Buildlexicon::CONSULT: {
                 lex = new CompactLexicon(directory, prefix);
@@ -266,7 +265,6 @@ int main(int argn, char **argv) {
                 lex->closeFiles();
                 return EXIT_SUCCESS;
             }
-                break;
 
             default:
                 break;

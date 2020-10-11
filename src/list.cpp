@@ -19,6 +19,8 @@
 
 #include "value.h"
 #include "list.h"
+
+#include <utility>
 #include "environment.h"
 #include "features.h"
 #include "messages.h"
@@ -31,12 +33,12 @@ listPtr List::NIL_LIST = List::create();
 /* **************************************************
  *
  ************************************************** */
-List::List(enum List::Type type, valuePtr value, listPtr car, listPtr cdr)
+List::List(enum List::Type type, valuePtr _value, listPtr _car, listPtr _cdr)
         : Id(0) {
     this->type = type;
-    this->value = value;
-    this->pairp.car = car;
-    this->pairp.cdr = cdr;
+    this->value = std::move(_value);
+    this->pairp.car = std::move(_car);
+    this->pairp.cdr = std::move(_cdr);
     //this->variable = 0;
     NEW;
 }
@@ -63,48 +65,48 @@ listPtr List::create() {
  *
  ************************************************** */
 listPtr List::create(valuePtr value) {
-    return listPtr(new List(List::ATOM, value));
+    return listPtr(new List(List::ATOM, std::move(value)));
 }
 
 /* **************************************************
  *
  ************************************************** */
 listPtr List::create(listPtr car, listPtr cdr) {
-    return listPtr(new List(List::PAIRP, valuePtr(), car, cdr));
+    return listPtr(new List(List::PAIRP, valuePtr(), std::move(car), std::move(cdr)));
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-List::Type List::getType(void) const {
+List::Type List::getType() const {
     return type;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::setType(Type type) {
-    this->type = type;
+void List::setType(Type _type) {
+    this->type = _type;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-valuePtr List::getValue(void) const {
+valuePtr List::getValue() const {
     return value;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::setValue(valuePtr value) {
-    this->value = value;
+void List::setValue(valuePtr _value) {
+    this->value = _value;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCar(void) const {
+listPtr List::getCar() const {
     return this->pairp.car;
 }
 
@@ -112,13 +114,13 @@ listPtr List::getCar(void) const {
  *                                                            *
  ************************************************************ */
 void List::setCar(listPtr car) {
-    this->pairp.car = car;
+    this->pairp.car = std::move(car);
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCdr(void) const {
+listPtr List::getCdr() const {
     return pairp.cdr;
 }
 
@@ -126,69 +128,69 @@ listPtr List::getCdr(void) const {
  *                                                            *
  ************************************************************ */
 void List::setCdr(listPtr cdr) {
-    this->pairp.cdr = cdr;
+    this->pairp.cdr = std::move(cdr);
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCadr(void) const {
+listPtr List::getCadr() const {
     return pairp.cdr->pairp.car;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCddr(void) const {
+listPtr List::getCddr() const {
     return pairp.cdr->pairp.cdr;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCaar(void) const {
+listPtr List::getCaar() const {
     return pairp.car->pairp.car;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCdar(void) const {
+listPtr List::getCdar() const {
     return pairp.car->pairp.cdr;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isNil(void) const {
+bool List::isNil() const {
     return (this->type == List::NIL);
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isAtomic(void) const {
+bool List::isAtomic() const {
     return (this->type == List::ATOM);
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isVariable(void) const {
+bool List::isVariable() const {
     return (this->type == List::ATOM) && (this->value->isVariable());
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isPairp(void) const {
+bool List::isPairp() const {
     return (this->type == PAIRP);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void List::makeSerialString(void) {
+void List::makeSerialString() {
     switch (type) {
         case NIL:
             serialString = 'N';
@@ -268,7 +270,7 @@ void List::flatPrint(std::ostream &outStream, bool par) const {
  *
  ************************************************** */
 bool
-List::buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root) {
+List::buildEnvironment(const environmentPtr& environment, const listPtr& otherList, bool acceptToFilterNULLVariables, bool root) {
     bool ret = true;
     /***
      std::cerr << "<H4>List::buildEnvironment</H4>" << std::endl;
@@ -437,7 +439,7 @@ listPtr List::clone() const {
 /* ************************************************************
  * this < o
  ************************************************************ */
-bool List::subsumes(listPtr o, environmentPtr environment) {
+bool List::subsumes(const listPtr& o, const environmentPtr& environment) {
     /***
      BUG;
      this->print(std::cerr);
@@ -474,14 +476,14 @@ bool List::subsumes(listPtr o, environmentPtr environment) {
 /* **************************************************
  *
  ************************************************** */
-listPtr List::pushFront(valuePtr value) {
+listPtr List::pushFront(valuePtr _value) {
     switch (type) {
         case NIL: WARNING("pushFront fails")
             break;
         case ATOM: WARNING("pushFront fails")
             break;
         case PAIRP: {
-            listPtr n = create(create(value), shared_from_this());
+            listPtr n = create(create(_value), shared_from_this());
             return n;
             break;
         }
@@ -492,7 +494,7 @@ listPtr List::pushFront(valuePtr value) {
 /* **************************************************
  *
  ************************************************** */
-listPtr List::pushBack(valuePtr value) {
+listPtr List::pushBack(valuePtr _value) {
     switch (type) {
         case NIL: WARNING("pushBack fails")
             break;
@@ -503,7 +505,7 @@ listPtr List::pushBack(valuePtr value) {
             listPtr n = m;
             while (n->pairp.cdr != List::NIL_LIST)
                 n = n->pairp.cdr;
-            n->pairp.cdr = create(create(value), List::NIL_LIST);
+            n->pairp.cdr = create(create(_value), List::NIL_LIST);
             return m;
             break;
         }
@@ -514,7 +516,7 @@ listPtr List::pushBack(valuePtr value) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, bool &effect, bool on) {
+void List::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
     switch (type) {
         case NIL:
             break;
@@ -533,7 +535,7 @@ void List::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, boo
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::findVariable(bitsetPtr variable) {
+bool List::findVariable(const bitsetPtr& variable) {
     switch (type) {
         case NIL:
             break;
@@ -554,7 +556,7 @@ bool List::findVariable(bitsetPtr variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statementPtr variable, statementPtr body,
+void List::apply(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
                  bool &effect) {
     switch (type) {
         case NIL:
@@ -574,7 +576,7 @@ void List::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, stateme
 /* **************************************************
  *
  ************************************************** */
-bool List::containsVariable(void) {
+bool List::containsVariable() {
     /***
      std::cerr << "<H4>List::containsVariable</H4>" << std::endl;
      std::cerr << "<table border = \"1\"><tr><th>this</th></tr>";

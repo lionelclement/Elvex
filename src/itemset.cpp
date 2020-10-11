@@ -20,7 +20,6 @@
 #include <sstream>
 #include "itemset.h"
 #include "messages.h"
-#include "item.h"
 #include "rule.h"
 #include "synthesizer.h"
 
@@ -36,9 +35,8 @@ ItemSet::ItemSet(unsigned int id) {
  *
  ************************************************** */
 ItemSet::~ItemSet() {
-    DELETE;
-    for (iterator it = items.begin(); it != items.end(); ++it) {
-        itemPtr tmp = *it;
+    //DELETE;
+    for (auto tmp : items) {
         if (tmp)
             (tmp).reset();
     }
@@ -62,37 +60,37 @@ unsigned int ItemSet::getId(void) {
 /* **************************************************
  *
  ************************************************** */
-ItemSet::set &ItemSet::getItems(void) {
+ItemSet::set &ItemSet::getItems() {
     return items;
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::begin(void) const {
+ItemSet::const_iterator ItemSet::begin() const {
     return items.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::end(void) const {
+ItemSet::const_iterator ItemSet::end() const {
     return items.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::find(itemPtr item) const {
+ItemSet::const_iterator ItemSet::find(const itemPtr& item) const {
     return items.find(item);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer) {
+bool ItemSet::insert(const itemPtr& item, Synthesizer *synthesizer) {
     if (items.size() > synthesizer->getMaxCardinal()) {
-        throw "*** error: too much items build";
+        throw std::string("*** error: too much items build");
         exit(1);
     }
 #ifdef TRACE_INSERT
@@ -107,14 +105,14 @@ bool ItemSet::insert(itemPtr item, Synthesizer *synthesizer) {
 /* **************************************************
  *
  ************************************************** */
-void ItemSet::erase(itemPtr item) {
+void ItemSet::erase(const itemPtr& item) {
     items.erase(item);
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t ItemSet::size(void) const {
+size_t ItemSet::size() const {
     return items.size();
 }
 
@@ -122,8 +120,8 @@ size_t ItemSet::size(void) const {
  *
  ************************************************** */
 void ItemSet::resetUsages() {
-    for (iterator item = items.begin(); item != items.end(); item++) {
-        (*item)->getRule()->resetUsages();
+    for (const auto & item : items) {
+        item->getRule()->resetUsages();
 
     }
 }
@@ -133,10 +131,10 @@ void ItemSet::resetUsages() {
  ************************************************** */
 void ItemSet::print(std::ostream &oss) {
     oss << "<TABLE border=\"0\">";
-    for (iterator item = items.begin(); item != items.end(); item++) {
+    for (const auto & item : items) {
         oss << "<TR>";
         oss << "<TD align=\"LEFT\">";
-        (*item)->print(oss);
+        item->print(oss);
         oss << "</TD>";
         oss << "</TR>";
 

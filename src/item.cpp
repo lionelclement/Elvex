@@ -18,6 +18,7 @@
  ************************************************** */
 
 #include <climits>
+#include <utility>
 #include "item.h"
 #include "environment.h"
 #include "messages.h"
@@ -39,10 +40,10 @@
  ************************************************** */
 Item::Item(rulePtr rule, unsigned int index, statementsPtr statements)
         : Id(0) {
-    this->rule = rule;
+    this->rule = std::move(rule);
     this->trace = this->rule->getTrace();
     this->index = index;
-    this->statements = statements;
+    this->statements = std::move(statements);
     this->environment = environmentPtr();
     this->inheritedFeatures = Features::NIL;
     this->synthesizedFeatures = Features::NIL;
@@ -54,8 +55,8 @@ Item::Item(rulePtr rule, unsigned int index, statementsPtr statements)
 /* **************************************************
  *
  ************************************************** */
-Item::Item(rulePtr rule, unsigned int index, unsigned int indexTerm, statementsPtr statements)
-        : Item(rule, index, statements) {
+Item::Item(const rulePtr& rule, unsigned int index, unsigned int indexTerm, statementsPtr statements)
+        : Item(rule, index, std::move(statements)) {
     std::vector<termsPtr> terms = rule->getRhs();
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j) {
@@ -73,8 +74,8 @@ Item::Item(rulePtr rule, unsigned int index, unsigned int indexTerm, statementsP
 /* **************************************************
  *
  ************************************************** */
-Item::Item(rulePtr rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
-        : Item(rule, index, statements) {
+Item::Item(const rulePtr& rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
+        : Item(rule, index, std::move(statements)) {
     this->indexTerms = indexTerms;
     std::vector<termsPtr> terms = rule->getRhs();
     unsigned j = 0;
@@ -103,9 +104,8 @@ Item::~Item() {
         synthesizedFeatures.reset();
     if (synthesizedSonFeatures)
         synthesizedSonFeatures.reset();
-    for (std::vector<forestIdentifierPtr>::iterator it = forestIdentifiers.begin();
-         it != forestIdentifiers.end(); ++it) {
-        forestIdentifierPtr tmp = *it;
+    for (auto it : forestIdentifiers) {
+        forestIdentifierPtr tmp = it;
         if (tmp)
             (tmp).reset();
     }
@@ -119,93 +119,93 @@ Item::~Item() {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Item::create(rulePtr rule, unsigned int index, unsigned int indexTerm, statementsPtr statements) {
-    return itemPtr(new Item(rule, index, indexTerm, statements));
+itemPtr Item::create(const rulePtr& rule, unsigned int index, unsigned int indexTerm, statementsPtr statements) {
+    return itemPtr(new Item(rule, index, indexTerm, std::move(statements)));
 }
 
 /* **************************************************
  *
  ************************************************** */
 itemPtr
-Item::create(rulePtr rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements) {
-    return itemPtr(new Item(rule, index, indexTerms, statements));
+Item::create(const rulePtr& rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements) {
+    return itemPtr(new Item(rule, index, indexTerms, std::move(statements)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-rulePtr Item::getRule(void) const {
+rulePtr Item::getRule() const {
     return rule;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setRule(rulePtr rule) {
-    this->rule = rule;
+void Item::setRule(rulePtr _rule) {
+    this->rule = _rule;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::getTrace(void) const {
+bool Item::getTrace() const {
     return trace;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setTrace(bool trace) {
-    this->trace = trace;
+void Item::setTrace(bool _trace) {
+    this->trace = _trace;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getLineno(void) const {
+unsigned int Item::getLineno() const {
     return rule->getLineno();
 }
 
 /* **************************************************
  *
  ************************************************** */
-const std::string &Item::getFilename(void) const {
+const std::string &Item::getFilename() const {
     return rule->getFilename();
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getIndex(void) const {
+unsigned int Item::getIndex() const {
     return index;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setIndex(unsigned int index) {
-    this->index = index;
+void Item::setIndex(unsigned int _index) {
+    this->index = _index;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int> &Item::getIndexTerms(void) {
+std::vector<unsigned int> &Item::getIndexTerms() {
     return indexTerms;
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Item::getStatements(void) {
+statementsPtr Item::getStatements() {
     return statements;
 }
 
 /* **************************************************
  *
  ************************************************** */
-termsPtr Item::getTerms(const unsigned int index) const {
-    return rule->getRhs()[index];
+termsPtr Item::getTerms(const unsigned int _index) const {
+    return rule->getRhs()[_index];
 }
 
 /* **************************************************
@@ -213,7 +213,7 @@ termsPtr Item::getTerms(const unsigned int index) const {
  ************************************************** */
 termsPtr Item::getCurrentTerms() const {
     if ((this->index == UINT_MAX) || (this->index >= this->getRhs().size()))
-        return NULL;
+        return nullptr;
     return rule->getRhs()[this->index];
 }
 
@@ -221,23 +221,23 @@ termsPtr Item::getCurrentTerms() const {
  *
  ************************************************** */
 void Item::setCurrentTerms(termsPtr terms) {
-    this->rule->getRhs()[this->index] = terms;
+    this->rule->getRhs()[this->index] = std::move(terms);
 }
 
 /* **************************************************
  *
  ************************************************** */
-termPtr Item::getCurrentTerm(void) const {
+termPtr Item::getCurrentTerm() const {
     termsPtr terms = getCurrentTerms();
-    if ((terms == NULL) || (terms->size() == 0))
-        return NULL;
+    if ((terms == nullptr) || (terms->size() == 0))
+        return nullptr;
     return (*terms)[0];
 }
 
 /* **************************************************
  *
  ************************************************** */
-termPtr Item::getLhs(void) const {
+termPtr Item::getLhs() const {
     return rule->getLhs();
 }
 
@@ -245,22 +245,22 @@ termPtr Item::getLhs(void) const {
  *
  ************************************************** */
 std::vector<termsPtr> &
-Item::getRhs(void) const {
+Item::getRhs() const {
     return rule->getRhs();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int> &Item::getRefs(void) {
+std::set<unsigned int> &Item::getRefs() {
     return refs;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setRefs(std::set<unsigned int> &refs) {
-    this->refs = refs;
+void Item::setRefs(std::set<unsigned int> &_refs) {
+    this->refs = _refs;
 }
 
 /* **************************************************
@@ -273,37 +273,37 @@ void Item::addRef(unsigned int ref) {
 /* **************************************************
  *
  ************************************************** */
-void Item::addRefs(std::set<unsigned int> &refs) {
-    for (std::set<unsigned int>::const_iterator i = refs.begin(); i != refs.end(); ++i)
-        addRef(*i);
+void Item::addRefs(std::set<unsigned int> &_refs) {
+    for (auto _ref : _refs)
+        addRef(_ref);
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<bool> &Item::getSeen(void) {
+std::vector<bool> &Item::getSeen() {
     return this->seen;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setSeen(std::vector<bool> &seen) {
-    this->seen = seen;
+void Item::setSeen(std::vector<bool> &_seen) {
+    this->seen = _seen;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::isSeen(unsigned int index) const {
-    return seen[index];
+bool Item::isSeen(unsigned int _index) const {
+    return seen[_index];
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setSeen(unsigned int index, bool b) {
-    this->seen[index] = b;
+void Item::setSeen(unsigned int _index, bool b) {
+    this->seen[_index] = b;
 }
 
 /* **************************************************
@@ -316,7 +316,7 @@ void Item::addItem(std::unordered_map<unsigned int, itemPtr> &table, unsigned in
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int> &Item::getRanges(void) {
+std::vector<unsigned int> &Item::getRanges() {
     return ranges;
 }
 
@@ -338,110 +338,110 @@ void Item::addRanges(std::vector<unsigned int> &l) {
 /* **************************************************
  *
  ************************************************** */
-std::vector<forestIdentifierPtr> &Item::getForestIdentifiers(void) {
+std::vector<forestIdentifierPtr> &Item::getForestIdentifiers() {
     return forestIdentifiers;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::addForestIdentifiers(unsigned int i, forestIdentifierPtr k) {
-    forestIdentifiers[i] = k;
+void Item::addForestIdentifiers(unsigned int key, forestIdentifierPtr forestIdentifier) {
+    forestIdentifiers[key] = std::move(forestIdentifier);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::addForestIdentifiers(std::vector<forestIdentifierPtr> &l) {
-    for (unsigned int i = 0; i < l.size(); ++i)
-        forestIdentifiers[i] = l[i];
+void Item::addForestIdentifiers(std::vector<forestIdentifierPtr> &_forestIdentifiers) {
+    for (unsigned int it = 0 ; it < _forestIdentifiers.size() ; ++it)
+        this->forestIdentifiers[it] = _forestIdentifiers[it];
 }
 
 /* **************************************************
  *
  ************************************************** */
-listFeaturesPtr Item::getSynthesizedSonFeatures(void) {
+listFeaturesPtr Item::getSynthesizedSonFeatures() {
     return synthesizedSonFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setSynthesizedSonFeatures(listFeaturesPtr l) {
-    synthesizedSonFeatures = l;
+void Item::setSynthesizedSonFeatures(listFeaturesPtr _synthesizedSonFeatures) {
+    this->synthesizedSonFeatures = std::move(_synthesizedSonFeatures);
 }
 
 /* **************************************************
  *
  ************************************************** */
-listFeaturesPtr Item::getInheritedSonFeatures(void) {
+listFeaturesPtr Item::getInheritedSonFeatures() {
     return inheritedSonFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setInheritedSonFeatures(listFeaturesPtr l) {
-    inheritedSonFeatures = l;
+void Item::setInheritedSonFeatures(listFeaturesPtr _inheritedSonFeatures) {
+    this->inheritedSonFeatures = std::move(_inheritedSonFeatures);
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Item::getSynthesizedFeatures(void) const {
+featuresPtr Item::getSynthesizedFeatures() const {
     return synthesizedFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setSynthesizedFeatures(featuresPtr synthesizedFeatures) {
-    this->synthesizedFeatures = synthesizedFeatures;
+void Item::setSynthesizedFeatures(featuresPtr _synthesizedFeatures) {
+    this->synthesizedFeatures = std::move(_synthesizedFeatures);
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Item::getInheritedFeatures(void) const {
+featuresPtr Item::getInheritedFeatures() const {
     return inheritedFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setInheritedFeatures(featuresPtr inheritedFeatures) {
-    this->inheritedFeatures = inheritedFeatures;
+void Item::setInheritedFeatures(featuresPtr _inheritedFeatures) {
+    this->inheritedFeatures = std::move(_inheritedFeatures);
 }
 
 /* **************************************************
  *
  ************************************************** */
-environmentPtr Item::getEnvironment(void) const {
+environmentPtr Item::getEnvironment() const {
     return this->environment;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setEnvironment(environmentPtr e) {
-    this->environment = e;
+void Item::setEnvironment(environmentPtr _environment) {
+    this->environment = std::move(_environment);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::isStarted(void) {
+bool Item::isStarted() {
     return ranges.size() == 1;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::addStatements(statementsPtr statements) {
+void Item::addStatements(const statementsPtr& _statements) {
     if (!this->statements)
         this->statements = Statements::create();
-    for (std::list<statementPtr>::const_iterator i = statements->begin(); i != statements->end(); ++i) {
-        this->statements->addStatement(*i);
+    for (const auto& i : *_statements) {
+        this->statements->addStatement(i);
     }
     if (this->statements->size() == 0) {
         FATAL_ERROR_UNEXPECTED
@@ -451,26 +451,26 @@ void Item::addStatements(statementsPtr statements) {
 /* **************************************************
  *
  ************************************************** */
-bool Item::isCompleted(void) {
+bool Item::isCompleted() {
     return ranges.size() == (this->getRhs().size() + 1);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::addEnvironment(environmentPtr e) {
+void Item::addEnvironment(environmentPtr _environment) {
     if (!this->environment)
         this->environment = Environment::create();
-    this->environment->add(e);
+    this->environment->add(std::move(_environment));
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::addEnvironment(environmentPtr e, environmentPtr where) {
+void Item::addEnvironment(environmentPtr _environment, environmentPtr where) {
     if (!this->environment)
         this->environment = Environment::create();
-    this->environment->add(e, where);
+    this->environment->add(std::move(_environment), std::move(where));
 }
 
 /* **************************************************
@@ -482,9 +482,8 @@ void Item::defaultInheritedSonFeatures() {
     for (std::vector<termsPtr>::const_iterator it = terms.begin(); it != terms.end(); ++it)
         assignedInheritedSonFeatures.push_back(false);
     if (statements)
-        for (std::list<statementPtr>::const_iterator statement = this->statements->begin();
-             statement != this->statements->end(); ++statement)
-            (*statement)->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
+        for (const auto & statement : *this->statements)
+            statement->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
     unsigned int j = 0;
     for (std::vector<bool>::const_iterator it = assignedInheritedSonFeatures.begin();
          it != assignedInheritedSonFeatures.end(); ++it, ++j)
@@ -563,7 +562,7 @@ void Item::print(std::ostream &out) const {
     }
     if (s_refs) {
         out << "<td>(";
-        std::set<unsigned int>::const_iterator ref = refs.begin();
+        auto ref = refs.begin();
         while (ref != refs.end()) {
             out << '#' << *ref;
             if (++ref != refs.end())
@@ -573,7 +572,7 @@ void Item::print(std::ostream &out) const {
     }
     if (s_seen) {
         out << "<td>(";
-        std::vector<bool>::const_iterator s = seen.begin();
+        auto s = seen.begin();
         while (s != seen.end()) {
             out << *s;
             if (++s != seen.end())
@@ -596,11 +595,11 @@ void Item::print(std::ostream &out) const {
     }
     if (s_indexTerms) {
         out << "<td>";
-        for (std::vector<unsigned int>::const_iterator i = indexTerms.begin(); i != indexTerms.end(); ++i)
-            if ((*i) == UINT_MAX)
+        for (unsigned int indexTerm : indexTerms)
+            if (indexTerm == UINT_MAX)
                 out << "UINT_MAX" << "&nbsp;";
             else
-                out << (*i) << "&nbsp;";
+                out << indexTerm << "&nbsp;";
         out << "</td>";
     }
     if (s_terms) {
@@ -617,21 +616,21 @@ void Item::print(std::ostream &out) const {
         out << "<td>"; //<center>Ranges</center><br>";
         int old = -1;
         bool first = true;
-        for (std::vector<unsigned int>::const_iterator i = ranges.begin(); i != ranges.end(); i++) {
+        for (unsigned int range : ranges) {
             if (old != -1) {
                 if (first)
                     first = false;
                 else
                     out << "&nbsp;";
-                out << '[' << old << '-' << *i << ']';
+                out << '[' << old << '-' << range << ']';
             }
-            old = *i;
+            old = range;
         }
         out << "</td>";
     }
     if (s_forestIdentifiers) {
         out << "<td>"; //<center>ForestIdentifiers</center><br>";
-        for (std::vector<forestIdentifierPtr>::const_iterator i = forestIdentifiers.begin();
+        for (auto i = forestIdentifiers.begin();
              i != forestIdentifiers.end();) {
             if (*i)
                 (*i)->print(out);
@@ -650,11 +649,10 @@ void Item::print(std::ostream &out) const {
     }
     if (s_inheritedSonFeatures) {
         out << "<td bgcolor=\"lightyellow\"><table>"; //<center>↓i</center><br>";
-        for (std::vector<featuresPtr>::const_iterator i = inheritedSonFeatures->begin();
-             i != inheritedSonFeatures->end(); ++i) {
+        for (const auto & i : *inheritedSonFeatures) {
             out << "<tr><td>";
-            if (*i)
-                (*i)->print(out);
+            if (i)
+                i->print(out);
             out << "</td></tr>";
         }
         out << "</table></td>";
@@ -668,11 +666,10 @@ void Item::print(std::ostream &out) const {
     }
     if (s_synthesizedSonFeatures) {
         out << "<td bgcolor=\"lightcyan\"><table>"; //<center>⇓i</center><br>";
-        for (std::vector<featuresPtr>::const_iterator i = synthesizedSonFeatures->begin();
-             i != synthesizedSonFeatures->end(); ++i) {
+        for (const auto & i : *synthesizedSonFeatures) {
             out << "<tr><td>";
-            if (*i)
-                (*i)->print(out);
+            if (i)
+                i->print(out);
             out << "</td></tr>";
         }
         out << "</table></td>";
@@ -718,7 +715,7 @@ itemPtr Item::clone(const std::bitset<FLAGS> &protectedFlags) {
 /* **************************************************
  *
  ************************************************** */
-void Item::successor(/*itemSetPtr state, *//*class Synthesizer *synthesizer, */bool &effect) {
+void Item::successor(bool &effect) {
 #ifdef TRACE_SUCCESSOR
     std::cout << "<H3>####################### SUCCESSOR #######################</H3>" << std::endl;
     this->print(std::cout);
@@ -751,7 +748,7 @@ void Item::successor(/*itemSetPtr state, *//*class Synthesizer *synthesizer, */b
 /* **************************************************
  *
  ************************************************** */
-void Item::apply(/*itemSetPtr state, */Parser &parser, Synthesizer *synthesizer) {
+void Item::apply(Parser &parser, Synthesizer *synthesizer) {
     if (statements) {
         unsigned int k = 1;
         bool effect = true;
@@ -794,7 +791,7 @@ void Item::makeSerialString() {
         serialString += std::to_string(*(ind++)) + '-';
 
     serialString += '|';
-    std::set<unsigned int>::const_iterator ref = refs.begin();
+    auto ref = refs.begin();
     while (ref != refs.end())
         serialString += std::to_string(*(ref++)) + '-';
 
@@ -815,14 +812,14 @@ void Item::makeSerialString() {
 /* **************************************************
  *
  ************************************************** */
-size_t Item::hash::operator()(itemPtr const i) const {
+size_t Item::hash::operator()(itemPtr const& i) const {
     return i->hashCode();
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::equal_to::operator()(itemPtr const i1, itemPtr const i2) const {
+bool Item::equal_to::operator()(itemPtr const& i1, itemPtr const& i2) const {
     return i1->peekSerialString() == i2->peekSerialString();
 }
 
@@ -832,3 +829,4 @@ bool Item::equal_to::operator()(itemPtr const i1, itemPtr const i2) const {
 void Item::renameVariables(size_t k) {
     this->statements->renameVariables(k);
 }
+

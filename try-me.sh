@@ -32,7 +32,8 @@ cd data
 #elvex -t -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 #elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 
-#make en-1.1.0.fsa
-elvex -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]' | elvexpostedition_en | sed 's/^ *//'
+make en-1.1.0.fsa
+../bin/elvex -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]' | ../bin/elvexpostedition | sed 's/^ *//'
+#../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]'
 
 cd ..

@@ -60,11 +60,11 @@ public:
 
     static featurePtr create(enum Type type = CONSTANT, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
 
-    const bitsetPtr getAttribute(void) const;
+    bitsetPtr getAttribute(void) const;
 
     void setAttribute(const bitsetPtr);
 
-    const valuePtr getValue(void) const;
+    valuePtr getValue(void) const;
 
     void setValue(const valuePtr);
 
@@ -86,13 +86,13 @@ public:
 
     bool renameVariables(size_t);
 
-    void enable(statementPtr, itemPtr, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
 
     bool findVariable(const bitsetPtr) const;
 
     bool containsVariable(void);
 
-    bool findVariable(bitsetPtr);
+    bool findVariable(const bitsetPtr&);
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 

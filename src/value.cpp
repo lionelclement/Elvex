@@ -18,6 +18,7 @@
  ************************************************** */
 
 #include <sstream>
+#include <utility>
 #include "value.h"
 #include "environment.h"
 #include "list.h"
@@ -38,7 +39,7 @@ valuePtr Value::ANONYMOUS_VALUE = Value::create(Value::ANONYMOUS);
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, std::string str)
+Value::Value(Value::Type const type, const std::string& str)
         : Id(0) {
     this->type = type;
     this->integer = 0;
@@ -55,15 +56,15 @@ Value::Value(Value::Type const type, std::string str)
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr bits, featuresPtr features,
-             listPtr list)
+Value::Value(Value::Type const type, unsigned int integer, double number, bitsetPtr _bits, featuresPtr _features,
+             listPtr _list)
         : Id(0) {
     this->type = type;
     this->integer = integer;
     this->number = number;
-    this->bits = bits;
-    this->features = features;
-    this->list = list;
+    this->bits = std::move(_bits);
+    this->features = std::move(_features);
+    this->list = std::move(_list);
     NEW;
 }
 
@@ -104,7 +105,7 @@ valuePtr Value::create(const enum Type type, unsigned int integer) {
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, std::string str) {
+valuePtr Value::create(const enum Type type, const std::string& str) {
     return valuePtr(new Value(type, str));
 }
 
@@ -112,146 +113,146 @@ valuePtr Value::create(const enum Type type, std::string str) {
  *
  ************************************************** */
 valuePtr Value::create(const enum Type type, bitsetPtr bits) {
-    return valuePtr(new Value(type, 0, 0, bits));
+    return valuePtr(new Value(type, 0, 0, std::move(bits)));
 }
 
 /* **************************************************
  *
  ************************************************** */
 valuePtr Value::create(const enum Type type, featuresPtr features) {
-    return valuePtr(new Value(type, 0, 0, bitsetPtr(), features));
+    return valuePtr(new Value(type, 0, 0, bitsetPtr(), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
 valuePtr Value::create(const enum Type type, listPtr lst) {
-    return valuePtr(new Value(type, 0, 0, bitsetPtr(), featuresPtr(), lst));
+    return valuePtr(new Value(type, 0, 0, bitsetPtr(), featuresPtr(), std::move(lst)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-Value::Type Value::getType(void) const {
+Value::Type Value::getType() const {
     return type;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bitsetPtr Value::getBits(void) const {
+bitsetPtr Value::getBits() const {
     return bits;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Value::getIdentifier(void) const {
+unsigned int Value::getIdentifier() const {
     return integer;
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Value::getFeatures(void) const {
+featuresPtr Value::getFeatures() const {
     return features;
 }
 
 /* **************************************************
  *
  ************************************************** */
-double Value::getDouble(void) const {
+double Value::getDouble() const {
     return number;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Value::getStr(void) const {
+std::string Value::getStr() const {
     return str;
 }
 
 /* **************************************************
  *
  ************************************************** */
-listPtr Value::getList(void) const {
+listPtr Value::getList() const {
     return list;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isNil(void) const {
+bool Value::isNil() const {
     return (type == Value::BOOL && integer == 0);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isFalse(void) const {
+bool Value::isFalse() const {
     return ((type == Value::BOOL && integer == 0)) || (type == Value::ANONYMOUS);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isTrue(void) const {
+bool Value::isTrue() const {
     return (type == Value::BOOL && integer == 1);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isAnonymous(void) const {
+bool Value::isAnonymous() const {
     return (type == Value::ANONYMOUS);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isDouble(void) const {
+bool Value::isDouble() const {
     return getType() == NUMBER;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isStr(void) const {
+bool Value::isStr() const {
     return getType() == STR;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isFeatures(void) const {
+bool Value::isFeatures() const {
     return getType() == FEATURES;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isConstant(void) const {
+bool Value::isConstant() const {
     return getType() == CONSTANT;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isVariable(void) const {
+bool Value::isVariable() const {
     return getType() == VARIABLE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isIdentifier(void) const {
+bool Value::isIdentifier() const {
     return getType() == CODE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isList(void) const {
+bool Value::isList() const {
     return getType() == LIST;
 }
 
@@ -265,8 +266,7 @@ void Value::print(std::ostream &outStream) const {
         outStream << "TRUE";
     else
         switch (type) {
-            case BOOL: FATAL_ERROR_UNEXPECTED
-                break;
+            case BOOL: FATAL_ERROR_UNEXPECTED;
             case CONSTANT:
                 outStream << getBits()->toString();
                 break;
@@ -304,8 +304,7 @@ void Value::flatPrint(std::ostream &outStream) const {
         outStream << "TRUE";
     else
         switch (type) {
-            case BOOL: FATAL_ERROR_UNEXPECTED
-                break;
+            case BOOL: FATAL_ERROR_UNEXPECTED;
             case CONSTANT:
                 outStream << getBits()->toString();
                 break;
@@ -336,7 +335,7 @@ void Value::flatPrint(std::ostream &outStream) const {
 /* **************************************************
  *
  ************************************************** */
-void Value::makeSerialString(void) {
+void Value::makeSerialString() {
     if (isNil())
         serialString = 'N';
     else if (isTrue())
@@ -344,8 +343,7 @@ void Value::makeSerialString(void) {
     else
         switch (type) {
             case BOOL: FATAL_ERROR_UNEXPECTED
-                break;
-            case CONSTANT:
+             case CONSTANT:
                 serialString = getBits()->peekSerialString();
                 break;
             case VARIABLE:
@@ -429,7 +427,7 @@ Value::toXML(xmlNodePtr nodeRoot) const
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::clone(void) {
+valuePtr Value::clone() {
     valuePtr result = valuePtr();
     switch (type) {
         case BOOL:
@@ -456,7 +454,7 @@ valuePtr Value::clone(void) {
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool acceptToFilterNULLVariables, bool root) {
+bool Value::buildEnvironment(const environmentPtr& environment, const valuePtr& value, bool acceptToFilterNULLVariables, bool root) {
     /***
     CERR_LINE;
     std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
@@ -599,7 +597,7 @@ bool Value::buildEnvironment(environmentPtr environment, valuePtr value, bool ac
 /* ************************************************************
  * this < o
  ************************************************************ */
-bool Value::subsumes(valuePtr o, environmentPtr environment) {
+bool Value::subsumes(const valuePtr& o, const environmentPtr& environment) {
     bool ret = true;
     /***
         std::cerr << "<DIV>";
@@ -750,7 +748,7 @@ bool Value::eq(valuePtr o) const {
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::lt(valuePtr o) const {
+bool Value::lt(const valuePtr& o) const {
     bool ret = false;
     /***
         STD::CERR_LINE;
@@ -768,7 +766,7 @@ bool Value::lt(valuePtr o) const {
 /* ************************************************************
  *
  ************************************************************ */
-void Value::deleteAnonymousVariables() {
+void Value::deleteAnonymousVariables() const {
     switch (type) {
         case BOOL:
         case CODE:
@@ -827,7 +825,7 @@ bool Value::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
-void Value::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Value::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
     switch (type) {
         case BOOL:
         case CODE:
@@ -859,7 +857,7 @@ void Value::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, bo
 /* **************************************************
  *
  ************************************************** */
-bool Value::findVariable(bitsetPtr variable) {
+bool Value::findVariable(const bitsetPtr& variable) const {
     switch (type) {
         case BOOL:
         case CODE:
@@ -887,7 +885,7 @@ bool Value::findVariable(bitsetPtr variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statementPtr variable, statementPtr body,
+void Value::apply(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
                   bool &effect) {
     switch (type) {
         case FEATURES: CERR_LINE;
@@ -904,7 +902,7 @@ void Value::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, statem
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool Value::containsVariable(void) {
+bool Value::containsVariable() {
     bool result = false;
     if (variableFlag.containsVariable())
         return true;

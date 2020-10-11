@@ -35,7 +35,7 @@ class ItemSet :
 public:
     typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to> set;
     typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::const_iterator const_iterator;
-    typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::iterator iterator;
+    //typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::iterator iterator;
 
 private:
     unsigned int id;
@@ -56,11 +56,11 @@ public:
 
     const_iterator end(void) const;
 
-    const_iterator find(itemPtr) const;
+    const_iterator find(const itemPtr&) const;
 
-    bool insert(itemPtr, class Synthesizer *);
+    bool insert(const itemPtr&, class Synthesizer *);
 
-    void erase(itemPtr);
+    void erase(const itemPtr&);
 
     size_t size(void) const;
 

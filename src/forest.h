@@ -61,7 +61,7 @@ public:
 
     const std::vector<std::string> &getOutput(void) const;
 
-    void addNode(nodePtr);
+    void addNode(const nodePtr&);
 
 #ifdef OUTPUT_XML
     void toXML(const xmlNodePtr, bool);

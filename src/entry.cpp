@@ -87,8 +87,8 @@ unsigned int Entry::getCode() const {
 /* **************************************************
  *
  ************************************************** */
-void Entry::setCode(unsigned int code) {
-    this->code = code;
+void Entry::setCode(unsigned int _code) {
+    this->code = _code;
 }
 
 /* **************************************************
@@ -109,14 +109,14 @@ Entry::getForm() {
 /* **************************************************
  *
  ************************************************** */
-void Entry::setForm(std::string form) {
-    this->form = form;
+void Entry::setForm(std::string _form) {
+    this->form = _form;
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Entry::getFeatures(void) const {
+featuresPtr Entry::getFeatures() const {
     return features;
 }
 

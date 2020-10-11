@@ -52,7 +52,7 @@ public:
 
     const std::vector<std::string> &getOutput(void) const;
 
-    void addForest(forestPtr);
+    void addForest(const forestPtr&);
 
     forestPtr getForest(unsigned int) const;
 

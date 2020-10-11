@@ -18,6 +18,7 @@
  ************************************************** */
 
 #include <iostream>
+#include <utility>
 #include "memoization-map.h"
 #include "features.h"
 #include "forestidentifier.h"
@@ -26,7 +27,7 @@
 /* ************************************************************
  * 
  ************************************************************ */
-MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string const key) const {
+MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string const& key) const {
     auto memItem = memoizationMap.find(key);
 #ifdef TRACE_MEMOIZATION
     if (memItem != memoizationMap.end()) {
@@ -41,20 +42,20 @@ MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string c
 /* ************************************************************
  * 
  ************************************************************ */
-MemoizationMap::unordered_map::const_iterator MemoizationMap::end(void) const {
+MemoizationMap::unordered_map::const_iterator MemoizationMap::end() const {
     return memoizationMap.end();
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
-void MemoizationMap::insert(std::string const key, featuresPtr features, forestIdentifierPtr forestIdentifier) {
+void MemoizationMap::insert(std::string const& key, featuresPtr features, forestIdentifierPtr forestIdentifier) {
 #ifdef TRACE_MEMOIZATION
     std::cout << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
     std::cout << "<BR>";
     std::cout << std::endl;
 #endif
-    memoizationValuePtr value = MemoizationValue::create(features, forestIdentifier);
+    memoizationValuePtr value = MemoizationValue::create(std::move(features), std::move(forestIdentifier));
     auto memItem = memoizationMap.find(key);
     if (memItem != memoizationMap.end()) {
         memItem->second.push_back(value);
@@ -68,7 +69,7 @@ void MemoizationMap::insert(std::string const key, featuresPtr features, forestI
 /* ************************************************************
  *
  ************************************************************ */
-void MemoizationMap::clear(void) {
+void MemoizationMap::clear() {
     memoizationMap.clear();
 }
 

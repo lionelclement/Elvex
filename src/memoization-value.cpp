@@ -18,14 +18,16 @@
  ************************************************** */
 
 #include "memoization-value.h"
+
+#include <utility>
 #include "messages.h"
 
 /* ************************************************************
  * 
  ************************************************************ */
 MemoizationValue::MemoizationValue(featuresPtr features, forestIdentifierPtr forestIdentifier) {
-    this->features = features;
-    this->forestIdentifier = forestIdentifier;
+    this->features = std::move(features);
+    this->forestIdentifier = std::move(forestIdentifier);
     NEW;
 }
 
@@ -40,19 +42,20 @@ MemoizationValue::~MemoizationValue() {
  * 
  ************************************************************ */
 memoizationValuePtr MemoizationValue::create(featuresPtr features, forestIdentifierPtr forestIdentifier) {
-    return memoizationValuePtr(new MemoizationValue(features, forestIdentifier));
+    return memoizationValuePtr(
+new MemoizationValue(std::move(features), std::move(forestIdentifier)));
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
-featuresPtr MemoizationValue::getFeatures(void) const {
+featuresPtr MemoizationValue::getFeatures() const {
     return this->features;
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
-forestIdentifierPtr MemoizationValue::getForestIdentifier(void) const {
+forestIdentifierPtr MemoizationValue::getForestIdentifier() const {
     return this->forestIdentifier;
 }

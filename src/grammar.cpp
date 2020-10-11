@@ -280,10 +280,10 @@ Grammar::toXML(xmlNodePtr nodeRoot)
    for (iter=nonTerminals.begin(); iter != nonTerminals.end(); ++iter) {
       xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
    }
-   xmlNodePtr r=xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
+   //xmlNodePtr r = xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
    ruleList::const_iterator iterRules;
    for (iterRules=rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
-      (*iterRules)->toXML(r);
+      (*iterRules)->toXML(/*r*/);
    }
 }
 #endif

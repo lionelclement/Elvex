@@ -206,7 +206,7 @@ rulePtr Rule::clone() const {
  *
  ************************************************** */
 void
-Rule::toXML(xmlNodePtr nodeRoot)
+Rule::toXML(/*xmlNodePtr nodeRoot*/)
 {
    // xmlNodePtr r=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"RULE", NULL);
    // xmlSetProp(r, (xmlChar*)"id", (xmlChar*)(toStr(id)).c_str());

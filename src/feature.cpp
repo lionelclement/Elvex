@@ -18,6 +18,8 @@
  ************************************************** */
 
 #include "feature.h"
+
+#include <utility>
 #include "environment.h"
 #include "value.h"
 #include "statement.h"
@@ -30,11 +32,11 @@
 /* ************************************************************
  * 
  ************************************************************ */
-Feature::Feature(enum Feature::Type type, bitsetPtr attribute, valuePtr value)
+Feature::Feature(enum Feature::Type type, bitsetPtr _attribute, valuePtr _value)
         : Id(0) {
     this->type = type;
-    this->attribute = attribute;
-    this->value = value;
+    this->attribute = std::move(_attribute);
+    this->value = std::move(_value);
     NEW;
 }
 
@@ -52,57 +54,57 @@ Feature::~Feature() {
 /* ************************************************************
  * 
  ************************************************************ */
-featurePtr Feature::create(Feature::Type type, bitsetPtr attribute, valuePtr value) {
-    return featurePtr(new Feature(type, attribute, value));
+featurePtr Feature::create(Feature::Type type, bitsetPtr _attribute, valuePtr _value) {
+    return featurePtr(new Feature(type, std::move(_attribute), std::move(_value)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-const valuePtr Feature::getValue(void) const {
+valuePtr Feature::getValue() const {
     return this->value;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Feature::Type Feature::getType(void) const {
+Feature::Type Feature::getType() const {
     return this->type;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Feature::setType(const Feature::Type type) {
-    this->type = type;
+void Feature::setType(const Feature::Type _type) {
+    this->type = _type;
 }
 
 /* **************************************************
  *
  ************************************************** */
-const bitsetPtr Feature::getAttribute(void) const {
+bitsetPtr Feature::getAttribute() const {
     return this->attribute;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Feature::attributeToString(void) const {
+std::string Feature::attributeToString() const {
     return attribute->toString();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Feature::setAttribute(bitsetPtr attribute) {
-    this->attribute = attribute;
+void Feature::setAttribute(bitsetPtr _attribute) {
+    this->attribute = std::move(_attribute);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Feature::setValue(valuePtr value) {
-    this->value = value;
+void Feature::setValue(valuePtr _value) {
+    this->value = std::move(_value);
 }
 
 /* **************************************************
@@ -183,7 +185,7 @@ void Feature::flatPrint(std::ostream &outStream) const {
 /* **************************************************
  *
  ************************************************** */
-void Feature::makeSerialString(void) {
+void Feature::makeSerialString() {
     switch (type) {
         case Feature::PRED:
             serialString = 'P';
@@ -272,7 +274,7 @@ bool Feature::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
-void Feature::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Feature::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
     switch (type) {
         case Feature::FORM:
         case Feature::PRED:
@@ -297,7 +299,7 @@ void Feature::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, 
 /* **************************************************
  *
  ************************************************** */
-bool Feature::findVariable(const bitsetPtr variable) {
+bool Feature::findVariable(const bitsetPtr& variable) {
     switch (type) {
         case Feature::FORM:
         case Feature::PRED:
@@ -316,7 +318,7 @@ bool Feature::findVariable(const bitsetPtr variable) {
 /* **************************************************
  *
  ************************************************** */
-bool Feature::containsVariable(void) {
+bool Feature::containsVariable() {
     bool result = false;
     if (variableFlag.containsVariable())
         return true;

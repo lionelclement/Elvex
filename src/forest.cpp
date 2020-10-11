@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <utility>
+
 #include "forest.h"
 #include "messages.h"
 #include "entry.h"
@@ -31,7 +33,7 @@
  ************************************************** */
 Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
         : Id(0) {
-    this->entry = entry;
+    this->entry = std::move(entry);
     this->from = from;
     this->to = to;
     if (from == to)
@@ -45,7 +47,7 @@ Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
  *
  ************************************************** */
 forestPtr Forest::create(entryPtr entry, unsigned int from, unsigned int to) {
-    return forestPtr(new Forest(entry, from, to));
+    return forestPtr(new Forest(std::move(entry), from, to));
 }
 
 /* **************************************************
@@ -53,8 +55,7 @@ forestPtr Forest::create(entryPtr entry, unsigned int from, unsigned int to) {
  ************************************************** */
 Forest::~Forest() {
     DELETE;
-    for (vectorNodes::iterator n = nodes.begin(); n != nodes.end(); ++n) {
-        nodePtr tmp = *n;
+    for (auto tmp : nodes) {
         if (tmp)
             tmp.reset();
     }
@@ -65,28 +66,28 @@ Forest::~Forest() {
 /* **************************************************
  *
  ************************************************** */
-const Forest::vectorNodes &Forest::getNodes(void) const {
+const Forest::vectorNodes &Forest::getNodes() const {
     return nodes;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Forest::getFrom(void) const {
+unsigned int Forest::getFrom() const {
     return from;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Forest::getTo(void) const {
+unsigned int Forest::getTo() const {
     return to;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Forest::isEmpty(void) const {
+bool Forest::isEmpty() const {
     return from == to;
 }
 
@@ -94,16 +95,16 @@ bool Forest::isEmpty(void) const {
  *
  ************************************************** */
 const std::vector<std::string> &
-Forest::getOutput(void) const {
+Forest::getOutput() const {
     return this->output;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Forest::addNode(nodePtr n) {
+void Forest::addNode(const nodePtr& node) {
     empty = false;
-    nodes.push_back(n);
+    nodes.push_back(node);
 }
 
 #ifdef OUTPUT_XML
@@ -152,9 +153,9 @@ Forest::toXML(xmlNodePtr nodeRoot, bool root)
 void Forest::generate(bool random, bool one) {
     if (isUnsetFlags(Flags::GEN)) {
         addFlags(Flags::GEN);
-        if (entry && entry->getForm().size() != 0) {
+        if (entry && !entry->getForm().empty()) {
             output.push_back(entry->getForm());
-        } else if (nodes.size() != 0) {
+        } else if (!nodes.empty()) {
             Forest::vectorNodes::const_iterator nodeIt = nodes.begin();
             nodePtr node;
             if (random) {
@@ -166,9 +167,8 @@ void Forest::generate(bool random, bool one) {
                     node = *nodeIt;
                 if (node->isUnsetFlags(Flags::GEN))
                     node->generate(random, one);
-                for (std::vector<std::string>::const_iterator s = node->getOutput().begin();
-                     s != node->getOutput().end(); ++s)
-                    output.push_back(*s);
+                for (const auto & s : node->getOutput())
+                    output.push_back(s);
                 if (random || one)
                     break;
                 ++nodeIt;

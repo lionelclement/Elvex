@@ -48,7 +48,7 @@ private:
         listPtr cdr;
     } pairp;
 
-    List(enum Type type, valuePtr value = valuePtr(), listPtr car = listPtr(), listPtr cdr = listPtr());
+    List(enum Type type, valuePtr _value = valuePtr(), listPtr _car = listPtr(), listPtr _cdr = listPtr());
 
     static listPtr create(void);
 
@@ -65,11 +65,11 @@ public:
 
     Type getType(void) const;
 
-    void setType(Type type);
+    void setType(Type _type);
 
     valuePtr getValue(void) const;
 
-    void setValue(valuePtr value);
+    void setValue(valuePtr _value);
 
     listPtr getCar(void) const;
 
@@ -99,14 +99,14 @@ public:
 
     void flatPrint(std::ostream &, bool par) const;
 
-    bool buildEnvironment(environmentPtr environment, listPtr otherList, bool acceptToFilterNULLVariables, bool root);
+    bool buildEnvironment(const environmentPtr& environment, const listPtr& otherList, bool acceptToFilterNULLVariables, bool root);
 
     void deleteAnonymousVariables(void);
 
     bool renameVariables(size_t);
 
     void
-    apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, statementPtr variable, statementPtr body,
+    apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
           bool &effect);
 
 #ifdef OUTPUT_XML
@@ -115,17 +115,17 @@ public:
 
     listPtr clone(void) const;
 
-    void enable(statementPtr, itemPtr, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
 
-    bool subsumes(listPtr, environmentPtr);
+    bool subsumes(const listPtr&, const environmentPtr&);
 
-    listPtr pushFront(valuePtr value);
+    listPtr pushFront(valuePtr _value);
 
-    listPtr pushBack(valuePtr value);
+    listPtr pushBack(valuePtr _value);
 
     bool containsVariable(void);
 
-    bool findVariable(bitsetPtr);
+    bool findVariable(const bitsetPtr&);
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 };

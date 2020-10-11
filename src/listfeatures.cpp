@@ -18,6 +18,7 @@
  ************************************************** */
 
 #include <climits>
+#include <utility>
 #include "listfeatures.h"
 #include "features.h"
 #include "shared_ptr.h"
@@ -26,7 +27,7 @@
 /* **************************************************
  *
  ************************************************** */
-ListFeatures::ListFeatures(void)
+ListFeatures::ListFeatures()
         : Id(0) {
     NEW;
 }
@@ -34,16 +35,16 @@ ListFeatures::ListFeatures(void)
 /* **************************************************
  *
  ************************************************** */
-ListFeatures::~ListFeatures(void) {
+ListFeatures::~ListFeatures() {
     DELETE;
-    for (std::vector<featuresPtr>::iterator i = listFeatures.begin(); i != listFeatures.end(); ++i)
-        i->reset();
+    for (auto & listFeature : listFeatures)
+        listFeature.reset();
 }
 
 /* **************************************************
  *
  ************************************************** */
-listFeaturesPtr ListFeatures::create(void) {
+listFeaturesPtr ListFeatures::create() {
     return listFeaturesPtr(new ListFeatures());
 }
 
@@ -57,7 +58,7 @@ featuresPtr ListFeatures::operator[](unsigned int j) {
 /* **************************************************
  *
  ************************************************** */
-void ListFeatures::push_back(featuresPtr fs) {
+void ListFeatures::push_back(const featuresPtr& fs) {
     listFeatures.push_back(fs);
 }
 
@@ -65,7 +66,7 @@ void ListFeatures::push_back(featuresPtr fs) {
  *
  ************************************************** */
 void ListFeatures::add(unsigned int j, featuresPtr fs) {
-    listFeatures[j] = fs;
+    listFeatures[j] = std::move(fs);
 }
 
 /* **************************************************

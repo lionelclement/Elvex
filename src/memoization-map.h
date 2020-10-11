@@ -39,9 +39,9 @@ public:
 
     unordered_map::const_iterator end(void) const;
 
-    unordered_map::const_iterator find(const std::string) const;
+    unordered_map::const_iterator find(const std::string&) const;
 
-    void insert(std::string, featuresPtr, forestIdentifierPtr);
+    void insert(const std::string&, featuresPtr, forestIdentifierPtr);
 
 };
 

@@ -49,7 +49,7 @@ Bitset::Bitset(std::bitset<MAXBITS> &data)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Bitset::Bitset(bitsetPtr bitset)
+Bitset::Bitset(const bitsetPtr& bitset)
         : std::bitset<MAXBITS>(*bitset) {
     NEW;
 }
@@ -78,7 +78,7 @@ bitsetPtr Bitset::create(std::bitset<MAXBITS> data) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bitsetPtr Bitset::create(bitsetPtr bs) {
+bitsetPtr Bitset::create(const bitsetPtr& bs) {
     return bitsetPtr(new Bitset(bs));
 }
 

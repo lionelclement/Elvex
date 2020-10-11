@@ -65,24 +65,24 @@ public:
 
     void printResults(std::ostream &, unsigned long int index, bool sep) const;
 
-    unsigned long int searchStatic(unsigned long int index, std::string) const;
+    unsigned long int searchStatic(unsigned long int index, const std::string&) const;
 
     void saveFsa();
 
     void loadFsa();
 
-    void openFiles(std::string mode);
+    void openFiles(const std::string& mode);
 
     void closeFiles();
 
-    std::string unif(std::string fs1, std::string fs2);
+    static std::string unif(const std::string& fs1, const std::string& fs2);
 
-    void addToData(std::string entry, std::string form, std::string features);
+    void addToData(const std::string& entry, const std::string& form, const std::string& features);
 
-    void addPattern(Lexicon &pattern, Lexicon &morpho, std::string input, std::string fs, std::string lemma,
-                    std::string pos);
+    void addPattern(Lexicon &pattern, Lexicon &morpho, const std::string& input, const std::string& fs, const std::string& lemma,
+                    const std::string& pos);
 
-    void addForms(std::string input, std::string inputSearch, std::string features/*, Lexicon &pattern*/, Lexicon &morpho);
+    void addForms(const std::string& input, std::string inputSearch, const std::string& features/*, Lexicon &pattern*/, Lexicon &morpho);
 
     void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
 

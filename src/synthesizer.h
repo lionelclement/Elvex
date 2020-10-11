@@ -142,7 +142,7 @@ public:
 
     void setCompactLexicon(class CompactLexicon *);
 
-    void addInput(std::string);
+    void addInput(const std::string&);
 
 #ifdef OUTPUT_XML
     void setOutXML(char *);
@@ -166,7 +166,7 @@ public:
 
     nodePtr getNodeRoot(void);
 
-    bool insertItemMap(const itemPtr);
+    bool insertItemMap(const itemPtr&);
 
     void eraseItemMap(const unsigned int);
 
@@ -188,20 +188,20 @@ public:
 
     bool getOne(void) const;
 
-    void printState(std::ostream &, itemSetPtr);
+    void printState(std::ostream &, const itemSetPtr&);
 
-    void close(class Parser &, itemSetPtr, unsigned int);
+    void close(class Parser &, const itemSetPtr&, unsigned int);
 
-    bool shift(class Parser &, itemSetPtr, unsigned int);
+    bool shift(class Parser &, const itemSetPtr&, unsigned int);
 
     void clear(void);
 
-    itemPtr createItem(itemPtr, unsigned int);
+    static itemPtr createItem(const itemPtr&, unsigned int);
 
     void generate(class Parser &);
 
     const entriesPtr
-    findCompactLexicon(class Parser &, unsigned int code, const std::string str, const unsigned int pred);
+    findCompactLexicon(class Parser &, unsigned int code, const std::string& str, const unsigned int pred);
 
 #ifdef MEMOIZATION
     std::string keyMemoization(itemPtr const, itemPtr const);

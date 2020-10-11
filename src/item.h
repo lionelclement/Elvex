@@ -53,18 +53,18 @@ private:
 
     Item(rulePtr rule, unsigned int index, statementsPtr statements);
 
-    Item(rulePtr rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
+    Item(const rulePtr& rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
 
-    Item(rulePtr rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements);
+    Item(const rulePtr& rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements);
 
     void makeSerialString(void);
 
 public:
     ~Item();
 
-    static itemPtr create(rulePtr, unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
+    static itemPtr create(const rulePtr&, unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
 
-    static itemPtr create(rulePtr, unsigned int, std::vector<unsigned int> &, statementsPtr);
+    static itemPtr create(const rulePtr&, unsigned int, std::vector<unsigned int> &, statementsPtr);
 
     unsigned int getLineno() const;
 
@@ -156,7 +156,7 @@ public:
 
     void setTrace(bool trace);
 
-    void addStatements(statementsPtr);
+    void addStatements(const statementsPtr&);
 
     void print(std::ostream &) const;
 
@@ -175,11 +175,11 @@ public:
     void apply(/*itemSetPtr state, */class Parser &parser, class Synthesizer *synthesizer);
 
     struct hash {
-        size_t operator()(itemPtr const) const;
+        size_t operator()(itemPtr const&) const;
     };
 
     struct equal_to {
-        bool operator()(itemPtr const, itemPtr const) const;
+        bool operator()(itemPtr const&, itemPtr const&) const;
     };
 };
 

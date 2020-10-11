@@ -56,8 +56,7 @@ Entries::Entries(const unsigned int codePos, const unsigned int codeLemma, const
  *
  ************************************************** */
 Entries::~Entries() {
-    for (auto i = entries.begin(); i != entries.end(); i++) {
-        entryPtr tmp = *i;
+    for (auto tmp : entries) {
         if (tmp)
             tmp.reset();
     }

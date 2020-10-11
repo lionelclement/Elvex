@@ -20,13 +20,13 @@
 .PHONY: all output debug
 
 SUBDIRS = lefff
-ELVEX = ../src/elvex
-ELVEXDEBUG = ../src/elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction 
-BUILDLEXICON = ../src/elvexbuildlexicon
-POSTEDITION = ../src/elvexpostedition
+ELVEX = ../bin/elvex
+ELVEXDEBUG = ../bin/elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction 
+BUILDLEXICON = ../bin/elvexbuildlexicon
+POSTEDITION = ../bin/elvexpostedition
 CLEANFILES = $(patsubst %.input, %.output, $(wildcard *.input)) $(patsubst %.input, %.xml, $(wildcard *.input)) $(patsubst %.input, %.err, $(wildcard *.input)) $(patsubst %.input, %.html, $(wildcard *.input)) $(patsubst %.input, %.jpg, $(wildcard *.input))
 
-all:
+all: en-1.1.0.fsa
 
 check: $(ELVEX) $(POSTEDITION) lefff/lefff.fsa Makefile
 	@$(ELVEX) -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.3.grammar -lexiconFile fr-1.0.3.local-lexicon "letter [PRED:letter, i:[FORM:\"`whoami`\", number:sg, gender:ms], ii:[PRED:_installer, i:[PRED:__pro, number:pl, person:two], ii:[FORM:\"Elvex\"], tense:recent_past], iii:[FORM:\"Lionel Clément\"]]" |tr '@' "\n" | $(POSTEDITION) | sed -e 's/^ *//'

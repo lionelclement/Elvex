@@ -42,7 +42,7 @@
  *
  ************************************************** */
 Synthesizer::Synthesizer() {
-    this->compactLexicon = NULL;
+    this->compactLexicon = nullptr;
     this->maxLength = MAXLENGTH;
     this->maxUsages = MAXUSAGES;
     this->maxCardinal = MAXCARDINAL;
@@ -65,42 +65,42 @@ Synthesizer::Synthesizer() {
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::~Synthesizer(void) {
+Synthesizer::~Synthesizer() {
     DELETE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTrace(void) const {
+bool Synthesizer::getTrace() const {
     return trace;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTrace(bool trace) {
-    this->trace = trace;
+void Synthesizer::setTrace(bool _trace) {
+    this->trace = _trace;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::ItemSet_map::const_iterator Synthesizer::begin(void) const {
+Synthesizer::ItemSet_map::const_iterator Synthesizer::begin() const {
     return states.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::ItemSet_map::const_iterator Synthesizer::end(void) const {
+Synthesizer::ItemSet_map::const_iterator Synthesizer::end() const {
     return states.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Synthesizer::size(void) const {
+size_t Synthesizer::size() const {
     return states.size();
 }
 
@@ -142,70 +142,70 @@ void Synthesizer::setGrammarFileName(char *name) {
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getInputFileName(void) const {
+std::string Synthesizer::getInputFileName() const {
     return inputFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getLexiconFileName(void) const {
+std::string Synthesizer::getLexiconFileName() const {
     return lexiconFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getCompactLexiconFileName(void) const {
+std::string Synthesizer::getCompactLexiconFileName() const {
     return compactLexiconFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getCompactDirectoryName(void) const {
+std::string Synthesizer::getCompactDirectoryName() const {
     return compactDirectoryName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getGrammarFileName(void) const {
+std::string Synthesizer::getGrammarFileName() const {
     return grammarFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxLength(unsigned int maxLength) {
-    this->maxLength = maxLength;
+void Synthesizer::setMaxLength(unsigned int _maxLength) {
+    this->maxLength = _maxLength;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxUsages(unsigned int maxUsages) {
-    this->maxUsages = maxUsages;
+void Synthesizer::setMaxUsages(unsigned int _maxUsages) {
+    this->maxUsages = _maxUsages;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxCardinal(unsigned int maxCardinal) {
-    this->maxCardinal = maxCardinal;
+void Synthesizer::setMaxCardinal(unsigned int _maxCardinal) {
+    this->maxCardinal = _maxCardinal;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::getMaxCardinal(void) {
+unsigned int Synthesizer::getMaxCardinal() {
     return this->maxCardinal;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::getMaxUsages(void) {
+unsigned int Synthesizer::getMaxUsages() {
     return this->maxUsages;
 }
 
@@ -213,56 +213,56 @@ unsigned int Synthesizer::getMaxUsages(void) {
  *
  ************************************************** */
 class CompactLexicon *
-Synthesizer::getCompactLexicon(void) const {
+Synthesizer::getCompactLexicon() const {
     return compactLexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactLexicon(class CompactLexicon *compactLexicon) {
-    this->compactLexicon = compactLexicon;
+void Synthesizer::setCompactLexicon(class CompactLexicon *_compactLexicon) {
+    this->compactLexicon = _compactLexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getReduceAll(void) const {
+bool Synthesizer::getReduceAll() const {
     return reduceAll;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setReduceAll(const bool reduceAll) {
-    this->reduceAll = reduceAll;
+void Synthesizer::setReduceAll(const bool _reduceAll) {
+    this->reduceAll = _reduceAll;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setRandom(const bool random) {
-    this->random = random;
+void Synthesizer::setRandom(const bool _random) {
+    this->random = _random;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getRandom(void) const {
+bool Synthesizer::getRandom() const {
     return this->random;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setOne(const bool one) {
-    this->one = one;
+void Synthesizer::setOne(const bool _one) {
+    this->one = _one;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getOne(void) const {
+bool Synthesizer::getOne() const {
     return this->one;
 }
 
@@ -388,14 +388,14 @@ bool Synthesizer::getTraceAction(void)
 /* **************************************************
  *
  ************************************************** */
-std::list<std::string> &Synthesizer::getInputs(void) {
+std::list<std::string> &Synthesizer::getInputs() {
     return this->inputs;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::insertItemMap(const itemPtr item) {
+bool Synthesizer::insertItemMap(const itemPtr& item) {
     return this->itemMap.insert(std::make_pair(item->getId(), item)).second;
 }
 
@@ -416,28 +416,28 @@ itemPtr Synthesizer::getItemMap(const unsigned int id) {
 /* **************************************************
  *
  ************************************************** */
-nodePtr Synthesizer::getNodeRoot(void) {
+nodePtr Synthesizer::getNodeRoot() {
     return nodeRoot;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::addInput(std::string input) {
+void Synthesizer::addInput(const std::string& input) {
     return this->inputs.push_back(input);
 }
 
 /* **************************************************
  *
  ************************************************** */
-class ForestMap Synthesizer::getForestMap(void) {
+class ForestMap Synthesizer::getForestMap() {
     return this->forestMap;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::printState(std::ostream &outStream, itemSetPtr state) {
+void Synthesizer::printState(std::ostream &outStream, const itemSetPtr& state) {
     outStream << "Q" << state->getId();
     state->print(outStream);
 }
@@ -445,7 +445,7 @@ void Synthesizer::printState(std::ostream &outStream, itemSetPtr state) {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Synthesizer::createItem(itemPtr item, unsigned int row) {
+itemPtr Synthesizer::createItem(const itemPtr& item, unsigned int row) {
     itemPtr it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
                               item->getStatements() ? item->getStatements()->clone(
                                       Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED) : statementsPtr());
@@ -486,14 +486,14 @@ void Synthesizer::clear() {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
+void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int row) {
     bool modification;
     do {
         loop:
         modification = false;
 
         // Iterate through list
-        for (ItemSet::const_iterator actualItem = state->begin();
+        for (auto actualItem = state->begin();
              actualItem != state->end() && !modification; ++actualItem) {
 
             if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM))
@@ -631,14 +631,13 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                         inheritedSonFeatures->deleteAnonymousVariables();
                     }
 
-                    for (Grammar::ruleList::const_iterator iterRules = parser.getGrammar().getRules().begin();
-                         iterRules != parser.getGrammar().getRules().end(); ++iterRules) {
-                        if (((*iterRules)->getLhs()->getCode() == (*actualItem)->getCurrentTerm()->getCode())) {
+                    for (auto iterRules : parser.getGrammar().getRules()) {
+                        if ((iterRules->getLhs()->getCode() == (*actualItem)->getCurrentTerm()->getCode())) {
 
                             itemPtr it;
-                            (*iterRules)->incUsages(this);
-                            it = Item::create((*iterRules)->clone(), 0, 0,
-                                              (*iterRules)->getStatements() ? (*iterRules)->getStatements()->clone(0)
+                            iterRules->incUsages(this);
+                            it = Item::create(iterRules->clone(), 0, 0,
+                                              iterRules->getStatements() ? iterRules->getStatements()->clone(0)
                                                                             : statementsPtr());
                             it->addRanges(row);
                             //it->renameVariables(it->getId());
@@ -653,7 +652,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
 #endif
 
                             // record the item
-                            ItemSet::const_iterator found = state->find(it);
+                            auto found = state->find(it);
                             if (found != state->end()) {
                                 (*found)->addRef((*actualItem)->getId());
                                 it.reset();
@@ -698,7 +697,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                     if (!(*actualItem)->getSynthesizedFeatures()->isBottom()) {
 
                         // If Axiom reduced or debug Transients
-                        if (reduceAll || (*actualItem)->getRefs().size() == 0) {
+                        if (reduceAll || (*actualItem)->getRefs().empty()) {
 #ifdef TRACE_OPTION
                             if (traceReduce) {
                                std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
@@ -744,18 +743,17 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                                 nodeRoot->addForest(forestFound);
                             }
                             nodePtr node = Node::create();
-                            for (unsigned int k = 0; k < (*actualItem)->getForestIdentifiers().size(); ++k) {
+                            for (auto & k : (*actualItem)->getForestIdentifiers()) {
                                 ForestMap::map::const_iterator forestMapIt = forestMap.find(
-                                        (*actualItem)->getForestIdentifiers()[k]);
+                                        k);
                                 if (forestMapIt != forestMap.end()) {
                                     node->getForests().push_back((*forestMapIt).second);
                                 }
                             }
                             forestFound->addNode(node);
                         }
-                        for (std::set<unsigned int>::const_iterator ref = (*actualItem)->getRefs().begin();
-                             ref != (*actualItem)->getRefs().end(); ++ref) {
-                            itemPtr previousItem = getItemMap(*ref);
+                        for (auto ref : (*actualItem)->getRefs()) {
+                            itemPtr previousItem = getItemMap(ref);
                             if (!previousItem) {
                                 FATAL_ERROR_UNEXPECTED
                             } else {
@@ -840,9 +838,9 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
 
                                     // On transmet le contexte de previousItem
                                     nodePtr node = Node::create();
-                                    for (unsigned int k = 0; k < (*actualItem)->getForestIdentifiers().size(); ++k) {
+                                    for (auto & k : (*actualItem)->getForestIdentifiers()) {
                                         ForestMap::map::const_iterator forestMapIt = forestMap.find(
-                                                (*actualItem)->getForestIdentifiers()[k]);
+                                                k);
                                         if (forestMapIt == forestMap.end()) {
                                             FATAL_ERROR_UNEXPECTED
                                         }
@@ -881,7 +879,7 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
                                         std::cout << std::endl;
                                     }
 
-                                    ItemSet::const_iterator found = states[row]->find(it);
+                                    auto found = states[row]->find(it);
                                     if (found != states[row]->end()) {
                                         (*found)->addRefs(previousItem->getRefs());
                                         it.reset();
@@ -921,21 +919,21 @@ void Synthesizer::close(Parser &parser, itemSetPtr state, unsigned int row) {
             }
         }
     } while (modification);
-    for (ItemSet::const_iterator i = state->begin(); i != state->end(); ++i)
-        (*i)->subFlags(Flags::SEEN);
+    for (const auto & i : *state)
+        i->subFlags(Flags::SEEN);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row) {
+bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned int row) {
     bool modificationOnce = false;
     bool modification;
     do {
         modification = false;
 
         // Iterate through list
-        for (ItemSet::const_iterator actualItem = state->begin();
+        for (auto actualItem = state->begin();
              actualItem != state->end() && !modification; ++actualItem) {
             if ((*actualItem)->isSetFlags(Flags::SEEN))
                 continue;
@@ -975,7 +973,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                      */
                     Parser::entries_map_map::const_iterator foundCode = parser.getLexicon().find(
                             (*actualItem)->getCurrentTerm()->getCode());
-                    if (foundCode != parser.getLexicon().end() && (foundCode->second->size() != 0)) {
+                    if (foundCode != parser.getLexicon().end() && (!foundCode->second->empty())) {
                         Parser::entries_map *listPred = foundCode->second;
                         if (listPred) {
                             Parser::entries_map::const_iterator found;
@@ -987,7 +985,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                 entriesPtr entries = entriesPtr();
 
                                 // With FORM
-                                if ((stage == 2) && (form.size() == 0))
+                                if ((stage == 2) && (form.empty()))
                                     continue;
 
                                 // With PRED
@@ -1032,7 +1030,7 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                 // Found !
                                 if (entries) {
                                     cont = false;
-                                    Entries::vector::const_iterator entryIt = entries->begin();
+                                    auto entryIt = entries->begin();
                                     int tryRandom = 0;
                                     while (entryIt != entries->end()) {
                                         entryPtr entry = *entryIt;
@@ -1090,13 +1088,13 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
                                             if (stage == 2)
                                                 word = Entry::create(entry->getCode(), UINT_MAX, form, resultFeatures);
                                             else {
-                                                size_t found = entry->getForm().find('$');
-                                                if (found != std::string::npos) {
+                                                size_t _found = entry->getForm().find('$');
+                                                if (_found != std::string::npos) {
                                                     bool effect = false;
-                                                    std::string form = entry->getForm();
-                                                    it->getEnvironment()->replaceVariables(form, effect);
+                                                    std::string _form = entry->getForm();
+                                                    it->getEnvironment()->replaceVariables(_form, effect);
 
-                                                    word = Entry::create(entry->getCode(), entry->getCodePred(), form,
+                                                    word = Entry::create(entry->getCode(), entry->getCodePred(), _form,
                                                                          resultFeatures);
                                                 } else {
                                                     word = Entry::create(entry->getCode(), entry->getCodePred(),
@@ -1158,8 +1156,8 @@ bool Synthesizer::shift(class Parser &parser, itemSetPtr state, unsigned int row
             }
         }
     } while (modification);
-    for (ItemSet::const_iterator i = state->begin(); i != state->end(); ++i)
-        (*i)->subFlags(Flags::SEEN);
+    for (const auto & i : *state)
+        i->subFlags(Flags::SEEN);
     return modificationOnce;
 }
 
@@ -1173,9 +1171,8 @@ void Synthesizer::generate(class Parser &parser) {
     states.clear();
     itemMap.clear();
     forestMap.clear();
-    for (Grammar::ruleList::const_iterator iterRules = parser.getGrammar().getRules().begin();
-         iterRules != parser.getGrammar().getRules().end(); ++iterRules) {
-        (*iterRules)->resetUsages();
+    for (const auto & iterRules : parser.getGrammar().getRules()) {
+        iterRules->resetUsages();
     }
 
     std::ofstream outfile;
@@ -1242,7 +1239,7 @@ void Synthesizer::generate(class Parser &parser) {
 /* **************************************************
  *
  ************************************************** */
-const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned int code, const std::string codeStr,
+const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned int code, const std::string& codeStr,
                                                  const unsigned int pred) {
     unsigned long int info = ~0UL;
     std::string str;
@@ -1280,18 +1277,18 @@ const entriesPtr Synthesizer::findCompactLexicon(Parser &parser, const unsigned 
 
             if (!parser.parseBuffer("#", features, "features")) {
                 if (parser.getLocalFeatures()) {
-                    unsigned int pred = parser.getLocalFeatures()->assignPred();
-                    entryPtr localEntry = Entry::create(0, pred, std::string(), parser.getLocalFeatures());
+                    unsigned int _pred = parser.getLocalFeatures()->assignPred();
+                    entryPtr _localEntry = Entry::create(0, _pred, std::string(), parser.getLocalFeatures());
 
-                    localEntry->setCode(code);
-                    localEntry->setForm(form);
-                    std::string localEntrySerialString = localEntry->peekSerialString();
-                    Parser::entry_map::iterator found = parser.getMapLocalEntry().find(localEntrySerialString);
+                    _localEntry->setCode(code);
+                    _localEntry->setForm(form);
+                    std::string localEntrySerialString = _localEntry->peekSerialString();
+                    auto found = parser.getMapLocalEntry().find(localEntrySerialString);
                     if (found != parser.getMapLocalEntry().end()) {
                         entries->add(found->second);
                     } else {
-                        parser.getMapLocalEntry().insert(std::make_pair(localEntrySerialString, localEntry));
-                        entries->add(localEntry);
+                        parser.getMapLocalEntry().insert(std::make_pair(localEntrySerialString, _localEntry));
+                        entries->add(_localEntry);
                     }
                 }
             } else {

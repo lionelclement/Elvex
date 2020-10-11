@@ -64,7 +64,7 @@ public:
     featuresPtr features; // pour encoder les SF
 
 private:
-    Value(const enum Type, std::string);
+    Value(const enum Type, const std::string&);
 
     Value(const enum Type, unsigned int = 0, double = 0.0, bitsetPtr bitset = bitsetPtr(), featuresPtr = featuresPtr(),
           listPtr lst = listPtr());
@@ -80,7 +80,7 @@ public:
 
     static valuePtr create(const enum Type, unsigned int);
 
-    static valuePtr create(const enum Type, std::string);
+    static valuePtr create(const enum Type, const std::string&);
 
     static valuePtr create(const enum Type, bitsetPtr);
 
@@ -112,13 +112,13 @@ public:
     void toXML(xmlNodePtr) const;
 #endif
 
-    bool buildEnvironment(environmentPtr, valuePtr, bool, bool);
+    bool buildEnvironment(const environmentPtr&, const valuePtr&, bool, bool);
 
-    bool subsumes(valuePtr, environmentPtr);
+    bool subsumes(const valuePtr&, const environmentPtr&);
 
     valuePtr clone(void);
 
-    void deleteAnonymousVariables(void);
+    void deleteAnonymousVariables(void) const;
 
     bool renameVariables(size_t);
 
@@ -144,16 +144,16 @@ public:
 
     bool isList(void) const;
 
-    void enable(statementPtr root, itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer *synthesizer, bool &effect, bool on);
 
     bool eq(valuePtr) const;
 
-    bool lt(valuePtr) const;
+    bool lt(const valuePtr&) const;
 
-    bool findVariable(bitsetPtr);
+    bool findVariable(const bitsetPtr&) const;
 
     void
-    apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, statementPtr variable, statementPtr body,
+    apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
           bool &effect);
 
     bool containsVariable(void);

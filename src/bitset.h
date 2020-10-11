@@ -47,7 +47,7 @@ private:
 
     explicit Bitset(std::bitset<MAXBITS> &);
 
-    explicit Bitset(bitsetPtr);
+    explicit Bitset(const bitsetPtr&);
 
     void makeSerialString() override;
 
@@ -58,7 +58,7 @@ public:
 
     static bitsetPtr create(std::bitset<MAXBITS>);
 
-    static bitsetPtr create(bitsetPtr);
+    static bitsetPtr create(const bitsetPtr&);
 
     std::string toString() const;
 

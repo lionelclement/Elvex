@@ -101,7 +101,7 @@ public:
     std::string toString() const;
 
 #ifdef OUTPUT_XML
-    void toXML(xmlNodePtr);
+    void toXML(/*xmlNodePtr*/);
 #endif
 
     void addDefaults(void);

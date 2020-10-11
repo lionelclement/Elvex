@@ -41,7 +41,7 @@ public:
 
     static listFeaturesPtr create(void);
 
-    void push_back(featuresPtr);
+    void push_back(const featuresPtr&);
 
     void add(unsigned int, featuresPtr);
 
