@@ -34,7 +34,7 @@
 #define PACKAGE_VERSION "?.?.?"
 #endif
 
-Parser parser;
+Parser parser = Parser();
 
 /* **************************************************
  *
@@ -105,7 +105,7 @@ int main(int argn, char **argv) {
             char line[MAXSTRING];
             while (inputFile.getline(line, MAXSTRING)) {
                 if ((line[0] != '#') && strchr(line, '\t')) {
-                    //std::cerr << "/line:/" << line << '/' << std::endl;
+                    //std::cerr << "*** line:" << line << std::endl;
                     std::string input;
                     std::string output;
 
@@ -124,7 +124,7 @@ int main(int argn, char **argv) {
 
                         std::stringstream stream;
                         stream << form;
-                        //std::string input = stream.str();
+                        std::string _input = stream.str();
 
                         stream.str("");
                         stream << form;
@@ -139,7 +139,8 @@ int main(int argn, char **argv) {
                             FATAL_ERROR(stream.str())
                         }
                         features = parser.getLocalFeatures();
-                        parser.addMacros(input, features);
+                        //features->flatPrint(std::cerr);
+                        parser.addMacros(_input, features);
                     } else {
                         char form[MAXSTRING];
                         strcpy(form, line);
@@ -187,15 +188,16 @@ int main(int argn, char **argv) {
             inputFile.close();
         }
 
+        //parser.listMacros();
 
         if (!patternFile.empty()) {
             std::ifstream inputFile;
             inputFile.open(patternFile.c_str());
             char line[MAXSTRING];
             while (inputFile.getline(line, MAXSTRING)) {
-                if (strchr(line, '\t') && strchr(line, '#')) {
+                if ((line[0] != '#') && strchr(line, '\t') && strchr(line, '#')) {
 
-                    //std::cerr << "/line:/" << line << '/' << std::endl;
+                    //std::cerr << "*** line:" << line << std::endl;
 
                     char lexeme[MAXSTRING];
                     strcpy(lexeme, line);

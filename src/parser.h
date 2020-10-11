@@ -39,13 +39,14 @@ public:
     // verb => (manger => (mangions, mange|mange))
     typedef std::map<unsigned int, entriesPtr> entries_map;
     typedef std::map<unsigned int, entries_map *> entries_map_map;
-    typedef std::unordered_map<std::string, featuresPtr> features_map;
+
+    void listMacros();
 
 private:
     Grammar grammar;
     entries_map_map lexicon;
     entry_map mapLocalEntry;
-    features_map macros;
+    std::unordered_map<std::string, featuresPtr> macros;
     featuresPtr startFeatures;
     termPtr startTerm;
     bool verbose;
@@ -54,57 +55,57 @@ private:
     std::deque<unsigned int> linenos;
 
 public:
-    Parser(void);
+    Parser();
 
-    ~Parser(void);
+    ~Parser();
 
     void pushBufferName(std::string);
 
-    std::string popBufferName(void);
+    std::string popBufferName();
 
     void pushLineno(unsigned int);
 
-    unsigned int popLineno(void);
+    unsigned int popLineno();
 
-    unsigned int getTopLineno(void);
+    unsigned int getTopLineno();
 
-    class Grammar &getGrammar(void);
+    class Grammar &getGrammar();
 
-    std::string getTopBufferName(void);
+    std::string getTopBufferName();
 
-    termPtr getStartTerm(void) const;
+    termPtr getStartTerm() const;
 
     void setStartTerm(termPtr);
 
     void setStartFeatures(featuresPtr);
 
-    featuresPtr getStartFeatures(void) const;
+    featuresPtr getStartFeatures() const;
 
-    featuresPtr getLocalFeatures(void) const;
+    featuresPtr getLocalFeatures() const;
 
     void setLocalFeatures(featuresPtr);
 
-    entries_map_map &getLexicon(void);
+    entries_map_map &getLexicon();
 
     void setLexicon(entries_map_map &);
 
     entries_map_map::const_iterator findLexicon(unsigned int i) const;
 
-    entries_map_map::const_iterator beginLexicon(void) const;
+    entries_map_map::const_iterator beginLexicon() const;
 
-    entries_map_map::const_iterator endLexicon(void) const;
+    entries_map_map::const_iterator endLexicon() const;
 
     void setVerbose(bool);
 
-    bool getVerbose(void) const;
+    bool getVerbose() const;
 
-    entry_map &getMapLocalEntry(void);
+    entry_map &getMapLocalEntry();
 
     void printLexicon(std::ostream &) const;
 
     void addMacros(std::string, featuresPtr);
 
-    featuresPtr findMacros(std::string);
+    featuresPtr findMacros(const std::string&);
 
 public:
     unsigned int parseFile(std::string prefix, std::string fileName);
@@ -114,6 +115,7 @@ public:
 
 private:
     unsigned int parseString(std::string buffer);
+
 };
 
 #endif // ELVEX_PARSER_H

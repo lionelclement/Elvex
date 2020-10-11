@@ -42,7 +42,7 @@
 #define PACKAGE_VERSION "?.?.?"
 #endif
 
-Parser parser;
+Parser parser = Parser();
 Synthesizer synthesizer = Synthesizer();
 
 time_t before, after;

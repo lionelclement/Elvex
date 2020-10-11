@@ -31,7 +31,7 @@
 #ifdef RESTORE_MEMORY
 #define DELETE {}
 #else
-#define DELETE {std::cout << "";}
+#define DELETE {std::cout << ""; return;}
 #endif
 #endif
 

@@ -1,9 +1,9 @@
-//try it with "_lemma#pos"
-//form	pos	lemma	features
-// @id: features;
-/************************************************************
-* Patterns
-************************************************************/
+# try it with "_lemma#pos"
+# form	pos	lemma	features
+# @id: features;
+# ***********************************************************
+# Patterns
+# ***********************************************************/
 @m	gender:ms
 @f	gender:fm
 @_1	person:one
@@ -22,9 +22,9 @@
 @_3ms	person:three,number:sg,gender:ms
 @_3fs	person:three,number:sg,number:sg,gender:fm
 
-/************************************************************
-* Verbs
-************************************************************/
+# ***********************************************************
+#  Verbs
+# ***********************************************************/
 feel	verb	TO_FEEL	vtense:present, tensed:true, SUBJECT:[@_12s]
 feel	verb	TO_FEEL	vtense:present, tensed:true, SUBJECT:[@p]
 feels	verb	TO_FEEL	vtense:present, tensed:true, SUBJECT:[@_3s]
@@ -121,9 +121,9 @@ told	verb	TO_TELL	vtense:past_participle, tensed:false
 telling	verb	TO_TELL	vtense:present_participle, tensed:false
 tell	verb	TO_TELL	vtense:infinitive, tensed:false
 
-/************************************************************
-* Nouns
-************************************************************/
+# ***********************************************************
+#  Nouns
+# ***********************************************************/
 pain	common_noun	PAIN	
 sadness	common_noun	SADNESS	
 hope	common_noun	HOPE	
@@ -133,20 +133,20 @@ divine blessings	common_noun	DIVINE_BLESSINGS
 chair	common_noun	CHAIR	
 chair man	common_noun	CHAIR_MAN	@s
 
-/************************************************************
-* Adjectives
-************************************************************/
+# ***********************************************************
+#  Adjectives
+# ***********************************************************/
 nice	adj	NICE	
 bad	adj	BAD	
 good	adj	GOOD	
 happy	adj	HAPPY	
 
-/************************************************************
-* Adverbs
-************************************************************/
+# ***********************************************************
+#  Adverbs
+# ***********************************************************/
 very	adv	VERY	
 
-// end
+# end
 
 
 

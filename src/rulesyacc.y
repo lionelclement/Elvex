@@ -1130,7 +1130,7 @@ features_components:
 	  featuresPtr found = parser.findMacros(*$2);
 	  $$ = new featuresPtr(Features::create());
 	  if (!(found)){
-	    std::ostringstream oss; oss << "unknown macro: @" << *$2;
+	    std::ostringstream oss; oss << "***unknown macro: @" << *$2;
 	    yyerror((char*)oss.str().c_str());
 	  } else {
 	    (*$$)->add(found->clone());

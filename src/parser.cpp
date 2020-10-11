@@ -20,15 +20,16 @@
 #include <climits>
 #include <stack>
 #include <string>
+#include <utility>
 #include "parser.h"
 #include "vartable.h"
 #include "messages.h"
 
-extern unsigned int rulesparse(void);
+extern unsigned int rulesparse();
 
-extern void init_buffer(void);
+extern void init_buffer();
 
-extern void delete_buffer(void);
+extern void delete_buffer();
 
 extern void scan_string(std::string);
 
@@ -37,7 +38,7 @@ extern void scan_string(std::string);
  ************************************************** */
 Parser::Parser() {
     this->startFeatures = featuresPtr();
-    this->startTerm = NULL;
+    this->startTerm = nullptr;
     this->localFeatures = featuresPtr();
     this->verbose = false;
     NEW;
@@ -54,7 +55,7 @@ Parser::~Parser() {
  *
  ************************************************** */
 class Grammar &
-Parser::getGrammar(void) {
+Parser::getGrammar() {
     return this->grammar;
 }
 
@@ -68,35 +69,35 @@ void Parser::setStartFeatures(featuresPtr f) {
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Parser::getStartFeatures(void) const {
+featuresPtr Parser::getStartFeatures() const {
     return this->startFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-termPtr Parser::getStartTerm(void) const {
+termPtr Parser::getStartTerm() const {
     return startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setStartTerm(termPtr startTerm) {
-    this->startTerm = startTerm;
+void Parser::setStartTerm(termPtr _startTerm) {
+    this->startTerm = _startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setVerbose(const bool verbose) {
-    this->verbose = verbose;
+void Parser::setVerbose(const bool _verbose) {
+    this->verbose = _verbose;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Parser::getVerbose(void) const {
+bool Parser::getVerbose() const {
     return this->verbose;
 }
 
@@ -104,21 +105,21 @@ bool Parser::getVerbose(void) const {
  *
  ************************************************** */
 Parser::entries_map_map &
-Parser::getLexicon(void) {
+Parser::getLexicon() {
     return lexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setLexicon(entries_map_map &lexicon) {
-    this->lexicon = lexicon;
+void Parser::setLexicon(entries_map_map &_lexicon) {
+    this->lexicon = _lexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entry_map &Parser::getMapLocalEntry(void) {
+Parser::entry_map &Parser::getMapLocalEntry() {
     return mapLocalEntry;
 }
 
@@ -132,21 +133,21 @@ Parser::entries_map_map::const_iterator Parser::findLexicon(unsigned int i) cons
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::beginLexicon(void) const {
+Parser::entries_map_map::const_iterator Parser::beginLexicon() const {
     return lexicon.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::endLexicon(void) const {
+Parser::entries_map_map::const_iterator Parser::endLexicon() const {
     return lexicon.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Parser::getLocalFeatures(void) const {
+featuresPtr Parser::getLocalFeatures() const {
     return localFeatures;
 }
 
@@ -167,7 +168,7 @@ void Parser::pushBufferName(std::string name) {
 /* **************************************************
  *
  ************************************************** */
-std::string Parser::popBufferName(void) {
+std::string Parser::popBufferName() {
     std::string str = bufferNames.front();
     this->bufferNames.pop_front();
     return str;
@@ -176,7 +177,7 @@ std::string Parser::popBufferName(void) {
 /* **************************************************
  *
  ************************************************** */
-std::string Parser::getTopBufferName(void) {
+std::string Parser::getTopBufferName() {
     return bufferNames.front();
 }
 
@@ -190,7 +191,7 @@ void Parser::pushLineno(unsigned int i) {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::popLineno(void) {
+unsigned int Parser::popLineno() {
     unsigned int i = linenos.front();
     linenos.pop_front();
     return i;
@@ -199,7 +200,7 @@ unsigned int Parser::popLineno(void) {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::getTopLineno(void) {
+unsigned int Parser::getTopLineno() {
     return linenos.front();
 }
 
@@ -235,26 +236,15 @@ void Parser::printLexicon(std::ostream &out) const {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Parser::addMacros(std::string str, featuresPtr features) {
-    /*CERR_LINE
-    std::cerr << "insert @" << str << ":";
-    if (features)
-       features->print(std::cerr);
-    else
-       std::cerr << "NULL";
-    std::cerr << std::endl;
-    */
-    macros.insert(std::pair<std::string, featuresPtr>(str, features));
+void Parser::addMacros(std::string key, featuresPtr features) {
+    macros.insert(std::pair<std::string, featuresPtr>(key, features));
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-featuresPtr Parser::findMacros(std::string str) {
-    /*
-       CERR_LINE
-       std::cerr << "find @" << str << ":";
-    */
+featuresPtr Parser::findMacros(const std::string& str) {
+    //std::cerr << "find @" << str << ":";
     std::unordered_map<std::string, featuresPtr>::const_iterator found;
     found = macros.find(str);
     if (found == macros.end()) {
@@ -294,3 +284,8 @@ unsigned int Parser::parseString(std::string buffer) {
     return result;
 }
 
+void Parser::listMacros() {
+    for (auto iterator : macros) {
+        std::cerr << "\"" << iterator.first << "\"" << std::endl;
+    }
+}
