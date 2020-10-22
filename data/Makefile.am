@@ -29,7 +29,7 @@ CLEANFILES = $(patsubst %.input, %.output, $(wildcard *.input)) $(patsubst %.inp
 all: en-1.1.0.fsa
 
 check: $(ELVEX) $(POSTEDITION) lefff/lefff.fsa Makefile
-	@$(ELVEX) -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.3.grammar -lexiconFile fr-1.0.3.local-lexicon "letter [PRED:letter, i:[FORM:\"`whoami`\", number:sg, gender:ms], ii:[PRED:_installer, i:[PRED:__pro, number:pl, person:two], ii:[FORM:\"Elvex\"], tense:recent_past], iii:[FORM:\"Lionel Clément\"]]" |tr '@' "\n" | $(POSTEDITION) | sed -e 's/^ *//'
+	@$(ELVEX) -compactLexiconDirectory lefff -compactLexiconFile lefff -grammarFile fr-1.0.3.grammar -lexiconFile fr-1.0.3.local-lexicon "letter [PRED:letter, i:[FORM:\"`whoami`\", number:sg, gender:ms], ii:[PRED:_installer, i:[PRED:__pro, number:pl, person:two], ii:[FORM:\"elvex\"], tense:recent_past], iii:[FORM:\"Lionel Clément\"]]" |tr '@' "\n" | $(POSTEDITION) | sed -e 's/^ *//'
 
 clean:
 	rm $(CLEANFILES)

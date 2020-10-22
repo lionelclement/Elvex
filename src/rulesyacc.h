@@ -198,7 +198,7 @@ typedef union YYSTYPE
   std::list<  bitsetPtr > *list_args;
  }
 /* Line 1529 of yacc.c.  */
-#line 202 "/Users/clement/workspace/Elvex/src/rulesyacc.h"
+#line 202 "/Users/clement/workspace/elvex/src/rulesyacc.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
