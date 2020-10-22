@@ -25,11 +25,6 @@
 #include "messages.hpp"
 #include "shared_ptr.hpp"
 
-//const std::bitset<MAXBITS> Bitset::LEXBITSET = 1ul;
-//const std::bitset<MAXBITS> Bitset::ARGBITSET = 2ul;
-//const std::bitset<MAXBITS> Bitset::SYSBITSET = 4ul;
-//const std::bitset<MAXBITS> Bitset::FIRSTBITSET = 8ul;
-
 /* ************************************************************
  *                                                            *
  ************************************************************ */
