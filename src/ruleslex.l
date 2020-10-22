@@ -21,9 +21,9 @@
 #include <iostream>
 #include <bitset>
 #include <string>
-#include "parser.h"
-#include "rulesyacc.h"
-#include "messages.h"
+#include "parser.hpp"
+#include "rulesyacc.hpp"
+#include "messages.hpp"
 
 #if __cplusplus > 199711L
 #define register      // Deprecated in C++11.

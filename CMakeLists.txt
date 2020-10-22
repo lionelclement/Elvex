@@ -6,8 +6,8 @@ include_directories(src)
 
 find_package(BISON)
 if (BISON_FOUND)
-    BISON_TARGET(rulesyacc src/rulesyacc.y ${CMAKE_CURRENT_BINARY_DIR}/src/rulesyacc.cpp
-            DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/rulesyacc.h
+    BISON_TARGET(rulesyacc src/rulesyacc.y ${CMAKE_CURRENT_BINARY_DIR}/src/rulesyacc.cc
+            DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/rulesyacc.hpp
             COMPILE_FLAGS "-p rules")
 else()
     message("bison not found")
@@ -15,7 +15,7 @@ endif()
 
 find_package(FLEX)
 if (FLEX_FOUND)
-    FLEX_TARGET(ruleslex src/ruleslex.l ${CMAKE_CURRENT_BINARY_DIR}/src/ruleslex.cpp
+    FLEX_TARGET(ruleslex src/ruleslex.l ${CMAKE_CURRENT_BINARY_DIR}/src/ruleslex.cc
             COMPILE_FLAGS "-Prules")
 else()
     message("flex not found")
@@ -30,85 +30,85 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(ELVEX_SOURCES
         ${BISON_rulesyacc_OUTPUTS}
         ${FLEX_ruleslex_OUTPUTS}
-        src/bitset.cpp
-        src/bitset.h
-        src/compact-lexicon-buffer.cpp
-        src/compact-lexicon-buffer.h
-        src/compact-lexicon-fsa.cpp
-        src/compact-lexicon-fsa.h
-        src/compact-lexicon-info.cpp
-        src/compact-lexicon-info.h
-        src/compact-lexicon-tree.cpp
-        src/compact-lexicon-tree.h
-        src/compact-lexicon.cpp
-        src/compact-lexicon.h
-        src/elvex.cpp
-        src/entries.cpp
-        src/entries.h
-        src/entry.cpp
-        src/entry.h
-        src/environment.cpp
-        src/environment.h
-        src/feature.cpp
-        src/feature.h
-        src/features.cpp
-        src/features.h
-        src/flags.cpp
-        src/flags.h
-        src/forest.cpp
-        src/forest.h
-        src/forestidentifier.cpp
-        src/forestidentifier.h
-        src/forestmap.cpp
-        src/forestmap.h
-        src/grammar.cpp
-        src/grammar.h
-        src/id.cpp
-        src/id.h
-        src/item.cpp
-        src/item.h
-        src/itemset.cpp
-        src/itemset.h
-        src/lexicon.cpp
-        src/lexicon.h
-        src/list.cpp
-        src/list.h
-        src/listfeatures.cpp
-        src/listfeatures.h
-        src/memoization-map.cpp
-        src/memoization-map.h
-        src/memoization-value.cpp
-        src/memoization-value.h
-        src/messages.h
-        src/node.cpp
-        src/node.h
-        src/parser.cpp
-        src/parser.h
-        src/rule.cpp
-        src/rule.h
-        src/serializable.cpp
-        src/serializable.h
-        src/shared_ptr.h
-        src/statement.cpp
-        src/statement.h
-        src/statements.cpp
-        src/statements.h
-        src/synthesizer.cpp
-        src/synthesizer.h
-        src/term.cpp
-        src/term.h
-        src/terms.cpp
-        src/terms.h
-        src/value.cpp
-        src/value.h
-        src/variableflag.cpp
-        src/variableflag.h
-        src/vartable.cpp
-        src/vartable.h)
+        src/bitset.cc
+        src/bitset.hpp
+        src/compact-lexicon-buffer.cc
+        src/compact-lexicon-buffer.hpp
+        src/compact-lexicon-fsa.cc
+        src/compact-lexicon-fsa.hpp
+        src/compact-lexicon-info.cc
+        src/compact-lexicon-info.hpp
+        src/compact-lexicon-tree.cc
+        src/compact-lexicon-tree.hpp
+        src/compact-lexicon.cc
+        src/compact-lexicon.hpp
+        src/elvex.cc
+        src/entries.cc
+        src/entries.hpp
+        src/entry.cc
+        src/entry.hpp
+        src/environment.cc
+        src/environment.hpp
+        src/feature.cc
+        src/feature.hpp
+        src/features.cc
+        src/features.hpp
+        src/flags.cc
+        src/flags.hpp
+        src/forest.cc
+        src/forest.hpp
+        src/forestidentifier.cc
+        src/forestidentifier.hpp
+        src/forestmap.cc
+        src/forestmap.hpp
+        src/grammar.cc
+        src/grammar.hpp
+        src/id.cc
+        src/id.hpp
+        src/item.cc
+        src/item.hpp
+        src/itemset.cc
+        src/itemset.hpp
+        src/lexicon.cc
+        src/lexicon.hpp
+        src/list.cc
+        src/list.hpp
+        src/listfeatures.cc
+        src/listfeatures.hpp
+        src/memoization-map.cc
+        src/memoization-map.hpp
+        src/memoization-value.cc
+        src/memoization-value.hpp
+        src/messages.hpp
+        src/node.cc
+        src/node.hpp
+        src/parser.cc
+        src/parser.hpp
+        src/rule.cc
+        src/rule.hpp
+        src/serializable.cc
+        src/serializable.hpp
+        src/shared_ptr.hpp
+        src/statement.cc
+        src/statement.hpp
+        src/statements.cc
+        src/statements.hpp
+        src/synthesizer.cc
+        src/synthesizer.hpp
+        src/term.cc
+        src/term.hpp
+        src/terms.cc
+        src/terms.hpp
+        src/value.cc
+        src/value.hpp
+        src/variableflag.cc
+        src/variableflag.hpp
+        src/vartable.cc
+        src/vartable.hpp)
 
 configure_file(
-        src/config.h.in
-        src/config.h
+        src/config.hpp.in
+        src/config.hpp
         @ONLY)
 
 add_executable(elvex ${ELVEX_SOURCES})
@@ -135,7 +135,7 @@ endif()
 add_executable(elvexbuildLexicon ${ELVEX_SOURCES})
 target_compile_options(elvexbuildLexicon PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
-FLEX_TARGET(postedition src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition.cpp)
+FLEX_TARGET(postedition src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition.cc)
 add_executable(elvexpostedition ${FLEX_postedition_OUTPUTS})
 target_compile_options(elvexpostedition PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 

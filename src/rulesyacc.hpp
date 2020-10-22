@@ -178,7 +178,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 80 "rulesyacc.y"
+#line 80 "src/rulesyacc.y"
 {
   unsigned int integer_slot;
   double double_slot;
@@ -198,7 +198,7 @@ typedef union YYSTYPE
   std::list<  bitsetPtr > *list_args;
  }
 /* Line 1529 of yacc.c.  */
-#line 202 "rulesyacc.hpp"
+#line 202 "/Users/clement/workspace/elvex/src/rulesyacc.hpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

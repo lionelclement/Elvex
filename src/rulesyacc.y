@@ -20,24 +20,24 @@
  ************************************************** */
 
 #include <sstream>
-#include "vartable.h"
-#include "term.h"
-#include "terms.h"
-#include "entry.h"
-#include "entries.h"
-#include "parser.h"
-#include "bitset.h"
-#include "value.h"
-#include "feature.h"
-#include "features.h"
-#include "list.h"
-#include "statements.h"
+#include "vartable.hpp"
+#include "term.hpp"
+#include "terms.hpp"
+#include "entry.hpp"
+#include "entries.hpp"
+#include "parser.hpp"
+#include "bitset.hpp"
+#include "value.hpp"
+#include "feature.hpp"
+#include "features.hpp"
+#include "list.hpp"
+#include "statements.hpp"
 
-#include "statement.h"
-#include "terms.h"
-#include "messages.h"
-#include "rule.h"
-#include "shared_ptr.h"
+#include "statement.hpp"
+#include "terms.hpp"
+#include "messages.hpp"
+#include "rule.hpp"
+#include "shared_ptr.hpp"
 
 #if false
 #define DBUG(x)x
