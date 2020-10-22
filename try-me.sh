@@ -3,7 +3,7 @@
 #
 # ELVEX
 #
-# Copyright 2019 LABRI, 
+# Copyright 2014-2020 LABRI,
 # CNRS (UMR 5800), the University of Bordeaux,
 # and the Bordeaux INP
 #
@@ -33,7 +33,7 @@ cd data
 #elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -grammarFile greg.grammar -lexiconFile greg.lexicon -inputFile greg.input
 
 make en-1.1.0.fsa
-../bin/elvex -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]' | ../bin/elvexpostedition | sed 's/^ *//'
-#../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]'
+#../bin/elvex -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]' | ../bin/elvexpostedition | sed 's/^ *//'
+../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactLexiconDirectory . -compactLexiconFile en-1.1.0 -grammarFile en-1.1.0.grammar -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]'
 
 cd ..
