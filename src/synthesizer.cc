@@ -522,19 +522,12 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                                                                   std::string(),
                                                                   row,
                                                                   row);
-                CERR_LINE
-                std::cerr << "fi: " << fi->peekSerialString() << std::endl;
-
                 auto forestMapIt = forestMap.find(fi);
                 if (forestMapIt != forestMap.end()) {
-                    CERR_LINE
-                    std::cerr << "pas nouveau" << std::endl;
                     forestFound = forestMapIt->second;
                     fi.reset();
                     it->addForestIdentifiers(it->getIndex(), forestMapIt->first);
                 } else {
-                    CERR_LINE
-                    std::cerr << "nouveau" << std::endl;
                     forestFound = Forest::create(Entry::create(it->getCurrentTerm()), row, row);
                     forestMap._insert(fi, forestFound);
                     it->addForestIdentifiers(it->getIndex(), fi);
