@@ -178,11 +178,10 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 80 "src/rulesyacc.y"
+#line 79 "src/rulesyacc.y"
 {
   unsigned int integer_slot;
   double double_slot;
-  termPtr *term_slot;
   termsPtr *terms_slot; //(A|B)
   std::vector< termsPtr  > *vector_terms_slot; // X Y
   std::string *string_slot;
@@ -198,7 +197,7 @@ typedef union YYSTYPE
   std::list<  bitsetPtr > *list_args;
  }
 /* Line 1529 of yacc.c.  */
-#line 202 "/Users/clement/workspace/elvex/src/rulesyacc.hpp"
+#line 201 "/Users/clement/workspace/elvex/src/rulesyacc.hpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

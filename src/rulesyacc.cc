@@ -236,7 +236,6 @@
 
 #include <sstream>
 #include "vartable.hpp"
-#include "term.hpp"
 #include "terms.hpp"
 #include "entry.hpp"
 #include "entries.hpp"
@@ -312,11 +311,10 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 80 "src/rulesyacc.y"
+#line 79 "src/rulesyacc.y"
 {
   unsigned int integer_slot;
   double double_slot;
-  termPtr *term_slot;
   termsPtr *terms_slot; //(A|B)
   std::vector< termsPtr  > *vector_terms_slot; // X Y
   std::string *string_slot;
@@ -332,7 +330,7 @@ typedef union YYSTYPE
   std::list<  bitsetPtr > *list_args;
  }
 /* Line 193 of yacc.c.  */
-#line 336 "/Users/clement/workspace/elvex/src/rulesyacc.cc"
+#line 334 "/Users/clement/workspace/elvex/src/rulesyacc.cc"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -345,7 +343,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 349 "/Users/clement/workspace/elvex/src/rulesyacc.cc"
+#line 347 "/Users/clement/workspace/elvex/src/rulesyacc.cc"
 
 #ifdef short
 # undef short
@@ -694,22 +692,22 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   171,   171,   177,   181,   189,   195,   199,   207,   211,
-     216,   221,   226,   234,   259,   286,   321,   330,   336,   344,
-     352,   361,   372,   372,   377,   377,   383,   389,   395,   410,
-     425,   431,   438,   443,   450,   457,   464,   472,   480,   489,
-     495,   500,   506,   514,   522,   529,   536,   541,   547,   553,
-     559,   565,   613,   628,   641,   659,   686,   706,   713,   719,
-     724,   729,   735,   746,   752,   758,   763,   768,   774,   785,
-     794,   801,   808,   815,   828,   834,   841,   848,   855,   862,
-     869,   879,   887,   895,   903,   911,   919,   926,   932,   938,
-     944,   953,   960,   965,   970,   975,   980,   986,   992,   998,
-    1004,  1010,  1015,  1021,  1026,  1035,  1041,  1047,  1054,  1060,
-    1067,  1072,  1082,  1088,  1095,  1103,  1112,  1127,  1143,  1150,
-    1158,  1165,  1171,  1179,  1186,  1194,  1202,  1209,  1216,  1222,
-    1228,  1235,  1242,  1248,  1254,  1260,  1267,  1273,  1281,  1289,
-    1300,  1306,  1312,  1323,  1334,  1342,  1350,  1357,  1363,  1369,
-    1376,  1383
+       0,   169,   169,   175,   179,   187,   193,   197,   205,   209,
+     214,   219,   224,   232,   257,   284,   313,   322,   328,   336,
+     344,   353,   364,   364,   369,   369,   375,   381,   387,   402,
+     417,   423,   430,   435,   442,   449,   456,   463,   470,   479,
+     485,   490,   496,   504,   512,   519,   526,   531,   537,   543,
+     549,   555,   603,   618,   631,   649,   676,   696,   703,   709,
+     714,   719,   725,   736,   742,   748,   753,   758,   764,   775,
+     784,   791,   798,   805,   818,   824,   831,   838,   845,   852,
+     859,   869,   877,   885,   893,   901,   909,   916,   922,   928,
+     934,   943,   950,   955,   960,   965,   970,   976,   982,   988,
+     994,  1000,  1005,  1011,  1016,  1025,  1031,  1037,  1044,  1050,
+    1057,  1062,  1072,  1078,  1085,  1093,  1102,  1117,  1133,  1140,
+    1148,  1155,  1161,  1169,  1176,  1184,  1192,  1199,  1206,  1212,
+    1218,  1225,  1232,  1238,  1244,  1250,  1257,  1263,  1271,  1279,
+    1290,  1296,  1302,  1313,  1324,  1332,  1340,  1347,  1353,  1359,
+    1366,  1373
 };
 #endif
 
@@ -1884,7 +1882,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 171 "src/rulesyacc.y"
+#line 169 "src/rulesyacc.y"
     {
 	  DBUGPRT("axiom done...");
 	  YYACCEPT;
@@ -1892,17 +1890,17 @@ yyreduce:
     break;
 
   case 3:
-#line 177 "src/rulesyacc.y"
+#line 175 "src/rulesyacc.y"
     {
 	  DBUGPRT("begin grammar");
 	;}
     break;
 
   case 4:
-#line 181 "src/rulesyacc.y"
+#line 179 "src/rulesyacc.y"
     {
 	  DBUGPRT("begin input");
-	  parser.setStartTerm(*(yyvsp[(2) - (3)].term_slot));
+	  parser.setStartTerm((yyvsp[(2) - (3)].integer_slot));
 	  (*(yyvsp[(3) - (3)].features_slot))->renameVariables((*(yyvsp[(3) - (3)].features_slot))->getId());
 	  parser.setStartFeatures(*(yyvsp[(3) - (3)].features_slot));
 	  free((yyvsp[(3) - (3)].features_slot));
@@ -1910,23 +1908,23 @@ yyreduce:
     break;
 
   case 5:
-#line 189 "src/rulesyacc.y"
+#line 187 "src/rulesyacc.y"
     {
 	  DBUGPRT("begin input");
-	  parser.setStartTerm(*(yyvsp[(2) - (2)].term_slot));
+	  parser.setStartTerm((yyvsp[(2) - (2)].integer_slot));
 	  parser.setStartFeatures(Features::create());
 	 ;}
     break;
 
   case 6:
-#line 195 "src/rulesyacc.y"
+#line 193 "src/rulesyacc.y"
     {      
 	  DBUGPRT("begin lexicon");
 	;}
     break;
 
   case 7:
-#line 200 "src/rulesyacc.y"
+#line 198 "src/rulesyacc.y"
     {
 	  DBUGPRT("begin features");
 	  parser.setLocalFeatures(*(yyvsp[(2) - (2)].features_slot));
@@ -1935,21 +1933,21 @@ yyreduce:
     break;
 
   case 8:
-#line 207 "src/rulesyacc.y"
+#line 205 "src/rulesyacc.y"
     {
 	  DBUGPRT("dictionary");
 	;}
     break;
 
   case 9:
-#line 211 "src/rulesyacc.y"
+#line 209 "src/rulesyacc.y"
     {
 	  DBUGPRT("dictionary");
 	 ;}
     break;
 
   case 10:
-#line 216 "src/rulesyacc.y"
+#line 214 "src/rulesyacc.y"
     {
 	  DBUGPRT("stringOrIdentifier");
 	  (yyval.string_slot) = (yyvsp[(1) - (1)].string_slot);
@@ -1957,7 +1955,7 @@ yyreduce:
     break;
 
   case 11:
-#line 221 "src/rulesyacc.y"
+#line 219 "src/rulesyacc.y"
     {
 	  DBUGPRT("stringOrIdentifier");
 	  (yyval.string_slot) = (yyvsp[(1) - (1)].string_slot);
@@ -1965,7 +1963,7 @@ yyreduce:
     break;
 
   case 12:
-#line 226 "src/rulesyacc.y"
+#line 224 "src/rulesyacc.y"
     {
 	  DBUGPRT("string");
 	  (yyval.string_slot) = (yyvsp[(1) - (3)].string_slot);
@@ -1974,7 +1972,7 @@ yyreduce:
     break;
 
   case 13:
-#line 235 "src/rulesyacc.y"
+#line 233 "src/rulesyacc.y"
     {
 	  DBUGPRT("dictionary_line");
 	  unsigned int code=Vartable::identifierToCode(*(yyvsp[(2) - (3)].string_slot));
@@ -2001,7 +1999,7 @@ yyreduce:
     break;
 
   case 14:
-#line 260 "src/rulesyacc.y"
+#line 258 "src/rulesyacc.y"
     {
 	  DBUGPRT("dictionary_line");
 	  unsigned int code=Vartable::identifierToCode(*(yyvsp[(2) - (4)].string_slot));
@@ -2029,33 +2027,27 @@ yyreduce:
     break;
 
   case 15:
-#line 287 "src/rulesyacc.y"
+#line 285 "src/rulesyacc.y"
     {
 	  DBUGPRT("dictionary_line");
-	  for (Entries::vector::const_iterator entry = (*(yyvsp[(2) - (3)].entries_slot))->begin();
-	       entry != (*(yyvsp[(2) - (3)].entries_slot))->end();
-	       ++entry){
+	  for (auto entry = (*(yyvsp[(2) - (3)].entries_slot))->begin() ; entry != (*(yyvsp[(2) - (3)].entries_slot))->end() ; ++entry) {
 	    (*entry)->setForm(*(yyvsp[(1) - (3)].string_slot));
-	    //}
-	    //for (std::featuresVector< entryPtr >::const_iterator entry = (*$2)->begin();
-	    //    entry != (*$2)->end();
-	    //   ++entry){
 	    entriesPtr lp;
 	    Parser::entries_map *predToEntries;
-	    //std::cerr << (*entry)->getCode() << std::endl;
-	    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find((*entry)->getCode());
+	    //std::cerr << entry->getCode() << std::endl;
+	    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find((*entry)->getPos());
 	    if (foundCode != parser.getLexicon().end()){
 	      predToEntries = foundCode->second;
 	    } else {
 	      predToEntries = new Parser::entries_map;
-	      parser.getLexicon().insert(std::make_pair((*entry)->getCode(), predToEntries));
+	      parser.getLexicon().insert(std::make_pair((*entry)->getPos(), predToEntries));
 	    }
-	    Parser::entries_map::iterator foundPred = predToEntries->find((*entry)->getCodePred());
+	    Parser::entries_map::iterator foundPred = predToEntries->find((*entry)->getPred());
 	    if (foundPred != predToEntries->end()){
 	      lp = foundPred->second;
 	    } else {
 	      lp = Entries::create();
-	      predToEntries->insert(std::make_pair((*entry)->getCodePred(), lp));
+	      predToEntries->insert(std::make_pair((*entry)->getPred(), lp));
 	    }
 	    lp->add(*entry);
 	  }
@@ -2065,7 +2057,7 @@ yyreduce:
     break;
 
   case 16:
-#line 322 "src/rulesyacc.y"
+#line 314 "src/rulesyacc.y"
     {
 	  DBUGPRT("dictionary_line");
 	  parser.addMacros(*(yyvsp[(2) - (5)].string_slot), *(yyvsp[(4) - (5)].features_slot));
@@ -2076,24 +2068,24 @@ yyreduce:
     break;
 
   case 17:
-#line 331 "src/rulesyacc.y"
+#line 323 "src/rulesyacc.y"
     {
 	  DBUGPRT("dictionary_line");
 	;}
     break;
 
   case 18:
-#line 337 "src/rulesyacc.y"
+#line 329 "src/rulesyacc.y"
     {	  
 	  DBUGPRT("lexical_entries");
-	  (yyval.entries_slot)=(yyvsp[(3) - (3)].entries_slot); 
+	  (yyval.entries_slot) = (yyvsp[(3) - (3)].entries_slot);
 	  (*(yyval.entries_slot))->add(*(yyvsp[(1) - (3)].entry_slot));
 	  free((yyvsp[(1) - (3)].entry_slot));
 	;}
     break;
 
   case 19:
-#line 344 "src/rulesyacc.y"
+#line 336 "src/rulesyacc.y"
     {
 	  DBUGPRT("lexical_entries");
 	  (yyval.entries_slot) = new entriesPtr(Entries::create(*(yyvsp[(1) - (1)].entry_slot)));
@@ -2102,7 +2094,7 @@ yyreduce:
     break;
 
   case 20:
-#line 353 "src/rulesyacc.y"
+#line 345 "src/rulesyacc.y"
     {
 	  DBUGPRT("lexical_entry");
 	  unsigned int pred = (*(yyvsp[(2) - (2)].features_slot))->assignPred();
@@ -2113,7 +2105,7 @@ yyreduce:
     break;
 
   case 21:
-#line 362 "src/rulesyacc.y"
+#line 354 "src/rulesyacc.y"
     {
 	  DBUGPRT("lexical_entry");
 	  (yyval.entry_slot) = new entryPtr(Entry::create(Vartable::identifierToCode(*(yyvsp[(1) - (1)].string_slot)), UINT_MAX, std::string(), Features::create()));
@@ -2122,31 +2114,31 @@ yyreduce:
     break;
 
   case 22:
-#line 372 "src/rulesyacc.y"
+#line 364 "src/rulesyacc.y"
     {headLineno = ruleslineno;;}
     break;
 
   case 23:
-#line 373 "src/rulesyacc.y"
+#line 365 "src/rulesyacc.y"
     {
 	  DBUGPRT("rules"); 
 	;}
     break;
 
   case 24:
-#line 377 "src/rulesyacc.y"
+#line 369 "src/rulesyacc.y"
     {headLineno = ruleslineno;;}
     break;
 
   case 25:
-#line 378 "src/rulesyacc.y"
+#line 370 "src/rulesyacc.y"
     {
 	  DBUGPRT("rules"); 
 	;}
     break;
 
   case 26:
-#line 384 "src/rulesyacc.y"
+#line 376 "src/rulesyacc.y"
     {
 	  DBUGPRT("pref_rule");
 	  headTrace = true;
@@ -2154,7 +2146,7 @@ yyreduce:
     break;
 
   case 27:
-#line 389 "src/rulesyacc.y"
+#line 381 "src/rulesyacc.y"
     {
 	  DBUGPRT("pref_rule");
 	  headTrace = false;
@@ -2162,15 +2154,15 @@ yyreduce:
     break;
 
   case 28:
-#line 396 "src/rulesyacc.y"
+#line 388 "src/rulesyacc.y"
     {
 	  DBUGPRT("rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *(yyvsp[(2) - (5)].term_slot), *(yyvsp[(4) - (5)].vector_terms_slot), (yyvsp[(5) - (5)].statements_slot) ? *(yyvsp[(5) - (5)].statements_slot) : statementsPtr());
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), (yyvsp[(2) - (5)].integer_slot), *(yyvsp[(4) - (5)].vector_terms_slot), (yyvsp[(5) - (5)].statements_slot) ? *(yyvsp[(5) - (5)].statements_slot) : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getGrammar().addRule(rule);
 	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm(*(yyvsp[(2) - (5)].term_slot));
+	    parser.getGrammar().setStartTerm((yyvsp[(2) - (5)].integer_slot));
 	  }
 	  free((yyvsp[(4) - (5)].vector_terms_slot));
 	  if ((yyvsp[(5) - (5)].statements_slot))
@@ -2179,15 +2171,15 @@ yyreduce:
     break;
 
   case 29:
-#line 411 "src/rulesyacc.y"
+#line 403 "src/rulesyacc.y"
     {
 	  DBUGPRT("Rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *(yyvsp[(2) - (4)].term_slot), (yyvsp[(4) - (4)].statements_slot) ? *(yyvsp[(4) - (4)].statements_slot) : statementsPtr());
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), (yyvsp[(2) - (4)].integer_slot), (yyvsp[(4) - (4)].statements_slot) ? *(yyvsp[(4) - (4)].statements_slot) : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getGrammar().addRule(rule);
 	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm(*(yyvsp[(2) - (4)].term_slot));
+	    parser.getGrammar().setStartTerm((yyvsp[(2) - (4)].integer_slot));
 	  }
 	  if ((yyvsp[(4) - (4)].statements_slot))
 	    free((yyvsp[(4) - (4)].statements_slot));
@@ -2195,7 +2187,7 @@ yyreduce:
     break;
 
   case 30:
-#line 425 "src/rulesyacc.y"
+#line 417 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term_vector");
 	  (yyval.vector_terms_slot)=(yyvsp[(1) - (2)].vector_terms_slot);
@@ -2204,7 +2196,7 @@ yyreduce:
     break;
 
   case 31:
-#line 431 "src/rulesyacc.y"
+#line 423 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term_vector"); 
 	  (yyval.vector_terms_slot) = new std::vector< termsPtr >;
@@ -2213,7 +2205,7 @@ yyreduce:
     break;
 
   case 32:
-#line 438 "src/rulesyacc.y"
+#line 430 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term");
 	  (yyval.terms_slot)=(yyvsp[(1) - (1)].terms_slot);
@@ -2221,7 +2213,7 @@ yyreduce:
     break;
 
   case 33:
-#line 443 "src/rulesyacc.y"
+#line 435 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term");
 	  (yyval.terms_slot) = (yyvsp[(2) - (3)].terms_slot);
@@ -2230,51 +2222,49 @@ yyreduce:
     break;
 
   case 34:
-#line 451 "src/rulesyacc.y"
+#line 443 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term_disj");
 	  (yyval.terms_slot) = (yyvsp[(1) - (3)].terms_slot);
-	  (*(yyval.terms_slot))->push_back(*(yyvsp[(3) - (3)].term_slot));
+	  (*(yyval.terms_slot))->push_back((yyvsp[(3) - (3)].integer_slot));
 	;}
     break;
 
   case 35:
-#line 458 "src/rulesyacc.y"
+#line 450 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term_disj"); 
-	  (yyval.terms_slot) = new termsPtr(Terms::create(*(yyvsp[(1) - (1)].term_slot)));
+	  (yyval.terms_slot) = new termsPtr(Terms::create((yyvsp[(1) - (1)].integer_slot)));
 	;}
     break;
 
   case 36:
-#line 465 "src/rulesyacc.y"
+#line 457 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term_id");
-	  unsigned int code = Vartable::identifierToCode(*(yyvsp[(1) - (1)].string_slot));
-	  (yyval.term_slot) = new termPtr(Term::create(code));
+	  (yyval.integer_slot) = Vartable::identifierToCode(*(yyvsp[(1) - (1)].string_slot));
 	  free((yyvsp[(1) - (1)].string_slot));
 	;}
     break;
 
   case 37:
-#line 473 "src/rulesyacc.y"
+#line 464 "src/rulesyacc.y"
     { 
 	  DBUGPRT("term_id");
-	  unsigned int code = Vartable::identifierToCode(*(yyvsp[(1) - (1)].string_slot));
-	  (yyval.term_slot) = new termPtr(Term::create(code));
+	  (yyval.integer_slot) = Vartable::identifierToCode(*(yyvsp[(1) - (1)].string_slot));
 	  free((yyvsp[(1) - (1)].string_slot));
 	;}
     break;
 
   case 38:
-#line 481 "src/rulesyacc.y"
+#line 471 "src/rulesyacc.y"
     {
 	  YYABORT;
 	;}
     break;
 
   case 39:
-#line 490 "src/rulesyacc.y"
+#line 480 "src/rulesyacc.y"
     {
 	  DBUGPRT("structure_statement");
 	  (yyval.statements_slot)=(yyvsp[(2) - (3)].statements_slot);
@@ -2282,21 +2272,21 @@ yyreduce:
     break;
 
   case 40:
-#line 496 "src/rulesyacc.y"
+#line 486 "src/rulesyacc.y"
     {
 	  (yyval.statements_slot)=NULL;
 	;}
     break;
 
   case 41:
-#line 501 "src/rulesyacc.y"
+#line 491 "src/rulesyacc.y"
     {
 	  (yyval.statements_slot)=NULL;
 	;}
     break;
 
   case 42:
-#line 507 "src/rulesyacc.y"
+#line 497 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_statement");
 	  (yyval.statements_slot) = new statementsPtr(Statements::create());
@@ -2306,7 +2296,7 @@ yyreduce:
     break;
 
   case 43:
-#line 514 "src/rulesyacc.y"
+#line 504 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_statement");
 	  (yyval.statements_slot) = (yyvsp[(1) - (2)].statements_slot);
@@ -2316,7 +2306,7 @@ yyreduce:
     break;
 
   case 44:
-#line 523 "src/rulesyacc.y"
+#line 513 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::STMS, *(yyvsp[(2) - (3)].statements_slot)));
@@ -2325,7 +2315,7 @@ yyreduce:
     break;
 
   case 45:
-#line 530 "src/rulesyacc.y"
+#line 520 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::STMS, Statements::create()));
@@ -2333,7 +2323,7 @@ yyreduce:
     break;
 
   case 46:
-#line 536 "src/rulesyacc.y"
+#line 526 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2341,7 +2331,7 @@ yyreduce:
     break;
 
   case 47:
-#line 541 "src/rulesyacc.y"
+#line 531 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::ATTEST, *(yyvsp[(2) - (3)].statement_slot)));
@@ -2350,7 +2340,7 @@ yyreduce:
     break;
 
   case 48:
-#line 547 "src/rulesyacc.y"
+#line 537 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::PRINT, *(yyvsp[(2) - (3)].statement_slot)));
@@ -2359,7 +2349,7 @@ yyreduce:
     break;
 
   case 49:
-#line 553 "src/rulesyacc.y"
+#line 543 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::PRINTLN, *(yyvsp[(2) - (3)].statement_slot)));
@@ -2368,7 +2358,7 @@ yyreduce:
     break;
 
   case 50:
-#line 559 "src/rulesyacc.y"
+#line 549 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::GUARD, *(yyvsp[(1) - (2)].features_slot)));
@@ -2377,7 +2367,7 @@ yyreduce:
     break;
 
   case 51:
-#line 565 "src/rulesyacc.y"
+#line 555 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::AFF, *(yyvsp[(1) - (4)].statement_slot), *(yyvsp[(3) - (4)].statement_slot)));
@@ -2416,7 +2406,7 @@ yyreduce:
 		      ||((*(yyvsp[(3) - (4)].statement_slot))->isUp())
 		      ||((*(yyvsp[(3) - (4)].statement_slot))->isUnif())
 		      ||((*(yyvsp[(3) - (4)].statement_slot))->isDown2())
-		      ||((*(yyvsp[(3) - (4)].statement_slot))->isDouble())
+		      ||((*(yyvsp[(3) - (4)].statement_slot))->isNumber())
 		      ||((*(yyvsp[(3) - (4)].statement_slot))->isFct())
 		      ||((*(yyvsp[(3) - (4)].statement_slot))->isSearch())));
 	  else {
@@ -2428,7 +2418,7 @@ yyreduce:
     break;
 
   case 52:
-#line 613 "src/rulesyacc.y"
+#line 603 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::SUBSUME, (*(yyvsp[(1) - (4)].statement_slot)), (*(yyvsp[(3) - (4)].statement_slot))));
@@ -2446,7 +2436,7 @@ yyreduce:
     break;
 
   case 53:
-#line 628 "src/rulesyacc.y"
+#line 618 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::INSET, (*(yyvsp[(1) - (4)].statement_slot)), (*(yyvsp[(3) - (4)].statement_slot))));
@@ -2462,7 +2452,7 @@ yyreduce:
     break;
 
   case 54:
-#line 641 "src/rulesyacc.y"
+#line 631 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  statementPtr stm;
@@ -2483,7 +2473,7 @@ yyreduce:
     break;
 
   case 55:
-#line 659 "src/rulesyacc.y"
+#line 649 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  statementPtr stm1;
@@ -2513,7 +2503,7 @@ yyreduce:
     break;
 
   case 56:
-#line 686 "src/rulesyacc.y"
+#line 676 "src/rulesyacc.y"
     {
 	  DBUGPRT("statement");
 	  statementPtr stm;
@@ -2535,7 +2525,7 @@ yyreduce:
     break;
 
   case 57:
-#line 706 "src/rulesyacc.y"
+#line 696 "src/rulesyacc.y"
     {
 	  DBUGPRT("left_hand_side_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FEATURES, *(yyvsp[(1) - (1)].features_slot)));
@@ -2544,7 +2534,7 @@ yyreduce:
     break;
 
   case 58:
-#line 713 "src/rulesyacc.y"
+#line 703 "src/rulesyacc.y"
     {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::VARIABLE, *(yyvsp[(1) - (1)].bits_slot)));
@@ -2553,7 +2543,7 @@ yyreduce:
     break;
 
   case 59:
-#line 719 "src/rulesyacc.y"
+#line 709 "src/rulesyacc.y"
     {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2561,7 +2551,7 @@ yyreduce:
     break;
 
   case 60:
-#line 724 "src/rulesyacc.y"
+#line 714 "src/rulesyacc.y"
     {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2569,7 +2559,7 @@ yyreduce:
     break;
 
   case 61:
-#line 729 "src/rulesyacc.y"
+#line 719 "src/rulesyacc.y"
     {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FEATURES, *(yyvsp[(1) - (1)].features_slot)));
@@ -2578,7 +2568,7 @@ yyreduce:
     break;
 
   case 62:
-#line 735 "src/rulesyacc.y"
+#line 725 "src/rulesyacc.y"
     {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, 
@@ -2591,7 +2581,7 @@ yyreduce:
     break;
 
   case 63:
-#line 746 "src/rulesyacc.y"
+#line 736 "src/rulesyacc.y"
     {
 	  DBUGPRT("left_hand_side_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2599,7 +2589,7 @@ yyreduce:
     break;
 
   case 64:
-#line 752 "src/rulesyacc.y"
+#line 742 "src/rulesyacc.y"
     {
 	  DBUGPRT("right_hand_side_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2607,7 +2597,7 @@ yyreduce:
     break;
 
   case 65:
-#line 758 "src/rulesyacc.y"
+#line 748 "src/rulesyacc.y"
     {
 	  DBUGPRT("left_hand_side_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2615,7 +2605,7 @@ yyreduce:
     break;
 
   case 66:
-#line 763 "src/rulesyacc.y"
+#line 753 "src/rulesyacc.y"
     {
 	  DBUGPRT("left_hand_side_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2623,7 +2613,7 @@ yyreduce:
     break;
 
   case 67:
-#line 768 "src/rulesyacc.y"
+#line 758 "src/rulesyacc.y"
     {
 	  DBUGPRT("left_hand_side_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::VARIABLE, *(yyvsp[(1) - (1)].bits_slot)));
@@ -2632,7 +2622,7 @@ yyreduce:
     break;
 
   case 68:
-#line 775 "src/rulesyacc.y"
+#line 765 "src/rulesyacc.y"
     {
 	  DBUGPRT("left_hand_side_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::LIST,
@@ -2644,7 +2634,7 @@ yyreduce:
     break;
 
   case 69:
-#line 785 "src/rulesyacc.y"
+#line 775 "src/rulesyacc.y"
     {
 	  DBUGPRT("right_hand_side_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2652,7 +2642,7 @@ yyreduce:
     break;
 
   case 70:
-#line 794 "src/rulesyacc.y"
+#line 784 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::OR, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2662,7 +2652,7 @@ yyreduce:
     break;
 
   case 71:
-#line 801 "src/rulesyacc.y"
+#line 791 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::AND, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2672,7 +2662,7 @@ yyreduce:
     break;
 
   case 72:
-#line 808 "src/rulesyacc.y"
+#line 798 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::OR, Statement::create(ruleslineno, Statement::FCT, Statement::NOT, (*(yyvsp[(1) - (3)].statement_slot))), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2682,7 +2672,7 @@ yyreduce:
     break;
 
   case 73:
-#line 815 "src/rulesyacc.y"
+#line 805 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::AND,
@@ -2698,7 +2688,7 @@ yyreduce:
     break;
 
   case 74:
-#line 828 "src/rulesyacc.y"
+#line 818 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::NOT, (*(yyvsp[(2) - (2)].statement_slot))));
@@ -2707,7 +2697,7 @@ yyreduce:
     break;
 
   case 75:
-#line 834 "src/rulesyacc.y"
+#line 824 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::EQ, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2717,7 +2707,7 @@ yyreduce:
     break;
 
   case 76:
-#line 841 "src/rulesyacc.y"
+#line 831 "src/rulesyacc.y"
     { 
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::DIFF, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot)))); 
@@ -2727,7 +2717,7 @@ yyreduce:
     break;
 
   case 77:
-#line 848 "src/rulesyacc.y"
+#line 838 "src/rulesyacc.y"
     { 
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::LT, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot)))); 
@@ -2737,7 +2727,7 @@ yyreduce:
     break;
 
   case 78:
-#line 855 "src/rulesyacc.y"
+#line 845 "src/rulesyacc.y"
     { 
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::LE, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot)))); 
@@ -2747,7 +2737,7 @@ yyreduce:
     break;
 
   case 79:
-#line 862 "src/rulesyacc.y"
+#line 852 "src/rulesyacc.y"
     { 
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::GT, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot)))); 
@@ -2757,7 +2747,7 @@ yyreduce:
     break;
 
   case 80:
-#line 869 "src/rulesyacc.y"
+#line 859 "src/rulesyacc.y"
     { 
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::GE, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot)))); 
@@ -2767,7 +2757,7 @@ yyreduce:
     break;
 
   case 81:
-#line 880 "src/rulesyacc.y"
+#line 870 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::PLUS, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2777,7 +2767,7 @@ yyreduce:
     break;
 
   case 82:
-#line 888 "src/rulesyacc.y"
+#line 878 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::MINUS, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2787,7 +2777,7 @@ yyreduce:
     break;
 
   case 83:
-#line 896 "src/rulesyacc.y"
+#line 886 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::TIMES, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2797,7 +2787,7 @@ yyreduce:
     break;
 
   case 84:
-#line 904 "src/rulesyacc.y"
+#line 894 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::DIVIDE, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2807,7 +2797,7 @@ yyreduce:
     break;
 
   case 85:
-#line 912 "src/rulesyacc.y"
+#line 902 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::MODULO, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2817,7 +2807,7 @@ yyreduce:
     break;
 
   case 86:
-#line 920 "src/rulesyacc.y"
+#line 910 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::MINUS_U, (*(yyvsp[(2) - (2)].statement_slot)), statementPtr()));
@@ -2826,7 +2816,7 @@ yyreduce:
     break;
 
   case 87:
-#line 927 "src/rulesyacc.y"
+#line 917 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::RAND));
@@ -2834,7 +2824,7 @@ yyreduce:
     break;
 
   case 88:
-#line 933 "src/rulesyacc.y"
+#line 923 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::NUMBER, (yyvsp[(1) - (1)].double_slot)));
@@ -2842,7 +2832,7 @@ yyreduce:
     break;
 
   case 89:
-#line 939 "src/rulesyacc.y"
+#line 929 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
  	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::NUMBER, (double)(yyvsp[(1) - (1)].integer_slot)));
@@ -2850,7 +2840,7 @@ yyreduce:
     break;
 
   case 90:
-#line 945 "src/rulesyacc.y"
+#line 935 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
  	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::STR, *(yyvsp[(1) - (1)].string_slot)));
@@ -2858,7 +2848,7 @@ yyreduce:
     break;
 
   case 91:
-#line 953 "src/rulesyacc.y"
+#line 943 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::UNIF, (*(yyvsp[(1) - (3)].statement_slot)), (*(yyvsp[(3) - (3)].statement_slot))));
@@ -2868,7 +2858,7 @@ yyreduce:
     break;
 
   case 92:
-#line 960 "src/rulesyacc.y"
+#line 950 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2876,7 +2866,7 @@ yyreduce:
     break;
 
   case 93:
-#line 965 "src/rulesyacc.y"
+#line 955 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2884,7 +2874,7 @@ yyreduce:
     break;
 
   case 94:
-#line 970 "src/rulesyacc.y"
+#line 960 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2892,7 +2882,7 @@ yyreduce:
     break;
 
   case 95:
-#line 975 "src/rulesyacc.y"
+#line 965 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2900,7 +2890,7 @@ yyreduce:
     break;
 
   case 96:
-#line 980 "src/rulesyacc.y"
+#line 970 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::FEATURES, *(yyvsp[(1) - (1)].features_slot)));
@@ -2909,7 +2899,7 @@ yyreduce:
     break;
 
   case 97:
-#line 987 "src/rulesyacc.y"
+#line 977 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::NIL));
@@ -2917,7 +2907,7 @@ yyreduce:
     break;
 
   case 98:
-#line 992 "src/rulesyacc.y"
+#line 982 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::CONSTANT, *(yyvsp[(1) - (1)].bits_slot)));
@@ -2926,7 +2916,7 @@ yyreduce:
     break;
 
   case 99:
-#line 999 "src/rulesyacc.y"
+#line 989 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::ANONYMOUS, Value::ANONYMOUS_VALUE));
@@ -2934,7 +2924,7 @@ yyreduce:
     break;
 
   case 100:
-#line 1004 "src/rulesyacc.y"
+#line 994 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::VARIABLE, *(yyvsp[(1) - (1)].bits_slot)));
@@ -2943,7 +2933,7 @@ yyreduce:
     break;
 
   case 101:
-#line 1010 "src/rulesyacc.y"
+#line 1000 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot)=(yyvsp[(2) - (3)].statement_slot);
@@ -2951,7 +2941,7 @@ yyreduce:
     break;
 
   case 102:
-#line 1015 "src/rulesyacc.y"
+#line 1005 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::LIST, *(yyvsp[(1) - (1)].list_slot)));
@@ -2960,7 +2950,7 @@ yyreduce:
     break;
 
   case 103:
-#line 1021 "src/rulesyacc.y"
+#line 1011 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot)=(yyvsp[(1) - (1)].statement_slot);
@@ -2968,7 +2958,7 @@ yyreduce:
     break;
 
   case 104:
-#line 1026 "src/rulesyacc.y"
+#line 1016 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, 
@@ -2979,7 +2969,7 @@ yyreduce:
     break;
 
   case 105:
-#line 1035 "src/rulesyacc.y"
+#line 1025 "src/rulesyacc.y"
     {  
 	  DBUGPRT("up");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::UP));
@@ -2987,7 +2977,7 @@ yyreduce:
     break;
 
   case 106:
-#line 1041 "src/rulesyacc.y"
+#line 1031 "src/rulesyacc.y"
     {  
 	  DBUGPRT("updouble");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::UP2));
@@ -2995,7 +2985,7 @@ yyreduce:
     break;
 
   case 107:
-#line 1048 "src/rulesyacc.y"
+#line 1038 "src/rulesyacc.y"
     { 
 	  DBUGPRT("down");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::DOWN, (unsigned int)(yyvsp[(2) - (2)].integer_slot)-1)); 
@@ -3003,7 +2993,7 @@ yyreduce:
     break;
 
   case 108:
-#line 1055 "src/rulesyacc.y"
+#line 1045 "src/rulesyacc.y"
     { 
 	  DBUGPRT("dash_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::DASH, (unsigned int)((yyvsp[(2) - (4)].integer_slot)-1), (unsigned int)((yyvsp[(4) - (4)].integer_slot)-1))); 
@@ -3011,7 +3001,7 @@ yyreduce:
     break;
 
   case 109:
-#line 1061 "src/rulesyacc.y"
+#line 1051 "src/rulesyacc.y"
     { 
 	  DBUGPRT("dash_statement");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::DASH, (unsigned int)((yyvsp[(2) - (2)].integer_slot)-1))); 
@@ -3019,7 +3009,7 @@ yyreduce:
     break;
 
   case 110:
-#line 1067 "src/rulesyacc.y"
+#line 1057 "src/rulesyacc.y"
     {  
 	  DBUGPRT("downdouble");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::DOWN2, (unsigned int)0)); 
@@ -3027,7 +3017,7 @@ yyreduce:
     break;
 
   case 111:
-#line 1073 "src/rulesyacc.y"
+#line 1063 "src/rulesyacc.y"
     { 
 	  DBUGPRT("downdouble");
 	  (yyval.statement_slot) = new statementPtr(Statement::create(ruleslineno, Statement::DOWN2, (unsigned int)((yyvsp[(2) - (2)].integer_slot)-1))); 
@@ -3035,7 +3025,7 @@ yyreduce:
     break;
 
   case 112:
-#line 1083 "src/rulesyacc.y"
+#line 1073 "src/rulesyacc.y"
     {
 	  DBUGPRT("features");
  	  (yyval.features_slot)=(yyvsp[(2) - (3)].features_slot);
@@ -3043,7 +3033,7 @@ yyreduce:
     break;
 
   case 113:
-#line 1089 "src/rulesyacc.y"
+#line 1079 "src/rulesyacc.y"
     {
 	  DBUGPRT("features");
 	  (yyval.features_slot) = new featuresPtr(Features::create());
@@ -3051,7 +3041,7 @@ yyreduce:
     break;
 
   case 114:
-#line 1096 "src/rulesyacc.y"
+#line 1086 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_components");
 	  (yyval.features_slot)=(yyvsp[(1) - (3)].features_slot); 
@@ -3061,7 +3051,7 @@ yyreduce:
     break;
 
   case 115:
-#line 1104 "src/rulesyacc.y"
+#line 1094 "src/rulesyacc.y"
     {
 	  DBUGPRT("features_components");
 	  (yyval.features_slot) = new featuresPtr(Features::create());
@@ -3071,7 +3061,7 @@ yyreduce:
     break;
 
   case 116:
-#line 1113 "src/rulesyacc.y"
+#line 1103 "src/rulesyacc.y"
     {
 	  DBUGPRT("features_components");
 	  featuresPtr found = parser.findMacros(*(yyvsp[(4) - (4)].string_slot));
@@ -3087,7 +3077,7 @@ yyreduce:
     break;
 
   case 117:
-#line 1128 "src/rulesyacc.y"
+#line 1118 "src/rulesyacc.y"
     {
 	  DBUGPRT("features_components");
 	  featuresPtr found = parser.findMacros(*(yyvsp[(2) - (2)].string_slot));
@@ -3103,7 +3093,7 @@ yyreduce:
     break;
 
   case 118:
-#line 1144 "src/rulesyacc.y"
+#line 1134 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::CODE, *(yyvsp[(3) - (3)].string_slot))));
@@ -3111,7 +3101,7 @@ yyreduce:
     break;
 
   case 119:
-#line 1151 "src/rulesyacc.y"
+#line 1141 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::VARIABLE, *(yyvsp[(3) - (3)].bits_slot))));
@@ -3120,7 +3110,7 @@ yyreduce:
     break;
 
   case 120:
-#line 1159 "src/rulesyacc.y"
+#line 1149 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::FORM, bitsetPtr(), Value::create(Value::VARIABLE, *(yyvsp[(3) - (3)].bits_slot))));
@@ -3129,7 +3119,7 @@ yyreduce:
     break;
 
   case 121:
-#line 1166 "src/rulesyacc.y"
+#line 1156 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::FORM, bitsetPtr(), Value::create(Value::STR, *(yyvsp[(3) - (3)].string_slot))));
@@ -3137,7 +3127,7 @@ yyreduce:
     break;
 
   case 122:
-#line 1172 "src/rulesyacc.y"
+#line 1162 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::CONSTANT, *(yyvsp[(1) - (3)].bits_slot), *(yyvsp[(3) - (3)].value_slot)));
@@ -3147,7 +3137,7 @@ yyreduce:
     break;
 
   case 123:
-#line 1180 "src/rulesyacc.y"
+#line 1170 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::CONSTANT, *(yyvsp[(1) - (3)].bits_slot), Value::create(Value::STR, *(yyvsp[(3) - (3)].string_slot))));
@@ -3156,7 +3146,7 @@ yyreduce:
     break;
 
   case 124:
-#line 1187 "src/rulesyacc.y"
+#line 1177 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::VARIABLE, *(yyvsp[(1) - (3)].bits_slot), *(yyvsp[(3) - (3)].value_slot)));
@@ -3166,7 +3156,7 @@ yyreduce:
     break;
 
   case 125:
-#line 1195 "src/rulesyacc.y"
+#line 1185 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature");
 	  (yyval.feature_slot) = new featurePtr(Feature::create(Feature::VARIABLE, *(yyvsp[(1) - (1)].bits_slot), valuePtr()));
@@ -3175,7 +3165,7 @@ yyreduce:
     break;
 
   case 126:
-#line 1203 "src/rulesyacc.y"
+#line 1193 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::create(Value::VARIABLE, *(yyvsp[(1) - (1)].bits_slot)));
@@ -3184,7 +3174,7 @@ yyreduce:
     break;
 
   case 127:
-#line 1210 "src/rulesyacc.y"
+#line 1200 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::create(Value::CONSTANT, *(yyvsp[(1) - (1)].bits_slot)));
@@ -3193,7 +3183,7 @@ yyreduce:
     break;
 
   case 128:
-#line 1217 "src/rulesyacc.y"
+#line 1207 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.value_slot) = new valuePtr(Value::create(Value::NUMBER, (yyvsp[(1) - (1)].double_slot)));
@@ -3201,7 +3191,7 @@ yyreduce:
     break;
 
   case 129:
-#line 1223 "src/rulesyacc.y"
+#line 1213 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.value_slot) = new valuePtr(Value::create(Value::NUMBER, (double)(yyvsp[(1) - (1)].integer_slot)));
@@ -3209,7 +3199,7 @@ yyreduce:
     break;
 
   case 130:
-#line 1229 "src/rulesyacc.y"
+#line 1219 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::create(Value::LIST, *(yyvsp[(1) - (1)].list_slot)));
@@ -3218,7 +3208,7 @@ yyreduce:
     break;
 
   case 131:
-#line 1236 "src/rulesyacc.y"
+#line 1226 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::create(Value::FEATURES, *(yyvsp[(1) - (1)].features_slot)));
@@ -3227,7 +3217,7 @@ yyreduce:
     break;
 
   case 132:
-#line 1243 "src/rulesyacc.y"
+#line 1233 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::NIL_VALUE);
@@ -3235,7 +3225,7 @@ yyreduce:
     break;
 
   case 133:
-#line 1249 "src/rulesyacc.y"
+#line 1239 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::TRUE_VALUE);
@@ -3243,7 +3233,7 @@ yyreduce:
     break;
 
   case 134:
-#line 1255 "src/rulesyacc.y"
+#line 1245 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::FALSE_VALUE);
@@ -3251,7 +3241,7 @@ yyreduce:
     break;
 
   case 135:
-#line 1261 "src/rulesyacc.y"
+#line 1251 "src/rulesyacc.y"
     {
 	  DBUGPRT("feature_value");
 	  (yyval.value_slot) = new valuePtr(Value::ANONYMOUS_VALUE);
@@ -3259,7 +3249,7 @@ yyreduce:
     break;
 
   case 136:
-#line 1268 "src/rulesyacc.y"
+#line 1258 "src/rulesyacc.y"
     {
 	  DBUGPRT("constants");
 	  (yyval.bits_slot)=(yyvsp[(1) - (1)].bits_slot);
@@ -3267,7 +3257,7 @@ yyreduce:
     break;
 
   case 137:
-#line 1274 "src/rulesyacc.y"
+#line 1264 "src/rulesyacc.y"
     {
 	  DBUGPRT("constants");
 	  (yyval.bits_slot)=(yyvsp[(1) - (3)].bits_slot);
@@ -3276,7 +3266,7 @@ yyreduce:
     break;
 
   case 138:
-#line 1282 "src/rulesyacc.y"
+#line 1272 "src/rulesyacc.y"
     {
 	  DBUGPRT("identifier");
  	  (yyval.bits_slot) = new bitsetPtr(Bitset::create(Vartable::createVariable(*(yyvsp[(1) - (1)].string_slot))));
@@ -3285,7 +3275,7 @@ yyreduce:
     break;
 
   case 139:
-#line 1290 "src/rulesyacc.y"
+#line 1280 "src/rulesyacc.y"
     {
 	  DBUGPRT("variable");
 	  std::ostringstream oss;
@@ -3297,7 +3287,7 @@ yyreduce:
     break;
 
   case 140:
-#line 1301 "src/rulesyacc.y"
+#line 1291 "src/rulesyacc.y"
     {
 	  DBUGPRT("list");
 	  (yyval.list_slot) = (yyvsp[(2) - (3)].list_slot);
@@ -3305,7 +3295,7 @@ yyreduce:
     break;
 
   case 141:
-#line 1307 "src/rulesyacc.y"
+#line 1297 "src/rulesyacc.y"
     {
 	  DBUGPRT("list");
 	  (yyval.list_slot) = new listPtr(List::NIL_LIST);
@@ -3313,7 +3303,7 @@ yyreduce:
     break;
 
   case 142:
-#line 1313 "src/rulesyacc.y"
+#line 1303 "src/rulesyacc.y"
     {
 	  DBUGPRT("list");
 	  if ((*(yyvsp[(2) - (5)].list_slot))->isPairp() && (*(yyvsp[(2) - (5)].list_slot))->getCdr()->isNil())
@@ -3326,7 +3316,7 @@ yyreduce:
     break;
 
   case 143:
-#line 1324 "src/rulesyacc.y"
+#line 1314 "src/rulesyacc.y"
     {
 	  DBUGPRT("list");
 	  if ((*(yyvsp[(2) - (5)].list_slot))->isPairp() && (*(yyvsp[(2) - (5)].list_slot))->getCdr()->isNil())
@@ -3338,7 +3328,7 @@ yyreduce:
     break;
 
   case 144:
-#line 1335 "src/rulesyacc.y"
+#line 1325 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_elements");
 	  (yyval.list_slot) = new listPtr(List::create(*(yyvsp[(1) - (3)].list_slot), *(yyvsp[(3) - (3)].list_slot)));
@@ -3348,7 +3338,7 @@ yyreduce:
     break;
 
   case 145:
-#line 1343 "src/rulesyacc.y"
+#line 1333 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_elements");
 	  (yyval.list_slot) = new listPtr(List::create(*(yyvsp[(1) - (1)].list_slot), List::NIL_LIST));
@@ -3357,7 +3347,7 @@ yyreduce:
     break;
 
   case 146:
-#line 1351 "src/rulesyacc.y"
+#line 1341 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_element");
 	  (yyval.list_slot) = new listPtr(List::create(Value::create(Value::VARIABLE, *(yyvsp[(1) - (1)].bits_slot))));
@@ -3366,7 +3356,7 @@ yyreduce:
     break;
 
   case 147:
-#line 1358 "src/rulesyacc.y"
+#line 1348 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.list_slot) = new listPtr(List::create(Value::create(Value::NUMBER, (yyvsp[(1) - (1)].double_slot))));
@@ -3374,7 +3364,7 @@ yyreduce:
     break;
 
   case 148:
-#line 1364 "src/rulesyacc.y"
+#line 1354 "src/rulesyacc.y"
     {
 	  DBUGPRT("expression_statement");
 	  (yyval.list_slot) = new listPtr(List::create(Value::create(Value::NUMBER, (double)(yyvsp[(1) - (1)].integer_slot))));
@@ -3382,7 +3372,7 @@ yyreduce:
     break;
 
   case 149:
-#line 1370 "src/rulesyacc.y"
+#line 1360 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_element");
 	  (yyval.list_slot) = new listPtr(List::create(Value::create(Value::CONSTANT, *(yyvsp[(1) - (1)].bits_slot))));
@@ -3391,7 +3381,7 @@ yyreduce:
     break;
 
   case 150:
-#line 1377 "src/rulesyacc.y"
+#line 1367 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_element");
 	  (yyval.list_slot) = new listPtr(List::create(Value::create(Value::FEATURES, *(yyvsp[(1) - (1)].features_slot))));
@@ -3400,7 +3390,7 @@ yyreduce:
     break;
 
   case 151:
-#line 1384 "src/rulesyacc.y"
+#line 1374 "src/rulesyacc.y"
     {
 	  DBUGPRT("list_element");
 	  (yyval.list_slot)=(yyvsp[(1) - (1)].list_slot);
@@ -3409,7 +3399,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 3413 "/Users/clement/workspace/elvex/src/rulesyacc.cc"
+#line 3403 "/Users/clement/workspace/elvex/src/rulesyacc.cc"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -3623,6 +3613,6 @@ yyreturn:
 }
 
 
-#line 1389 "src/rulesyacc.y"
+#line 1379 "src/rulesyacc.y"
 
 
