@@ -1,0 +1,377 @@
+@grammar «
+#line 2
+#file "p3.grammar"
+
+startSymbol → T dot {
+  ↓1 = ↑ ∪ [mode:indicative, participle:no];
+}
+ 
+T → T dot T
+{
+  [PRED:succ, arg1:Arg1, arg2:Arg2];
+  ↓1 = Arg1;
+  ↓3 = Arg2;
+}
+
+T → T dot T
+{
+  [PRED:cause, arg1:Arg1, arg2:Arg2];
+  ↓1 = Arg1;
+  ↓3 = Arg2;
+}
+
+T → S
+{
+  [mod:NIL];
+  ↓1 = ↑;
+}
+
+T → time comma T
+{
+  [mod:<Head::Tail>, Rest];
+  ↓1 = Head ∪ [time:date];
+  ↓3 = Rest ∪ [mod:Tail];
+}
+
+T → T _à locality
+{
+  [mod:<Head::Tail>, Rest];
+  ↓1 = Head ∪ [locality:city];
+  ↓3 = Rest ∪ [mod:Tail];
+}
+
+T → T _en locality
+{
+  [mod:<Head::Tail>, Rest];
+  ↓1 = Head ∪ [locality:country];
+  ↓3 = Rest ∪ [mod:Tail];
+}
+
+T → T time
+{
+  [mod:<Head::Tail>, Rest];
+  ↓1 = Rest ∪ [mod:Tail];
+  ↓2 = Head ∪ [time:time];
+}
+
+S → NP|cln VP
+{
+  [subj:S, Rest];
+  ↓1 = S ∪ [det:yes];
+  SyntS = ⇓1;
+  [number:N, gender:G, person:P] ⊂ ⇓1;
+  ↓2 = Rest ∪ [subj:SyntS] ∪ [number:N, gender:G, person:P];
+}
+
+S → form VP
+{
+  [subj:NIL];
+  ↓2 = ↑;
+  [subj:S] ⊂ ⇓2;
+  ↓1 = S;
+}
+
+NP → [det] N
+{
+  ↓2 = ↑;
+  if ($1) {
+    ↓1 = ↑ ∪ ⇓2;
+    ⇑ = ↑ ∪ ⇓1 ∪ ⇓2 ∪ [person:three, det:yes];
+  } else {
+    ⇑ = ↑ ∪ ⇓2 ∪ [person:three, det:no];
+  }
+}
+
+NP → pn
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+NP → constantNoun
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N → N2
+{
+  [mod:Mod];
+  ↓1 = ↑;
+  ⇑ = ⇓;
+}
+
+N → N2
+{
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓;
+}
+
+N2 → A N2
+{
+  [mod:<Head::Tail>, X];
+  [number:N, gender:G] ⊂ ↑;
+  ↓1 = Head ∪ [number:N, gender:G, pos:pre];
+  [number:N1, gender:G1] ⊂  ⇓1;
+  test [pos:pre] ∪ ⇓1;
+  ↓2 = [X, mod:Tail] ∪ [number:N1, gender:G1];
+  ⇑ = X ∪ ⇓2 ∪ [number:N1, gender:G1];
+}
+
+N2 → N2 A
+{
+  [mod:<Head::Tail>, X];
+  [number:N, gender:G] ⊂ ↑;
+  ↓2 = Head ∪ [number:N, gender:G, pos:post];
+  [number:N2, gender:G2] ⊂ ⇓2;
+  test [pos:post] ∪ ⇓1;
+  ↓1 = [X, mod:Tail] ∪ [number:N2, gender:G2];
+  ⇑ = X ∪ ⇓1 ∪ [number:N2, gender:G2];
+}
+
+A → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N2 → nc
+{
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+VP → VP NP
+{
+  [obj:Obj, Rest];
+  [obj:[PRED:P]] ⊂ ↑;
+  test P ≠ pro; 
+  ↓1 = Rest;
+  ↓2 = Obj ∪ [det:yes];
+  ⇑ = ⇓1;
+}
+
+VP → VP PP
+{
+  [de_obj:DeObj, Rest];
+  [de_obj:[PRED:P]] ⊂ ↑;
+  test P ≠ pro; 
+  ↓1 = Rest;
+  ↓2 = DeObj ∪ [det:yes, pcas:de];
+  ⇑ = ⇓1;
+}
+
+VP → VP PP
+{
+  [à_obj:AObj, Rest];
+  [à_obj:[PRED:P]] ⊂ ↑;
+  test P ≠ pro; 
+  ↓1 = Rest;
+  //↓2 = AObj ∪ [det:yes, pcas:à];
+  ↓2 = AObj ∪ [pcas:à];
+  ⇑ = ⇓1;
+}
+
+VP → VP SComp
+{
+  [scomp:SComp, Rest];
+  ↓1 = Rest;
+  [scomp:SCompSynt] ⊂ ⇓1;
+  ↓2 = SComp ∪ SCompSynt;
+  ⇑ = ⇓1;
+}
+
+VP → VP VComp
+{
+  [vcomp:VComp, Rest];
+  ↓1 = Rest;
+  [vcomp:VCompSynt] ⊂ ⇓1;
+  ↓2 = VComp ∪ VCompSynt;
+  ⇑ = ⇓1;
+}
+
+VP → V [NP]
+{
+  [obj:NIL];
+  [objC:Obj, X] ⊂ ↑;
+  ↓1 = X;
+  [objC:ObjSynt] ⊂ ⇓1;
+  if ($2) {
+    ↓2 = ObjSynt;
+  } else {
+    test ¬ObjSynt;
+  }
+  ⇑ = ⇓1;
+}
+
+VP → V
+{
+  [obj:[PRED:_pro]];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+// passive
+V → [clneg] CLITICS aux [ADVV] [advneg] v
+{
+  [X, subj:S];
+  [tense:T, mode:M, diathese:passive, finite:F] ⊂ ↑;
+  [number:N, gender:G] ⊂ S;
+  ↓6 = X ∪ [aux:avoir, v_form:participle, tense:past, gender:G, number:N];
+  ⇑ = ⇓6;
+  ↓2 = ↑;
+  ↓3 = [aux:être, tense:T, mode:M, subj:S, finite:F];
+  if ($4) {
+    [modV:ModV];
+    ↓4 = [modV:ModV];
+  } else {
+    [modV:NIL];
+  }
+  test $5 ⇔ $1;
+  if ($5) {
+    [neg:yes];
+  } else {
+    [neg:no] ⊂ ↑;
+  }
+}
+
+// active
+// manque verbes intransitifs
+V → [clneg] CLITICS aux [ADVV] [advneg] v
+{
+  [PRED:P, tense:T, subj:S, mode:M, diathese:active, finite:F] ⊂ ↑;
+  ↓2 = ↑;
+  if ($4) {
+    [modV:ModV];
+    ↓4 = [modV:ModV];
+  } else {
+    [modV:NIL];
+  }
+  test $5 ⇔ $1;
+  if ($5) {
+    [neg:yes];
+  } else {
+    [neg:no] ⊂ ↑;
+  }
+  // Si l'objet est extrait, il s'accorde
+  // en genre et en nombre avec le participe
+  [objExtr:OBJEXTR] ⊂ ↑;
+  ↓3 = [tense:T, mode:M, subj:S, finite:F];
+  [aux:AUX] ⊂ ⇓3;
+  if (OBJEXTR) {
+    [objExtr:[gender:G, number:N]] ⊂ ↑;
+    ↓6 = [PRED:P, aux:avoir, v_form:participle, tense:past, gender:G, number:N];
+  } 
+  else {
+    if (AUX == avoir) {
+      ↓6 = [PRED:P, aux:avoir, v_form:participle, tense:past, gender:ms, number:sg];
+    } else {
+      [number:N, gender:G] ⊂ S;
+      ↓6 = [PRED:P, aux:être, v_form:participle, tense:past, gender:G, number:N];
+    }
+  }
+  ⇑ = ⇓3 ∪ [PRED:P];
+}
+
+V → [clneg] [advneg] CLITICS v [ADVV] [advneg]
+{
+  [diathese:active] ⊂ ↑;
+  test ($2 ∨ $6) ⇔ $1;
+  test ¬ ($2 ∧ $6);
+  [à_obj:Aobj,de_obj:Deobj,obj:Obj,scomp:Scomp, X] ⊂ ↑;
+  ↓3 = [à_obj:Aobj,de_obj:Deobj,obj:Obj,scomp:Scomp];
+  if ($5) {
+    [modV:ModV];
+    ↓5 = [modV:ModV];
+  } else {
+    [modV:NIL];
+  }
+  if ($2) {
+    [neg:yes];
+    [finite:no] ⊂ ↑;
+    ↓4 = X ∪ [v_form:tense, finite:no];
+  }
+  else {
+    if ($6) {
+      [neg:yes];
+      [finite:yes] ⊂ ↑;
+      ↓4 = X ∪ [v_form:tense, finite:yes];
+    } 
+    else {
+      [neg:no] ⊂ ↑;
+      ↓4 = X ∪ [v_form:tense];
+    }
+  }
+  ⇑ = ⇓4;
+}
+
+ADVV → adv ADVV
+{
+  [modV:<Head::Tail>];
+  ↓1 = Head;
+  ↓2 = [modV:Tail];
+}
+
+ADVV →
+{
+  [modV:NIL];
+}
+
+// me le
+CLITICS → [cld] [cla]
+{
+  [de_obj:NIL,scomp:NIL];
+  if ($1) {
+    [à_obj:[PRED:_pro]];
+    [à_obj:AObj];
+    ↓1 = AObj;
+  } else {
+    [à_obj:NIL];
+  }
+  if ($2) {
+    [obj:[PRED:_pro, person:three]];
+    [obj:Obj];
+    ↓2 = Obj;
+  } else {
+    [obj:NIL];
+  }
+}
+
+// le lui
+CLITICS → cla [cld]
+{
+  [de_obj:NIL,scomp:NIL];
+  [obj:[PRED:_pro, person:one|two]];
+  [obj:Obj];
+  ↓1 = Obj;
+  if ($2) {
+    [à_obj:[PRED:_pro]];
+    [à_obj:AObj];
+    ↓2 = AObj;
+  } else {
+    [à_obj:NIL];
+  }
+}
+
+SComp → csu T
+{
+  ↓1 = ↑;
+  ↓2 = ↑;
+  ⇑ = ⇓1 ∪ ⇓2;
+}
+
+VComp → VP
+{
+  ↓1 = ↑ ∪ [finite:yes];
+  ⇑ = ⇓1;
+}
+
+PP → prep NP
+{
+  ↓1 = ↑;
+  ↓2 = ↑;
+  ⇑ = ⇓1 ∪ ⇓2;
+}
+»

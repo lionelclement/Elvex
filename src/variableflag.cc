@@ -31,8 +31,8 @@ VariableFlag::VariableFlag() noexcept {
 /* **************************************************
  *
  ************************************************** */
-void VariableFlag::setFlag(enum flagValues flag) {
-    this->flag = flag;
+void VariableFlag::setFlag(enum flagValues _flag) {
+    this->flag = _flag;
 }
 
 /* **************************************************

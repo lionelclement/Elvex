@@ -19,8 +19,8 @@
 
 #include <regex>
 #include <sstream>
-#include <string>
-#include <vector>
+//#include <string>
+//#include <vector>
 #include <list>
 #include "environment.hpp"
 #include "messages.hpp"
@@ -31,20 +31,20 @@
 #include "shared_ptr.hpp"
 #include "listfeatures.hpp"
 #include "bitset.hpp"
-#include "messages.hpp"
+//#include "messages.hpp"
 
 /* **************************************************
  *
  ************************************************** */
 Environment::Environment() {
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 Environment::~Environment() {
-    DELETE;
+    DELETE
     for (unordered_map::iterator i = env.begin(); i != env.end(); ++i) {
         valuePtr tmp = i->second;
         if (tmp)
@@ -225,7 +225,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
                     effect = true;
                     goto redo;
                 } else {
-                    FATAL_ERROR("environment: variable substitution failed");
+                    FATAL_ERROR("environment: variable substitution failed")
                 }
             }
                 break;
@@ -249,8 +249,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
  *
  ************************************************** */
 void Environment::replaceVariables(listFeaturesPtr listFeatures, bool &effect) {
-    for (ListFeatures::featuresVector::const_iterator vf = listFeatures->begin(); vf != listFeatures->end(); ++vf)
-        //if (*vf)
+    for (auto vf = listFeatures->begin(); vf != listFeatures->end(); ++vf)
         this->replaceVariables(*vf, effect);
 }
 
@@ -271,7 +270,9 @@ void Environment::replaceVariables(valuePtr value, bool &effect) {
         return;
     if (!value->isNil() && !value->isTrue()) {
         switch (value->getType()) {
-            case Value::BOOL:
+            case Value::NIL:
+            case Value::FALSE:
+            case Value::TRUE:
             case Value::STR:
             case Value::CONSTANT:
             case Value::CODE:

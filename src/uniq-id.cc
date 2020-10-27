@@ -17,15 +17,14 @@
  *
  ************************************************** */
 
-#include "id.hpp"
-#include "messages.hpp"
+#include "uniq-id.hpp"
 
-std::size_t Id::uniqId = 1;
+std::size_t UniqId::uniqId = 1;
 
 /* **************************************************
  *
  ************************************************** */
-Id::Id(size_t id) {
+UniqId::UniqId(size_t id) {
     if (id)
         this->id = id;
     else
@@ -35,6 +34,6 @@ Id::Id(size_t id) {
 /* **************************************************
  *
  ************************************************** */
-std::size_t Id::getId(void) const {
+std::size_t UniqId::getId(void) const {
     return this->id;
 }

@@ -21,7 +21,7 @@
 #define ELVEX_VALUE_H
 
 #include "flags.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 #include "variableflag.hpp"
@@ -31,11 +31,13 @@
 #endif
 
 class Value :
-        public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Value> {
+        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Value> {
 
 public:
     enum Type {
-        BOOL,
+        NIL,
+        FALSE,
+        TRUE,
         CONSTANT,
         VARIABLE,
         ANONYMOUS,
@@ -48,7 +50,7 @@ public:
 
 private:
     bitsetPtr bits; // pour encoder les constantes et les variables
-    unsigned int integer; // pour encoder les identifiers
+    unsigned int code; // pour encoder les identifiers
     listPtr list;
     std::string str;
     double number;
@@ -94,11 +96,11 @@ public:
 
     bitsetPtr getBits(void) const;
 
-    unsigned int getIdentifier(void) const;
+    unsigned int getCode(void) const;
 
     featuresPtr getFeatures(void) const;
 
-    double getDouble(void) const;
+    double getNumber(void) const;
 
     std::string getStr(void) const;
 
@@ -130,7 +132,7 @@ public:
 
     bool isAnonymous(void) const;
 
-    bool isDouble(void) const;
+    bool isNumber(void) const;
 
     bool isStr(void) const;
 

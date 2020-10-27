@@ -33,12 +33,13 @@ private:
     unsigned int from;
     unsigned int to;
 
-    ForestIdentifier(unsigned int, const std::string&, unsigned int, unsigned int);
+    ForestIdentifier(unsigned int, const std::string &, unsigned int, unsigned int);
 
 public:
     ~ForestIdentifier() override;
 
-    static forestIdentifierPtr create(unsigned int, const std::string&, unsigned int, unsigned int);
+    static forestIdentifierPtr create(unsigned int code, const std::string &featuresSerialString, unsigned int from,
+                                       unsigned int to);
 
     void makeSerialString() override;
 
@@ -54,18 +55,16 @@ public:
         return code;
     };
 
-    void print(std::ostream &) const;
-
     bool operator<(ForestIdentifier const &) const;
 
     bool operator!=(ForestIdentifier const &) const;
 
     struct hash {
-        size_t operator()(const forestIdentifierPtr&) const;
+        size_t operator()(const forestIdentifierPtr) const;
     };
 
     struct equal_to {
-        bool operator()(const forestIdentifierPtr&, const forestIdentifierPtr&) const;
+        bool operator()(const forestIdentifierPtr, const forestIdentifierPtr) const;
     };
 
 };

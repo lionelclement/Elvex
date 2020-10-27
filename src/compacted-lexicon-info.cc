@@ -17,12 +17,15 @@
  *
  ************************************************** */
 
-#include "compact-lexicon-buffer.hpp"
+#include "compacted-lexicon-info.hpp"
+#include "messages.hpp"
 
 /* **************************************************
  *
  ************************************************** */
-CompactLexiconBuffer::CompactLexiconBuffer(unsigned long int next, unsigned long int offset) {
+CompactedLexiconInfo::CompactedLexiconInfo(class CompactedLexiconInfo *next, unsigned long int offset) {
+    NEW
+    this->address = 0;
     this->next = next;
     this->offset = offset;
 }
@@ -30,43 +33,39 @@ CompactLexiconBuffer::CompactLexiconBuffer(unsigned long int next, unsigned long
 /* **************************************************
  *
  ************************************************** */
-CompactLexiconBuffer::CompactLexiconBuffer(void) {
-    this->next = (unsigned long int) (~0UL);
-    this->offset = (unsigned long int) (~0UL);
+CompactedLexiconInfo::~CompactedLexiconInfo() {
+    DELETE
+    if (next) {
+        delete (next);
+        next = NULL;
+    }
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactLexiconBuffer::getOffset() const {
-    return offset;
-}
-
-/* **************************************************
- *
- ************************************************** */
-unsigned long int CompactLexiconBuffer::getNext() const {
+class CompactedLexiconInfo *CompactedLexiconInfo::getNext(void) const {
     return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool CompactLexiconBuffer::isNext() const {
-    return next != (unsigned long int) (~0UL);
+unsigned long int CompactedLexiconInfo::getOffset(void) const {
+    return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool CompactLexiconBuffer::isOffset() const {
-    return offset != (unsigned long int) (~0UL);
+unsigned long int CompactedLexiconInfo::getAddress(void) const {
+    return address;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactLexiconBuffer::print(std::ostream &out) const {
-    out << (long int) next << ' ' << (long int) offset << std::endl;
+void CompactedLexiconInfo::setAddress(unsigned long int _address) {
+    this->address = _address;
 }
 

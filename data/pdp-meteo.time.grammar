@@ -1,0 +1,54 @@
+// from pdp-meteo.tensed.grammar
+#include pdp-meteo.binding.grammar
+
+/* **************************************************
+* Expressions temporelles
+************************************************** */
+@trace
+timeClause → bindingClause {
+  // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+  // println ↑;
+  [modS:NIL, $rest];
+  ↓1 = $rest;
+  ⇑ = ⇓1;
+}
+
+timeClause → bindingClause form time form time {
+  [modSType:lap_date, modS:<$CAR::<$CADR::$CDDR> >, $rest];
+  ↓1 = [modS:$CDDR, $rest];
+  ↓2 = [FORM:"du"];
+  ↓3 = [type:date, $CAR];
+  ↓4 = [FORM:"au"];
+  ↓5 = [type:date, $CADR];
+  ⇑ = ⇓1;
+}
+
+timeClause → form time form time comma bindingClause {
+  [modSType:lap_deixis, modS:<$CAR::<$CADR::$CDDR> >, $rest];
+  ↓1 = [FORM:"à partir de"];
+  ↓2 = [type:time, $CAR];
+  ↓3 = [FORM:"jusqu'à"];
+  ↓4 = [type:time, $CADR];
+  ↓5 = [];
+  ↓6 = [modS:$CDDR, $rest];
+  ⇑ = ⇓6;
+}
+
+timeClause → time|adv bindingClause {
+  [modSType:time, vform:tensed];
+  [modSType:time, modS:<$Head::$Tail>, $rest];
+  ↓1 = [type:time, $Head];
+  ↓2 = [$rest, modS:$Tail];
+  ⇑ = ⇓2;
+}
+
+/***
+timeClause → bindingClause time {
+  [modSType:time, vform:infinitive];
+  [modSType:time, modS:<$Head::$Tail>, $rest];
+  ↓1 = [$rest, modS:$Tail];
+  ↓2 = [type:time, $Head];
+  ⇑ = ⇓1;
+}
+***/
+

@@ -28,14 +28,14 @@
 #include <libxml/tree.h>
 #endif
 
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 
 class Rule :
-        public Id::Id, public std::enable_shared_from_this<class Rule> {
+public UniqId, public std::enable_shared_from_this<class Rule> {
 
 private:
-    termPtr lhs;
+    unsigned int lhs;
     std::vector<termsPtr> rhs;
     statementsPtr statements;
     unsigned int usages;
@@ -43,36 +43,36 @@ private:
     unsigned int lineno;
     bool trace;
 
-    Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+    Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+    Rule(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs,
+    Rule(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
-    Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs,
+    Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
 public:
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, termPtr lhs,
+    static rulePtr create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs,
                           statementsPtr statements = statementsPtr());
 
     static rulePtr
-    create(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements = statementsPtr());
+    create(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements = statementsPtr());
 
-    static rulePtr create(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
     ~Rule();
 
-    termPtr getLhs(void) const;
+    unsigned int getLhs(void) const;
 
     std::vector<termsPtr> &getRhs(void);
 
-    termPtr getCurrentTerm(void) const;
+    unsigned int getCurrentTerm(void) const;
 
     termsPtr getCurrentTerms() const;
 

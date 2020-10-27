@@ -21,7 +21,7 @@
 #define ELVEX_FOREST_H
 
 #include <vector>
-#include "id.hpp"
+#include "uniq-id.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -31,7 +31,7 @@
 #include "shared_ptr.hpp"
 
 class Forest :
-        public Id, public Flags, public std::enable_shared_from_this<class Forest> {
+        public UniqId, public Flags, public std::enable_shared_from_this<class Forest> {
 
 public:
     typedef std::vector<nodePtr> vectorNodes;
@@ -43,7 +43,6 @@ private:
     bool empty;
     entryPtr entry;
     std::vector<std::string> output;
-
     Forest(entryPtr entry, unsigned int from, unsigned int to);
 
 public:

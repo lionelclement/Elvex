@@ -28,7 +28,7 @@ public:
     static const int FLAGS = 8;
     static const std::bitset<FLAGS> SEEN;
     static const std::bitset<FLAGS> XML;
-    static const std::bitset<FLAGS> GEN;
+    static const std::bitset<FLAGS> GENERATED;
     static const std::bitset<FLAGS> DISABLED;
     static const std::bitset<FLAGS> NIL;
     static const std::bitset<FLAGS> BOTTOM;
@@ -42,11 +42,9 @@ public:
     Flags(void);
 
     Flags(const std::bitset<FLAGS> &flags);
-    //~Flags(void);
 
     std::bitset<FLAGS> &getFlags(void);
 
-    //void setFlags(const std::bitset<FLAGS> &flags);
     bool isSetFlags(const std::bitset<FLAGS> &cmp) const;
 
     bool isUnsetFlags(const std::bitset<FLAGS> &cmp) const;

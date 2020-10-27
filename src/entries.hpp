@@ -31,40 +31,37 @@
 class Entries :
         public std::enable_shared_from_this<class Entries> {
 
-public:
-    typedef std::vector<entryPtr> vector;
-
 private:
-    vector entries;
+    std::vector<entryPtr> entries;
 
     Entries();
 
-    Entries(const entryPtr&);
+    Entries(const entryPtr &);
 
-    Entries(const vector &);
+    Entries(const std::vector<entryPtr> &);
 
-    Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string& form);
+    Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string &form);
 
 public:
     ~Entries();
 
     static entriesPtr create();
 
-    static entriesPtr create(const entryPtr&);
+    static entriesPtr create(const entryPtr &);
 
-    static entriesPtr create(const vector &);
+    static entriesPtr create(const std::vector<entryPtr> &);
 
-    static entriesPtr create(unsigned int codePos, const unsigned int codeLemma, const std::string& form);
+    static entriesPtr create(unsigned int codePos, const unsigned int codeLemma, const std::string &form);
 
     size_t size() const;
 
-    vector::const_iterator begin() const;
+    std::vector<entryPtr>::iterator begin();
 
-    vector::const_iterator end() const;
+    std::vector<entryPtr>::iterator end();
 
     entryPtr get(const unsigned int) const;
 
-    void add(const entryPtr&);
+    void add(const entryPtr &);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr) const;

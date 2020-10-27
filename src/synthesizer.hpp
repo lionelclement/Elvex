@@ -54,7 +54,7 @@ private:
     Item_map itemMap;
     nodePtr nodeRoot;
 
-    class CompactLexicon *compactLexicon;
+    class CompactedLexicon *compactedLexicon;
 
     unsigned int maxLength;
     unsigned int maxUsages;
@@ -65,8 +65,8 @@ private:
 
     std::list<std::string> inputs;
 
-    std::string compactLexiconFileName;
-    std::string compactDirectoryName;
+    std::string compactedLexiconFileName;
+    std::string compactedDirectoryName;
 
     bool reduceAll;
     bool trace;
@@ -75,7 +75,9 @@ private:
     bool one;
     int attempsRandom;
 
-#ifdef TRACE_OPTION
+    MemoizationMap memoizedMap;
+
+    #ifdef TRACE_OPTION
     bool traceInit;
     bool traceStage;
     bool traceClose;
@@ -88,9 +90,6 @@ private:
     char *outXML;
 #endif
 
-#ifdef MEMOIZATION
-    MemoizationMap memoizedMap;
-#endif
 
 public:
 
@@ -114,17 +113,17 @@ public:
 
     void setGrammarFileName(char *);
 
-    void setCompactLexiconFileName(char *);
+    void setCompactedLexiconFileName(char *);
 
-    void setCompactDirectoryName(char *);
+    void setCompactedDirectoryName(char *);
 
     std::string getInputFileName(void) const;
 
     std::string getLexiconFileName(void) const;
 
-    std::string getCompactLexiconFileName(void) const;
+    std::string getCompactedLexiconFileName(void) const;
 
-    std::string getCompactDirectoryName(void) const;
+    std::string getCompactedDirectoryName(void) const;
 
     std::string getGrammarFileName(void) const;
 
@@ -138,9 +137,9 @@ public:
 
     unsigned int getMaxCardinal(void);
 
-    class CompactLexicon *getCompactLexicon(void) const;
+    class CompactedLexicon *getCompactedLexicon(void) const;
 
-    void setCompactLexicon(class CompactLexicon *);
+    void setCompactedLexicon(class CompactedLexicon *);
 
     void addInput(const std::string&);
 
@@ -201,11 +200,9 @@ public:
     void generate(class Parser &);
 
     const entriesPtr
-    findCompactLexicon(class Parser &, unsigned int code, const std::string& str, const unsigned int pred);
+    findCompactedLexicon(class Parser &, unsigned int code, const std::string& str, const unsigned int pred);
 
-#ifdef MEMOIZATION
     std::string keyMemoization(itemPtr const, itemPtr const);
-#endif
 };
 
 #endif // ELVEX_SYNTHESIZER_H

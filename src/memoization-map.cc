@@ -17,12 +17,14 @@
  *
  ************************************************** */
 
+#ifdef TRACE_MEMOIZATION
 #include <iostream>
+#endif
 #include <utility>
 #include "memoization-map.hpp"
 #include "features.hpp"
 #include "forestidentifier.hpp"
-#include "messages.hpp"
+//#include "messages.hpp"
 
 /* ************************************************************
  * 

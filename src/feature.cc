@@ -26,25 +26,24 @@
 #include "statements.hpp"
 #include "messages.hpp"
 #include "item.hpp"
-#include "bitset.hpp"
+//#include "bitset.hpp"
 #include "vartable.hpp"
 
 /* ************************************************************
  * 
  ************************************************************ */
-Feature::Feature(enum Feature::Type type, bitsetPtr _attribute, valuePtr _value)
-        : Id(0) {
+Feature::Feature(enum Feature::Type type, bitsetPtr _attribute, valuePtr _value) {
     this->type = type;
     this->attribute = std::move(_attribute);
     this->value = std::move(_value);
-    NEW;
+    NEW
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
 Feature::~Feature() {
-    DELETE;
+    DELETE
     if (attribute)
         attribute.reset();
     if (value)
@@ -194,10 +193,10 @@ void Feature::makeSerialString() {
             serialString = 'F';
             break;
         case Feature::CONSTANT:
-            serialString = this->attribute->peekSerialString();
+            serialString = attribute->peekSerialString();
             break;
         case Feature::VARIABLE:
-            serialString = '$' + this->attribute->peekSerialString();
+            serialString = '$' + attribute->peekSerialString();
             break;
     }
     if (value)

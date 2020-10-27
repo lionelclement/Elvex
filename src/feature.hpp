@@ -21,7 +21,7 @@
 #define ELVEX_FEATURE_H
 
 #include "flags.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 #include "variableflag.hpp"
@@ -31,7 +31,7 @@
 #endif
 
 class Feature :
-        public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Feature> {
+        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Feature> {
 
 public:
     enum Type {

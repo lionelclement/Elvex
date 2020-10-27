@@ -21,7 +21,6 @@
 
 #include <sstream>
 #include "vartable.hpp"
-#include "term.hpp"
 #include "terms.hpp"
 #include "entry.hpp"
 #include "entries.hpp"
@@ -80,7 +79,6 @@
 %union{
   unsigned int integer_slot;
   double double_slot;
-  termPtr *term_slot;
   termsPtr *terms_slot; //(A|B)
   std::vector< termsPtr  > *vector_terms_slot; // X Y
   std::string *string_slot;
@@ -136,7 +134,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %token TOKEN_ANONYMOUS
 
 %type<string_slot> stringOrIdentifier
-%type<term_slot> term
+%type<integer_slot> term
 %type<terms_slot> terms terms_disj
 %type<vector_terms_slot> terms_vector
 %type<entries_slot> lexical_entries  
@@ -180,7 +178,7 @@ begin:
 
 	|TOKEN_INPUT term features {
 	  DBUGPRT("begin input");
-	  parser.setStartTerm(*$2);
+	  parser.setStartTerm($2);
 	  (*$3)->renameVariables((*$3)->getId());
 	  parser.setStartFeatures(*$3);
 	  free($3);
@@ -188,7 +186,7 @@ begin:
 
 	|TOKEN_INPUT term {
 	  DBUGPRT("begin input");
-	  parser.setStartTerm(*$2);
+	  parser.setStartTerm($2);
 	  parser.setStartFeatures(Features::create());
 	 }
 
@@ -286,30 +284,24 @@ dictionary_line:
 	|stringOrIdentifier lexical_entries TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  for (Entries::vector::const_iterator entry = (*$2)->begin();
-	       entry != (*$2)->end();
-	       ++entry){
+	  for (auto entry = (*$2)->begin() ; entry != (*$2)->end() ; ++entry) {
 	    (*entry)->setForm(*$1);
-	    //}
-	    //for (std::featuresVector< entryPtr >::const_iterator entry = (*$2)->begin();
-	    //    entry != (*$2)->end();
-	    //   ++entry){
 	    entriesPtr lp;
 	    Parser::entries_map *predToEntries;
-	    //std::cerr << (*entry)->getCode() << std::endl;
-	    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find((*entry)->getCode());
+	    //std::cerr << entry->getCode() << std::endl;
+	    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find((*entry)->getPos());
 	    if (foundCode != parser.getLexicon().end()){
 	      predToEntries = foundCode->second;
 	    } else {
 	      predToEntries = new Parser::entries_map;
-	      parser.getLexicon().insert(std::make_pair((*entry)->getCode(), predToEntries));
+	      parser.getLexicon().insert(std::make_pair((*entry)->getPos(), predToEntries));
 	    }
-	    Parser::entries_map::iterator foundPred = predToEntries->find((*entry)->getCodePred());
+	    Parser::entries_map::iterator foundPred = predToEntries->find((*entry)->getPred());
 	    if (foundPred != predToEntries->end()){
 	      lp = foundPred->second;
 	    } else {
 	      lp = Entries::create();
-	      predToEntries->insert(std::make_pair((*entry)->getCodePred(), lp));
+	      predToEntries->insert(std::make_pair((*entry)->getPred(), lp));
 	    }
 	    lp->add(*entry);
 	  }
@@ -336,7 +328,7 @@ lexical_entries:
 	lexical_entry TOKEN_PIPE lexical_entries
 	{	  
 	  DBUGPRT("lexical_entries");
-	  $$=$3; 
+	  $$ = $3;
 	  (*$$)->add(*$1);
 	  free($1);
 	}
@@ -395,12 +387,12 @@ rule:
 	pref_rule term TOKEN_RIGHTARROW terms_vector structure_statement
 	{
 	  DBUGPRT("rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$2, *$4, $5 ? *$5 : statementsPtr());
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), $2, *$4, $5 ? *$5 : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getGrammar().addRule(rule);
 	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm(*$2);
+	    parser.getGrammar().setStartTerm($2);
 	  }
 	  free($4);
 	  if ($5)
@@ -410,12 +402,12 @@ rule:
 	|pref_rule term TOKEN_RIGHTARROW structure_statement
 	{
 	  DBUGPRT("Rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), *$2, $4 ? *$4 : statementsPtr());
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), $2, $4 ? *$4 : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getGrammar().addRule(rule);
 	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm(*$2);
+	    parser.getGrammar().setStartTerm($2);
 	  }
 	  if ($4)
 	    free($4);
@@ -451,29 +443,27 @@ terms_disj:
 	{ 
 	  DBUGPRT("term_disj");
 	  $$ = $1;
-	  (*$$)->push_back(*$3);
+	  (*$$)->push_back($3);
 	}
 
 	|term
 	{ 
 	  DBUGPRT("term_disj"); 
-	  $$ = new termsPtr(Terms::create(*$1));
+	  $$ = new termsPtr(Terms::create($1));
 	};
 	
 term:
 	TOKEN_IDENTIFIER
 	{ 
 	  DBUGPRT("term_id");
-	  unsigned int code = Vartable::identifierToCode(*$1);
-	  $$ = new termPtr(Term::create(code));
+	  $$ = Vartable::identifierToCode(*$1);
 	  free($1);
 	}
 
 	|TOKEN_VARIABLE
 	{ 
 	  DBUGPRT("term_id");
-	  unsigned int code = Vartable::identifierToCode(*$1);
-	  $$ = new termPtr(Term::create(code));
+	  $$ = Vartable::identifierToCode(*$1);
 	  free($1);
 	}
 
@@ -600,7 +590,7 @@ statement:
 		      ||((*$3)->isUp())
 		      ||((*$3)->isUnif())
 		      ||((*$3)->isDown2())
-		      ||((*$3)->isDouble())
+		      ||((*$3)->isNumber())
 		      ||((*$3)->isFct())
 		      ||((*$3)->isSearch())));
 	  else {

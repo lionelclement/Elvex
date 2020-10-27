@@ -27,22 +27,21 @@ ADD_FLEX_BISON_DEPENDENCY(ruleslex rulesyacc)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-set(ELVEX_SOURCES
+set(ELVEX_COMMON_SOURCES
         ${BISON_rulesyacc_OUTPUTS}
         ${FLEX_ruleslex_OUTPUTS}
         src/bitset.cc
         src/bitset.hpp
-        src/compact-lexicon-buffer.cc
-        src/compact-lexicon-buffer.hpp
-        src/compact-lexicon-fsa.cc
-        src/compact-lexicon-fsa.hpp
-        src/compact-lexicon-info.cc
-        src/compact-lexicon-info.hpp
-        src/compact-lexicon-tree.cc
-        src/compact-lexicon-tree.hpp
-        src/compact-lexicon.cc
-        src/compact-lexicon.hpp
-        src/elvex.cc
+        src/compacted-lexicon-buffer.cc
+        src/compacted-lexicon-buffer.hpp
+        src/compacted-lexicon-fsa.cc
+        src/compacted-lexicon-fsa.hpp
+        src/compacted-lexicon-info.cc
+        src/compacted-lexicon-info.hpp
+        src/compacted-lexicon-tree.cc
+        src/compacted-lexicon-tree.hpp
+        src/compacted-lexicon.cc
+        src/compacted-lexicon.hpp
         src/entries.cc
         src/entries.hpp
         src/entry.cc
@@ -63,8 +62,8 @@ set(ELVEX_SOURCES
         src/forestmap.hpp
         src/grammar.cc
         src/grammar.hpp
-        src/id.cc
-        src/id.hpp
+        src/uniq-id.cc
+        src/uniq-id.hpp
         src/item.cc
         src/item.hpp
         src/itemset.cc
@@ -95,8 +94,6 @@ set(ELVEX_SOURCES
         src/statements.hpp
         src/synthesizer.cc
         src/synthesizer.hpp
-        src/term.cc
-        src/term.hpp
         src/terms.cc
         src/terms.hpp
         src/value.cc
@@ -111,28 +108,29 @@ configure_file(
         src/config.hpp
         @ONLY)
 
-add_executable(elvex ${ELVEX_SOURCES})
+add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc)
 target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
+add_executable(elvexdebug  ${ELVEX_COMMON_SOURCES} src/elvex.cc)
+target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
-    target_compile_definitions(elvex PUBLIC OUTPUT_XML)
+    target_compile_definitions(elvex PUBLIC
+            OUTPUT_XML
+            )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
-else()
-    message("libxml2 not found")
-endif()
-
-add_executable(elvexdebug ${ELVEX_SOURCES})
-target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
-if (LibXml2_FOUND)
-    target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML TRACE_OPTION)
+    target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
+    TRACE_OPTION
+    TRACE_MEMOIZATION
+)
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})
 else()
     message("libxml2 not found")
 endif()
 
-add_executable(elvexbuildLexicon ${ELVEX_SOURCES})
+add_executable(elvexbuildLexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
 target_compile_options(elvexbuildLexicon PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 FLEX_TARGET(postedition src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition.cc)

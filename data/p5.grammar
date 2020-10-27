@@ -1,0 +1,65 @@
+@grammar «
+
+startSymbol → [a] c {
+  Y = X;
+  if ($1)
+    X = _a_;
+  else
+    X = none;
+  ↓2 = [a:X, b:Y] ∪ ↑;	
+
+/*
+PI = 3.1416;
+  [number:N, gender:G, person:P] ⊂ ⇓1;
+  [x:XXX, y:NIL];
+  [x:YYY, y:ZZZ] ⊂ ↑;
+  KKK = XXX;
+  LLL = MMM;
+  if (YYY)
+    TEST1 = yes;
+  else 
+    TEST1 = no;
+  if (¬YYY)
+    TEST2 = no;
+  else 
+    TEST2 = yes;
+  if (ZZZ)
+    TEST3 = yes;
+  else 
+    TEST3 = no;
+  if (¬ZZZ)
+    TEST4= no;
+  else 
+    TEST4 = yes;
+  if (MMM)
+    TEST5 = yes;
+  else 
+    TEST5 = no;
+  if (¬MMM)
+    TEST6 = no;
+  else 
+    TEST6 = yes;
+  
+  */
+  /*
+if ($1)
+    if ($1:1)
+      A = a1;
+    else 
+      A = a2;
+  else
+    A = no;
+  
+  
+  if ($2)
+    if ($2:1)
+      B = b1;
+    else
+      B = b2;
+  else
+    B = no;
+  ↓3 = [a:A, b:B];	
+  */
+}
+
+»

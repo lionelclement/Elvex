@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef COMPACTLEXICON_H
-#define COMPACTLEXICON_H
+#ifndef COMPACTEDLEXICON_H
+#define COMPACTEDLEXICON_H
 
 #define MAXSTRING 100000
 #define SEP_PREF ""
@@ -30,7 +30,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "compact-lexicon-tree.hpp"
+#include "compacted-lexicon-tree.hpp"
 #include "lexicon.hpp"
 
 extern bool isLexString;
@@ -39,7 +39,7 @@ extern char *currentLexString;
 
 extern class Entry *localEntry;
 
-class CompactLexicon {
+class CompactedLexicon {
 
 private:
 
@@ -50,18 +50,17 @@ private:
     FILE *dataFile;
     std::string dataFileName;
     std::istream *inputStream = &std::cin;
-    CompactLexiconTree *compactLexicon;
+    CompactedLexiconTree *compactedLexicon;
 
 public:
     char *buffer;
-    struct CompactLexiconFsa *fsa;
-    struct CompactLexiconBuffer *info;
+    struct CompactedLexiconFsa *fsa;
+    struct CompactedLexiconBuffer *info;
     unsigned long int init;
-
-    class CompactLexiconTree *lexiconInit;
+    class CompactedLexiconTree *lexiconInit;
 
 public:
-    CompactLexicon(std::string directoryName, std::string fileName);
+    CompactedLexicon(std::string directoryName, std::string fileName);
 
     void printResults(std::ostream &, unsigned long int index, bool sep) const;
 
@@ -91,4 +90,4 @@ public:
     void consult(void);
 };
 
-#endif // COMPACTLEXICON_H
+#endif // COMPACTEDLEXICON_H

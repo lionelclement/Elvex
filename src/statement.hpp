@@ -186,7 +186,7 @@ public:
 
     bool isList(void) const;
 
-    bool isDouble(void) const;
+    bool isNumber(void) const;
 
     bool isFct(void) const;
 

@@ -17,55 +17,56 @@
  *
  ************************************************** */
 
-#include "compact-lexicon-info.hpp"
-#include "messages.hpp"
+#include "compacted-lexicon-buffer.hpp"
 
 /* **************************************************
  *
  ************************************************** */
-CompactLexiconInfo::CompactLexiconInfo(class CompactLexiconInfo *next, unsigned long int offset) {
-    this->address = 0;
+CompactedLexiconBuffer::CompactedLexiconBuffer(unsigned long int next, unsigned long int offset) {
     this->next = next;
     this->offset = offset;
-    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-CompactLexiconInfo::~CompactLexiconInfo() {
-    DELETE;
-    if (next) {
-        delete (next);
-        next = NULL;
-    }
+CompactedLexiconBuffer::CompactedLexiconBuffer(void) {
+    this->next = (unsigned long int) (~0UL);
+    this->offset = (unsigned long int) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-class CompactLexiconInfo *CompactLexiconInfo::getNext(void) const {
-    return next;
-}
-
-/* **************************************************
- *
- ************************************************** */
-unsigned long int CompactLexiconInfo::getOffset(void) const {
+unsigned long int CompactedLexiconBuffer::getOffset() const {
     return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactLexiconInfo::getAddress(void) const {
-    return address;
+unsigned long int CompactedLexiconBuffer::getNext() const {
+    return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactLexiconInfo::setAddress(unsigned long int address) {
-    this->address = address;
+bool CompactedLexiconBuffer::isNext() const {
+    return next != (unsigned long int) (~0UL);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool CompactedLexiconBuffer::isOffset() const {
+    return offset != (unsigned long int) (~0UL);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void CompactedLexiconBuffer::print(std::ostream &out) const {
+    out << (long int) next << ' ' << (long int) offset << std::endl;
 }
 

@@ -17,9 +17,9 @@
  *
  ************************************************** */
 
-#include <sstream>
-#include <iostream>
-#include "messages.hpp"
+//#include <sstream>
+//#include <iostream>
+//#include "messages.hpp"
 #include "serializable.hpp"
 
 /* **************************************************
@@ -41,8 +41,7 @@ Serializable::~Serializable() {
  ************************************************** */
 size_t Serializable::hashCode() {
     if (serialHashCode == 0) {
-        makeSerialString();
-        serialHashCode = std::hash<std::string>()(serialString);
+        peekSerialString();
     }
     return serialHashCode;
 }
@@ -51,7 +50,7 @@ size_t Serializable::hashCode() {
  *
  ************************************************** */
 std::string Serializable::peekSerialString() {
-    if (serialString.empty()) {
+  if (serialString.empty()) {
         makeSerialString();
         serialHashCode = std::hash<std::string>()(serialString);
     }

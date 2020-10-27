@@ -20,7 +20,7 @@
 #ifndef ELVEX_ENTRY_H
 #define ELVEX_ENTRY_H
 
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
@@ -29,11 +29,11 @@
 #endif
 
 class Entry :
-        public Id, public Serializable, public std::enable_shared_from_this<class Entry> {
+        public UniqId, public Serializable, public std::enable_shared_from_this<class Entry> {
 
 private:
-    unsigned int code;
-    unsigned int codePred;
+    unsigned int pos;
+    unsigned int pred;
     std::string form;
     featuresPtr features;
 
@@ -46,17 +46,17 @@ private:
 public:
     ~Entry();
 
-    static entryPtr create(unsigned int code, unsigned int codePred, std::string form = std::string(),
+    static entryPtr create(unsigned int term, unsigned int pred, std::string form = std::string(),
                            featuresPtr features = featuresPtr());
 
-    static entryPtr create(unsigned int code, std::string pred = std::string(), std::string form = std::string(),
+    static entryPtr create(unsigned int term, std::string pred = std::string(), std::string form = std::string(),
                            featuresPtr features = featuresPtr());
 
-    unsigned int getCode(void) const;
+    unsigned int getPos(void) const;
 
-    void setCode(const unsigned int code);
+    void setPos(const unsigned int pos);
 
-    unsigned int getCodePred(void) const;
+    unsigned int getPred(void) const;
 
     void setForm(const std::string form);
 

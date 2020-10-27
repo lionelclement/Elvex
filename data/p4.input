@@ -1,0 +1,2 @@
+@input 
+S [PRED:b, adj:<[PRED:a2], [PRED:a1]>];

@@ -17,22 +17,22 @@
  *
  ************************************************** */
 
-#ifndef COMPACTLEXICONINFO_H
-#define COMPACTLEXICONINFO_H
+#ifndef COMPACTEDLEXICONINFO_H
+#define COMPACTEDLEXICONINFO_H
 
-class CompactLexiconInfo {
+class CompactedLexiconInfo {
 private:
-    class CompactLexiconInfo *next;
+    class CompactedLexiconInfo *next;
 
     unsigned long int offset;
     unsigned long int address;
 
 public:
-    CompactLexiconInfo(class CompactLexiconInfo *next = nullptr, unsigned long int offset = 0);
+    CompactedLexiconInfo(class CompactedLexiconInfo *next = nullptr, unsigned long int offset = 0);
 
-    ~CompactLexiconInfo();
+    ~CompactedLexiconInfo();
 
-    class CompactLexiconInfo *getNext(void) const;
+    class CompactedLexiconInfo *getNext(void) const;
 
     unsigned long int getOffset(void) const;
 
@@ -41,4 +41,4 @@ public:
     void setAddress(unsigned long int);
 };
 
-#endif // COMPACTLEXICONINFO_H
+#endif // COMPACTEDLEXICONINFO_H

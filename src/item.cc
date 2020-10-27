@@ -23,7 +23,7 @@
 #include "environment.hpp"
 #include "messages.hpp"
 #include "forest.hpp"
-#include "entry.hpp"
+//#include "entry.hpp"
 #include "forestidentifier.hpp"
 #include "itemset.hpp"
 #include "shared_ptr.hpp"
@@ -32,14 +32,13 @@
 #include "statement.hpp"
 #include "statements.hpp"
 #include "synthesizer.hpp"
-#include "term.hpp"
+//#include "../trash/term.hpp"
 #include "terms.hpp"
 
 /* **************************************************
  *
  ************************************************** */
-Item::Item(rulePtr rule, unsigned int index, statementsPtr statements)
-        : Id(0) {
+Item::Item(rulePtr rule, unsigned int index, statementsPtr statements) {
     this->rule = std::move(rule);
     this->trace = this->rule->getTrace();
     this->index = index;
@@ -49,7 +48,7 @@ Item::Item(rulePtr rule, unsigned int index, statementsPtr statements)
     this->synthesizedFeatures = Features::NIL;
     this->synthesizedSonFeatures = ListFeatures::create();
     this->inheritedSonFeatures = ListFeatures::create();
-    NEW;
+    NEW
 }
 
 /* **************************************************
@@ -68,7 +67,7 @@ Item::Item(const rulePtr& rule, unsigned int index, unsigned int indexTerm, stat
     }
     if ((terms.size() < index) && (index != UINT_MAX))
         this->indexTerms[index] = indexTerm;
-    NEW;
+    NEW
 }
 
 /* **************************************************
@@ -85,14 +84,15 @@ Item::Item(const rulePtr& rule, unsigned int index, std::vector<unsigned int> &i
         this->forestIdentifiers.push_back(forestIdentifierPtr());
         this->synthesizedSonFeatures->push_back(Features::NIL);
         this->inheritedSonFeatures->push_back(Features::NIL);
-    }NEW;
+    }
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 Item::~Item() {
-    DELETE;
+    DELETE
     refs.clear();
     seen.clear();
     ranges.clear();
@@ -227,17 +227,17 @@ void Item::setCurrentTerms(termsPtr terms) {
 /* **************************************************
  *
  ************************************************** */
-termPtr Item::getCurrentTerm() const {
+unsigned int Item::getCurrentTerm() const {
     termsPtr terms = getCurrentTerms();
     if ((terms == nullptr) || (terms->size() == 0))
-        return nullptr;
+        return 0;
     return (*terms)[0];
 }
 
 /* **************************************************
  *
  ************************************************** */
-termPtr Item::getLhs() const {
+unsigned int Item::getLhs() const {
     return rule->getLhs();
 }
 
@@ -633,7 +633,7 @@ void Item::print(std::ostream &out) const {
         for (auto i = forestIdentifiers.begin();
              i != forestIdentifiers.end();) {
             if (*i)
-                (*i)->print(out);
+                out << (*i)->peekSerialString();
             else
                 out << "NULL";
             if (++i != forestIdentifiers.end()) {
@@ -644,13 +644,16 @@ void Item::print(std::ostream &out) const {
     }
     if (s_inheritedFeatures) {
         out << "<td bgcolor=\"lightyellow\">"; //<center>↑</center><br>";
+        //out << inheritedFeatures->hashCode() << "<BR>" <<std::endl;
+        //out << inheritedFeatures->peekSerialString() << "<BR>" << std::endl;
         inheritedFeatures->print(out);
         out << "</td>";
     }
     if (s_inheritedSonFeatures) {
         out << "<td bgcolor=\"lightyellow\"><table>"; //<center>↓i</center><br>";
-        for (const auto & i : *inheritedSonFeatures) {
-            out << "<tr><td>";
+        int k = 1;
+	for (const auto & i : *inheritedSonFeatures) {
+	  out << "<tr><td>" << k++ << "</td><td>";
             if (i)
                 i->print(out);
             out << "</td></tr>";
@@ -666,8 +669,9 @@ void Item::print(std::ostream &out) const {
     }
     if (s_synthesizedSonFeatures) {
         out << "<td bgcolor=\"lightcyan\"><table>"; //<center>⇓i</center><br>";
-        for (const auto & i : *synthesizedSonFeatures) {
-            out << "<tr><td>";
+        int k = 1;
+	for (const auto & i : *synthesizedSonFeatures) {
+	  out << "<tr><td>" << k++ << "</td><td>";
             if (i)
                 i->print(out);
             out << "</td></tr>";
@@ -750,7 +754,7 @@ void Item::successor(bool &effect) {
  ************************************************** */
 void Item::apply(Parser &parser, Synthesizer *synthesizer) {
     if (statements) {
-        unsigned int k = 1;
+        //unsigned int k = 1;
         bool effect = true;
         if (isUnsetFlags(Flags::BOTTOM)
             && statements->isUnsetFlags(Flags::SEEN)) {
@@ -764,7 +768,7 @@ void Item::apply(Parser &parser, Synthesizer *synthesizer) {
 #endif
             effect = false;
             statements->apply(shared_from_this(), parser, synthesizer, effect);
-            ++k;
+            //++k;
 #ifdef TRACE_OPTION
             if (synthesizer->getTraceAction()) {
           std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
@@ -780,6 +784,36 @@ void Item::apply(Parser &parser, Synthesizer *synthesizer) {
  *
  ************************************************** */
 void Item::makeSerialString() {
+
+     serialString = std::to_string(getRule()->getId());
+   if (getIndex() == UINT_MAX)
+      serialString += '+';
+   else
+      serialString += std::to_string(getIndex());
+   serialString += '|';
+   std::vector<unsigned int>::const_iterator ind = indexTerms.begin();
+   while (ind != indexTerms.end())
+      serialString += std::to_string(*(ind++)) + '-';
+
+   serialString += '|';
+   std::set<unsigned int>::const_iterator ref = refs.begin();
+   while (ref != refs.end())
+      serialString += std::to_string(*(ref++)) + '-';
+
+   serialString += '|';
+   std::vector<forestIdentifierPtr>::const_iterator fi = forestIdentifiers.begin();
+   while (fi != forestIdentifiers.end()) {
+      if (*fi)
+         serialString += (*fi)->peekSerialString() + '-';
+      else
+         serialString += '.';
+      ++fi;
+   }
+
+   serialString += '|';
+   serialString += inheritedFeatures->peekSerialString();
+
+   /*
     serialString = std::to_string(getRule()->getId());
     if (getIndex() == UINT_MAX)
         serialString += '+';
@@ -807,6 +841,7 @@ void Item::makeSerialString() {
 
     serialString += '|';
     serialString += inheritedFeatures->peekSerialString();
+   */
 }
 
 /* **************************************************
@@ -821,6 +856,9 @@ size_t Item::hash::operator()(itemPtr const& i) const {
  ************************************************** */
 bool Item::equal_to::operator()(itemPtr const& i1, itemPtr const& i2) const {
     return i1->peekSerialString() == i2->peekSerialString();
+    /*
+    return i1->hashCode() == i2->hashCode();
+    */
 }
 
 /* **************************************************

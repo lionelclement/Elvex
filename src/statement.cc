@@ -45,6 +45,7 @@
  *
  ************************************************** */
 Statement::Statement(unsigned int lineno, type op, std::string str) {
+    NEW
     this->lineno = lineno;
     this->op = op;
     this->lhs = statementPtr();
@@ -58,7 +59,6 @@ Statement::Statement(unsigned int lineno, type op, std::string str) {
     this->list = listPtr();
     this->statements = statementsPtr();
     this->number = 0;
-    NEW;
 }
 
 /* **************************************************
@@ -67,6 +67,7 @@ Statement::Statement(unsigned int lineno, type op, std::string str) {
 Statement::Statement(unsigned int lineno, type op, statementPtr lhs, statementPtr rhs, unsigned int first,
                      unsigned int second, featuresPtr features, bitsetPtr bits,
                      arithmetic_op fct, listPtr list, statementsPtr statements, double number) {
+    NEW
     this->lineno = lineno;
     this->op = op;
     this->lhs = std::move(lhs);
@@ -80,26 +81,25 @@ Statement::Statement(unsigned int lineno, type op, statementPtr lhs, statementPt
     this->list = std::move(list);
     this->statements = std::move(statements);
     this->number = number;
-    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Statement::Statement(unsigned int lineno, type op, valuePtr value) {
+    NEW
     this->lineno = lineno;
     this->op = op;
     this->lhs = statementPtr();
     this->rhs = statementPtr();
     this->value = value;
-    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
 Statement::~Statement() {
-    DELETE;
+    DELETE
 }
 
 /* **************************************************
@@ -333,7 +333,7 @@ bool Statement::isList() const {
 /* **************************************************
  *
  ************************************************** */
-bool Statement::isDouble() const {
+bool Statement::isNumber() const {
     return op == NUMBER;
 }
 
@@ -370,7 +370,7 @@ statementPtr Statement::getRhs() const {
  ************************************************** */
 featuresPtr Statement::getFeatures() const {
     return features;
-};
+}
 
 /* **************************************************
  *
@@ -1009,12 +1009,12 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
 
         case VARIABLE: {
             if (item->getEnvironment()) {
-                valuePtr value = item->getEnvironment()->find(getBits());
-                if (!value) {
+                valuePtr _value = item->getEnvironment()->find(getBits());
+                if (!_value) {
                     FATAL_ERROR_STM
                 }
-                if (value && value->getType() == Value::FEATURES)
-                    resultFeatures = value->getFeatures()->clone();
+                if (_value && _value->getType() == Value::FEATURES)
+                    resultFeatures = _value->getFeatures()->clone();
             }
         }
             break;
@@ -1058,24 +1058,24 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
             if (!fs) {
                 resultFeatures = featuresPtr();
             }
-            if (!synthesizer->getCompactLexicon()) FATAL_ERROR("search operator error: No compact lexicon defined.");
-            entriesPtr entries = synthesizer->findCompactLexicon(parser, 0, getBits()->toString(), fs->assignPred());
+            if (!synthesizer->getCompactedLexicon()) FATAL_ERROR("search operator error: No compact lexicon defined.")
+            entriesPtr entries = synthesizer->findCompactedLexicon(parser, 0, getBits()->toString(), fs->assignPred());
             if (entries) {
                 //if (entries->size() > 1) {
                 // ERROR("pred ambiguous")
                 //}
                 // On ne cherche que la première entrée
-                Entries::vector::const_iterator it = entries->begin();
-                featuresPtr fs = (*it)->getFeatures();
-                if (fs) {
+                auto it = entries->begin();
+                featuresPtr _fs = (*it)->getFeatures();
+                if (_fs) {
                     std::stringstream stringStream;
-                    fs->flatPrint(stringStream);
+                    _fs->flatPrint(stringStream);
                     if (parser.parseBuffer("#", stringStream.str(), stringStream.str())) FATAL_ERROR_UNEXPECTED
                     else {
                         resultFeatures = parser.getLocalFeatures();
                     }
                 }
-            } else FATAL_ERROR("search operator error: No entry for " + Vartable::codeToIdentifier(fs->assignPred()));
+            } else FATAL_ERROR("search operator error: No entry for " + Vartable::codeToIdentifier(fs->assignPred()))
 
         }
             break;
@@ -1134,7 +1134,7 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
         case FCT:
         case FINISHED:
         case SEARCH:
-        case ANONYMOUS: FATAL_ERROR_STM;
+        case ANONYMOUS: FATAL_ERROR_STM
             break;
         case LIST:
             resultList = getList()->clone();
@@ -1145,14 +1145,14 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
             break;
         case VARIABLE:
             if (item->getEnvironment()) {
-                valuePtr value = item->getEnvironment()->find(getBits());
-                if (!value) {
-                    FATAL_ERROR_STM;
+                valuePtr _value = item->getEnvironment()->find(getBits());
+                if (!_value) {
+                    FATAL_ERROR_STM
                     resultList = listPtr();
-                } else if (value->isNil())
+                } else if (_value->isNil())
                     resultList = List::NIL_LIST;
-                else if (value->isList())
-                    resultList = value->getList()->clone();
+                else if (_value->isList())
+                    resultList = _value->getList()->clone();
                 else {
                     std::ostringstream oss1, oss2;
                     this->print(oss1);
@@ -1215,7 +1215,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
         case SUBSUME:
         case INSET:
         case GUARD:
-        case STMS: FATAL_ERROR_STM;
+        case STMS: FATAL_ERROR_STM
             break;
 
         case DASH: {
@@ -1265,8 +1265,8 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 
         case VARIABLE:
             if (replaceVariables && item->getEnvironment()) {
-                valuePtr value = item->getEnvironment()->find(getBits());
-                resultValue = value;
+                valuePtr _value = item->getEnvironment()->find(getBits());
+                resultValue = _value;
                 goto valueBuilt;
             } else if (replaceVariables) {
                 resultValue = valuePtr();
@@ -1313,7 +1313,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
             break;
 
         case SEARCH:
-        case ATTEST: FATAL_ERROR_STM;
+        case ATTEST: FATAL_ERROR_STM
             goto valueBuilt;
             break;
 
@@ -1334,7 +1334,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                         if (v1->isVariable())
                             v1str = v1->getBits()->toString();
                         else if (v1->isIdentifier())
-                            v1str = Vartable::codeToIdentifier(v1->getIdentifier());
+                            v1str = Vartable::codeToIdentifier(v1->getCode());
                         else if (v1->isStr())
                             v1str = v1->getStr();
                         else
@@ -1348,7 +1348,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                         if (v2->isVariable())
                             v2str = v2->getBits()->toString();
                         else if (v2->isIdentifier())
-                            v2str = Vartable::codeToIdentifier(v2->getIdentifier());
+                            v2str = Vartable::codeToIdentifier(v2->getCode());
                         else if (v2->isStr())
                             v2str = v2->getStr();
                         else
@@ -1358,14 +1358,14 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     if ((!v1) || (!v2))
                         resultValue = valuePtr();
 
-                    else if ((v1->isDouble()) && (v2->isDouble()))
-                        resultValue = Value::create(Value::NUMBER, v1->getDouble() + v2->getDouble());
+                    else if ((v1->isNumber()) && (v2->isNumber()))
+                        resultValue = Value::create(Value::NUMBER, v1->getNumber() + v2->getNumber());
 
                     else if (isv1astring && isv2astring)
                         resultValue = Value::create(Value::STR, v1str + v2str);
 
                     else if ((v1->isList()) && (v2->isList())) {
-                        WARNING_STM;
+                        WARNING_STM
                         resultValue = valuePtr();
                     } else {
                         FATAL_ERROR_UNEXPECTED
@@ -1379,8 +1379,8 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if ((!v1) || (!v2))
                         resultValue = valuePtr();
-                    else if ((v1->isDouble()) && (v2->isDouble()))
-                        resultValue = Value::create(Value::NUMBER, v1->getDouble() - v2->getDouble());
+                    else if ((v1->isNumber()) && (v2->isNumber()))
+                        resultValue = Value::create(Value::NUMBER, v1->getNumber() - v2->getNumber());
                     else
                         resultValue = valuePtr();
                     goto valueBuilt;
@@ -1392,8 +1392,8 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if ((!v1) || (!v2))
                         resultValue = valuePtr();
-                    else if ((v1->isDouble()) && (v2->isDouble()))
-                        resultValue = Value::create(Value::NUMBER, v1->getDouble() * v2->getDouble());
+                    else if ((v1->isNumber()) && (v2->isNumber()))
+                        resultValue = Value::create(Value::NUMBER, v1->getNumber() * v2->getNumber());
                     else
                         resultValue = valuePtr();
                     goto valueBuilt;
@@ -1404,8 +1404,8 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if ((!v1) || (!v2))
                         resultValue = valuePtr();
-                    else if ((v1->isDouble()) && (v2->isDouble()))
-                        resultValue = Value::create(Value::NUMBER, v1->getDouble() / v2->getDouble());
+                    else if ((v1->isNumber()) && (v2->isNumber()))
+                        resultValue = Value::create(Value::NUMBER, v1->getNumber() / v2->getNumber());
                     else
                         resultValue = valuePtr();
                     goto valueBuilt;
@@ -1416,8 +1416,8 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if ((!v1) || (!v2))
                         resultValue = valuePtr();
-                    else if ((v1->isDouble()) && (v2->isDouble()))
-                        resultValue = Value::create(Value::NUMBER, fmod(v1->getDouble(), v2->getDouble()));
+                    else if ((v1->isNumber()) && (v2->isNumber()))
+                        resultValue = Value::create(Value::NUMBER, fmod(v1->getNumber(), v2->getNumber()));
                     else
                         resultValue = valuePtr();
                     goto valueBuilt;
@@ -1427,8 +1427,8 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if (!v1)
                         resultValue = valuePtr();
-                    else if ((v1->isDouble()))
-                        resultValue = Value::create(Value::NUMBER, -v1->getDouble());
+                    else if ((v1->isNumber()))
+                        resultValue = Value::create(Value::NUMBER, -v1->getNumber());
                     else
                         resultValue = valuePtr();
                     goto valueBuilt;
@@ -1580,7 +1580,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
     }
 
     if (!resultFeatures && !resultValue && !resultList) {
-        FATAL_ERROR_STM;
+        FATAL_ERROR_STM
     }
 
     if (resultList) {
@@ -1668,7 +1668,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                         case Value::CODE: {
                             switch ((*i2)->getValue()->getType()) {
                                 case Value::CODE:
-                                    if ((*i1)->getValue()->getIdentifier() != (*i2)->getValue()->getIdentifier()) {
+                                    if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode()) {
                                         result = Features::BOTTOM;
                                         goto endUnif;
                                     }
@@ -1681,7 +1681,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
 
-                                default: FATAL_ERROR_STM;
+                                default: FATAL_ERROR_STM
                                     break;
                             }
                         }
@@ -1705,7 +1705,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                             result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i2)->getValue()));
                             break;
 
-                        default: FATAL_ERROR_STM;
+                        default: FATAL_ERROR_STM
                             break;
                     }
 
@@ -1720,7 +1720,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                 if ((*i2)->getType() == Feature::FORM) {
 
                     (*i2)->addFlags(Flags::SEEN);
-                    if (!(*i1)->getValue()->isStr() || !(*i2)->getValue()->isStr()) FATAL_ERROR_STM;
+                    if (!(*i1)->getValue()->isStr() || !(*i2)->getValue()->isStr()) FATAL_ERROR_STM
 
                     if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr()) {
                         result = Features::BOTTOM;
@@ -1745,6 +1745,9 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 
                     switch ((*i1)->getValue()->getType()) {
 
+                        case Value::NIL:
+                            FATAL_ERROR_UNEXPECTED
+
                         case Value::STR:
                             switch ((*i2)->getValue()->getType()) {
                                 case Value::STR:
@@ -1756,7 +1759,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                                                                 (*i1)->getValue()));
                                     break;
 
-                                case Value::VARIABLE: FATAL_ERROR_STM;
+                                case Value::VARIABLE: FATAL_ERROR_STM
                                     /*
                                   result->add(new Feature((*i2)->getAttribute(), (*i1)->getValue(), Feature::CONSTANT));
                                   if (item->getEnvironment()==NULL)
@@ -1765,15 +1768,17 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                                     */
                                     break;
 
-                                default: FATAL_ERROR_STM;
+                                default: FATAL_ERROR_STM
                                     break;
 
                             }
                             break;
 
-                        case Value::BOOL: {
+                        case Value::FALSE:
+                            case Value::TRUE: {
                             switch ((*i2)->getValue()->getType()) {
-                                case Value::BOOL:
+                                case Value::FALSE:
+                                case Value::TRUE:
                                     if ((*i1)->getValue()->isNil() != (*i2)->getValue()->isNil()) {
                                         result = Features::BOTTOM;
                                         goto endUnif;
@@ -1789,7 +1794,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                                         item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
-                                default: FATAL_ERROR_STM;
+                                default: FATAL_ERROR_STM
                                     break;
                             }
                         }
@@ -1798,14 +1803,14 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                         case Value::NUMBER: {
                             switch ((*i2)->getValue()->getType()) {
                                 case Value::NUMBER:
-                                    if ((*i1)->getValue()->getDouble() != (*i2)->getValue()->getDouble()) {
+                                    if ((*i1)->getValue()->getNumber() != (*i2)->getValue()->getNumber()) {
                                         result = Features::BOTTOM;
                                         goto endUnif;
                                     }
 
                                     result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
                                                                 Value::create(Value::NUMBER,
-                                                                              (*i1)->getValue()->getDouble())));
+                                                                              (*i1)->getValue()->getNumber())));
                                     break;
                                 case Value::VARIABLE:
                                     result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
@@ -1814,7 +1819,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                                         item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
-                                default: FATAL_ERROR_STM;
+                                default: FATAL_ERROR_STM
                                     break;
                             }
                         }
@@ -1823,14 +1828,14 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                         case Value::CODE: {
                             switch ((*i2)->getValue()->getType()) {
                                 case Value::CODE:
-                                    if ((*i1)->getValue()->getIdentifier() != (*i2)->getValue()->getIdentifier()) {
+                                    if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode()) {
                                         result = Features::BOTTOM;
                                         goto endUnif;
                                     }
 
                                     result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
                                                                 Value::create(Value::CODE,
-                                                                              (*i1)->getValue()->getIdentifier())));
+                                                                              (*i1)->getValue()->getCode())));
                                     break;
                                 case Value::VARIABLE:
                                     result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
@@ -1839,7 +1844,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                                         item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
-                                default: FATAL_ERROR_STM;
+                                default: FATAL_ERROR_STM
                                     break;
                             }
                         }
@@ -1869,7 +1874,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                                     result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
                                                                 (*i1)->getValue()));
                                     break;
-                                default: FATAL_ERROR_STM;
+                                default: FATAL_ERROR_STM
                                     break;
                             }
                         }
@@ -1894,14 +1899,14 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                             break;
 
                         case Value::FEATURES: {
-                            featuresPtr features = unif((*i1)->getValue()->getFeatures(),
+                            featuresPtr _features = unif((*i1)->getValue()->getFeatures(),
                                                         (*i2)->getValue()->getFeatures(), item);
-                            if (features->isBottom()) {
-                                result = features;
+                            if (_features->isBottom()) {
+                                result = _features;
                                 goto endUnif;
                             } else
                                 result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                            Value::create(Value::FEATURES, features)));
+                                                            Value::create(Value::FEATURES, _features)));
                         }
                             break;
 
@@ -1956,11 +1961,11 @@ void Statement::buildInheritedSonFeatures(itemPtr item, Parser &parser, Synthesi
         print(std::cerr);
         std::cerr << std::endl;
     ***/
-    featuresPtr features = rhs->evalFeatures(item, parser, synthesizer, true);
-    if (features->isNil())
+    featuresPtr _features = rhs->evalFeatures(item, parser, synthesizer, true);
+    if (_features->isNil())
         addFlags(Flags::BOTTOM);
     else
-        item->getInheritedSonFeatures()->add(lhs->getFirst(), features);
+        item->getInheritedSonFeatures()->add(lhs->getFirst(), _features);
 }
 
 /* ************************************************************
@@ -1969,13 +1974,13 @@ void Statement::buildInheritedSonFeatures(itemPtr item, Parser &parser, Synthesi
 void Statement::buildSynthesizedFeatures(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
     if (!item->getSynthesizedFeatures()->isNil()) {
         this->print(std::cerr);
-        FATAL_ERROR_STM;
+        FATAL_ERROR_STM
     }
-    featuresPtr features = rhs->evalFeatures(item, parser, synthesizer, true);
-    if (features->isNil())
+    featuresPtr _features = rhs->evalFeatures(item, parser, synthesizer, true);
+    if (_features->isNil())
         addFlags(Flags::BOTTOM);
     else {
-        item->setSynthesizedFeatures(features);
+        item->setSynthesizedFeatures(_features);
     }
 }
 
@@ -1997,7 +2002,7 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Parser &parser, Syn
             featuresPtr sonSynth = rhs->evalFeatures(item, parser, synthesizer, true);
             if (sonSynth) {
                 environment->add(lhs->getBits(), Value::create(Value::FEATURES, sonSynth));
-            } else FATAL_ERROR_STM;
+            } else FATAL_ERROR_STM
         }
             break;
 
@@ -2007,7 +2012,7 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Parser &parser, Syn
             featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
             if (!left) {
 
-                WARNING_STM;
+                WARNING_STM
             } else {
 
                 environmentPtr environment;
@@ -2028,14 +2033,14 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Parser &parser, Syn
                         addFlags(Flags::BOTTOM);
                     }
                 } else {
-                    FATAL_ERROR_STM;
+                    FATAL_ERROR_STM
                 }
             }
 
         }
             break;
 
-        default: FATAL_ERROR_STM;
+        default: FATAL_ERROR_STM
             break;
     }
 }
@@ -2055,7 +2060,7 @@ void Statement::buildEnvironmentWithInherited(itemPtr item, Parser &parser, Synt
             // $X = ↑;
             featuresPtr right = rhs->evalFeatures(item, parser, synthesizer, true);
             if (!right) {
-                WARNING_STM;
+                WARNING_STM
             } else {
                 environmentPtr environment;
                 if (item->getEnvironment()) {
@@ -2072,11 +2077,11 @@ void Statement::buildEnvironmentWithInherited(itemPtr item, Parser &parser, Synt
         case SUBSUME: {
             featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
             if (!left) {
-                WARNING_STM;
+                WARNING_STM
             } else {
                 featuresPtr right = rhs->evalFeatures(item, parser, synthesizer, true);
                 if (!right) {
-                    WARNING_STM;
+                    WARNING_STM
                 } else {
                     environmentPtr environment;
                     if (item->getEnvironment()) {
@@ -2093,7 +2098,7 @@ void Statement::buildEnvironmentWithInherited(itemPtr item, Parser &parser, Synt
         }
             break;
 
-        default: FATAL_ERROR_STM;
+        default: FATAL_ERROR_STM
             break;
     }
 }
@@ -2134,7 +2139,7 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesi
                 valuePtr right = rhs->evalValue(item, parser, synthesizer, true);
                 if (!right) {
                     this->print(std::cerr, 0);
-                    WARNING_STM;
+                    WARNING_STM
                 } else {
                     environmentPtr environment;
                     if (item->getEnvironment()) {
@@ -2154,16 +2159,16 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesi
             else if (lhs->isList()) {
                 listPtr right = rhs->evalList(item, true);
                 if (!right) {
-                    FATAL_ERROR_STM;
-                    WARNING_STM;
+                    FATAL_ERROR_STM
+                    WARNING_STM
                 } else {
                     if (right->isNil()) {
-                        FATAL_ERROR_STM;
+                        FATAL_ERROR_STM
                         addFlags(Flags::BOTTOM);
                     }
                     listPtr left = lhs->evalList(item, false);
                     if (!left) {
-                        WARNING_STM;
+                        WARNING_STM
                     } else {
                         environmentPtr environment;
                         if (item->getEnvironment()) {
@@ -2177,13 +2182,13 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesi
                         }
                     }
                 }
-            } else FATAL_ERROR_STM;
+            } else FATAL_ERROR_STM
             break;
 
         case SUBSUME: {
             featuresPtr right = rhs->evalFeatures(item, parser, synthesizer, true);
             if (!right) {
-                WARNING_STM;
+                WARNING_STM
             } else {
                 if (right->isNil()) {} // empty
                 featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
@@ -2203,7 +2208,7 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesi
         }
             break;
 
-        default: FATAL_ERROR_STM;
+        default: FATAL_ERROR_STM
             break;
     }
 }
@@ -2227,7 +2232,7 @@ void Statement::stmAttest(itemPtr item, Parser &parser, Synthesizer *synthesizer
             }
         }
             break;
-        default: FATAL_ERROR_STM;
+        default: FATAL_ERROR_STM
             break;
     }
 }
@@ -2244,11 +2249,11 @@ void Statement::stmGuard(const itemPtr &item/*, Synthesizer *synthesizer*/) {
          std::cerr << "</DIV>";
     ***/
     if (isSetFlags(Flags::DISABLED | Flags::SEEN)) {
-        FATAL_ERROR_STM;
+        FATAL_ERROR_STM
     } else {
         featuresPtr localFeatures = getFeatures();
         if (!localFeatures) {
-            FATAL_ERROR_STM;
+            FATAL_ERROR_STM
         }
         environmentPtr environment;
         if (item->getEnvironment())
@@ -2286,11 +2291,11 @@ void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesize
     ***/
 
     statementPtr variable = getLhs();
-    valuePtr value = getRhs()->getLhs()->evalValue(item, parser, synthesizer, true);
+    valuePtr _value = getRhs()->getLhs()->evalValue(item, parser, synthesizer, true);
     statementPtr body = getRhs()->getRhs();
-    if (!value->isList()) FATAL_ERROR_MSG_STM("foreach does'nt apply a list");
-    listPtr list = value->getList();
-    list->apply(item, parser, synthesizer, variable, body, effect);
+    if (!_value->isList()) FATAL_ERROR_MSG_STM("foreach does'nt apply a list")
+    listPtr _list = _value->getList();
+    _list->apply(item, parser, synthesizer, variable, body, effect);
     /***
         std::cerr << "<DIV>foreach done";
         item->print(std::cerr);
@@ -2302,8 +2307,8 @@ void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesize
  * if
  ************************************************************ */
 void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
-    statementPtr lhs = getRhs()->getLhs();
-    statementPtr rhs = getRhs()->getRhs();
+    statementPtr _lhs = getRhs()->getLhs();
+    statementPtr _rhs = getRhs()->getRhs();
 
     unsigned int resif = 0;    // 0:none 1:then 2:else
     //if (lhs->isSetFlags(Flags::CHOOSEN))
@@ -2317,32 +2322,32 @@ void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer, bo
             resif = 0;
         else if (res == Value::NIL_VALUE || res == Value::ANONYMOUS_VALUE) {
             resif = 2;
-            lhs->addFlags(Flags::REJECTED);
-            if (rhs)
-                rhs->addFlags(Flags::CHOOSEN);
+            _lhs->addFlags(Flags::REJECTED);
+            if (_rhs)
+                _rhs->addFlags(Flags::CHOOSEN);
         } else {
             resif = 1;
-            lhs->addFlags(Flags::CHOOSEN);
-            if (rhs)
-                rhs->addFlags(Flags::REJECTED);
+            _lhs->addFlags(Flags::CHOOSEN);
+            if (_rhs)
+                _rhs->addFlags(Flags::REJECTED);
         }
     }
     //bool localResult = true;
     switch (resif) {
         case 1:
-            lhs->apply(item, parser, synthesizer, effect);
-            if (lhs->isSetFlags(Flags::BOTTOM)) {
+            _lhs->apply(item, parser, synthesizer, effect);
+            if (_lhs->isSetFlags(Flags::BOTTOM)) {
                 this->addFlags(Flags::BOTTOM);
             }
-            if (lhs->isSetFlags(Flags::SEEN))
+            if (_lhs->isSetFlags(Flags::SEEN))
                 this->addFlags(Flags::SEEN);
             break;
         case 2:
-            if (rhs) {
-                rhs->apply(item, parser, synthesizer, effect);
-                if (rhs->isSetFlags(Flags::BOTTOM))
+            if (_rhs) {
+                _rhs->apply(item, parser, synthesizer, effect);
+                if (_rhs->isSetFlags(Flags::BOTTOM))
                     this->addFlags(Flags::BOTTOM);
-                if (rhs->isSetFlags(Flags::SEEN))
+                if (_rhs->isSetFlags(Flags::SEEN))
                     this->addFlags(Flags::SEEN);
             } else {
                 this->addFlags(Flags::SEEN);
@@ -2359,8 +2364,8 @@ void Statement::stmPrint(itemPtr item, Parser &parser, Synthesizer *synthesizer)
     if (lhs->isStr()) {
         std::cout << lhs->getStr();
     } else {
-        valuePtr value = lhs->evalValue(item, parser, synthesizer, true);
-        value->print(std::cout);
+        valuePtr _value = lhs->evalValue(item, parser, synthesizer, true);
+        _value->print(std::cout);
     }
 }
 
@@ -2378,8 +2383,8 @@ void Statement::stmPrintln(itemPtr item, Parser &parser, Synthesizer *synthesize
 void Statement::renameVariables(size_t i) {
     switch (this->op) {
         case VARIABLE: {
-            std::string str = getBits()->toString() + "_" + std::to_string(i);
-            bitsetPtr variableBits = Vartable::createVariable(str);
+            std::string _str = getBits()->toString() + "_" + std::to_string(i);
+            bitsetPtr variableBits = Vartable::createVariable(_str);
             bitset = variableBits;
         }
             break;
@@ -2674,7 +2679,7 @@ void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bo
         // [ … $X … ] ⊂ search Y
     else if (((isAff()) && (getLhs()->isVariable())
               && ((getRhs()->isConstant()) || (getRhs()->isVariable()) || (getRhs()->isUnif()) ||
-                  (getRhs()->isFeatures()) || (getRhs()->isDouble()) || (getRhs()->isFct())
+                  (getRhs()->isFeatures()) || (getRhs()->isNumber()) || (getRhs()->isFct())
                   || (getRhs()->isList()) || (getRhs()->isSearch()))) ||
              ((isAff()) && (getLhs()->isList()) && ((getRhs()->isVariable()) || (getRhs()->isList())))
              || ((isSubsume()) && (getLhs()->isFeatures()) &&
@@ -2756,7 +2761,7 @@ void Statement::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assign
             break;
 
         case STMS:
-            getStatements()->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
+            //getStatements()->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
             break;
 
         default:
@@ -2771,9 +2776,11 @@ bool Statement::findVariable(bitsetPtr variable) {
     switch (this->op) {
 
         case STMS:
-            if (getStatements()->findVariableElsewhere(statementPtr(), variable))
+            FATAL_ERROR_UNEXPECTED
+            /*if (getStatements()->findVariableElsewhere(statementPtr(), variable))
                 return true;
             break;
+             */
 
         case IF:
             if (rhs->findVariable(variable))

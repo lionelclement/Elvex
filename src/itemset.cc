@@ -28,14 +28,14 @@
  ************************************************** */
 ItemSet::ItemSet(unsigned int id) {
     this->id = id;
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 ItemSet::~ItemSet() {
-    //DELETE;
+    DELETE
     for (auto tmp : items) {
         if (tmp)
             (tmp).reset();
@@ -90,8 +90,7 @@ ItemSet::const_iterator ItemSet::find(const itemPtr& item) const {
  ************************************************** */
 bool ItemSet::insert(const itemPtr& item, Synthesizer *synthesizer) {
     if (items.size() > synthesizer->getMaxCardinal()) {
-        throw std::string("*** error: too much items build");
-        exit(1);
+        FATAL_ERROR ("*** error: too much items build")
     }
 #ifdef TRACE_INSERT
     std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;

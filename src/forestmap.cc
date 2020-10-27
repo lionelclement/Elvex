@@ -17,21 +17,26 @@
  *
  ************************************************** */
 
+#include <unordered_map>
+
 #include "forestmap.hpp"
 #include "messages.hpp"
+#include "forestidentifier.hpp"
+#include "forest.hpp"
+#include "vartable.hpp"
 
 /* **************************************************
  *
  ************************************************** */
 ForestMap::ForestMap() {
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 ForestMap::~ForestMap() {
-    DELETE;
+    DELETE
     for (auto & i : data) {
         forestPtr tmp = i.second;
         if (tmp)
@@ -70,7 +75,10 @@ void ForestMap::clear() {
 /* **************************************************
  *
  ************************************************** */
-bool ForestMap::insert(ForestMap::pair pair) {
-    return data.insert(pair).second;
+bool ForestMap::_insert(forestIdentifierPtr key, forestPtr value) {
+    auto result = data.insert(std::make_pair(key, value)).second;
+    //CERR_LINE
+    //std::cerr << "insert " << key->peekSerialString() << std::endl;
+    return result;
 }
 

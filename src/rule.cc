@@ -19,18 +19,19 @@
 
 #include <sstream>
 #include "rule.hpp"
-#include "term.hpp"
+//#include "../trash/term.hpp"
 #include "terms.hpp"
 #include "statements.hpp"
 #include "messages.hpp"
 #include "synthesizer.hpp"
+#include "vartable.hpp"
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs,
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
            statementsPtr statements)
-        : Id(id) {
+        : UniqId(id) {
     this->lineno = lineno;
     this->filename = filename;
     this->lhs = lhs;
@@ -38,41 +39,41 @@ Rule::Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, st
     this->statements = statements;
     this->usages = 0;
     this->trace = false;
-    NEW;
+    NEW
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements)
-        : Id(id) {
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
+        : UniqId(id) {
     this->lineno = lineno;
     this->filename = filename;
     this->lhs = lhs;
     this->statements = statements;
     this->usages = 0;
     this->trace = false;
-    NEW;
+    NEW
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
+Rule::Rule(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
         : Rule(0, lineno, filename, lhs, rhs, statements) {
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements)
+Rule::Rule(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
         : Rule(0, lineno, filename, lhs, statements) {
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements) {
     return rulePtr(new Rule(id, lineno, filename, lhs, rhs, statements));
 }
@@ -80,14 +81,14 @@ rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, termP
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements) {
+rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements) {
     return rulePtr(new Rule(id, lineno, filename, lhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(unsigned int lineno, std::string filename, termPtr lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements) {
     return rulePtr(new Rule(lineno, filename, lhs, rhs, statements));
 }
@@ -95,7 +96,7 @@ rulePtr Rule::create(unsigned int lineno, std::string filename, termPtr lhs, std
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(unsigned int lineno, std::string filename, termPtr lhs, statementsPtr statements) {
+rulePtr Rule::create(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements) {
     return rulePtr(new Rule(lineno, filename, lhs, statements));
 }
 
@@ -103,13 +104,10 @@ rulePtr Rule::create(unsigned int lineno, std::string filename, termPtr lhs, sta
  *
  ************************************************************ */
 Rule::~Rule() {
-    DELETE;
+    DELETE
     for (std::vector<termsPtr>::iterator term = rhs.begin(); term != rhs.end(); term++)
         if (*term)
             term->reset();
-    if (lhs) {
-        lhs.reset();
-    }
     if (statements) {
         statements.reset();
     }
@@ -118,7 +116,7 @@ Rule::~Rule() {
 /* ************************************************************
  *
  ************************************************************ */
-termPtr Rule::getLhs(void) const {
+unsigned int Rule::getLhs(void) const {
     return lhs;
 }
 
@@ -148,8 +146,7 @@ statementsPtr Rule::getStatements(void) const {
  ************************************************************ */
 void Rule::incUsages(class Synthesizer *synthesizer) {
     if (++usages > synthesizer->getMaxUsages()) {
-        throw "*** error: too much usages of the same rule: " + this->toString();
-        exit(EXIT_FAILURE);
+        FATAL_ERROR("*** error: too much usages of the same rule: " + this->toString())
     }
 }
 
@@ -184,8 +181,8 @@ bool Rule::getTrace(void) const {
 /* **************************************************
  *
  ************************************************** */
-void Rule::setTrace(bool trace) {
-    this->trace = trace;
+void Rule::setTrace(bool _trace) {
+    this->trace = _trace;
 }
 
 /***************************
@@ -238,8 +235,7 @@ void Rule::addDefaults() {
 void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic, bool html) const {
     std::string space = (html ? "&nbsp;" : " ");
     bool first = true;
-    lhs->print(outStream);
-    outStream << space << "→" << space;
+    outStream << Vartable::codeToIdentifier(lhs) << space << "→" << space;
     for (unsigned int i = 0; i < rhs.size(); i++) {
         if (first)
             first = false;

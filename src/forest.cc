@@ -17,7 +17,7 @@
  *
  ************************************************** */
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <string.h>
 
 #include <utility>
@@ -31,8 +31,7 @@
 /* **************************************************
  *
  ************************************************** */
-Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
-        : Id(0) {
+Forest::Forest(entryPtr entry, unsigned int from, unsigned int to) {
     this->entry = std::move(entry);
     this->from = from;
     this->to = to;
@@ -40,7 +39,7 @@ Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
         this->empty = true;
     else
         this->empty = false;
-    NEW;
+    NEW
 }
 
 /* **************************************************
@@ -54,7 +53,7 @@ forestPtr Forest::create(entryPtr entry, unsigned int from, unsigned int to) {
  *
  ************************************************** */
 Forest::~Forest() {
-    DELETE;
+    DELETE
     for (auto tmp : nodes) {
         if (tmp)
             tmp.reset();
@@ -151,12 +150,12 @@ Forest::toXML(xmlNodePtr nodeRoot, bool root)
  *
  ************************************************** */
 void Forest::generate(bool random, bool one) {
-    if (isUnsetFlags(Flags::GEN)) {
-        addFlags(Flags::GEN);
+    if (isUnsetFlags(Flags::GENERATED)) {
+        addFlags(Flags::GENERATED);
         if (entry && !entry->getForm().empty()) {
             output.push_back(entry->getForm());
         } else if (!nodes.empty()) {
-            Forest::vectorNodes::const_iterator nodeIt = nodes.begin();
+            auto nodeIt = nodes.begin();
             nodePtr node;
             if (random) {
                 size_t rv = std::rand() / ((RAND_MAX + 1u) / nodes.size());
@@ -165,10 +164,10 @@ void Forest::generate(bool random, bool one) {
             while (nodeIt != nodes.end()) {
                 if (!random)
                     node = *nodeIt;
-                if (node->isUnsetFlags(Flags::GEN))
+                if (node->isUnsetFlags(Flags::GENERATED))
                     node->generate(random, one);
-                for (const auto & s : node->getOutput())
-                    output.push_back(s);
+		for (std::vector<std::string>::const_iterator s = node->getOutput().begin(); s != node->getOutput().end(); ++s)
+		  output.push_back(*s);
                 if (random || one)
                     break;
                 ++nodeIt;
@@ -176,4 +175,3 @@ void Forest::generate(bool random, bool one) {
         }
     }
 }
-

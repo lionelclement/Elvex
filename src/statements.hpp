@@ -23,12 +23,12 @@
 #include <list>
 #include <vector>
 #include "flags.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
 class Statements :
-        public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Statements> {
+        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Statements> {
 
 public:
     typedef std::list<statementPtr> list;
@@ -62,11 +62,11 @@ public:
 
     void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
+    //void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 
     void enable(itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
 
-    bool findVariableElsewhere(statementPtr, bitsetPtr);
+    //bool findVariableElsewhere(statementPtr, bitsetPtr);
 };
 
 #endif // ELVEX_STATEMENTS_H

@@ -17,20 +17,20 @@
  *
  ************************************************** */
 
-#ifndef COMPACTLEXICONBUFFER_H
-#define COMPACTLEXICONBUFFER_H
+#ifndef COMPACTEDLEXICONBUFFER_H
+#define COMPACTEDLEXICONBUFFER_H
 
 #include <ostream>
 
-struct CompactLexiconBuffer {
+struct CompactedLexiconBuffer {
 private:
     unsigned long int next;
     unsigned long int offset;
 
 public:
-    CompactLexiconBuffer(unsigned long int next, unsigned long int offset);
+    CompactedLexiconBuffer(unsigned long int next, unsigned long int offset);
 
-    CompactLexiconBuffer(void);
+    CompactedLexiconBuffer(void);
 
     unsigned long int getOffset() const;
 
@@ -44,4 +44,4 @@ public:
 
 };
 
-#endif // COMPACTLEXICONBUFFER_H
+#endif // COMPACTEDLEXICONBUFFER_H

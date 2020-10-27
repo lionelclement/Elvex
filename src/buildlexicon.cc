@@ -19,12 +19,12 @@
 
 #include <cstring>
 
-#include "buildlexicon.h"
-#include "compact-lexicon.h"
-#include "compact-lexicon-info.h"
-#include "lexicon.h"
-#include "messages.h"
-#include "synthesizer.h"
+#include "buildlexicon.hpp"
+#include "compacted-lexicon.hpp"
+#include "compacted-lexicon-info.hpp"
+#include "lexicon.hpp"
+#include "messages.hpp"
+#include "synthesizer.hpp"
 
 #ifndef PACKAGE_NAME
 #define PACKAGE_NAME "elvex"
@@ -45,10 +45,10 @@ void usage() {
 \tGlobal options:\n\
 \t-h|--help                              print this\n\
 \t-v|--version                           print version\n\
-\t-compactLexiconDirectory <directory>\n\
-\t-compactLexiconFile <file>\n\
-\t-patternFile <file>\n\
-\t-morphoFile <file>"
+\t-compactedLexiconDirectory <directory> the directory which contains the compacted lexicon\n\
+\t-compactedLexiconFile <file>           the compacted lexicon prefix name\n\
+\t-patternFile <file>                    the pattern file\n\
+\t-morphoFile <file>                     the morpho file"
             << std::endl;
     exit(EXIT_SUCCESS);
 }
@@ -58,7 +58,7 @@ void usage() {
  ************************************************** */
 int main(int argn, char **argv) {
     try {
-        CompactLexicon *lex;
+        CompactedLexicon* lex;
         Buildlexicon::Choice mode = Buildlexicon::NONE;
         std::string inputFileName = std::string();
         std::string prefix;
@@ -79,9 +79,9 @@ int main(int argn, char **argv) {
                     } else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
                         usage();
                         return EXIT_SUCCESS;
-                    } else if (!strcmp(argv[arg] + 1, "compactLexiconFile")) {
+                    } else if (!strcmp(argv[arg] + 1, "compactedLexiconFile")) {
                         prefix = std::string(argv[++arg]);
-                    } else if (!strcmp(argv[arg] + 1, "compactLexiconDirectory")) {
+                    } else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory")) {
                         directory = std::string(argv[++arg]);
                     } else if (!strcmp(argv[arg] + 1, "patternFile")) {
                         patternFile = std::string(argv[++arg]);
@@ -132,7 +132,7 @@ int main(int argn, char **argv) {
 
                         stream.str("");
                         stream << '[' << f << ']';
-                        std::string fsStrin!g = stream.str();
+                        std::string fsString = stream.str();
                         if (parser.parseBuffer("#", fsString, "morphology")) {
                             stream.str("");
                             stream << "error in lexicon: " << f << std::endl;
@@ -250,7 +250,7 @@ int main(int argn, char **argv) {
         switch (mode) {
 
             case Buildlexicon::BUILD: {
-                lex = new CompactLexicon(directory, prefix);
+                lex = new CompactedLexicon(directory, prefix);
                 lex->openFiles("w");
                 lex->buildEntries(pattern, morpho);
                 lex->saveFsa();
@@ -259,7 +259,7 @@ int main(int argn, char **argv) {
             }
 
             case Buildlexicon::CONSULT: {
-                lex = new CompactLexicon(directory, prefix);
+                lex = new CompactedLexicon(directory, prefix);
                 lex->openFiles("r");
                 lex->loadFsa();
                 lex->loadData();

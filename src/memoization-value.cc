@@ -28,14 +28,14 @@
 MemoizationValue::MemoizationValue(featuresPtr features, forestIdentifierPtr forestIdentifier) {
     this->features = std::move(features);
     this->forestIdentifier = std::move(forestIdentifier);
-    NEW;
+    NEW
 }
 
 /* ************************************************************
  * 
  ************************************************************ */
 MemoizationValue::~MemoizationValue() {
-    DELETE;
+    DELETE
 }
 
 /* ************************************************************

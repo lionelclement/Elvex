@@ -18,14 +18,14 @@
  ************************************************** */
 
 #include <sys/stat.h>
-//#include <string.h>
+#include <cstring>
 #include <cmath>
 #include <utility>
 
-#include "compact-lexicon.hpp"
-#include "compact-lexicon-tree.hpp"
-#include "compact-lexicon-fsa.hpp"
-#include "compact-lexicon-buffer.hpp"
+#include "compacted-lexicon.hpp"
+#include "compacted-lexicon-tree.hpp"
+#include "compacted-lexicon-fsa.hpp"
+#include "compacted-lexicon-buffer.hpp"
 #include "messages.hpp"
 #include "vartable.hpp"
 #include "entries.hpp"
@@ -37,7 +37,7 @@
 /* **************************************************
  *
  ************************************************** */
-CompactLexicon::CompactLexicon(std::string directoryName, std::string fileName) {
+CompactedLexicon::CompactedLexicon(std::string directoryName, std::string fileName) {
     this->directoryName = std::move(directoryName);
     this->fileName = std::move(fileName);
     this->dataFile = nullptr;
@@ -46,16 +46,16 @@ CompactLexicon::CompactLexicon(std::string directoryName, std::string fileName) 
     this->fsa = nullptr;
     this->info = nullptr;
     this->init = 0;
-    this->compactLexicon = new CompactLexiconTree(nullptr, nullptr, nullptr, '\0');
-    this->compactLexicon->setChild(new CompactLexiconTree(nullptr, nullptr, nullptr, '\0'));
-    this->lexiconInit = compactLexicon;
-    this->compactLexicon = compactLexicon->getChild();
+    this->compactedLexicon = new CompactedLexiconTree(nullptr, nullptr, nullptr, '\0');
+    this->compactedLexicon->setChild(new CompactedLexiconTree(nullptr, nullptr, nullptr, '\0'));
+    this->lexiconInit = compactedLexicon;
+    this->compactedLexicon = compactedLexicon->getChild();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::printResults(std::ostream &output, unsigned long int index, bool sep) const {
+void CompactedLexicon::printResults(std::ostream &output, unsigned long int index, bool sep) const {
     char tag[MAXSTRING];
     if (sep)
         output << SEP_PREF;
@@ -84,7 +84,7 @@ void CompactLexicon::printResults(std::ostream &output, unsigned long int index,
 // input: string
 // output: info
 ////////////////////////////////////////////////////////////
-unsigned long int CompactLexicon::searchStatic(unsigned long int index, const std::string &s) const {
+unsigned long int CompactedLexicon::searchStatic(unsigned long int index, const std::string &s) const {
     char *str = strdup(s.c_str());
     char *str2 = str;
     index = fsa[index].getChild();
@@ -117,7 +117,7 @@ unsigned long int CompactLexicon::searchStatic(unsigned long int index, const st
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::saveFsa() {
+void CompactedLexicon::saveFsa() {
     int nbrBytes = sizeof(unsigned long int);
     std::cerr << "*** Writing Finite State Automata " << std::endl;
     // encodage des offsets (16 ou 32 bits)
@@ -148,7 +148,7 @@ void CompactLexicon::saveFsa() {
     std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
     if (sizeInfo == (unsigned long int) ~0UL) {
-        FATAL_ERROR("*** Error: Data too large");
+        FATAL_ERROR("*** Error: Data too large")
     }
 #ifdef TRACE_DIFF
     std::cout << "---FSA---" << std::endl;
@@ -171,7 +171,7 @@ void CompactLexicon::saveFsa() {
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::loadFsa() {
+void CompactedLexicon::loadFsa() {
     std::cerr << "*** Loading Finite State Automata" << std::endl;
     int nbrBytes;
     if (!fread(&nbrBytes, sizeof(nbrBytes), 1, fsaFile)) FATAL_ERROR_UNEXPECTED
@@ -184,7 +184,7 @@ void CompactLexicon::loadFsa() {
     std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
     if (nbrBytes != (sizeof(unsigned long int)) || (maxSize != (unsigned long int) ~0UL)) {
-        FATAL_ERROR("*** lexicon compiled with an incompatible system");
+        FATAL_ERROR("*** lexicon compiled with an incompatible system")
     }
     unsigned long int sizeFsa;
     if (!fread(&sizeFsa, sizeof(sizeFsa), 1, fsaFile)) FATAL_ERROR_UNEXPECTED
@@ -200,8 +200,8 @@ void CompactLexicon::loadFsa() {
 #ifdef TRACE_DIFF
     std::cout << "---FSA---" << std::endl;
 #endif //TRACE_DIFF
-    fsa = new CompactLexiconFsa[sizeFsa + 1]();
-    if (!fread(fsa, sizeof(CompactLexiconFsa), sizeFsa, fsaFile)) FATAL_ERROR_UNEXPECTED
+    fsa = new CompactedLexiconFsa[sizeFsa + 1]();
+    if (!fread(fsa, sizeof(CompactedLexiconFsa), sizeFsa, fsaFile)) FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
     for(unsigned long int sizeSy=0;sizeSy<sizeFsa;sizeSy++) {
        fsa[sizeSy].print(std::cout);
@@ -211,8 +211,8 @@ void CompactLexicon::loadFsa() {
 #ifdef TRACE_DIFF
     std::cout << "---Info---" << std::endl;
 #endif //TRACE_DIFF
-    info = new CompactLexiconBuffer[sizeInfo + 1]();
-    if (!fread(info, sizeof(CompactLexiconBuffer), sizeInfo, fsaFile)) FATAL_ERROR_UNEXPECTED
+    info = new CompactedLexiconBuffer[sizeInfo + 1]();
+    if (!fread(info, sizeof(CompactedLexiconBuffer), sizeInfo, fsaFile)) FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
     for(unsigned long int sizeSy=0;sizeSy<sizeInfo;sizeSy++) {
        std::cout << sizeSy << ' ';
@@ -228,14 +228,14 @@ void CompactLexicon::loadFsa() {
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::openFiles(const std::string &mode) {
+void CompactedLexicon::openFiles(const std::string &mode) {
     std::ostringstream oss;
 
     oss << this->directoryName << "/" << this->fileName << ".tbl";
     dataFileName = oss.str();
     dataFile = fopen(dataFileName.c_str(), mode.c_str());
     if (dataFile == nullptr) {
-        FATAL_ERROR("Unable to open file " << dataFileName << " for writing");
+        FATAL_ERROR("Unable to open file " << dataFileName << " for writing")
     }
 
     oss.str("");
@@ -243,14 +243,14 @@ void CompactLexicon::openFiles(const std::string &mode) {
     fsaFileName = oss.str();
     fsaFile = fopen(fsaFileName.c_str(), mode.c_str());
     if (fsaFile == nullptr) {
-        FATAL_ERROR("Unable to open file " << fsaFileName << " for writing");
+        FATAL_ERROR("Unable to open file " << fsaFileName << " for writing")
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::closeFiles() {
+void CompactedLexicon::closeFiles() {
     fclose(fsaFile);
     fclose(dataFile);
 }
@@ -258,7 +258,7 @@ void CompactLexicon::closeFiles() {
 /* **************************************************
  *
  ************************************************** */
-std::string CompactLexicon::unif(const std::string &fs1, const std::string &fs2) {
+std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs2) {
     extern Parser parser;
     std::stringstream stringStream;
     featuresPtr features1;
@@ -269,7 +269,7 @@ std::string CompactLexicon::unif(const std::string &fs1, const std::string &fs2)
         if (parser.parseBuffer("#", fsString, "morphology")) {
             //stringStream.str("");
             //stringStream <<  << std::endl;
-            FATAL_ERROR("error in lexicon: " << fs1);
+            FATAL_ERROR("error in lexicon: " << fs1)
             //stringStream.str())
         }
         features1 = parser.getLocalFeatures();
@@ -309,7 +309,7 @@ std::string CompactLexicon::unif(const std::string &fs1, const std::string &fs2)
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::addToData(const std::string &input, const std::string &form, const std::string &features) {
+void CompactedLexicon::addToData(const std::string &input, const std::string &form, const std::string &features) {
     //std::cerr << "add:" << form << "[input:" << input << ",form:" << form << ",features:" << features << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
@@ -317,7 +317,7 @@ void CompactLexicon::addToData(const std::string &input, const std::string &form
     std::string output = stringStream.str();
     unsigned long int offset;
     offset = ftell(dataFile);
-    compactLexicon->add(input.c_str(), offset);
+    compactedLexicon->add(input.c_str(), offset);
     fprintf(dataFile, "%s%c", output.c_str(), 0);
     //std::cerr << output.c_str() << std::endl;
 }
@@ -325,7 +325,7 @@ void CompactLexicon::addToData(const std::string &input, const std::string &form
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::addForms(const std::string &input, std::string inputSearch,
+void CompactedLexicon::addForms(const std::string &input, std::string inputSearch,
                               const std::string &patternFs/*, Lexicon &pattern*/,
                               Lexicon &morpho) {
     //std::cerr << "addForms " << inputSearch << std::endl;
@@ -351,7 +351,7 @@ void CompactLexicon::addForms(const std::string &input, std::string inputSearch,
  *
  ************************************************** */
 void
-CompactLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &patternFs,
+CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &patternFs,
                            const std::string &lemma, const std::string &pos) {
     //std::cerr << "addPattern with " << '(' << input << ',' << patternFs << ',' << lemma << ',' << pos << ')' << std::endl;
     std::stringstream stringStream;
@@ -383,7 +383,7 @@ CompactLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string 
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
+void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
 
     std::stringstream _inputStream;
     std::size_t size = pattern.size();
@@ -441,7 +441,7 @@ void CompactLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::loadData() {
+void CompactedLexicon::loadData() {
     std::cerr << "*** Loading Data" << std::endl;
     struct stat *statbuf;
     statbuf = (struct stat *) malloc(sizeof(struct stat));
@@ -456,7 +456,7 @@ void CompactLexicon::loadData() {
 /* **************************************************
  *
  ************************************************** */
-void CompactLexicon::consult() {
+void CompactedLexicon::consult() {
     unsigned long int _info;
     std::string str;
     while (!this->inputStream->eof()) {

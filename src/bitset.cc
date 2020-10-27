@@ -30,7 +30,7 @@
  ************************************************************ */
 Bitset::Bitset(unsigned int data)
         : std::bitset<MAXBITS>(data) {
-    NEW;
+    NEW
 }
 
 /* ************************************************************
@@ -38,7 +38,7 @@ Bitset::Bitset(unsigned int data)
  ************************************************************ */
 Bitset::Bitset(std::bitset<MAXBITS> &data)
         : std::bitset<MAXBITS>(data) {
-    NEW;
+    NEW
 }
 
 /* ************************************************************
@@ -46,14 +46,14 @@ Bitset::Bitset(std::bitset<MAXBITS> &data)
  ************************************************************ */
 Bitset::Bitset(const bitsetPtr& bitset)
         : std::bitset<MAXBITS>(*bitset) {
-    NEW;
+    NEW
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
 Bitset::~Bitset() {
-    DELETE;
+    DELETE
 }
 
 /* ************************************************************
@@ -84,15 +84,12 @@ std::string Bitset::toString() const {
     std::stringstream s;
     size_t c = this->count();
     size_t sz = this->size();
-    bool first = true;
     for (size_t i = 0; i < sz && c > 0; ++i) {
         if ((*this)[i]) {
             --c;
-            if (first)
-                first = false;
-            else
-                s << '|';
             s << Vartable::bitToVariable(i);
+            if (c > 0)
+                s << '|';
         }
     }
     return s.str();
@@ -102,7 +99,7 @@ std::string Bitset::toString() const {
  *                                                            *
  ************************************************************ */
 void Bitset::makeSerialString() {
-    serialString = std::string();
+serialString = std::string();
     std::stringstream s;
     size_t c = this->count();
     size_t sz = this->size();
@@ -111,7 +108,7 @@ void Bitset::makeSerialString() {
             --c;
             serialString += std::to_string(i);
             if (c > 0)
-                serialString += ',';
+                serialString += '|';
         }
     }
 }

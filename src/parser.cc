@@ -38,17 +38,16 @@ extern void scan_string(std::string);
  ************************************************** */
 Parser::Parser() {
     this->startFeatures = featuresPtr();
-    this->startTerm = nullptr;
     this->localFeatures = featuresPtr();
     this->verbose = false;
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 Parser::~Parser() {
-    DELETE;
+    DELETE
 }
 
 /* **************************************************
@@ -76,14 +75,14 @@ featuresPtr Parser::getStartFeatures() const {
 /* **************************************************
  *
  ************************************************** */
-termPtr Parser::getStartTerm() const {
+unsigned int Parser::getStartTerm() const {
     return startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setStartTerm(termPtr _startTerm) {
+void Parser::setStartTerm(unsigned int _startTerm) {
     this->startTerm = _startTerm;
 }
 
@@ -154,8 +153,8 @@ featuresPtr Parser::getLocalFeatures() const {
 /* **************************************************
  *
  ************************************************** */
-void Parser::setLocalFeatures(featuresPtr localFeatures) {
-    this->localFeatures = localFeatures;
+void Parser::setLocalFeatures(featuresPtr _localFeatures) {
+    this->localFeatures = _localFeatures;
 }
 
 /* **************************************************

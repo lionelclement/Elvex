@@ -25,7 +25,7 @@
  *
  ************************************************** */
 Entries::Entries() {
-    NEW;
+    NEW
 }
 
 /* **************************************************
@@ -33,15 +33,15 @@ Entries::Entries() {
  ************************************************** */
 Entries::Entries(const entryPtr &entry) {
     this->entries.insert(this->entries.begin(), entry);
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(const vector &entries) {
+Entries::Entries(const std::vector<entryPtr>& entries) {
     this->entries = entries;
-    NEW;
+    NEW
 }
 
 /* **************************************************
@@ -49,7 +49,7 @@ Entries::Entries(const vector &entries) {
  ************************************************** */
 Entries::Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string &form) {
     this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
-    NEW;
+    NEW
 }
 
 /* **************************************************
@@ -60,7 +60,7 @@ Entries::~Entries() {
         if (tmp)
             tmp.reset();
     }
-    DELETE;
+    DELETE
 }
 
 /* **************************************************
@@ -80,7 +80,7 @@ entriesPtr Entries::create(const entryPtr &entry) {
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(const vector &entries) {
+entriesPtr Entries::create(const std::vector<entryPtr>& entries) {
     return entriesPtr(new Entries(entries));
 }
 
@@ -101,15 +101,15 @@ size_t Entries::size() const {
 /* **************************************************
  *
  ************************************************** */
-Entries::vector::const_iterator Entries::begin() const {
-    return this->entries.begin();
+std::vector<entryPtr>::iterator Entries::begin() {
+    return entries.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::vector::const_iterator Entries::end() const {
-    return this->entries.end();
+std::vector<entryPtr>::iterator  Entries::end() {
+    return entries.end();
 }
 
 /* **************************************************
@@ -126,13 +126,6 @@ entryPtr Entries::get(unsigned int i) const {
     return this->entries.at(i);
 }
 
-/* **************************************************
- *
- ************************************************** */
-//entryPtr Entries::get(const unsigned int index) const
-//{
-//  return this->entries[index];
-//}
 #ifdef OUTPUT_XML
 /* **************************************************
  *
@@ -152,6 +145,6 @@ Entries::toXML(xmlNodePtr nodeRoot) const
  *
  ************************************************** */
 void Entries::print(std::ostream &out) const {
-    for (auto i = entries.begin(); i != entries.end(); ++i)
-        (*i)->print(out);
+  for (auto i : entries)
+        i->print(out);
 }

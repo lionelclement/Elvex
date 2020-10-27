@@ -17,39 +17,40 @@
  *
  ************************************************** */
 
-#ifndef COMPACTLEXICONTREE_H
-#define COMPACTLEXICONTREE_H
+#ifndef COMPACTEDLEXICONTREE_H
+#define COMPACTEDLEXICONTREE_H
 
-class CompactLexiconTree {
+#include <iostream>
+
+class CompactedLexiconTree {
 
 private:
-    CompactLexiconTree *child;
-    CompactLexiconTree *sibling;
-
-    class CompactLexiconInfo *info;
+    CompactedLexiconTree *child;
+    CompactedLexiconTree *sibling;
+    class CompactedLexiconInfo *info;
 
     char character;
     unsigned long int address;
 
 public:
-    CompactLexiconTree(CompactLexiconTree *child, CompactLexiconTree *sibling, class CompactLexiconInfo *info,
+    CompactedLexiconTree(CompactedLexiconTree *child, CompactedLexiconTree *sibling, class CompactedLexiconInfo *info,
                        const char character);
 
-    ~CompactLexiconTree();
+    ~CompactedLexiconTree();
 
-    void setChild(CompactLexiconTree *);
+    void setChild(CompactedLexiconTree *);
 
-    CompactLexiconTree *getChild() const;
+    CompactedLexiconTree *getChild() const;
 
     void add(const char *, unsigned long int);
 
     void setIndexStaticFSA(unsigned long int &);
 
-    void printStaticFSA(FILE *, class CompactLexicon *) const;
+    void printStaticFSA(FILE *, class CompactedLexicon *) const;
 
     void setIndexStaticInfo(unsigned long int &);
 
     void printStaticInfo(FILE *) const;
 };
 
-#endif // COMPACTLEXICONTREE_H
+#endif // COMPACTEDLEXICONTREE_H

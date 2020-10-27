@@ -29,36 +29,36 @@
 #include "features.hpp"
 #include "value.hpp"
 #include "vartable.hpp"
+//#include "term.h"
+#include "shared_ptr.hpp"
 
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int code, unsigned int codePred, std::string form, featuresPtr features)
-        : Id(0) {
-    this->code = code;
-    this->codePred = codePred;
+Entry::Entry(unsigned int pos, unsigned int pred, std::string form, featuresPtr features) {
+    this->pos = pos;
+    this->pred = pred;
     this->form = std::move(form);
     this->features = std::move(features);
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int code, std::string pred, std::string form, featuresPtr features)
-        : Id(0) {
-    this->code = code;
-    this->codePred = Vartable::identifierToCode(std::move(pred));
+Entry::Entry(unsigned int pos, std::string pred, std::string form, featuresPtr features) {
+    this->pos = pos;
+    this->pred = Vartable::identifierToCode(std::move(pred));
     this->form = std::move(form);
     this->features = std::move(features);
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 Entry::~Entry() {
-    DELETE;
+    DELETE
     if (features)
         features.reset();
 }
@@ -66,36 +66,36 @@ Entry::~Entry() {
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(unsigned int code, unsigned int codePred, std::string form, featuresPtr features) {
-    return entryPtr(new Entry(code, codePred, std::move(form), std::move(features)));
+entryPtr Entry::create(unsigned int term, unsigned int codePred, std::string form, featuresPtr features) {
+    return entryPtr(new Entry(term, codePred, std::move(form), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(unsigned int code, std::string pred, std::string form, featuresPtr features) {
-    return entryPtr(new Entry(code, std::move(pred), std::move(form), std::move(features)));
+entryPtr Entry::create(unsigned int term, std::string pred, std::string form, featuresPtr features) {
+    return entryPtr(new Entry(term, std::move(pred), std::move(form), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Entry::getCode() const {
-    return code;
+unsigned int Entry::getPos() const {
+    return pos;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Entry::setCode(unsigned int _code) {
-    this->code = _code;
+void Entry::setPos(unsigned int _pos) {
+    this->pos = _pos;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Entry::getCodePred() const {
-    return codePred;
+unsigned int Entry::getPred() const {
+    return pred;
 }
 
 /* **************************************************
@@ -128,14 +128,14 @@ void
 Entry::toXML(xmlNodePtr nodeRoot) const
 {
    xmlNodePtr entry = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRY", NULL);
-   if (this->code!=(unsigned int)-1) {
-      xmlSetProp(entry, (xmlChar*)"code", (xmlChar*)Vartable::codeToIdentifier(this->code).c_str());
-      xmlSetProp(entry, (xmlChar*)"codeStr", (xmlChar*)Vartable::codeToIdentifier(this->code).c_str());
+   if (this->pos != (unsigned int)-1) {
+      xmlSetProp(entry, (xmlChar*)"pos", (xmlChar*)std::to_string(this->pos).c_str());
+      xmlSetProp(entry, (xmlChar*)"posStr", (xmlChar*)Vartable::codeToIdentifier(this->pos).c_str());
 
    }
-   if (this->codePred != (unsigned int)-1) {
-      xmlSetProp(entry, (xmlChar*)"codePred", (xmlChar*)Vartable::codeToIdentifier(this->codePred).c_str());
-      xmlSetProp(entry, (xmlChar*)"codePredStr", (xmlChar*)Vartable::codeToIdentifier(this->codePred).c_str());
+   if (this->pred != (unsigned int)-1) {
+      xmlSetProp(entry, (xmlChar*)"codePred", (xmlChar*)std::to_string(this->pred).c_str());
+      xmlSetProp(entry, (xmlChar*)"codePredStr", (xmlChar*)Vartable::codeToIdentifier(this->pred).c_str());
 
    }
    if (this->form.size() != 0) {
@@ -151,9 +151,9 @@ Entry::toXML(xmlNodePtr nodeRoot) const
  *
  ************************************************** */
 void Entry::print(std::ostream &out) const {
-    out << "(id: " << this->getId() << ", code: " << Vartable::codeToIdentifier(this->code);
-    if ((this->codePred != UINT_MAX))
-        out << ", pred: " << Vartable::codeToIdentifier(this->codePred);
+    out << "(id: " << this->getId() << ", term: " << Vartable::codeToIdentifier(this->pos);
+    if ((this->pred != UINT_MAX))
+        out << ", pred: " << Vartable::codeToIdentifier(this->pred);
     if (!this->form.empty())
         out << ", form: " << this->form;
     out << ")";
@@ -163,9 +163,9 @@ void Entry::print(std::ostream &out) const {
  *
  ************************************************** */
 void Entry::makeSerialString() {
-    serialString = std::to_string(code) + std::to_string(codePred) + '"' + form + '"';
+    serialString = std::to_string(pos) + std::to_string(pred) + '"' + form + '"';
     if (features)
-        serialString += features->peekSerialString();
+      serialString += features->peekSerialString();
     else
-        serialString += 'N';
+      serialString += 'N';
 }

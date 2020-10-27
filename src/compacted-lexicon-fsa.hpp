@@ -17,12 +17,12 @@
  *
  ************************************************** */
 
-#ifndef COMPACTLEXICONFSA_H
-#define COMPACTLEXICONFSA_H
+#ifndef COMPACTEDLEXICONFSA_H
+#define COMPACTEDLEXICONFSA_H
 
 #include <ostream>
 
-struct CompactLexiconFsa {
+struct CompactedLexiconFsa {
 private:
     unsigned long int child;
     unsigned long int sibling;
@@ -30,9 +30,9 @@ private:
     char character;
 
 public:
-    CompactLexiconFsa(unsigned long int, unsigned long int, unsigned long int, char);
+    CompactedLexiconFsa(unsigned long int, unsigned long int, unsigned long int, char);
 
-    CompactLexiconFsa();
+    CompactedLexiconFsa();
 
     void print(std::ostream &) const;
 
@@ -52,4 +52,4 @@ public:
 
 };
 
-#endif // COMPACTLEXICONFSA_H
+#endif // COMPACTEDLEXICONFSA_H

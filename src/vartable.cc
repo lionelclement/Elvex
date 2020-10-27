@@ -18,11 +18,11 @@
  ************************************************** */
 
 #include <climits>
-#include <sstream>
+//#include <sstream>
 #include <map>
 #include <unordered_map>
 #include "vartable.hpp"
-#include "messages.hpp"
+//#include "messages.hpp"
 
 const unsigned int Vartable::_END_;
 const unsigned int Vartable::_STARTTERM_;

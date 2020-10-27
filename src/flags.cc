@@ -22,7 +22,7 @@
 
 const std::bitset<Flags::FLAGS> Flags::SEEN = std::bitset<Flags::FLAGS>(1ul << 1);
 const std::bitset<Flags::FLAGS> Flags::XML = std::bitset<Flags::FLAGS>(1ul << 2);
-const std::bitset<Flags::FLAGS> Flags::GEN = std::bitset<Flags::FLAGS>(1ul << 3);
+const std::bitset<Flags::FLAGS> Flags::GENERATED = std::bitset<Flags::FLAGS>(1ul << 3);
 const std::bitset<Flags::FLAGS> Flags::DISABLED = std::bitset<Flags::FLAGS>(1ul << 4);
 const std::bitset<Flags::FLAGS> Flags::NIL = std::bitset<Flags::FLAGS>(1ul << 5);
 const std::bitset<Flags::FLAGS> Flags::BOTTOM = std::bitset<Flags::FLAGS>(1ul << 6);
@@ -43,20 +43,6 @@ Flags::Flags(const std::bitset<Flags::FLAGS> &flags) {
     this->flags = flags;
 }
 
-/* **************************************************
- *
- ************************************************** */
-//Flags::~Flags(void)
-//{
-//}
-///* **************************************************
-// *
-// ************************************************** */
-//void Flags::setFlags(const std::bitset<Flags::FLAGS> &flags)
-//{
-//  this->flags = flags;
-//}
-//
 /* **************************************************
  *
  ************************************************** */
@@ -88,15 +74,15 @@ bool Flags::isUnsetFlags(const std::bitset<Flags::FLAGS> &cmp) const {
 /* **************************************************
  *
  ************************************************** */
-void Flags::addFlags(const std::bitset<Flags::FLAGS> &f) {
-    this->flags |= f;
+void Flags::addFlags(const std::bitset<Flags::FLAGS>& _flags) {
+    this->flags |= _flags;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Flags::subFlags(const std::bitset<Flags::FLAGS> &f) {
-    this->flags &= ~f;
+void Flags::subFlags(const std::bitset<Flags::FLAGS>& _flags) {
+    this->flags &= ~_flags;
 }
 
 /* **************************************************
@@ -107,8 +93,8 @@ void Flags::printFlags(std::ostream &outStream) const {
         outStream << "SEEN ";
     if (isSetFlags(XML))
         outStream << "XML ";
-    if (isSetFlags(GEN))
-        outStream << "GEN ";
+    if (isSetFlags(GENERATED))
+        outStream << "GENERATED ";
     if (isSetFlags(DISABLED))
         outStream << "DISABLED ";
     if (isSetFlags(NIL))

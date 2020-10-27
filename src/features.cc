@@ -18,6 +18,8 @@
  ************************************************** */
 
 #include <climits>
+#include <sstream>
+
 #include "feature.hpp"
 #include "features.hpp"
 #include "environment.hpp"
@@ -32,20 +34,19 @@ featuresPtr Features::NIL = createNil();
 /* **************************************************
  *
  ************************************************** */
-Features::Features(const featurePtr& feature)
-        : Id(0) {
+Features::Features(const featurePtr& feature) {
     if (feature)
         features.push_front(feature);
     this->pred = 0;
     this->form = "";
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 Features::~Features() {
-    DELETE;
+    DELETE
     for (auto tmp : features) {
         if (tmp)
             tmp.reset();
@@ -216,14 +217,15 @@ void Features::makeSerialString() {
         serialString = '[';
         if (!features.empty()) {
             bool first = true;
-            for (Features::list::const_iterator f = features.begin(); f != features.end(); ++f) {
+            for (auto f : features) {
                 if (first)
                     first = false;
                 else
                     serialString += ',';
-                serialString += (*f)->peekSerialString();
+                serialString += f->peekSerialString();
             }
         }
+        serialString += ']';
     }
 }
 
@@ -237,7 +239,7 @@ unsigned int Features::assignPred() {
     for (Features::list::const_iterator f = features.begin(); f != features.end(); ++f) {
         // […, PRED = …, …]
         if ((*f)->getType() == Feature::PRED) {
-            ret = (*f)->getValue()->getIdentifier();
+            ret = (*f)->getValue()->getCode();
             break;
         }
     }
@@ -404,7 +406,7 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
                 //if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(), acceptToFilterNULLVariables, false)){
                 //ret = false;
                 //}
-                featuresPtr nFeatures = Features::create();
+                /*featuresPtr nFeatures = Features::create();
                 Features::list::const_iterator i2 = _features->begin();
                 while (i2 != _features->end()) {
                     if ((*i2)->isUnsetFlags(Flags::SEEN)) {
@@ -412,7 +414,7 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
                         nFeatures->add(*i2);
                     }
                     ++i2;
-                }
+                }*/
                 //environment->add((*i1)->getAttribute(), new Value(nFeatures, Value::FEATURES));
             } else {
                 featuresPtr nFeatures = Features::create();
@@ -553,7 +555,7 @@ void Features::deleteAnonymousVariables() {
                     if ((*iterator)->getValue() && ((*iterator)->getValue()->isAnonymous())) {
                         features.erase(iterator);
                         goto redo;
-                        return;
+                        //return;
                     }
                 }
                 break;

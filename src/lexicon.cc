@@ -19,8 +19,8 @@
 
 #include "lexicon.hpp"
 
-#include <iostream>
-#include <string>
+//#include <iostream>
+//#include <string>
 #include <unordered_map>
 #include <sstream>
 #include "messages.hpp"
@@ -31,7 +31,7 @@ std::list<std::string> *Lexicon::emptyList = new std::list<std::string>();
  *
  ************************************************** */
 Lexicon::Lexicon(void) {
-    NEW;
+    NEW
 }
 
 /* **************************************************

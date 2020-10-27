@@ -31,8 +31,7 @@
 /* **************************************************
  *
  ************************************************** */
-Statements::Statements(statementPtr statement)
-        : Id(0), Flags() {
+Statements::Statements(statementPtr statement) {
     NEW
     if (statement)
         statements.push_front(statement);
@@ -124,8 +123,8 @@ void Statements::makeSerialString() {
     serialString = '{';
     if (guard)
         serialString += guard->peekSerialString() + ';';
-    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i)
-        serialString += (*i)->peekSerialString() + ';';
+    for (auto i : statements)
+        serialString += i->peekSerialString() + ';';
     serialString += '}';
 }
 
@@ -133,12 +132,12 @@ void Statements::makeSerialString() {
  *
  ************************************************** */
 statementsPtr Statements::clone(const std::bitset<Flags::FLAGS> &protectedFlags) {
-    statementsPtr statements = Statements::create();
-    statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
+    statementsPtr _statements = Statements::create();
+    _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
     for (list::const_iterator i = this->statements.begin(); i != this->statements.end(); ++i)
-        statements->addStatement((*i)->clone(protectedFlags));
-    statements->addFlags(protectedFlags & this->getFlags());
-    return statements;
+        _statements->addStatement((*i)->clone(protectedFlags));
+    _statements->addFlags(protectedFlags & this->getFlags());
+    return _statements;
 }
 
 /* **************************************************
@@ -197,7 +196,7 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
             }
             if (effect) {
                 goto loopStatements;
-                break;
+                //break;
             }
         }
     }
@@ -209,13 +208,15 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
 /* **************************************************
  *
  ************************************************** */
-void Statements::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assignedInheritedSonFeatures) {
+/*
+ * void Statements::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assignedInheritedSonFeatures) {
     FATAL_ERROR_UNEXPECTED
     for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
         std::cerr << '.';
         (*i)->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
     }
 }
+*/
 
 /* **************************************************
  *
@@ -231,14 +232,14 @@ void Statements::enable(itemPtr item, Synthesizer *synthesizer, bool &effect, bo
 /* **************************************************
  *
  ************************************************** */
-bool Statements::findVariableElsewhere(statementPtr o, bitsetPtr variable) {
+/*bool Statements::findVariableElsewhere(statementPtr o, bitsetPtr variable) {
     FATAL_ERROR_UNEXPECTED
-    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
+ for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
         if ((*i) == o)
             continue;
         if ((*i)->findVariable(variable))
             return true;
     }
-    return false;
+   return false;
 }
-
+*/

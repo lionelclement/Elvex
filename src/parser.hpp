@@ -48,7 +48,7 @@ private:
     entry_map mapLocalEntry;
     std::unordered_map<std::string, featuresPtr> macros;
     featuresPtr startFeatures;
-    termPtr startTerm;
+    unsigned int startTerm;
     bool verbose;
     featuresPtr localFeatures;
     std::deque<std::string> bufferNames;
@@ -73,9 +73,9 @@ public:
 
     std::string getTopBufferName();
 
-    termPtr getStartTerm() const;
+    unsigned int getStartTerm() const;
 
-    void setStartTerm(termPtr);
+    void setStartTerm(unsigned int);
 
     void setStartFeatures(featuresPtr);
 

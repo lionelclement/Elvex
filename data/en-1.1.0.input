@@ -80,7 +80,7 @@
 //will have been feeling
 //Text_with_features [PRED:_TO_SNORE, vtense:future_perfect_continuous, i:[PRED:_JOHN]]
 
-//Text [PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]
+Text [PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_1, i:[PRED:_JOHN], ii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_2, i:[PRED:_JOHN], ii:[PRED:_WARNING, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_3, i:[PRED:_JOHN], ii:[PRED:_DIVINE_BLESSINGS, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
@@ -92,7 +92,7 @@
 
 //Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD], verbal_constr:neg|no_neg|int|no_int|excl, vtense:$all]
 
-Text [PRED:_TO_TELL, i:[PRED:__EGO], ii:[PRED:_JOHN], iii:[PRED:_TO_CALL, i:[PRED:_CHAIR_MAN, def:true, @s], ii:[PRED:_MARY]]]
+//Text [PRED:_TO_TELL, i:[PRED:__EGO], ii:[PRED:_JOHN], iii:[PRED:_TO_CALL, i:[PRED:_CHAIR_MAN, def:true, @s], ii:[PRED:_MARY]]]
 
 //Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]]
 

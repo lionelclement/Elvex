@@ -23,16 +23,13 @@
 #include <vector>
 #include "shared_ptr.hpp"
 #include "flags.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 
 class ListFeatures :
-        public Id, public Flags, public std::enable_shared_from_this<class ListFeatures> {
-
-public:
-    typedef std::vector<featuresPtr> featuresVector;
+        public UniqId, public Flags, public std::enable_shared_from_this<class ListFeatures> {
 
 private:
-    featuresVector listFeatures;
+    std::vector<featuresPtr> listFeatures;
 
     ListFeatures(void);
 
@@ -47,9 +44,9 @@ public:
 
     void clear(void);
 
-    featuresVector::const_iterator begin(void) const;
+    std::vector<featuresPtr>::const_iterator begin(void) const;
 
-    featuresVector::const_iterator end(void) const;
+    std::vector<featuresPtr>::const_iterator end(void) const;
 
     size_t size() const;
 

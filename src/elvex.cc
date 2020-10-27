@@ -18,7 +18,7 @@
  ************************************************** */
 
 #include <signal.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <cstdlib>
@@ -26,7 +26,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "compact-lexicon.hpp"
+#include "compacted-lexicon.hpp"
 #include "parser.hpp"
 #include "synthesizer.hpp"
 #include "vartable.hpp"
@@ -77,15 +77,15 @@ options\n\
 #endif
     std::cerr
             << "\
-\t-maxLength <number>         max number of length\n\
-\t-maxUsages <number>         max number of rule usage\n\
-\t-maxCardinal <number>       max number of items per set\n\
-\t-maxTime <seconds>          max time in seconds\n\
-\t-grammarFile <file>\n\
-\t-lexiconFile <file>\n\
-\t-inputFile <file>\n\
-\t-compactLexiconDirectory <directory>\n\
-\t-compactLexiconFile <file>\n\
+\t-maxLength <number>                    max number of length\n\
+\t-maxUsages <number>                    max number of rule usage\n\
+\t-maxCardinal <number>                  max number of items per set\n\
+\t-maxTime <seconds>                     max time in seconds\n\
+\t-grammarFile <file>                    the grammar\n\
+\t-lexiconFile <file>                    the lexicon\n\
+\t-inputFile <file>                      the input\n\
+\t-compactedLexiconDirectory <directory> the directory which contains the compacted lexicon\n\
+\t-compactedLexiconFile <file>           the compacted lexicon prefix name\n\
 ";
 #ifdef OUTPUT_XML
     std::cerr << "\t-xml <file>                 the XML file\n";
@@ -96,7 +96,7 @@ options\n\
  *
  ************************************************** */
 void sig_handler(int signum) {
-    FATAL_ERROR("ALARM SIGNAL" + std::to_string(signum) + " OUT OF TIME");
+    FATAL_ERROR("ALARM SIGNAL" + std::to_string(signum) + " OUT OF TIME")
 }
 
 /* **************************************************
@@ -261,16 +261,16 @@ int main(int argn, char **argv) {
                             Usage(/*argv*/);
                             return EXIT_FAILURE;
                         }
-                    } else if (!strcmp(argv[arg] + 1, "compactLexiconDirectory")) {
+                    } else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory")) {
                         if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setCompactDirectoryName(argv[++arg]);
+                            synthesizer.setCompactedDirectoryName(argv[++arg]);
                         else {
                             Usage(/*argv*/);
                             return EXIT_FAILURE;
                         }
-                    } else if (!strcmp(argv[arg] + 1, "compactLexiconFile")) {
+                    } else if (!strcmp(argv[arg] + 1, "compactedLexiconFile")) {
                         if ((argv[arg + 1] != NULL) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setCompactLexiconFileName(argv[++arg]);
+                            synthesizer.setCompactedLexiconFileName(argv[++arg]);
                         else {
                             Usage(/*argv*/);
                             return EXIT_FAILURE;
@@ -311,12 +311,12 @@ int main(int argn, char **argv) {
                 parser.getGrammar().analyseTerms(parser);
             }
 
-            if (synthesizer.getCompactLexiconFileName().length() > 0) {
-                char *dir = strdup((synthesizer.getCompactDirectoryName().length() > 0)
-                                   ? synthesizer.getCompactDirectoryName().c_str() : ".");
-                char *file = strdup(synthesizer.getCompactLexiconFileName().c_str());
-                CompactLexicon *lex = new CompactLexicon(std::string(dir), std::string(file));
-                synthesizer.setCompactLexicon(lex);
+            if (synthesizer.getCompactedLexiconFileName().length() > 0) {
+                char *dir = strdup((synthesizer.getCompactedDirectoryName().length() > 0)
+                                   ? synthesizer.getCompactedDirectoryName().c_str() : ".");
+                char *file = strdup(synthesizer.getCompactedLexiconFileName().c_str());
+                CompactedLexicon *lex = new CompactedLexicon(std::string(dir), std::string(file));
+                synthesizer.setCompactedLexicon(lex);
                 lex->openFiles("r");
                 lex->loadFsa();
                 lex->loadData();

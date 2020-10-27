@@ -28,12 +28,12 @@
 
 #include "flags.hpp"
 #include "serializable.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 #include "variableflag.hpp"
 
 class Features :
-        public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Features> {
+        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Features> {
 
 public:
     typedef std::list<featurePtr> list;

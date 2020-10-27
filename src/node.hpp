@@ -28,11 +28,11 @@
 #endif
 
 #include "flags.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 
 class Node :
-        public Flags, public Id, public std::enable_shared_from_this<class Node> {
+        public Flags, public UniqId, public std::enable_shared_from_this<class Node> {
 
 private:
     unsigned int nbrCS;

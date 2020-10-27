@@ -1,6 +1,8 @@
-#try it with "_lemma#pos"
+# input:
 #form	pos	lemma	features
-# @id: features;
+#@id: features;
+# output:
+#"_lemma#pos" =>
 /************************************************************
 * Patterns
 ************************************************************/

@@ -36,7 +36,7 @@ private:
     std::set<unsigned int> terminals;
     std::set<unsigned int> nonTerminals;
     ruleList rules;
-    termPtr startTerm;
+    unsigned int startTerm;
     rulePtr firstRule;
     unsigned int idMax;
 
@@ -51,13 +51,13 @@ public:
 
     const ruleList &getRules(void) const;
 
-    termPtr getStartTerm(void) const;
+    unsigned int getStartTerm(void) const;
 
     rulePtr getFirstRule(void) const;
 
     const unsigned int *getRefIdMax(void) const;
 
-    void setStartTerm(termPtr startTerm);
+    void setStartTerm(unsigned int startTerm);
 
     ruleList::const_iterator rulesBegin(void) const;
 
@@ -73,9 +73,9 @@ public:
 
     void print(std::ostream &) const;
 
-    bool isTerminal(termPtr) const;
+    bool isTerminal(unsigned int) const;
 
-    bool isNonTerminal(termPtr) const;
+    bool isNonTerminal(unsigned int) const;
 
     void analyseTerms(class Parser &);
 
@@ -83,7 +83,7 @@ public:
     void toXML(xmlNodePtr);
 #endif
 
-    std::list<rulePtr> *findRules(termPtr lhs);
+    std::list<rulePtr> *findRules(unsigned int lhs);
 };
 
 #endif // ELVEX_GRAMMAR_H

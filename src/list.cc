@@ -22,10 +22,10 @@
 
 #include <utility>
 #include "environment.hpp"
-#include "features.hpp"
+//#include "features.hpp"
 #include "messages.hpp"
 #include "shared_ptr.hpp"
-#include "grammar.hpp"
+//#include "grammar.hpp"
 #include "statement.hpp"
 
 listPtr List::NIL_LIST = List::create();
@@ -33,21 +33,20 @@ listPtr List::NIL_LIST = List::create();
 /* **************************************************
  *
  ************************************************** */
-List::List(enum List::Type type, valuePtr _value, listPtr _car, listPtr _cdr)
-        : Id(0) {
+List::List(enum List::Type type, valuePtr _value, listPtr _car, listPtr _cdr) {
     this->type = type;
     this->value = std::move(_value);
     this->pairp.car = std::move(_car);
     this->pairp.cdr = std::move(_cdr);
     //this->variable = 0;
-    NEW;
+    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 List::~List() {
-    DELETE;
+    DELETE
     if (pairp.car)
         pairp.car.reset();
     if (pairp.cdr)
@@ -424,14 +423,12 @@ listPtr List::clone() const {
     switch (type) {
         case NIL:
             return NIL_LIST;
-            break;
         case ATOM:
             if (value)
                 return create(value->clone());
             break;
         case PAIRP:
             return create(pairp.car->clone(), pairp.cdr->clone());
-            break;
     }
     return listPtr();
 }
@@ -485,7 +482,6 @@ listPtr List::pushFront(valuePtr _value) {
         case PAIRP: {
             listPtr n = create(create(_value), shared_from_this());
             return n;
-            break;
         }
     }
     return listPtr();
@@ -507,7 +503,6 @@ listPtr List::pushBack(valuePtr _value) {
                 n = n->pairp.cdr;
             n->pairp.cdr = create(create(_value), List::NIL_LIST);
             return m;
-            break;
         }
     }
     return listPtr();

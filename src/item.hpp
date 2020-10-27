@@ -25,12 +25,12 @@
 #include <vector>
 #include <unordered_map>
 #include "flags.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 
 class Item :
-        public Id, public Flags, public Serializable, public std::enable_shared_from_this<class Item> {
+        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Item> {
 
 private:
     rulePtr rule;
@@ -47,8 +47,8 @@ private:
     std::vector<forestIdentifierPtr> forestIdentifiers;
     environmentPtr environment;
     bool trace;
-    bool s_id = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
-            s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true, s_inheritedSonFeatures = true, s_synthesizedFeatures = true, s_synthesizedSonFeatures = true,
+    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
+            s_ranges = false, s_forestIdentifiers = true, s_inheritedFeatures = true, s_inheritedSonFeatures = true, s_synthesizedFeatures = true, s_synthesizedSonFeatures = true,
             s_statements = true, s_environment = true;
 
     Item(rulePtr rule, unsigned int index, statementsPtr statements);
@@ -70,7 +70,7 @@ public:
 
     const std::string &getFilename() const;
 
-    termPtr getCurrentTerm(void) const;
+    unsigned int getCurrentTerm(void) const;
 
     termsPtr getCurrentTerms() const;
 
@@ -88,7 +88,7 @@ public:
 
     std::vector<unsigned int> &getIndexTerms(void);
 
-    termPtr getLhs(void) const;
+    unsigned int getLhs(void) const;
 
     std::vector<termsPtr> &getRhs(void) const;
 

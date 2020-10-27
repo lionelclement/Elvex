@@ -21,7 +21,7 @@
 #define ELVEX_LIST_H
 
 #include "flags.hpp"
-#include "id.hpp"
+#include "uniq-id.hpp"
 #include "serializable.hpp"
 #include "variableflag.hpp"
 
@@ -30,7 +30,7 @@
 #endif
 
 class List :
-        public Serializable, public Flags, public Id, public std::enable_shared_from_this<List> {
+        public Serializable, public Flags, public UniqId, public std::enable_shared_from_this<List> {
 
 public:
     enum Type {
