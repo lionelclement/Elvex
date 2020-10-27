@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.13)
+
 project(elvex VERSION 2.15.0)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -22,8 +23,6 @@ else()
 endif()
 
 ADD_FLEX_BISON_DEPENDENCY(ruleslex rulesyacc)
-#add_compile_options("-std=c++11;-Wall;-Wextra;-Wno-deprecated")
-#add_definitions("-DPACKAGE_VERSION=\"2.15.0\"" )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
@@ -42,6 +41,7 @@ set(ELVEX_COMMON_SOURCES
         src/compacted-lexicon-tree.hpp
         src/compacted-lexicon.cc
         src/compacted-lexicon.hpp
+        src/config.hpp
         src/entries.cc
         src/entries.hpp
         src/entry.cc
@@ -117,13 +117,13 @@ find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
             OUTPUT_XML
-            #RESTORE_MEMORY
             MEMOIZATION
-            MAXLENGTH=1000
-            MAXUSAGES=10000
-            MAXCARDINAL=1000000
-            MAXATTEMPTS=100
-            MAXBITS=512
+            #RESTORE_MEMORY
+            #MAXLENGTH=1000
+            #MAXUSAGES=10000
+            #MAXCARDINAL=1000000
+            #MAXATTEMPTS=100
+            #MAXBITS=512
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
