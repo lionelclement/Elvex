@@ -24,7 +24,7 @@ all: lefff.fsa
 
 %.fsa: %.formPosLemmaFeatures %.pattern
 	@echo "build $@ from $*.formPosLemmaFeatures $*.pattern"
-	$(BUILDLEXICON) -compactLexiconDirectory . -compactLexiconFile $* -patternFile $*.pattern -morphoFile $*.formPosLemmaFeatures build
+	$(BUILDLEXICON) -compactedLexiconDirectory . -compactedLexiconFile $* -patternFile $*.pattern -morphoFile $*.formPosLemmaFeatures build
 
 %.morpho: %.bz2 %.slang.bz2
 	@echo "build $@ from $^"
