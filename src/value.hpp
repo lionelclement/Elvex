@@ -36,7 +36,6 @@ class Value :
 public:
     enum Type {
         NIL,
-        FALSE,
         TRUE,
         CONSTANT,
         VARIABLE,
@@ -57,10 +56,9 @@ private:
     VariableFlag variableFlag;
 
 public:
+    static valuePtr TRUE_VALUE;
     static valuePtr NIL_VALUE;
     static valuePtr ANONYMOUS_VALUE;
-    static valuePtr TRUE_VALUE;
-    static valuePtr FALSE_VALUE;
 
     Type type;
     featuresPtr features; // pour encoder les SF
@@ -126,7 +124,7 @@ public:
 
     bool isNil(void) const;
 
-    bool isFalse(void) const;
+    //bool isFalse(void) const;
 
     bool isTrue(void) const;
 

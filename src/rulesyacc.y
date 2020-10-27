@@ -1241,12 +1241,12 @@ feature_value:
 	  $$ = new valuePtr(Value::TRUE_VALUE);
 	}
 
-	|TOKEN_FALSE
+/*	|TOKEN_FALSE
 	{
 	  DBUGPRT("feature_value");
 	  $$ = new valuePtr(Value::FALSE_VALUE);
 	}
-
+*/
 	|TOKEN_ANONYMOUS
 	{
 	  DBUGPRT("feature_value");

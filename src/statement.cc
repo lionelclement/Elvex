@@ -1183,7 +1183,7 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
 valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables) {
 #ifdef TRACE_EVAL
     std::cout << "####################### EVAL VALUE #######################" << std::endl;
-    std::cout << "<div>Value: " << std::endl;
+    std::cout << "<div>" << std::endl;
     this->print(std::cout, 0);
     item->print(std::cout);
     std::cout << "</div>" << std::endl;
@@ -1440,7 +1440,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if ((!v1) || (!v2))
                         resultValue = valuePtr();
-                    else if ((v1->isFalse()) || (v2->isFalse()))
+                    else if ((v1->isNil()) || (v2->isNil()))
                         resultValue = Value::NIL_VALUE;
                     else
                         resultValue = Value::TRUE_VALUE;
@@ -1453,7 +1453,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                     valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if ((!v1) || (!v2))
                         resultValue = valuePtr();
-                    else if ((v1->isFalse()) && (v2->isFalse()))
+                    else if ((v1->isNil()) && (v2->isNil()))
                         resultValue = Value::NIL_VALUE;
                     else
                         resultValue = Value::TRUE_VALUE;
@@ -1561,7 +1561,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
                 case NOT: {
                     valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
                     if (!v1
-                        || v1->isFalse())
+                        || v1->isNil())
                         resultValue = Value::TRUE_VALUE;
                     else
                         resultValue = Value::NIL_VALUE;
@@ -1774,10 +1774,10 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                             }
                             break;
 
-                        case Value::FALSE:
-                            case Value::TRUE: {
+                        //case Value::FALSE:
+                        case Value::TRUE: {
                             switch ((*i2)->getValue()->getType()) {
-                                case Value::FALSE:
+                                //case Value::FALSE:
                                 case Value::TRUE:
                                     if ((*i1)->getValue()->isNil() != (*i2)->getValue()->isNil()) {
                                         result = Features::BOTTOM;
@@ -2218,10 +2218,10 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesi
  ************************************************************ */
 void Statement::stmAttest(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
     /***
-        std::cerr << "<DIV>*** attest</DIV>";
-        std::cerr << "<DIV>";
-        this->print(std::cerr);
-        std::cerr << "</DIV>";
+        std::cout << "<DIV>*** attest</DIV>";
+        std::cout << "<DIV>";
+        this->print(std::cout);
+        std::cout << "</DIV>";
     ***/
     switch (this->op) {
         case ATTEST: {

@@ -41,7 +41,7 @@
 *
 ***/
 
-//Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD]]
+Text [PRED:_TO_FEEL, i:[PRED:__EGO], ii:[PRED:_GOOD]]
 //Text [PRED:_TO_FEEL, i:[PRED:__YOU], ii:[PRED:_BAD], lexical_function:magn]
 //Text [PRED:_TO_APPRECIATE, i:[PRED:__pro, @_3ms], ii:[PRED:__pro, @_3ms, animate:false]]
 //Text [PRED:_TO_ENDURE, i:[PRED:__EGO], ii:[PRED:_HOPE]]
@@ -80,7 +80,7 @@
 //will have been feeling
 //Text_with_features [PRED:_TO_SNORE, vtense:future_perfect_continuous, i:[PRED:_JOHN]]
 
-Text [PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]
+//Text [PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_1, i:[PRED:_JOHN], ii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_2, i:[PRED:_JOHN], ii:[PRED:_WARNING, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_3, i:[PRED:_JOHN], ii:[PRED:_DIVINE_BLESSINGS, number:sg, def:false, poss:false], iii:[PRED:_MARY]]

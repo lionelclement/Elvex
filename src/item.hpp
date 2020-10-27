@@ -48,7 +48,7 @@ private:
     environmentPtr environment;
     bool trace;
     bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
-            s_ranges = false, s_forestIdentifiers = true, s_inheritedFeatures = true, s_inheritedSonFeatures = true, s_synthesizedFeatures = true, s_synthesizedSonFeatures = true,
+            s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true, s_inheritedSonFeatures = true, s_synthesizedFeatures = true, s_synthesizedSonFeatures = true,
             s_statements = true, s_environment = true;
 
     Item(rulePtr rule, unsigned int index, statementsPtr statements);

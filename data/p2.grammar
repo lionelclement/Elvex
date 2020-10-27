@@ -6,6 +6,13 @@ S → form [a] form b form [c] form {
   ↓2 = [];
   ↓4 = [];
   ↓6 = [];
-  attest ¬(#2 ∧ #6);
+  //attest !(#2 && #6);
+  //attest ¬(#2 ∧ #6);
+  //attest (#2 ∨ #6);
+  //attest (#2 || #6);
+  //attest (¬#2 ∨ #6);
+  //attest (¬#2 || #6);
+  //attest (#2 ⇒ #6);
+  attest (#2 => #6);
 }
 

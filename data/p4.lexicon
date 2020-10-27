@@ -1,5 +1,3 @@
-@lexicon
-
 a1 a[PRED:a1, weight:1];
 a2 a[PRED:a2, weight:2];
 a3 a[PRED:a3, weight:3];

@@ -1,7 +1,3 @@
-@lexicon «
-#line 2
-#file "p3.lexicon"
-
 "." dot;
 "..." dots;
 "<BR>"	br ;
