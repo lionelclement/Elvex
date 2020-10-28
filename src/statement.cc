@@ -1775,10 +1775,10 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
                             break;
 
                         //case Value::FALSE:
-                        case Value::TRUE: {
+                        case Value::_TRUE: {
                             switch ((*i2)->getValue()->getType()) {
                                 //case Value::FALSE:
-                                case Value::TRUE:
+                                case Value::_TRUE:
                                     if ((*i1)->getValue()->isNil() != (*i2)->getValue()->isNil()) {
                                         result = Features::BOTTOM;
                                         goto endUnif;

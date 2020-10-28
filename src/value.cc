@@ -31,7 +31,7 @@
 #include "synthesizer.hpp"
 #include "vartable.hpp"
 
-valuePtr Value::TRUE_VALUE = Value::create(Value::TRUE);
+valuePtr Value::TRUE_VALUE = Value::create(Value::_TRUE);
 valuePtr Value::NIL_VALUE = Value::create(Value::NIL);
 valuePtr Value::ANONYMOUS_VALUE = Value::create(Value::ANONYMOUS);
 
@@ -194,7 +194,7 @@ bool Value::isNil() const {
  *
  ************************************************** */
 bool Value::isTrue() const {
-    return (type == Value::TRUE);
+    return (type == Value::_TRUE);
 }
 
 /* **************************************************
@@ -261,7 +261,7 @@ void Value::print(std::ostream &outStream) const {
         case NIL:
             outStream << "NIL";
             break;
-        case TRUE:
+        case _TRUE:
             outStream << "TRUE";
             break;
         case CONSTANT:
@@ -299,7 +299,7 @@ void Value::flatPrint(std::ostream &outStream) const {
         case NIL:
             outStream << "NIL";
             break;
-        case TRUE:
+        case _TRUE:
             outStream << "TRUE";
             break;
         case CONSTANT:
@@ -337,7 +337,7 @@ void Value::makeSerialString() {
         case NIL:
             serialString = 'N';
             break;
-        case TRUE:
+        case _TRUE:
             serialString = 'T';
             break;
         case CONSTANT:
@@ -380,7 +380,7 @@ Value::toXML(xmlNodePtr nodeRoot) const
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"nil");
     bits->toXML(v);
     break;
-  case TRUE:
+  case _TRUE:
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"true");
     bits->toXML(v);
     break;
@@ -428,7 +428,7 @@ valuePtr Value::clone() {
     valuePtr result = valuePtr();
     switch (type) {
         case NIL:
-        case TRUE:
+        case _TRUE:
         case CONSTANT:
         case CODE:
         case STR:
@@ -473,10 +473,10 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     bool ret = true;
     switch (type) {
 
-        case TRUE:
+        case _TRUE:
             if (value->type == VARIABLE) {
                 environment->add(value->bits, shared_from_this());
-            } else if (value->type == TRUE) {
+            } else if (value->type == _TRUE) {
             } else if (value->type == ANONYMOUS) {
             } else {
                 ret = false;
@@ -505,7 +505,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
                                                            acceptToFilterNULLVariables/*,
                                                            root*/))
                     ret = false;
-            } else if (value->type == TRUE) {
+            } else if (value->type == _TRUE) {
                 environment->add(value->bits, shared_from_this());
             } else {
                 ret = false;
@@ -723,7 +723,7 @@ bool Value::eq(valuePtr o) const {
 
     else {
         switch (o->type) {
-            case TRUE: FATAL_ERROR_UNEXPECTED
+            case _TRUE: FATAL_ERROR_UNEXPECTED
 
             case CODE:
                 if ((type == CODE) && ((code == o->getCode())))
@@ -779,7 +779,7 @@ void Value::deleteAnonymousVariables() const {
     switch (type) {
         case NIL:
             FATAL_ERROR_UNEXPECTED
-        case TRUE:
+        case _TRUE:
         case CODE:
         case CONSTANT:
         case STR:
@@ -808,7 +808,7 @@ bool Value::renameVariables(size_t i) {
             case CONSTANT:
         case CODE:
         case STR:
-        case TRUE:
+        case _TRUE:
         case NUMBER:
         case ANONYMOUS:
             break;
@@ -843,7 +843,7 @@ void Value::enable(const statementPtr &root, const itemPtr &item, Synthesizer *s
     switch (type) {
         case NIL:
             FATAL_ERROR_UNEXPECTED
-        case TRUE:
+        case _TRUE:
         case CODE:
         case STR:
         case CONSTANT:
@@ -876,7 +876,7 @@ void Value::enable(const statementPtr &root, const itemPtr &item, Synthesizer *s
 bool Value::findVariable(const bitsetPtr &variable) const {
     switch (type) {
         case NIL: FATAL_ERROR_UNEXPECTED
-        case TRUE:
+        case _TRUE:
         case CODE:
         case STR:
         case CONSTANT:
@@ -926,7 +926,7 @@ bool Value::containsVariable() {
         return true;
     switch (type) {
         case NIL: FATAL_ERROR_UNEXPECTED
-        case TRUE:
+        case _TRUE:
         case CODE:
         case STR:
         case CONSTANT:

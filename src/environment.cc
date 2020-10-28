@@ -272,7 +272,7 @@ void Environment::replaceVariables(valuePtr value, bool &effect) {
         switch (value->getType()) {
             case Value::NIL:
             //case Value::FALSE:
-            case Value::TRUE:
+            case Value::_TRUE:
             case Value::STR:
             case Value::CONSTANT:
             case Value::CODE:
