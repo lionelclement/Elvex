@@ -38,10 +38,6 @@ class Bitset :
         public std::bitset<MAXBITS>, public Serializable, public std::enable_shared_from_this<Bitset> {
 
 private:
-    //static const std::bitset<MAXBITS> LEXBITSET;
-    //static const std::bitset<MAXBITS> ARGBITSET;
-    //static const std::bitset<MAXBITS> SYSBITSET;
-    //static const std::bitset<MAXBITS> FIRSTBITSET;
 
     explicit Bitset(unsigned int = 0);
 

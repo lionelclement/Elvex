@@ -75,7 +75,7 @@ public:
     void toXML(xmlNodePtr);
 #endif
 
-    // compare deux termes
+    // compares two terms
     struct Less {
         bool operator()(const termsPtr t1, const termsPtr t2) const;
     };

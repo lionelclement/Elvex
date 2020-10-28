@@ -29,7 +29,7 @@
 /* ************************************************************
  * 
  ************************************************************ */
-MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string const& key) const {
+MemoizationMap::map::const_iterator MemoizationMap::find(std::string const& key) const {
     auto memItem = memoizationMap.find(key);
 #ifdef TRACE_MEMOIZATION
     if (memItem != memoizationMap.end()) {
@@ -44,7 +44,7 @@ MemoizationMap::unordered_map::const_iterator MemoizationMap::find(std::string c
 /* ************************************************************
  * 
  ************************************************************ */
-MemoizationMap::unordered_map::const_iterator MemoizationMap::end() const {
+MemoizationMap::map::const_iterator MemoizationMap::end() const {
     return memoizationMap.end();
 }
 

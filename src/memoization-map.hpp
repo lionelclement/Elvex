@@ -29,17 +29,17 @@ class MemoizationMap :
         public std::enable_shared_from_this<class MemoizationMap> {
 
 public:
-    typedef std::unordered_map<std::string, std::list<memoizationValuePtr> > unordered_map;
+    typedef std::unordered_map<std::string, std::list<memoizationValuePtr> > map;
 
 private:
-    unordered_map memoizationMap;
+    map memoizationMap;
 
 public:
     void clear(void);
 
-    unordered_map::const_iterator end(void) const;
+    map::const_iterator end(void) const;
 
-    unordered_map::const_iterator find(const std::string&) const;
+    map::const_iterator find(const std::string&) const;
 
     void insert(const std::string&, featuresPtr, forestIdentifierPtr);
 

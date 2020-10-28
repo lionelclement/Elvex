@@ -23,7 +23,6 @@
 #include "environment.hpp"
 #include "messages.hpp"
 #include "forest.hpp"
-//#include "entry.hpp"
 #include "forestidentifier.hpp"
 #include "itemset.hpp"
 #include "shared_ptr.hpp"
@@ -32,7 +31,6 @@
 #include "statement.hpp"
 #include "statements.hpp"
 #include "synthesizer.hpp"
-//#include "../trash/term.hpp"
 #include "terms.hpp"
 
 /* **************************************************
@@ -856,9 +854,6 @@ size_t Item::hash::operator()(itemPtr const& i) const {
  ************************************************** */
 bool Item::equal_to::operator()(itemPtr const& i1, itemPtr const& i2) const {
     return i1->peekSerialString() == i2->peekSerialString();
-    /*
-    return i1->hashCode() == i2->hashCode();
-    */
 }
 
 /* **************************************************

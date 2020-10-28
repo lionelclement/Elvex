@@ -17,9 +17,6 @@
  *
  ************************************************** */
 
-//#include <sstream>
-//#include <iostream>
-//#include "messages.hpp"
 #include "serializable.hpp"
 
 /* **************************************************

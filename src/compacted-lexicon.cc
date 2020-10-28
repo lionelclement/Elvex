@@ -92,8 +92,8 @@ unsigned long int CompactedLexicon::searchStatic(unsigned long int index, const 
     while (*str) {
         // parse the brothers while founding the actual char
         while (!fsa[index].isThisChar(*str)) {
-            if (fsa[index].isSibling())
-                index = fsa[index].getSibling();
+            if (fsa[index].isNext())
+                index = fsa[index].getNext();
             else
                 return (unsigned long int) (~0UL);
         }

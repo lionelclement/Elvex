@@ -137,7 +137,7 @@ void Feature::print(std::ostream &outStream) const {
             break;
         case Feature::VARIABLE:
             outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD>";
-            if (value && !value->isNil()) {
+            if (value && !value->_isNil()) {
                 outStream << "<TD ALIGN=\"LEFT\">";
                 value->print(outStream);
                 outStream << "</TD>";
@@ -174,7 +174,7 @@ void Feature::flatPrint(std::ostream &outStream) const {
             break;
         case Feature::VARIABLE:
             outStream << attributeToString();
-            if (value && !value->isNil()) {
+            if (value && !value->_isNil()) {
                 value->flatPrint(outStream);
             }
             break;

@@ -24,6 +24,7 @@
 #include "uniq-id.hpp"
 #include "serializable.hpp"
 #include "variableflag.hpp"
+#include "shared_ptr.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>

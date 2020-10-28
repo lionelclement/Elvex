@@ -49,7 +49,6 @@ public:
         ANONYMOUS,
         CONSTANT,
         NIL,
-        NOT_NIL,
         UNIF,
         GUARD,
         PRINT,

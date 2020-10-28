@@ -34,9 +34,9 @@
 class Parser {
 
 public:
-    typedef std::unordered_map<std::string, entryPtr, std::hash<std::string>, std::equal_to<std::string> > entry_map;
-    // pos => (PRED => entries)
-    // verb => (manger => (mangions, mange|mange))
+    typedef std::unordered_map<std::string, entryPtr> entry_map;
+    // POS => (LEMMA => ENTRIES)
+    // i.e.: verb => (manger => (mangions, mange|mange))
     typedef std::map<unsigned int, entriesPtr> entries_map;
     typedef std::map<unsigned int, entries_map *> entries_map_map;
 

@@ -19,8 +19,6 @@
 
 #include <regex>
 #include <sstream>
-//#include <string>
-//#include <vector>
 #include <list>
 #include "environment.hpp"
 #include "messages.hpp"
@@ -31,7 +29,6 @@
 #include "shared_ptr.hpp"
 #include "listfeatures.hpp"
 #include "bitset.hpp"
-//#include "messages.hpp"
 
 /* **************************************************
  *
@@ -90,8 +87,8 @@ void Environment::add(bitsetPtr attr, valuePtr value) {
  *
  ************************************************** */
 void Environment::add(const environmentPtr e) {
-    for (Environment::unordered_map::const_iterator i = e->begin(); i != e->end(); ++i)
-        add(i->first, i->second);
+    for (auto i : *e)
+        add(i.first, i.second);
 }
 
 /* **************************************************
@@ -99,9 +96,9 @@ void Environment::add(const environmentPtr e) {
  ************************************************** */
 void Environment::add(const environmentPtr e, const environmentPtr where) {
     if (where)
-        for (Environment::unordered_map::const_iterator i = e->begin(); i != e->end(); i++)
-            if (where->env.find(i->first) != where->env.end())
-                add(i->first, i->second);
+        for (auto i : *e)
+            if (where->env.find(i.first) != where->env.end())
+                add(i.first, i.second);
 }
 
 /* **************************************************
@@ -138,7 +135,7 @@ size_t Environment::size() const {
  ************************************************** */
 valuePtr Environment::find(bitsetPtr attr) const {
     const std::string key = attr->toString();
-    Environment::unordered_map::const_iterator it = env.find(key);
+    auto it = env.find(key);
     if (it != env.end())
         return it->second;
     else
@@ -150,21 +147,19 @@ valuePtr Environment::find(bitsetPtr attr) const {
  ************************************************** */
 void Environment::print(std::ostream &out) const {
     bool first = true;
-    Environment::unordered_map::const_iterator i = begin();
     out << "<TABLE border=\"1\"><TR>";
-    while (i != end()) {
+    for (auto & i : env) {
         if (first)
             first = false;
         else
             out << "</TR><TR>";
         out << "<TD>";
-        out << (*i).first;
-        if ((*i).second) {
+        out << i.first;
+        if (i.second) {
             out << "</TD><TD>";
-            (*i).second->print(out);
+            i.second->print(out);
         }
         out << "</TD>";
-        ++i;
     }
     out << "</TR></TABLE>";
 }
@@ -186,42 +181,42 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
         return;
 
     redo:
-    for (std::list<featurePtr>::iterator feature = features->begin(); feature != features->end(); ++feature) {
-        switch ((*feature)->getType()) {
+    for (auto it = features->begin() ; it != features->end() ; ++it) {
+        featurePtr feature = *it;
+        switch (feature->getType()) {
             case Feature::PRED:
-                if ((*feature)->getValue())
-                    replaceVariables((*feature)->getValue(), effect);
+                if (feature->getValue())
+                    replaceVariables(feature->getValue(), effect);
                 break;
             case Feature::FORM:
             case Feature::CONSTANT:
-                if ((*feature)->getValue()) {
-                    replaceVariables((*feature)->getValue(), effect);
+                if (feature->getValue()) {
+                    replaceVariables(feature->getValue(), effect);
                 } else FATAL_ERROR_UNEXPECTED
                 break;
             case Feature::VARIABLE: {
-                if ((*feature)->getValue()) {
+                if (feature->getValue()) {
                     effect = true;
-                    replaceVariables((*feature)->getValue(), effect);
+                    replaceVariables(feature->getValue(), effect);
                 }
 
-                valuePtr value = find((*feature)->getAttribute());
+                valuePtr value = find(feature->getAttribute());
                 if (!value) {
                     /* do nothing */
-                } else if (value->isNil()) {
+                } else if (value->_isNil()) {
                     /* do nothing */
-                } else if (value->isFeatures()) {
-                    features->erase(feature);
-                    for (std::list<featurePtr>::iterator f = value->getFeatures()->begin();
-                         f != value->getFeatures()->end(); ++f) {
-                        features->add(*f);
+                } else if (value->_isFeatures()) {
+                    features->erase(it);
+                    for (auto f : *value->getFeatures()) {
+                        features->add(f);
                     }
                     effect = true;
                     goto redo;
-                } else if (value->isConstant()) {
-                    (*feature)->setType(Feature::CONSTANT);
-                    (*feature)->setAttribute(value->getBits());
-                } else if (value->isAnonymous()) {
-                    features->erase(feature);
+                } else if (value->_isConstant()) {
+                    feature->setType(Feature::CONSTANT);
+                    feature->setAttribute(value->getBits());
+                } else if (value->_isAnonymous()) {
+                    features->erase(it);
                     effect = true;
                     goto redo;
                 } else {
@@ -249,8 +244,8 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
  *
  ************************************************** */
 void Environment::replaceVariables(listFeaturesPtr listFeatures, bool &effect) {
-    for (auto vf = listFeatures->begin(); vf != listFeatures->end(); ++vf)
-        this->replaceVariables(*vf, effect);
+    for (auto & vf : *listFeatures)
+        this->replaceVariables(vf, effect);
 }
 
 /* **************************************************
@@ -268,24 +263,23 @@ void Environment::replaceVariables(valuePtr value, bool &effect) {
      ***/
     if (!value->containsVariable())
         return;
-    if (!value->isNil() && !value->isTrue()) {
+    if (!value->_isNil() && !value->_isAnonymous()) {
         switch (value->getType()) {
-            case Value::NIL:
-            //case Value::FALSE:
+            case Value::_NIL:
             case Value::_TRUE:
-            case Value::STR:
-            case Value::CONSTANT:
-            case Value::CODE:
-            case Value::ANONYMOUS:
-            case Value::NUMBER:
+            case Value::_FORM:
+            case Value::_CONSTANT:
+            case Value::_CODE:
+            case Value::_ANONYMOUS:
+            case Value::_NUMBER:
                 break;
-            case Value::FEATURES:
+            case Value::_FEATURES:
                 replaceVariables(value->getFeatures(), effect);
                 break;
-            case Value::LIST:
+            case Value::_LIST:
                 replaceVariables(value->getList(), effect);
                 break;
-            case Value::VARIABLE:
+            case Value::_VARIABLE:
                 valuePtr val = find(value->getBits());
                 if (val && (val != value)) {
                     effect = true;
@@ -325,9 +319,9 @@ void Environment::replaceVariables(listPtr list, bool &effect) {
         case List::ATOM:
             if (list->isVariable()) {
                 valuePtr value = this->find(list->getValue()->getBits());
-                if (value->isList()) {
+                if (value->_isList()) {
                     *list = *(value->getList());
-                } else if (value->isNil()) {
+                } else if (value->_isNil()) {
                     *list = *List::NIL_LIST;
                 } else {
                     list->setValue(value);

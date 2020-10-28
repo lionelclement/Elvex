@@ -62,11 +62,8 @@ public:
 
     void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    //void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
-
     void enable(itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
 
-    //bool findVariableElsewhere(statementPtr, bitsetPtr);
 };
 
 #endif // ELVEX_STATEMENTS_H

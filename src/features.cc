@@ -92,17 +92,17 @@ void Features::add(const featurePtr& feature, bool front) {
  *
  ************************************************** */
 void Features::add(const featuresPtr& _features, bool front) {
-    for (list::const_iterator j = _features->begin(); j != _features->end(); ++j)
+    for (auto j : *_features)
         if (front)
-            this->features.push_front(*j);
+            this->features.push_front(j);
         else
-            this->features.push_back(*j);
+            this->features.push_back(j);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Features::list::iterator Features::erase(Features::list::iterator i) {
+std::list<featurePtr>::iterator Features::erase(std::list<featurePtr>::iterator i) {
     return features.erase(i);
 }
 
@@ -116,14 +116,14 @@ size_t Features::size() const {
 /* **************************************************
  *
  ************************************************** */
-Features::list::iterator Features::begin() {
+std::list<featurePtr>::iterator Features::begin() {
     return features.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Features::list::iterator Features::end() {
+std::list<featurePtr>::iterator Features::end() {
     return features.end();
 }
 
@@ -236,10 +236,10 @@ unsigned int Features::assignPred() {
     unsigned int ret = UINT_MAX;
     if (this->pred)
         return this->pred;
-    for (Features::list::const_iterator f = features.begin(); f != features.end(); ++f) {
+    for (auto f : features) {
         // […, PRED = …, …]
-        if ((*f)->getType() == Feature::PRED) {
-            ret = (*f)->getValue()->getCode();
+        if (f->getType() == Feature::PRED) {
+            ret = f->getValue()->getCode();
             break;
         }
     }
@@ -253,9 +253,9 @@ unsigned int Features::assignPred() {
 std::string Features::assignForm() {
     if (!form.empty())
         return form;
-    for (Features::list::const_iterator f = features.begin(); f != features.end(); ++f) {
-        if ((*f)->getType() == Feature::FORM) {
-            form = (*f)->getValue()->getStr();
+    for (auto f : features) {
+        if (f->getType() == Feature::FORM) {
+            form = f->getValue()->getStr();
             return form;
         }
     }
@@ -272,7 +272,7 @@ Features::toXML(xmlNodePtr nodeRoot)
    xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"FS", NULL);
    xmlSetProp(f, (xmlChar*)"id", (xmlChar*)std::to_string(this->getId()).c_str());
    if (features.size())
-   for (Features::list::const_iterator i = features.begin();
+   for (std::list<featurePtr>::const_iterator i = features.begin();
          i != features.end();
          ++i)
    (*i)->toXML(f);
@@ -339,53 +339,56 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
      ***/
 
     // Traite tous les attributs constants
-    for (Features::list::const_iterator i1 = begin(); i1 != end(); ++i1) {
-        if (((*i1)->getType() == Feature::PRED) || ((*i1)->getType() == Feature::CONSTANT)) {
-            Features::list::const_iterator i2 = _features->begin();
-            while (i2 != _features->end()) {
+    for (const auto & i1 : features) {
+        if ((i1->getType() == Feature::PRED) || (i1->getType() == Feature::CONSTANT)) {
+            bool stop = false;
+            for (auto & i2 : *_features) {
                 // Si deux constantes matchent
                 // ou deux PRED matchent
-                if ((((*i2)->getType() == Feature::CONSTANT) && ((*i1)->getType() == Feature::CONSTANT) &&
-                     ((*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()))
-                    || (((*i1)->getType() == Feature::PRED) && ((*i2)->getType() == Feature::PRED))) {
-                    (*i2)->addFlags(Flags::SEEN);
-                    // Si les deux valeurs sont NIL
-                    if (((*i1)->getValue()->isNil()) && ((*i2)->getValue()->isNil())) {
+                if (((i2->getType() == Feature::CONSTANT) && (i1->getType() == Feature::CONSTANT) &&
+                     ((*i1->getAttribute() & *i2->getAttribute()).any()))
+                    || ((i1->getType() == Feature::PRED) && (i2->getType() == Feature::PRED))) {
+                    i2->addFlags(Flags::SEEN);
+
+                    // If both are NIL
+                    if ((i1->getValue()->_isNil()) && (i2->getValue()->_isNil())) {
                     }
-                        // Si les deux valeurs sont TRUE
-                    else if (((*i1)->getValue()->isTrue()) && ((*i2)->getValue()->isTrue())) {
-                    }
-                        // Si l'une des deux est ANONYMOUS
-                        //else if (((*i1)->getValue()->isAnonymous()) || ((*i2)->getValue()->isAnonymous())) {
+                        // If both are TRUE
+                    //else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
+                    //}
+
+                        // If one is ANONYMOUS
+                        //else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous())) {
                         //}
-                        // Sinon on construit l'environnement avec les deux valeurs
-                    else if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(),
+
+                        // Else build environment with the two values
+                    else if (!i1->getValue()->buildEnvironment(environment, i2->getValue(),
                                                                   acceptToFilterNULLVariables, false)) {
                         ret = false;
                     }
+                    stop = true;
                     break;
                 }
-                ++i2;
             }
             // Trait i1 inexistant
-            if (i2 == _features->end()) {
+            if (!stop) {
                 // i1: a = $X
-                if (((*i1)->getType() == Feature::CONSTANT) || (*i1)->getType() == Feature::PRED) {
-                    if ((*i1)->getValue()->getType() == Value::VARIABLE) {
+                if ((i1->getType() == Feature::CONSTANT) || i1->getType() == Feature::PRED) {
+                    if (i1->getValue()->getType() == Value::_VARIABLE) {
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables) {
-                            environment->add((*i1)->getValue()->getBits(), Value::ANONYMOUS_VALUE);
+                            environment->add(i1->getValue()->getBits(), Value::ANONYMOUS_VALUE);
                         } else {
                             ret = false;
                         }
-                    } else if ((*i1)->getValue()->isNil()) {
+                    } else if (i1->getValue()->_isNil()) {
                     }
                         // i1: a = ...
                     else {
                         if (!acceptToFilterNULLVariables) {
                             ret = false;
                         } else {
-                            if (!(*i1)->getValue()->buildEnvironment(environment, Value::ANONYMOUS_VALUE,
+                            if (!i1->getValue()->buildEnvironment(environment, Value::ANONYMOUS_VALUE,
                                                                      acceptToFilterNULLVariables, false)) {
                                 ret = false;
                             }
@@ -397,36 +400,34 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
     }
 
     // traite les variables de structures
-    for (Features::list::const_iterator i1 = begin(); i1 != end(); ++i1) {
+    for (auto i1 : features) {
         // i1: X
-        if ((*i1)->getType() == Feature::VARIABLE) {
-            if ((*i1)->getValue()) {
+        if (i1->getType() == Feature::VARIABLE) {
+            if (i1->getValue()) {
                 throw "*** error: A variable attribute is not allowed in this context: " +
-                      (*i1)->getAttribute()->toString();
-                //if (!(*i1)->getValue()->buildEnvironment(environment, (*i2)->getValue(), acceptToFilterNULLVariables, false)){
+                      i1->getAttribute()->toString();
+                //if (!i1->getValue()->buildEnvironment(environment, i2->getValue(), acceptToFilterNULLVariables, false)){
                 //ret = false;
                 //}
                 /*featuresPtr nFeatures = Features::create();
-                Features::list::const_iterator i2 = _features->begin();
+                Features::std::list<featurePtr>::const_iterator i2 = _features->begin();
                 while (i2 != _features->end()) {
-                    if ((*i2)->isUnsetFlags(Flags::SEEN)) {
-                        (*i2)->addFlags(Flags::SEEN);
-                        nFeatures->add(*i2);
+                    if (i2->isUnsetFlags(Flags::SEEN)) {
+                        i2->addFlags(Flags::SEEN);
+                        nFeatures->addi2;
                     }
                     ++i2;
                 }*/
-                //environment->add((*i1)->getAttribute(), new Value(nFeatures, Value::FEATURES));
+                //environment->add(i1->getAttribute(), new Value(nFeatures, Value::FEATURES));
             } else {
                 featuresPtr nFeatures = Features::create();
-                Features::list::const_iterator i2 = _features->begin();
-                while (i2 != _features->end()) {
-                    if ((*i2)->isUnsetFlags(Flags::SEEN)) {
-                        (*i2)->addFlags(Flags::SEEN);
-                        nFeatures->add(*i2);
+                for (auto & i2 : *_features) {
+                    if (i2->isUnsetFlags(Flags::SEEN)) {
+                        i2->addFlags(Flags::SEEN);
+                        nFeatures->add(i2);
                     }
-                    ++i2;
                 }
-                environment->add((*i1)->getAttribute(), Value::create(Value::FEATURES, nFeatures));
+                environment->add(i1->getAttribute(), Value::create(Value::_FEATURES, nFeatures));
             }
         }
     }
@@ -479,18 +480,16 @@ bool Features::subsumes(const featuresPtr& o, const environmentPtr& environment)
     else if (isBottom() || o->isBottom()) {
         ret = false;
     } else {
-        Features::list::const_iterator i1;
-        Features::list::const_iterator i2;
-        for (i1 = begin(); i1 != end(); ++i1) {
-            for (i2 = o->begin(); i2 != o->end(); ++i2) {
+        for (auto & i1 : features) {
+            for (auto & i2 : o->features) {
                 // [PRED:X]  < [PRED:Y]
                 // [att:X] < [att:Y]
                 // X < Y
-                if ((((*i1)->getType() == Feature::PRED) && ((*i2)->getType() == Feature::PRED))
-                    || (((*i1)->getType() == Feature::CONSTANT) && ((*i2)->getType() == Feature::CONSTANT) &&
-                        ((*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()))) {
-                    valuePtr v1 = (*i1)->getValue();
-                    valuePtr v2 = (*i2)->getValue();
+                if (((i1->getType() == Feature::PRED) && (i2->getType() == Feature::PRED))
+                    || ((i1->getType() == Feature::CONSTANT) && (i2->getType() == Feature::CONSTANT) &&
+                        ((*i1->getAttribute() & *i2->getAttribute()).any()))) {
+                    valuePtr v1 = i1->getValue();
+                    valuePtr v2 = i2->getValue();
                     if (!v1->subsumes(v2, environment)) {
                         ret = false;
                     }
@@ -513,8 +512,8 @@ bool Features::subsumes(const featuresPtr& o, const environmentPtr& environment)
  *
  ************************************************** */
 void Features::subFlags(const std::bitset<FLAGS> &flags) {
-    for (Features::list::const_iterator i = begin(); i != end(); ++i)
-        (*i)->subFlags(flags);
+    for (auto & i : features)
+        i->subFlags(flags);
 }
 
 /* **************************************************
@@ -544,7 +543,7 @@ void Features::enable(const statementPtr& root, const itemPtr& item, Synthesizer
  ************************************************** */
 void Features::deleteAnonymousVariables() {
     redo:
-    for (auto iterator = features.begin(); iterator != features.end(); ++iterator) {
+    for (auto iterator = begin() ; iterator != end() ; ++iterator) {
         switch ((*iterator)->getType()) {
             case Feature::FORM:
             case Feature::PRED:
@@ -552,15 +551,31 @@ void Features::deleteAnonymousVariables() {
             case Feature::CONSTANT:
                 if ((*iterator)->getValue()) {
                     (*iterator)->getValue()->deleteAnonymousVariables();
-                    if ((*iterator)->getValue() && ((*iterator)->getValue()->isAnonymous())) {
+                    if ((*iterator)->getValue() && ((*iterator)->getValue()->_isAnonymous())) {
                         features.erase(iterator);
                         goto redo;
-                        //return;
                     }
                 }
                 break;
         }
     }
+/*    for (auto iterator : features) {
+        switch (iterator->getType()) {
+            case Feature::FORM:
+            case Feature::PRED:
+            case Feature::VARIABLE:
+            case Feature::CONSTANT:
+                if (iterator->getValue()) {
+                    iterator->getValue()->deleteAnonymousVariables();
+                    if (iterator->getValue() && (iterator->getValue()->_isAnonymous())) {
+                        erase(iterator);
+                        goto redo;
+                    }
+                }
+                break;
+        }
+    }
+*/
 }
 
 /* **************************************************
@@ -580,8 +595,8 @@ bool Features::containsVariable() {
     bool result = false;
     if (variableFlag.containsVariable())
         return true;
-    for (Features::list::const_iterator iterator = features.begin(); iterator != features.end(); ++iterator) {
-        if ((*iterator)->containsVariable()) {
+    for (auto & iterator : features) {
+        if (iterator->containsVariable()) {
             result = true;
         }
     }

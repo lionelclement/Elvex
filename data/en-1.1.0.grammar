@@ -11,7 +11,7 @@ Text_with_features → features S1 {
     $vtense = present;
   // not interrogative, not negative
   if (¬ $verbal_constr)
-    $verbal_constr = no_int|no_neg;
+    $verbal_constr = no_int | no_neg;
   ↓2 = [lexical_function:$lexical_function, vtense:$vtense, verbal_constr:$verbal_constr, $REST];
 }
 
@@ -22,7 +22,7 @@ Text → S1 strongPunct {
   if (¬ $vtense)
     $vtense = present;
   if (¬ $verbal_constr)
-    $verbal_constr = no_int|no_neg;
+    $verbal_constr = no_int | no_neg;
   ↓1 = [lexical_function:$lexical_function, vtense:$vtense, verbal_constr:$verbal_constr, $REST];
   [punct:$punc] ⊂ ⇓1;
   ↓2 = [punct:$punc];
@@ -359,7 +359,7 @@ SCOMP → csu S1 {
     $vtense = present;
   // not interrogative, not negative
   if (¬ $verbal_constr)
-    $verbal_constr = no_int|no_neg;
+    $verbal_constr = no_int | no_neg;
   [lexical_function:$lexical_function, vtense:$vtense, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
   ↓2 = [lexical_function:$lexical_function, vtense:$vtense, verbal_constr:$verbal_constr, $REST];
   ⇑ = ⇓2;
@@ -371,7 +371,7 @@ VCOMP → to S1 {
     $lexical_function = none;
   // not interrogative, not negative
   if (¬ $verbal_constr)
-    $verbal_constr = no_int|no_neg;
+    $verbal_constr = no_int | no_neg;
   [lexical_function:$lexical_function, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
   ↓2 = [lexical_function:$lexical_function, vtense:infinitive, verbal_constr:$verbal_constr, $REST];
   ⇑ = ⇓1;

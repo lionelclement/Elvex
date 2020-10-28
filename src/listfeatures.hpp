@@ -44,9 +44,9 @@ public:
 
     void clear(void);
 
-    std::vector<featuresPtr>::const_iterator begin(void) const;
+    std::vector<featuresPtr>::const_iterator begin() const;
 
-    std::vector<featuresPtr>::const_iterator end(void) const;
+    std::vector<featuresPtr>::const_iterator end() const;
 
     size_t size() const;
 

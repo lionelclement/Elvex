@@ -17,10 +17,10 @@ X1 → a2 X2 {
   }
 
 X → X1 {
-  [adj:<$Head::$Tail>, $Rest];
+  [adj:<$Head>, $Rest];
   ↓1 = $Head;
-  ↓2 = [adj:$Tail, $Rest];
-  ⇑ = ⇓2; 
+  //↓2 = [adj:$Tail, $Rest];
+  ⇑ = ⇓1;
   }
 
 X → B {

@@ -36,12 +36,11 @@ class Features :
         public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Features> {
 
 public:
-    typedef std::list<featurePtr> list;
     static featuresPtr NIL;
     static featuresPtr BOTTOM;
 
+    std::list<featurePtr> features;
 private:
-    list features;
     unsigned int pred;
     std::string form;
     VariableFlag variableFlag;
@@ -65,13 +64,13 @@ public:
 
     void add(const featuresPtr&, bool = false);
 
-    list::iterator erase(list::iterator i);
-
     size_t size(void) const;
 
-    list::iterator begin(void);
+    std::list<featurePtr>::iterator begin(void);
 
-    list::iterator end(void);
+    std::list<featurePtr>::iterator end(void);
+
+    std::list<featurePtr>::iterator erase(std::list<featurePtr>::iterator);
 
     featurePtr front(void) const;
 

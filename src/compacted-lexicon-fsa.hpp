@@ -25,7 +25,7 @@
 struct CompactedLexiconFsa {
 private:
     unsigned long int child;
-    unsigned long int sibling;
+    unsigned long int next;
     unsigned long int info;
     char character;
 
@@ -40,11 +40,11 @@ public:
 
     bool isInfo() const;
 
-    bool isSibling() const;
+    bool isNext() const;
 
     unsigned long int getChild(void) const;
 
-    unsigned long int getSibling(void) const;
+    unsigned long int getNext(void) const;
 
     unsigned long int getInfo(void) const;
 

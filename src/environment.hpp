@@ -20,6 +20,7 @@
 #ifndef ELVEX_ENVIRONMENT_H
 #define ELVEX_ENVIRONMENT_H
 
+#include <string>
 #include <unordered_map>
 #include "shared_ptr.hpp"
 
@@ -27,7 +28,7 @@ class Environment :
         public std::enable_shared_from_this<class Environment> {
 
 public:
-    typedef std::unordered_map<const std::string, valuePtr, std::hash<std::string>, std::equal_to<std::string> > unordered_map;
+    typedef std::unordered_map<std::string, valuePtr> unordered_map;
 
 private:
     Environment();

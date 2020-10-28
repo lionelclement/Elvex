@@ -25,14 +25,7 @@
 #include "lexicon.hpp"
 #include "messages.hpp"
 #include "synthesizer.hpp"
-
-#ifndef PACKAGE_NAME
-#define PACKAGE_NAME "elvex"
-#endif
-
-#ifndef PACKAGE_VERSION
-#define PACKAGE_VERSION "?.?.?"
-#endif
+#include "config.hpp"
 
 Parser parser = Parser();
 
@@ -41,7 +34,7 @@ Parser parser = Parser();
  ************************************************** */
 void usage() {
     std::cerr
-            << "Usage: buildlexiconmain [global-option] <build|consult> <input>\n\
+            << "Usage: elvexbuildlexicon [global-option] <build|consult> <input>\n\
 \tGlobal options:\n\
 \t-h|--help                              print this\n\
 \t-v|--version                           print version\n\
@@ -74,7 +67,7 @@ int main(int argn, char **argv) {
                 if (argv[arg][0] == '-') {
 
                     if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
-                        std::cout << PACKAGE_VERSION << std::endl;
+                        std::cout << ELVEX_VERSION << std::endl;
                         return EXIT_SUCCESS;
                     } else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
                         usage();

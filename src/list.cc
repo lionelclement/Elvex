@@ -176,7 +176,7 @@ bool List::isAtomic() const {
  *                                                            *
  ************************************************************ */
 bool List::isVariable() const {
-    return (this->type == List::ATOM) && (this->value->isVariable());
+    return (this->type == List::ATOM) && (this->value->_isVariable());
 }
 
 /* ************************************************************
@@ -288,7 +288,7 @@ List::buildEnvironment(const environmentPtr& environment, const listPtr& otherLi
         case NIL:
             if (otherList->isNil()) {
                 ret = true;
-            } else if ((otherList->isAtomic()) && (otherList->value->isVariable())) {
+            } else if ((otherList->isAtomic()) && (otherList->value->_isVariable())) {
                 environment->add(otherList->value->getBits(), Value::NIL_VALUE);
             } else {
                 ret = false;
@@ -296,7 +296,7 @@ List::buildEnvironment(const environmentPtr& environment, const listPtr& otherLi
             break;
 
         case ATOM:
-            if (this->value->isVariable()) {
+            if (this->value->_isVariable()) {
                 if (!otherList) {
                     FATAL_ERROR_UNEXPECTED
                 } else {
@@ -308,14 +308,14 @@ List::buildEnvironment(const environmentPtr& environment, const listPtr& otherLi
                             environment->add(this->value->getBits(), otherList->getValue());
                             break;
                         case PAIRP:
-                            environment->add(this->value->getBits(), Value::create(Value::LIST, otherList));
+                            environment->add(this->value->getBits(), Value::create(Value::_LIST, otherList));
                             break;
                     }
                 }
             } else if (!otherList) {
                 ret = false;
             } else if (otherList->isAtomic()) {
-                if (otherList->value->isVariable())
+                if (otherList->value->_isVariable())
                     environment->add(otherList->value->getBits(), this->getValue());
                 else if (!this->value->buildEnvironment(environment, otherList->value, acceptToFilterNULLVariables,
                                                         root))

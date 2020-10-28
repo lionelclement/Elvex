@@ -18,13 +18,10 @@
  ************************************************** */
 
 #include <signal.h>
-//#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <cstdlib>
-//#include <fstream>
 #include <iostream>
-//#include <sstream>
 
 #include "compacted-lexicon.hpp"
 #include "parser.hpp"

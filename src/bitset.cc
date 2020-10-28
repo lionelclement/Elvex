@@ -100,7 +100,6 @@ std::string Bitset::toString() const {
  ************************************************************ */
 void Bitset::makeSerialString() {
 serialString = std::string();
-    std::stringstream s;
     size_t c = this->count();
     size_t sz = this->size();
     for (size_t i = 0; i < sz && c > 0; ++i) {

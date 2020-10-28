@@ -22,10 +22,11 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconFsa::CompactedLexiconFsa(unsigned long int child, unsigned long int sibling, unsigned long int info,
+CompactedLexiconFsa::CompactedLexiconFsa(unsigned long int child, unsigned long int next,
+                                         unsigned long int info,
                                      char character) {
     this->child = child;
-    this->sibling = sibling;
+    this->next = next;
     this->info = info;
     this->character = character;
 }
@@ -35,7 +36,7 @@ CompactedLexiconFsa::CompactedLexiconFsa(unsigned long int child, unsigned long 
  ************************************************** */
 CompactedLexiconFsa::CompactedLexiconFsa(void) {
     this->child = (unsigned long int) ~0UL;
-    this->sibling = (unsigned long int) ~0UL;
+    this->next = (unsigned long int) ~0UL;
     this->info = (unsigned long int) ~0UL;
     this->character = (char) ~0;
 }
@@ -44,7 +45,7 @@ CompactedLexiconFsa::CompactedLexiconFsa(void) {
  *
  ************************************************** */
 void CompactedLexiconFsa::print(std::ostream &out) const {
-    out << (long int) child << ' ' << (long int) sibling << ' ' << (long int) info << ' ' << (int) character
+    out << (long int) child << ' ' << (long int) next << ' ' << (long int) info << ' ' << (int) character
         << std::endl;
 }
 
@@ -58,8 +59,8 @@ bool CompactedLexiconFsa::isChild() const {
 /* **************************************************
  *
  ************************************************** */
-bool CompactedLexiconFsa::isSibling() const {
-    return sibling != (unsigned long int) (~0UL);
+bool CompactedLexiconFsa::isNext() const {
+    return next != (unsigned long int) (~0UL);
 }
 
 /* **************************************************
@@ -79,8 +80,8 @@ unsigned long int CompactedLexiconFsa::getChild(void) const {
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconFsa::getSibling(void) const {
-    return sibling;
+unsigned long int CompactedLexiconFsa::getNext() const {
+    return next;
 }
 
 /* **************************************************
@@ -93,6 +94,6 @@ unsigned long int CompactedLexiconFsa::getInfo(void) const {
 /* **************************************************
  *
  ************************************************** */
-bool CompactedLexiconFsa::isThisChar(char character) const {
-    return character == this->character;
+bool CompactedLexiconFsa::isThisChar(char _character) const {
+    return this->character == _character;
 }

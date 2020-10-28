@@ -765,8 +765,8 @@ left_hand_side_aff_statement:
 	{
 	  DBUGPRT("left_hand_side_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::LIST,
-						List::create(List::create(Value::create(Value::VARIABLE, *$2)),
-							     List::create(Value::create(Value::VARIABLE, *$4)))));
+						List::create(List::create(Value::create(Value::_VARIABLE, *$2)),
+							     List::create(Value::create(Value::_VARIABLE, *$4)))));
 	  free($2);
 	  free($4);
 	};
@@ -1133,14 +1133,14 @@ feature:
 	TOKEN_PRED TOKEN_COLON TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::CODE, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::_CODE, *$3)));
 	}
 
 	// PRED: $X
 	|TOKEN_PRED TOKEN_COLON variable
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::VARIABLE, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::_VARIABLE, *$3)));
 	  free($3);
 	}
 
@@ -1148,14 +1148,14 @@ feature:
 	|TOKEN_FORM TOKEN_COLON variable
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::FORM, bitsetPtr(), Value::create(Value::VARIABLE, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::FORM, bitsetPtr(), Value::create(Value::_VARIABLE, *$3)));
 	  free($3);
 	}
 
 	|TOKEN_FORM TOKEN_COLON stringOrIdentifier
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::FORM, bitsetPtr(), Value::create(Value::STR, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::FORM, bitsetPtr(), Value::create(Value::_FORM, *$3)));
 	}
 
 	|identifier TOKEN_COLON feature_value
@@ -1169,7 +1169,7 @@ feature:
 	|identifier TOKEN_COLON TOKEN_STRING
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::CONSTANT, *$1, Value::create(Value::STR, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::CONSTANT, *$1, Value::create(Value::_FORM, *$3)));
 	  free($1);
 	}
 
@@ -1192,40 +1192,40 @@ feature_value:
 	variable
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::VARIABLE, *$1));
+	  $$ = new valuePtr(Value::create(Value::_VARIABLE, *$1));
 	  free($1);
 	}
 
 	|constant
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::CONSTANT, *$1));
+	  $$ = new valuePtr(Value::create(Value::_CONSTANT, *$1));
 	  free($1);
 	}
 
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new valuePtr(Value::create(Value::NUMBER, $1));
+	  $$ = new valuePtr(Value::create(Value::_NUMBER, $1));
 	}
 
 	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new valuePtr(Value::create(Value::NUMBER, (double)$1));
+	  $$ = new valuePtr(Value::create(Value::_NUMBER, (double)$1));
 	}
 
 	|list
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::LIST, *$1));
+	  $$ = new valuePtr(Value::create(Value::_LIST, *$1));
 	  free($1);
 	}
 
 	|features
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::FEATURES, *$1));
+	  $$ = new valuePtr(Value::create(Value::_FEATURES, *$1));
 	  free($1);
 	}
 
@@ -1233,12 +1233,6 @@ feature_value:
 	{
 	  DBUGPRT("feature_value");
 	  $$ = new valuePtr(Value::NIL_VALUE);
-	}
-
-	|TOKEN_TRUE
-	{
-	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::TRUE_VALUE);
 	}
 
 	|TOKEN_ANONYMOUS
@@ -1334,33 +1328,33 @@ list_element:
 	variable
 	{
 	  DBUGPRT("list_element");
-	  $$ = new listPtr(List::create(Value::create(Value::VARIABLE, *$1)));
+	  $$ = new listPtr(List::create(Value::create(Value::_VARIABLE, *$1)));
 	  free($1);
 	}
 
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new listPtr(List::create(Value::create(Value::NUMBER, $1)));
+	  $$ = new listPtr(List::create(Value::create(Value::_NUMBER, $1)));
 	}
 
  	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new listPtr(List::create(Value::create(Value::NUMBER, (double)$1)));
+	  $$ = new listPtr(List::create(Value::create(Value::_NUMBER, (double)$1)));
 	}
 
 	|constant
 	{
 	  DBUGPRT("list_element");
-	  $$ = new listPtr(List::create(Value::create(Value::CONSTANT, *$1)));
+	  $$ = new listPtr(List::create(Value::create(Value::_CONSTANT, *$1)));
 	  free($1);
 	}
 
 	|features
 	{
 	  DBUGPRT("list_element");
-	  $$ = new listPtr(List::create(Value::create(Value::FEATURES, *$1)));
+	  $$ = new listPtr(List::create(Value::create(Value::_FEATURES, *$1)));
 	  free($1);
 	}
 

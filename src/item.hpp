@@ -168,11 +168,11 @@ public:
 
     bool isStarted(void);
 
-    void successor(/*itemSetPtr, *//*class Synthesizer *, */bool &);
+    void successor(bool &);
 
     void defaultInheritedSonFeatures(void);
 
-    void apply(/*itemSetPtr state, */class Parser &parser, class Synthesizer *synthesizer);
+    void apply(class Parser &parser, class Synthesizer *synthesizer);
 
     struct hash {
         size_t operator()(itemPtr const&) const;
