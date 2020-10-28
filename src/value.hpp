@@ -36,7 +36,7 @@ class Value :
 public:
     enum Type {
         NIL,
-        TRUE,
+        _TRUE,
         CONSTANT,
         VARIABLE,
         ANONYMOUS,
