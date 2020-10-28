@@ -22,9 +22,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <cstdlib>
-#include <fstream>
+//#include <fstream>
 #include <iostream>
-#include <sstream>
+//#include <sstream>
 
 #include "compacted-lexicon.hpp"
 #include "parser.hpp"
@@ -33,14 +33,7 @@
 #include "node.hpp"
 #include "forest.hpp"
 #include "messages.hpp"
-
-#ifndef PACKAGE_NAME
-#define    PACKAGE_NAME "elvex"
-#endif
-
-#ifndef PACKAGE_VERSION
-#define PACKAGE_VERSION "?.?.?"
-#endif
+#include "config.hpp"
 
 Parser parser = Parser();
 Synthesizer synthesizer = Synthesizer();
@@ -54,8 +47,8 @@ xmlDocPtr document;
 /* **************************************************
  *
  ************************************************** */
-void Usage(/*char **argv*/) {
-    std::cerr << "Usage: " << PACKAGE_NAME << " [options] [<input>]*\n";
+void Usage() {
+    std::cerr << "Usage: " << ELVEX_VERSION << " [options] [<input>]*\n";
     std::cerr
             << "\
 options\n\
@@ -162,7 +155,7 @@ int main(int argn, char **argv) {
             for (unsigned int arg = 1; argv[arg]; ++arg) {
                 if (argv[arg][0] == '-') {
                     if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
-                        std::cout << PACKAGE_VERSION << std::endl;
+                        std::cout << ELVEX_VERSION << std::endl;
                         return EXIT_SUCCESS;
                     }
 
