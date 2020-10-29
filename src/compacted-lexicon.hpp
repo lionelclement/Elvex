@@ -85,9 +85,12 @@ public:
 
     void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
 
-    void loadData(void);
+    void loadData();
 
-    void consult(void);
+    void consult();
+
+    void list();
+    void list(unsigned int, std::string);
 };
 
 #endif // COMPACTEDLEXICON_H

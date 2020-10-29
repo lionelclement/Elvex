@@ -91,21 +91,21 @@ unsigned long int CompactedLexicon::searchStatic(unsigned long int index, const 
     // for each letter of the suffix
     while (*str) {
         // parse the brothers while founding the actual char
-        while (!fsa[index].isThisChar(*str)) {
-            if (fsa[index].isNext())
+        while (!fsa[index].equalsThisChar(*str)) {
+            if (fsa[index].hasNext())
                 index = fsa[index].getNext();
             else
                 return (unsigned long int) (~0UL);
         }
-        if (!fsa[index].isThisChar(*str))
+        if (!fsa[index].equalsThisChar(*str))
             return ((unsigned long int) (~0UL));
         if (*(str + 1)) {
-            if (fsa[index].isChild())
+            if (fsa[index].hasChild())
                 index = fsa[index].getChild();
             else
                 return (unsigned long int) (~0UL);
 
-        } else if (fsa[index].isInfo())
+        } else if (fsa[index].hasInfo())
             return fsa[index].getInfo();
         str++;
 
@@ -343,7 +343,7 @@ void CompactedLexicon::addForms(const std::string &input, std::string inputSearc
         char *morphoFs = strchr(line, '#') + 1;
 
         //std::cerr << "addToData " << input << " => " << form << ' ' << unif(patternFs, morphoFs) << std::endl;
-        addToData("_" + input, form, unif(patternFs, morphoFs));
+        addToData(input, form, unif(patternFs, morphoFs));
     }
 }
 
@@ -467,3 +467,24 @@ void CompactedLexicon::consult() {
     }
 }
 
+/* **************************************************
+ *
+ ************************************************** */
+void CompactedLexicon::list() {
+    list(init+1, "");
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void CompactedLexicon::list(unsigned int index, std::string prefix) {
+    if (fsa[index].hasChild())
+        list (fsa[index].getChild(), prefix+fsa[index].getCharacter());
+    if (fsa[index].hasNext())
+            list(fsa[index].getNext(), prefix);
+    if (fsa[index].hasInfo()) {
+        std::cout << prefix+fsa[index].getCharacter() << '\t';
+        this->printResults(std::cout, fsa[index].getInfo(), false);
+        std::cout << std::endl;
+    }
+}

@@ -26,7 +26,7 @@ class CompactedLexiconTree {
 
 private:
     CompactedLexiconTree *child;
-    CompactedLexiconTree *sibling;
+    CompactedLexiconTree *next;
     class CompactedLexiconInfo *info;
 
     char character;

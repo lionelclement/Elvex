@@ -34,7 +34,7 @@ Parser parser = Parser();
  ************************************************** */
 void usage() {
     std::cerr
-            << "Usage: elvexbuildlexicon [global-option] <build|consult> <input>\n\
+            << "Usage: elvexbuildlexicon [global-option] <build|consult|list> <input>\n\
 \tGlobal options:\n\
 \t-h|--help                              print this\n\
 \t-v|--version                           print version\n\
@@ -86,6 +86,8 @@ int main(int argn, char **argv) {
                         mode = Buildlexicon::BUILD;
                     else if (!strcmp(argv[arg], "consult"))
                         mode = Buildlexicon::CONSULT;
+                    else if (!strcmp(argv[arg], "list"))
+                        mode = Buildlexicon::LIST;
                     else
                         inputFileName = argv[arg];
                 }
@@ -98,11 +100,12 @@ int main(int argn, char **argv) {
             char line[MAXSTRING];
             while (inputFile.getline(line, MAXSTRING)) {
                 if ((line[0] != '#') && strchr(line, '\t')) {
-                    //std::cerr << "*** line:" << line << std::endl;
+                    //std::cerr << line << std::endl;
                     std::string input;
                     std::string output;
 
                     if (line[0] == '@') {
+                        //std::cerr << line << std::endl;
                         featuresPtr features;
 
                         char line2[MAXSTRING];
@@ -171,8 +174,8 @@ int main(int argn, char **argv) {
                         stream.str("");
                         stream << form << '#' << features;
                         std::string _output = stream.str();
-                        //std::cerr << "morpho/input:/" << input << '/' << std::endl;
-                        //std::cerr << "morpho/output:/" << output << '/' << std::endl;
+                        //std::cerr << "morpho/input:/" << _input << '/' << std::endl;
+                        //std::cerr << "morpho/output:/" << _output << '/' << std::endl;
                         morpho.add(_input, _output);
                     }
 
@@ -188,31 +191,31 @@ int main(int argn, char **argv) {
             inputFile.open(patternFile.c_str());
             char line[MAXSTRING];
             while (inputFile.getline(line, MAXSTRING)) {
-                if ((line[0] != '#') && strchr(line, '\t') && strchr(line, '#')) {
+                if ((line[0] != '#') && strchr(line, '\t')) {
 
-                    //std::cerr << "*** line:" << line << std::endl;
+                    //std::cerr << line << std::endl;
 
                     char lexeme[MAXSTRING];
                     strcpy(lexeme, line);
-                    char *rhs = strchr(lexeme, '#');
+                    char *rhs = strchr(lexeme, '\t');
                     *rhs = 0;
 
                     char line2[MAXSTRING];
                     strcpy(line2, line);
-                    char *pos = strchr(line2, '#') + 1;
+                    char *pos = strchr(line2, '\t') + 1;
                     rhs = strchr(pos, '\t');
                     *rhs = 0;
 
                     char line3[MAXSTRING];
                     strcpy(line3, line);
-                    char *lemma = strchr(line3, '#') + 1;
+                    char *lemma = strchr(line3, '\t') + 1;
                     lemma = strchr(lemma, '\t') + 1;
                     rhs = strchr(lemma, '\t');
                     *rhs = 0;
 
                     char line4[MAXSTRING];
                     strcpy(line4, line);
-                    char *features = strchr(line4, '#') + 1;
+                    char *features = strchr(line4, '\t') + 1;
                     features = strchr(features, '\t') + 1;
                     features = strchr(features, '\t') + 1;
 
@@ -239,7 +242,6 @@ int main(int argn, char **argv) {
             inputFile.close();
         }
 
-
         switch (mode) {
 
             case Buildlexicon::BUILD: {
@@ -257,6 +259,16 @@ int main(int argn, char **argv) {
                 lex->loadFsa();
                 lex->loadData();
                 lex->consult();
+                lex->closeFiles();
+                return EXIT_SUCCESS;
+            }
+
+            case Buildlexicon::LIST: {
+                lex = new CompactedLexicon(directory, prefix);
+                lex->openFiles("r");
+                lex->loadFsa();
+                lex->loadData();
+                lex->list();
                 lex->closeFiles();
                 return EXIT_SUCCESS;
             }

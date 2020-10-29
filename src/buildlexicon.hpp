@@ -24,6 +24,7 @@ namespace Buildlexicon {
     enum Choice {
         BUILD,
         CONSULT,
+        LIST,
         NONE
     };
 

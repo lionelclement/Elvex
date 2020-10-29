@@ -107,10 +107,8 @@ public:
 
     featuresPtr findMacros(const std::string&);
 
-public:
     unsigned int parseFile(std::string prefix, std::string fileName);
 
-public:
     unsigned int parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
 
 private:

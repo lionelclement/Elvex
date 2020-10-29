@@ -36,11 +36,11 @@ public:
 
     void print(std::ostream &) const;
 
-    bool isChild() const;
+    bool hasChild() const;
 
-    bool isInfo() const;
+    bool hasInfo()const;
 
-    bool isNext() const;
+    bool hasNext() const;
 
     unsigned long int getChild(void) const;
 
@@ -48,7 +48,9 @@ public:
 
     unsigned long int getInfo(void) const;
 
-    bool isThisChar(char character) const;
+    bool equalsThisChar(char character) const;
+
+    char getCharacter() const {return character;}
 
 };
 

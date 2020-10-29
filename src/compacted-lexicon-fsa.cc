@@ -52,21 +52,21 @@ void CompactedLexiconFsa::print(std::ostream &out) const {
 /* **************************************************
  *
  ************************************************** */
-bool CompactedLexiconFsa::isChild() const {
+bool CompactedLexiconFsa::hasChild() const {
     return child != (unsigned long int) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool CompactedLexiconFsa::isNext() const {
+bool CompactedLexiconFsa::hasNext() const {
     return next != (unsigned long int) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool CompactedLexiconFsa::isInfo() const {
+bool CompactedLexiconFsa::hasInfo() const {
     return info != (unsigned long int) (~0UL);
 }
 
@@ -94,6 +94,6 @@ unsigned long int CompactedLexiconFsa::getInfo(void) const {
 /* **************************************************
  *
  ************************************************** */
-bool CompactedLexiconFsa::isThisChar(char _character) const {
+bool CompactedLexiconFsa::equalsThisChar(char _character) const {
     return this->character == _character;
 }
