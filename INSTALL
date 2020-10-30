@@ -11,7 +11,7 @@ Once you have installed Elvex execute these commands:
 
 The full compilation of Elvex requires the following tools on your computer:
 — g++
-— flex (only if you need to recompile lex files)
-— bison (only if you need to recompile yacc file)
+— flex
+— bison
 — libxml2-dev
 - cmake
