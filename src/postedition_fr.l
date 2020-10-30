@@ -79,7 +79,7 @@ mesure		mm|cm|m|dm|km|m2|m3|A|[oO]hm|V|VA|gr|[kK]g
 
 %%
 
-int main(int argn, char **argv){
+int main(){
     yylex();
     return 0;
 }
