@@ -1,24 +1,8 @@
-Ubuntu / Debian quick installation:
 ####################
-- Download install-Elvex.sh
-- Exec the script: . ./install-Elvex.sh
-That it !
 
-autotool installation:
-####################
-aclocal
-automake −a
-autoconf
-./configure
-make
-make clean
-sudo make install
-
-cmake compilation
-####################
 cmake .
 make
-// make elvex/buildLexicon/postedition links on /usr/local/bin (or configure CMakeLists.txt)
+sudo make install
 
 Once you have installed Elvex execute these commands:
 ####################
@@ -29,8 +13,5 @@ The full compilation of Elvex requires the following tools on your computer:
 — g++
 — flex (only if you need to recompile lex files)
 — bison (only if you need to recompile yacc file)
-— aclocal
-— automake 
-— autoconf
 — libxml2-dev
 - cmake
