@@ -141,7 +141,14 @@ endif()
 add_executable(elvexbuildLexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
 target_compile_options(elvexbuildLexicon PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
-FLEX_TARGET(postedition src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition.cc)
-add_executable(elvexpostedition ${FLEX_postedition_OUTPUTS})
-target_compile_options(elvexpostedition PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+FLEX_TARGET(postedition_en src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_en.cc)
+add_executable(elvexpostedition_en ${FLEX_postedition_en_OUTPUTS})
+target_compile_options(elvexpostedition_en PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
+FLEX_TARGET(postedition_fr src/postedition_fr.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_fr.cc)
+add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
+target_compile_options(elvexpostedition_fr PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+
+install(TARGETS elvex elvexbuildLexicon elvexpostedition_en elvexpostedition_fr
+        RUNTIME DESTINATION bin
+        )

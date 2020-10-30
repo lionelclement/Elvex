@@ -1130,7 +1130,7 @@ features_components:
 
 feature:
 	// PRED: predicate
-	TOKEN_PRED TOKEN_COLON TOKEN_IDENTIFIER
+	TOKEN_PRED TOKEN_COLON stringOrIdentifier
 	{
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::PRED, bitsetPtr(), Value::create(Value::_CODE, *$3)));

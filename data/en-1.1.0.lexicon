@@ -26,40 +26,40 @@
 /************************************************************
 * Noms propres
 ************************************************************/
-John	proper_noun [PRED:_JOHN, @_3s, @hum];
-Mary	proper_noun [PRED:_MARY, @_3s, @hum];
-Elvex	proper_noun [PRED:_ELVEX, @_3s];
+John	proper_noun [PRED:JOHN, @_3s, @hum];
+Mary	proper_noun [PRED:MARY, @_3s, @hum];
+Elvex	proper_noun [PRED:ELVEX, @_3s];
 
 /************************************************************
 * Pronoms nominatifs
 ************************************************************/
-I	cln [PRED:__pro, @_1s, animate:true, @hum, _case:nominative]
-	| cln [PRED:__EGO, @_1s, animate:true, @hum, _case:nominative];
-you	cln [PRED:__pro, @_2s, animate:true, @hum, _case:nominative]
-	| cln [PRED:__YOU, @_2s, animate:true, @hum, _case:nominative];
-he	cln [PRED:__pro, @_3ms, animate:true, @hum, _case:nominative];
-she	cln [PRED:__pro, @_3fs, animate:true, @hum, _case:nominative];
-it	cln [PRED:__pro, @_3fs, @nohum, _case:nominative];
-we	cln [PRED:__pro, @_1p, animate:true, @hum, _case:nominative];
-they	cln [PRED:__pro, @_3p, _case:nominative];
+I	cln [PRED:_pro, @_1s, animate:true, @hum, _case:nominative]
+	| cln [PRED:_EGO, @_1s, animate:true, @hum, _case:nominative];
+you	cln [PRED:_pro, @_2s, animate:true, @hum, _case:nominative]
+	| cln [PRED:_YOU, @_2s, animate:true, @hum, _case:nominative];
+he	cln [PRED:_pro, @_3ms, animate:true, @hum, _case:nominative];
+she	cln [PRED:_pro, @_3fs, animate:true, @hum, _case:nominative];
+it	cln [PRED:_pro, @_3fs, @nohum, _case:nominative];
+we	cln [PRED:_pro, @_1p, animate:true, @hum, _case:nominative];
+they	cln [PRED:_pro, @_3p, _case:nominative];
 
 /************************************************************
 * Pronoms accusatifs
 ************************************************************/
-me	pro [PRED:__pro, @_1s, animate:true, @hum, _case:accusative];
-you	pro [PRED:__pro, @_2, animate:true, @hum, _case:accusative];
-him	pro [PRED:__pro, @_3ms, animate:true, @hum, _case:accusative];
-her	pro [PRED:__pro, @_3fs, animate:true, @hum, _case:accusative];
-it	pro [PRED:__pro, @_3s, @nohum, _case:accusative];
-us	pro [PRED:__pro, @_1p, animate:true, @hum, _case:accusative];
-them	pro [PRED:__pro, @_3p, _case:accusative];
+me	pro [PRED:_pro, @_1s, animate:true, @hum, _case:accusative];
+you	pro [PRED:_pro, @_2, animate:true, @hum, _case:accusative];
+him	pro [PRED:_pro, @_3ms, animate:true, @hum, _case:accusative];
+her	pro [PRED:_pro, @_3fs, animate:true, @hum, _case:accusative];
+it	pro [PRED:_pro, @_3s, @nohum, _case:accusative];
+us	pro [PRED:_pro, @_1p, animate:true, @hum, _case:accusative];
+them	pro [PRED:_pro, @_3p, _case:accusative];
 
 /************************************************************
 * Pronoms réflexifs
 ************************************************************/
-myself	pro [PRED:__pro, @_1s, _case:reflexive];
-yourself pro [PRED:__pro, @_2s, _case:reflexive];
-himself pro [PRED:__pro, @_3s, _case:reflexive];
+myself	pro [PRED:_pro, @_1s, _case:reflexive];
+yourself pro [PRED:_pro, @_2s, _case:reflexive];
+himself pro [PRED:_pro, @_3s, _case:reflexive];
 
 // Déterminants
 a	det	[number:sg, def:false, poss:false, part:false, dem:false];

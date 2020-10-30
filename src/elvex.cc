@@ -45,7 +45,7 @@ xmlDocPtr document;
  *
  ************************************************** */
 void Usage() {
-    std::cerr << "Usage: " << ELVEX_VERSION << " [options] [<input>]*\n";
+    std::cerr << "Usage: " << PROJECT_NAME << " [options] [<input>]*\n";
     std::cerr
             << "\
 options\n\

@@ -22,39 +22,23 @@ BUILDLEXICON = ../../bin/elvexbuildlexicon
 
 all: lefff.fsa
 
-%.fsa: %.formPosLemmaFeatures %.pattern
+%.fsa: %.morpho %.pattern
 	@echo "build $@ from $*.formPosLemmaFeatures $*.pattern"
-	$(BUILDLEXICON) -compactedLexiconDirectory . -compactedLexiconFile $* -patternFile $*.pattern -morphoFile $*.formPosLemmaFeatures build
+	$(BUILDLEXICON) -compactedLexiconDirectory . -compactedLexiconFile $* -patternFile $*.pattern -morphoFile $*.morpho build
 
-%.morpho: %.bz2 %.slang.bz2
+%.morpho: %.morpho.gz
 	@echo "build $@ from $^"
-	@bunzip2 -c $^ |sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' | sort -u > $@
+	@gunzip < $^ |sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' | sort -u > $@
 
-%.formPosLemmaFeatures: %.form %.pos %.lemma %.features
+%.pattern: %.pattern.gz
 	@echo "build $@ from $^"
-	@paste $*.form $*.pos $*.lemma $*.features > $@
+	@gunzip < $^ |sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' | sort -u > $@
 
-%.form: %.morpho
+%.pattern: %.general.pattern %.slang.pattern %.phaseology.pattern %.weather.pattern
 	@echo "build $@ from $^"
-	@grep -v '^//' < $< | cut -f1 > $@
+	@cat $^ | sed -e '/^#/d' -e '/^\/\//d' | sort -u > $@
 
-%.pos: %.morpho
+%.morpho:  %.general.morpho %.slang.morpho
 	@echo "build $@ from $^"
-	@grep -v '^//' < $< | cut -f2 > $@
-
-%.lemma: %.morpho
-	@echo "build $@ from $^"
-	@cut -f3 < $< | tr '\-/\.' '____' > $@
-
-%.features: %.morpho
-	@echo "build $@ from $^"
-	@cut -f4 < $< | tr '\-/\.' '____' > $@
-
-%.pattern: %.general.pattern.bz2 %.slang.pattern.bz2 %.phaseology.pattern.bz2 %.weather.pattern.bz2
-	@echo "build $@ from $^"
-	@bunzip2 -c $^ | sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' | tr '\-/\.' '____' | sort -u > $@
-
-%.auto.pattern: %.lemma %.pos
-	@echo "build $@ from $^"
-	@paste $*.lemma $*.pos | sed 's/^\([^	]*\)	\([^	]*\)/\1#\2	\1	PRED:_\1/' | grep '#\(n\|pn\|v\|adj\|adv\)	' | sort -u > $@
-	@paste $*.lemma $*.pos | sed 's/^\([^	]*\)Je ce	\([^	]*\)/\1#\2	\1	/' | grep -v '#\(n\|pn\|v\|adj\|adv\)	' | sort -u >> $@
+	@cat $*.macro | sed -e '/^#/d' -e '/^\/\//d' > $@
+	@cat $^ | sed -e '/^#/d' -e '/^\/\//d' | sort -u >> $@

@@ -2,7 +2,7 @@
 //text [PRED:_pleuvoir, degree:few]
 //text [PRED:_pleuvoir, degree:a_lot]
 
-text [PRED:_pleuvoir, degree:regular, language_register:slang]
+text [PRED:PLEUVOIR, degree:regular, language_register:slang]
 //text [PRED:_pleuvoir, degree:few, language_register:slang]
 //text [PRED:_pleuvoir, degree:a_lot, language_register:slang]
 

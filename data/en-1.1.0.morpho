@@ -1,6 +1,6 @@
 # form	pos	lemma	features
 # @id: features;
-# try it with "_lemma#pos"
+# try it with "lemma#pos"
 # ***********************************************************
 # Patterns
 # ***********************************************************/
@@ -147,7 +147,3 @@ happy	adj	HAPPY
 very	adv	VERY	
 
 # end
-
-
-
-

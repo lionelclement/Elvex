@@ -114,48 +114,48 @@ un_tel#det	un_tel
 /* **************************************************
  * Pronouns
  ************************************************** */
-moi	pro [PRED:__pro, number:sg, person:one, clitic:no];
-toi	pro [PRED:__pro, number:sg, person:two, clitic:no];
-lui	pro [PRED:__pro, gender:ms, number:sg, person:three, clitic:no];
-elle	pro [PRED:__pro, gender:fm, number:sg, person:three, clitic:no];
-nous	pro [PRED:__pro, number:pl, person:one, clitic:no];
-vous	pro [PRED:__pro, number:pl, person:two, clitic:no];
-eux	pro [PRED:__pro, gender:ms, number:pl, person:three, clitic:no];
-elles	pro [PRED:__pro, gender:fm, number:pl, person:three, clitic:no];
+moi	pro [PRED:_pro, number:sg, person:one, clitic:no];
+toi	pro [PRED:_pro, number:sg, person:two, clitic:no];
+lui	pro [PRED:_pro, gender:ms, number:sg, person:three, clitic:no];
+elle	pro [PRED:_pro, gender:fm, number:sg, person:three, clitic:no];
+nous	pro [PRED:_pro, number:pl, person:one, clitic:no];
+vous	pro [PRED:_pro, number:pl, person:two, clitic:no];
+eux	pro [PRED:_pro, gender:ms, number:pl, person:three, clitic:no];
+elles	pro [PRED:_pro, gender:fm, number:pl, person:three, clitic:no];
 
-me	clr [PRED:__pro, number:sg, person:one, clitic:yes];
-te	clr [PRED:__pro, number:sg, person:two, mode:conditional|indicative|subjonctive, clitic:yes];
-"-toi"	clr [PRED:__pro, number:sg, person:two, mode:imperative, clitic:yes];
-se	clr [PRED:__pro, number:sg|pl, person:three, clitic:yes];
-nous	clr [PRED:__pro, number:pl, person:one, mode:conditional|indicative|subjonctive, clitic:yes];
-"-nous"	clr [PRED:__pro, number:pl, person:one, mode:imperative, clitic:yes];
-vous	clr [PRED:__pro, number:pl, person:two, mode:conditional|indicative|subjonctive, clitic:yes];
-"-vous"	clr [PRED:__pro, number:pl, person:two, mode:imperative, clitic:yes];
+me	clr [PRED:_pro, number:sg, person:one, clitic:yes];
+te	clr [PRED:_pro, number:sg, person:two, mode:conditional|indicative|subjonctive, clitic:yes];
+"-toi"	clr [PRED:_pro, number:sg, person:two, mode:imperative, clitic:yes];
+se	clr [PRED:_pro, number:sg|pl, person:three, clitic:yes];
+nous	clr [PRED:_pro, number:pl, person:one, mode:conditional|indicative|subjonctive, clitic:yes];
+"-nous"	clr [PRED:_pro, number:pl, person:one, mode:imperative, clitic:yes];
+vous	clr [PRED:_pro, number:pl, person:two, mode:conditional|indicative|subjonctive, clitic:yes];
+"-vous"	clr [PRED:_pro, number:pl, person:two, mode:imperative, clitic:yes];
 
-me	cld [PRED:__pro, number:sg, person:one, clitic:yes];
-te	cld [PRED:__pro, number:sg, person:two, clitic:yes];
-lui	cld [PRED:__pro, number:sg, person:three, clitic:yes];
-//en	cld [PRED:__pro, number:sg, person:three, proReal:en, clitic:yes];
-nous	cld [PRED:__pro, number:pl, person:one, clitic:yes];
-vous	cld [PRED:__pro, number:pl, person:two, clitic:yes];
-leur	cld [PRED:__pro, number:pl, person:three, clitic:yes];
+me	cld [PRED:_pro, number:sg, person:one, clitic:yes];
+te	cld [PRED:_pro, number:sg, person:two, clitic:yes];
+lui	cld [PRED:_pro, number:sg, person:three, clitic:yes];
+//en	cld [PRED:_pro, number:sg, person:three, proReal:en, clitic:yes];
+nous	cld [PRED:_pro, number:pl, person:one, clitic:yes];
+vous	cld [PRED:_pro, number:pl, person:two, clitic:yes];
+leur	cld [PRED:_pro, number:pl, person:three, clitic:yes];
 
-me	cla [PRED:__pro, number:sg, person:one, clitic:yes];
-te	cla [PRED:__pro, number:sg, person:two, clitic:yes];
-le	cla [PRED:__pro, gender:ms, number:sg, person:three, clitic:yes];
-la	cla [PRED:__pro, gender:fm, number:sg, person:three, clitic:yes];
-nous	cla [PRED:__pro, number:pl, person:one, clitic:yes];
-vous	cla [PRED:__pro, number:pl, person:two, clitic:yes];
-les	cla [PRED:__pro, number:pl, person:three, clitic:yes];
+me	cla [PRED:_pro, number:sg, person:one, clitic:yes];
+te	cla [PRED:_pro, number:sg, person:two, clitic:yes];
+le	cla [PRED:_pro, gender:ms, number:sg, person:three, clitic:yes];
+la	cla [PRED:_pro, gender:fm, number:sg, person:three, clitic:yes];
+nous	cla [PRED:_pro, number:pl, person:one, clitic:yes];
+vous	cla [PRED:_pro, number:pl, person:two, clitic:yes];
+les	cla [PRED:_pro, number:pl, person:three, clitic:yes];
 
-je	cln [PRED:__pro, number:sg, person:one, clitic:yes];
-tu	cln [PRED:__pro, number:sg, person:two, clitic:yes];
-il	cln [PRED:__pro, number:sg, person:three, gender:ms, clitic:yes];
-elle	cln [PRED:__pro, number:sg, person:three, gender:fm, clitic:yes];
-nous	cln [PRED:__pro, number:pl, person:one, clitic:yes];
-vous	cln [PRED:__pro, number:pl, person:two, clitic:yes];
-ils	cln [PRED:__pro, number:pl, person:three, gender:ms, clitic:yes];
-elles	cln [PRED:__pro, number:pl, person:three, gender:fm, clitic:yes];
+je	cln [PRED:_pro, number:sg, person:one, clitic:yes];
+tu	cln [PRED:_pro, number:sg, person:two, clitic:yes];
+il	cln [PRED:_pro, number:sg, person:three, gender:ms, clitic:yes];
+elle	cln [PRED:_pro, number:sg, person:three, gender:fm, clitic:yes];
+nous	cln [PRED:_pro, number:pl, person:one, clitic:yes];
+vous	cln [PRED:_pro, number:pl, person:two, clitic:yes];
+ils	cln [PRED:_pro, number:pl, person:three, gender:ms, clitic:yes];
+elles	cln [PRED:_pro, number:pl, person:three, gender:fm, clitic:yes];
 
 "-je"	clint [number:sg, person:one, clitic:yes];
 "-tu"	clint [number:sg, person:two, clitic:yes];
@@ -165,9 +165,9 @@ elles	cln [PRED:__pro, number:pl, person:three, gender:fm, clitic:yes];
 "-t-ils"	clint [number:pl, person:three, gender:ms, clitic:yes];
 "-t-elles"	clint [number:pl, person:three, gender:fm, clitic:yes];
 
-y	cll [PRED:__pro, number:sg, person:three, clitic:yes];
+y	cll [PRED:_pro, number:sg, person:three, clitic:yes];
 
-en	clg [PRED:__pro, number:sg, person:three, clitic:yes];
+en	clg [PRED:_pro, number:sg, person:three, clitic:yes];
 
 /* **************************************************
  * Prepositions

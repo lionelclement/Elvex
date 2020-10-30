@@ -33,8 +33,7 @@ Parser parser = Parser();
  *
  ************************************************** */
 void usage() {
-    std::cerr
-            << "Usage: elvexbuildlexicon [global-option] <build|consult|list> <input>\n\
+    std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global-option] <build|consult|list> <input>\n\
 \tGlobal options:\n\
 \t-h|--help                              print this\n\
 \t-v|--version                           print version\n\
@@ -105,7 +104,6 @@ int main(int argn, char **argv) {
                     std::string output;
 
                     if (line[0] == '@') {
-                        //std::cerr << line << std::endl;
                         featuresPtr features;
 
                         char line2[MAXSTRING];
@@ -241,6 +239,8 @@ int main(int argn, char **argv) {
             }
             inputFile.close();
         }
+
+        //CERR_LINE
 
         switch (mode) {
 

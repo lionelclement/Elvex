@@ -35,7 +35,7 @@ text → rhetoricalStructure {
  * Greetings, hello, etc
  ************************************************** */
 letter → dear name comma newParagraph text newParagraph regards newline signature {
-  [PRED:letter, to:$to, body:$body, from:$from];
+  [to:$to, body:$body, from:$from];
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexical_function:$lexical_function] ⊂ ↑;
   if (¬ $vform) 
     $vform = tensed;

@@ -23,10 +23,11 @@
 //
 
 #include <iostream>
+#define YY_NO_INPUT
+
 %}
 
 %option noyywrap
-%option noyyinput
 
 %s NEXT BEGINLINE
 

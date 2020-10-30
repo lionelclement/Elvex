@@ -66,8 +66,8 @@
 
 %}
 
-alphaMin [a-z]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ
-alphaCap [A-Z]|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß
+alphaMin [a-z]|à|á|â|ã|ä|å|æ|ç|è|é|ë|ê|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ
+alphaCap [A-Z]|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ê|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß
 alpha {alphaMin}|{alphaCap}
 alphaNum [[:digit:]]|{alpha}|_
 identifier {alpha}{alphaNum}*|[_]{alphaNum}+
@@ -490,7 +490,6 @@ downDoubleArrow "⇓"
     DBUGPRTARG("TOKEN_STRING ", yytext);
     std::string s = yytext;
     ruleslval.string_slot = new std::string(s.substr(1, s.length()-2));
-    //ruleslval.string_slot = new std::string(s);
     return TOKEN_STRING;
   }
   
