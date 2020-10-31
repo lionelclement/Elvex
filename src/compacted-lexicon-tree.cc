@@ -18,8 +18,8 @@
  ************************************************** */
 
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #include "compacted-lexicon.hpp"
 #include "compacted-lexicon-fsa.hpp"
@@ -66,7 +66,7 @@ void CompactedLexiconTree::setChild(CompactedLexiconTree *_child) {
  // Compute offsets of FSA array
  ************************************************** */
 void CompactedLexiconTree::setIndexStaticFSA(unsigned long int &index) {
-    for (class CompactedLexiconTree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->next) {
+    for (class CompactedLexiconTree *lexiconSy = this; lexiconSy != nullptr; lexiconSy = lexiconSy->next) {
         lexiconSy->address = index++;
         if (lexiconSy->child)
             lexiconSy->child->setIndexStaticFSA(index);
@@ -82,10 +82,10 @@ void CompactedLexiconTree::printStaticFSA(FILE *out, class CompactedLexicon *lex
         lex->init = this->address;
     }
     for (lexiconSy = this; lexiconSy; lexiconSy = lexiconSy->next) {
-        CompactedLexiconFsa *elt = new CompactedLexiconFsa(
-                (lexiconSy->child == NULL) ? (unsigned long int) ~0UL : lexiconSy->child->address,
-                (lexiconSy->next == NULL) ? (unsigned long int) ~0UL : lexiconSy->next->address,
-                (lexiconSy->info == NULL) ? (unsigned long int) ~0UL : lexiconSy->info->getAddress(),
+        auto *elt = new CompactedLexiconFsa(
+                (lexiconSy->child == nullptr) ? (unsigned long int) ~0UL : lexiconSy->child->address,
+                (lexiconSy->next == nullptr) ? (unsigned long int) ~0UL : lexiconSy->next->address,
+                (lexiconSy->info == nullptr) ? (unsigned long int) ~0UL : lexiconSy->info->getAddress(),
                 lexiconSy->character);
         if (!fwrite(elt, sizeof(CompactedLexiconFsa), 1, out)) {
             FATAL_ERROR_UNEXPECTED
@@ -103,12 +103,12 @@ void CompactedLexiconTree::printStaticFSA(FILE *out, class CompactedLexicon *lex
  // Calculate offsets of the array
  ************************************************** */
 void CompactedLexiconTree::setIndexStaticInfo(unsigned long int &index) {
-    for (CompactedLexiconTree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->next) {
+    for (CompactedLexiconTree *lexiconSy = this; lexiconSy != nullptr; lexiconSy = lexiconSy->next) {
         if (lexiconSy->child)
             lexiconSy->child->setIndexStaticInfo(index);
     }
-    for (CompactedLexiconTree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->next) {
-        for (CompactedLexiconInfo *infoSy = lexiconSy->info; infoSy != NULL; infoSy = infoSy->getNext()) {
+    for (CompactedLexiconTree *lexiconSy = this; lexiconSy != nullptr; lexiconSy = lexiconSy->next) {
+        for (CompactedLexiconInfo *infoSy = lexiconSy->info; infoSy != nullptr; infoSy = infoSy->getNext()) {
             infoSy->setAddress(index++);
         }
     }
@@ -119,14 +119,14 @@ void CompactedLexiconTree::setIndexStaticInfo(unsigned long int &index) {
  // offsets are calculated on 32 (vs 16) bits if long==1
  ************************************************** */
 void CompactedLexiconTree::printStaticInfo(FILE *out) const {
-    for (const CompactedLexiconTree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->next) {
+    for (const CompactedLexiconTree *lexiconSy = this; lexiconSy != nullptr; lexiconSy = lexiconSy->next) {
         if (lexiconSy->child)
             lexiconSy->child->printStaticInfo(out);
     }
-    for (const CompactedLexiconTree *lexiconSy = this; lexiconSy != NULL; lexiconSy = lexiconSy->next) {
-        for (CompactedLexiconInfo *infoSy = lexiconSy->info; infoSy != NULL; infoSy = infoSy->getNext()) {
-            CompactedLexiconBuffer *elt = new CompactedLexiconBuffer(
-                    (infoSy->getNext() != NULL) ? infoSy->getNext()->getAddress() : (unsigned long int) (~(0UL)),
+    for (const CompactedLexiconTree *lexiconSy = this; lexiconSy != nullptr; lexiconSy = lexiconSy->next) {
+        for (CompactedLexiconInfo *infoSy = lexiconSy->info; infoSy != nullptr; infoSy = infoSy->getNext()) {
+            auto *elt = new CompactedLexiconBuffer(
+                    (infoSy->getNext() != nullptr) ? infoSy->getNext()->getAddress() : (unsigned long int) (~(0UL)),
                     infoSy->getOffset());
             if (!fwrite(elt, sizeof(CompactedLexiconBuffer), 1, out)) {
                 FATAL_ERROR_UNEXPECTED
@@ -149,7 +149,7 @@ void CompactedLexiconTree::add(const char *str, unsigned long int offset) {
             this->info = new CompactedLexiconInfo(this->info, offset);
         } else {
             if (!this->child)
-                this->child = new CompactedLexiconTree(NULL, NULL, NULL, str[1]);
+                this->child = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[1]);
             this->child->add((char *) str + 1, offset);
         }
     } else if (this->character == str[0]) {
@@ -157,13 +157,13 @@ void CompactedLexiconTree::add(const char *str, unsigned long int offset) {
             this->info = new CompactedLexiconInfo(this->info, offset);
         } else {
             if (!this->child)
-                this->child = new CompactedLexiconTree(NULL, NULL, NULL, str[1]);
+                this->child = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[1]);
             this->child->add((char *) str + 1, offset);
         }
     } else if (this->next)
         this->next->add(str, offset);
     else {
-        this->next = new CompactedLexiconTree(NULL, NULL, NULL, str[0]);
+        this->next = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[0]);
         this->next->add(str, offset);
     }
 }

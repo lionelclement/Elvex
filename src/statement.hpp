@@ -27,8 +27,8 @@
 #include "serializable.hpp"
 #include "synthesizer.hpp"
 
-#define FATAL_ERROR_STM {CERR_LINE; std::ostringstream oss; oss << "*** fatal error with statement line " << getLineno(); throw oss.str();}
-#define FATAL_ERROR_MSG_STM(msg) {std::ostringstream oss; oss << "*** fatal error: " << msg << " with statement line " << getLineno(); throw oss.str();}
+#define FATAL_ERROR_STM {FATAL_ERROR("*** fatal error with statement line " << getLineno());}
+#define FATAL_ERROR_MSG_STM(msg) {FATAL_ERROR("*** fatal error: " << msg << " with statement line " << getLineno());}
 #define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "*** warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
 
 class Statement :
@@ -217,47 +217,47 @@ public:
 
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
-    featuresPtr evalFeatures(itemPtr, class Parser &parser, class Synthesizer *synthesizer, bool);
+    featuresPtr evalFeatures(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer, bool);
 
-    listPtr evalList(itemPtr, bool);
+    listPtr evalList(const itemPtr&, bool);
 
-    valuePtr evalValue(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
+    valuePtr evalValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
 
-    featuresPtr unif(featuresPtr, featuresPtr, itemPtr);
+    featuresPtr unif(const featuresPtr&, featuresPtr, itemPtr);
 
     statementPtr clone(const std::bitset<Flags::FLAGS> &savedFlags = std::bitset<Flags::FLAGS>());
 
-    void buildInheritedSonFeatures(itemPtr item, Parser &parser, Synthesizer *synthesizer);
+    void buildInheritedSonFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildSynthesizedFeatures(itemPtr item, Parser &parser, Synthesizer *synthesizer);
+    void buildSynthesizedFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithInherited(itemPtr item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithInherited(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithSynthesize(itemPtr item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithSynthesize(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void stmAttest(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
+    void stmAttest(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
 
     void stmGuard(const itemPtr&/*, class Synthesizer *synthesizer*/);
 
-    void stmForeach(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmForeach(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void stmIf(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmIf(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void stmPrint(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrint(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
 
     void stmPrintln(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
 
     void renameVariables(size_t);
 
-    void enable(statementPtr root, itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer *synthesizer, bool &effect, bool on);
 
-    void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 
-    bool findVariable(bitsetPtr);
+    bool findVariable(const bitsetPtr&);
 
 };
 

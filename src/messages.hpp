@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <string>
+#include "fatal_exception.hpp"
 
 #ifdef TRACE_MALLOC
 #define NEW {std::cerr << "$$$ New " << __FILE__ << std::endl; }
@@ -34,8 +35,8 @@
 #define CERR_LINE  {std::cerr << __FILE__ << "(" << std::dec <<  __LINE__ << ")" << "<br>" << std::endl;}
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
-#define FATAL_ERROR_UNEXPECTED {CERR_LINE; throw "*** unexpected";}
-#define FATAL_ERROR(msg) {std::ostringstream _oss; _oss << "*** " << msg; throw _oss.str();}
+#define FATAL_ERROR_UNEXPECTED {CERR_LINE; throw fatal_exception("*** unexpected");}
+#define FATAL_ERROR(msg) {std::ostringstream _oss; _oss << "*** " << msg; throw fatal_exception(_oss.str());}
 #define WARNING(msg) {std::cerr << "*** " << msg << std::endl;}
 
 #endif // ELVEX_MESSAGES_H

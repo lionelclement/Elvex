@@ -92,7 +92,7 @@ Statement::Statement(unsigned int lineno, type op, valuePtr value) {
     this->op = op;
     this->lhs = statementPtr();
     this->rhs = statementPtr();
-    this->value = value;
+    this->value = std::move(value);
 }
 
 /* **************************************************
@@ -944,7 +944,7 @@ statementPtr Statement::clone(const std::bitset<Flags::FLAGS> &protectedFlags) {
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables) {
+featuresPtr Statement::evalFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables) {
 #ifdef TRACE_EVAL
     std::cout << "####################### EVAL FEATURES #######################" << std::endl;
     std::cout << "<div>evalFeatures: " << std::endl;
@@ -1090,7 +1090,7 @@ featuresPtr Statement::evalFeatures(itemPtr item, Parser &parser, Synthesizer *s
 /* **************************************************
  *
  ************************************************** */
-listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
+listPtr Statement::evalList(const itemPtr& item, bool replaceVariables) {
 #ifdef TRACE_EVAL
     std::cout << "####################### EVAL LIST #######################" << std::endl;
     std::cout << "<div>" << std::endl;
@@ -1171,7 +1171,7 @@ listPtr Statement::evalList(itemPtr item, bool replaceVariables) {
 /* **************************************************
  *
  ************************************************** */
-valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables) {
+valuePtr Statement::evalValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables) {
 #ifdef TRACE_EVAL
     std::cout << "####################### EVAL VALUE #######################" << std::endl;
     std::cout << "<div>" << std::endl;
@@ -1618,7 +1618,7 @@ valuePtr Statement::evalValue(itemPtr item, Parser &parser, Synthesizer *synthes
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
+featuresPtr Statement::unif(const featuresPtr& fs1, featuresPtr fs2, itemPtr item) {
 #ifdef TRACE_EVAL
     std::cout << "####################### EVAL UNIF #######################" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>fs1</th><th>fs2</th><th>Environment</th></tr>";
@@ -1951,7 +1951,7 @@ featuresPtr Statement::unif(featuresPtr fs1, featuresPtr fs2, itemPtr item) {
 /* ************************************************************
  * ↓1 = … 
  ************************************************************ */
-void Statement::buildInheritedSonFeatures(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::buildInheritedSonFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
     /***
         std::cerr << "buildInheritedSonFeatures: ";
         print(std::cerr);
@@ -1967,7 +1967,7 @@ void Statement::buildInheritedSonFeatures(itemPtr item, Parser &parser, Synthesi
 /* ************************************************************
  * ⇑ = …
  ************************************************************ */
-void Statement::buildSynthesizedFeatures(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::buildSynthesizedFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
     if (!item->getSynthesizedFeatures()->isNil()) {
         this->print(std::cerr);
         FATAL_ERROR_STM
@@ -1984,7 +1984,7 @@ void Statement::buildSynthesizedFeatures(itemPtr item, Parser &parser, Synthesiz
  * [ … $X … ] ⊂ ⇓1;
  * $X = ⇓1;
  ************************************************************ */
-void Statement::buildEnvironmentWithSynthesize(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::buildEnvironmentWithSynthesize(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
     switch (this->op) {
         case AFF: {
             // $X = ⇓1;
@@ -2045,7 +2045,7 @@ void Statement::buildEnvironmentWithSynthesize(itemPtr item, Parser &parser, Syn
  * [ … $X … ] ⊂ ↑;
  * $X = ↑;
  ************************************************************ */
-void Statement::buildEnvironmentWithInherited(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::buildEnvironmentWithInherited(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
     /***
         std::cerr << "<DIV>buildEnvironmentWithInherited ";
         this->print(std::cerr, "", TRUE_ROOT);
@@ -2113,7 +2113,7 @@ void Statement::buildEnvironmentWithInherited(itemPtr item, Parser &parser, Synt
  * < … > = reverse $X;
  * < … > = $X;
  ************************************************************ */
-void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::buildEnvironmentWithValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
     /***
         std::cerr << "<DIV>buildEnvironmentWithValue</DIV>";
         std::cerr << "<DIV>";
@@ -2212,7 +2212,7 @@ void Statement::buildEnvironmentWithValue(itemPtr item, Parser &parser, Synthesi
 /* ************************************************************
  * attest
  ************************************************************ */
-void Statement::stmAttest(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::stmAttest(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
     /***
         std::cout << "<DIV>*** attest</DIV>";
         std::cout << "<DIV>";
@@ -2278,7 +2278,7 @@ void Statement::stmGuard(const itemPtr &item/*, Synthesizer *synthesizer*/) {
 /* ************************************************************
  * foreach
  ************************************************************ */
-void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
+void Statement::stmForeach(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
     /***
         std::cerr << "<DIV>foreach";
         item->print(std::cerr);
@@ -2302,7 +2302,7 @@ void Statement::stmForeach(itemPtr item, Parser &parser, Synthesizer *synthesize
 /* ************************************************************
  * if
  ************************************************************ */
-void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
+void Statement::stmIf(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
     statementPtr _lhs = getRhs()->getLhs();
     statementPtr _rhs = getRhs()->getRhs();
 
@@ -2355,7 +2355,7 @@ void Statement::stmIf(itemPtr item, Parser &parser, Synthesizer *synthesizer, bo
 /* ************************************************************
  * print
  ************************************************************ */
-void Statement::stmPrint(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
+void Statement::stmPrint(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
     addFlags(Flags::SEEN);
     if (lhs->isStr()) {
         std::cout << lhs->getStr();
@@ -2369,7 +2369,7 @@ void Statement::stmPrint(itemPtr item, Parser &parser, Synthesizer *synthesizer)
  * println
  ************************************************************ */
 void Statement::stmPrintln(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
-    stmPrint(item, parser, synthesizer);
+    stmPrint(std::move(item), parser, synthesizer);
     std::cout << std::endl;
 }
 
@@ -2431,7 +2431,7 @@ void Statement::renameVariables(size_t i) {
 /* ************************************************************
  *
  ************************************************************ */
-void Statement::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Statement::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
 #ifdef TRACE_APPLY
     if (synthesizer->getTraceAction()) {
       std::cout << "<H3>####################### ENABLE #######################</H3>" << std::endl;
@@ -2495,9 +2495,6 @@ void Statement::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer
 
         case PRINT:
         case PRINTLN:
-            lhs->enable(root, item, synthesizer, effect, on);
-            break;
-
         case ATTEST:
             lhs->enable(root, item, synthesizer, effect, on);
             break;
@@ -2596,7 +2593,7 @@ void Statement::enable(statementPtr root, itemPtr item, Synthesizer *synthesizer
 /* **************************************************
  * 
  ************************************************** */
-void Statement::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
+void Statement::apply(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
 #ifdef TRACE_APPLY
     if (synthesizer->getTraceAction()) {
       std::cout << "<H3>####################### APPLY #######################</H3>" << std::endl;
@@ -2755,9 +2752,9 @@ void Statement::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assign
         }
             break;
 
-        case STMS:
+        //case STMS:
             //getStatements()->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
-            break;
+        //    break;
 
         default:
             break;
@@ -2767,7 +2764,7 @@ void Statement::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assign
 /* ************************************************************
  *
  ************************************************************ */
-bool Statement::findVariable(bitsetPtr variable) {
+bool Statement::findVariable(const bitsetPtr& variable) {
     switch (this->op) {
 
         case STMS: FATAL_ERROR_UNEXPECTED

@@ -30,7 +30,7 @@ CompactedLexiconBuffer::CompactedLexiconBuffer(unsigned long int next, unsigned 
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconBuffer::CompactedLexiconBuffer(void) {
+CompactedLexiconBuffer::CompactedLexiconBuffer() {
     this->next = (unsigned long int) (~0UL);
     this->offset = (unsigned long int) (~0UL);
 }

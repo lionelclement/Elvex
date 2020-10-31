@@ -90,7 +90,7 @@ public:
     void consult();
 
     void list();
-    void list(unsigned int, std::string);
+    void list(unsigned int, const std::string&);
 };
 
 #endif // COMPACTEDLEXICON_H

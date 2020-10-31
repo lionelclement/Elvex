@@ -391,7 +391,7 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
     for (auto patternIt = pattern.cbegin();
          patternIt != pattern.cend(); ++patternIt) {
         //std::cerr << "pattern:" << patternIt->first << std::endl;
-        for (auto it2 : *patternIt->second) {
+        for (const auto& it2 : *patternIt->second) {
 
             //std::cerr << "str:" << it2 << std::endl;
 
@@ -420,7 +420,7 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
         }
 
         if (!(range++ % 1009)) {
-            int k = 40 * range / size;
+            unsigned int k = 40 * range / size;
             std::cerr << " " << round(2.5 * k) << "%[";
             int i = 0;
             for (; i <= k; i++)
@@ -463,7 +463,7 @@ void CompactedLexicon::consult() {
     while (!this->inputStream->eof()) {
         *this->inputStream >> str;
         _info = searchStatic(init, str);
-        printResults(std::cout, _info, 1);
+        printResults(std::cout, _info, true);
         fflush(stdout);
     }
 }
@@ -478,7 +478,7 @@ void CompactedLexicon::list() {
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::list(unsigned int index, std::string prefix) {
+void CompactedLexicon::list(unsigned int index, const std::string& prefix) {
     if (fsa[index].hasChild())
         list(fsa[index].getChild(), prefix + fsa[index].getCharacter());
     if (fsa[index].hasNext())

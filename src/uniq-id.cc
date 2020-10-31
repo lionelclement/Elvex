@@ -34,6 +34,6 @@ UniqId::UniqId(size_t id) {
 /* **************************************************
  *
  ************************************************** */
-std::size_t UniqId::getId(void) const {
+std::size_t UniqId::getId() const {
     return this->id;
 }

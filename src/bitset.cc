@@ -118,7 +118,7 @@ serialString = std::string();
  ************************************************************ */
 void Bitset::toXML(xmlNodePtr nodeRoot)
 {
-   xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ALT", NULL);
+   xmlNodePtr f = xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"ALT", nullptr);
    std::unordered_map<unsigned int, std::string>::const_iterator varTableIt;
    size_t c=this->count();
    size_t sz=this->size();
@@ -127,7 +127,7 @@ void Bitset::toXML(xmlNodePtr nodeRoot)
       --c;
       varTableIt = Vartable::bitMapFind(i);
       if (varTableIt != Vartable::bitMapEnd())
-      xmlNewChild(f, NULL, (const xmlChar*)"OPT", (const xmlChar*)varTableIt->second.c_str());
+      xmlNewChild(f, nullptr, (const xmlChar*)"OPT", (const xmlChar*)varTableIt->second.c_str());
    }
 }
 #endif
