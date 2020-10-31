@@ -48,6 +48,8 @@ set(ELVEX_COMMON_SOURCES
         src/entry.hpp
         src/environment.cc
         src/environment.hpp
+        src/fatal_exception.cpp
+        src/fatal_exception.hpp
         src/feature.cc
         src/feature.hpp
         src/features.cc
@@ -108,7 +110,7 @@ configure_file(
         src/config.hpp
         @ONLY)
 
-add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc)
+add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cpp src/fatal_exception.hpp)
 target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
 add_executable(elvexdebug  ${ELVEX_COMMON_SOURCES} src/elvex.cc)
 target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
