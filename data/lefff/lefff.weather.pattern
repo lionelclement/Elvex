@@ -31,24 +31,24 @@
 ###################################################
 ### regular language
 ###################################################
-FAIRE_FROID	v	faire	PRED:_faire_froid, subjC:[FORM:"il", @_3s], objC:[PRED:_froid, @s, gender:ms, det:no]
+FAIRE_FROID	v	faire	PRED:FAIRE_FROID, subjC:[FORM:"il", @_3s], objC:[PRED:FROID, @s, gender:ms, det:no]
 ###################################################
 ### slang language
 ###################################################
-FAIRE_FROID	v	faire	PRED:_faire_froid, subjC:[FORM:"il", @_3s], objC:[FORM:"un froid de canard"], language_register:slang
-FAIRE_FROID	v	faire	PRED:_faire_froid, subjC:[FORM:"il", @_3s], objC:[FORM:"un froid de gueux"], language_register:slang
-FAIRE_FROID	v	cailler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[FORM:"les miches"], refl:yes, objRefl:[@_3s], language_register:slang
-FAIRE_FROID	v	cailler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[FORM:"les meules"], refl:yes, objRefl:[@_3s], language_register:slang
-FAIRE_FROID	v	cailler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], language_register:slang
-FAIRE_FROID	v	geler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[PRED:_testicule, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang
-FAIRE_FROID	v	geler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[PRED:_fesses, def:yes, @s], refl:yes, objRefl:[@_3s], language_register:slang
-FAIRE_FROID	v	geler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[PRED:_testicule, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang
-FAIRE_FROID	v	peler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[FORM:"les miches"], refl:yes, objRefl:[@_3s], language_register:slang
-FAIRE_FROID	v	cailler	PRED:_faire_froid, refl:yes, objRefl:[person:two, @s], subjC:[FORM:"tu", person:two, @s], objC:[PRED:_fesses, def:yes], language_register:slang
-FAIRE_FROID	v	geler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[PRED:_testicule, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang, crude:true
-FAIRE_FROID	v	geler	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[PRED:_fesses, def:yes, @s], refl:yes, objRefl:[@_3s], language_register:slang, crude:true
-FAIRE_FROID	v	avoir	PRED:_faire_froid, subjC:[FORM:"on", @_3s], objC:[PRED:_testicule, def:yes, @p], pobjC:[PRED:_frais, def:yes, @s, pcas:à], language_register:slang, crude:true
-FAIRE_FROID	v	cailler	PRED:_faire_froid, refl:yes, objRefl:[person:two, @s], subjC:[FORM:"tu", person:two, @s], objC:[PRED:_fesses, def:yes], language_register:slang, crude:true
+FAIRE_FROID	v	faire	PRED:FAIRE_FROID, subjC:[FORM:"il", @_3s], objC:[FORM:"un froid de canard"], language_register:slang
+FAIRE_FROID	v	faire	PRED:FAIRE_FROID, subjC:[FORM:"il", @_3s], objC:[FORM:"un froid de gueux"], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[FORM:"les miches"], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[FORM:"les meules"], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:FESSES, def:yes, @s], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	peler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[FORM:"les miches"], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, refl:yes, objRefl:[person:two, @s], subjC:[FORM:"tu", person:two, @s], objC:[PRED:FESSES, def:yes], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang, crude:true
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:FESSES, def:yes, @s], refl:yes, objRefl:[@_3s], language_register:slang, crude:true
+FAIRE_FROID	v	avoir	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], pobjC:[PRED:FRAIS, def:yes, @s, pcas:à], language_register:slang, crude:true
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, refl:yes, objRefl:[person:two, @s], subjC:[FORM:"tu", person:two, @s], objC:[PRED:FESSES, def:yes], language_register:slang, crude:true
 
 ###################################################
 ### hot
@@ -56,18 +56,18 @@ FAIRE_FROID	v	cailler	PRED:_faire_froid, refl:yes, objRefl:[person:two, @s], sub
 ###################################################
 ### regular language
 ###################################################
-FAIRE_CHAUD	v	faire	PRED:_faire_chaud, subjC:[FORM:"il", @_3s], objC:[PRED:_chaud, @s, gender:ms, det:no]
+FAIRE_CHAUD	v	faire	PRED:FAIRE_CHAUD, subjC:[FORM:"il", @_3s], objC:[PRED:CHAUD, @s, gender:ms, det:no]
 ###################################################
 ### slang language
 ###################################################
-FAIRE_CHAUD	v	crever	PRED:_faire_chaud, subjC:[FORM:"on", @_3s], language_register:slang
-FAIRE_CHAUD	v	crever	PRED:_faire_chaud, subjC:[FORM:"on", @_3s], modC:<[FORM:"de chaud"]>, language_register:slang
-FAIRE_CHAUD	v	avoir	PRED:_faire_chaud, subjC:[FORM:"on", @_3s], modC:<[FORM:"la raie en sauce"]>, language_register:slang
-FAIRE_CHAUD	v	avoir	PRED:_faire_chaud, subjC:[FORM:"on", @_3s], modC:<[FORM:"les olives qui baignent dans l'huile"]>, language_register:slang
-FAIRE_CHAUD	v	avoir	PRED:_faire_chaud, subjC:[FORM:"on", @_3s], modC:<[FORM:"les rillettes sous les bras"]>, language_register:slang
-FAIRE_CHAUD	v	avoir	PRED:_faire_chaud, subjC:[FORM:"on", @_3s], modC:<[FORM:"la chipolata au bain-marie"]>, language_register:slang
-FAIRE_CHAUD	v	avoir	PRED:_faire_chaud, subjC:[FORM:"on", @_3s], modC:<[FORM:"les bigorneaux qui collent aux rochers"]>, language_register:slang
-FAIRE_CHAUD	v	faire	PRED:_faire_chaud, subjC:[FORM:"il", @_3s], modC:<[FORM:"plus chaud que sous l'aiselle d'un tondeur"]>, language_register:slang
+FAIRE_CHAUD	v	crever	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], language_register:slang
+FAIRE_CHAUD	v	crever	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"de chaud"]>, language_register:slang
+FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"la raie en sauce"]>, language_register:slang
+FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les olives qui baignent dans l'huile"]>, language_register:slang
+FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les rillettes sous les bras"]>, language_register:slang
+FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"la chipolata au bain-marie"]>, language_register:slang
+FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les bigorneaux qui collent aux rochers"]>, language_register:slang
+FAIRE_CHAUD	v	faire	PRED:FAIRE_CHAUD, subjC:[FORM:"il", @_3s], modC:<[FORM:"plus chaud que sous l'aiselle d'un tondeur"]>, language_register:slang
 
 ###################################################
 ### regular language
@@ -75,27 +75,27 @@ FAIRE_CHAUD	v	faire	PRED:_faire_chaud, subjC:[FORM:"il", @_3s], modC:<[FORM:"plu
 ###################################################
 ### regular
 ###################################################
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_pluie, part:yes, @s], locCl:[PRED:__pro, @s, @_3], degree:regular
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, part:yes, @s], locCl:[PRED:_pro, @s, @_3], degree:regular
 ##################################################
 ### few
 ###################################################
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:_légèrement]>, degree:few
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:_few]>, degree:few
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_pluie, det:yes, @s, detForm:[FORM:"un peu de"]], locCl:[PRED:__pro, @s, @_3], neg:no, degree:few
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_pluie, det:yes, @s, qual:yes, def:no, mod:<[PRED:_léger, pos:pre]>], locCl:[PRED:__pro, @s, @_3], neg:no, degree:few
-PLEUVOIR	v	tomber	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_goutte, det:yes, @p, detForm:[FORM:"quelques"]], neg:no, degree:few
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:LÉGÈREMENT]>, degree:few
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:FEW]>, degree:few
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, @s, @_3], neg:no, degree:few
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, qual:yes, def:no, mod:<[PRED:LÉGER, pos:pre]>], locCl:[PRED:_pro, @s, @_3], neg:no, degree:few
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:GOUTTE, det:yes, @p, detForm:[FORM:"quelques"]], neg:no, degree:few
 ##################################################
 ### a_lot
 ###################################################
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:_énormément]>, degree:a_lot
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_pluie, det:yes, @s, detForm:[FORM:"énormément de"]], locCl:[PRED:__pro, @s, @_3], degree:a_lot
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à flots"]>, degree:a_lot
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à seaux"]>, degree:a_lot
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à torrents"]>, degree:a_lot
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à verse"]>, degree:a_lot
-##PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_pluie, det:yes, @s, qual:yes, def:no, mod:<[PRED:_abondant, pos:post]>], locCl:[PRED:__pro, @s, @_3], neg:no, degree:a_lot
-##PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_pluie, det:yes, @s, detForm:[FORM:"énormément de"]], locCl:[PRED:__pro, @s, @_3], degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:ÉNORMÉMENT]>, degree:a_lot
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, detForm:[FORM:"énormément de"]], locCl:[PRED:_pro, @s, @_3], degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à flots"]>, degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à seaux"]>, degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à torrents"]>, degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à verse"]>, degree:a_lot
+##PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, qual:yes, def:no, mod:<[PRED:ABONDANT, pos:post]>], locCl:[PRED:_pro, @s, @_3], neg:no, degree:a_lot
+##PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, detForm:[FORM:"énormément de"]], locCl:[PRED:_pro, @s, @_3], degree:a_lot
 
 
 ###################################################
@@ -104,58 +104,58 @@ PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<
 ###################################################
 ### regular
 ###################################################
-PLEUVOIR	v	vaser	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
-PLEUVOIR	v	flotter	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
-PLEUVOIR	v	tomber	PRED:_pleuvoir, subjC:[FORM:"ça", @_3s], iiReal:none, degree:regular, language_register:slang
+PLEUVOIR	v	vaser	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"ça", @_3s], iiReal:none, degree:regular, language_register:slang
 ##################################################
 ### few
 ###################################################
-PLEUVOIR	v	flotter	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:_trop]>, negC:yes, degree:few, language_register:slang
-PLEUVOIR	v	flotter	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:_bézef]>, negC:yes, degree:few, language_register:slang
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:TROP]>, negC:yes, degree:few, language_register:slang
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:BÉZEF]>, negC:yes, degree:few, language_register:slang
 ##################################################
 ### a_lot
 ###################################################
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"comme vache qui pisse"]>, degree:a_lot, language_register:slang
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"des trolls femelles"]>, degree:a_lot, language_register:slang
-PLEUVOIR	v	dracher	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, degree:a_lot, language_register:slang
-PLEUVOIR	v	tomber	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_courge, @p], degree:a_lot, language_register:slang
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"comme vache qui pisse"]>, degree:a_lot, language_register:slang
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"des trolls femelles"]>, degree:a_lot, language_register:slang
+PLEUVOIR	v	dracher	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:a_lot, language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:COURGE, @p], degree:a_lot, language_register:slang
 COURGE	n	courge	language_register:slang
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"comme à la Gravelotte"]>, degree:a_lot, language_register:slang
-PLEUVOIR	v	tomber	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_hallebarde, def:no, @p], degree:a_lot, language_register:slang
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"comme à la Gravelotte"]>, degree:a_lot, language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:HALLEBARDE, def:no, @p], degree:a_lot, language_register:slang
 HALLEBARDE	n	hallebarde	language_register:slang
-PLEUVOIR	v	tomber	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_litharge, part:yes, @s], degree:a_lot, language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:LITHARGE, part:yes, @s], degree:a_lot, language_register:slang
 LITHARGE	n	litharge	language_register:slang
-PLEUVOIR	v	prendre	PRED:_pleuvoir, subjC:[FORM:"on", @_3s], objC:[FORM:"une chavanne"], refl:yes, objRefl:[@_3s], degree:a_lot, language_register:slang
-PLEUVOIR	v	flotter	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:_grave]>, degree:a_lot, language_register:slang
+PLEUVOIR	v	prendre	PRED:PLEUVOIR, subjC:[FORM:"on", @_3s], objC:[FORM:"une chavanne"], refl:yes, objRefl:[@_3s], degree:a_lot, language_register:slang
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:GRAVE]>, degree:a_lot, language_register:slang
 
 ###################################################
 ### poetic language
 ###################################################
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"le petit Jésus", @s, @_3], iiReal:none, objC:[FORM:"la prostate"], language_register:poetic
-PLEUVOIR	v	dégringoler	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"des chiens et des chats"]>, degree:a_lot, language_register:poetic
-PLEUVOIR	v	tomber	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[FORM:"un déluge de larmes célestes"], degree:a_lot, language_register:poetic
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"le petit Jésus", @s, @_3], iiReal:none, objC:[FORM:"la prostate"], language_register:poetic
+PLEUVOIR	v	dégringoler	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"des chiens et des chats"]>, degree:a_lot, language_register:poetic
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[FORM:"un déluge de larmes célestes"], degree:a_lot, language_register:poetic
 
 ###################################################
 ### technical language
 ###################################################
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_épisode_pluvieux, det:yes, @p, detForm:[FORM:"quelques"]], locCl:[PRED:__pro, @s, @_3], neg:no, language_register:technical
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_épisode_pluvieux, det:yes, @p, detForm:[FORM:"quelques rares"]], locCl:[PRED:__pro, @s, @_3], neg:no, degree:few, language_register:technical
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_précipitation, det:yes, @p, qual:yes, def:no, mod:<[PRED:_fort, pos:pre]>], locCl:[PRED:__pro, @s, @_3], degree:a_lot, language_register:technical
-PLEUVOIR	v	avoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_précipitation, det:yes, @p, qual:yes, def:no, detForm:[FORM:"quelques"]], locCl:[PRED:__pro, @s, @_3], degree:many, language_register:technical
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:ÉPISODE_PLUVIEUX, det:yes, @p, detForm:[FORM:"quelques"]], locCl:[PRED:_pro, @s, @_3], neg:no, language_register:technical
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:ÉPISODE_PLUVIEUX, det:yes, @p, detForm:[FORM:"quelques rares"]], locCl:[PRED:_pro, @s, @_3], neg:no, degree:few, language_register:technical
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PRÉCIPITATION, det:yes, @p, qual:yes, def:no, mod:<[PRED:FORT, pos:pre]>], locCl:[PRED:_pro, @s, @_3], degree:a_lot, language_register:technical
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PRÉCIPITATION, det:yes, @p, qual:yes, def:no, detForm:[FORM:"quelques"]], locCl:[PRED:_pro, @s, @_3], degree:many, language_register:technical
 
 ###################################################
 ### in_house language
 ###################################################
-PLEUVOIR	v	pleuvoir	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"un tantinet"]>, degree:few, language_register:in_house
-PLEUVOIR	v	tomber	PRED:_pleuvoir, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_corde, def:no, @p], degree:a_lot, language_register:in_house
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"un tantinet"]>, degree:few, language_register:in_house
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:CORDE, def:no, @p], degree:a_lot, language_register:in_house
 CORDE	n	corde	language_register:in_house
 
 ### ############################################################
 ## Neige
 ############################################################# ##
-NEIGER	v	neiger	PRED:_neiger, subjC:[FORM:"il", @_3s], iiReal:none
-NEIGER	v	avoir	PRED:_neiger, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_neige, part:yes, @s], locCl:[PRED:__pro, @s, @_3]
-NEIGER	v	avoir	PRED:_neiger, subjC:[FORM:"il"], iiReal:none, objC:[PRED:_neige, part:yes, @s], locCl:[PRED:__pro, @s, @_3]
+NEIGER	v	neiger	PRED:NEIGER, subjC:[FORM:"il", @_3s], iiReal:none
+NEIGER	v	avoir	PRED:NEIGER, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:NEIGE, part:yes, @s], locCl:[PRED:_pro, @s, @_3]
+NEIGER	v	avoir	PRED:NEIGER, subjC:[FORM:"il"], iiReal:none, objC:[PRED:NEIGE, part:yes, @s], locCl:[PRED:_pro, @s, @_3]
 
 
 ### ############################################################
@@ -168,11 +168,11 @@ NEIGER	v	avoir	PRED:_neiger, subjC:[FORM:"il"], iiReal:none, objC:[PRED:_neige, 
 ### ############################################################
 ## Beau
 ############################################################# ##
-FAIRE_BEAU	v	faire	PRED:_faire_beau, subjC:[FORM:"il", @_3s], objC:[PRED:_beau, @s, gender:ms, det:no]
-FAIRE_BEAU	v	avoir	PRED:_faire_beau, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:_soleil, part:yes, @s], locCl:[PRED:__pro, @s, @_3]
-FAIRE_BEAU	v	cramer	PRED:_faire_beau, subjC:[FORM:"ça", @_3s], language_register:slang
-FAIRE_BEAU	v	flamber	PRED:_faire_beau, subjC:[FORM:"ça", @_3s], language_register:slang
-FAIRE_BEAU	v	griller	PRED:_faire_beau, subjC:[FORM:"on", @_3s], modC:<[FORM:"comme un merlu sur un barbecue"]>, language_register:slang
+FAIRE_BEAU	v	faire	PRED:FAIRE_BEAU, subjC:[FORM:"il", @_3s], objC:[PRED:BEAU, @s, gender:ms, det:no]
+FAIRE_BEAU	v	avoir	PRED:FAIRE_BEAU, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:SOLEIL, part:yes, @s], locCl:[PRED:_pro, @s, @_3]
+FAIRE_BEAU	v	cramer	PRED:FAIRE_BEAU, subjC:[FORM:"ça", @_3s], language_register:slang
+FAIRE_BEAU	v	flamber	PRED:FAIRE_BEAU, subjC:[FORM:"ça", @_3s], language_register:slang
+FAIRE_BEAU	v	griller	PRED:FAIRE_BEAU, subjC:[FORM:"on", @_3s], modC:<[FORM:"comme un merlu sur un barbecue"]>, language_register:slang
 
 ### ############################################################
 ## Nuageux

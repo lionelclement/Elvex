@@ -139,36 +139,36 @@ AVOIR_FAIM	v	crever	PRED:AVOIR_FAIM, pobjC:[PRED:FAIM, pcas:de, det:no, number:s
 ########################################################
 
 # ennuyer qqun
-ENNUYER	v	broyer_slang	PRED:ENNUYER, objC:[PRED:TESTICULE, def:yes, number:pl], language_register:slang
-ENNUYER	v	casser	PRED:ENNUYER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-ENNUYER	v	casser	PRED:ENNUYER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-ENNUYER	v	gaver	PRED:ENNUYER, iiReal:obj, language_register:slang
-ENNUYER	v	gaver	PRED:ENNUYER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-ENNUYER	v	gonfler	PRED:ENNUYER, iiReal:obj, language_register:slang
-ENNUYER	v	gonfler	PRED:ENNUYER, iiReal:obj, modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-ENNUYER	v	pomper	PRED:ENNUYER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-ENNUYER	v	pomper	PRED:ENNUYER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-ENNUYER	v	pomper	PRED:ENNUYER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-ENNUYER	v	pomper	PRED:ENNUYER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-ENNUYER	v	prendre	PRED:ENNUYER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-ENNUYER	v	prendre	PRED:ENNUYER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-ENNUYER	v	prendre	PRED:ENNUYER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-ENNUYER	v	prendre	PRED:ENNUYER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-ENNUYER	v	saoûler	PRED:ENNUYER, iiReal:obj, language_register:slang
-ENNUYER	v	saoûler	PRED:ENNUYER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-ENNUYER	v	chier	PRED:ENNUYER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], language_register:slang
-ENNUYER	v	chier	PRED:ENNUYER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-ENNUYER	v	faire	PRED:ENNUYER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], language_register:slang
-ENNUYER	v	faire	PRED:ENNUYER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-ENNUYER	v	emmerder	PRED:ENNUYER, language_register:slang, iiReal:obj
-ENNUYER	v	emmerder	PRED:ENNUYER, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang, iiReal:obj
+IMPORTUNER	v	BROYER_SLANG	PRED:IMPORTUNER, objC:[PRED:TESTICULE, def:yes, number:pl], language_register:slang
+#IMPORTUNER	v	casser	PRED:IMPORTUNER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+#IMPORTUNER	v	casser	PRED:IMPORTUNER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	gaver	PRED:IMPORTUNER, iiReal:obj, language_register:slang
+#IMPORTUNER	v	gaver	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	gonfler	PRED:IMPORTUNER, iiReal:obj, language_register:slang
+#IMPORTUNER	v	gonfler	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	saoûler	PRED:IMPORTUNER, iiReal:obj, language_register:slang
+#IMPORTUNER	v	saoûler	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	chier	PRED:IMPORTUNER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], language_register:slang
+#IMPORTUNER	v	chier	PRED:IMPORTUNER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	faire	PRED:IMPORTUNER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], language_register:slang
+#IMPORTUNER	v	faire	PRED:IMPORTUNER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+#IMPORTUNER	v	emmerder	PRED:IMPORTUNER, language_register:slang, iiReal:obj
+#IMPORTUNER	v	emmerder	PRED:IMPORTUNER, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang, iiReal:obj
 
 BROYER_SLANG	v	casser	iiReal:prep_obj, prep_obj:[pcas:à]
 BROYER_SLANG	v	casser	iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn
-BROYER_SLANG	v	broyer_concasser	iiReal:prep_obj, prep_obj:[pcas:de]
-BROYER_SLANG	v	broyer_concasser	iiReal:prep_obj, prep_obj:[pcas:de], modC:<[PRED:FINEMENT]>, lexical_function:magn
-BROYER_SLANG	v	broyer_concasser	iiReal:prep_obj, prep_obj:[pcas:de], modC:<[FORM:"menu"]>, lexical_function:magn
-BROYER_CONCASSER	v	broyer	
+BROYER_SLANG	v	BROYER_CONCASSER	iiReal:prep_obj, prep_obj:[pcas:de]
+BROYER_SLANG	v	BROYER_CONCASSER	iiReal:prep_obj, prep_obj:[pcas:de], modC:<[PRED:FINEMENT]>, lexical_function:magn
+BROYER_SLANG	v	BROYER_CONCASSER	iiReal:prep_obj, prep_obj:[pcas:de], modC:<[FORM:"menu"]>, lexical_function:magn
+BROYER_CONCASSER	v	manger	
 BROYER_CONCASSER	v	briser	
 BROYER_CONCASSER	v	péter	
 
@@ -212,10 +212,10 @@ MOQUER	v	moquer	PRED:MOQUER, refl:yes, genCl:[PRED:_PRO], aux:être, iiReal:none
 ÊTRE_CONTENT	v	frotter	PRED:ÊTRE_CONTENT, objC:[FORM:"les mains"], refl:yes, language_register:slang
 ÊTRE_CONTENT	v	péter	PRED:ÊTRE_CONTENT, objC:[FORM:"joie", pcas:de], language_register:slang
 
-_FÊTE	n	fête	PRED:_FÊTE, language_register:slang
-_ANGE	n	ange	PRED:_ANGE, language_register:slang
-_GAI	adj	gai	PRED:_GAI, language_register:slang
-_PINSON	n	pinson	PRED:_PINSON, language_register:slang
+FÊTE	n	fête	PRED:_FÊTE, language_register:slang
+ANGE	n	ange	PRED:_ANGE, language_register:slang
+GAI	adj	gai	PRED:_GAI, language_register:slang
+PINSON	n	pinson	PRED:_PINSON, language_register:slang
 
 CONTENT	adj	jouasse	PRED:CONTENT, language_register:slang
 
@@ -231,7 +231,7 @@ ESCARGOT	n	magnin	PRED:ESCARGOT, language_register:slang
 
 # pleurer
 PLEURER	v	chialer	PRED:PLEURER, language_register:slang
-#PLEUVOIR	v	avoir	PRED:PLEUVOIR,subjC:[FORM:"il", person:three, number:sg],iiReal:none,objC:[PRED:FLOTTE,part:yes,number:sg],locCl:[PRED:_PRO,number:sg,person:three]
+PLEUVOIR	v	avoir	PRED:PLEUVOIR,subjC:[FORM:"il", person:three, number:sg],iiReal:none,objC:[PRED:FLOTTE,part:yes,number:sg],locCl:[PRED:_pro,number:sg,person:three]
 
 HORLOGER	n	con	PRED:HORLOGER, language_register:slang, sem:hyper
 
