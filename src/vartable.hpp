@@ -30,11 +30,8 @@
 class Vartable {
 
 public:
-    static const unsigned int _END_ = 0;
-    static const unsigned int _STARTTERM_ = 1;
-    static const unsigned int _EMPTY_ = 2;
-    static const unsigned int _OPEN_ = 3;
-    static const unsigned int _FIRSTID_ = 4;
+    static const unsigned int END_ = 0;
+    static const unsigned int STARTTERM_ = 1;
 
 private:
     static unsigned int codeMapIndex;
@@ -48,7 +45,7 @@ public:
     Vartable();
 
     static bitsetPtr createVariable(std::string); // variable -> bitset
-    static unsigned int identifierToCode(std::string); // identifier -> code
+    static unsigned int identifierToCode(const std::string&); // identifier -> code
     static std::string codeToIdentifier(unsigned int);
 
     static std::string bitToVariable(unsigned int);

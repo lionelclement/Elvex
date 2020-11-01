@@ -891,7 +891,7 @@ bool Value::findVariable(const bitsetPtr &variable) const {
  *                                                            *
  ************************************************************ */
 void Value::apply(const itemPtr &item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
-                  statementPtr body,
+                  const statementPtr& body,
                   bool &effect) {
     switch (type) {
         case _FEATURES:

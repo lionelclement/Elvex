@@ -38,7 +38,7 @@ void VariableFlag::setFlag(enum flagValues _flag) {
 /* **************************************************
  *
  ************************************************** */
-bool VariableFlag::containsVariable(void) {
+bool VariableFlag::containsVariable() {
     if (flag != 0)
         return (flag == 1);
     return false;

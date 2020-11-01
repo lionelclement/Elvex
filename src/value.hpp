@@ -153,7 +153,7 @@ public:
     bool findVariable(const bitsetPtr&) const;
 
     void
-    apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
+    apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr& variable, const statementPtr& body,
           bool &effect);
 
     bool containsVariable(void);

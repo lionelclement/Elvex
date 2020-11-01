@@ -18,17 +18,14 @@
  ************************************************** */
 
 #include <climits>
-//#include <sstream>
 #include <map>
 #include <unordered_map>
+#include <utility>
 #include "vartable.hpp"
-//#include "messages.hpp"
+#include "messages.hpp"
 
-const unsigned int Vartable::_END_;
-const unsigned int Vartable::_STARTTERM_;
-const unsigned int Vartable::_EMPTY_;
-const unsigned int Vartable::_OPEN_;
-const unsigned int Vartable::_FIRSTID_;
+const unsigned int Vartable::END_;
+const unsigned int Vartable::STARTTERM_;
 
 unsigned int Vartable::codeMapIndex;
 std::bitset<MAXBITS> Vartable::variableMapIndex;
@@ -45,11 +42,8 @@ Vartable vartable;
 Vartable::Vartable() {
     codeMapIndex = 0;
     variableMapIndex = 1;
-    insertCodeMap(_END_, "_END_");
-    insertCodeMap(_STARTTERM_, "_STARTTERM_");
-    insertCodeMap(_EMPTY_, "_EMPTY_");
-    insertCodeMap(_OPEN_, "_OPEN_");
-    insertCodeMap(_FIRSTID_, "_FIRSTID_");
+    insertCodeMap(END_, "_END_");
+    insertCodeMap(STARTTERM_, "_STARTTERM_");
 }
 
 /* ************************************************************
@@ -71,7 +65,7 @@ bitsetPtr Vartable::createVariable(std::string str) {
         Vartable::bitMap[i] = str;
         variableMapIndex <<= 1;
         if (variableMapIndex.none())
-            throw "Too much values";
+            FATAL_ERROR("Too much values")
     } else {
         result = varTableIt->second;
     }
@@ -81,7 +75,7 @@ bitsetPtr Vartable::createVariable(std::string str) {
 /* ************************************************************
  *
  ************************************************************ */
-unsigned int Vartable::identifierToCode(std::string str) {
+unsigned int Vartable::identifierToCode(const std::string& str) {
     unsigned int code;
     std::unordered_map<std::string, unsigned int>::const_iterator it(identifierMap.find(str));
     if (it == identifierMap.end()) {
@@ -107,7 +101,7 @@ std::string Vartable::codeToIdentifier(unsigned int i) {
  *
  ************************************************************ */
 void Vartable::insertCodeMap(const unsigned int key, std::string value) {
-    codeMap[key] = value;
+    codeMap[key] = std::move(value);
     if (codeMapIndex <= key)
         codeMapIndex = key + 1;
 }
@@ -122,7 +116,7 @@ std::unordered_map<unsigned int, std::string>::const_iterator Vartable::bitMapFi
 /* ************************************************************
  *
  ************************************************************ */
-std::unordered_map<unsigned int, std::string>::const_iterator Vartable::bitMapEnd(void) {
+std::unordered_map<unsigned int, std::string>::const_iterator Vartable::bitMapEnd() {
     return bitMap.end();
 }
 

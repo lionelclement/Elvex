@@ -133,19 +133,19 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
     std::vector<termsPtr> rhs;
 
     if (addENDTerminal) {
-        terminals.insert(Vartable::_END_);
+        terminals.insert(Vartable::END_);
     }
 
-    Vartable::insertCodeMap(Vartable::_STARTTERM_, "_STARTTERM_");
-    nonTerminals.insert(Vartable::_STARTTERM_);
+    Vartable::insertCodeMap(Vartable::STARTTERM_, "_STARTTERM_");
+    nonTerminals.insert(Vartable::STARTTERM_);
 
     rhs.push_back(Terms::create(getStartTerm()));
     if (addENDTerminal) {
-        rhs.push_back(Terms::create(Vartable::_END_));
+        rhs.push_back(Terms::create(Vartable::END_));
     }
 
     std::string fileName = "";
-    r = Rule::create(0, fileName, Vartable::_STARTTERM_, rhs);
+    r = Rule::create(0, fileName, Vartable::STARTTERM_, rhs);
     setStartTerm(startTerm);
     rules.push_back(r);
     firstRule = r;
