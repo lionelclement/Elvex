@@ -19,7 +19,9 @@
 
 #include "fatal_exception.hpp"
 
+#include <utility>
+
 fatal_exception::fatal_exception(std::string message) {
-    this->message = message;
+    this->message = std::move(message);
 
 }

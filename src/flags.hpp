@@ -22,10 +22,11 @@
 
 #include <bitset>
 
+#define FLAGS 8
+
 class Flags {
 
 public:
-    static const int FLAGS = 8;
     static const std::bitset<FLAGS> SEEN;
     static const std::bitset<FLAGS> XML;
     static const std::bitset<FLAGS> GENERATED;
@@ -39,17 +40,17 @@ private:
     std::bitset<FLAGS> flags;
 
 public:
-    Flags(void);
+    Flags();
 
-    Flags(const std::bitset<FLAGS> &flags);
+    explicit Flags(const std::bitset<FLAGS> &flags);
 
-    std::bitset<FLAGS> &getFlags(void);
+    std::bitset<FLAGS> &getFlags();
 
     bool isSetFlags(const std::bitset<FLAGS> &cmp) const;
 
     bool isUnsetFlags(const std::bitset<FLAGS> &cmp) const;
 
-    void resetFlags(void);
+//    void resetFlags();
 
     void addFlags(const std::bitset<FLAGS> &f);
 
