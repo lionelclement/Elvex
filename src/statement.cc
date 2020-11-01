@@ -882,7 +882,7 @@ void Statement::makeSerialString() {
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::clone(const std::bitset<Flags::FLAGS> &protectedFlags) {
+statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags) {
     statementPtr statement = shared_from_this();
     switch (this->op) {
         case UP:
