@@ -37,14 +37,14 @@ private:
     statementPtr guard;
     list statements;
 
-    Statements(statementPtr);
+    Statements(const statementPtr&);
 
     void makeSerialString(void);
 
 public:
     ~Statements();
 
-    static statementsPtr create(statementPtr = statementPtr());
+    static statementsPtr create(const statementPtr& = statementPtr());
 
     size_t size(void);
 
@@ -52,11 +52,11 @@ public:
 
     list::const_iterator end(void) const;
 
-    void addStatement(statementPtr);
+    void addStatement(const statementPtr&);
 
     void renameVariables(size_t);
 
-    void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
+    void print(std::ostream &, unsigned int tabulation = 0, unsigned int yetColored = 0) const;
 
     statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 

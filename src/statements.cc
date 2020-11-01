@@ -31,7 +31,7 @@
 /* **************************************************
  *
  ************************************************** */
-Statements::Statements(statementPtr statement) {
+Statements::Statements(const statementPtr& statement) {
     NEW
     if (statement)
         statements.push_front(statement);
@@ -42,42 +42,42 @@ Statements::Statements(statementPtr statement) {
  ************************************************** */
 Statements::~Statements() {
     DELETE
-    for (list::iterator i = statements.begin(); i != statements.end(); ++i)
-        i->reset();
+    for (auto & statement : statements)
+        statement.reset();
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Statements::create(statementPtr statement) {
+statementsPtr Statements::create(const statementPtr& statement) {
     return statementsPtr(new Statements(statement));
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Statements::size(void) {
+size_t Statements::size() {
     return this->statements.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::begin(void) const {
+Statements::list::const_iterator Statements::begin() const {
     return this->statements.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::end(void) const {
+Statements::list::const_iterator Statements::end() const {
     return this->statements.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Statements::addStatement(statementPtr statement) {
+void Statements::addStatement(const statementPtr& statement) {
     if (statement->isGuard())
         this->guard = statement;
     else
@@ -87,16 +87,16 @@ void Statements::addStatement(statementPtr statement) {
 /* **************************************************
  *
  ************************************************** */
-void Statements::print(std::ostream &outStream, unsigned int tabulation, int yetColored) const {
-    int color = yetColored;
+void Statements::print(std::ostream &outStream, unsigned int tabulation, unsigned int yetColored) const {
+    unsigned int color = yetColored;
     if (isSetFlags(Flags::SEEN)) {
-        color |= 0x0000FF;
+        color |= 0x0000FFu;
     }
     if (isSetFlags(Flags::DISABLED)) {
-        color |= 0xC0C0C0;
+        color |= 0xC0C0C0u;
     }
     if (isSetFlags(Flags::BOTTOM)) {
-        color |= 0xFF0000;
+        color |= 0xFF0000u;
     }
     if (color != 0)
         outStream << "<div style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";

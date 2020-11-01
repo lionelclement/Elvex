@@ -95,17 +95,17 @@ public:
 
     Synthesizer();
 
-    ~Synthesizer(void);
+    ~Synthesizer();
 
-    ItemSet_map::const_iterator begin(void) const;
+    ItemSet_map::const_iterator begin() const;
 
-    ItemSet_map::const_iterator end(void) const;
+    ItemSet_map::const_iterator end() const;
 
-    size_t size(void) const;
+    size_t size() const;
 
-    class ForestMap getForestMap(void);
+    class ForestMap getForestMap();
 
-    std::list<std::string> &getInputs(void);
+    std::list<std::string> &getInputs();
 
     void setInputFileName(char *);
 
@@ -117,27 +117,27 @@ public:
 
     void setCompactedDirectoryName(char *);
 
-    std::string getInputFileName(void) const;
+    std::string getInputFileName() const;
 
-    std::string getLexiconFileName(void) const;
+    std::string getLexiconFileName() const;
 
-    std::string getCompactedLexiconFileName(void) const;
+    std::string getCompactedLexiconFileName() const;
 
-    std::string getCompactedDirectoryName(void) const;
+    std::string getCompactedDirectoryName() const;
 
-    std::string getGrammarFileName(void) const;
+    std::string getGrammarFileName() const;
 
     void setMaxLength(unsigned int);
 
     void setMaxUsages(unsigned int);
 
-    unsigned int getMaxUsages(void);
+    unsigned int getMaxUsages() const;
 
     void setMaxCardinal(unsigned int);
 
-    unsigned int getMaxCardinal(void);
+    unsigned int getMaxCardinal() const;
 
-    class CompactedLexicon *getCompactedLexicon(void) const;
+    class CompactedLexicon *getCompactedLexicon() const;
 
     void setCompactedLexicon(class CompactedLexicon *);
 
@@ -145,7 +145,7 @@ public:
 
 #ifdef OUTPUT_XML
     void setOutXML(char *);
-    char *getOutXML(void) const;
+    char *getOutXML() const;
 #endif
 
 #ifdef TRACE_OPTION
@@ -155,37 +155,37 @@ public:
     void setTraceShift(bool);
     void setTraceReduce(bool);
     void setTraceAction(bool);
-    bool getTraceInit(void);
-    bool getTraceStage(void);
-    bool getTraceClose(void);
-    bool getTraceShift(void);
-    bool getTraceReduce(void);
-    bool getTraceAction(void);
+    bool getTraceInit();
+    bool getTraceStage();
+    bool getTraceClose();
+    bool getTraceShift();
+    bool getTraceReduce();
+    bool getTraceAction();
 #endif
 
-    nodePtr getNodeRoot(void);
+    nodePtr getNodeRoot();
 
     bool insertItemMap(const itemPtr&);
 
-    void eraseItemMap(const unsigned int);
+    void eraseItemMap(unsigned int);
 
-    itemPtr getItemMap(const unsigned int);
+    itemPtr getItemMap(unsigned int);
 
-    bool getTrace(void) const;
+    bool getTrace() const;
 
-    void setTrace(const bool);
+    void setTrace(bool);
 
-    bool getReduceAll(void) const;
+    bool getReduceAll() const;
 
     void setReduceAll(bool);
 
     void setRandom(bool);
 
-    bool getRandom(void) const;
+    bool getRandom() const;
 
     void setOne(bool);
 
-    bool getOne(void) const;
+    bool getOne() const;
 
     void printState(std::ostream &, const itemSetPtr&);
 
@@ -193,16 +193,16 @@ public:
 
     bool shift(class Parser &, const itemSetPtr&, unsigned int);
 
-    void clear(void);
+    void clear();
 
     static itemPtr createItem(const itemPtr&, unsigned int);
 
     void generate(class Parser &);
 
-    const entriesPtr
-    findCompactedLexicon(class Parser &, unsigned int code, const std::string& str, const unsigned int pred);
+    entriesPtr
+    findCompactedLexicon(class Parser &, unsigned int code, const std::string& str, unsigned int pred);
 
-    std::string keyMemoization(itemPtr const, itemPtr const);
+    std::string keyMemoization(const itemPtr&, const itemPtr&);
 };
 
 #endif // ELVEX_SYNTHESIZER_H
