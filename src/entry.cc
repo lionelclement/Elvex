@@ -110,7 +110,7 @@ Entry::getForm() {
  *
  ************************************************** */
 void Entry::setForm(std::string _form) {
-    this->form = _form;
+    this->form = std::move(_form);
 }
 
 /* **************************************************
@@ -127,7 +127,7 @@ featuresPtr Entry::getFeatures() const {
 void
 Entry::toXML(xmlNodePtr nodeRoot) const
 {
-   xmlNodePtr entry = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRY", NULL);
+   xmlNodePtr entry = xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"ENTRY", nullptr);
    if (this->pos != (unsigned int)-1) {
       xmlSetProp(entry, (xmlChar*)"pos", (xmlChar*)std::to_string(this->pos).c_str());
       xmlSetProp(entry, (xmlChar*)"posStr", (xmlChar*)Vartable::codeToIdentifier(this->pos).c_str());
@@ -138,7 +138,7 @@ Entry::toXML(xmlNodePtr nodeRoot) const
       xmlSetProp(entry, (xmlChar*)"codePredStr", (xmlChar*)Vartable::codeToIdentifier(this->pred).c_str());
 
    }
-   if (this->form.size() != 0) {
+   if (!this->form.empty()) {
       xmlSetProp(entry, (xmlChar*)"form", (xmlChar*)this->form.c_str());
    }
    if (this->features) {

@@ -20,6 +20,7 @@
 #include <regex>
 #include <sstream>
 #include <list>
+#include <utility>
 #include "environment.hpp"
 #include "messages.hpp"
 #include "list.hpp"
@@ -42,8 +43,8 @@ Environment::Environment() {
  ************************************************** */
 Environment::~Environment() {
     DELETE
-    for (unordered_map::iterator i = env.begin(); i != env.end(); ++i) {
-        valuePtr tmp = i->second;
+    for (auto & i : env) {
+        valuePtr tmp = i.second;
         if (tmp)
             tmp.reset();
     }
@@ -59,8 +60,8 @@ environmentPtr Environment::create() {
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(const std::string key, valuePtr value) {
-    Environment::unordered_map::iterator it = env.find(key);
+void Environment::add(const std::string& key, valuePtr value) {
+    auto it = env.find(key);
     if (it == env.end()) {
         env.insert(std::make_pair(key, value));
     } else {
@@ -71,32 +72,32 @@ void Environment::add(const std::string key, valuePtr value) {
 /* **************************************************
  *
  ************************************************** */
-void Environment::remove(const std::string key) {
+void Environment::remove(const std::string& key) {
     env.erase(key);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(bitsetPtr attr, valuePtr value) {
+void Environment::add(const bitsetPtr& attr, valuePtr value) {
     const std::string key = attr->toString();
-    add(key, value);
+    add(key, std::move(value));
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(const environmentPtr e) {
-    for (auto i : *e)
+void Environment::add(const environmentPtr& e) {
+    for (const auto& i : *e)
         add(i.first, i.second);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(const environmentPtr e, const environmentPtr where) {
+void Environment::add(const environmentPtr& e, const environmentPtr& where) {
     if (where)
-        for (auto i : *e)
+        for (const auto& i : *e)
             if (where->env.find(i.first) != where->env.end())
                 add(i.first, i.second);
 }
@@ -104,7 +105,7 @@ void Environment::add(const environmentPtr e, const environmentPtr where) {
 /* **************************************************
  *
  ************************************************** */
-void Environment::remove(bitsetPtr attr) {
+void Environment::remove(const bitsetPtr& attr) {
     const std::string key = attr->toString();
     remove(key);
 }
@@ -133,7 +134,7 @@ size_t Environment::size() const {
 /* **************************************************
  *
  ************************************************** */
-valuePtr Environment::find(bitsetPtr attr) const {
+valuePtr Environment::find(const bitsetPtr& attr) const {
     const std::string key = attr->toString();
     auto it = env.find(key);
     if (it != env.end())
@@ -167,7 +168,7 @@ void Environment::print(std::ostream &out) const {
 /* **************************************************
  *
  ************************************************** */
-void Environment::replaceVariables(featuresPtr features, bool &effect) {
+void Environment::replaceVariables(const featuresPtr& features, bool &effect) {
     /***
      std::cerr << "<H4>Environment::replaceVariables(features)</H4>" << std::endl;
      std::cerr << "<table border=\"1\"><tr><th>featurePtrs</th><th>Environment</th></tr>";
@@ -207,7 +208,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
                     /* do nothing */
                 } else if (value->_isFeatures()) {
                     features->erase(it);
-                    for (auto f : *value->getFeatures()) {
+                    for (const auto& f : *value->getFeatures()) {
                         features->add(f);
                     }
                     effect = true;
@@ -243,7 +244,7 @@ void Environment::replaceVariables(featuresPtr features, bool &effect) {
 /* **************************************************
  *
  ************************************************** */
-void Environment::replaceVariables(listFeaturesPtr listFeatures, bool &effect) {
+void Environment::replaceVariables(const listFeaturesPtr& listFeatures, bool &effect) {
     for (auto & vf : *listFeatures)
         this->replaceVariables(vf, effect);
 }
@@ -251,7 +252,7 @@ void Environment::replaceVariables(listFeaturesPtr listFeatures, bool &effect) {
 /* **************************************************
  *
  ************************************************** */
-void Environment::replaceVariables(valuePtr value, bool &effect) {
+void Environment::replaceVariables(const valuePtr& value, bool &effect) {
     /***
      std::cerr << "<H4>Environment::replaceVariables(value)</H4>" << std::endl;
      std::cerr << "<table border=\"1\"><tr><th>Value</th><th>Environment</th></tr>";
@@ -303,7 +304,7 @@ void Environment::replaceVariables(valuePtr value, bool &effect) {
 /* **************************************************
  *
  ************************************************** */
-void Environment::replaceVariables(listPtr list, bool &effect) {
+void Environment::replaceVariables(const listPtr& list, bool &effect) {
     /***
      std::cerr << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
      std::cerr << "<table border=\"1\"><tr><th>List</th><th>Environment</th></tr>";
@@ -375,7 +376,7 @@ void Environment::replaceVariables(std::string &str, bool &effect) {
         std::regex regexpression(pattern, std::regex_constants::ECMAScript);
         while (std::regex_search(str.c_str(), match, regexpression, std::regex_constants::format_first_only)) {
             const std::string key = match[1];
-            Environment::unordered_map::iterator i = this->env.find(key);
+            auto i = this->env.find(key);
             if (i == this->env.end()) {
                 //std::cerr << "*** error variable " << match[1] << " not found" << std::endl;
                 std::string s = "?";
@@ -405,10 +406,10 @@ void Environment::replaceVariables(std::string &str, bool &effect) {
 /* **************************************************
  *
  ************************************************** */
-environmentPtr Environment::clone(void) const {
+environmentPtr Environment::clone() const {
     environmentPtr environment = Environment::create();
-    for (Environment::unordered_map::const_iterator i = begin(); i != end(); ++i) {
-        environment->add((*i).first, ((*i).second) ? (*i).second->clone() : valuePtr());
+    for (const auto & i : *this) {
+        environment->add(i.first, (i.second) ? i.second->clone() : valuePtr());
     }
     return environment;
 }

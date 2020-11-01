@@ -133,11 +133,9 @@ entryPtr Entries::get(unsigned int i) const {
 void
 Entries::toXML(xmlNodePtr nodeRoot) const
 {
-   xmlNodePtr node=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"ENTRIES", NULL);
-   for (auto i = entries.begin();
-         i!=entries.end();
-         ++i)
-   (*i)->toXML(node);
+   xmlNodePtr node=xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"ENTRIES", nullptr);
+   for (const auto & entrie : entries)
+   entrie->toXML(node);
 }
 #endif
 
@@ -145,6 +143,6 @@ Entries::toXML(xmlNodePtr nodeRoot) const
  *
  ************************************************** */
 void Entries::print(std::ostream &out) const {
-  for (auto i : entries)
+  for (const auto& i : entries)
         i->print(out);
 }
