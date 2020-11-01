@@ -151,6 +151,6 @@ FLEX_TARGET(postedition_fr src/postedition_fr.l ${CMAKE_CURRENT_BINARY_DIR}/src/
 add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
 target_compile_options(elvexpostedition_fr PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
-install(TARGETS elvex elvexbuildLexicon elvexpostedition_en elvexpostedition_fr
+install(TARGETS elvex elvexdebug elvexbuildLexicon elvexpostedition_en elvexpostedition_fr
         RUNTIME DESTINATION bin
         )
