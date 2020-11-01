@@ -1,7 +1,7 @@
 ÊTRE_RANCUNIER	v	avoir	PRED:ÊTRE_RANCUNIER,objC:[PRED:dent, number:sg, def:no],iiiReal:prep_obj,prep_obj:[pcas:contre]
 
 // tomber locution
-ÉVANOUIR	v	tomber	PRED:ÉVANOUIR,pobjC:[PRED:pomme,number:pl,def:yes,pcas:dans],language_register:slang
+ÉVANOUIR	v	tomber	PRED:ÉVANOUIR,pobjC:[PRED:POMME,number:pl,def:yes,pcas:dans],language_register:slang
 TOMBER_À_TERRE	v	tomber	PRED:TOMBER_À_TERRE,modC:<[FORM:"à terre"]>,language_register:slang
 ÊTRE_AMOUREUX	v	tomber	PRED:ÊTRE_AMOUREUX,iiReal:prep_obj,prep_obj:[pcas:pour],modC:<[FORM:"en amour"]>,language_register:dialect
 
