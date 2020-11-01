@@ -1,0 +1,136 @@
+@m	gender:ms
+@f	gender:fm
+@s	number:sg
+@p	number:pl
+@ms	gender:ms,@s
+@fs	gender:fm,@s
+@mp	gender:ms,@p
+@fp	gender:fm,@p
+@_1	person:one
+@_2	person:two
+@_12	person:one|two
+@_3	person:three
+@_13	person:one|three
+@_1s	@_1,@s
+@_2s	@_2,@s
+@_12s	@_12,@s
+@_3s	@_3,@s
+@_13s	@_13,@s
+@_1p	@_1,@p
+@_2p	@_2,@p
+@_3p	@_3,@p
+@avoir	aux:avoir
+@être	aux:être
+@tensed	vform:tensed
+@indicative	mode:indicative
+@subjonctive	mode:subjonctive
+@indicative_subjonctive	mode:indicative|subjonctive
+@conditional	mode:conditional
+@present	vtense:present
+@past		vtense:past
+@present_past		vtense:present|past
+@past_historic	vtense:past_historic
+@imperfect	vtense:imperfect
+@future		vtense:future
+@participle	vform:participle
+@infinitive	vform:infinitive
+
+@P	@indicative, @present, @tensed
+@I	@indicative, @imperfect, @tensed
+@F	@indicative, @future, @tensed
+@J	@indicative, @past_historic, @tensed
+
+@S	@subjonctive, @present, @tensed
+@T	@subjonctive, @past, @tensed
+
+@PS	@indicative_subjonctive, @present, @tensed
+@ST	@subjonctive, @present_past, @tensed
+
+@C	@conditional, @present, @tensed
+
+@Y	mode:imperative, @present, @tensed
+
+@E	@participle, @present
+@A	@participle, @past
+
+@K	@infinitive
+
+@Am	@participle, @past, @m
+@Ams	@participle, @past, @ms
+@Afs	@participle, @past, @fs
+@Amp	@participle, @past, @mp
+@Afp	@participle, @past, @fp
+
+@P1s	@P,subj:[@_1s]
+@P2s	@P,subj:[@_2s]
+@P12s	@P,subj:[@_12s]
+@P3s	@P,subj:[@_3s]
+@P1p	@P,subj:[@_1p]
+@P2p	@P,subj:[@_2p]
+@P3p	@P,subj:[@_3p]
+
+@I1s	@I,subj:[@_1s]
+@I2s	@I,subj:[@_2s]
+@I12s	@I,subj:[@_12s]
+@I3s	@I,subj:[@_3s]
+@I1p	@I,subj:[@_1p]
+@I2p	@I,subj:[@_2p]
+@I3p	@I,subj:[@_3p]
+
+@F1s	@F,subj:[@_1s]
+@F2s	@F,subj:[@_2s]
+@F3s	@F,subj:[@_3s]
+@F1p	@F,subj:[@_1p]
+@F2p	@F,subj:[@_2p]
+@F3p	@F,subj:[@_3p]
+
+@J1s	@J,subj:[@_1s]
+@J2s	@J,subj:[@_2s]
+@J12s	@J,subj:[@_12s]
+@J3s	@J,subj:[@_3s]
+@J1p	@J,subj:[@_1p]
+@J2p	@J,subj:[@_2p]
+@J3p	@J,subj:[@_3p]
+
+@S1s	@S,subj:[@_1s]
+@S2s	@S,subj:[@_2s]
+@S3s	@S,subj:[@_3s]
+@S13s	@S,subj:[@_13s]
+@S1p	@S,subj:[@_1p]
+@S2p	@S,subj:[@_2p]
+@S3p	@S,subj:[@_3p]
+
+#@PS1s	@PS,subj:[@_1s]
+@PS2s	@PS,subj:[@_2s]
+#@PS3s	@PS,subj:[@_3s]
+@PS13s	@PS,subj:[@_13s]
+#@PS1p	@PS,subj:[@_1p]
+#@PS2p	@PS,subj:[@_2p]
+@PS3p	@PS,subj:[@_3p]
+
+@T1s	@T,subj:[@_1s]
+@T2s	@T,subj:[@_2s]
+@T3s	@T,subj:[@_3s]
+@T1p	@T,subj:[@_1p]
+@T2p	@T,subj:[@_2p]
+@T3p	@T,subj:[@_3p]
+
+#@ST1s	@ST,subj:[@_1s]
+@ST2s	@ST,subj:[@_2s]
+#@ST3s	@ST,subj:[@_3s]
+#@ST1p	@ST,subj:[@_1p]
+#@ST2p	@ST,subj:[@_2p]
+#@ST3p	@ST,subj:[@_3p]
+
+@C1s	@C,subj:[@_1s]
+@C2s	@C,subj:[@_2s]
+@C12s	@C,subj:[@_12s]
+@C3s	@C,subj:[@_3s]
+@C1p	@C,subj:[@_1p]
+@C2p	@C,subj:[@_2p]
+@C3p	@C,subj:[@_3p]
+
+@Y2s	@Y,subj:[@_2s]
+@Y1p	@Y,subj:[@_1p]
+@Y2p	@Y,subj:[@_2p]
+
