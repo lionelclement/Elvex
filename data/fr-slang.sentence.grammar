@@ -1,6 +1,6 @@
-// from pdp-meteo.arguments.grammar
-#include pdp-meteo.verb.grammar
-#include pdp-meteo.clitics.grammar
+// from fr-slang.arguments.grammar
+#include fr-slang.verb.grammar
+#include fr-slang.clitics.grammar
 
 sentence → form S form {
   // println __FILE__ + " (" + __LINE__ + ")";

@@ -108,8 +108,8 @@ argumentClause → sentence {
 // X alimente Y avec Z
 @trace
 argumentClause → sentence {
-  print __FILE__ ; print " (" ; print __LINE__ ; println ")";
-  println ↑;
+  //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+  //println ↑;
   [i:$I, ii:$II, iii:$III, iv:NIL, $Rest];
   [diathesis:active] ⊂ ↑;
   ↓1 = [subj:$I, obj:$II, prep_obj:$III, iiReal:obj, iiiReal:prep_obj, ivReal:none, voice:active, $Rest];

@@ -1,5 +1,5 @@
-// from pdp-meteo.illocution.grammar
-#include pdp-meteo.tensed.grammar
+// from fr-slang.illocution.grammar
+#include fr-slang.tensed.grammar
 
 /* **************************************************
  * modality

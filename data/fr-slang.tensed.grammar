@@ -1,5 +1,5 @@
-// from pdp-meteo.modality.grammar
-#include pdp-meteo.time.grammar
+// from fr-slang.modality.grammar
+#include fr-slang.time.grammar
 
 /* **************************************************
 * Temps verbal

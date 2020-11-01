@@ -19,9 +19,14 @@
 
 #include "fatal_exception.hpp"
 
+#include <iostream>
 #include <utility>
 
 fatal_exception::fatal_exception(std::string message) {
+    std::cerr << message << std::endl;
     this->message = std::move(message);
+}
 
+const std::string &fatal_exception::getMessage() {
+    return message;
 }

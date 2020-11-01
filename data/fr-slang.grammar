@@ -1,5 +1,5 @@
-#include pdp-meteo.rhetoric.grammar
-#include pdp-meteo.noun.grammar
+#include fr-slang.rhetoric.grammar
+#include fr-slang.noun.grammar
 
 /* **************************************************
  * Start with an NP

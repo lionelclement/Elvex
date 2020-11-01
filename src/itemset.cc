@@ -90,7 +90,7 @@ ItemSet::const_iterator ItemSet::find(const itemPtr& item) const {
  ************************************************** */
 bool ItemSet::insert(const itemPtr& item, Synthesizer *synthesizer) {
     if (items.size() > synthesizer->getMaxCardinal()) {
-        FATAL_ERROR ("*** error: too much items build")
+        FATAL_ERROR ("*** error: too much items build : " << items.size() << " (" << synthesizer->getMaxCardinal() << " Max)");
     }
 #ifdef TRACE_INSERT
     std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;

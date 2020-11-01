@@ -1,5 +1,5 @@
-// from pdp-meteo.grammar
-#include pdp-meteo.illocution.grammar
+// from fr-slang.grammar
+#include fr-slang.illocution.grammar
 
 /* **************************************************
  *  * Cause, reason

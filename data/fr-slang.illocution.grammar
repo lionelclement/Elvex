@@ -1,5 +1,5 @@
-// from pdp-meteo.rhetoric.grammar
-#include pdp-meteo.modality.grammar
+// from fr-slang.rhetoric.grammar
+#include fr-slang.modality.grammar
 
 /* **************************************************
  * Default

@@ -1,5 +1,5 @@
-// from pdp-meteo.tensed.grammar
-#include pdp-meteo.binding.grammar
+// from fr-slang.tensed.grammar
+#include fr-slang.binding.grammar
 
 /* **************************************************
 * Expressions temporelles

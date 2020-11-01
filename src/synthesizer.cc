@@ -495,14 +495,6 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
             if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM))
                 continue;
 
-#ifdef TRACE_OPTION
-            if (traceClose) {
-               std::cout << "<H3>####################### CLOSE #######################</H3>" << std::endl;
-               (*actualItem)->print(std::cout);
-               std::cout << std::endl;
-            }
-#endif
-
             // X -> alpha • [Y] gamma
             if ((*actualItem)->getRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
                 !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]

@@ -1,5 +1,5 @@
-// from pdp-meteo.binding.grammar
-#include pdp-meteo.sentence.grammar
+// from fr-slang.binding.grammar
+#include fr-slang.sentence.grammar
 
 /* **************************************************
  * Actants

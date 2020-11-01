@@ -31,7 +31,7 @@
 //text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], language_register:slang]
 
 //text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future]
-text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future, language_register:slang]
+//text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future, language_register:slang]
 //text [PRED:PLEUVOIR, tense:near_future]
 
 //text [PRED:neiger]
@@ -125,15 +125,21 @@ text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_fut
 // ############################################################
 // ############################################################
 
-//***
-//text [PRED:ENNUYER, i:[PRED:IDIOT, number:sg, gender:ms], ii:[PRED:FEMME, number:sg]]
-text [PRED:ENNUYER, i:[PRED:IDIOT, number:sg, gender:ms], ii:[PRED:FEMME, number:sg], language_register:slang]
+//text [PRED:IMPORTUNER, i:[PRED:IDIOT, number:sg, gender:ms], ii:[PRED:FEMME, number:sg]]
+//text [PRED:IMPORTUNER, i:[PRED:IDIOT, number:sg, gender:ms], ii:[PRED:FEMME, number:sg], language_register:slang]
 
-//***
-// text [PRED:cause,
-// 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],
-//	ii:[PRED:ROULER, i:[idref:45, PRED:VOITURE, number:sg, def:yes]],
-// language_register:slang]
+//text[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]]
+//text [PRED:ROULER, i:[idref:45, PRED:VOITURE, number:sg, def:yes]]
+
+/* text [PRED:cause,
+ 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes]],
+	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]]]
+*/
+
+ text [PRED:cause,
+ 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],
+	ii:[PRED:ROULER, i:[idref:45111]],
+ language_register:slang]
 
 // text [PRED:cause,
 // i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],

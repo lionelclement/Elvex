@@ -120,11 +120,11 @@ if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
             OUTPUT_XML
             MEMOIZATION
-            #RESTORE_MEMORY
-            #MAXLENGTH=1000
-            #MAXUSAGES=10000
-            #MAXCARDINAL=1000000
-            #MAXATTEMPTS=100
+            RESTORE_MEMORY
+            MAXLENGTH=1000
+            MAXUSAGES=10000
+            MAXCARDINAL=1000000
+            MAXATTEMPTS=100
             #MAXBITS=512
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})

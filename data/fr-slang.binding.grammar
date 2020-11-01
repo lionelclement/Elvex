@@ -1,5 +1,5 @@
-// from pdp-meteo.time.grammar
-#include pdp-meteo.arguments.grammar
+// from fr-slang.time.grammar
+#include fr-slang.arguments.grammar
 
 // /* **************************************************
 //  *

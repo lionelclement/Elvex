@@ -33,6 +33,7 @@ private:
 public:
     fatal_exception(std::string);
 
+    const std::string &getMessage();
 };
 
 

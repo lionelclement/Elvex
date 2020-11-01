@@ -240,7 +240,7 @@ int main(int argn, char **argv) {
             inputFile.close();
         }
 
-        //CERR_LINE
+        CERR_LINE
 
         switch (mode) {
 
@@ -279,7 +279,7 @@ int main(int argn, char **argv) {
         usage();
     }
     catch (fatal_exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << e.getMessage() << std::endl;
     }
     return EXIT_SUCCESS;
 }
