@@ -131,7 +131,7 @@ void Statements::makeSerialString() {
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Statements::clone(const std::bitset<Flags::FLAGS> &protectedFlags) {
+statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags) {
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
     for (list::const_iterator i = this->statements.begin(); i != this->statements.end(); ++i)
