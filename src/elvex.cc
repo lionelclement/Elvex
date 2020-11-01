@@ -346,11 +346,8 @@ int main(int argn, char **argv) {
 #endif
 
     }
-    catch (std::string &message) {
-        std::cerr << message << std::endl;
-    }
-    catch (char const *message) {
-        std::cerr << message << std::endl;
+    catch (fatal_exception &e) {
+        std::cerr << e.what() << std::endl;
     }
 #ifdef TRACE_OPTION
     std::cout << "</body></html>" << std::endl;

@@ -278,8 +278,8 @@ int main(int argn, char **argv) {
         }
         usage();
     }
-    catch (std::string &message) {
-        std::cout << message << std::endl;
+    catch (fatal_exception &e) {
+        std::cerr << e.what() << std::endl;
     }
     return EXIT_SUCCESS;
 }

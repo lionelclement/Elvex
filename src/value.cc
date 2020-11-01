@@ -767,8 +767,8 @@ bool Value::lt(const valuePtr &o) const {
  ************************************************************ */
 void Value::deleteAnonymousVariables() const {
     switch (type) {
+        case _TRUE:
         case _NIL:
-        case _TRUE: FATAL_ERROR_UNEXPECTED
         case _CODE:
         case _CONSTANT:
         case _FORM:
@@ -793,8 +793,6 @@ bool Value::renameVariables(size_t i) {
     switch (type) {
         case _NIL:
         case _TRUE:
-            FATAL_ERROR_UNEXPECTED
-
         case _CONSTANT:
         case _CODE:
         case _FORM:
@@ -832,7 +830,6 @@ void Value::enable(const statementPtr &root, const itemPtr &item, Synthesizer *s
     switch (type) {
         case _NIL:
         case _TRUE:
-            FATAL_ERROR_UNEXPECTED
         case _CODE:
         case _FORM:
         case _CONSTANT:
@@ -864,7 +861,8 @@ void Value::enable(const statementPtr &root, const itemPtr &item, Synthesizer *s
  ************************************************** */
 bool Value::findVariable(const bitsetPtr &variable) const {
     switch (type) {
-        case _NIL: case _TRUE: FATAL_ERROR_UNEXPECTED
+        case _NIL:
+        case _TRUE:
         case _CODE:
         case _FORM:
         case _CONSTANT:
@@ -912,7 +910,8 @@ bool Value::containsVariable() {
     if (variableFlag.containsVariable())
         return true;
     switch (type) {
-        case _NIL: case _TRUE: FATAL_ERROR_UNEXPECTED
+        case _TRUE:
+        case _NIL:
         case _CODE:
         case _FORM:
         case _CONSTANT:

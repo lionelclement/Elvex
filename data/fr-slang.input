@@ -1,40 +1,40 @@
-//text [PRED:_pleuvoir, degree:regular]
-//text [PRED:_pleuvoir, degree:few]
-//text [PRED:_pleuvoir, degree:a_lot]
+//text [PRED:PLEUVOIR, degree:regular]
+//text [PRED:PLEUVOIR, degree:few]
+//text [PRED:PLEUVOIR, degree:a_lot]
 
-text [PRED:PLEUVOIR, degree:regular, language_register:slang]
-//text [PRED:_pleuvoir, degree:few, language_register:slang]
-//text [PRED:_pleuvoir, degree:a_lot, language_register:slang]
+//text [PRED:LEUVOIR, degree:regular, language_register:slang]
+//text [PRED:PLEUVOIR, degree:few, language_register:slang]
+//text [PRED:PLEUVOIR, degree:a_lot, language_register:slang]
 
 
-//text [PRED:_faire_chaud]
-//text [PRED:_faire_chaud, language_register:slang, tense:future, modSType:time, modS:<[FORM:"demain"]>]
-//text [PRED:_faire_chaud, language_register:slang, tense:near_future, modSType:time, modS:<[FORM:"demain"]>]
-//text [PRED:_faire_chaud, language_register:slang, tense:present]
-//text [PRED:_faire_chaud, tense:near_future, language_register:slang]
+//text [PRED:FAIRE_CHAUD]
+//text [PRED:FAIRE_CHAUD, language_register:slang, tense:future, modSType:time, modS:<[FORM:"demain"]>]
+//text [PRED:FAIRE_CHAUD, language_register:slang, tense:near_future, modSType:time, modS:<[FORM:"demain"]>]
+//text [PRED:FAIRE_CHAUD, language_register:slang, tense:present]
+//text [PRED:FAIRE_CHAUD, tense:near_future, language_register:slang]
 
-//text [PRED:_faire_froid]
-//text [PRED:_faire_froid, language_register:slang]
+//text [PRED:FAIRE_FROID]
+//text [PRED:FAIRE_FROID, language_register:slang]
 
-//text [PRED:_faire_froid, language_register:slang, int:true]
-//text [PRED:_faire_chaud]
-//text [PRED:_faire_chaud, language_register:slang]
-//text [PRED:_faire_beau]
-//text [PRED:_faire_beau, language_register:slang]
+//text [PRED:FAIRE_FROID, language_register:slang, int:true]
+//text [PRED:FAIRE_CHAUD]
+//text [PRED:FAIRE_CHAUD, language_register:slang]
+//text [PRED:FAIRE_BEAU]
+//text [PRED:FAIRE_BEAU, language_register:slang]
 
-//text [PRED:_faire_froid]
-//text [PRED:_faire_froid, tense:near_future, modSType:time, modS:<[FORM:"demain"]>]
-//text [PRED:_faire_froid, tense:near_future, modSType:time, modS:<[FORM:"demain"]>, language_register:slang]
-//text [PRED:_être_mécontent, i:[PRED:_Léon], tense:near_future, language_register:slang]
-//text [PRED:_être_mécontent, i:[PRED:_Léon], tense:past, language_register:slang]
-//text [PRED:_être_mécontent, i:[PRED:_Léon], tense:future, language_register:slang]
-//text [PRED:_être_mécontent, i:[PRED:__pro, person:two, number:sg], language_register:slang]
+//text [PRED:FAIRE_FROID]
+//text [PRED:FAIRE_FROID, tense:near_future, modSType:time, modS:<[FORM:"demain"]>]
+//text [PRED:FAIRE_FROID, tense:near_future, modSType:time, modS:<[FORM:"demain"]>, language_register:slang]
+//text [PRED:ÊTRE_MÉCONTENT, i:[PRED:LÉON], tense:near_future, language_register:slang]
+//text [PRED:ÊTRE_MÉCONTENT, i:[PRED:LÉON], tense:past, language_register:slang]
+//text [PRED:ÊTRE_MÉCONTENT, i:[PRED:LÉON], tense:future, language_register:slang]
+//text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], language_register:slang]
 
-//text[PRED:_être_mécontent, i:[PRED:__pro, person:two, number:sg], tense:near_future]
-//text[PRED:_être_mécontent, i:[PRED:__pro, person:two, number:sg], tense:near_future, language_register:slang]
-//text [PRED:_pleuvoir, tense:near_future]
+//text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future]
+text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future, language_register:slang]
+//text [PRED:PLEUVOIR, tense:near_future]
 
-//text [PRED:_neiger]
+//text [PRED:neiger]
 
 
 /* **************************************************
@@ -49,166 +49,166 @@ text [PRED:PLEUVOIR, degree:regular, language_register:slang]
  * verbal tense & inflexion
  ************************************************** */
 
-//text [PRED:_marcher, i:[PRED:_horloger], tense:present]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:present]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:future]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:imperfect]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past, aspect:continuous]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:recent_past]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:present, aspect:continuous]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:near_future]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:future, aspect:continuous]
-//text [PRED:_partir, i:[PRED:_Léon], tense:present]
-//text [PRED:_partir, i:[PRED:_Léon], tense:past]
-//text [PRED:_partir, i:[PRED:_Micheline], tense:past]
-//text [PRED:_partir, i:[PRED:_boucher], tense:past]
-//text [PRED:_partir, i:[PRED:_Léon], tense:future]
-//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:imperfect]
-//text [PRED:_partir, i:[PRED:_Léon], tense:past, aspect:continuous]
-//text [PRED:_partir, i:[PRED:_Léon], tense:recent_past]
-//text [PRED:_partir, i:[PRED:_Léon], tense:present, aspect:continuous]
-//text [PRED:_partir, i:[PRED:_Léon], tense:near_future]
-//text [PRED:_partir, i:[PRED:_Léon], tense:future, aspect:continuous]
+//text [PRED:MARCHER, i:[PRED:HORLOGER], tense:present]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:present]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:past]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:future]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:past, aspect:imperfect]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:past, aspect:continuous]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:recent_past]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:present, aspect:continuous]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:near_future]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:future, aspect:continuous]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:present]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:past]
+//text [PRED:PARTIR, i:[PRED:MICHELINE], tense:past]
+//text [PRED:PARTIR, i:[PRED:BOUCHER], tense:past]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:future]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:past, aspect:imperfect]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:past, aspect:continuous]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:recent_past]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:present, aspect:continuous]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:near_future]
+//text [PRED:PARTIR, i:[PRED:LÉON], tense:future, aspect:continuous]
 
-//text [PRED:_marcher, i:[PRED:__pro, person:one, number:sg], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:two, number:sg], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:three, number:sg], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:one, number:pl], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:two, number:pl], tense:past]
-//text [PRED:_marcher, i:[PRED:__pro, person:three, number:pl], tense:past]
-//text [PRED:_marcher, i:[PRED:_Léon], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:one, number:sg], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:two, number:sg], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:three, number:sg], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:one, number:pl], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:two, number:pl], tense:past]
-//text [PRED:_partir, i:[PRED:__pro, person:three, number:pl], tense:past]
+//text [PRED:MARCHER, i:[PRED:_pro, person:one, number:sg], tense:past]
+//text [PRED:MARCHER, i:[PRED:_pro, person:two, number:sg], tense:past]
+//text [PRED:MARCHER, i:[PRED:_pro, person:three, number:sg], tense:past]
+//text [PRED:MARCHER, i:[PRED:_pro, person:one, number:pl], tense:past]
+//text [PRED:MARCHER, i:[PRED:_pro, person:two, number:pl], tense:past]
+//text [PRED:MARCHER, i:[PRED:_pro, person:three, number:pl], tense:past]
+//text [PRED:MARCHER, i:[PRED:LÉON], tense:past]
+//text [PRED:PARTIR, i:[PRED:_pro, person:one, number:sg], tense:past]
+//text [PRED:PARTIR, i:[PRED:_pro, person:two, number:sg], tense:past]
+//text [PRED:PARTIR, i:[PRED:_pro, person:three, number:sg], tense:past]
+//text [PRED:PARTIR, i:[PRED:_pro, person:one, number:pl], tense:past]
+//text [PRED:PARTIR, i:[PRED:_pro, person:two, number:pl], tense:past]
+//text [PRED:PARTIR, i:[PRED:_pro, person:three, number:pl], tense:past]
 
 /* **************************************************
  * Verbal Arguments
  ************************************************** */
 
-//text [PRED:_ronfler, i:[PRED:_horloger, number:sg, gender:ms, def:yes]]
-//text [PRED:_réparer, i:[PRED:_horloger, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], tense:past]
-//text [PRED:_réparer, i:[PRED:_horloger, number:sg, gender:ms, def:yes], ii:[PRED:__pro, number:sg, gender:fm, person:three]]
-//text [PRED:_livrer, i:[PRED:_horloger, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:__pro, person:three, number:sg, genr:ms], tense:past]
-//text [PRED:_livrer, i:[PRED:_horloger, def:yes, gender:ms, number:sg], ii:[PRED:_montre, number:sg, def:yes], iii:[PRED:_client, number:sg, gender:ms, def:yes], tense:past]
-//text [PRED:_livrer, i:[PRED:__pro, person:one, number:sg], ii:[PRED:__pro, person:three, gender:fm, number:sg], iii:[PRED:__pro, person:three, number:sg]]
-//text [PRED:_couper, i:[PRED:_boucher, number:sg, gender:ms, def:yes], ii:[PRED:_poulet, number:sg, gender:ms, def:yes], iii:[PRED:_ciseaux, def:yes]]
-//text [PRED:_dire, i:[PRED:_boucher, number:sg, gender:ms, def:yes], ii:[PRED:_ânerie, number:sg, def:no], iii:[PRED:_client, gender:ms, number:sg, def:yes]]
-//text [PRED:_transporter, i:[PRED:_camion, number:sg, gender:ms, def:yes], ii:[PRED:_viande, number:sg, def:yes], iii:[FORM:"Rungis"], iv:[PRED:_boucherie, number:sg, def:yes]]
-//text [PRED:_transporter, i:[PRED:_camion, number:sg, gender:ms, def:yes], ii:[PRED:_viande, number:sg, def:yes], iii:[PRED:_boutique, number:sg], iv:[PRED:_boucherie, number:sg, def:yes]]
-//text [PRED:_arrêter, i:[PRED:_horloger, number:sg, gender:ms, def:yes], ii:[PRED:_montre, number:sg, def:yes]]
-//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], iii:[PRED:_soupe, number:sg, def:no]]
-//text [PRED:_alimenter, i:[PRED:__pro, number:pl, person:one], iii:[PRED:_soupe, number:sg, def:no], tense:past]
-//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], ii:[PRED:_cochon, gender:ms, number:pl, def:yes], iii:[PRED:_soupe, number:sg, part:yes], tense:near_future]
-//text [PRED:_alimenter, i:[PRED:_vieillard, number:sg, gender:ms, def:yes], ii:[PRED:_cochon, gender:ms, number:pl, def:yes], iii:[PRED:_soupe, number:sg, part:yes], tense:past, aspect:neutral, illocutnary:ask, neg:yes]
-//text [PRED:_dire, i:[PRED:_Léon], ii:[PRED:_couper, i:[PRED:_boucher, number:sg, def:yes], ii:[PRED:_poulet, number:sg, def:yes], iii:[PRED:_ciseaux, def:yes]], iii:[PRED:_client, gender:ms, number:sg, def:yes]]
+//text [PRED:RONFLER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes]]
+//text [PRED:RÉPARER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], tense:past]
+//text [PRED:RÉPARER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]]
+//text [PRED:LIVRER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, genr:ms], tense:past]
+//text [PRED:LIVRER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], iii:[PRED:CLIENT, number:sg, gender:ms, def:yes], tense:past]
+//text [PRED:LIVRER, i:[PRED:_pro, person:one, number:sg], ii:[PRED:_pro, person:three, gender:fm, number:sg], iii:[PRED:_pro, person:three, number:sg]]
+//text [PRED:COUPER, i:[PRED:BOUCHER, number:sg, gender:ms, def:yes], ii:[PRED:POULET, number:sg, gender:ms, def:yes], iii:[PRED:CISEAUX, def:yes]]
+//text [PRED:DIRE, i:[PRED:BOUCHER, number:sg, gender:ms, def:yes], ii:[PRED:ÂNERIE, number:sg, def:no], iii:[PRED:CLIENT, gender:ms, number:sg, def:yes]]
+//text [PRED:TRANSPORTER, i:[PRED:CAMION, number:sg, gender:ms, def:yes], ii:[PRED:VIANDE, number:sg, def:yes], iii:[FORM:"Rungis"], iv:[PRED:BOUCHERIE, number:sg, def:yes]]
+//text [PRED:TRANSPORTER, i:[PRED:CAMION, number:sg, gender:ms, def:yes], ii:[PRED:VIANDE, number:sg, def:yes], iii:[PRED:BOUTIQUE, number:sg], iv:[PRED:BOUCHERIE, number:sg, def:yes]]
+//text [PRED:ARRÊTER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes], ii:[PRED:MONTRE, number:sg, def:yes]]
+//text [PRED:ALIMENTER, i:[PRED:VIEILLARD, number:sg, gender:ms, def:yes], iii:[PRED:SOUPE, number:sg, def:no]]
+//text [PRED:ALIMENTER, i:[PRED:_pro, number:pl, person:one], iii:[PRED:SOUPE, number:sg, def:no], tense:past]
+//text [PRED:ALIMENTER, i:[PRED:VIEILLARD, number:sg, gender:ms, def:yes], ii:[PRED:COCHON, gender:ms, number:pl, def:yes], iii:[PRED:SOUPE, number:sg, part:yes], tense:near_future]
+//text [PRED:ALIMENTER, i:[PRED:VIEILLARD, number:sg, gender:ms, def:yes], ii:[PRED:COCHON, gender:ms, number:pl, def:yes], iii:[PRED:SOUPE, number:sg, part:yes], tense:past, aspect:neutral, illocutnary:ask, neg:yes]
+//text [PRED:DIRE, i:[PRED:LÉON], ii:[PRED:COUPER, i:[PRED:BOUCHER, number:sg, def:yes], ii:[PRED:POULET, number:sg, def:yes], iii:[PRED:CISEAUX, def:yes]], iii:[PRED:CLIENT, gender:ms, number:sg, def:yes]]
 
-//text [PRED:_délinquant, number:sg, language_register:slang]
-//text [PRED:_voiture, number:sg, language_register:slang]
-//text [PRED:_importun, number:sg, gender:ms, language_register:slang]
-
-//***
-//text [PRED:_vendre, i:[PRED:_délinquant, number:sg], ii:[PRED:_voiture, number:sg], iii:[PRED:_importun, number:sg, gender:ms], tense:past]
-//text [PRED:_vendre, i:[PRED:_délinquant, number:sg], ii:[PRED:_voiture, number:sg], iii:[PRED:_importun, number:sg, gender:ms, lexical_function:magn], tense:past]
-//text [PRED:_vendre, i:[PRED:_délinquant, number:sg], ii:[PRED:_voiture, mod:<[PRED:_cassé]>, number:sg], iii:[PRED:_importun, number:sg, gender:ms, lexical_function:magn], tense:past]
-//text [PRED:_vendre, i:[PRED:_délinquant, number:sg], ii:[PRED:_voiture, number:sg], iii:[PRED:_importun, number:sg, gender:ms], tense:past, language_register:slang]
-//text [PRED:_vendre, i:[PRED:_délinquant, number:sg], ii:[PRED:_voiture, mod:<[PRED:_cassé]>, number:sg], iii:[PRED:_importun, number:sg, gender:ms, lexical_function:magn], tense:past, language_register:slang]
-
-// ############################################################
-// ############################################################
-// ############################################################
-// ############################################################
-// ############################################################
-// ############################################################
-// ############################################################
+//text [PRED:DÉLINQUANT, number:sg, language_register:slang]
+//text [PRED:VOITURE, number:sg, language_register:slang]
+//text [PRED:IMPORTUN, number:sg, gender:ms, language_register:slang]
 
 //***
-//text [PRED:_ennuyer, i:[PRED:_idiot, number:sg, gender:ms], ii:[PRED:_femme, number:sg]]
-text [PRED:_ennuyer, i:[PRED:_idiot, number:sg, gender:ms], ii:[PRED:_femme, number:sg], language_register:slang]
+//text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms], tense:past]
+//text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past]
+//text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, mod:<[PRED:CASSÉ]>, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past]
+//text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms], tense:past, language_register:slang]
+//text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, mod:<[PRED:CASSÉ]>, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past, language_register:slang]
+
+// ############################################################
+// ############################################################
+// ############################################################
+// ############################################################
+// ############################################################
+// ############################################################
+// ############################################################
+
+//***
+//text [PRED:ENNUYER, i:[PRED:IDIOT, number:sg, gender:ms], ii:[PRED:FEMME, number:sg]]
+text [PRED:ENNUYER, i:[PRED:IDIOT, number:sg, gender:ms], ii:[PRED:FEMME, number:sg], language_register:slang]
 
 //***
 // text [PRED:cause,
-// 	i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, gender:ms, def:yes], ii:[PRED:_voiture, number:sg, def:yes, id:45]],
-//	ii:[PRED:_rouler, i:[idref:45, PRED:_voiture, number:sg, def:yes]],
+// 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],
+//	ii:[PRED:ROULER, i:[idref:45, PRED:VOITURE, number:sg, def:yes]],
 // language_register:slang]
 
 // text [PRED:cause,
-// i:[PRED:_réparer, i:[PRED:_garagiste, number:sg, gender:ms, def:yes], ii:[PRED:_voiture, number:sg, def:yes, id:45]],
-// ii:[PRED:_rouler, i:[PRED:_voiture, number:sg, def:yes]],
+// i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],
+// ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]],
 // language_register:slang]
 
-//text [PRED:_gagner_de_l_argent, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn]]
-//text [PRED:_gagner_de_l_argent, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn],language_register:slang]
-//text [PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn], ii:[PRED:_voiture, number:sg], iii:[PRED:_femme, number:sg]]
-//text [PRED:_gagner_de_l_argent, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn],language_register:slang, lexical_function:magn]
+//text [PRED:GAGNER_DE_L_ARGENT, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn]]
+//text [PRED:GAGNER_DE_L_ARGENT, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn],language_register:slang]
+//text [PRED:VENDRE, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], ii:[PRED:VOITURE, number:sg], iii:[PRED:FEMME, number:sg]]
+//text [PRED:GAGNER_DE_L_ARGENT, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn],language_register:slang, lexical_function:magn]
 
-// text [PRED:_être_rancunier, i:[PRED:_professeur, def:yes, number:sg], iii:[PRED:_élève, dem:yes, number:sg, gender:ms], neg:yes]
+// text [PRED:ÊTRE_RANCUNIER, i:[PRED:_proFESSEUR, def:yes, number:sg], iii:[PRED:ÉLÈVE, dem:yes, number:sg, gender:ms], neg:yes]
 
 // text [PRED:cause,
-//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, dem:yes, number:sg, gender:ms]],
-//       ii:[PRED:_enrichir, i:[idref:45]],
+//       i:[PRED:VENDRE, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:VOITURE, number:sg], iii:[PRED:IDIOT, dem:yes, number:sg, gender:ms]],
+//       ii:[PRED:ENRICHIR, i:[idref:45]],
 //       tense:present
 //       //,language_register:slang
 // ]
 
 // text [PRED:cause,
-//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, number:sg, gender:ms]],
-//       ii:[PRED:_enrichir, i:[idref:45]],
+//       i:[PRED:VENDRE, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:VOITURE, number:sg], iii:[PRED:IDIOT, number:sg, gender:ms]],
+//       ii:[PRED:ENRICHIR, i:[idref:45]],
 //       tense:present,
 //       language_register:neutral
 // ]
 
 // text [PRED:cause,
-//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, number:sg, gender:ms]],
-//       ii:[PRED:_gagner_de_l_argent, i:[idref:45],lexical_function:magn],
+//       i:[PRED:VENDRE, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:VOITURE, number:sg], iii:[PRED:IDIOT, number:sg, gender:ms]],
+//       ii:[PRED:GAGNER_DE_L_ARGENT, i:[idref:45],lexical_function:magn],
 //       tense:present
 // ]
 
 // text [PRED:cause,
-//       i:[PRED:_vendre, i:[PRED:_importun, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:_voiture, number:sg], iii:[PRED:_idiot, number:sg, gender:ms]],
-//       ii:[PRED:_gagner_de_l_argent, i:[idref:45],lexical_function:magn],
+//       i:[PRED:VENDRE, i:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn, id:45], ii:[PRED:VOITURE, number:sg], iii:[PRED:IDIOT, number:sg, gender:ms]],
+//       ii:[PRED:GAGNER_DE_L_ARGENT, i:[idref:45],lexical_function:magn],
 //       language_register:slang
 // ]
 
-//text [PRED:_enrichir, i:[PRED:_Léon]],
+//text [PRED:ENRICHIR, i:[PRED:LÉON]],
 
-//text [PRED:_escargot, def:yes, number:pl, language_register:slang]
+//text [PRED:ESCARGOT, def:yes, number:pl, language_register:slang]
       
-//text [PRED:_être_content, i:[PRED:_escargot, def:yes, number:pl], tense:near_future]
-//text [PRED:_pleurer, i:[PRED:_Michel]]
-//text [PRED:_pleurer, i:[PRED:_Michel], language_register:slang]
-//text [PRED:_être_content, i:[PRED:_escargot, def:yes, number:sg], tense:near_future, language_register:slang]
+//text [PRED:ÊTRE_CONTENT, i:[PRED:ESCARGOT, def:yes, number:pl], tense:near_future]
+//text [PRED:PLEURER, i:[PRED:MICHEL]]
+//TEXT [PRED:PLEURER, i:[PRED:MICHEL], language_register:slang]
+//text [PRED:ÊTRE_CONTENT, i:[PRED:ESCARGOT, def:yes, number:sg], tense:near_future, language_register:slang]
 
 /*
 text [PRED:succ,
-      i: [PRED:_être_content, i:[PRED:_escargot, def:yes, number:pl], tense:near_future],
-      ii: [PRED:_pleuvoir, tense:near_future],
+      i: [PRED:ÊTRE_CONTENT, i:[PRED:ESCARGOT, def:yes, number:pl], tense:near_future],
+      ii: [PRED:PLEUVOIR, tense:near_future],
       language_register:slang
       ]
 */
 
-text[PRED:_être_mécontent, i:[PRED:__pro, person:two, number:sg], tense:near_future, language_register:slang]
-//text[PRED:_pleuvoir, tense:past]
-//text[PRED:_pleuvoir, tense:past$near_future]
-//text[PRED:_pleuvoir, tense:near_future, language_register:slang]
+text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future, language_register:slang]
+//text[PRED:PLEUVOIR, tense:past]
+//text[PRED:PLEUVOIR, tense:past$near_future]
+//text[PRED:PLEUVOIR, tense:near_future, language_register:slang]
 
 
-//text[PRED:_faire_froid]
-//text[PRED:_faire_froid, language_register:slang, tense:future]
+//text[PRED:FAIRE_FROID]
+//TEXT[PRED:FAIRE_FROID, language_register:slang, tense:future]
 
-//text[PRED:_faire_chaud]
-//text[PRED:_faire_chaud, language_register:slang]
+//text[PRED:FAIRE_CHAUD]
+//TEXT[PRED:FAIRE_CHAUD, language_register:slang]
 
-//text[PRED:_faire_beau]
-//text[PRED:_faire_beau, language_register:slang]
+//text[PRED:FAIRE_BEAU]
+//TEXT[PRED:FAIRE_BEAU, language_register:slang]
       
 
 /*text [PRED:cause,
-      i: [PRED:_faire_beau],
-      ii: [PRED:_être_content, i:[PRED:__pro, person:two, number:sg]],
+      i: [PRED:FAIRE_BEAU],
+      ii: [PRED:ÊTRE_CONTENT, i:[PRED:_pro, person:two, number:sg]],
       //tense:future,
       tense:near_future,
       language_register:slang,
@@ -217,8 +217,8 @@ text[PRED:_être_mécontent, i:[PRED:__pro, person:two, number:sg], tense:near_f
 */
 /*
 text [PRED:cause,
-      i: [PRED:_pleuvoir],
-      ii: [PRED:_être_mécontent, i:[PRED:__pro, person:two, number:sg], modV:<[PRED:_encore]>],
+      i: [PRED:PLEUVOIR],
+      ii: [PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], modV:<[PRED:ENCORE]>],
       //tense:future,
       tense:near_future,
       language_register:slang,
@@ -227,15 +227,15 @@ text [PRED:cause,
 */
 
 // text [PRED:et,
-// 	    i: [PRED:_faire_froid, tense:near_future, language_register:slang],
-// 	    ii: [PRED:_pleuvoir, tense:near_future, language_register:slang]
+// 	    i: [PRED:FAIRE_FROID, tense:near_future, language_register:slang],
+// 	    ii: [PRED:PLEUVOIR, tense:near_future, language_register:slang]
 // 	    ]
 // ]
 /*text [PRED:succ,
-      i: [PRED:_être_mécontent, i:[PRED:__pro, person:two, number:sg], tense:near_future, modSType:time, modS:<[FORM:"ce jeudi 23 janvier"]>],
+      i: [PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future, modSType:time, modS:<[FORM:"ce jeudi 23 janvier"]>],
       ii: [PRED:et,
-	   i: [PRED:_faire_froid, tense:near_future],
-	   ii: [PRED:_pleuvoir, tense:near_future]
+	   i: [PRED:FAIRE_FROID, tense:near_future],
+	   ii: [PRED:PLEUVOIR, tense:near_future]
 	   ],
       language_register:slang
       ]
@@ -243,7 +243,7 @@ text [PRED:cause,
 
 
 
-//text[PRED:_pleuvoir]
-//text[PRED:_pleuvoir, lexical_function:un_peu]
-//text[PRED:_pleuvoir, lexical_function:beaucoup]
-//text[PRED:_pleuvoir, language_register:slang]
+//text[PRED:PLEUVOIR]
+//TEXT[PRED:PLEUVOIR, lexical_function:un_peu]
+//text[PRED:PLEUVOIR, lexical_function:beaucoup]
+//text[PRED:PLEUVOIR, language_register:slang]
