@@ -58,7 +58,7 @@ public:
 
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
-    statementsPtr clone(const std::bitset<Flags::FLAGS> &savedFlags);
+    statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 
     void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 

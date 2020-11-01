@@ -225,7 +225,7 @@ public:
 
     featuresPtr unif(const featuresPtr&, featuresPtr, itemPtr);
 
-    statementPtr clone(const std::bitset<Flags::FLAGS> &savedFlags = std::bitset<Flags::FLAGS>());
+    statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
     void buildInheritedSonFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
