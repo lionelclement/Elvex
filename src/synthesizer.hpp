@@ -70,6 +70,7 @@ private:
 
     bool reduceAll;
     bool trace;
+    bool verbose;
     bool warning;
     bool random;
     bool one;
@@ -102,8 +103,6 @@ public:
     ItemSet_map::const_iterator end() const;
 
     size_t size() const;
-
-    class ForestMap getForestMap();
 
     std::list<std::string> &getInputs();
 
@@ -175,8 +174,6 @@ public:
 
     void setTrace(bool);
 
-    bool getReduceAll() const;
-
     void setReduceAll(bool);
 
     void setRandom(bool);
@@ -203,6 +200,8 @@ public:
     findCompactedLexicon(class Parser &, unsigned int code, const std::string& str, unsigned int pred);
 
     std::string keyMemoization(const itemPtr&, const itemPtr&);
+
+    void setVerbose(bool _verbose);
 };
 
 #endif // ELVEX_SYNTHESIZER_H

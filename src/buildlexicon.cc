@@ -240,8 +240,6 @@ int main(int argn, char **argv) {
             inputFile.close();
         }
 
-        CERR_LINE
-
         switch (mode) {
 
             case Buildlexicon::BUILD: {

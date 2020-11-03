@@ -156,18 +156,23 @@ int main(int argn, char **argv) {
                     }
 
                     if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose")) {
+                        synthesizer.setVerbose(true);
                         parser.setVerbose(true);
 
                     } else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
                         Usage(/*argv*/);
                         return EXIT_SUCCESS;
+
                     } else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace")) {
                         synthesizer.setTrace(true);
+
                     } else if (!strcmp(argv[arg] + 1, "a") || !strcmp(argv[arg] + 1, "-reduceAll")) {
                         synthesizer.setReduceAll(true);
+
                     } else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random")) {
                         std::srand(time(nullptr));
                         synthesizer.setRandom(true);
+
                     } else if (!strcmp(argv[arg] + 1, "o") || !strcmp(argv[arg] + 1, "-one")) {
                         synthesizer.setOne(true);
                     }
@@ -239,6 +244,7 @@ int main(int argn, char **argv) {
                             synthesizer.setMaxCardinal(atoi(argv[++arg]));
                         else {
                             Usage(/*argv*/);
+                            return EXIT_FAILURE;
                             return EXIT_FAILURE;
                         }
                     } else if (!strcmp(argv[arg] + 1, "maxTime")) {

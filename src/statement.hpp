@@ -118,7 +118,7 @@ public:
 
     Statement(unsigned int, type op, valuePtr value);
 
-    void makeSerialString(void);
+    void makeSerialString();
 
 public:
     ~Statement();
@@ -147,73 +147,73 @@ public:
 
     static statementPtr create();
 
-    bool isAff(void) const;
+    bool isAff() const;
 
-    bool isSubsume(void) const;
+    bool isSubsume() const;
 
-    bool isUp(void) const;
+    bool isUp() const;
 
-     bool isUp2(void) const;
+     bool isUp2() const;
 
-     bool isDown(void) const;
+     bool isDown() const;
 
-     bool isDown2(void) const;
+     bool isDown2() const;
 
-     bool isFeatures(void) const;
+     bool isFeatures() const;
 
-     bool isVariable(void) const;
+     bool isVariable() const;
 
-     bool isConstant(void) const;
+     bool isConstant() const;
 
-     bool isUnif(void) const;
+     bool isUnif() const;
 
-     bool isGuard(void) const;
+     bool isGuard() const;
 
-     bool isPrint(void) const;
+     bool isPrint() const;
 
-    bool isPrintln(void) const;
+    bool isPrintln() const;
 
-    bool isAttest(void) const;
+    bool isAttest() const;
 
-    bool isIf(void) const;
+    bool isIf() const;
 
-    bool isForeach(void) const;
+    bool isForeach() const;
 
-    bool isStms(void) const;
+    bool isStms() const;
 
-    bool isStr(void) const;
+    bool isStr() const;
 
-    bool isList(void) const;
+    bool isList() const;
 
-    bool isNumber(void) const;
+    bool isNumber() const;
 
-    bool isFct(void) const;
+    bool isFct() const;
 
-    bool isSearch(void) const;
+    bool isSearch() const;
 
-    arithmetic_op getFct(void) const;
+    arithmetic_op getFct() const;
 
-    statementPtr getLhs(void) const;
+    statementPtr getLhs() const;
 
-    statementPtr getRhs(void) const;
+    statementPtr getRhs() const;
 
-    featuresPtr getFeatures(void) const;
+    featuresPtr getFeatures() const;
 
-    bitsetPtr getBits(void) const;
+    bitsetPtr getBits() const;
 
-    unsigned int getFirst(void) const;
+    unsigned int getFirst() const;
 
-    unsigned int getSecond(void) const;
+    unsigned int getSecond() const;
 
-    std::string getStr(void) const;
+    std::string getStr() const;
 
-    listPtr getList(void) const;
+    listPtr getList() const;
 
-    statementsPtr getStatements(void) const;
+    statementsPtr getStatements() const;
 
-    double getNumber(void) const;
+    double getNumber() const;
 
-    unsigned int getLineno(void) const;
+    unsigned int getLineno() const;
 
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 

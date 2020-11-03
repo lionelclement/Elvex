@@ -132,7 +132,7 @@ public:
 
     void setInheritedSonFeatures(listFeaturesPtr);
 
-    featuresPtr getSynthesizedFeatures(void) const;
+    featuresPtr getSynthesizedFeatures() const;
 
     void setSynthesizedFeatures(featuresPtr);
 
@@ -144,7 +144,7 @@ public:
 
     void buildInheritedSonFeatures(class Synthesizer *);
 
-    environmentPtr getEnvironment(void) const;
+    environmentPtr getEnvironment() const;
 
     void setEnvironment(environmentPtr);
 
@@ -152,7 +152,7 @@ public:
 
     void addEnvironment(environmentPtr, environmentPtr);
 
-    bool getTrace(void) const;
+    bool getTrace() const;
 
     void setTrace(bool trace);
 

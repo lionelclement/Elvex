@@ -805,12 +805,12 @@ expression_statement:
 	|expression_statement TOKEN_EQUIV expression_statement {
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::AND,
-						Statement::create(ruleslineno, Statement::FCT, Statement::OR,
-								  Statement::create(ruleslineno, Statement::FCT, Statement::NOT, (*$1)),
-								  (*$3)),
-						Statement::create(ruleslineno, Statement::FCT, Statement::OR,
-								  (*$1),
-								  Statement::create(ruleslineno, Statement::FCT, Statement::NOT, (*$3)))));
+						                    Statement::create(ruleslineno, Statement::FCT, Statement::OR,
+								                Statement::create(ruleslineno, Statement::FCT, Statement::NOT, (*$1)),
+								                (*$3)),
+						                    Statement::create(ruleslineno, Statement::FCT, Statement::OR,
+								                (*$1),
+								                Statement::create(ruleslineno, Statement::FCT, Statement::NOT, (*$3)))));
 	  free($1);
 	  free($3);
 	}

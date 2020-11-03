@@ -193,7 +193,7 @@ void Environment::replaceVariables(const featuresPtr& features, bool &effect) {
             case Feature::CONSTANT:
                 if (feature->getValue()) {
                     replaceVariables(feature->getValue(), effect);
-                } else FATAL_ERROR_UNEXPECTED
+                }
                 break;
             case Feature::VARIABLE: {
                 if (feature->getValue()) {

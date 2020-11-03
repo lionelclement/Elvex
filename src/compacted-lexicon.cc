@@ -423,9 +423,9 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
             unsigned int k = 40 * range / size;
             std::cerr << " " << round(2.5 * k) << "%[";
             int i = 0;
-            for (; i <= k; i++)
+            while (i++ <= k)
                 std::cerr << '#';
-            for (; i <= 40; i++)
+            while (i++ <= 40)
                 std::cerr << ' ';
             std::cerr << ']' << "\r";
         }

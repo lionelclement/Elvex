@@ -60,6 +60,7 @@ Synthesizer::Synthesizer() {
     this->one = false;
     this->attempsRandom = 1000;
     this->trace = false;
+    this->verbose = false;
 }
 
 /* **************************************************
@@ -227,9 +228,9 @@ void Synthesizer::setCompactedLexicon(class CompactedLexicon *_compactedLexicon)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getReduceAll() const {
-    return reduceAll;
-}
+//bool Synthesizer::getReduceAll() const {
+//    return reduceAll;
+//}
 
 /* **************************************************
  *
@@ -271,9 +272,9 @@ bool Synthesizer::getOne() const {
  *
  ************************************************** */
 void
-Synthesizer::setOutXML(char *outXML)
+Synthesizer::setOutXML(char *_outXML)
 {
-   this->outXML = outXML;
+   this->outXML = _outXML;
 }
 
 /* **************************************************
@@ -425,13 +426,6 @@ nodePtr Synthesizer::getNodeRoot() {
  ************************************************** */
 void Synthesizer::addInput(const std::string& input) {
     return this->inputs.push_back(input);
-}
-
-/* **************************************************
- *
- ************************************************** */
-class ForestMap Synthesizer::getForestMap() {
-    return this->forestMap;
 }
 
 /* **************************************************
@@ -611,6 +605,12 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                    std::cout << std::endl;
                 }
 #endif
+                if (verbose && trace && (*actualItem)->getTrace()) {
+                    std::cout << "*** Trying Close" << std::endl;
+                    (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
+                    std::cout << std::endl << std::endl;
+                }
+
                 (*actualItem)->addFlags(Flags::SEEN);
 
                 featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
@@ -640,6 +640,16 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                                std::cout << std::endl;
                             }
 #endif
+
+                            if (trace && (it)->getTrace()) {
+                                std::cout << "*** Close" << std::endl;
+                                (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
+                                std::cout << std::endl << "↓" << (*actualItem)->getIndex()+1 << ':';
+                                (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->flatPrint(std::cout);
+                                std::cout << std::endl << " => " << std::endl;
+                                it->getRule()->print(std::cout, it->getIndex(), false, false);
+                                std::cout << std::endl << std::endl;
+                            }
 
                             // record the item
                             auto found = state->find(it);
@@ -671,6 +681,12 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                    std::cout << std::endl;
                 }
 #endif
+                if (verbose && trace && (*actualItem)->getTrace()) {
+                    std::cout << "*** Trying Reduce \n";
+                    (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
+                    std::cout << std::endl << std::endl;
+                }
+
                 (*actualItem)->addFlags(Flags::SEEN);
                 if (!(*actualItem)->getSynthesizedFeatures()) {
                     FATAL_ERROR_UNEXPECTED
@@ -861,10 +877,14 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
 #endif
                                     if (trace && it->getTrace()) {
                                         std::cout << "*** Reduce \n";
-                                        it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
-                                        std::cout << " ... ";
-                                        it->getRule()->print(std::cout, it->getIndex(), false, false);
+                                        (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
+                                        std::cout << std::endl << "⇑:";
+                                        (*actualItem)->getSynthesizedFeatures()->flatPrint(std::cout);
                                         std::cout << std::endl;
+                                        it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
+                                        std::cout << std::endl << " => " << std::endl;
+                                        it->getRule()->print(std::cout, it->getIndex(), false, false);
+                                        std::cout << std::endl << std::endl;
                                     }
 
                                     auto found = states[row]->find(it);
@@ -941,6 +961,12 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned 
                        std::cout << std::endl;
                     }
 #endif
+
+                    if (verbose && trace && (*actualItem)->getTrace()) {
+                        std::cout << "*** Trying Shift " << std::endl;
+                        (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex() - 1, false, false);
+                        std::cout << std::endl << std::endl;
+                    }
 
                     if ((*actualItem)->getEnvironment() && (*actualItem)->getEnvironment()->size() > 0) {
                         bool effect = false;
@@ -1116,9 +1142,11 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned 
                                             if (trace && it->getTrace()) {
                                                 std::cout << "*** Shift " << entry->getForm() << std::endl;
                                                 it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
-                                                std::cout << " ... ";
+                                                std::cout << std::endl << "↓" << it->getIndex() << ':';
+                                                (*it->getInheritedSonFeatures())[it->getIndex()-1]->flatPrint(std::cout);
+                                                std::cout << std::endl << " => " << std::endl;
                                                 it->getRule()->print(std::cout, it->getIndex(), false, false);
-                                                std::cout << std::endl;
+                                                std::cout << std::endl << std::endl;
                                             }
 
                                             // record the item
@@ -1180,6 +1208,14 @@ void Synthesizer::generate(class Parser &parser) {
            std::cout << std::endl;
         }
 #endif
+        if (trace && it->getTrace()) {
+            std::cout << "*** init \n";
+            it->getRule()->print(std::cout, it->getIndex(), false, false);
+            std::cout << std::endl << "↑:";
+            it->getInheritedFeatures()->flatPrint(std::cout);
+            std::cout << std::endl << std::endl;
+        }
+
         insertItemMap(it);
         initState->insert(it, this);
     }
@@ -1292,3 +1328,6 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int 
         return entriesPtr();
 }
 
+void Synthesizer::setVerbose(bool _verbose) {
+    this->verbose = _verbose;
+}
