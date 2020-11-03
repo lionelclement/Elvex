@@ -8,11 +8,12 @@
 #Je lui abats la verroterie sur le bocal. (Beurre, 138)
 
 # Noms
-VOITURE	n	bagnole	PRED:VOITURE, language_register:slang
-VOITURE	n	caisse	PRED:VOITURE, language_register:slang
-VOITURE	n	chignole	PRED:VOITURE, language_register:slang
-VOITURE	n	chiotte	PRED:VOITURE, language_register:slang
+#VOITURE	n	bagnole	PRED:VOITURE, language_register:slang
+#VOITURE	n	caisse	PRED:VOITURE, language_register:slang
+#VOITURE	n	chignole	PRED:VOITURE, language_register:slang
+#VOITURE	n	chiotte	PRED:VOITURE, language_register:slang
 VOITURE	n	tire	PRED:VOITURE, language_register:slang
+VOITURE	n	engin	PRED:VOITURE, language_register:slang, sem:hyper
 
 # Visage
 VISAGE	n	fraise	PRED:VISAGE, language_register:slang
@@ -38,6 +39,15 @@ IDIOT	n	mariole	PRED:IDIOT, language_register:slang
 IDIOT	n	débile	PRED:IDIOT, language_register:slang
 IDIOT	n	crétin	PRED:IDIOT, language_register:slang
 IDIOT	n	couillon	PRED:IDIOT, language_register:slang
+
+# Garagiste
+GARAGISTE	n	garagiste	PRED:GARAGISTE, language_register:slang
+
+# Rouler
+ROULER	v	rouler	PRED:ROULER, language_register:slang
+
+# Réparer
+RÉPARER	v	réparer	PRED:RÉPARER,iiReal:obj,@avoir,language_register:slang
 
 # Femme
 FEMME	n	gosse	PRED:FEMME, gender:fm, language_register:slang
