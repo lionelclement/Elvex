@@ -34,6 +34,7 @@ text → rhetoricalStructure {
 /* **************************************************
  * Greetings, hello, etc
  ************************************************** */
+@trace
 letter → dear name comma newParagraph text newParagraph regards newline signature {
   [to:$to, body:$body, from:$from];
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexical_function:$lexical_function] ⊂ ↑;
