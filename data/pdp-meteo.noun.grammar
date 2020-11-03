@@ -5,10 +5,10 @@
 @trace
 NP → NP2 {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  //println ↑;
   [sem:$sem, language_register:$language_register, lexical_function:$lexical_function, $rest] ⊂ ↑;
   if ((¬ $sem) || ($sem == default))
-    $s = [];
+    $s = [sem:default];
   else
     $s = [sem:$sem];
   if ((¬ $language_register) || ($language_register == default))
