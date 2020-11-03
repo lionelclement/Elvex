@@ -3,27 +3,30 @@
 #include fr-slang.clitics.grammar
 
 sentence → form S form {
-  // println __FILE__ + " (" + __LINE__ + ")";
-  // println ↑;
-  //↓1 = [FORM:"<VP line="+__LINE__+">"];
-  //↓3 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓3 = [FORM:" "];
+  println __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
+  //↓1 = [FORM:"<sentence line="+__LINE__+">"];
+  //↓3 = [FORM:"</sentence>"];
+  ↓1 = [FORM:"XXX"];
+  ↓3 = [FORM:""];
   //[subj:$subj, modS:NIL];
   [voice:$voice, lexical_function:$lexical_function, language_register:$language_register, $rest] ⊂ ↑;
 
-  if ((¬ $language_register) || ($language_register == default))
+  if ((¬ $language_register) || ($language_register == default)) {
     $lr = [];
-  else
+  }
+  else {
     $lr = [language_register:$language_register];
+    }
+
   if ((¬ $lexical_function) || ($lexical_function == default))
     $lf = [];
   else
     $lf = [$lexical_function:lexical_function];
-  if (¬ $lexical_function)
-    $lexical_function = default;
+
   if (¬ $voice)
     $voice = active;
+
   ↓2 = $rest U [voice:$voice, $lf, $lr];
   ⇑ = ⇓2;
 }
@@ -44,9 +47,9 @@ S → S et S {
  * revoir if!
  ************************************************** */
 S → [ NP | cln ] VP {
-  [subj:$subj, $rest];
   //println __FILE__ + " (" + __LINE__ + ")";
-  //println $rest;
+  //println ↑;
+  [subj:$subj, $rest];
   [aggrSubjSCompSubj:$aggrSubjSCompSubj, inv:$inv, mode:$mode, language_register:$language_register] ⊂ ↑;
   [PRED:$predSubj] ⊂ $subj;
   if (#1){

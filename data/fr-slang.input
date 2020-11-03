@@ -136,10 +136,18 @@
 	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]]]
 */
 
- text [PRED:cause,
+/* text [PRED:cause,
  	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],
-	ii:[PRED:ROULER, i:[idref:45111]],
- language_register:slang]
+	ii:[PRED:ROULER, i:[idref:45]], language_register:slang]
+*/
+
+//text[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes, language_register:slang], ii:[PRED:VOITURE, number:sg, def:yes, language_register:slang], language_register:slang],
+
+ text [PRED:cause,
+ 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes, language_register:slang], ii:[PRED:VOITURE, number:sg, def:yes]],
+	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]],
+	language_register:slang
+	]
 
 // text [PRED:cause,
 // i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],

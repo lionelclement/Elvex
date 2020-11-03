@@ -48,7 +48,6 @@ argumentClause → sentence {
   ⇑ = [i:$iSynt, $RestSynt];
 }
 
-
 // manger: X Y
 @trace
 argumentClause → sentence {

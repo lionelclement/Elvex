@@ -7,17 +7,30 @@ NP → NP2 {
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
   [sem:$sem, language_register:$language_register, lexical_function:$lexical_function, $rest] ⊂ ↑;
+
   if ((¬ $sem) || ($sem == default))
-    $s = [];
+    $sm = [];
   else
-    $s = [sem:$sem];
-  if ((¬ $language_register) || ($language_register == default))
+    $sm = [sem:$sem];
+
+  if ((¬ $language_register) || ($language_register == default)) {
     $lr = [];
-  else
+  }
+  else {
     $lr = [language_register:$language_register];
+    }
+
+/*
+  if ((¬ $language_register) || ($language_register == default))
+      $lr = [];
+  else
+      $lr = [language_register:$language_register];
+*/
+
   if (¬ $lexical_function)
     $lexical_function = default;
-  ↓1 = [lexical_function:$lexical_function, $s, $lr, $rest];
+
+  ↓1 = [lexical_function:$lexical_function, $sm, $lr, $rest];
   ⇑ = ⇓1;
 }
 
@@ -163,7 +176,6 @@ N → [AP] N [AP] [comma] [AP] [et] [AP]
 	}
 	else {
 	  ↓3 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-	  println $language_register;
 	}
       }
     }
@@ -218,14 +230,14 @@ N → N2 {
 
 @trace
 N2 → n [n] {
-  // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  //print __FILE__+" ("+__LINE__+")";
+  //println ↑;
   [mod:NIL, obj:NIL, de_obj:NIL, à_obj:NIL, i:NIL];
   [obj:$obj, $rest] ⊂ ↑;
   [sem:$sem, language_register:$language_register] ⊂ $rest;
   ↓1 = $rest;
   [obj:$Synth_obj, sem:$Synth_sem, language_register:$Synth_language_register] ⊂ ⇓1;
-  attest ($sem <=> $Synth_sem);
+  attest ($Synth_sem <=> $sem);
   attest ($language_register <=> $Synth_language_register);
   if (#2)
     ↓2 = [language_register:$language_register, $Synth_obj];

@@ -48,8 +48,8 @@
  ************************************************** */
 @trace
 rhetoricalStructure → illocutionaryAct {
-  // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
-  // println ↑;
+   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+   //println ↑;
   [rhet:NIL, $rest];
   ↓1 = $rest;
   ⇑ = ⇓1;
@@ -62,7 +62,7 @@ rhetoricalStructure → illocutionaryAct {
  * Je prends mon parapluie parce qu'il pleut.
  ************************************************** */
 @trace
-rhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise dot form {
+zzzrhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise dot form {
   [rhet:cause, i:$I, ii:$II, $rest];
   [language_register:familiar|slang] ⊂ ↑;
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
@@ -74,8 +74,9 @@ rhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise 
   // Coréférence
   [i:[i:[id:$ID_I_I]]] ⊂ ↑;
   [i:[ii:[id:$ID_I_II]]] ⊂ ↑;
-  [ii:[i:[idref:$ID_II_I]]] ⊂ ↑;
-  [ii:[ii:[idref:$ID_II_II]]] ⊂ ↑;
+  //[ii:[i:[idref:$ID_II_I]]] ⊂ ↑;
+  //[ii:[ii:[idref:$ID_II_II]]] ⊂ ↑;
+
   attest ($ID_I_I ⇒ (($ID_I_I ≠ $ID_II_I) ∧ ($ID_I_I ≠ $ID_II_II)));
   attest ($ID_I_II ⇒ (($ID_I_II ≠ $ID_II_I) ∧ ($ID_I_II ≠ $ID_II_II)));
 
@@ -102,23 +103,36 @@ rhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise 
  * Je prends mon parapluie parce qu'il pleut.
  ************************************************** */
 @trace
-rhetoricalStructure → form du_fait_que premise comma conclusion dot form {
+rhetoricalStructure → premise comma conclusion dot {
   [rhet:cause, i:$I, ii:$II, $rest];
   [language_register:familiar|slang] ⊂ ↑;
-  //↓1 = [FORM:"<VP line="+__LINE__+">"];
-  //↓7 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓7 = [FORM:" "];
+  [language_register:$language_register] ⊂ ↑;
   ↓2 = [];
   ↓4 = [];
-  ↓6 = [];
+
   // Coréférence
   [i:[i:[id:$ID_I_I]]] ⊂ ↑;
   [i:[ii:[id:$ID_I_II]]] ⊂ ↑;
-  [ii:[i:[idref:$ID_II_I]]] ⊂ ↑;
-  [ii:[ii:[idref:$ID_II_II]]] ⊂ ↑;
-  attest ($ID_I_I ⇒ (($ID_I_I ≠ $ID_II_I) ∧ ($ID_I_I ≠ $ID_II_II)));
-  attest ($ID_I_II ⇒ (($ID_I_II ≠ $ID_II_I) ∧ ($ID_I_II ≠ $ID_II_II)));
+  [ii:[i:[idref:$IDREF_II_I], $IDREF_II_I_Rest]] ⊂ ↑;
+  [ii:[ii:[idref:$IDREF_II_II]]] ⊂ ↑;
+
+  //attest ($ID_I_I ⇒ (($ID_I_I ≠ $ID_II_I) ∧ ($ID_I_I ≠ $ID_II_II)));
+  //attest ($ID_I_II ⇒ (($ID_I_II ≠ $ID_II_I) ∧ ($ID_I_II ≠ $ID_II_II)));
+
+  if ($IDREF_II_I == $ID_I_II) {
+        //println $GSynth;
+        [i:[ii:[PRED:$P_ID_I_II, $ID_I_II_Rest]]] ⊂ ↑;
+        [ii:[gender:$GSynth, number:$NSynth, person:$PSynth]] ⊂ ⇓1;
+        $IIbis = [i:[PRED:$P_ID_I_II, sem:hyper, def:yes, $ID_I_II_Rest], $IDREF_II_I_Rest];
+        [i:[sem:$SSynth]] ⊂ ⇓3;
+        //println $IIbis;
+        //attest ($SSynth == hyper);
+        //$IIbis = [i:[PRED:_pro, gender:$GSynth, number:$NSynth, person:$PSynth], $IDREF_II_I_Rest];
+        //$IIbis = [i:[PRED:_pro, gender:$GSynth], $IDREF_II_I_Rest];
+        //$IIbis = [i:[PRED:_pro], $IDREF_II_I_Rest];
+      } else {
+        $IIbis = $II;
+  }
 
   [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ $rest;
   [modality:$modalityI, illocutionary:$illocutionaryI] ⊂ $I;
@@ -135,19 +149,20 @@ rhetoricalStructure → form du_fait_que premise comma conclusion dot form {
   if (¬ $mode)
     $mode = indicative;
   
-  ↓3 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryI, modality:$modalityI, language_register:$language_register, modSType:$modSType, modS:$modS];
-  ↓5 = $II ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, language_register:$language_register];
+  ↓1 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryI, modality:$modalityI, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓3 = $IIbis ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, language_register:$language_register];
+
 }
 
 /* **************************************************
  * Cause
  ************************************************** */
 @trace
-rhetoricalStructure → form premise conclusion dot form {
+zzzrhetoricalStructure → form premise conclusion dot form {
   [rhet:cause, i:$I, ii:$II, $rest];
   [language_register:default] ⊂ ↑;
-  ↓1 = [FORM:"<VP line="+__LINE__+">"];
-  ↓5 = [FORM:"</VP>"];
+  ↓1 = [FORM:"<rhetoricalStructure line="+__LINE__+">"];
+  ↓5 = [FORM:"</rhetoricalStructure>"];
   //↓1 = [FORM:" "];
   //↓5 = [FORM:" "];
   ↓4 = [];
@@ -189,10 +204,10 @@ rhetoricalStructure → form premise conclusion dot form {
  * Cause
  ************************************************** */
 @trace
-rhetoricalStructure → form premise [parce_que] conclusion form {
+zzzrhetoricalStructure → form premise [parce_que] conclusion form {
   [rhet:cause, i:[i:[id:$ID]], ii:[i:[idref:$ID]], $rest];
-  ↓1 = [FORM:"<VP line="+__LINE__+">"];
-  ↓5 = [FORM:"</VP>"];
+  ↓1 = [FORM:"<rhetoricalStructure line="+__LINE__+">"];
+  ↓5 = [FORM:"</rhetoricalStructure>"];
   //↓1 = [FORM:" "];
   //↓5 = [FORM:" "];
   // Coréférence i:[i] avec ii:[i]
@@ -241,8 +256,8 @@ rhetoricalStructure → form premise [parce_que] conclusion form {
  ************************************************** */
 @trace
 premise → form si modalClause form {
-  //↓1 = [FORM:"<VP line="+__LINE__+">"];
-  //↓4 = [FORM:"</VP>"];
+  //↓1 = [FORM:"<premise line="+__LINE__+">"];
+  //↓4 = [FORM:"</premise>"];
   ↓1 = [FORM:" "];
   ↓4 = [FORM:" "];
   [language_register:default] ⊂ ↑;
@@ -289,8 +304,8 @@ premise → form si modalClause form {
  ************************************************** */
 @trace
 premise → form modalClause form {
-  //↓1 = [FORM:"<VP line="+__LINE__+">"];
-  //↓3 = [FORM:"</VP>"];
+  //↓1 = [FORM:"<premise line="+__LINE__+">"];
+  //↓3 = [FORM:"</premise>"];
   ↓1 = [FORM:" "];
   ↓3 = [FORM:" "];
   [language_register:familiar|slang];
@@ -336,11 +351,11 @@ premise → form modalClause form {
 
  ************************************************** */
 @trace
-conclusion → form modalClause form {
-  //↓1 = [FORM:"<VP line="+__LINE__+">"];
-  //↓3 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓3 = [FORM:" "];
+zzzconclusion → form modalClause form {
+  ↓1 = [FORM:"<conclusion line="+__LINE__+">"];
+  ↓3 = [FORM:"</conclusion>"];
+  //↓1 = [FORM:" "];
+  //↓3 = [FORM:" "];
   [language_register:default] ⊂ ↑;
   [language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
   if (¬ $aspect)
@@ -379,6 +394,7 @@ conclusion → form modalClause form {
   
   ↓2 = [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, $rest];
   
+  ⇑ = ⇓2;
 }
 
 /* **************************************************
@@ -386,8 +402,8 @@ conclusion → form modalClause form {
  ************************************************** */
 @trace
 conclusion → form modalClause form {
-  //↓1 = [FORM:"<VP line="+__LINE__+">"];
-  //↓3 = [FORM:"</VP>"];
+  //↓1 = [FORM:"<conclusion line="+__LINE__+">"];
+  //↓3 = [FORM:"</conclusion>"];
   ↓1 = [FORM:" "];
   ↓3 = [FORM:" "];
   [language_register:familiar|slang];
@@ -427,6 +443,7 @@ conclusion → form modalClause form {
   
   ↓2 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionary, modality:$modality, language_register:$language_register];
   
+  ⇑ = ⇓2;
 }
 
 /* **************************************************

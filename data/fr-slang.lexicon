@@ -22,6 +22,7 @@ si	si;
 "et"	  et;
 "de"	  de;
 "parce que"	parce_que;
+"du fait que"	du_fait_que;
 
 /* **************************************************
  * Determiner
@@ -365,7 +366,6 @@ eût	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vfor
 eussions	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
 eussiez	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
 eussent	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
-
 
 /* **************************************************
  * Negative words
