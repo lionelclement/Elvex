@@ -39,18 +39,18 @@ private:
     std::vector<forestPtr> forests;
     std::vector<std::string> output;
 
-    Node(void);
+    Node();
 
     void generate(std::vector<forestPtr>::const_iterator);
 
 public:
     ~Node();
 
-    static nodePtr create(void);
+    static nodePtr create();
 
-    std::vector<forestPtr> &getForests(void);
+    std::vector<forestPtr> &getForests();
 
-    const std::vector<std::string> &getOutput(void) const;
+    const std::vector<std::string> &getOutput() const;
 
     void addForest(const forestPtr&);
 

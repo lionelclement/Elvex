@@ -303,8 +303,6 @@ void Value::flatPrint(std::ostream &outStream) const {
             outStream << "TRUE";
             break;
         case _CONSTANT:
-            outStream << bits->toString();
-            break;
         case _VARIABLE:
             outStream << bits->toString();
             break;
@@ -694,13 +692,13 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment) {
  *
  ************************************************************ */
 bool Value::eq(valuePtr o) const {
-    /***
-        STD::CERR_LINE;
-        this->print(std::cerr);
+    /* **
+        CERR_LINE;
+        this->flatPrint(std::cerr);
         std::cerr << " = ";
-        o->print(std::cerr);
+        o->flatPrint(std::cerr);
         std::cerr << std::endl;
-    ***/
+     ** */
 
     bool ret = false;
 
@@ -738,7 +736,8 @@ bool Value::eq(valuePtr o) const {
                     (getFeatures()->peekSerialString() == o->getFeatures()->peekSerialString()))
                     ret = true;
                 break;
-            default: FATAL_ERROR_UNEXPECTED
+            default:
+                FATAL_ERROR_UNEXPECTED
         }
     }
     return ret;

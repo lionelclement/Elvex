@@ -223,7 +223,7 @@ public:
 
     valuePtr evalValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
 
-    featuresPtr unif(const featuresPtr&, featuresPtr, itemPtr);
+    featuresPtr unif(const featuresPtr&, const featuresPtr&, const itemPtr&);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
@@ -247,7 +247,7 @@ public:
 
     void stmPrint(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
 
-    void stmPrintln(itemPtr, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrintln(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
 
     void renameVariables(size_t);
 

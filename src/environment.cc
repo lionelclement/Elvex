@@ -186,6 +186,7 @@ void Environment::replaceVariables(const featuresPtr& features, bool &effect) {
         featurePtr feature = *it;
         switch (feature->getType()) {
             case Feature::PRED:
+            case Feature::LEMMA:
                 if (feature->getValue())
                     replaceVariables(feature->getValue(), effect);
                 break;

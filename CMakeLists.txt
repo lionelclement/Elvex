@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.15.0)
+project(elvex VERSION 2.16.1)
 
 set(CMAKE_CXX_STANDARD 11)
 include_directories(src)

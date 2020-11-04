@@ -56,13 +56,13 @@ public:
 
     void setPos(const unsigned int pos);
 
-    unsigned int getPred(void) const;
+    unsigned int getPred() const;
 
     void setForm(const std::string form);
 
-    std::string &getForm(void);
+    std::string &getForm();
 
-    featuresPtr getFeatures(void) const;
+    featuresPtr getFeatures() const;
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr nodeRoot) const;

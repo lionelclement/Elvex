@@ -47,11 +47,11 @@ private:
 
     Features(const featurePtr&);
 
-    static featuresPtr createBottom(void);
+    static featuresPtr createBottom();
 
-    static featuresPtr createNil(void);
+    static featuresPtr createNil();
 
-    void makeSerialString(void);
+    void makeSerialString();
 
 public:
     ~Features();
@@ -64,15 +64,15 @@ public:
 
     void add(const featuresPtr&, bool = false);
 
-    size_t size(void) const;
+    size_t size() const;
 
-    std::list<featurePtr>::iterator begin(void);
+    std::list<featurePtr>::iterator begin();
 
-    std::list<featurePtr>::iterator end(void);
+    std::list<featurePtr>::iterator end();
 
     std::list<featurePtr>::iterator erase(std::list<featurePtr>::iterator);
 
-    featurePtr front(void) const;
+    featurePtr front() const;
 
     void print(std::ostream &) const;
 
@@ -82,7 +82,7 @@ public:
     void toXML(xmlNodePtr);
 #endif
 
-    featuresPtr clone(void) const;
+    featuresPtr clone() const;
 
     valuePtr find(const bitsetPtr&) const;
 
@@ -90,23 +90,23 @@ public:
 
     void subFlags(const std::bitset<FLAGS> &);
 
-    unsigned int assignPred(void);
+    unsigned int assignPred();
 
-    std::string assignForm(void);
+    std::string *assignForm();
 
     bool renameVariables(size_t);
 
-    bool isNil(void) const;
+    bool isNil() const;
 
-    bool isBottom(void) const;
+    bool isBottom() const;
 
     void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
 
     bool subsumes(const featuresPtr&, const environmentPtr&);
 
-    void deleteAnonymousVariables(void);
+    void deleteAnonymousVariables();
 
-    bool containsVariable(void);
+    bool containsVariable();
 
     bool findVariable(const bitsetPtr&);
 

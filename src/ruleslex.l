@@ -424,6 +424,11 @@ downDoubleArrow "⇓"
     return TOKEN_PRED;
   }
   
+  "LEMMA" {
+    DBUGPRT("TOKEN_LEMMA\n");
+    return TOKEN_LEMMA;
+  }
+
   "FORM" {
     DBUGPRT("TOKEN_FORM\n");
     return TOKEN_FORM;

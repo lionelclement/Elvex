@@ -1358,7 +1358,11 @@ valuePtr Statement::evalValue(const itemPtr &item, Parser &parser, Synthesizer *
                     else if ((v1->_isList()) && (v2->_isList())) {
                         WARNING_STM
                         resultValue = valuePtr();
-                    } else {
+                    }
+
+                    else {
+                        v1->flatPrint(std::cout);
+                        v2->flatPrint(std::cout);
                         FATAL_ERROR_UNEXPECTED
                     }
                     goto valueBuilt;
@@ -1639,7 +1643,7 @@ valuePtr Statement::evalValue(const itemPtr &item, Parser &parser, Synthesizer *
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Statement::unif(const featuresPtr &fs1, featuresPtr fs2, itemPtr item) {
+featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr& fs2, const itemPtr& item) {
 #ifdef TRACE_EVAL
     std::cout << "####################### EVAL UNIF #######################" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>fs1</th><th>fs2</th><th>Environment</th></tr>";
@@ -1676,10 +1680,10 @@ featuresPtr Statement::unif(const featuresPtr &fs1, featuresPtr fs2, itemPtr ite
     result = Features::create();
     for (std::list<featurePtr>::const_iterator i1 = fs1->begin(); i1 != fs1->end(); ++i1) {
 
-        if ((*i1)->getType() == Feature::PRED) {
+        if (((*i1)->getType() == Feature::PRED) || ((*i1)->getType() == Feature::LEMMA) ) {
             std::list<featurePtr>::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end()) {
-                if ((*i2)->getType() == Feature::PRED) {
+                if ((*i2)->getType() == (*i1)->getType()) {
                     (*i2)->addFlags(Flags::SEEN);
                     switch ((*i1)->getValue()->getType()) {
 
@@ -1732,7 +1736,8 @@ featuresPtr Statement::unif(const featuresPtr &fs1, featuresPtr fs2, itemPtr ite
                 ++i2;
             }
             result->add(*i1);
-        } else if ((*i1)->getType() == Feature::FORM) {
+        }
+        else if ((*i1)->getType() == Feature::FORM) {
             std::list<featurePtr>::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end()) {
                 if ((*i2)->getType() == Feature::FORM) {
@@ -1750,7 +1755,8 @@ featuresPtr Statement::unif(const featuresPtr &fs1, featuresPtr fs2, itemPtr ite
                 ++i2;
             }
             result->add(*i1);
-        } else if ((*i1)->getType() == Feature::CONSTANT) {
+        }
+        else if ((*i1)->getType() == Feature::CONSTANT) {
             std::list<featurePtr>::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end()) {
                 if (((*i2)->getType() == Feature::CONSTANT) &&
@@ -2382,15 +2388,18 @@ void Statement::stmPrint(const itemPtr &item, Parser &parser, Synthesizer *synth
         std::cout << lhs->getStr();
     } else {
         valuePtr _value = lhs->evalValue(item, parser, synthesizer, true);
-        _value->flatPrint(std::cout);
+        if (_value->_isForm())
+            std::cout << _value->getStr();
+        else
+            _value->flatPrint(std::cout);
     }
 }
 
 /* ************************************************************
  * println
  ************************************************************ */
-void Statement::stmPrintln(itemPtr item, Parser &parser, Synthesizer *synthesizer) {
-    stmPrint(std::move(item), parser, synthesizer);
+void Statement::stmPrintln(const itemPtr& item, Parser &parser, Synthesizer *synthesizer) {
+    stmPrint(item, parser, synthesizer);
     std::cout << std::endl;
 }
 

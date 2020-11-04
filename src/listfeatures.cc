@@ -100,7 +100,7 @@ size_t ListFeatures::size() const {
  ************************************************** */
 listFeaturesPtr ListFeatures::clone() {
     listFeaturesPtr lf = ListFeatures::create();
-    for (auto i = listFeatures.begin(); i != listFeatures.end(); ++i)
-        lf->push_back((*i)->clone());
+    for (auto & listFeature : listFeatures)
+        lf->push_back(listFeature->clone());
     return lf;
 }

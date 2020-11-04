@@ -268,23 +268,23 @@ bool Synthesizer::getOne() const {
 }
 
 #ifdef OUTPUT_XML
+
 /* **************************************************
  *
  ************************************************** */
 void
-Synthesizer::setOutXML(char *_outXML)
-{
-   this->outXML = _outXML;
+Synthesizer::setOutXML(char *_outXML) {
+    this->outXML = _outXML;
 }
 
 /* **************************************************
  *
  ************************************************** */
 char *
-Synthesizer::getOutXML() const
-{
-   return this->outXML;
+Synthesizer::getOutXML() const {
+    return this->outXML;
 }
+
 #endif
 
 #ifdef TRACE_OPTION
@@ -396,7 +396,7 @@ std::list<std::string> &Synthesizer::getInputs() {
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::insertItemMap(const itemPtr& item) {
+bool Synthesizer::insertItemMap(const itemPtr &item) {
     return this->itemMap.insert(std::make_pair(item->getId(), item)).second;
 }
 
@@ -424,14 +424,14 @@ nodePtr Synthesizer::getNodeRoot() {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::addInput(const std::string& input) {
+void Synthesizer::addInput(const std::string &input) {
     return this->inputs.push_back(input);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::printState(std::ostream &outStream, const itemSetPtr& state) {
+void Synthesizer::printState(std::ostream &outStream, const itemSetPtr &state) {
     outStream << "Q" << state->getId();
     state->print(outStream);
 }
@@ -439,7 +439,7 @@ void Synthesizer::printState(std::ostream &outStream, const itemSetPtr& state) {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Synthesizer::createItem(const itemPtr& item, unsigned int row) {
+itemPtr Synthesizer::createItem(const itemPtr &item, unsigned int row) {
     itemPtr it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
                               item->getStatements() ? item->getStatements()->clone(
                                       Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED) : statementsPtr());
@@ -458,9 +458,9 @@ itemPtr Synthesizer::createItem(const itemPtr& item, unsigned int row) {
  *
  ************************************************** */
 std::string
-Synthesizer::keyMemoization(const itemPtr& actualItem, const itemPtr& previousItem)
-{
-   return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) + actualItem->getSynthesizedFeatures()->peekSerialString();
+Synthesizer::keyMemoization(const itemPtr &actualItem, const itemPtr &previousItem) {
+    return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) +
+           actualItem->getSynthesizedFeatures()->peekSerialString();
 }
 
 /* **************************************************
@@ -476,7 +476,7 @@ void Synthesizer::clear() {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int row) {
+void Synthesizer::close(Parser &parser, const itemSetPtr &state, unsigned int row) {
     bool modification;
     do {
         loop:
@@ -621,14 +621,14 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                         inheritedSonFeatures->deleteAnonymousVariables();
                     }
 
-                    for (const auto& iterRules : parser.getGrammar().getRules()) {
+                    for (const auto &iterRules : parser.getGrammar().getRules()) {
                         if ((iterRules->getLhs() == (*actualItem)->getCurrentTerm())) {
 
                             itemPtr it;
                             iterRules->incUsages(this);
                             it = Item::create(iterRules->clone(), 0, 0,
                                               iterRules->getStatements() ? iterRules->getStatements()->clone(0)
-                                                                            : statementsPtr());
+                                                                         : statementsPtr());
                             it->addRanges(row);
                             //it->renameVariables(it->getId());
                             it->setInheritedFeatures(inheritedSonFeatures->clone());
@@ -644,8 +644,9 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                             if (trace && (it)->getTrace()) {
                                 std::cout << "*** Close" << std::endl;
                                 (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
-                                std::cout << std::endl << "↓" << (*actualItem)->getIndex()+1 << ':';
-                                (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->flatPrint(std::cout);
+                                std::cout << std::endl << "↓" << (*actualItem)->getIndex() + 1 << ':';
+                                (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->flatPrint(
+                                        std::cout);
                                 std::cout << std::endl << " => " << std::endl;
                                 it->getRule()->print(std::cout, it->getIndex(), false, false);
                                 std::cout << std::endl << std::endl;
@@ -749,7 +750,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                                 nodeRoot->addForest(forestFound);
                             }
                             nodePtr node = Node::create();
-                            for (auto & k : (*actualItem)->getForestIdentifiers()) {
+                            for (auto &k : (*actualItem)->getForestIdentifiers()) {
                                 auto _forestMapIt = forestMap.find(k);
                                 if (_forestMapIt != forestMap.end()) {
                                     node->getForests().push_back((*_forestMapIt).second);
@@ -776,53 +777,53 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                                 auto memItem = memoizedMap.find(key);
                                 // Is this already done ?
                                 if (memItem != memoizedMap.end()) {
-                                   std::list< memoizationValuePtr > result = memItem->second;
-                                   for (std::list< memoizationValuePtr >::const_iterator i = result.begin();
+                                    std::list<memoizationValuePtr> result = memItem->second;
+                                    for (std::list<memoizationValuePtr>::const_iterator i = result.begin();
                                          i != result.end();
                                          ++i) {
-                                      // New item build
-                                      itemPtr it = createItem(previousItem, row);
-                                      it->setEnvironment(previousItem->getEnvironment() ? previousItem->getEnvironment()->clone() : environmentPtr());
-                                      it->getSynthesizedSonFeatures()->add(previousItem->getIndex(), (*i)->getFeatures());
-                                      //...
-                                      featuresPtr inheritedFeatures = it->getInheritedFeatures();
-                                      if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom()) {
-                                         if (it->getEnvironment() && it->getEnvironment()->size() > 0) {
-                                            bool effect = false;
-                                            it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
-                                            inheritedFeatures->deleteAnonymousVariables();
-                                         }
-                                      }
+                                        // New item build
+                                        itemPtr it = createItem(previousItem, row);
+                                        it->setEnvironment(
+                                                previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
+                                                                               : environmentPtr());
+                                        it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
+                                                                             (*i)->getFeatures());
+                                        //...
+                                        featuresPtr inheritedFeatures = it->getInheritedFeatures();
+                                        if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom()) {
+                                            if (it->getEnvironment() && it->getEnvironment()->size() > 0) {
+                                                bool effect = false;
+                                                it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
+                                                inheritedFeatures->deleteAnonymousVariables();
+                                            }
+                                        }
 
-                                      it->addForestIdentifiers(previousItem->getIndex(), (*i)->getForestIdentifier());
+                                        it->addForestIdentifiers(previousItem->getIndex(), (*i)->getForestIdentifier());
 
 #ifdef TRACE_MEMOIZATION
-                                      std::cout << "<H3>####################### MEMOIZED REDUCE (X -> α Y • β) #######################</H3>" << std::endl;
-                                      it->print(std::cout);
-                                      std::cout << std::endl;
+                                        std::cout << "<H3>####################### MEMOIZED REDUCE (X -> α Y • β) #######################</H3>" << std::endl;
+                                        it->print(std::cout);
+                                        std::cout << std::endl;
 #endif
-                                      it->setRefs(previousItem->getRefs());
+                                        it->setRefs(previousItem->getRefs());
 
-                                      auto found = states[row]->find(it);
-                                      if (found != states[row]->end()) {
-                                         (*found)->addRefs(previousItem->getRefs());
-                                         it.reset();
-                                      }
-                                      else {
-                                         if (!states[row]->insert(it, this)) {
-                                            FATAL_ERROR_UNEXPECTED
-                                         }
-                                         else {
-                                            insertItemMap(it);
-                                            modification = true;
-                                         }
-                                      }
-                                      (*actualItem)->addFlags(Flags::SEEN);
-                                   }
+                                        auto found = states[row]->find(it);
+                                        if (found != states[row]->end()) {
+                                            (*found)->addRefs(previousItem->getRefs());
+                                            it.reset();
+                                        } else {
+                                            if (!states[row]->insert(it, this)) {
+                                                FATAL_ERROR_UNEXPECTED
+                                            } else {
+                                                insertItemMap(it);
+                                                modification = true;
+                                            }
+                                        }
+                                        (*actualItem)->addFlags(Flags::SEEN);
+                                    }
                                 }
-                                // This reduce action is new
-                                else
-                                {
+                                    // This reduce action is new
+                                else {
                                     itemPtr it = createItem(previousItem, row);
                                     it->setEnvironment(
                                             previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
@@ -842,7 +843,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
 
                                     // On transmet le contexte de previousItem
                                     nodePtr node = Node::create();
-                                    for (auto & k : (*actualItem)->getForestIdentifiers()) {
+                                    for (auto &k : (*actualItem)->getForestIdentifiers()) {
                                         auto forestMapIt = forestMap.find(
                                                 k);
                                         if (forestMapIt == forestMap.end()) {
@@ -853,7 +854,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                                     }
                                     forestPtr forestFound = forestPtr();
                                     forestIdentifierPtr fi = ForestIdentifier::create((*actualItem)->getId(),
-                                                                                       std::string(),
+                                                                                      std::string(),
                                                                                       (*actualItem)->getRanges()[0],
                                                                                       row);
                                     auto forestMapIt = forestMap.find(fi);
@@ -877,7 +878,8 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
 #endif
                                     if (trace && it->getTrace()) {
                                         std::cout << "*** Reduce \n";
-                                        (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
+                                        (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false,
+                                                                        false);
                                         std::cout << std::endl << "⇑:";
                                         (*actualItem)->getSynthesizedFeatures()->flatPrint(std::cout);
                                         std::cout << std::endl;
@@ -896,8 +898,8 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
                                         // tabulates this result
                                         // std::string key = keyMemoization(*actualItem, previousItem);
                                         memoizedMap.insert(key,
-                                              (*it->getSynthesizedSonFeatures())[it->getIndex()-1],
-                                              it->getForestIdentifiers()[it->getIndex()-1]);
+                                                           (*it->getSynthesizedSonFeatures())[it->getIndex() - 1],
+                                                           it->getForestIdentifiers()[it->getIndex() - 1]);
                                         // record the item
                                         it->setRefs(previousItem->getRefs());
                                         if (!states[row]->insert(it, this)) {
@@ -926,14 +928,14 @@ void Synthesizer::close(Parser &parser, const itemSetPtr& state, unsigned int ro
             }
         }
     } while (modification);
-    for (const auto & i : *state)
+    for (const auto &i : *state)
         i->subFlags(Flags::SEEN);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned int row) {
+bool Synthesizer::shift(class Parser &parser, const itemSetPtr &state, unsigned int row) {
     bool modificationOnce = false;
     bool modification;
     do {
@@ -964,7 +966,7 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned 
 
                     if (verbose && trace && (*actualItem)->getTrace()) {
                         std::cout << "*** Trying Shift " << std::endl;
-                        (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex() - 1, false, false);
+                        (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
                         std::cout << std::endl << std::endl;
                     }
 
@@ -974,8 +976,20 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned 
                         inheritedSonFeatures->deleteAnonymousVariables();
                     }
 
+                    std::string *form = nullptr;
                     unsigned int pred = inheritedSonFeatures->assignPred();
-                    std::string form = inheritedSonFeatures->assignForm();
+                    Stage _stage;
+                    if (pred == UINT_MAX) {
+                        form = inheritedSonFeatures->assignForm();
+                        if (form)
+                            _stage = FORM_FEATURES;
+                        else
+                            _stage = MORPHO_FEATURES;
+                    }
+                    else {
+                        _stage = PRED_FEATURES;
+                    }
+
                     /*
                      std::cerr << "inheritedSonFeatures : ";
                      inheritedSonFeatures->print(std::cerr);
@@ -984,182 +998,155 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned 
                      std::cerr << "form:" << form << std::endl;
                      //std::cerr << "POS : " << Vartable::codeToIdentifier((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
                      */
-                    Parser::entries_map_map::const_iterator foundCode = parser.getLexicon().find(
+                    auto foundCode = parser.getLexicon().find(
                             (*actualItem)->getCurrentTerm());
                     if (foundCode != parser.getLexicon().end() && (!foundCode->second->empty())) {
                         Parser::entries_map *listPred = foundCode->second;
                         if (listPred) {
                             Parser::entries_map::const_iterator found;
-                            // stages : // 1) : without PRED or FORM
-                            // 2) : with FORM
-                            // 3) : with PRED
-                            bool cont = true;
-                            for (unsigned int stage = 1; cont && (stage <= 3); ++stage) {
-                                entriesPtr entries = entriesPtr();
+                            entriesPtr entries = entriesPtr();
 
-                                // With FORM
-                                if ((stage == 2) && (form.empty()))
-                                    continue;
+                            /* *****
+                            std::cout << "stage : " << _stage << std::endl;
+                            std::cout << "pred : " << Vartable::codeToIdentifier(pred) << std::endl;
+                            std::cout << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
+                            ***** */
+                            switch (_stage) {
 
-                                // With PRED
-                                if ((stage == 3) && (pred == UINT_MAX))
-                                    continue;
+                                case MORPHO_FEATURES:
+                                    entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+                                    break;
 
-                                /*****
-                                 std::cerr << "stage : " << stage << "<BR>" << std::endl;
-                                 std::cerr << "pred : " << Vartable::codeToIdentifier(pred) << "<BR>" << std::endl;
-                                 std::cerr << "form : " << form << "<BR>" << std::endl;
-                                 **** */
-                                switch (stage) {
-                                    case 1:
-                                        found = listPred->find(UINT_MAX);        // Without pred : UINT_MAX = > ...
-                                        if (found != listPred->end()) {
-                                            entries = found->second;
-                                        } else if (compactedLexicon) {
-                                            // Compact lexicon
-                                            entries = findCompactedLexicon(parser,
-                                                                         (*actualItem)->getCurrentTerm(),
-                                                                         std::string(), 0);
-                                        }
-                                        break;
-                                    case 2:
-                                        found = listPred->find(0);        // IDENTITY : 0 = > ...
-                                        if (found != listPred->end())
-                                            entries = found->second;
-                                        break;
-                                    case 3:
-                                        found = listPred->find(pred);        // pred = > ...
-                                        if (found != listPred->end()) {
-                                            // Local lexicon
-                                            entries = found->second;
-                                        } else if (compactedLexicon) {
-                                            // Compact lexicon
-                                            entries = findCompactedLexicon(parser,
-                                                                         (*actualItem)->getCurrentTerm(),
-                                                                         std::string(), pred);
-                                        }
-                                        break;
-                                }
-                                // Found !
-                                if (entries) {
-                                    cont = false;
-                                    auto entryIt = entries->begin();
-                                    int tryRandom = 0;
-                                    while (entryIt != entries->end()) {
-                                        entryPtr entry = *entryIt;
-                                        if (this->getRandom()) {
-                                            if (tryRandom++ > attempsRandom)
-                                                break;
-                                            size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
-                                            entry = entries->get(rv);
-                                        } else {
-                                            entry = *entryIt;
-                                            ++entryIt;
-                                        }
+                                case FORM_FEATURES:
+                                    entries = findByForm(listPred);
+                                    break;
 
-                                        featuresPtr entryFeatures = entry->getFeatures() ? entry->getFeatures()->clone()
-                                                                                         : featuresPtr();
-                                        statementsPtr entryStatements = statementsPtr();
-                                        environmentPtr env = (*actualItem)->getEnvironment()
-                                                             ? (*actualItem)->getEnvironment()->clone()
-                                                             : Environment::create();
+                                case PRED_FEATURES:
+                                    entries = findByPred(parser, listPred, (*actualItem)->getCurrentTerm(), pred);
+                                    if (!entries)
+                                        entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+                                    break;
+                            }
 
-                                        // Filter !!
-                                        // entryFeatures subsumes ↑
-                                        if (stage == 2 ||
-                                            (entryFeatures && entryFeatures->subsumes(inheritedSonFeatures, env))) {
+                            // Found !
+                            if (entries) {
+                                //cont = false;
+                                auto entryIt = entries->begin();
+                                int tryRandom = 0;
+                                while (entryIt != entries->end()) {
+                                    entryPtr entry = *entryIt;
+                                    if (this->getRandom()) {
+                                        if (tryRandom++ > attempsRandom)
+                                            break;
+                                        size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
+                                        entry = entries->get(rv);
+                                    } else {
+                                        entry = *entryIt;
+                                        ++entryIt;
+                                    }
 
-                                            // New item build
-                                            itemPtr it = createItem(*actualItem, row);
+                                    featuresPtr entryFeatures = entry->getFeatures() ? entry->getFeatures()->clone()
+                                                                                     : featuresPtr();
+                                    statementsPtr entryStatements = statementsPtr();
+                                    environmentPtr env = (*actualItem)->getEnvironment()
+                                                         ? (*actualItem)->getEnvironment()->clone()
+                                                         : Environment::create();
 
-                                            it->setEnvironment(env);
+                                    // Filter !!
+                                    // entryFeatures subsumes ↑
+                                    if (_stage == FORM_FEATURES ||
+                                        (entryFeatures && entryFeatures->subsumes(inheritedSonFeatures, env))) {
 
-                                            featuresPtr resultFeatures = featuresPtr();
-                                            statementPtr s = Statement::create();
-                                            featuresPtr inheritedSonFeaturesCopy = inheritedSonFeatures->clone();
-                                            featuresPtr entryFeaturesCopy = entryFeatures->clone();
-                                            if (entryFeatures) {
-                                                resultFeatures = s->unif(entryFeaturesCopy, inheritedSonFeaturesCopy,
-                                                                         it);
-                                            } else
-                                                resultFeatures = inheritedSonFeaturesCopy;
-                                            s.reset();
-                                            if (resultFeatures) {
-                                                if (it->getEnvironment() && (it->getEnvironment()->size() > 0)) {
-                                                    bool effect = false;
-                                                    it->getEnvironment()->replaceVariables(resultFeatures, effect);
-                                                }
-                                                resultFeatures->renameVariables(entry->getId());
+                                        // New item build
+                                        itemPtr it = createItem(*actualItem, row);
+
+                                        it->setEnvironment(env);
+
+                                        featuresPtr resultFeatures = featuresPtr();
+                                        statementPtr s = Statement::create();
+                                        featuresPtr inheritedSonFeaturesCopy = inheritedSonFeatures->clone();
+                                        featuresPtr entryFeaturesCopy = entryFeatures->clone();
+                                        if (entryFeatures) {
+                                            resultFeatures = s->unif(entryFeaturesCopy, inheritedSonFeaturesCopy,
+                                                                     it);
+                                        } else
+                                            resultFeatures = inheritedSonFeaturesCopy;
+                                        s.reset();
+                                        if (resultFeatures) {
+                                            if (it->getEnvironment() && (it->getEnvironment()->size() > 0)) {
+                                                bool effect = false;
+                                                it->getEnvironment()->replaceVariables(resultFeatures, effect);
                                             }
+                                            resultFeatures->renameVariables(entry->getId());
+                                        }
 
-                                            //it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(), resultFeatures);
-                                            it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(),
-                                                                                 entryFeaturesCopy);
-                                            if (entryStatements)
-                                                entryStatements->renameVariables(entry->getId());
-                                            entryPtr word;
-                                            if (stage == 2)
-                                                word = Entry::create(entry->getPos(), UINT_MAX, form, resultFeatures);
-                                            else {
-                                                size_t _found = entry->getForm().find('$');
-                                                if (_found != std::string::npos) {
-                                                    bool effect = false;
-                                                    std::string _form = entry->getForm();
-                                                    it->getEnvironment()->replaceVariables(_form, effect);
+                                        it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(),
+                                                                             entryFeaturesCopy);
+                                        if (entryStatements)
+                                            entryStatements->renameVariables(entry->getId());
+                                        entryPtr word;
+                                        if (_stage == FORM_FEATURES)
+                                            word = Entry::create(entry->getPos(), UINT_MAX, *form, resultFeatures);
+                                        else {
+                                            size_t _found = entry->getForm().find('$');
+                                            if (_found != std::string::npos) {
+                                                bool effect = false;
+                                                std::string _form = entry->getForm();
+                                                it->getEnvironment()->replaceVariables(_form, effect);
 
-                                                    word = Entry::create(entry->getPos(), entry->getPred(), _form,
-                                                                         resultFeatures);
-                                                } else {
-                                                    word = Entry::create(entry->getPos(), entry->getPred(),
-                                                                         entry->getForm(), resultFeatures);
-                                                }
-                                            }
-                                            forestIdentifierPtr fi = ForestIdentifier::create(word->getId(),
-                                                                                              resultFeatures->peekSerialString(),
-                                                                                              row - 1, row);
-                                            auto forestMapIt = forestMap.find(fi);
-                                            if (forestMapIt != forestMap.end()) {
-                                                it->addForestIdentifiers((*actualItem)->getIndex(),
-                                                                         (*forestMapIt).first);
-                                                fi.reset();
-                                                //std::cerr << "stage : " << stage! << "<BR>" << std::endl;
-                                                //std::cerr << "pred : " << Vartable::codeToIdentifier(pred) << "<BR>" << std::endl;
-                                                //std::cout << "form : " << form << "<BR>" << std::endl;
+                                                word = Entry::create(entry->getPos(), entry->getPred(), _form,
+                                                                     resultFeatures);
                                             } else {
-                                                forestMap._insert(fi, Forest::create(word, row - 1, row));
-                                                it->addForestIdentifiers((*actualItem)->getIndex(), fi);
+                                                word = Entry::create(entry->getPos(), entry->getPred(),
+                                                                     entry->getForm(), resultFeatures);
                                             }
-                                            it->setRefs((*actualItem)->getRefs());
+                                        }
+                                        forestIdentifierPtr fi = ForestIdentifier::create(word->getId(),
+                                                                                          resultFeatures->peekSerialString(),
+                                                                                          row - 1, row);
+                                        auto forestMapIt = forestMap.find(fi);
+                                        if (forestMapIt != forestMap.end()) {
+                                            it->addForestIdentifiers((*actualItem)->getIndex(),
+                                                                     (*forestMapIt).first);
+                                            fi.reset();
+                                            //std::cerr << "stage : " << stage! << "<BR>" << std::endl;
+                                            //std::cerr << "pred : " << Vartable::codeToIdentifier(pred) << "<BR>" << std::endl;
+                                            //std::cout << "form : " << form << "<BR>" << std::endl;
+                                        } else {
+                                            forestMap._insert(fi, Forest::create(word, row - 1, row));
+                                            it->addForestIdentifiers((*actualItem)->getIndex(), fi);
+                                        }
+                                        it->setRefs((*actualItem)->getRefs());
 
 #ifdef TRACE_OPTION
-                                            if (traceShift) {
-                                               std::cout << "<H3>####################### SHIFT (X -> α ω • β) #######################</H3>" << std::endl;
-                                               it->print(std::cout);
-                                               std::cout << std::endl;
-                                            }
+                                        if (traceShift) {
+                                            std::cout << "<H3>####################### SHIFT (X -> α ω • β) #######################</H3>" << std::endl;
+                                            it->print(std::cout);
+                                            std::cout << std::endl;
+                                        }
 #endif
 
-                                            if (trace && it->getTrace()) {
-                                                std::cout << "*** Shift " << entry->getForm() << std::endl;
-                                                it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
-                                                std::cout << std::endl << "↓" << it->getIndex() << ':';
-                                                (*it->getInheritedSonFeatures())[it->getIndex()-1]->flatPrint(std::cout);
-                                                std::cout << std::endl << " => " << std::endl;
-                                                it->getRule()->print(std::cout, it->getIndex(), false, false);
-                                                std::cout << std::endl << std::endl;
-                                            }
+                                        if (trace && it->getTrace()) {
+                                            std::cout << "*** Shift " << entry->getForm() << std::endl;
+                                            it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
+                                            std::cout << std::endl << "↓" << it->getIndex() << ':';
+                                            (*it->getInheritedSonFeatures())[it->getIndex() - 1]->flatPrint(
+                                                    std::cout);
+                                            std::cout << std::endl << " => " << std::endl;
+                                            it->getRule()->print(std::cout, it->getIndex(), false, false);
+                                            std::cout << std::endl << std::endl;
+                                        }
 
-                                            // record the item
-                                            if (!states[row]->insert(it, this)) {
-                                                FATAL_ERROR_UNEXPECTED
-                                            }
-                                            insertItemMap(it);
-                                            modification = true;
-                                            modificationOnce = true;
-                                            (*actualItem)->addFlags(Flags::SEEN);
-                                            if (this->getRandom()) {
-                                                break;
-                                            }
+                                        // record the item
+                                        if (!states[row]->insert(it, this)) {
+                                            FATAL_ERROR_UNEXPECTED
+                                        }
+                                        insertItemMap(it);
+                                        modification = true;
+                                        modificationOnce = true;
+                                        (*actualItem)->addFlags(Flags::SEEN);
+                                        if (this->getRandom()) {
+                                            break;
                                         }
                                     }
                                 }
@@ -1170,8 +1157,11 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr& state, unsigned 
             }
         }
     } while (modification);
-    for (const auto & i : *state)
-        i->subFlags(Flags::SEEN);
+    for (
+        const auto &i
+            : *state)
+        i->
+                subFlags(Flags::SEEN);
     return modificationOnce;
 }
 
@@ -1185,7 +1175,7 @@ void Synthesizer::generate(class Parser &parser) {
     states.clear();
     itemMap.clear();
     forestMap.clear();
-    for (const auto & iterRules : parser.getGrammar().getRules()) {
+    for (const auto &iterRules : parser.getGrammar().getRules()) {
         iterRules->resetUsages();
     }
 
@@ -1253,7 +1243,7 @@ void Synthesizer::generate(class Parser &parser) {
     nodeRoot->generate(this->getRandom(), this->getOne());
 #ifdef OUTPUT_XML
     if (outXML) {
-       nodeRoot->toXML(xmlNodeRoot, xmlNodeRoot);
+        nodeRoot->toXML(xmlNodeRoot, xmlNodeRoot);
     }
 #endif
 }
@@ -1261,8 +1251,8 @@ void Synthesizer::generate(class Parser &parser) {
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int code, const std::string& codeStr,
-                                                 const unsigned int pred) {
+entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int code, const std::string &codeStr,
+                                             const unsigned int pred) {
     unsigned long int info = ~0UL;
     std::string str;
     if (pred) {
@@ -1316,7 +1306,7 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int 
             } else {
                 std::ostringstream oss;
                 FATAL_ERROR("error: Illegal lexical entry: " << form << " " << Vartable::codeToIdentifier(code) << " "
-                    << result.substr(result.find('#') + 1, -1));
+                                                             << result.substr(result.find('#') + 1, -1));
             }
             if ((compactedLexicon->info[info].isNext()))
                 info = compactedLexicon->info[info].getNext();
@@ -1324,10 +1314,53 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int 
                 info = (unsigned long int) (~(0UL));
         }
         return entries;
-    } else
+    } else {
         return entriesPtr();
+    }
 }
 
 void Synthesizer::setVerbose(bool _verbose) {
     this->verbose = _verbose;
 }
+
+entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred, unsigned int term) {
+    //entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+    entriesPtr entries = entriesPtr();
+    auto found = listPred->find(UINT_MAX);        // Without pred : UINT_MAX = > ...
+    if (found != listPred->end()) {
+        entries = found->second;
+    } else if (compactedLexicon) {
+        // Compact lexicon
+        entries = findCompactedLexicon(parser,
+                                       term,
+                                       std::string(),
+                                       0);
+    }
+    return entries;
+
+}
+
+entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred) {
+    entriesPtr entries = entriesPtr();
+    auto found = listPred->find(0);        // IDENTITY : 0 = > ...
+    if (found != listPred->end())
+        entries = found->second;
+    return entries;
+}
+
+entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred, unsigned int term, unsigned int pred) {
+    entriesPtr entries = entriesPtr();
+    auto found = listPred->find(pred);        // pred = > ...
+    if (found != listPred->end()) {
+        // Local lexicon
+        entries = found->second;
+    } else if (compactedLexicon) {
+        // Compact lexicon
+        entries = findCompactedLexicon(parser,
+                                       term,
+                                       std::string(),
+                                       pred);
+    }
+    return entries;
+}
+

@@ -40,7 +40,7 @@ private:
 
     Entries(const std::vector<entryPtr> &);
 
-    Entries(const unsigned int codePos, const unsigned int codeLemma, const std::string &form);
+    Entries(unsigned int codePos, unsigned int codeLemma, std::string &form);
 
 public:
     ~Entries();
@@ -51,7 +51,7 @@ public:
 
     static entriesPtr create(const std::vector<entryPtr> &);
 
-    static entriesPtr create(unsigned int codePos, const unsigned int codeLemma, const std::string &form);
+    static entriesPtr create(unsigned int codePos, unsigned int codeLemma, std::string &form);
 
     size_t size() const;
 
@@ -59,7 +59,7 @@ public:
 
     std::vector<entryPtr>::iterator end();
 
-    entryPtr get(const unsigned int) const;
+    entryPtr get(unsigned int) const;
 
     void add(const entryPtr &);
 

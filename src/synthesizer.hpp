@@ -47,6 +47,11 @@ class Synthesizer {
 public:
     typedef std::map<unsigned int, itemPtr> Item_map;
     typedef std::map<unsigned int, itemSetPtr> ItemSet_map;
+    enum Stage {
+        MORPHO_FEATURES,
+        FORM_FEATURES,
+        PRED_FEATURES
+    };
 
 private:
     ItemSet_map states;
@@ -202,6 +207,12 @@ public:
     std::string keyMemoization(const itemPtr&, const itemPtr&);
 
     void setVerbose(bool _verbose);
+
+    entriesPtr findByPos(Parser &parser, Parser::entries_map *pMap, unsigned int term);
+
+    entriesPtr findByForm(Parser::entries_map *pMap);
+
+    entriesPtr findByPred(Parser &parser, Parser::entries_map *listPred, unsigned int term, unsigned int pred);
 };
 
 #endif // ELVEX_SYNTHESIZER_H

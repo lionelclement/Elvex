@@ -353,7 +353,7 @@ void CompactedLexicon::addForms(const std::string &input, std::string inputSearc
 void
 CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &patternFs,
                              const std::string &lemma, const std::string &pos) {
-    //std::cerr << "addPattern with " << '(' << input << ',' << patternFs << ',' << lemma << ',' << pos << ')' << std::endl;
+    //std::cout << "addPattern with " << '(' << input << ',' << patternFs << ',' << lemma << ',' << pos << ')' << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
     stringStream << lemma << '#' << pos;
@@ -364,13 +364,13 @@ CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::strin
     } else if (pattern.count(inputSearch)) {
         //std::cerr << "find " << inputSearch << std::endl;
         std::list<std::string> *o = pattern.find(inputSearch);
-        for (std::list<std::string>::const_iterator it = o->begin(); it != o->end(); ++it) {
+        for (auto & it : *o) {
             char patternLemma[MAXSTRING];
-            strcpy(patternLemma, it->c_str());
+            strcpy(patternLemma, it.c_str());
             char *rhs = strchr(patternLemma, '#');
             *rhs = 0;
             char line2[MAXSTRING];
-            strcpy(line2, it->c_str());
+            strcpy(line2, it.c_str());
             std::string pattern2Fs = strchr(line2, '#') + 1;
             if (patternFs != pattern2Fs) {
                 //std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << patternFs << '-' << pattern2Fs << ')' << std::endl;
@@ -390,10 +390,10 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
     std::size_t range = 0;
     for (auto patternIt = pattern.cbegin();
          patternIt != pattern.cend(); ++patternIt) {
-        //std::cerr << "pattern:" << patternIt->first << std::endl;
+        //std::cout << "pattern:" << patternIt->first << std::endl;
         for (const auto& it2 : *patternIt->second) {
 
-            //std::cerr << "str:" << it2 << std::endl;
+            //std::cout << "str:" << it2 << std::endl;
 
             char lexeme[MAXSTRING];
             strcpy(lexeme, patternIt->first.c_str());
@@ -414,7 +414,7 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho) {
             char *features = strchr(line4, '#') + 1;
 
             std::string patternFs = ((*features) ? features : std::string());
-            //std::cerr << "lexeme:" << lexeme << " patternFs:" << patternFs << " lemma:" << lemma << " pos:" << pos << std::endl;
+            //std::cout << "lexeme:" << lexeme << " patternFs:[" << patternFs << "] lemma:" << lemma << " pos:" << pos << std::endl;
             addPattern(pattern, morpho, patternIt->first, patternFs, lemma, pos);
 
         }

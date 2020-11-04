@@ -26,7 +26,6 @@
 #include "statements.hpp"
 #include "messages.hpp"
 #include "item.hpp"
-//#include "bitset.hpp"
 #include "vartable.hpp"
 
 /* ************************************************************
@@ -112,7 +111,15 @@ void Feature::setValue(valuePtr _value) {
 void Feature::print(std::ostream &outStream) const {
     switch (type) {
         case Feature::PRED:
-            outStream << "<TD ALIGN=\"LEFT\">PRED</TD><TD ALIGN=\"LEFT\">";
+            outStream << R"(<TD ALIGN="LEFT">PRED</TD><TD ALIGN="LEFT">)";
+            if (value)
+                value->print(outStream);
+            else
+                outStream << "NIL";
+            outStream << "</TD>";
+            break;
+        case Feature::LEMMA:
+            outStream << R"(<TD ALIGN="LEFT">LEMMA</TD><TD ALIGN="LEFT">)";
             if (value)
                 value->print(outStream);
             else
@@ -120,7 +127,7 @@ void Feature::print(std::ostream &outStream) const {
             outStream << "</TD>";
             break;
         case Feature::FORM:
-            outStream << "<TD ALIGN=\"LEFT\">FORM</TD><TD ALIGN=\"LEFT\">";
+            outStream << R"(<TD ALIGN="LEFT">FORM</TD><TD ALIGN="LEFT">)";
             if (value)
                 value->print(outStream);
             else
@@ -158,6 +165,13 @@ void Feature::flatPrint(std::ostream &outStream) const {
             else
                 outStream << "NIL";
             break;
+        case Feature::LEMMA:
+            outStream << "LEMMA:";
+            if (value)
+                value->flatPrint(outStream);
+            else
+                outStream << "NIL";
+            break;
         case Feature::FORM:
             outStream << "FORM:";
             if (value)
@@ -189,6 +203,9 @@ void Feature::makeSerialString() {
         case Feature::PRED:
             serialString = 'P';
             break;
+        case Feature::LEMMA:
+            serialString = 'L';
+            break;
         case Feature::FORM:
             serialString = 'F';
             break;
@@ -212,13 +229,16 @@ void Feature::makeSerialString() {
 void
 Feature::toXML(xmlNodePtr nodeRoot)
 {
-   xmlNodePtr f=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"F", NULL);
+   xmlNodePtr f=xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"F", nullptr);
 
    switch(type) {
-      case Feature::PRED:
-      xmlSetProp(f, (xmlChar*)"type", (const xmlChar*)"pred");
-      break;
-      case Feature::FORM:
+       case Feature::PRED:
+           xmlSetProp(f, (xmlChar*)"type", (const xmlChar*)"pred");
+           break;
+       case Feature::LEMMA:
+           xmlSetProp(f, (xmlChar*)"type", (const xmlChar*)"lemma");
+           break;
+       case Feature::FORM:
       xmlSetProp(f, (xmlChar*)"type", (const xmlChar*)"form");
       break;
       case Feature::CONSTANT:
@@ -249,6 +269,7 @@ bool Feature::renameVariables(size_t i) {
     bool effect = false;
     switch (type) {
         case Feature::PRED:
+        case Feature::LEMMA:
         case Feature::CONSTANT:
             if (value)
                 if (value->renameVariables(i))
@@ -275,8 +296,9 @@ bool Feature::renameVariables(size_t i) {
  ************************************************** */
 void Feature::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
     switch (type) {
-        case Feature::FORM:
         case Feature::PRED:
+        case Feature::LEMMA:
+        case Feature::FORM:
         case Feature::CONSTANT:
             if (value)
                 value->enable(root, item, synthesizer, effect, on);
@@ -300,8 +322,9 @@ void Feature::enable(const statementPtr& root, const itemPtr& item, Synthesizer 
  ************************************************** */
 bool Feature::findVariable(const bitsetPtr& variable) {
     switch (type) {
-        case Feature::FORM:
         case Feature::PRED:
+        case Feature::LEMMA:
+        case Feature::FORM:
         case Feature::CONSTANT:
             if (value && value->findVariable(variable))
                 return true;
@@ -322,8 +345,9 @@ bool Feature::containsVariable() {
     if (variableFlag.containsVariable())
         return true;
     switch (type) {
-        case Feature::FORM:
         case Feature::PRED:
+        case Feature::LEMMA:
+        case Feature::FORM:
         case Feature::CONSTANT:
             if (value && value->containsVariable()) {
                 result = true;
@@ -338,11 +362,4 @@ bool Feature::containsVariable() {
     else
         variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     return result;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Feature::setVariableFlag(enum VariableFlag::flagValues flag) {
-    this->variableFlag.setFlag(flag);
 }

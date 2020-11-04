@@ -36,6 +36,7 @@ class Feature :
 public:
     enum Type {
         PRED = 0,
+        LEMMA,
         CONSTANT,
         FORM,
         VARIABLE,
@@ -93,8 +94,6 @@ public:
     bool containsVariable(void);
 
     bool findVariable(const bitsetPtr&);
-
-    void setVariableFlag(enum VariableFlag::flagValues flag);
 
 };
 

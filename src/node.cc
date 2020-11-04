@@ -76,22 +76,20 @@ Node::getOutput() const {
 void
 Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 {
-   xmlNodePtr node=xmlNewChild(nodeFather, NULL, (const xmlChar*)"NODE", NULL);
+   xmlNodePtr node=xmlNewChild(nodeFather, nullptr, (const xmlChar*)"NODE", nullptr);
    xmlSetProp(node, (xmlChar*)"id", (xmlChar*)(std::to_string(this->getId())).c_str());
-   for (std::vector< forestPtr >::const_iterator s=forests.begin();
-         s!=forests.end();
-         ++s) {
-      if ((*s)->isUnsetFlags(Flags::XML))
-      (*s)->toXML(nodeRoot, false);
-      xmlNodePtr forest=xmlNewChild(node, NULL, (const xmlChar*)"SON", NULL);
-      xmlSetProp(forest, (xmlChar*)"from", (xmlChar*)std::to_string((*s)->getFrom()).c_str());
-      xmlSetProp(forest, (xmlChar*)"to", (xmlChar*)std::to_string((*s)->getTo()).c_str());
-      xmlSetProp(forest, (xmlChar*)"idref", (xmlChar*)(std::to_string((*s)->getId())).c_str());
+   for (const auto & s : forests) {
+      if (s->isUnsetFlags(Flags::XML))
+      s->toXML(nodeRoot, false);
+      xmlNodePtr forest=xmlNewChild(node, nullptr, (const xmlChar*)"SON", nullptr);
+      xmlSetProp(forest, (xmlChar*)"from", (xmlChar*)std::to_string(s->getFrom()).c_str());
+      xmlSetProp(forest, (xmlChar*)"to", (xmlChar*)std::to_string(s->getTo()).c_str());
+      xmlSetProp(forest, (xmlChar*)"idref", (xmlChar*)(std::to_string(s->getId())).c_str());
    }
-   if (output.size()) {
-      xmlNodePtr o=xmlNewChild(node, NULL, (const xmlChar*)"OUTPUT", NULL);
-      for(std::vector<std::string>::const_iterator s = output.begin() ; s != output.end(); ++s)
-      xmlNewChild(o, NULL, (const xmlChar*)"S", (xmlChar*)(*s).c_str());
+   if (!output.empty()) {
+      xmlNodePtr o=xmlNewChild(node, nullptr, (const xmlChar*)"OUTPUT", nullptr);
+      for(const auto & s : output)
+      xmlNewChild(o, nullptr, (const xmlChar*)"S", (xmlChar*)s.c_str());
    }
 }
 
@@ -133,7 +131,7 @@ void Node::generate(bool random, bool one) {
          if ((*forestIterator)->isUnsetFlags(Flags::GENERATED))
 	   (*forestIterator)->generate(random, one);
       }
-      if (forests.size() > 0)
+      if (!forests.empty())
 	generate(forests.begin());
    }
 }
