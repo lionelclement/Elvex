@@ -8,7 +8,7 @@ NP → NP2 {
   // println ↑;
   [sem:$sem, language_register:$language_register, lexical_function:$lexical_function, $rest] ⊂ ↑;
 
-  if ((¬ $sem) || ($sem == default))
+  if (¬ $sem)
     $sm = [];
   else
     $sm = [sem:$sem];
@@ -232,12 +232,14 @@ N → N2 {
 N2 → n [n] {
   //print __FILE__+" ("+__LINE__+")";
   //println ↑;
+  //println ⇓1;
   [mod:NIL, obj:NIL, de_obj:NIL, à_obj:NIL, i:NIL];
   [obj:$obj, $rest] ⊂ ↑;
   [sem:$sem, language_register:$language_register] ⊂ $rest;
   ↓1 = $rest;
   [obj:$Synth_obj, sem:$Synth_sem, language_register:$Synth_language_register] ⊂ ⇓1;
-  attest ($Synth_sem <=> $sem);
+  //print __FILE__+" ("+__LINE__+")";
+  //attest ($Synth_sem <=> $sem);
   attest ($language_register <=> $Synth_language_register);
   if (#2)
     ↓2 = [language_register:$language_register, $Synth_obj];

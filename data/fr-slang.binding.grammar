@@ -10,8 +10,8 @@
 ////[iii:[id:$ID], ii:[gen:$ID], $rest];
 @trace
 bindingClause → argumentClause {
-  // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
-  // println ↑;
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
   [i:$I, ii:$II, iii:$III] ⊂ ↑;
   [gen:$genI] ⊂ $I;
   [gen:$genII] ⊂ $II;

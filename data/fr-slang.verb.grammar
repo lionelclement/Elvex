@@ -6,10 +6,11 @@
 VP → form V [ADVM] [NP] [AP] [PP] [VComp] form {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
+  //println ⇓2;
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
   //↓8 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓8 = [FORM:" "];
+  ↓1 = [FORM:""];
+  ↓8 = [FORM:""];
   [obj:NIL, prep_obj:NIL, prep_obj2:NIL, scomp:NIL, vcomp:NIL];
   [subj:$subj, neg:$neg, lexical_function:$lexical_functionH, language_register:$language_register] ⊂ ↑;
   if (¬ $lexical_functionH)
@@ -75,8 +76,8 @@ VP → form V [ADVM] [NP] [AP] [PP] [VComp] form {
 VP → form VP [NP] form {
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
   //↓4 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓4 = [FORM:" "];
+  ↓1 = [FORM:""];
+  ↓4 = [FORM:""];
   [obj:$obj, prep_obj:NIL, prep_obj2:NIL, $rest];
   [obj:[PRED:$predObj, number:$n, gender:$g, part:$part], neg:$neg, language_register:$language_register] ⊂ ↑;
   if (#3){
@@ -100,8 +101,8 @@ VP → form VP [NP] form {
 VP → form VP [PP] form {
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
   //↓4 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓4 = [FORM:" "];
+  ↓1 = [FORM:""];
+  ↓4 = [FORM:""];
   [prep_obj:$pObj, prep_obj2:NIL, vcomp:NIL, scomp:NIL, $rest];
   [pcas:$pcas] ⊂ $pObj;
   [prep_obj:[PRED:$pred], language_register:$language_register] ⊂ ↑;
@@ -132,8 +133,8 @@ VP → form VP [PP] form {
 VP → form VP PP form {
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
   //↓4 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓4 = [FORM:" "];
+  ↓1 = [FORM:""];
+  ↓4 = [FORM:""];
   [prep_obj2:$pObj, $rest];
   [prep_obj2:$prep_objSynt] ⊂ ⇓2;
   [pcas:$pcasSynt] ⊂ $prep_objSynt;
@@ -274,12 +275,12 @@ VP → VP VComp {
 // ne lui donne pas
 @trace
 V → form [clneg] [advneg] CLITICS Verb [clint] [advneg] [ADVM] form {
-  //↓1 = [FORM:"<VP line="+__LINE__+">"];
-  //↓9 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓9 = [FORM:" "];
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓9 = [FORM:"</VP>"];
+  ↓1 = [FORM:""];
+  ↓9 = [FORM:""];
   [vtense:present|imperfect|future, mode:conditional|indicative|subjonctive];
   [voice:active|middle, language_register:$language_register] ⊂ ↑;
   attest (#3 ∨ #7) ⇔ #2;

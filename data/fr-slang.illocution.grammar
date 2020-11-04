@@ -6,8 +6,8 @@
  ************************************************** */
 @trace
 illocutionaryAct → modalClause dot {
-  // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
-  // println ↑;
+  //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+  //println ↑;
   [illocutionary:default, $rest];
   [vform:$vform, mode:$mode] ⊂ ↑;
   if (¬ $mode)

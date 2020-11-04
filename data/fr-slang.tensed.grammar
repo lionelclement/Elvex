@@ -1,13 +1,13 @@
 // from fr-slang.modality.grammar
-#include fr-slang.time.grammar
+#include fr-slang.binding.grammar
 
 /* **************************************************
 * Temps verbal
 ************************************************** */
 @trace
-tensedClause → timeClause {
-  // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
-  // println ↑;
+tensedClause → bindingClause {
+  //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+  //println ↑;
   [vform:_, mode:_];
   [tense:$tense, aspect:$aspect, mode:$mode] ⊂ ↑;
   attest $pred ≠ paragraph;

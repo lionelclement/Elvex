@@ -38,11 +38,10 @@ argumentClause → sentence {
 // courir: X
 @trace
 argumentClause → sentence {
-  //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+  //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
   [i:$I, ii:NIL, iii:NIL, iv:NIL, $Rest];
   [diathesis:active] ⊂ ↑;
-  //↓1 = [subj:$I, iiReal:none, $Rest];
   ↓1 = [subj:$I, iiReal:none, iiiReal:none, ivReal:none, $Rest];
   [subj:$iSynt, $RestSynt] ⊂ ⇓1;
   ⇑ = [i:$iSynt, $RestSynt];

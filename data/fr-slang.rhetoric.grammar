@@ -48,8 +48,8 @@
  ************************************************** */
 @trace
 rhetoricalStructure → illocutionaryAct {
-   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
-   //println ↑;
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
   [rhet:NIL, $rest];
   ↓1 = $rest;
   ⇑ = ⇓1;
@@ -62,13 +62,15 @@ rhetoricalStructure → illocutionaryAct {
  * Je prends mon parapluie parce qu'il pleut.
  ************************************************** */
 @trace
-zzzrhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise dot form {
+ZZZrhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise dot form {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
   [rhet:cause, i:$I, ii:$II, $rest];
   [language_register:familiar|slang] ⊂ ↑;
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
   //↓6 = [FORM:"</VP>"];
-  ↓1 = [FORM:" "];
-  ↓6 = [FORM:" "];
+  //↓1 = [FORM:""];
+  //↓6 = [FORM:""];
   ↓3 = [];
   ↓5 = [];
   // Coréférence
@@ -103,7 +105,9 @@ zzzrhetoricalStructure → form conclusion parce_que | du_fait_que | comma premi
  * Je prends mon parapluie parce qu'il pleut.
  ************************************************** */
 @trace
-rhetoricalStructure → premise comma conclusion dot {
+ZZZrhetoricalStructure → premise comma conclusion dot {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
   [rhet:cause, i:$I, ii:$II, $rest];
   [language_register:familiar|slang] ⊂ ↑;
   [language_register:$language_register] ⊂ ↑;
@@ -120,7 +124,6 @@ rhetoricalStructure → premise comma conclusion dot {
   //attest ($ID_I_II ⇒ (($ID_I_II ≠ $ID_II_I) ∧ ($ID_I_II ≠ $ID_II_II)));
 
   if ($IDREF_II_I == $ID_I_II) {
-        //println $GSynth;
         [i:[ii:[PRED:$P_ID_I_II, $ID_I_II_Rest]]] ⊂ ↑;
         [ii:[gender:$GSynth, number:$NSynth, person:$PSynth]] ⊂ ⇓1;
         $IIbis = [i:[PRED:$P_ID_I_II, sem:hyper, def:yes, $ID_I_II_Rest], $IDREF_II_I_Rest];
@@ -134,7 +137,7 @@ rhetoricalStructure → premise comma conclusion dot {
         $IIbis = $II;
   }
 
-  [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ $rest;
+  [language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect, time:$time] ⊂ $rest;
   [modality:$modalityI, illocutionary:$illocutionaryI] ⊂ $I;
   if (¬ $modalityI) 
     $modalityI = default;
@@ -149,7 +152,7 @@ rhetoricalStructure → premise comma conclusion dot {
   if (¬ $mode)
     $mode = indicative;
   
-  ↓1 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryI, modality:$modalityI, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓1 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryI, modality:$modalityI, language_register:$language_register, time:$time];
   ↓3 = $IIbis ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, language_register:$language_register];
 
 }
@@ -157,27 +160,128 @@ rhetoricalStructure → premise comma conclusion dot {
 /* **************************************************
  * Cause
  ************************************************** */
+/* **************************************************
+ * Coreference with synonym or hyperonym
+ ************************************************** */
 @trace
-zzzrhetoricalStructure → form premise conclusion dot form {
+rhetoricalStructure → premise_conclusion {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
   [rhet:cause, i:$I, ii:$II, $rest];
   [language_register:default] ⊂ ↑;
-  ↓1 = [FORM:"<rhetoricalStructure line="+__LINE__+">"];
-  ↓5 = [FORM:"</rhetoricalStructure>"];
-  //↓1 = [FORM:" "];
-  //↓5 = [FORM:" "];
-  ↓4 = [];
   
   // Coréférence
   [i:[i:[id:$ID_I_I]]] ⊂ ↑;
   [i:[ii:[id:$ID_I_II]]] ⊂ ↑;
-  [ii:[i:[idref:$ID_II_I]]] ⊂ ↑;
-  [ii:[ii:[idref:$ID_II_II]]] ⊂ ↑;
-  attest ($ID_I_I ⇒ (($ID_I_I ≠ $ID_II_I) ∧ ($ID_I_I ≠ $ID_II_II)));
-  attest ($ID_I_II ⇒ (($ID_I_II ≠ $ID_II_I) ∧ ($ID_I_II ≠ $ID_II_II)));
+  [ii:[i:[id:$ID_II_I]]] ⊂ ↑;
+  [ii:[ii:[id:$ID_II_II]]] ⊂ ↑;
+  
+  $isI_I = $ID_I_I && $ID_II_I && ($ID_I_I == $ID_II_I);
+  $isII_I = $ID_I_II && $ID_II_I && ($ID_I_II == $ID_II_I);
+  $isI_II = $ID_I_I && $ID_II_II && ($ID_I_I == $ID_II_II);
+  $isII_II = $ID_I_II && $ID_II_II && ($ID_I_II == $ID_II_II);
+  
+  // objet principale coréfère avec sujet subordonnée
+  if ($isII_I) {
+    [i:[ii:[PRED:$P_I_II, id:_, def:_, $Rest_I_II]]] ⊂ ↑;
+    [ii:[i:[id:_], $Rest_II]] ⊂ ↑;
+    $IIbis = [i:[PRED:$P_I_II, sem:syn|hyper, def:yes], $Rest_II];
+    [i:[ii:$I_II, $Rest_I]] ⊂ ↑;
+    $Ibis = [ii:[sem:default, $I_II], $Rest_I];
+    
+    [ii:[i:[LEMMA:$lemma]]] ⊂ ⇓1;
+    attest ($lemma != $P_I_II);
 
-  [modSType:$modSType, modS:$modS, language_register:$language_register, mode:$mode, tense:$tense, aspect:$aspect] ⊂ $rest;
-  [modality:$modalityI, illocutionary:$illocutionaryI] ⊂ $I;
-  if (¬ $modalityI) 
+    [i:[ii:[number:$NSynth_I_II]], ii:[i:[number:$NSynth_II_I]]] ⊂ ⇓1;
+    attest ($NSynth_I_II == $NSynth_II_I);
+  }
+
+  // Sujets coréfèrent
+  else if ($isI_I) {
+    println __FILE__ + " (" + __LINE__ + ")";
+  }
+
+  // Sujet principale coréfère avec objet subordonnée
+  else if ($isI_II) {
+    println __FILE__ + " (" + __LINE__ + ")";
+  }
+
+  // Objet principale coréfère avec objet subordonnée
+  else if ($isII_II) {
+    println __FILE__ + " (" + __LINE__ + ")";
+  }
+
+  else {
+    $Ibis = $I;
+    $IIbis = $II;
+  }
+  
+  ↓1 = [i:$Ibis, ii:$IIbis, $rest];
+}
+
+/* **************************************************
+ * Coreference with pro
+ ************************************************** */
+@trace
+rhetoricalStructure → premise_conclusion {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [rhet:cause, i:$I, ii:$II, $rest];
+  [language_register:default] ⊂ ↑;
+
+  // Coréférence
+  [i:[i:[id:$ID_I_I]]] ⊂ ↑;
+  [i:[ii:[id:$ID_I_II]]] ⊂ ↑;
+  [ii:[i:[id:$ID_II_I]]] ⊂ ↑;
+  [ii:[ii:[id:$ID_II_II]]] ⊂ ↑;
+
+  $isI_I = $ID_I_I && $ID_II_I && ($ID_I_I == $ID_II_I);
+  $isII_I = $ID_I_II && $ID_II_I && ($ID_I_II == $ID_II_I);
+  $isI_II = $ID_I_I && $ID_II_II && ($ID_I_I == $ID_II_II);
+  $isII_II = $ID_I_II && $ID_II_II && ($ID_I_II == $ID_II_II);
+
+  // objet principale coréfère avec sujet subordonnée
+  if ($isII_I) {
+    [i:[ii:[PRED:$P_I_II, id:_, def:_, $Rest_I_II]]] ⊂ ↑;
+    [ii:[i:[id:_], $Rest_II]] ⊂ ↑;
+    [i:[ii:[number:$NSynth]]] ⊂ ⇓1;
+    $IIbis = [i:[PRED:_pro], $Rest_II];
+    [i:[ii:$I_II, $Rest_I]] ⊂ ↑;
+    $Ibis = [ii:[sem:default, $I_II], $Rest_I];
+
+    [i:[ii:[number:$NSynth_I_II, gender:$GSynth_I_II, person:$PSynth_I_II]],
+     ii:[i:[number:$NSynth_II_I, gender:$GSynth_II_I, person:$PSynth_II_I]]] ⊂ ⇓1;
+    attest ($NSynth_I_II == $NSynth_II_I);
+    attest ($GSynth_I_II == $GSynth_II_I);
+    attest ($PSynth_I_II == $PSynth_II_I);
+  }
+
+  // Sujets coréfèrent
+  else if ($isI_I) {
+    println __FILE__ + " (" + __LINE__ + ")";
+  }
+
+  // Sujet principale coréfère avec objet subordonnée
+  else if ($isI_II) {
+    println __FILE__ + " (" + __LINE__ + ")";
+  }
+
+  // Objet principale coréfère avec objet subordonnée
+  else if ($isII_II) {
+    println __FILE__ + " (" + __LINE__ + ")";
+  }
+
+  ↓1 = [i:$Ibis, ii:$IIbis, $rest];
+}
+
+@trace
+premise_conclusion → premise conclusion dot {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:$I, ii:$II, $rest];
+  [language_register:$language_register, mode:$mode] ⊂ $rest;
+  [modality:$modalityI, illocutionary:$illocutionaryI, time:$timeI] ⊂ $I;
+  if (¬ $modalityI)
     $modalityI = default;
   if (¬ $illocutionaryI)
     $illocutionaryI = default;
@@ -186,7 +290,71 @@ zzzrhetoricalStructure → form premise conclusion dot form {
     $modalityII = default;
   if (¬ $illocutionaryII)
     $illocutionaryII = default;
+  
+  if (¬ $mode)
+    $mode = indicative;
+  
+  ↓1 = $I ∪ [vform:tensed, mode:$mode, time:$timeI, illocutionary:$illocutionaryI, modality:$modalityI, language_register:$language_register];
+  ↓2 = $II ∪ [vform:tensed, mode:$mode, time:$timeI, illocutionary:$illocutionaryII, modality:$modalityII, language_register:$language_register];
+  ↓3 = [];
+  $ISynth = ⇓1;
+  $IISynth = ⇓2;
+  ⇑ = [i:$ISynth, ii:$IISynth];
+}
 
+@trace
+zzzrhetoricalStructure → form premise conclusion dot form {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [rhet:cause, i:$I, ii:$II, $rest];
+  [language_register:default] ⊂ ↑;
+  //↓1 = [FORM:"<rhetoricalStructure line="+__LINE__+">"];
+  //↓5 = [FORM:"</rhetoricalStructure>"];
+  ↓1 = [FORM:""];
+  ↓5 = [FORM:""];
+  ↓4 = [];
+
+  [i:[i:[id:$ID_I_I]]] ⊂ ↑;
+  [i:[ii:[id:$ID_I_II]]] ⊂ ↑;
+  [ii:[i:[id:$ID_II_I]]] ⊂ ↑;
+  [ii:[ii:[id:$ID_II_II]]] ⊂ ↑;
+
+$I_I = $ID_I_I && $ID_II_I && ($ID_I_I == $ID_II_I);
+$II_I = $ID_I_II && $ID_II_I && ($ID_I_II == $ID_II_I);
+$I_II = $ID_I_I && $ID_II_II && ($ID_I_I == $ID_II_II);
+$II_II = $ID_I_II && $ID_II_II && ($ID_I_II == $ID_II_II);
+
+if ($I_I)
+    println ".sujets coréfèrent";
+if ($II_I)
+    println ".objet principale coréfère avec sujet subordonnée";
+if ($I_II)
+    println ".sujet principale coréfère avec objet subordonnée";
+if ($II_II)
+    println ".objet principale coréfère avec objet subordonnée";
+
+if ($II_I) {
+        [i:[ii:[PRED:$P_I_II, id:_, def:_, $Rest_I_II]]] ⊂ ↑;
+        [ii:[i:[id:_], $Rest_II]] ⊂ ↑;
+        [ii:[number:$NSynth]] ⊂ ⇓2;
+        $IIbis = [i:[PRED:_pro, gender:$GSynth, number:$NSynth, person:$PSynth], $Rest_II];
+
+      } else {
+        $IIbis = $II;
+  }
+
+
+  [language_register:$language_register, mode:$mode, time:$time] ⊂ $rest;
+  [modality:$modalityI, illocutionary:$illocutionaryI] ⊂ $I;
+  if (¬ $modalityI)
+    $modalityI = default;
+  if (¬ $illocutionaryI)
+    $illocutionaryI = default;
+  [modality:$modalityII, illocutionary:$illocutionaryII] ⊂ $II;
+  if (¬ $modalityII)
+    $modalityII = default;
+  if (¬ $illocutionaryII)
+    $illocutionaryII = default;
 
   if (($language_register == slang) ∧ ($illocutionaryII ≠ ask)) {
      ↓3 = [];
@@ -195,9 +363,9 @@ zzzrhetoricalStructure → form premise conclusion dot form {
 
   if (¬ $mode)
     $mode = indicative;
-  
-  ↓2 = $I ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryI, modality:$modalityI, language_register:$language_register, modSType:$modSType, modS:$modS];
-  ↓3 = $II ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:$illocutionaryII, modality:$modalityII, language_register:$language_register];
+
+  ↓2 = $I ∪ [vform:tensed, mode:$mode, illocutionary:$illocutionaryI, modality:$modalityI, language_register:$language_register, time:$time];
+  ↓3 = $IIbis ∪ [vform:tensed, mode:$mode, illocutionary:$illocutionaryII, modality:$modalityII, language_register:$language_register, time:$time];
 }
 
 /* **************************************************
@@ -205,11 +373,13 @@ zzzrhetoricalStructure → form premise conclusion dot form {
  ************************************************** */
 @trace
 zzzrhetoricalStructure → form premise [parce_que] conclusion form {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
   [rhet:cause, i:[i:[id:$ID]], ii:[i:[idref:$ID]], $rest];
-  ↓1 = [FORM:"<rhetoricalStructure line="+__LINE__+">"];
-  ↓5 = [FORM:"</rhetoricalStructure>"];
-  //↓1 = [FORM:" "];
-  //↓5 = [FORM:" "];
+  //↓1 = [FORM:"<rhetoricalStructure line="+__LINE__+">"];
+  //↓5 = [FORM:"</rhetoricalStructure>"];
+  ↓1 = [FORM:""];
+  ↓5 = [FORM:""];
   // Coréférence i:[i] avec ii:[i]
   [i:$I, ii:$II] ⊂ ↑;
   [i:[i:$I_I], ii:[i:$II_I, $II_rest]] ⊂ ↑;
@@ -250,31 +420,30 @@ zzzrhetoricalStructure → form premise [parce_que] conclusion form {
 }
 
 /* **************************************************
- * Si aujourd'hui tu gagnais... 
- * Si hier tu avais gagné... 
- * Si demain tu gagnais... 
+ * Si hier tu avais gagné...
+ * Si aujourd'hui tu gagnais...
+ * Si demain tu gagnais...
  ************************************************** */
 @trace
-premise → form si modalClause form {
+premise → form si modalClause comma form {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
   //↓1 = [FORM:"<premise line="+__LINE__+">"];
-  //↓4 = [FORM:"</premise>"];
-  ↓1 = [FORM:" "];
-  ↓4 = [FORM:" "];
+  //↓5 = [FORM:"</premise>"];
+  ↓1 = [FORM:""];
+  ↓5 = [FORM:""];
   [language_register:default] ⊂ ↑;
-  [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
+  [modSType:$modSType, modS:$modS, language_register:$language_register, time:$time, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
   $mode = indicative;
   if (¬ $aspect)
      $aspect = default;
+
   [modality:$modalityI] ⊂ ↑;
-  if (¬ $tense ∨ ($tense == present)) { 
-    if ($aspect == continuous) {
+
+  if ($time == tomorrow) {
       $tense = present;
-    }
-    else {
-      $tense = present;
-    }
   }
-  else if ($tense == past) { 
+  else if ($time == yesterday) {
     if ($aspect == continuous) {
       $mode = indicative; $tense = past;
     }
@@ -282,20 +451,37 @@ premise → form si modalClause form {
       $mode = indicative; $tense = past; $aspect = pluperfect;
     }
   }
-  else if ($tense == future) { 
+  else if (¬ $tense ∨ ($tense == present)) {
+    if ($aspect == continuous) {
+      $tense = present;
+    }
+    else {
+      $tense = present;
+    }
+  }
+  else if ($tense == past) {
     if ($aspect == continuous) {
       $mode = indicative; $tense = past;
     }
     else {
-      $mode = indicative; $tense = past; $aspect = imperfect;
+      $mode = indicative; $tense = past; $aspect = pluperfect;
     }
   }
-  
+  else if ($tense == future) {
+    if ($aspect == continuous) {
+      $mode = indicative; $tense = past;
+    }
+    else {
+      $mode = indicative; $tense = present;
+    }
+  }
+
   [modality:$modality] ⊂ ↑;
   if (¬ $modality) 
     $modality = default;
   ↓2 = [];
-  ↓3 = $rest ∪ [vform:tensed, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:default, modality:$modality, language_register:$language_register, modSType:$modSType, modS:$modS];
+  ↓4 = [];
+  ↓3 = $rest ∪ [vform:tensed, time:$time, mode:$mode, tense:$tense, aspect:$aspect, illocutionary:default, modality:$modality, language_register:$language_register, modSType:$modSType, modS:$modS];
   ⇑ = ⇓3;
 }
 
@@ -303,11 +489,13 @@ premise → form si modalClause form {
  * je gagnerais
  ************************************************** */
 @trace
-premise → form modalClause form {
-  //↓1 = [FORM:"<premise line="+__LINE__+">"];
-  //↓3 = [FORM:"</premise>"];
-  ↓1 = [FORM:" "];
-  ↓3 = [FORM:" "];
+zzzpremise → form modalClause form {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
+  ↓1 = [FORM:"<premise line="+__LINE__+">"];
+  ↓3 = [FORM:"</premise>"];
+  ↓1 = [FORM:""];
+  ↓3 = [FORM:""];
   [language_register:familiar|slang];
   [modSType:$modSType, modS:$modS, language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
   if (¬ $aspect)
@@ -340,44 +528,34 @@ premise → form modalClause form {
 }
 
 /* **************************************************
- * Si aujourd'hui tu gagnes... tu remporteras le pactole
  * Si hier tu avais gagné... tu aurais remporté le pactole
- * Si demain tu gagnais... tu remporterais le pactole
-
+ * Si aujourd'hui tu gagnes... tu remporteras le pactole
  * Si aujourd'hui le garagiste répare ta voiture... tu pourras aller à la campagne.
  * Si aujourd'hui le garagiste répare ta voiture... elle pourra démarer.
- * Si hier tu avais gagné... tu aurais remporté le pactole
  * Si demain tu gagnais... tu remporterais le pactole
-
  ************************************************** */
 @trace
-zzzconclusion → form modalClause form {
-  ↓1 = [FORM:"<conclusion line="+__LINE__+">"];
-  ↓3 = [FORM:"</conclusion>"];
-  //↓1 = [FORM:" "];
-  //↓3 = [FORM:" "];
+conclusion → form modalClause form {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  //↓1 = [FORM:"<conclusion line="+__LINE__+">"];
+  //↓3 = [FORM:"</conclusion>"];
+  ↓1 = [FORM:""];
+  ↓3 = [FORM:""];
   [language_register:default] ⊂ ↑;
-  [language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
-  if (¬ $aspect)
-     $aspect = default;
-  if (¬ $tense ∨ ($tense == present)) { 
-    if ($aspect == continuous) {
-      $mode = indicative; $tense  = future; $aspect = default;
-    }
-    else {
+  [language_register:$language_register, mode:$mode, aspect:$aspect, time:$time, $rest] ⊂ ↑;
+
+  if ($time == yesterday) {
+      $mode = conditional; $tense = past; $aspect = default;
+     }
+  else if ($time == today|now) {
       $mode = indicative; $tense = future;
-      //$mode = conditional; $tense = present;
-    }
-  }
-  else if ($tense == past) { 
-    if ($aspect == continuous) {
-      $mode = conditional; $tense  = past;
-    }
-    else {
-      $mode = conditional; $tense  = past;
-    }
-  }
-  else if ($tense == future) { 
+     }
+  else if ($time == tomorrow) {
+      $mode = indicative; $tense = future;
+     }
+
+  else if ($tense == future) {
     if ($aspect == continuous) {
       $mode = conditional; $tense  = present;
     }
@@ -402,10 +580,12 @@ zzzconclusion → form modalClause form {
  ************************************************** */
 @trace
 conclusion → form modalClause form {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
   //↓1 = [FORM:"<conclusion line="+__LINE__+">"];
   //↓3 = [FORM:"</conclusion>"];
-  ↓1 = [FORM:" "];
-  ↓3 = [FORM:" "];
+  ↓1 = [FORM:""];
+  ↓3 = [FORM:""];
   [language_register:familiar|slang];
   [language_register:$language_register, tense:$tense, mode:$mode, aspect:$aspect, $rest] ⊂ ↑;
   if (¬ $tense ∨ ($tense == present)) { 
@@ -471,8 +651,8 @@ rhetoricalStructure → modalClause et illocutionaryAct {
 // rhetoricalStructure → form premise conclusion form {
 //   ↓1 = [FORM:"<VP line="+__LINE__+">"];
 //   ↓4 = [FORM:"</VP>"];
-//   //↓1 = [FORM:" "];
-//   //↓4 = [FORM:" "];
+//   //↓1 = [FORM:""];
+//   //↓4 = [FORM:""];
 //   [PRED:cause, i:[ii:[id:$ID]], ii:[i:[idref:$ID]], $rest];
 //   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
 //   [ii:$II] ⊂ ↑;

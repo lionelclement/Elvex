@@ -129,22 +129,43 @@
 //text [PRED:IMPORTUNER, i:[PRED:IDIOT, number:sg, gender:ms], ii:[PRED:FEMME, number:sg], language_register:slang]
 
 //text[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]]
-//text [PRED:ROULER, i:[idref:45, PRED:VOITURE, number:sg, def:yes]]
+//text [PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]]
+
+/*
+text [PRED:cause,
+ 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes]],
+	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]],
+    time:yesterday
+]
+*/
+
+text [PRED:cause,
+ 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes, id:11], ii:[PRED:VOITURE, number:sg, def:yes, id:12],
+ 	    time:yesterday],
+	ii:[PRED:ROULER, i:[id:12]]
+]
+
+text [PRED:cause,
+ 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes]],
+	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]],
+    time:tomorrow
+]
+
 
 /* text [PRED:cause,
  	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes]],
-	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]]]
+	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]]
+	]
 */
 
-/* text [PRED:cause,
+text [PRED:cause,
  	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]],
-	ii:[PRED:ROULER, i:[idref:45]], language_register:slang]
-*/
-
-//text[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes, language_register:slang], ii:[PRED:VOITURE, number:sg, def:yes, language_register:slang], language_register:slang],
+	ii:[PRED:ROULER, i:[idref:45]],
+	language_register:slang
+	]
 
  text [PRED:cause,
- 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes, language_register:slang], ii:[PRED:VOITURE, number:sg, def:yes]],
+ 	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes]],
 	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]],
 	language_register:slang
 	]

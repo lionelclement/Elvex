@@ -1,5 +1,5 @@
 // from fr-slang.illocution.grammar
-#include fr-slang.tensed.grammar
+#include fr-slang.time.grammar
 
 /* **************************************************
  * modality
@@ -9,7 +9,7 @@
  * Default
  ************************************************** */
 @trace
-modalClause → tensedClause {
+modalClause → timeClause {
   // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   // println ↑;
   [modality:default, $rest];
@@ -20,28 +20,28 @@ modalClause → tensedClause {
 /* **************************************************
  * modality
  ************************************************** */
-modalClause → tensedClause {
+modalClause → timeClause {
   [modality:pouvoir];
   [PRED:$PRED, modality:pouvoir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
   ↓1 = [PRED:pouvoir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
   ⇑ = ⇓1;
 }
 
-modalClause → tensedClause {
+modalClause → timeClause {
   [modality:devoir];
   [PRED:$PRED, modality:devoir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
   ↓1 = [PRED:devoir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
   ⇑ = ⇓1;
 }
 
-modalClause → tensedClause {
+modalClause → timeClause {
   [modality:savoir];
   [PRED:$PRED, modality:savoir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
   ↓1 = [PRED:savoir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
   ⇑ = ⇓1;
 }
 
-modalClause → tensedClause {
+modalClause → timeClause {
   [modality:vouloir];
   [PRED:$PRED, modality:vouloir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
   ↓1 = [PRED:vouloir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
