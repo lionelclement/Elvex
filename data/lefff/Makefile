@@ -34,7 +34,7 @@ all: lefff.fsa
 	@echo "build $@ from $^"
 	@gunzip < $^ |sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' | sort -u > $@
 
-%.pattern: %.general.pattern %.slang.pattern %.phaseology.pattern %.weather.pattern
+%.pattern: %.general.pattern %.sem.pattern %.slang.pattern %.phaseology.pattern %.weather.pattern
 	@echo "build $@ from $^"
 	@cat $^ | sed -e '/^#/d' -e '/^\/\//d' | sort -u > $@
 

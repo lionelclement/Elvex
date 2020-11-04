@@ -41,7 +41,7 @@ IDIOT	n	crétin	PRED:IDIOT, language_register:slang
 IDIOT	n	couillon	PRED:IDIOT, language_register:slang
 
 # Garagiste
-GARAGISTE	n	garagiste	PRED:GARAGISTE, language_register:slang
+GARAGISTE	n	mécano	PRED:GARAGISTE, language_register:slang
 
 # Rouler
 ROULER	v	rouler	PRED:ROULER, language_register:slang
