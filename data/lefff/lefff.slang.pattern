@@ -8,10 +8,10 @@
 #Je lui abats la verroterie sur le bocal. (Beurre, 138)
 
 # Noms
-#VOITURE	n	bagnole	PRED:VOITURE, language_register:slang
-#VOITURE	n	caisse	PRED:VOITURE, language_register:slang
-#VOITURE	n	chignole	PRED:VOITURE, language_register:slang
-#VOITURE	n	chiotte	PRED:VOITURE, language_register:slang
+VOITURE	n	bagnole	PRED:VOITURE, language_register:slang
+VOITURE	n	caisse	PRED:VOITURE, language_register:slang
+VOITURE	n	chignole	PRED:VOITURE, language_register:slang
+VOITURE	n	chiotte	PRED:VOITURE, language_register:slang
 VOITURE	n	tire	PRED:VOITURE, language_register:slang
 VOITURE	n	engin	PRED:VOITURE, language_register:slang, sem:hyper
 
@@ -72,7 +72,7 @@ FESSES	n	miche	PRED:FESSES, number:pl, language_register:slang
 # Testicule
 TESTICULE	n	burette	PRED:TESTICULE, language_register:slang
 TESTICULE	n	burne	PRED:TESTICULE, language_register:slang
-TESTICULE	n	claouis	PRED:TESTICULE, language_register:slang
+#TESTICULE	n	claouis	PRED:TESTICULE, language_register:slang
 TESTICULE	n	noix	PRED:TESTICULE, language_register:slang
 TESTICULE	n	précieuse	PRED:TESTICULE, language_register:slang
 TESTICULE	n	roubignole	PRED:TESTICULE, language_register:slang
@@ -110,6 +110,7 @@ VOLEUR	n	pécoreur	PRED:VOLEUR, language_register:slang
 
 DÉLINQUANT	n	racaille	PRED:DÉLINQUANT, language_register:slang
 DÉLINQUANT	n	kaïra	PRED:DÉLINQUANT, language_register:slang
+DÉLINQUANT	n	crapule	PRED:DÉLINQUANT, language_register:slang
 
 PUTAIN	adj	putain	PRED:PUTAIN, language_register:slang
 
@@ -137,8 +138,9 @@ ARGENT	n	fric	PRED:ARGENT, language_register:slang
 ARGENT	n	artiche	PRED:ARGENT, language_register:slang
 ARGENT	n	flouze	PRED:ARGENT, language_register:slang
 
-# construction foutre passive pour causatif
+# construction "ficher" passif pour causatif
 
+AVOIR_FAIM	v	avoir	PRED:AVOIR_FAIM, objC:[FORM:"faim"]
 AVOIR_FAIM	v	avoir	PRED:AVOIR_FAIM, objC:[FORM:"les crocs"], language_register:slang
 AVOIR_FAIM	v	avoir	PRED:AVOIR_FAIM, objC:[PRED:DALLE, def:yes, number:sg], language_register:slang
 AVOIR_FAIM	v	crever	PRED:AVOIR_FAIM, pobjC:[PRED:FAIM, pcas:de, det:no, number:sg], language_register:slang
@@ -150,28 +152,28 @@ AVOIR_FAIM	v	crever	PRED:AVOIR_FAIM, pobjC:[PRED:FAIM, pcas:de, det:no, number:s
 
 # ennuyer qqun
 IMPORTUNER	v	BROYER_SLANG	PRED:IMPORTUNER, objC:[PRED:TESTICULE, def:yes, number:pl], language_register:slang
-#IMPORTUNER	v	casser	PRED:IMPORTUNER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-#IMPORTUNER	v	casser	PRED:IMPORTUNER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	gaver	PRED:IMPORTUNER, iiReal:obj, language_register:slang
-#IMPORTUNER	v	gaver	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	gonfler	PRED:IMPORTUNER, iiReal:obj, language_register:slang
-#IMPORTUNER	v	gonfler	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-#IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
-#IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	saoûler	PRED:IMPORTUNER, iiReal:obj, language_register:slang
-#IMPORTUNER	v	saoûler	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	chier	PRED:IMPORTUNER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], language_register:slang
-#IMPORTUNER	v	chier	PRED:IMPORTUNER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	faire	PRED:IMPORTUNER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], language_register:slang
-#IMPORTUNER	v	faire	PRED:IMPORTUNER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
-#IMPORTUNER	v	emmerder	PRED:IMPORTUNER, language_register:slang, iiReal:obj
-#IMPORTUNER	v	emmerder	PRED:IMPORTUNER, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang, iiReal:obj
+IMPORTUNER	v	casser	PRED:IMPORTUNER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+IMPORTUNER	v	casser	PRED:IMPORTUNER, objC:[PRED:BONBON, def:yes, number:pl], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	gaver	PRED:IMPORTUNER, iiReal:obj, language_register:slang
+IMPORTUNER	v	gaver	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	gonfler	PRED:IMPORTUNER, iiReal:obj, language_register:slang
+IMPORTUNER	v	gonfler	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:AIR, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+IMPORTUNER	v	pomper	PRED:IMPORTUNER, objC:[PRED:DARD, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:CHOU, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], language_register:slang
+IMPORTUNER	v	prendre	PRED:IMPORTUNER, objC:[PRED:TÊTE, def:yes, number:sg], iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	saoûler	PRED:IMPORTUNER, iiReal:obj, language_register:slang
+IMPORTUNER	v	saoûler	PRED:IMPORTUNER, iiReal:obj, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	chier	PRED:IMPORTUNER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], language_register:slang
+IMPORTUNER	v	chier	PRED:IMPORTUNER, iiReal:prep_obj, prep_obj:[pcas:de], pobjC:[PRED:BOTTE, def:yes, number:pl, pcas:dans], modmC:<[PRED:VRAIMENT]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	faire	PRED:IMPORTUNER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], language_register:slang
+IMPORTUNER	v	faire	PRED:IMPORTUNER, iiReal:obj, vcompC:[PRED:CHIER, real:vcomp, compl:none, vform:infinitive], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang
+IMPORTUNER	v	emmerder	PRED:IMPORTUNER, language_register:slang, iiReal:obj
+IMPORTUNER	v	emmerder	PRED:IMPORTUNER, modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn, language_register:slang, iiReal:obj
 
 BROYER_SLANG	v	casser	iiReal:prep_obj, prep_obj:[pcas:à]
 BROYER_SLANG	v	casser	iiReal:prep_obj, prep_obj:[pcas:à], modmC:<[PRED:SÉRIEUSEMENT_SLANG]>, lexical_function:magn
@@ -241,7 +243,7 @@ ESCARGOT	n	magnin	PRED:ESCARGOT, language_register:slang
 
 # pleurer
 PLEURER	v	chialer	PRED:PLEURER, language_register:slang
-PLEUVOIR	v	avoir	PRED:PLEUVOIR,subjC:[FORM:"il", person:three, number:sg],iiReal:none,objC:[PRED:FLOTTE,part:yes,number:sg],locCl:[PRED:_pro,number:sg,person:three]
+#PLEUVOIR	v	avoir	PRED:PLEUVOIR,subjC:[FORM:"il", person:three, number:sg],iiReal:none,objC:[PRED:FLOTTE,part:yes,number:sg],locCl:[PRED:_pro,number:sg,person:three]
 
 HORLOGER	n	con	PRED:HORLOGER, language_register:slang, sem:hyper
 
