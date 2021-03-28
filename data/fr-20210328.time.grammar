@@ -1,0 +1,129 @@
+// from fr-20210328.modality.grammar
+#include fr-20210328.tensed.grammar
+
+/* **************************************************
+* Expressions temporelles
+************************************************** */
+@trace
+timeClause → timeClauseCont {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [time:NIL, $rest];
+  ↓1 = $rest;
+  ⇑ = ⇓1;
+}
+
+@trace
+timeClause → timeClauseCont {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [time:now, $rest];
+  [tense:$tense, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$tense || $tense != present)
+     $tense = present;
+  ↓1 = [modS:<[PRED:MAINTENANT]>, modSType:time, tense:$tense, $rest];
+  ⇑ = ⇓1;
+}
+
+@trace
+timeClause → timeClauseCont {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [time:today, $rest];
+  [tense:$tense, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$tense)
+     $tense = present;
+  ↓1 = [modS:<[PRED:AUJOURD_HUI]>, modSType:time, tense:$tense, $rest];
+  ⇑ = ⇓1;
+}
+
+@trace
+timeClause → timeClauseCont {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [time:yesterday];
+  [tense:$tense, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$tense)
+       $tense = past;
+  //if (!$aspect || $aspect != pluperfect)
+  //       $aspect = pluperfect;
+  ↓1 = [modS:<[PRED:HIER]>, modSType:time, tense:$tense, aspect:$aspect, $rest];
+  ⇑ = ⇓1;
+}
+
+@trace
+timeClause → timeClauseCont {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [time:tonight];
+  [tense:$tense, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$tense)
+       $tense = past;
+  if ($tense == past)
+    ↓1 = [modS:<[FORM:"hier soir"]>, modSType:time, tense:$tense, aspect:$aspect, $rest];
+  else if ($tense == future)
+    ↓1 = [modS:<[FORM:"ce soir"]>, modSType:time, tense:$tense, aspect:$aspect, $rest];
+  else
+      ↓1 = [modS:<[FORM:"ce soir"]>, modSType:time, tense:$tense, aspect:$aspect, $rest];
+    ⇑ = ⇓1;
+}
+
+@trace
+timeClause → timeClauseCont {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [time:tomorrow, $rest];
+  [tense:$tense, aspect:$aspect, $rest] ⊂ ↑;
+  if (!$tense)
+       $tense = future;
+  ↓1 = [modS:<[PRED:DEMAIN]>, modSType:time, tense:$tense, aspect:$aspect, $rest];
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+* Expressions temporelles
+************************************************** */
+@trace
+timeClauseCont → tensedClause {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [modS:NIL, $rest];
+  ↓1 = $rest;
+  ⇑ = ⇓1;
+}
+
+timeClauseCont → tensedClause form time form time {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [modSType:lap_date, modS:<$CAR::<$CADR::$CDDR> >, $rest];
+  ↓1 = [modS:$CDDR, $rest];
+  ↓2 = [FORM:"du"];
+  ↓3 = [type:date, $CAR];
+  ↓4 = [FORM:"au"];
+  ↓5 = [type:date, $CADR];
+  ⇑ = ⇓1;
+}
+
+timeClauseCont → form time form time comma tensedClause {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [modSType:lap_deixis, modS:<$CAR::<$CADR::$CDDR> >, $rest];
+  ↓1 = [FORM:"à partir de"];
+  ↓2 = [type:time, $CAR];
+  ↓3 = [FORM:"jusqu'à"];
+  ↓4 = [type:time, $CADR];
+  ↓5 = [];
+  ↓6 = [modS:$CDDR, $rest];
+  ⇑ = ⇓6;
+}
+
+timeClauseCont → tensedClause time|adv {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [modSType:time, vform:tensed];
+  [modSType:time, modS:<$Head::$Tail>, $rest];
+  ↓2 = [type:time, $Head];
+  ↓1 = [$rest, modS:$Tail];
+  ⇑ = ⇓1;
+}
+

@@ -1,0 +1,248 @@
+// from fr-20210328.binding.grammar
+#include fr-20210328.sentence.grammar
+
+/* **************************************************
+ * Actants
+ * agent
+ * patient
+ * comp
+ * recipient
+ * source
+ ************************************************** */
+// il pleut
+@trace
+argumentClause → sentence  {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:NIL, ii:NIL, iii:NIL, iv:NIL, $rest];
+  //[vform:tensed, diathesis:active] ⊂ ↑;
+  ↓1 = [iReal:none, iiReal:none, iiiReal:none, ivReal:none, $rest];
+  ⇑ = ⇓1;
+}
+
+// il pleut des grenouilles
+// without subject:
+@trace
+argumentClause → sentence {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:NIL, ii:$II, iii:NIL, iv:NIL, $rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:[], obj:$II, iiReal:obj, voice:active, iiiReal:none, ivReal:none, $rest];
+  [subj:$iSynt, obj:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// courir: X
+@trace
+argumentClause → sentence {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:$I, ii:NIL, iii:NIL, iv:NIL, $rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:$I, iiReal:none, iiiReal:none, ivReal:none, $rest];
+  [subj:$iSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, $restSynt];
+}
+
+// Transitif voix active
+// manger: X Y
+@trace
+argumentClause → sentence {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:$I, ii:$II, iii:NIL, iv:NIL, $rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:$I, obj:$II, iiReal:obj, iiiReal:none, ivReal:none, voice:active, $rest];
+  [subj:$iSynt, obj:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// Transitif voix passive
+@trace
+argumentClause → sentence {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:$I, ii:$II, iii:NIL, iv:NIL, diathesis:passive, $rest];
+  $I = $I U [pcas:par];
+  ↓1 = [subj:$II, prep_obj:$I, iiiReal:none, ivReal:none, voice:passive, $rest];
+  [prep_obj:$iSynt, subj:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// provenir : X de Y
+@trace
+argumentClause → sentence {
+  [i:$I, ii:$II, iii:NIL, iv:NIL, $rest];
+  ↓1 = [subj:$I, prep_obj:$II, iiReal:prep_obj, voice:active, iiiReal:none, ivReal:none, $rest];
+  [subj:$subjSynt, prep_obj:$objSynt, $restSynt] ⊂ ⇓1;
+  [subj:$iSynt, prep_obj:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// Transitif voix moyenne: la branche casse
+@trace
+argumentClause → sentence {
+  [i:$I, ii:NIL, iii:NIL, iv:NIL, diathesis:middle, $rest];
+  ↓1 = [subj:$I, voice:middle, resObj:yes, iiReal:none, iiiReal:none, ivReal:none, $rest];
+  [subj:$iSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, $restSynt];
+}
+
+// sentir: X Y
+@trace
+argumentClause → sentence {
+  [i:$I, ii:$II, iii:NIL, iv:NIL, $rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:$I, adj:$II, iiReal:adj, iiiReal:none, ivReal:none, voice:active, $rest];
+  [subj:$iSynt, adj:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// s'alimenter: X avec Z
+@trace
+argumentClause → sentence {
+  [i:$I, ii:NIL, iii:$III, iv:NIL, $rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:$I, prep_obj:$III, iiiReal:prep_obj, iiReal:obj|none, ivReal:none, $rest];
+  [subj:$iSynt, prep_obj:$iiiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, iii:$iiiSynt, $restSynt];
+}
+
+// X livre Y à Z
+// X coupe Y avec Z
+// X alimente Y avec Z
+@trace
+argumentClause → sentence {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [ii:$II, iii:$III, iv:NIL, $rest];
+  [i:$I] ⊂ ↑;
+  [diathesis:active] ⊂ ↑;
+  if ($I) {
+    ↓1 = [subj:$I, obj:$II, prep_obj:$III, iiReal:obj, iiiReal:prep_obj, ivReal:none, voice:active, $rest];
+    [subj:$iSynt, obj:$iiSynt, prep_obj:$iiiSynt, $restSynt] ⊂ ⇓1;
+    ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, $restSynt];
+  }
+  else {
+    //vform:infinitive,
+    ↓1 = [obj:$II, prep_obj:$III, iiReal:obj, iiiReal:prep_obj, ivReal:none, $rest];
+    ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, $restSynt];
+  }
+}
+
+// X parle de Y à Z
+@trace
+argumentClause → sentence {
+  [i:$I, ii:$II, iii:$III, iv:NIL, $rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:$I, prep_obj:$II, prep_obj2:$III, iiReal:prep_obj, iiiReal:prep_obj, ivReal:none, voice:active, $rest];
+  [subj:$iSynt, prep_obj:$iiSynt, prep_obj2:$iiiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, $restSynt];
+}
+
+// Y est livré à Z par X
+// Y est coupé avec Z par X
+@trace
+argumentClause → sentence {
+  [i:$I, ii:$II, iii:$III, iv:NIL, diathesis:passive, $rest];
+  $I = $I U [pcas:par];
+  ↓1 = [subj:$II, prep_obj2:$I, prep_obj:$III, iiReal:obj, iiiReal:prep_obj, ivReal:none, voice:passive, $rest];
+  [subj:$iiSynt, prep_obj2:$iSynt, prep_obj:$iiiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, $restSynt];
+}
+
+// transporter: X Y de Z à K
+@trace
+argumentClause → sentence {
+  [i:$I, ii:$II, iii:$III, iv:$IV, $rest];
+  [diathesis:active] ⊂ ↑;
+  ↓1 = [subj:$I, obj:$II, prep_obj:$III, prep_obj2:$IV, iiReal:obj, iiiReal:prep_obj, ivReal:prep_obj, $rest];
+  [subj:$iSynt, obj:$iiSynt, prep_obj:$iiiSynt, prep_obj2:$ivSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, iv:$ivSynt, $restSynt];
+}
+
+// vcomp|scomp
+/* **************************************************
+ * Coréférence
+ ************************************************** */
+// Controller subject
+// Jean souhaite partir
+// Jean accepte/refuse de partir
+@trace
+argumentClause → sentence {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:[id:$ID], ii:[i:[idref:$ID]], iii:NIL];
+  [i:$I, ii:[i:_, $restComp], $rest] ⊂ ↑;
+  ↓1 = [subj:$I, vcomp:[real:vcomp, $restComp], ctr:subj, iiReal:vcomp, ivReal:none, $rest];
+  [subj:$iSynt, vcomp:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// Jean souhaite qu'il parte
+// Jean accepte/refuse qu'il parte
+@trace
+argumentClause → sentence {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:[id:$ID], ii:[i:[idref:NIL]], iii:NIL];
+  [i:$I, ii:[i:$II_I, $restComp], $rest] ⊂ ↑;
+  ↓1 = [subj:$I, scomp:[i:$II_I, real:scomp, $restComp], iiReal:scomp, iiiReal:none, ivReal:none, $rest];
+  [subj:$iSynt, scomp:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// Jean souhaite qu'il parte
+// Jean accepte/refuse qu'il parte
+@trace
+argumentClause → sentence {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [i:[id:NIL], ii:[i:[idref:NIL]], iii:NIL];
+  [i:$I, ii:[i:$II_I, $restComp], $rest] ⊂ ↑;
+  ↓1 = [subj:$I, scomp:[i:$II_I, real:scomp, $restComp], iiReal:scomp, iiiReal:none, ivReal:none, $rest];
+  [subj:$iSynt, scomp:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// Controller à_obj
+// La police demande à Marie de circuler
+@trace
+argumentClause → sentence {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [ii:[i:[idref:$ID1]], iii:[id:$ID1]];
+  //attest $ID1 != $ID2;
+  [i:$I, ii:[i:_, $restComp], iii:[id:_, $III], $rest] ⊂ ↑;
+  ↓1 = [subj:$I, vcomp:[real:vcomp, $restComp], ctr:obj, iiReal:vcomp, prep_obj:$III, iiiReal:prep_obj, ivReal:none, $rest];
+  [subj:$iSynt, vcomp:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// Jean demande à Marie qu'il parte
+@trace
+argumentClause → sentence {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
+  [i:[id:$ID], ii:[i:[idref:$ID]], iii:[idref:NIL]];
+  [i:$I, ii:[i:_, $restComp], iii:[id:_, $III], $rest] ⊂ ↑;
+  [subj:[number:$N, gender:$G, person:$P], scomp:[i:[number:$N, gender:$G, person:$P]]] ⊂ ⇓1;
+  ↓1 = [subj:$I, scomp:[i:[PRED:_pro], real:scomp, $restComp], iiReal:icomp|scomp, prep_obj:$III, iiiReal:prep_obj, ivReal:none, $rest];
+  [subj:$iSynt, scomp:$iiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, $restSynt];
+}
+
+// Jean demande à la police s'il peut partir
+// Jean demande à Marie qu'elle parte
+// Jean dit à Marie que Luc part
+@trace
+argumentClause → sentence {
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [ii:[i:[idref:NIL]], iii:[idref:NIL]];
+  [i:$I, ii:$II, iii:$III, $rest] ⊂ ↑;
+  ↓1 = [subj:$I, scomp:[real:scomp, $II], iiReal:scomp, prep_obj:$III, iiiReal:prep_obj, ivReal:none, $rest];
+  [subj:$iSynt, scomp:$iiSynt, prep_obj:$iiiSynt, $restSynt] ⊂ ⇓1;
+  ⇑ = [i:$iSynt, ii:$iiSynt, iii:$iiiSynt, $restSynt];
+}
