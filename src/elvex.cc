@@ -46,16 +46,15 @@ xmlDocPtr document;
  ************************************************** */
 void Usage() {
     std::cerr << "Usage: " << PROJECT_NAME << " [options] [<input>]*\n";
-    std::cerr
-            << "\
+    std::cerr << "\
 options\n\
-\t--help|-h                   print this\n\
-\t--version|-v                print version\n\
-\t--verbose|-V                verbose mode\n\
-\t--reduceAll|-a              reduce all rules\n\
-\t--trace|-t                  trace the generation process\n\
-\t--random|-r                 outputs one sentence randomly selected\n\
-\t--one|-o                    outputs the first sentence\n";
+\t--help|-h                                   print this\n\
+\t--version|-v                                print version\n\
+\t--verbose|-V                                verbose mode\n\
+\t--reduceAll|-a                              reduce all rules\n\
+\t--trace|-t                                  trace the generation process\n\
+\t--random|-r                                 outputs one sentence randomly selected\n\
+\t--one|-o                                    outputs the first sentence\n";
 #ifdef TRACE_OPTION
     std::cerr << "\
  \t--traceInit\n\
@@ -65,20 +64,20 @@ options\n\
  \t--traceReduce\n\
  \t--traceAction\n";
 #endif
-    std::cerr
-            << "\
-\t-maxLength <number>                    max number of length\n\
-\t-maxUsages <number>                    max number of rule usage\n\
-\t-maxCardinal <number>                  max number of items per set\n\
-\t-maxTime <seconds>                     max time in seconds\n\
-\t-grammarFile <file>                    the grammar\n\
-\t-lexiconFile <file>                    the lexicon\n\
-\t-inputFile <file>                      the input\n\
-\t-compactedLexiconDirectory <directory> the directory which contains the compacted lexicon\n\
-\t-compactedLexiconFile <file>           the compacted lexicon prefix name\n\
+    std::cerr << "\
+\t-maxLength <number>                         max number of length\n\
+\t-maxUsages <number>                         max number of rule usage\n\
+\t-maxCardinal <number>                       max number of items per set\n\
+\t-maxTime <seconds>                          max time in seconds\n\
+\t-grammarFile <file>                         the grammar\n\
+\t-lexiconFile <file>                         the lexicon\n\
+\t-inputFile <file>                           the input\n\
+\t-compactedLexiconDirectory/-cld <directory> the directory which contains the compacted lexicon\n\
+\t-compactedLexiconFile/-clf <file>           the compacted lexicon prefix name\n\
 ";
 #ifdef OUTPUT_XML
-    std::cerr << "\t-xml <file>                 the XML file\n";
+    std::cerr << "\
+\t-xml <file>                                 the XML file\n";
 #endif
 }
 
@@ -263,7 +262,21 @@ int main(int argn, char **argv) {
                             Usage(/*argv*/);
                             return EXIT_FAILURE;
                         }
+                    } else if (!strcmp(argv[arg] + 1, "cld")) {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                            synthesizer.setCompactedDirectoryName(argv[++arg]);
+                        else {
+                            Usage(/*argv*/);
+                            return EXIT_FAILURE;
+                        }
                     } else if (!strcmp(argv[arg] + 1, "compactedLexiconFile")) {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                            synthesizer.setCompactedLexiconFileName(argv[++arg]);
+                        else {
+                            Usage(/*argv*/);
+                            return EXIT_FAILURE;
+                        }
+                    } else if (!strcmp(argv[arg] + 1, "clf")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setCompactedLexiconFileName(argv[++arg]);
                         else {

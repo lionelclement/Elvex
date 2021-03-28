@@ -1,6 +1,6 @@
-#line 2 "/Users/clement/workspace/Elvex/src/postedition_en.cc"
+#line 2 "/Users/clement/workspace/elvex/src/postedition_en.cc"
 
-#line 4 "/Users/clement/workspace/Elvex/src/postedition_en.cc"
+#line 4 "/Users/clement/workspace/elvex/src/postedition_en.cc"
 
 #define  YY_INT_ALIGNED short int
 
@@ -534,7 +534,7 @@ char *yytext;
 #define YY_NO_INPUT
 
 
-#line 538 "/Users/clement/workspace/Elvex/src/postedition_en.cc"
+#line 538 "/Users/clement/workspace/elvex/src/postedition_en.cc"
 
 #define INITIAL 0
 #define NEXT 1
@@ -721,7 +721,7 @@ YY_DECL
 #line 39 "src/postedition_en.l"
 
 
-#line 725 "/Users/clement/workspace/Elvex/src/postedition_en.cc"
+#line 725 "/Users/clement/workspace/elvex/src/postedition_en.cc"
 
 	if ( !(yy_init) )
 		{
@@ -905,7 +905,7 @@ YY_RULE_SETUP
 #line 69 "src/postedition_en.l"
 ECHO;
 	YY_BREAK
-#line 909 "/Users/clement/workspace/Elvex/src/postedition_en.cc"
+#line 909 "/Users/clement/workspace/elvex/src/postedition_en.cc"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(NEXT):
 case YY_STATE_EOF(BEGINLINE):

@@ -35,12 +35,12 @@ Parser parser = Parser();
 void usage() {
     std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global-option] <build|consult|list> <input>\n\
 \tGlobal options:\n\
-\t-h|--help                              print this\n\
-\t-v|--version                           print version\n\
-\t-compactedLexiconDirectory <directory> the directory which contains the compacted lexicon\n\
-\t-compactedLexiconFile <file>           the compacted lexicon prefix name\n\
-\t-patternFile <file>                    the pattern file\n\
-\t-morphoFile <file>                     the morpho file"
+\t-h|--help                                     print this\n\
+\t-v|--version                                  print version\n\
+\t-compactedLexiconDirectory/-cld <directory>   the directory which contains the compacted lexicon\n\
+\t-compactedLexiconFile/-clf <file>             the compacted lexicon prefix name\n\
+\t-patternFile <file>                           the pattern file\n\
+\t-morphoFile <file>                            the morpho file"
             << std::endl;
     exit(EXIT_SUCCESS);
 }
@@ -73,7 +73,11 @@ int main(int argn, char **argv) {
                         return EXIT_SUCCESS;
                     } else if (!strcmp(argv[arg] + 1, "compactedLexiconFile")) {
                         prefix = std::string(argv[++arg]);
+                    } else if (!strcmp(argv[arg] + 1, "clf")) {
+                        prefix = std::string(argv[++arg]);
                     } else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory")) {
+                        directory = std::string(argv[++arg]);
+                    } else if (!strcmp(argv[arg] + 1, "cld")) {
                         directory = std::string(argv[++arg]);
                     } else if (!strcmp(argv[arg] + 1, "patternFile")) {
                         patternFile = std::string(argv[++arg]);
