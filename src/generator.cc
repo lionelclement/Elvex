@@ -21,7 +21,7 @@
 #include <stack>
 #include <string>
 #include <utility>
-#include "parser.hpp"
+#include "generator.hpp"
 #include "vartable.hpp"
 #include "messages.hpp"
 
@@ -36,7 +36,7 @@ extern void scan_string(std::string);
 /* **************************************************
  *
  ************************************************** */
-Parser::Parser() {
+Generator::Generator() {
     this->startFeatures = featuresPtr();
     this->localFeatures = featuresPtr();
     this->verbose = false;
@@ -46,128 +46,128 @@ Parser::Parser() {
 /* **************************************************
  *
  ************************************************** */
-Parser::~Parser() {
+Generator::~Generator() {
     DELETE
 }
 
 /* **************************************************
  *
  ************************************************** */
-class Grammar &
-Parser::getGrammar() {
-    return this->grammar;
+class Rules &
+Generator::getRules() {
+    return this->rules;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setStartFeatures(featuresPtr f) {
+void Generator::setStartFeatures(featuresPtr f) {
     this->startFeatures = f;
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Parser::getStartFeatures() const {
+featuresPtr Generator::getStartFeatures() const {
     return this->startFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::getStartTerm() const {
+unsigned int Generator::getStartTerm() const {
     return startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setStartTerm(unsigned int _startTerm) {
+void Generator::setStartTerm(unsigned int _startTerm) {
     this->startTerm = _startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setVerbose(const bool _verbose) {
+void Generator::setVerbose(const bool _verbose) {
     this->verbose = _verbose;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Parser::getVerbose() const {
+bool Generator::getVerbose() const {
     return this->verbose;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map &
-Parser::getLexicon() {
+Generator::entries_map_map &
+Generator::getLexicon() {
     return lexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setLexicon(entries_map_map &_lexicon) {
+void Generator::setLexicon(entries_map_map &_lexicon) {
     this->lexicon = _lexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entry_map &Parser::getMapLocalEntry() {
+Generator::entry_map &Generator::getMapLocalEntry() {
     return mapLocalEntry;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::findLexicon(unsigned int i) const {
+Generator::entries_map_map::const_iterator Generator::findLexicon(unsigned int i) const {
     return lexicon.find(i);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::beginLexicon() const {
+Generator::entries_map_map::const_iterator Generator::beginLexicon() const {
     return lexicon.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::endLexicon() const {
+Generator::entries_map_map::const_iterator Generator::endLexicon() const {
     return lexicon.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Parser::getLocalFeatures() const {
+featuresPtr Generator::getLocalFeatures() const {
     return localFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setLocalFeatures(featuresPtr _localFeatures) {
+void Generator::setLocalFeatures(featuresPtr _localFeatures) {
     this->localFeatures = _localFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::pushBufferName(std::string name) {
+void Generator::pushBufferName(std::string name) {
     bufferNames.push_front(name);
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Parser::popBufferName() {
+std::string Generator::popBufferName() {
     std::string str = bufferNames.front();
     this->bufferNames.pop_front();
     return str;
@@ -176,21 +176,21 @@ std::string Parser::popBufferName() {
 /* **************************************************
  *
  ************************************************** */
-std::string Parser::getTopBufferName() {
+std::string Generator::getTopBufferName() {
     return bufferNames.front();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::pushLineno(unsigned int i) {
+void Generator::pushLineno(unsigned int i) {
     linenos.push_front(i);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::popLineno() {
+unsigned int Generator::popLineno() {
     unsigned int i = linenos.front();
     linenos.pop_front();
     return i;
@@ -199,14 +199,14 @@ unsigned int Parser::popLineno() {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::getTopLineno() {
+unsigned int Generator::getTopLineno() {
     return linenos.front();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::printLexicon(std::ostream &out) const {
+void Generator::printLexicon(std::ostream &out) const {
     out << "<ul>";
     for (entries_map_map::const_iterator i = beginLexicon(); i != endLexicon(); ++i) {
         out << "<li>";
@@ -235,14 +235,14 @@ void Parser::printLexicon(std::ostream &out) const {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Parser::addMacros(std::string key, featuresPtr features) {
+void Generator::addMacros(std::string key, featuresPtr features) {
     macros.insert(std::pair<std::string, featuresPtr>(key, features));
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-featuresPtr Parser::findMacros(const std::string& str) {
+featuresPtr Generator::findMacros(const std::string& str) {
     //std::cerr << "find @" << str << ":";
     std::unordered_map<std::string, featuresPtr>::const_iterator found;
     found = macros.find(str);
@@ -256,7 +256,7 @@ featuresPtr Parser::findMacros(const std::string& str) {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::parseFile(std::string prefix, std::string fileName) {
+unsigned int Generator::parseFile(std::string prefix, std::string fileName) {
     unsigned int result;
     result = parseString(prefix + "\n#include " + fileName);
     return result;
@@ -265,7 +265,7 @@ unsigned int Parser::parseFile(std::string prefix, std::string fileName) {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
+unsigned int Generator::parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
     unsigned int result;
     pushBufferName(bufferName);
     result = parseString(prefix + "\n" + buffer);
@@ -275,7 +275,7 @@ unsigned int Parser::parseBuffer(std::string prefix, std::string buffer, std::st
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::parseString(std::string buffer) {
+unsigned int Generator::parseString(std::string buffer) {
     init_buffer();
     scan_string(buffer);
     unsigned int result = rulesparse();
@@ -283,7 +283,7 @@ unsigned int Parser::parseString(std::string buffer) {
     return result;
 }
 
-void Parser::listMacros() {
+void Generator::listMacros() {
     for (auto iterator : macros) {
         std::cerr << "\"" << iterator.first << "\"" << std::endl;
     }

@@ -17,14 +17,14 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_SYNTHESIZER_H
-#define ELVEX_SYNTHESIZER_H
+#ifndef ELVEX_APPLICATION_H
+#define ELVEX_APPLICATION_H
 
 #include <map>
 #include "shared_ptr.hpp"
 #include "forestmap.hpp"
 #include "memoization-map.hpp"
-#include "parser.hpp"
+#include "generator.hpp"
 
 #ifndef MAXLENGTH
 #define MAXLENGTH 1000
@@ -42,7 +42,7 @@
 #define MAXATTEMPTS 3000
 #endif
 
-class Synthesizer {
+class Application {
 
 public:
     typedef std::map<unsigned int, itemPtr> Item_map;
@@ -52,6 +52,10 @@ public:
         FORM_FEATURES,
         PRED_FEATURES
     };
+
+public:
+
+    Generator generator;
 
 private:
     ItemSet_map states;
@@ -65,7 +69,7 @@ private:
     unsigned int maxUsages;
     unsigned int maxCardinal;
     std::string lexiconFileName;
-    std::string grammarFileName;
+    std::string rulesFileName;
     std::string inputFileName;
 
     std::list<std::string> inputs;
@@ -99,9 +103,9 @@ private:
 
 public:
 
-    Synthesizer();
+    Application();
 
-    ~Synthesizer();
+    ~Application();
 
     ItemSet_map::const_iterator begin() const;
 
@@ -115,7 +119,7 @@ public:
 
     void setLexiconFileName(char *);
 
-    void setGrammarFileName(char *);
+    void setRulesFileName(char *);
 
     void setCompactedLexiconFileName(char *);
 
@@ -129,7 +133,7 @@ public:
 
     std::string getCompactedDirectoryName() const;
 
-    std::string getGrammarFileName() const;
+    std::string getRulesFileName() const;
 
     void setMaxLength(unsigned int);
 
@@ -191,28 +195,27 @@ public:
 
     void printState(std::ostream &, const itemSetPtr&);
 
-    void close(class Parser &, const itemSetPtr&, unsigned int);
+    void close(class Generator &, const itemSetPtr&, unsigned int);
 
-    bool shift(class Parser &, const itemSetPtr&, unsigned int);
+    bool shift(class Generator &, const itemSetPtr&, unsigned int);
 
     void clear();
 
     static itemPtr createItem(const itemPtr&, unsigned int);
 
-    void generate(class Parser &);
+    void generate(class Generator &);
 
-    entriesPtr
-    findCompactedLexicon(class Parser &, unsigned int code, const std::string& str, unsigned int pred);
+    entriesPtr findCompactedLexicon(class Generator &, unsigned int code, const std::string& str, unsigned int pred);
 
     std::string keyMemoization(const itemPtr&, const itemPtr&);
 
     void setVerbose(bool _verbose);
 
-    entriesPtr findByPos(Parser &parser, Parser::entries_map *pMap, unsigned int term);
+    entriesPtr findByPos(Generator &, Generator::entries_map *pMap, unsigned int term);
 
-    entriesPtr findByForm(Parser::entries_map *pMap);
+    entriesPtr findByForm(Generator::entries_map *pMap);
 
-    entriesPtr findByPred(Parser &parser, Parser::entries_map *listPred, unsigned int term, unsigned int pred);
+    entriesPtr findByPred(Generator &, Generator::entries_map *listPred, unsigned int term, unsigned int pred);
 };
 
-#endif // ELVEX_SYNTHESIZER_H
+#endif // ELVEX_APPLICATION_H

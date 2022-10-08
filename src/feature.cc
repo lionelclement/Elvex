@@ -108,7 +108,7 @@ void Feature::setValue(valuePtr _value) {
 /* **************************************************
  *
  ************************************************** */
-void Feature::print(std::ostream &outStream) const {
+void Feature::print(std::ostream& outStream) const {
     switch (type) {
         case Feature::PRED:
             outStream << R"(<TD ALIGN="LEFT">PRED</TD><TD ALIGN="LEFT">)";
@@ -144,7 +144,7 @@ void Feature::print(std::ostream &outStream) const {
             break;
         case Feature::VARIABLE:
             outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD>";
-            if (value && !value->_isNil()) {
+            if (value && !value->isNil()) {
                 outStream << "<TD ALIGN=\"LEFT\">";
                 value->print(outStream);
                 outStream << "</TD>";
@@ -156,7 +156,7 @@ void Feature::print(std::ostream &outStream) const {
 /* **************************************************
  *
  ************************************************** */
-void Feature::flatPrint(std::ostream &outStream) const {
+void Feature::flatPrint(std::ostream& outStream) const {
     switch (type) {
         case Feature::PRED:
             outStream << "PRED:";
@@ -188,7 +188,7 @@ void Feature::flatPrint(std::ostream &outStream) const {
             break;
         case Feature::VARIABLE:
             outStream << attributeToString();
-            if (value && !value->_isNil()) {
+            if (value && !value->isNil()) {
                 value->flatPrint(outStream);
             }
             break;
@@ -294,14 +294,14 @@ bool Feature::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
-void Feature::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Feature::enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on) {
     switch (type) {
         case Feature::PRED:
         case Feature::LEMMA:
         case Feature::FORM:
         case Feature::CONSTANT:
             if (value)
-                value->enable(root, item, synthesizer, effect, on);
+                value->enable(root, item, application, effect, on);
             break;
         case Feature::VARIABLE:
             if (on) {
@@ -358,8 +358,9 @@ bool Feature::containsVariable() {
             break;
     }
     if (result)
-        variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     else
-        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     return result;
 }
+

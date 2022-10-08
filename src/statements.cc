@@ -25,7 +25,7 @@
 #include "messages.hpp"
 #include "item.hpp"
 #include "statement.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 #include "listfeatures.hpp"
 
 /* **************************************************
@@ -87,7 +87,7 @@ void Statements::addStatement(const statementPtr& statement) {
 /* **************************************************
  *
  ************************************************** */
-void Statements::print(std::ostream &outStream, unsigned int tabulation, unsigned int yetColored) const {
+void Statements::print(std::ostream& outStream, unsigned int tabulation, unsigned int yetColored) const {
     unsigned int color = yetColored;
     if (isSetFlags(Flags::SEEN)) {
         color |= 0x0000FFu;
@@ -131,7 +131,7 @@ void Statements::makeSerialString() {
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags) {
+statementsPtr Statements::clone(const std::bitset<FLAGS>& protectedFlags) {
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
     for (list::const_iterator i = this->statements.begin(); i != this->statements.end(); ++i)
@@ -153,7 +153,7 @@ void Statements::renameVariables(size_t i) {
 /* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
-void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
+void Statements::apply(itemPtr item, Application *application, bool& effect) {
     if (item->isSetFlags(Flags::BOTTOM))
         return;
     if (item->isSetFlags(Flags::SEEN)) {
@@ -162,7 +162,7 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
 
     if (guard) {
         if (guard->isUnsetFlags(Flags::SEEN)) {
-            guard->apply(item, parser, synthesizer, effect);
+            guard->apply(item, application, effect);
             guard->addFlags(Flags::SEEN);
             if (guard->isSetFlags(Flags::BOTTOM)) {
                 item->addFlags(Flags::BOTTOM);
@@ -176,9 +176,9 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
     for (list::iterator statement = statements.begin(); statement != statements.end(); ++statement) {
         if ((*statement)->isUnsetFlags(Flags::SEEN)) {
             bool enable_effect = false;
-            (*statement)->enable(*statement, item, synthesizer, enable_effect, false);
+            (*statement)->enable(*statement, item, application, enable_effect, false);
             if (enable_effect)
-                (*statement)->enable(*statement, item, synthesizer, enable_effect, true);
+                (*statement)->enable(*statement, item, application, enable_effect, true);
             if (enable_effect)
                 allDone = false;
             if ((*statement)->isSetFlags(Flags::DISABLED)) {
@@ -189,7 +189,7 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
                 item->setEnvironment(environmentPtr());
             }
             effect = false;
-            (*statement)->apply(item, parser, synthesizer, effect);
+            (*statement)->apply(item, application, effect);
             if ((*statement)->isSetFlags(Flags::BOTTOM)) {
                 item->addFlags(Flags::BOTTOM);
                 break;
@@ -208,11 +208,11 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
 /* **************************************************
  *
  ************************************************** */
-void Statements::enable(itemPtr item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Statements::enable(itemPtr item, Application *application, bool& effect, bool on) {
     if (guard)
-        guard->enable(guard, item, synthesizer, effect, on);
+        guard->enable(guard, item, application, effect, on);
     for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
-        (*i)->enable(*i, item, synthesizer, effect, on);
+        (*i)->enable(*i, item, application, effect, on);
     }
 }
 

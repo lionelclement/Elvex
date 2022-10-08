@@ -23,7 +23,7 @@
 #include "terms.hpp"
 #include "statements.hpp"
 #include "messages.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 #include "vartable.hpp"
 
 /* ************************************************************
@@ -144,8 +144,8 @@ statementsPtr Rule::getStatements(void) const {
 /* ************************************************************
  *
  ************************************************************ */
-void Rule::incUsages(class Synthesizer *synthesizer) {
-    if (++usages > synthesizer->getMaxUsages()) {
+void Rule::incUsages(class Application *application) {
+    if (++usages > application->getMaxUsages()) {
         FATAL_ERROR("*** error: too much usages of the same rule: " + this->toString())
     }
 }

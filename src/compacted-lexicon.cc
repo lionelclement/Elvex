@@ -31,7 +31,7 @@
 #include "entries.hpp"
 #include "entry.hpp"
 #include "lexicon.hpp"
-#include "parser.hpp"
+#include "generator.hpp"
 #include "statement.hpp"
 
 /* **************************************************
@@ -259,20 +259,20 @@ void CompactedLexicon::closeFiles() {
  *
  ************************************************** */
 std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs2) {
-    extern Parser parser;
+    extern Application application;
     std::stringstream stringStream;
     featuresPtr features1;
     if (!fs1.empty()) {
         stringStream.str("");
         stringStream << '[' << fs1 << ']';
         std::string fsString = stringStream.str();
-        if (parser.parseBuffer("#", fsString, "morphology")) {
+        if (application.generator.parseBuffer("#", fsString, "morphology")) {
             //stringStream.str("");
             //stringStream <<  << std::endl;
             FATAL_ERROR("error in lexicon: " << fs1)
             //stringStream.str())
         }
-        features1 = parser.getLocalFeatures();
+        features1 = application.generator.getLocalFeatures();
     } else
         features1 = featuresPtr();
 
@@ -281,12 +281,12 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
         stringStream.str("");
         stringStream << '[' << fs2 << ']';
         std::string fsString = stringStream.str();
-        if (parser.parseBuffer("#", fsString, "morphology")) {
+        if (application.generator.parseBuffer("#", fsString, "morphology")) {
             stringStream.str("");
             stringStream << "error in lexicon: " << fs2 << std::endl;
             FATAL_ERROR(stringStream.str())
         }
-        features2 = parser.getLocalFeatures();
+        features2 = application.generator.getLocalFeatures();
     } else
         features2 = featuresPtr();
 

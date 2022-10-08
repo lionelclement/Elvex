@@ -87,7 +87,7 @@ public:
 
     bool renameVariables(size_t);
 
-    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr&, const itemPtr&, class Application* application, bool &, bool);
 
     bool findVariable(const bitsetPtr) const;
 

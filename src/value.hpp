@@ -122,29 +122,29 @@ public:
 
     bool renameVariables(size_t);
 
-    bool _isNil(void) const;
+    bool isNil(void) const;
 
-    bool _isFalse(void) const;
+    bool isFalse(void) const;
 
-    bool _isTrue(void) const;
+    bool isTrue(void) const;
 
-    bool _isAnonymous(void) const;
+    bool isAnonymous(void) const;
 
-    bool _isNumber(void) const;
+    bool isNumber(void) const;
 
-    bool _isForm(void) const;
+    bool isForm(void) const;
 
-    bool _isVariable(void) const;
+    bool isVariable(void) const;
 
-    bool _isIdentifier(void) const;
+    bool isIdentifier(void) const;
 
-    bool _isFeatures(void) const;
+    bool isFeatures(void) const;
 
-    bool _isConstant(void) const;
+    bool isConstant(void) const;
 
-    bool _isList(void) const;
+    bool isList(void) const;
 
-    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(const statementPtr& root, const itemPtr& item, class Application* application, bool &effect, bool on);
 
     bool eq(valuePtr) const;
 
@@ -153,7 +153,7 @@ public:
     bool findVariable(const bitsetPtr&) const;
 
     void
-    apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr& variable, const statementPtr& body,
+    apply(const itemPtr& item, class Application* application, const statementPtr& variable, const statementPtr& body,
           bool &effect);
 
     bool containsVariable(void);

@@ -56,13 +56,13 @@ public:
 
     void renameVariables(size_t);
 
-    void print(std::ostream &, unsigned int tabulation = 0, unsigned int yetColored = 0) const;
+    void print(std::ostream& , unsigned int tabulation = 0, unsigned int yetColored = 0) const;
 
-    statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
+    statementsPtr clone(const std::bitset<FLAGS>& savedFlags);
 
-    void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(itemPtr item, class Application *application, bool& effect);
 
-    void enable(itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(itemPtr item, class Application *application, bool& effect, bool on);
 
 };
 

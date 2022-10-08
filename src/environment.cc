@@ -205,19 +205,19 @@ void Environment::replaceVariables(const featuresPtr& features, bool &effect) {
                 valuePtr value = find(feature->getAttribute());
                 if (!value) {
                     /* do nothing */
-                } else if (value->_isNil()) {
+                } else if (value->isNil()) {
                     /* do nothing */
-                } else if (value->_isFeatures()) {
+                } else if (value->isFeatures()) {
                     features->erase(it);
                     for (const auto& f : *value->getFeatures()) {
                         features->add(f);
                     }
                     effect = true;
                     goto redo;
-                } else if (value->_isConstant()) {
+                } else if (value->isConstant()) {
                     feature->setType(Feature::CONSTANT);
                     feature->setAttribute(value->getBits());
-                } else if (value->_isAnonymous()) {
+                } else if (value->isAnonymous()) {
                     features->erase(it);
                     effect = true;
                     goto redo;
@@ -227,7 +227,7 @@ void Environment::replaceVariables(const featuresPtr& features, bool &effect) {
             }
                 break;
         }
-        features->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
+        features->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     }
     /***
      std::cerr << "<H4>Environment::replaceVariables(features) DONE</H4>" << std::endl;
@@ -265,7 +265,7 @@ void Environment::replaceVariables(const valuePtr& value, bool &effect) {
      ***/
     if (!value->containsVariable())
         return;
-    if (!value->_isNil() && !value->_isAnonymous()) {
+    if (!value->isNil() && !value->isAnonymous()) {
         switch (value->getType()) {
             case Value::_NIL:
             case Value::_TRUE:
@@ -290,7 +290,7 @@ void Environment::replaceVariables(const valuePtr& value, bool &effect) {
                 }
                 break;
         }
-        value->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
+        value->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     }
     /***
      std::cerr << "<H4>Environment::replaceVariables(value) result</H4>" << std::endl;
@@ -321,9 +321,9 @@ void Environment::replaceVariables(const listPtr& list, bool &effect) {
         case List::ATOM:
             if (list->isVariable()) {
                 valuePtr value = this->find(list->getValue()->getBits());
-                if (value->_isList()) {
+                if (value->isList()) {
                     *list = *(value->getList());
-                } else if (value->_isNil()) {
+                } else if (value->isNil()) {
                     *list = *List::NIL_LIST;
                 } else {
                     list->setValue(value);
@@ -343,7 +343,7 @@ void Environment::replaceVariables(const listPtr& list, bool &effect) {
         case List::NIL:
             break;
     }
-    list->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
+    list->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     /***
      std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
      std::cerr << "<table border=\"1\"><tr><th>List</th></tr>";

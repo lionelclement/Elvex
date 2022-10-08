@@ -17,18 +17,19 @@
  *
  ************************************************** */
 
-#include "grammar.hpp"
+#include "rules.hpp"
 #include "terms.hpp"
 #include "vartable.hpp"
 #include "messages.hpp"
-#include "parser.hpp"
+#include "generator.hpp"
+#include "application.hpp"
 #include "entries.hpp"
 #include "rule.hpp"
 
 /* **************************************************
  *
  ************************************************** */
-Grammar::Grammar(void) {
+Rules::Rules(void) {
     this->firstRule = nullptr;
     this->startTerm = 0;
     this->idMax = 0;
@@ -38,7 +39,7 @@ Grammar::Grammar(void) {
 /* **************************************************
  *
  ************************************************** */
-Grammar::~Grammar(void) {
+Rules::~Rules(void) {
     DELETE
     terminals.clear();
     nonTerminals.clear();
@@ -56,70 +57,70 @@ Grammar::~Grammar(void) {
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int> &Grammar::getTerminals(void) {
+std::set<unsigned int> &Rules::getTerminals(void) {
     return terminals;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int> &Grammar::getNonTerminals(void) {
+std::set<unsigned int> &Rules::getNonTerminals(void) {
     return nonTerminals;
 }
 
 /* **************************************************
  *
  ************************************************** */
-const Grammar::ruleList &Grammar::getRules(void) const {
+const Rules::ruleList &Rules::getRules(void) const {
     return rules;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Grammar::getStartTerm(void) const {
+unsigned int Rules::getStartTerm(void) const {
     return startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-rulePtr Grammar::getFirstRule(void) const {
+rulePtr Rules::getFirstRule(void) const {
     return firstRule;
 }
 
 /* **************************************************
  *
  ************************************************** */
-const unsigned int *Grammar::getRefIdMax(void) const {
+const unsigned int *Rules::getRefIdMax(void) const {
     return &idMax;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Grammar::setStartTerm(unsigned int _startTerm) {
+void Rules::setStartTerm(unsigned int _startTerm) {
     this->startTerm = _startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Grammar::ruleList::const_iterator Grammar::rulesBegin(void) const {
+Rules::ruleList::const_iterator Rules::rulesBegin(void) const {
     return rules.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Grammar::ruleList::const_iterator Grammar::rulesEnd(void) const {
+Rules::ruleList::const_iterator Rules::rulesEnd(void) const {
     return rules.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addRule(rulePtr rule) {
+void Rules::addRule(rulePtr rule) {
     rules.push_back(rule);
     //std::pair<ruleList::iterator, bool> result = rules.insert(rule);
     //return result.second;
@@ -128,7 +129,7 @@ void Grammar::addRule(rulePtr rule) {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addNewStartTerm(bool addENDTerminal) {
+void Rules::addNewStartTerm(bool addENDTerminal) {
     rulePtr r;
     std::vector<termsPtr> rhs;
 
@@ -154,7 +155,7 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::print(std::ostream &outStream) const {
+void Rules::print(std::ostream &outStream) const {
     outStream << "<table border=\"1\"><tr><td>";
     outStream << "Terminals</td><td>";
     std::set<unsigned int>::const_iterator iter;
@@ -199,21 +200,21 @@ void Grammar::print(std::ostream &outStream) const {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addNonTerminal(unsigned int s) {
+void Rules::addNonTerminal(unsigned int s) {
     nonTerminals.insert(s);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addTerminal(unsigned int s) {
+void Rules::addTerminal(unsigned int s) {
     terminals.insert(s);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Grammar::isTerminal(unsigned int t) const {
+bool Rules::isTerminal(unsigned int t) const {
     std::set<unsigned int>::const_iterator iter = terminals.find(t);
     return (iter != terminals.end());
 }
@@ -221,7 +222,7 @@ bool Grammar::isTerminal(unsigned int t) const {
 /* **************************************************
  *
  ************************************************** */
-bool Grammar::isNonTerminal(unsigned int t) const {
+bool Rules::isNonTerminal(unsigned int t) const {
     std::set<unsigned int>::const_iterator iter = nonTerminals.find(t);
     return (iter != nonTerminals.end());
 }
@@ -229,7 +230,7 @@ bool Grammar::isNonTerminal(unsigned int t) const {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::analyseTerms(class Parser &parser) {
+void Rules::analyseTerms(class Application &application) {
     nonTerminals.clear();
     terminals.clear();
     ruleList::const_iterator iterRules;
@@ -245,12 +246,12 @@ void Grammar::analyseTerms(class Parser &parser) {
                     unsigned long int code = (*term);
                     terminals.insert(code);
 
-                    Parser::entries_map *predToEntries;
-                    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find(code);
-                    if (foundCode == parser.getLexicon().end()) {
+                    Generator::entries_map *predToEntries;
+                    Generator::entries_map_map::iterator foundCode = application.generator.getLexicon().find(code);
+                    if (foundCode == application.generator.getLexicon().end()) {
                         predToEntries = new std::map<unsigned int, entriesPtr>;
                         predToEntries->insert(std::make_pair(code, Entries::create()));
-                        parser.getLexicon().insert(std::make_pair(code, predToEntries));
+                        application.generator.getLexicon().insert(std::make_pair(code, predToEntries));
                     }
                 }
             }
@@ -263,9 +264,9 @@ void Grammar::analyseTerms(class Parser &parser) {
  *
  ************************************************** */
 void
-Grammar::toXML(xmlNodePtr nodeRoot)
+Rules::toXML(xmlNodePtr nodeRoot)
 {
-   xmlNodePtr g=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"GRAMMAR", NULL);
+   xmlNodePtr g=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"Rules", NULL);
    xmlNodePtr t=xmlNewChild(g, NULL, (const xmlChar*)"TERMINALS", NULL);
    std::set<unsigned int>::const_iterator iter;
    for (iter=terminals.begin(); iter != terminals.end(); ++iter) {
@@ -287,7 +288,7 @@ Grammar::toXML(xmlNodePtr nodeRoot)
  *
  % ************************************************** */
 std::list<rulePtr> *
-Grammar::findRules(unsigned int lhs) {
+Rules::findRules(unsigned int lhs) {
     std::list<rulePtr> *result = new std::list<rulePtr>;
     ruleList::const_iterator iterRules;
     for (iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++) {

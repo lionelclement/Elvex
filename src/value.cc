@@ -19,6 +19,7 @@
 
 #include <sstream>
 #include <utility>
+
 #include "value.hpp"
 #include "environment.hpp"
 #include "list.hpp"
@@ -28,7 +29,7 @@
 #include "messages.hpp"
 #include "item.hpp"
 #include "shared_ptr.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 #include "vartable.hpp"
 
 valuePtr Value::NIL_VALUE = Value::create(Value::_NIL);
@@ -179,77 +180,77 @@ listPtr Value::getList() const {
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isNil() const {
+bool Value::isNil() const {
     return (type == _NIL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isFalse() const {
+bool Value::isFalse() const {
     return ((type == _NIL) || (type == _ANONYMOUS));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isTrue() const {
+bool Value::isTrue() const {
     return (type == _TRUE);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isAnonymous() const {
+bool Value::isAnonymous() const {
     return type == _ANONYMOUS;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isNumber() const {
+bool Value::isNumber() const {
     return type == _NUMBER;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isForm() const {
+bool Value::isForm() const {
     return type == _FORM;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isFeatures() const {
+bool Value::isFeatures() const {
     return type == _FEATURES;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isConstant() const {
+bool Value::isConstant() const {
     return type == _CONSTANT;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isVariable() const {
+bool Value::isVariable() const {
     return type == _VARIABLE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isIdentifier() const {
+bool Value::isIdentifier() const {
     return type == _CODE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isList() const {
+bool Value::isList() const {
     return type == _LIST;
 }
 
@@ -628,22 +629,22 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment) {
     }
 
         // NIL < NIL
-    else if (_isNil() && o->_isNil()) {
+    else if (isNil() && o->isNil()) {
     }
 
         // NIL < …
         // … < NIL
-    else if (_isNil() || o->_isNil()) {
+    else if (isNil() || o->isNil()) {
     }
 
         // TRUE < TRUE
-    else if (_isTrue() && o->_isTrue()) {
+    else if (isTrue() && o->isTrue()) {
 
     }
 
         // TRUE < …
         // … < TRUE
-    else if (_isTrue() || o->_isTrue()) {
+    else if (isTrue() || o->isTrue()) {
         ret = false;
 
     } else if ((type != o->type)) {
@@ -702,10 +703,10 @@ bool Value::eq(valuePtr o) const {
 
     bool ret = false;
 
-    if (o->_isNil() && this->_isNil())
+    if (o->isNil() && this->isNil())
         ret = true;
 
-    else if (o->_isNil() || this->_isNil())
+    else if (o->isNil() || this->isNil())
         ret = false;
 
     else if (o->type == _ANONYMOUS || this->type == _ANONYMOUS)
@@ -755,7 +756,7 @@ bool Value::lt(const valuePtr &o) const {
         o->print(std::cerr);
         std::cerr << std::endl;
     ***/
-    if (_isNumber() && o->_isNumber())
+    if (isNumber() && o->isNumber())
         return (number < o->getNumber());
     else FATAL_ERROR_UNEXPECTED
     //return ret;
@@ -825,7 +826,7 @@ bool Value::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
-void Value::enable(const statementPtr &root, const itemPtr &item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Value::enable(const statementPtr &root, const itemPtr &item, Application *application, bool &effect, bool on) {
     switch (type) {
         case _NIL:
         case _TRUE:
@@ -847,10 +848,10 @@ void Value::enable(const statementPtr &root, const itemPtr &item, Synthesizer *s
             }
             break;
         case _FEATURES:
-            getFeatures()->enable(root, item, synthesizer, effect, on);
+            getFeatures()->enable(root, item, application, effect, on);
             break;
         case _LIST:
-            getList()->enable(root, item, synthesizer, effect, on);
+            getList()->enable(root, item, application, effect, on);
             break;
     }
 }
@@ -887,14 +888,14 @@ bool Value::findVariable(const bitsetPtr &variable) const {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(const itemPtr &item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Value::apply(const itemPtr &item, Application *application, const statementPtr &variable,
                   const statementPtr& body,
                   bool &effect) {
     switch (type) {
         case _FEATURES:
             item->getEnvironment()->add(variable->getBits(), shared_from_this());
             effect = true;
-            body->apply(item, parser, synthesizer, effect);
+            body->apply(item, application, effect);
             item->getEnvironment()->remove(variable->getBits());
             break;
         default: FATAL_ERROR_UNEXPECTED
@@ -932,9 +933,9 @@ bool Value::containsVariable() {
             break;
     }
     if (result)
-        this->variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        this->variableFlag.setFlag(VariableFlag::CONTAINS_VARIABLE);
     else
-        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     return result;
 }
 

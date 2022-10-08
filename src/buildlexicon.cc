@@ -24,15 +24,17 @@
 #include "compacted-lexicon-info.hpp"
 #include "lexicon.hpp"
 #include "messages.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 #include "config.hpp"
+#include "usage_exception.hpp"
 
-Parser parser = Parser();
+Application application;
+Rules rules;
 
 /* **************************************************
  *
  ************************************************** */
-void usage() {
+void showUsage() {
     std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global-option] <build|consult|list> <input>\n\
 \tGlobal options:\n\
 \t-h|--help                                     print this\n\
@@ -49,6 +51,8 @@ void usage() {
  *
  ************************************************** */
 int main(int argn, char **argv) {
+    application = Application();
+    rules = application.generator.getRules();
     try {
         CompactedLexicon* lex;
         Buildlexicon::Choice mode = Buildlexicon::NONE;
@@ -69,8 +73,7 @@ int main(int argn, char **argv) {
                         std::cout << ELVEX_VERSION << std::endl;
                         return EXIT_SUCCESS;
                     } else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
-                        usage();
-                        return EXIT_SUCCESS;
+                        throw usage_exception();
                     } else if (!strcmp(argv[arg] + 1, "compactedLexiconFile")) {
                         prefix = std::string(argv[++arg]);
                     } else if (!strcmp(argv[arg] + 1, "clf")) {
@@ -131,14 +134,14 @@ int main(int argn, char **argv) {
                         stream.str("");
                         stream << '[' << f << ']';
                         std::string fsString = stream.str();
-                        if (parser.parseBuffer("#", fsString, "morphology")) {
+                        if (application.generator.parseBuffer("#", fsString, "morphology")) {
                             stream.str("");
                             stream << "error in lexicon: " << f << std::endl;
                             FATAL_ERROR(stream.str())
                         }
-                        features = parser.getLocalFeatures();
+                        features = application.generator.getLocalFeatures();
                         //features->flatPrint(std::cerr);
-                        parser.addMacros(_input, features);
+                        application.generator.addMacros(_input, features);
                     } else {
                         char form[MAXSTRING];
                         strcpy(form, line);
@@ -186,7 +189,7 @@ int main(int argn, char **argv) {
             inputFile.close();
         }
 
-        //parser.listMacros();
+        //application.listMacros();
 
         if (!patternFile.empty()) {
             std::ifstream inputFile;
@@ -252,7 +255,6 @@ int main(int argn, char **argv) {
                 lex->buildEntries(pattern, morpho);
                 lex->saveFsa();
                 lex->closeFiles();
-                return EXIT_SUCCESS;
             }
 
             case Buildlexicon::CONSULT: {
@@ -262,7 +264,6 @@ int main(int argn, char **argv) {
                 lex->loadData();
                 lex->consult();
                 lex->closeFiles();
-                return EXIT_SUCCESS;
             }
 
             case Buildlexicon::LIST: {
@@ -272,16 +273,18 @@ int main(int argn, char **argv) {
                 lex->loadData();
                 lex->list();
                 lex->closeFiles();
-                return EXIT_SUCCESS;
             }
 
             default:
+                throw usage_exception();
                 break;
         }
-        usage();
+    }
+    catch (usage_exception &e) {
+        showUsage();
     }
     catch (fatal_exception &e) {
-        std::cerr << e.getMessage() << std::endl;
+        return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
 }

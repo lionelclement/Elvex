@@ -176,7 +176,7 @@ bool List::isAtomic() const {
  *                                                            *
  ************************************************************ */
 bool List::isVariable() const {
-    return (this->type == List::ATOM) && (this->value->_isVariable());
+    return (this->type == List::ATOM) && (this->value->isVariable());
 }
 
 /* ************************************************************
@@ -288,7 +288,7 @@ List::buildEnvironment(const environmentPtr& environment, const listPtr& otherLi
         case NIL:
             if (otherList->isNil()) {
                 ret = true;
-            } else if ((otherList->isAtomic()) && (otherList->value->_isVariable())) {
+            } else if ((otherList->isAtomic()) && (otherList->value->isVariable())) {
                 environment->add(otherList->value->getBits(), Value::NIL_VALUE);
             } else {
                 ret = false;
@@ -296,7 +296,7 @@ List::buildEnvironment(const environmentPtr& environment, const listPtr& otherLi
             break;
 
         case ATOM:
-            if (this->value->_isVariable()) {
+            if (this->value->isVariable()) {
                 if (!otherList) {
                     FATAL_ERROR_UNEXPECTED
                 } else {
@@ -315,7 +315,7 @@ List::buildEnvironment(const environmentPtr& environment, const listPtr& otherLi
             } else if (!otherList) {
                 ret = false;
             } else if (otherList->isAtomic()) {
-                if (otherList->value->_isVariable())
+                if (otherList->value->isVariable())
                     environment->add(otherList->value->getBits(), this->getValue());
                 else if (!this->value->buildEnvironment(environment, otherList->value, acceptToFilterNULLVariables,
                                                         root))
@@ -511,18 +511,18 @@ listPtr List::pushBack(valuePtr _value) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
+void List::enable(const statementPtr& root, const itemPtr& item, Application* application, bool &effect, bool on) {
     switch (type) {
         case NIL:
             break;
         case ATOM:
-            value->enable(root, item, synthesizer, effect, on);
+            value->enable(root, item, application, effect, on);
             break;
         case PAIRP:
             if (pairp.car)
-                pairp.car->enable(root, item, synthesizer, effect, on);
+                pairp.car->enable(root, item, application, effect, on);
             if (pairp.cdr)
-                pairp.cdr->enable(root, item, synthesizer, effect, on);
+                pairp.cdr->enable(root, item, application, effect, on);
             break;
     }
 }
@@ -551,19 +551,19 @@ bool List::findVariable(const bitsetPtr& variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
+void List::apply(const itemPtr& item, Application* application, const statementPtr& variable, statementPtr body,
                  bool &effect) {
     switch (type) {
         case NIL:
             break;
         case ATOM:
-            value->apply(item, parser, synthesizer, variable, body->clone(0), effect);
+            value->apply(item, application, variable, body->clone(0), effect);
             break;
         case PAIRP:
             if (pairp.car)
-                pairp.car->apply(item, parser, synthesizer, variable, body, effect);
+                pairp.car->apply(item, application, variable, body, effect);
             if (pairp.cdr)
-                pairp.cdr->apply(item, parser, synthesizer, variable, body, effect);
+                pairp.cdr->apply(item, application, variable, body, effect);
             break;
     }
 }
@@ -605,9 +605,9 @@ bool List::containsVariable() {
             break;
     }
     if (result)
-        this->variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        this->variableFlag.setFlag(VariableFlag::CONTAINS_VARIABLE);
     else
-        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     /***
      std::cerr << "<H4>List::containsVariable done</H4>" << std::endl;
      std::cerr << (result ? "TRUE" : "FALSE");

@@ -27,7 +27,7 @@
 class ForestMap {
 
 public:
-    typedef std::unordered_map<const forestIdentifierPtr, forestPtr, ForestIdentifier::hash, ForestIdentifier::equal_to> map;
+    typedef std::unordered_map<forestIdentifierPtr, forestPtr, ForestIdentifier::hash, ForestIdentifier::equal_to> map;
 
 private:
     map data;

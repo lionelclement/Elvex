@@ -26,7 +26,7 @@
 #include "value.hpp"
 #include "messages.hpp"
 #include "bitset.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 
 featuresPtr Features::BOTTOM = createBottom();
 featuresPtr Features::NIL = createNil();
@@ -151,7 +151,7 @@ bool Features::isBottom() const {
 /* **************************************************
  *
  ************************************************** */
-void Features::print(std::ostream &outStream) const {
+void Features::print(std::ostream& outStream) const {
     if (isNil())
         outStream << "NIL";
     else if (isBottom())
@@ -180,7 +180,7 @@ void Features::print(std::ostream &outStream) const {
 /* **************************************************
  *
  ************************************************** */
-void Features::flatPrint(std::ostream &outStream, bool par) const {
+void Features::flatPrint(std::ostream& outStream, bool par) const {
     if (isNil())
         outStream << "NIL";
     else if (isBottom())
@@ -353,7 +353,7 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
                     i2->addFlags(Flags::SEEN);
 
                     // If both are NIL
-                    if ((i1->getValue()->_isNil()) && (i2->getValue()->_isNil())) {
+                    if ((i1->getValue()->isNil()) && (i2->getValue()->isNil())) {
                     }
                         // If both are TRUE
                     //else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
@@ -383,7 +383,7 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
                         } else {
                             ret = false;
                         }
-                    } else if (i1->getValue()->_isNil()) {
+                    } else if (i1->getValue()->isNil()) {
                     }
                         // i1: a = ...
                     else {
@@ -515,7 +515,7 @@ bool Features::subsumes(const featuresPtr& o, const environmentPtr& environment)
 /* **************************************************
  *
  ************************************************** */
-void Features::subFlags(const std::bitset<FLAGS> &flags) {
+void Features::subFlags(const std::bitset<FLAGS>& flags) {
     for (auto & i : features)
         i->subFlags(flags);
 }
@@ -537,9 +537,9 @@ bool Features::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
-void Features::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Features::enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on) {
     for (auto & feature : features)
-        feature->enable(root, item, synthesizer, effect, on);
+        feature->enable(root, item, application, effect, on);
 }
 
 /* **************************************************
@@ -556,7 +556,7 @@ void Features::deleteAnonymousVariables() {
             case Feature::CONSTANT:
                 if ((*iterator)->getValue()) {
                     (*iterator)->getValue()->deleteAnonymousVariables();
-                    if ((*iterator)->getValue() && ((*iterator)->getValue()->_isAnonymous())) {
+                    if ((*iterator)->getValue() && ((*iterator)->getValue()->isAnonymous())) {
                         features.erase(iterator);
                         goto redo;
                     }
@@ -586,12 +586,13 @@ bool Features::containsVariable() {
     for (auto & iterator : features) {
         if (iterator->containsVariable()) {
             result = true;
+            break;
         }
     }
     if (result)
-        variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        variableFlag.setFlag(VariableFlag::CONTAINS_VARIABLE);
     else
-        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     return result;
 }
 

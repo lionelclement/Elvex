@@ -140,9 +140,9 @@ public:
 
     void setInheritedFeatures(featuresPtr);
 
-    void buildSynthesizedFeatures(class Synthesizer *);
+    void buildSynthesizedFeatures(class Application *);
 
-    void buildInheritedSonFeatures(class Synthesizer *);
+    void buildInheritedSonFeatures(class Application *);
 
     environmentPtr getEnvironment() const;
 
@@ -172,7 +172,7 @@ public:
 
     void defaultInheritedSonFeatures(void);
 
-    void apply(class Parser &parser, class Synthesizer *synthesizer);
+    void apply(class Application *application);
 
     struct hash {
         size_t operator()(itemPtr const&) const;

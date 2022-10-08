@@ -57,7 +57,7 @@ public:
 
     const_iterator find(const itemPtr&) const;
 
-    bool insert(const itemPtr&, class Synthesizer *);
+    bool insert(const itemPtr&, class Application *);
 
     void erase(const itemPtr&);
 

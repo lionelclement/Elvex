@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_PARSER_H
-#define ELVEX_PARSER_H
+#ifndef ELVEX_GENERATOR_H
+#define ELVEX_GENERATOR_H
 
 #include <functional>
 #include <string>
@@ -26,12 +26,12 @@
 #include <unordered_map>
 #include <deque>
 #include "shared_ptr.hpp"
-#include "grammar.hpp"
+#include "rules.hpp"
 #include "entry.hpp"
 #include "entries.hpp"
 #include "features.hpp"
 
-class Parser {
+class Generator {
 
 public:
     typedef std::unordered_map<std::string, entryPtr> entry_map;
@@ -42,8 +42,9 @@ public:
 
     void listMacros();
 
+    Rules rules;
+
 private:
-    Grammar grammar;
     entries_map_map lexicon;
     entry_map mapLocalEntry;
     std::unordered_map<std::string, featuresPtr> macros;
@@ -55,9 +56,9 @@ private:
     std::deque<unsigned int> linenos;
 
 public:
-    Parser();
+    Generator();
 
-    ~Parser();
+    ~Generator();
 
     void pushBufferName(std::string);
 
@@ -69,7 +70,7 @@ public:
 
     unsigned int getTopLineno();
 
-    class Grammar &getGrammar();
+    class Rules &getRules();
 
     std::string getTopBufferName();
 
@@ -116,4 +117,4 @@ private:
 
 };
 
-#endif // ELVEX_PARSER_H
+#endif // ELVEX_GENERATOR_H

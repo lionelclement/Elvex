@@ -27,7 +27,11 @@
 class Lexicon {
 
 public:
-    typedef std::unordered_map<const std::string, std::list<std::string> *, std::hash<std::string>, std::equal_to<std::string>,
+    typedef std::unordered_map<
+            const std::string,
+            std::list<std::string> *,
+            std::hash<std::string>,
+            std::equal_to<std::string>,
             std::allocator<std::pair<const std::string, std::list<std::string> *> > > unordered_map;
     unordered_map the_map;
     static std::list<std::string> *emptyList;

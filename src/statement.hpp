@@ -25,7 +25,7 @@
 #include "flags.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 
 #define FATAL_ERROR_STM {FATAL_ERROR("*** fatal error with statement line " << getLineno());}
 #define FATAL_ERROR_MSG_STM(msg) {FATAL_ERROR("*** fatal error: " << msg << " with statement line " << getLineno());}
@@ -215,47 +215,47 @@ public:
 
     unsigned int getLineno() const;
 
-    void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
+    void print(std::ostream& , unsigned int tabulation = 0, int yetColored = 0) const;
 
-    featuresPtr evalFeatures(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer, bool);
+    featuresPtr evalFeatures(const itemPtr&, class Application* application, bool);
 
     listPtr evalList(const itemPtr&, bool);
 
-    valuePtr evalValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
+    valuePtr evalValue(const itemPtr& item, Application* application, bool replaceVariables);
 
     featuresPtr unif(const featuresPtr&, const featuresPtr&, const itemPtr&);
 
-    statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
+    statementPtr clone(const std::bitset<FLAGS>& savedFlags = std::bitset<FLAGS>());
 
-    void buildInheritedSonFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildInheritedSonFeatures(const itemPtr& item, Application* application);
 
-    void buildSynthesizedFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildSynthesizedFeatures(const itemPtr& item, Application* application);
 
-    void buildEnvironmentWithInherited(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithInherited(const itemPtr& item, Application* application);
 
-    void buildEnvironmentWithSynthesize(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithSynthesize(const itemPtr& item, Application* application);
 
-    void buildEnvironmentWithValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithValue(const itemPtr& item, Application* application);
 
-    void stmAttest(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
+    void stmAttest(const itemPtr&, class Application* application);
 
-    void stmGuard(const itemPtr&/*, class Synthesizer *synthesizer*/);
+    void stmGuard(const itemPtr&/**/);
 
-    void stmForeach(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmForeach(const itemPtr& item, class Application* application, bool& effect);
 
-    void stmIf(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmIf(const itemPtr& item, class Application* application, bool& effect);
 
-    void stmPrint(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrint(const itemPtr&, class Application* application);
 
-    void stmPrintln(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrintln(const itemPtr&, class Application* application);
 
     void renameVariables(size_t);
 
-    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer *synthesizer, bool &effect, bool on);
+  void enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on);
 
-    void apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(const itemPtr& item, class Application* application, bool& effect);
 
-    void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
+    void lookingForAssignedInheritedSonFeatures(std::vector<bool>& );
 
     bool findVariable(const bitsetPtr&);
 

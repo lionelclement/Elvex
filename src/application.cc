@@ -18,13 +18,10 @@
  ************************************************** */
 #include <unistd.h>
 #include <iostream>
-//#include <sstream>
-//#include <fstream>
-
-#include "synthesizer.hpp"
+#include "application.hpp"
+#include "generator.hpp"
 #include "compacted-lexicon.hpp"
 #include "compacted-lexicon-buffer.hpp"
-//#include "../trash/term.hpp"
 #include "statements.hpp"
 #include "statement.hpp"
 #include "messages.hpp"
@@ -41,7 +38,7 @@
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::Synthesizer() {
+Application::Application() {
     NEW
     this->compactedLexicon = nullptr;
     this->maxLength = MAXLENGTH;
@@ -49,7 +46,7 @@ Synthesizer::Synthesizer() {
     this->maxCardinal = MAXCARDINAL;
     this->nodeRoot = nodePtr();
     this->lexiconFileName = std::string();
-    this->grammarFileName = std::string();
+    this->rulesFileName = std::string();
     this->inputFileName = std::string();
 #ifdef OUTPUT_XML
     this->outXML = nullptr;
@@ -66,147 +63,147 @@ Synthesizer::Synthesizer() {
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::~Synthesizer() {
+Application::~Application() {
     DELETE
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTrace() const {
+bool Application::getTrace() const {
     return trace;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTrace(bool _trace) {
+void Application::setTrace(bool _trace) {
     this->trace = _trace;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::ItemSet_map::const_iterator Synthesizer::begin() const {
+Application::ItemSet_map::const_iterator Application::begin() const {
     return states.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::ItemSet_map::const_iterator Synthesizer::end() const {
+Application::ItemSet_map::const_iterator Application::end() const {
     return states.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Synthesizer::size() const {
+size_t Application::size() const {
     return states.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setInputFileName(char *name) {
+void Application::setInputFileName(char *name) {
     inputFileName = name;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setLexiconFileName(char *name) {
+void Application::setLexiconFileName(char *name) {
     lexiconFileName = name;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedLexiconFileName(char *bufferName) {
+void Application::setCompactedLexiconFileName(char *bufferName) {
     compactedLexiconFileName = bufferName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedDirectoryName(char *DirectoryName) {
+void Application::setCompactedDirectoryName(char *DirectoryName) {
     compactedDirectoryName = DirectoryName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setGrammarFileName(char *name) {
-    grammarFileName = name;
+void Application::setRulesFileName(char *name) {
+    rulesFileName = name;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getInputFileName() const {
+std::string Application::getInputFileName() const {
     return inputFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getLexiconFileName() const {
+std::string Application::getLexiconFileName() const {
     return lexiconFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getCompactedLexiconFileName() const {
+std::string Application::getCompactedLexiconFileName() const {
     return compactedLexiconFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getCompactedDirectoryName() const {
+std::string Application::getCompactedDirectoryName() const {
     return compactedDirectoryName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getGrammarFileName() const {
-    return grammarFileName;
+std::string Application::getRulesFileName() const {
+    return rulesFileName;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxLength(unsigned int _maxLength) {
+void Application::setMaxLength(unsigned int _maxLength) {
     this->maxLength = _maxLength;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxUsages(unsigned int _maxUsages) {
+void Application::setMaxUsages(unsigned int _maxUsages) {
     this->maxUsages = _maxUsages;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxCardinal(unsigned int _maxCardinal) {
+void Application::setMaxCardinal(unsigned int _maxCardinal) {
     this->maxCardinal = _maxCardinal;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::getMaxCardinal() const {
+unsigned int Application::getMaxCardinal() const {
     return this->maxCardinal;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::getMaxUsages() const {
+unsigned int Application::getMaxUsages() const {
     return this->maxUsages;
 }
 
@@ -214,56 +211,56 @@ unsigned int Synthesizer::getMaxUsages() const {
  *
  ************************************************** */
 class CompactedLexicon *
-Synthesizer::getCompactedLexicon() const {
+Application::getCompactedLexicon() const {
     return compactedLexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedLexicon(class CompactedLexicon *_compactedLexicon) {
+void Application::setCompactedLexicon(class CompactedLexicon *_compactedLexicon) {
     this->compactedLexicon = _compactedLexicon;
 }
 
 /* **************************************************
  *
  ************************************************** */
-//bool Synthesizer::getReduceAll() const {
+//bool Application::getReduceAll() const {
 //    return reduceAll;
 //}
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setReduceAll(const bool _reduceAll) {
+void Application::setReduceAll(const bool _reduceAll) {
     this->reduceAll = _reduceAll;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setRandom(const bool _random) {
+void Application::setRandom(const bool _random) {
     this->random = _random;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getRandom() const {
+bool Application::getRandom() const {
     return this->random;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setOne(const bool _one) {
+void Application::setOne(const bool _one) {
     this->one = _one;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getOne() const {
+bool Application::getOne() const {
     return this->one;
 }
 
@@ -273,7 +270,7 @@ bool Synthesizer::getOne() const {
  *
  ************************************************** */
 void
-Synthesizer::setOutXML(char *_outXML) {
+Application::setOutXML(char *_outXML) {
     this->outXML = _outXML;
 }
 
@@ -281,7 +278,7 @@ Synthesizer::setOutXML(char *_outXML) {
  *
  ************************************************** */
 char *
-Synthesizer::getOutXML() const {
+Application::getOutXML() const {
     return this->outXML;
 }
 
@@ -291,7 +288,7 @@ Synthesizer::getOutXML() const {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceInit(bool traceInit)
+void Application::setTraceInit(bool traceInit)
 {
    this->traceInit = traceInit;
 }
@@ -299,7 +296,7 @@ void Synthesizer::setTraceInit(bool traceInit)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceStage(bool traceStage)
+void Application::setTraceStage(bool traceStage)
 {
    this->traceStage = traceStage;
 }
@@ -307,7 +304,7 @@ void Synthesizer::setTraceStage(bool traceStage)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceClose(bool traceClose)
+void Application::setTraceClose(bool traceClose)
 {
    this->traceClose = traceClose;
 }
@@ -315,7 +312,7 @@ void Synthesizer::setTraceClose(bool traceClose)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceShift(bool traceShift)
+void Application::setTraceShift(bool traceShift)
 {
    this->traceShift = traceShift;
 }
@@ -323,7 +320,7 @@ void Synthesizer::setTraceShift(bool traceShift)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceReduce(bool traceReduce)
+void Application::setTraceReduce(bool traceReduce)
 {
    this->traceReduce = traceReduce;
 }
@@ -331,7 +328,7 @@ void Synthesizer::setTraceReduce(bool traceReduce)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceAction(bool traceAction)
+void Application::setTraceAction(bool traceAction)
 {
    this->traceAction = traceAction;
 }
@@ -339,7 +336,7 @@ void Synthesizer::setTraceAction(bool traceAction)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceInit(void)
+bool Application::getTraceInit(void)
 {
    return this->traceInit;
 }
@@ -347,7 +344,7 @@ bool Synthesizer::getTraceInit(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceStage(void)
+bool Application::getTraceStage(void)
 {
    return this->traceStage;
 }
@@ -355,7 +352,7 @@ bool Synthesizer::getTraceStage(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceClose(void)
+bool Application::getTraceClose(void)
 {
    return this->traceClose;
 }
@@ -363,7 +360,7 @@ bool Synthesizer::getTraceClose(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceShift(void)
+bool Application::getTraceShift(void)
 {
    return this->traceShift;
 }
@@ -371,7 +368,7 @@ bool Synthesizer::getTraceShift(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceReduce(void)
+bool Application::getTraceReduce(void)
 {
    return this->traceReduce;
 }
@@ -379,7 +376,7 @@ bool Synthesizer::getTraceReduce(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceAction(void)
+bool Application::getTraceAction(void)
 {
    return this->traceAction;
 }
@@ -389,49 +386,49 @@ bool Synthesizer::getTraceAction(void)
 /* **************************************************
  *
  ************************************************** */
-std::list<std::string> &Synthesizer::getInputs() {
+std::list<std::string> &Application::getInputs() {
     return this->inputs;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::insertItemMap(const itemPtr &item) {
+bool Application::insertItemMap(const itemPtr &item) {
     return this->itemMap.insert(std::make_pair(item->getId(), item)).second;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::eraseItemMap(const unsigned int id) {
+void Application::eraseItemMap(const unsigned int id) {
     this->itemMap.erase(id);
 }
 
 /* **************************************************
  *
  ************************************************** */
-itemPtr Synthesizer::getItemMap(const unsigned int id) {
+itemPtr Application::getItemMap(const unsigned int id) {
     return this->itemMap[id];
 }
 
 /* **************************************************
  *
  ************************************************** */
-nodePtr Synthesizer::getNodeRoot() {
+nodePtr Application::getNodeRoot() {
     return nodeRoot;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::addInput(const std::string &input) {
+void Application::addInput(const std::string &input) {
     return this->inputs.push_back(input);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::printState(std::ostream &outStream, const itemSetPtr &state) {
+void Application::printState(std::ostream &outStream, const itemSetPtr &state) {
     outStream << "Q" << state->getId();
     state->print(outStream);
 }
@@ -439,7 +436,7 @@ void Synthesizer::printState(std::ostream &outStream, const itemSetPtr &state) {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Synthesizer::createItem(const itemPtr &item, unsigned int row) {
+itemPtr Application::createItem(const itemPtr &item, unsigned int row) {
     itemPtr it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
                               item->getStatements() ? item->getStatements()->clone(
                                       Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED) : statementsPtr());
@@ -458,7 +455,7 @@ itemPtr Synthesizer::createItem(const itemPtr &item, unsigned int row) {
  *
  ************************************************** */
 std::string
-Synthesizer::keyMemoization(const itemPtr &actualItem, const itemPtr &previousItem) {
+Application::keyMemoization(const itemPtr &actualItem, const itemPtr &previousItem) {
     return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) +
            actualItem->getSynthesizedFeatures()->peekSerialString();
 }
@@ -466,7 +463,7 @@ Synthesizer::keyMemoization(const itemPtr &actualItem, const itemPtr &previousIt
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::clear() {
+void Application::clear() {
     states.clear();
     forestMap.clear();
     itemMap.clear();
@@ -476,7 +473,7 @@ void Synthesizer::clear() {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::close(Parser &parser, const itemSetPtr &state, unsigned int row) {
+void Application::close(Generator &generator, const itemSetPtr &state, unsigned int row) {
     bool modification;
     do {
         loop:
@@ -585,7 +582,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr &state, unsigned int ro
                 goto loop;
             }
 
-            (*actualItem)->apply(/*state, */parser, this);
+            (*actualItem)->apply(this);
             if ((*actualItem)->isSetFlags(Flags::BOTTOM)) {
                 state->erase((*actualItem));
                 eraseItemMap((*actualItem)->getId());
@@ -595,7 +592,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr &state, unsigned int ro
             else if ((*actualItem)->getRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
                      !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
                      && (*actualItem)->getCurrentTerms()->size() == 1 && !(*actualItem)->getCurrentTerms()->isOptional()
-                     && parser.getGrammar().isNonTerminal((*actualItem)->getCurrentTerm()) &&
+                     && generator.getRules().isNonTerminal((*actualItem)->getCurrentTerm()) &&
                      !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
 
 #ifdef TRACE_OPTION
@@ -621,7 +618,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr &state, unsigned int ro
                         inheritedSonFeatures->deleteAnonymousVariables();
                     }
 
-                    for (const auto &iterRules : parser.getGrammar().getRules()) {
+                    for (const auto &iterRules : generator.getRules().getRules()) {
                         if ((iterRules->getLhs() == (*actualItem)->getCurrentTerm())) {
 
                             itemPtr it;
@@ -921,7 +918,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr &state, unsigned int ro
             else if ((*actualItem)->getRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
                      !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
                      && (*actualItem)->getCurrentTerms()->size() == 1 && !(*actualItem)->getCurrentTerms()->isOptional()
-                     && parser.getGrammar().isTerminal((*actualItem)->getCurrentTerm()) &&
+                     && generator.getRules().isTerminal((*actualItem)->getCurrentTerm()) &&
                      !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
             } else {
                 (*actualItem)->successor(/*state, *//*this, */modification);
@@ -935,7 +932,7 @@ void Synthesizer::close(Parser &parser, const itemSetPtr &state, unsigned int ro
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::shift(class Parser &parser, const itemSetPtr &state, unsigned int row) {
+bool Application::shift(class Generator &generator, const itemSetPtr &state, unsigned int row) {
     bool modificationOnce = false;
     bool modification;
     do {
@@ -953,8 +950,8 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr &state, unsigned 
                 if (!(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
                     !(*actualItem)->getCurrentTerms()->isOptional() && (*actualItem)->getCurrentTerm()
                     && !inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom()
-                    && parser.getGrammar().getTerminals().find((*actualItem)->getCurrentTerm()) !=
-                       parser.getGrammar().getTerminals().end()) {
+                    && generator.getRules().getTerminals().find((*actualItem)->getCurrentTerm()) !=
+                       generator.getRules().getTerminals().end()) {
 
 #ifdef TRACE_OPTION
                     if (traceShift) {
@@ -998,12 +995,12 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr &state, unsigned 
                      std::cerr << "form:" << form << std::endl;
                      //std::cerr << "POS : " << Vartable::codeToIdentifier((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
                      */
-                    auto foundCode = parser.getLexicon().find(
+                    auto foundCode = generator.getLexicon().find(
                             (*actualItem)->getCurrentTerm());
-                    if (foundCode != parser.getLexicon().end() && (!foundCode->second->empty())) {
-                        Parser::entries_map *listPred = foundCode->second;
+                    if (foundCode != generator.getLexicon().end() && (!foundCode->second->empty())) {
+                        Generator::entries_map *listPred = foundCode->second;
                         if (listPred) {
-                            Parser::entries_map::const_iterator found;
+                            Generator::entries_map::const_iterator found;
                             entriesPtr entries = entriesPtr();
 
                             /* *****
@@ -1014,7 +1011,7 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr &state, unsigned 
                             switch (_stage) {
 
                                 case MORPHO_FEATURES:
-                                    entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+                                    entries = findByPos(generator, listPred, (*actualItem)->getCurrentTerm());
                                     break;
 
                                 case FORM_FEATURES:
@@ -1022,9 +1019,9 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr &state, unsigned 
                                     break;
 
                                 case PRED_FEATURES:
-                                    entries = findByPred(parser, listPred, (*actualItem)->getCurrentTerm(), pred);
+                                    entries = findByPred(generator, listPred, (*actualItem)->getCurrentTerm(), pred);
                                     if (!entries)
-                                        entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+                                        entries = findByPos(generator, listPred, (*actualItem)->getCurrentTerm());
                                     break;
                             }
 
@@ -1168,28 +1165,28 @@ bool Synthesizer::shift(class Parser &parser, const itemSetPtr &state, unsigned 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::generate(class Parser &parser) {
+void Application::generate(class Generator &generator) {
 #ifdef OUTPUT_XML
     extern xmlNodePtr xmlNodeRoot;
 #endif
     states.clear();
     itemMap.clear();
     forestMap.clear();
-    for (const auto &iterRules : parser.getGrammar().getRules()) {
+    for (const auto &iterRules : generator.getRules().getRules()) {
         iterRules->resetUsages();
     }
 
     std::ofstream outfile;
     nodeRoot = Node::create();
     itemSetPtr initState = ItemSet::create(0);
-    std::list<rulePtr> *rules = parser.getGrammar().findRules(parser.getStartTerm());
+    std::list<rulePtr> *rules = generator.getRules().findRules(generator.getStartTerm());
     itemPtr it;
     for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule) {
         (*rule)->incUsages(this);
         it = Item::create(*rule, UINT_MAX, 0,
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRanges(0);
-        it->setInheritedFeatures(parser.getStartFeatures());
+        it->setInheritedFeatures(generator.getStartFeatures());
         //it->renameVariables(it->getId());
 #ifdef TRACE_OPTION
         if (traceInit) {
@@ -1211,14 +1208,14 @@ void Synthesizer::generate(class Parser &parser) {
     }
 
     states.insert(std::make_pair(0, initState));
-    close(parser, initState, 0);
+    close(generator, initState, 0);
 
     unsigned int i = 0;
     while (i <= maxLength) {
 
         itemSetPtr actualState = ItemSet::create(++i);
         states.insert(std::make_pair(i, actualState));
-        if (!shift(parser, initState, i))
+        if (!shift(generator, initState, i))
             break;
 #ifdef TRACE_OPTION
         if (traceStage) {
@@ -1229,7 +1226,7 @@ void Synthesizer::generate(class Parser &parser) {
 #endif
 
         actualState->resetUsages();
-        close(parser, actualState, i);
+        close(generator, actualState, i);
         initState = actualState;
     }
 
@@ -1251,7 +1248,7 @@ void Synthesizer::generate(class Parser &parser) {
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int code, const std::string &codeStr,
+entriesPtr Application::findCompactedLexicon(Generator& generator, const unsigned int code, const std::string& codeStr,
                                              const unsigned int pred) {
     unsigned long int info = ~0UL;
     std::string str;
@@ -1287,19 +1284,19 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int 
             std::string form = result.substr(0, result.find('#'));
             std::string features = result.substr(result.find('#') + 1, -1);
 
-            if (!parser.parseBuffer("#", features, "features")) {
-                if (parser.getLocalFeatures()) {
-                    unsigned int _pred = parser.getLocalFeatures()->assignPred();
-                    entryPtr _localEntry = Entry::create(0, _pred, std::string(), parser.getLocalFeatures());
+            if (!generator.parseBuffer("#", features, "features")) {
+                if (generator.getLocalFeatures()) {
+                    unsigned int _pred = generator.getLocalFeatures()->assignPred();
+                    entryPtr _localEntry = Entry::create(0, _pred, std::string(), generator.getLocalFeatures());
 
                     _localEntry->setPos(code);
                     _localEntry->setForm(form);
                     std::string localEntrySerialString = _localEntry->peekSerialString();
-                    auto found = parser.getMapLocalEntry().find(localEntrySerialString);
-                    if (found != parser.getMapLocalEntry().end()) {
+                    auto found = generator.getMapLocalEntry().find(localEntrySerialString);
+                    if (found != generator.getMapLocalEntry().end()) {
                         entries->add(found->second);
                     } else {
-                        parser.getMapLocalEntry().insert(std::make_pair(localEntrySerialString, _localEntry));
+                        generator.getMapLocalEntry().insert(std::make_pair(localEntrySerialString, _localEntry));
                         entries->add(_localEntry);
                     }
                 }
@@ -1319,19 +1316,19 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser &parser, const unsigned int 
     }
 }
 
-void Synthesizer::setVerbose(bool _verbose) {
+void Application::setVerbose(bool _verbose) {
     this->verbose = _verbose;
 }
 
-entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred, unsigned int term) {
-    //entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+entriesPtr Application::findByPos(Generator& generator, Generator::entries_map *listPred, unsigned int term) {
+    //entries = findByPos(generator, listPred, (*actualItem)->getCurrentTerm());
     entriesPtr entries = entriesPtr();
     auto found = listPred->find(UINT_MAX);        // Without pred : UINT_MAX = > ...
     if (found != listPred->end()) {
         entries = found->second;
     } else if (compactedLexicon) {
         // Compact lexicon
-        entries = findCompactedLexicon(parser,
+        entries = findCompactedLexicon(generator,
                                        term,
                                        std::string(),
                                        0);
@@ -1340,7 +1337,7 @@ entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
 
 }
 
-entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred) {
+entriesPtr Application::findByForm(Generator::entries_map *listPred) {
     entriesPtr entries = entriesPtr();
     auto found = listPred->find(0);        // IDENTITY : 0 = > ...
     if (found != listPred->end())
@@ -1348,7 +1345,7 @@ entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred) {
     return entries;
 }
 
-entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred, unsigned int term, unsigned int pred) {
+entriesPtr Application::findByPred(Generator& generator, Generator::entries_map *listPred, unsigned int term, unsigned int pred) {
     entriesPtr entries = entriesPtr();
     auto found = listPred->find(pred);        // pred = > ...
     if (found != listPred->end()) {
@@ -1356,7 +1353,7 @@ entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred
         entries = found->second;
     } else if (compactedLexicon) {
         // Compact lexicon
-        entries = findCompactedLexicon(parser,
+        entries = findCompactedLexicon(generator,
                                        term,
                                        std::string(),
                                        pred);

@@ -30,7 +30,7 @@
 #include "rule.hpp"
 #include "statement.hpp"
 #include "statements.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 #include "terms.hpp"
 
 /* **************************************************
@@ -750,7 +750,7 @@ void Item::successor(bool &effect) {
 /* **************************************************
  *
  ************************************************** */
-void Item::apply(Parser &parser, Synthesizer *synthesizer) {
+void Item::apply(Application *application) {
     if (statements) {
         //unsigned int k = 1;
         bool effect = true;
@@ -758,17 +758,17 @@ void Item::apply(Parser &parser, Synthesizer *synthesizer) {
             && statements->isUnsetFlags(Flags::SEEN)) {
 
 #ifdef TRACE_OPTION
-            if (synthesizer->getTraceAction()) {
+            if (application->getTraceAction()) {
           std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
           print(std::cout);
           std::cout << std::endl;
             }
 #endif
             effect = false;
-            statements->apply(shared_from_this(), parser, synthesizer, effect);
+            statements->apply(shared_from_this(), application, effect);
             //++k;
 #ifdef TRACE_OPTION
-            if (synthesizer->getTraceAction()) {
+            if (application->getTraceAction()) {
           std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
           print(std::cout);
           std::cout << std::endl;

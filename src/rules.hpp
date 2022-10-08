@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_GRAMMAR_H
-#define ELVEX_GRAMMAR_H
+#ifndef ELVEX_Rules_H
+#define ELVEX_Rules_H
 
 #include <set>
 #include <list>
@@ -28,7 +28,7 @@
 #include <libxml/tree.h>
 #endif
 
-class Grammar {
+class Rules {
 public:
     typedef std::list<rulePtr> ruleList;
 
@@ -41,9 +41,9 @@ private:
     unsigned int idMax;
 
 public:
-    Grammar(void);
+    Rules(void);
 
-    ~Grammar(void);
+    ~Rules(void);
 
     std::set<unsigned int> &getTerminals(void);
 
@@ -77,7 +77,7 @@ public:
 
     bool isNonTerminal(unsigned int) const;
 
-    void analyseTerms(class Parser &);
+    void analyseTerms(class Application &);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
@@ -86,4 +86,4 @@ public:
     std::list<rulePtr> *findRules(unsigned int lhs);
 };
 
-#endif // ELVEX_GRAMMAR_H
+#endif // ELVEX_Rules_H

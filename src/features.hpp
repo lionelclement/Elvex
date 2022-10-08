@@ -39,8 +39,9 @@ public:
     static featuresPtr NIL;
     static featuresPtr BOTTOM;
 
-    std::list<featurePtr> features;
 private:
+    std::list<featurePtr> features;
+
     unsigned int pred;
     std::string form;
     VariableFlag variableFlag;
@@ -100,7 +101,7 @@ public:
 
     bool isBottom() const;
 
-    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr&, const itemPtr&, class Application* application, bool &, bool);
 
     bool subsumes(const featuresPtr&, const environmentPtr&);
 

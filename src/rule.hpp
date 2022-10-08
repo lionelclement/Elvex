@@ -82,7 +82,7 @@ public:
 
     statementsPtr getStatements(void) const;
 
-    void incUsages(class Synthesizer *);
+    void incUsages(class Application *applicationy);
 
     void resetUsages(void);
 

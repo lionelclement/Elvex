@@ -21,7 +21,7 @@
 #include "itemset.hpp"
 #include "messages.hpp"
 #include "rule.hpp"
-#include "synthesizer.hpp"
+#include "application.hpp"
 
 /* **************************************************
  *
@@ -88,9 +88,9 @@ ItemSet::const_iterator ItemSet::find(const itemPtr& item) const {
 /* **************************************************
  *
  ************************************************** */
-bool ItemSet::insert(const itemPtr& item, Synthesizer *synthesizer) {
-    if (items.size() > synthesizer->getMaxCardinal()) {
-        FATAL_ERROR ("*** error: too much items build : " << items.size() << " (" << synthesizer->getMaxCardinal() << " Max)");
+bool ItemSet::insert(const itemPtr& item, Application *application) {
+    if (items.size() > application->getMaxCardinal()) {
+        FATAL_ERROR ("*** error: too much items build : " << items.size() << " (" << application->getMaxCardinal() << " Max)");
     }
 #ifdef TRACE_INSERT
     std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;

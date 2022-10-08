@@ -86,4 +86,3 @@ size_t ForestIdentifier::hash::operator()(const forestIdentifierPtr i) const {
 bool ForestIdentifier::equal_to::operator()(const forestIdentifierPtr i1, const forestIdentifierPtr i2) const {
     return i1->peekSerialString() == i2->peekSerialString();
 }
-
