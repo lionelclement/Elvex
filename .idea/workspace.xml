@@ -9,77 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f9b2b48-437e-4e5e-bfa7-5de49b7e5a36" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/adj.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/en-1.1.0.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.arguments.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.binding.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.clitics.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.illocution.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.modality.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.noun.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.rhetoric.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.sentence.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.tensed.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.time.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-1.0.4.verb.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.arguments.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.binding.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.clitics.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.illocution.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.modality.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.noun.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.rhetoric.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.sentence.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.tensed.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.time.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-20210328.verb.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.arguments.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.binding.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.clitics.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.illocution.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.input" beforeDir="false" afterPath="$PROJECT_DIR$/data/fr-slang.input" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.modality.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.noun.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.rhetoric.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.sentence.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.tensed.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.time.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/fr-slang.verb.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/p1.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/p10.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/p2.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/p3.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/p4.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/p5.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/p6.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.arguments.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.binding.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.clitics.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.illocution.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.modality.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.noun.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.rhetoric.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.sentence.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.tensed.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.time.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pdp-meteo.verb.grammar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/grammar.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/grammar.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/postedition_en.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/postedition_fr.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ruleslex.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ruleslex.l" beforeDir="false" afterPath="$PROJECT_DIR$/src/ruleslex.l" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rulesyacc.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rulesyacc.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rulesyacc.y" beforeDir="false" afterPath="$PROJECT_DIR$/src/rulesyacc.y" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/try-me.sh" beforeDir="false" afterPath="$PROJECT_DIR$/try-me.sh" afterDir="false" />
-    </list>
+    <list default="true" id="9f9b2b48-437e-4e5e-bfa7-5de49b7e5a36" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -127,7 +57,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1665317098940</updated>
-      <workItem from="1665317104244" duration="10228000" />
+      <workItem from="1665317104244" duration="10672000" />
     </task>
     <servers />
   </component>
