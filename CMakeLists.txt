@@ -48,7 +48,7 @@ set(ELVEX_COMMON_SOURCES
         src/entry.hpp
         src/environment.cc
         src/environment.hpp
-        src/fatal_exception.cpp
+        src/fatal_exception.cc
         src/fatal_exception.hpp
         src/feature.cc
         src/feature.hpp
@@ -62,8 +62,6 @@ set(ELVEX_COMMON_SOURCES
         src/forestidentifier.hpp
         src/forestmap.cc
         src/forestmap.hpp
-        src/grammar.cc
-        src/grammar.hpp
         src/uniq-id.cc
         src/uniq-id.hpp
         src/item.cc
@@ -85,8 +83,12 @@ set(ELVEX_COMMON_SOURCES
         src/node.hpp
         src/parser.cc
         src/parser.hpp
+        src/parser_exception.cc
+        src/parser_exception.hpp
         src/rule.cc
         src/rule.hpp
+        src/rules.cc
+        src/rules.hpp
         src/serializable.cc
         src/serializable.hpp
         src/shared_ptr.hpp
@@ -98,6 +100,8 @@ set(ELVEX_COMMON_SOURCES
         src/synthesizer.hpp
         src/terms.cc
         src/terms.hpp
+        src/usage_exception.cc
+        src/usage_exception.hpp
         src/value.cc
         src/value.hpp
         src/variableflag.cc
@@ -110,7 +114,7 @@ configure_file(
         src/config.hpp
         @ONLY)
 
-add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cpp src/fatal_exception.hpp)
+add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
 target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
 add_executable(elvexdebug ${ELVEX_COMMON_SOURCES} src/elvex.cc)
 target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
