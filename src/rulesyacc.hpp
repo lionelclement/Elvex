@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.7.4.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -72,7 +72,7 @@ extern int rulesdebug;
     TOKEN_COLON = 273,             /* TOKEN_COLON  */
     TOKEN_DOUBLECOLON = 274,       /* TOKEN_DOUBLECOLON  */
     TOKEN_COMMA = 275,             /* TOKEN_COMMA  */
-    TOKEN_GRAMMAR = 276,           /* TOKEN_GRAMMAR  */
+    TOKEN_RULES = 276,             /* TOKEN_RULES  */
     TOKEN_INPUT = 277,             /* TOKEN_INPUT  */
     TOKEN_LEXICON = 278,           /* TOKEN_LEXICON  */
     TOKEN_LEMMA = 279,             /* TOKEN_LEMMA  */
@@ -128,7 +128,7 @@ extern int rulesdebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 79 "src/rulesyacc.y"
+#line 69 "src/rulesyacc.y"
 
   unsigned int integer_slot;
   double double_slot;
@@ -147,7 +147,7 @@ union YYSTYPE
   std::list<  bitsetPtr > *list_args;
  
 
-#line 151 "/Users/clement/workspace/elvex/src/rulesyacc.hpp"
+#line 151 "/Users/clement/workspace/Elvex/src/rulesyacc.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -158,6 +158,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE ruleslval;
 
+
 int rulesparse (void);
+
 
 #endif /* !YY_RULES_USERS_CLEMENT_WORKSPACE_ELVEX_SRC_RULESYACC_HPP_INCLUDED  */

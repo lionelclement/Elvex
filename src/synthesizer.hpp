@@ -65,7 +65,7 @@ private:
     unsigned int maxUsages;
     unsigned int maxCardinal;
     std::string lexiconFileName;
-    std::string grammarFileName;
+    std::string rulesFileName;
     std::string inputFileName;
 
     std::list<std::string> inputs;
@@ -115,7 +115,7 @@ public:
 
     void setLexiconFileName(char *);
 
-    void setGrammarFileName(char *);
+    void setRulesFileName(char *);
 
     void setCompactedLexiconFileName(char *);
 
@@ -129,7 +129,7 @@ public:
 
     std::string getCompactedDirectoryName() const;
 
-    std::string getGrammarFileName() const;
+    std::string getRulesFileName() const;
 
     void setMaxLength(unsigned int);
 

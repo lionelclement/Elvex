@@ -60,7 +60,7 @@ public:
 
     void setForm(const std::string form);
 
-    std::string &getForm();
+    std::string& getForm();
 
     featuresPtr getFeatures() const;
 
@@ -68,7 +68,7 @@ public:
     void toXML(xmlNodePtr nodeRoot) const;
 #endif
 
-    void print(std::ostream &) const;
+    void print(std::ostream&) const;
 
 };
 

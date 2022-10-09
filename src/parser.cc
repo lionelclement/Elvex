@@ -20,7 +20,6 @@
 #include <climits>
 #include <stack>
 #include <string>
-#include <utility>
 #include "parser.hpp"
 #include "vartable.hpp"
 #include "messages.hpp"
@@ -53,9 +52,9 @@ Parser::~Parser() {
 /* **************************************************
  *
  ************************************************** */
-class Grammar &
-Parser::getGrammar() {
-    return this->grammar;
+class Rules &
+Parser::getRules() {
+    return this->rules;
 }
 
 /* **************************************************
@@ -256,33 +255,31 @@ featuresPtr Parser::findMacros(const std::string& str) {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::parseFile(std::string prefix, std::string fileName) {
-    unsigned int result;
-    result = parseString(prefix + "\n#include " + fileName);
-    return result;
+void Parser::parseFile(std::string prefix, std::string fileName) {
+    parseString(prefix + "\n#include " + fileName);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
-    unsigned int result;
+void Parser::parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
     pushBufferName(bufferName);
-    result = parseString(prefix + "\n" + buffer);
-    return result;
+    parseString(prefix + "\n" + buffer);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::parseString(std::string buffer) {
+void Parser::parseString(std::string buffer) {
     init_buffer();
     scan_string(buffer);
-    unsigned int result = rulesparse();
+    rulesparse();
     delete_buffer();
-    return result;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 void Parser::listMacros() {
     for (auto iterator : macros) {
         std::cerr << "\"" << iterator.first << "\"" << std::endl;

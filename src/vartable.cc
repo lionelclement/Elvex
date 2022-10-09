@@ -65,7 +65,7 @@ bitsetPtr Vartable::createVariable(std::string str) {
         Vartable::bitMap[i] = str;
         variableMapIndex <<= 1;
         if (variableMapIndex.none())
-            FATAL_ERROR("Too much values")
+            throw fatal_exception("Too much values");
     } else {
         result = varTableIt->second;
     }

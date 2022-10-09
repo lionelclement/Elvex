@@ -1,0 +1,22 @@
+#include fr-20210328.rhetoric.rules
+#include fr-20210328.noun.rules
+
+/* **************************************************
+ * Start with an NP
+ ************************************************** */
+@trace
+text → NP {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Start with a Narative Sentence
+ ************************************************** */
+@trace
+text → rhetoricalStructure {
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

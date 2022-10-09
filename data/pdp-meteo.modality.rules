@@ -1,0 +1,50 @@
+// from pdp-meteo.illocution.rules
+#include pdp-meteo.tensed.rules
+
+/* **************************************************
+ * modality
+ ************************************************** */
+
+/* **************************************************
+ * Default
+ ************************************************** */
+@trace
+modalClause → tensedClause {
+  // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
+  // println ↑;
+  [modality:default, $rest];
+  ↓1 = $rest;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * modality
+ ************************************************** */
+modalClause → tensedClause {
+  [modality:pouvoir];
+  [PRED:$PRED, modality:pouvoir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
+  ↓1 = [PRED:pouvoir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
+  ⇑ = ⇓1;
+}
+
+modalClause → tensedClause {
+  [modality:devoir];
+  [PRED:$PRED, modality:devoir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
+  ↓1 = [PRED:devoir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
+  ⇑ = ⇓1;
+}
+
+modalClause → tensedClause {
+  [modality:savoir];
+  [PRED:$PRED, modality:savoir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
+  ↓1 = [PRED:savoir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
+  ⇑ = ⇓1;
+}
+
+modalClause → tensedClause {
+  [modality:vouloir];
+  [PRED:$PRED, modality:vouloir, i:$I, neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv, $Rest] ⊂ ↑;
+  ↓1 = [PRED:vouloir, i:[id:1, $I], ii:[PRED:$PRED, i:[idref:1], $Rest], neg:$neg, vform:$vform, tense:$tense, aspect:$aspect, mode:$mode, inv:$inv];
+  ⇑ = ⇓1;
+}
+

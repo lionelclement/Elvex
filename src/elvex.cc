@@ -31,6 +31,9 @@
 #include "forest.hpp"
 #include "messages.hpp"
 #include "config.hpp"
+#include "fatal_exception.hpp"
+#include "usage_exception.hpp"
+#include "parser_exception.hpp"
 
 Parser parser = Parser();
 Synthesizer synthesizer = Synthesizer();
@@ -44,7 +47,7 @@ xmlDocPtr document;
 /* **************************************************
  *
  ************************************************** */
-void Usage() {
+void describeUsage() {
     std::cerr << "Usage: " << PROJECT_NAME << " [options] [<input>]*\n";
     std::cerr << "\
 options\n\
@@ -69,7 +72,7 @@ options\n\
 \t-maxUsages <number>                         max number of rule usage\n\
 \t-maxCardinal <number>                       max number of items per set\n\
 \t-maxTime <seconds>                          max time in seconds\n\
-\t-grammarFile <file>                         the grammar\n\
+\t-rulesFile <file>                           the rules\n\
 \t-lexiconFile <file>                         the lexicon\n\
 \t-inputFile <file>                           the input\n\
 \t-compactedLexiconDirectory/-cld <directory> the directory which contains the compacted lexicon\n\
@@ -85,7 +88,7 @@ options\n\
  *
  ************************************************** */
 void sig_handler(int signum) {
-    FATAL_ERROR("ALARM SIGNAL" + std::to_string(signum) + " OUT OF TIME")
+    throw fatal_exception("ALARM SIGNAL" + std::to_string(signum) + " OUT OF TIME");
 }
 
 /* **************************************************
@@ -135,7 +138,7 @@ void generate() {
 /* **************************************************
  *
  ************************************************** */
-int main(int argn, char **argv) {
+int main(int argn, char** argv) {
 #ifdef TRACE_OPTION
     std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
 #endif
@@ -144,8 +147,7 @@ int main(int argn, char **argv) {
         synthesizer.setOutXML(nullptr);
 #endif
         if (argn <= 1) {
-            Usage(/*argv*/);
-            return EXIT_SUCCESS;
+            throw usage_exception("not enough arguments");
         } else {
             for (unsigned int arg = 1; argv[arg]; ++arg) {
                 if (argv[arg][0] == '-') {
@@ -159,7 +161,7 @@ int main(int argn, char **argv) {
                         parser.setVerbose(true);
 
                     } else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
-                        Usage(/*argv*/);
+                        describeUsage();
                         return EXIT_SUCCESS;
 
                     } else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace")) {
@@ -207,44 +209,37 @@ int main(int argn, char **argv) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setLexiconFileName(argv[++arg]);
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad lexiconFile argument");
                         }
-                    } else if (!strcmp(argv[arg] + 1, "grammarFile")) {
+                    } else if (!strcmp(argv[arg] + 1, "rulesFile")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setGrammarFileName(argv[++arg]);
+                            synthesizer.setRulesFileName(argv[++arg]);
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad rulesFile argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "inputFile")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setInputFileName(argv[++arg]);
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad inputFile argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "maxLength")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setMaxLength(atoi(argv[++arg]));
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad maxLength argument");
                         }
-                    } else if (!strcmp(argv[arg] + 1, "maxUsages")) {
+                    } else if (!strcmp(argv[arg] + 1, "maxLength")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setMaxUsages(atoi(argv[++arg]));
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad maxLength argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "maxCardinal")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setMaxCardinal(atoi(argv[++arg]));
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad maxCardinal argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "maxTime")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-')) {
@@ -252,36 +247,31 @@ int main(int argn, char **argv) {
                             alarm(atoi(argv[++arg]));
                             time(&before);
                         } else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad maxTime argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setCompactedDirectoryName(argv[++arg]);
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad compactedLexiconDirectory argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "cld")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setCompactedDirectoryName(argv[++arg]);
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad cld argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "compactedLexiconFile")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setCompactedLexiconFileName(argv[++arg]);
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad compactedLexiconFile argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "clf")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setCompactedLexiconFileName(argv[++arg]);
                         else {
-                            Usage(/*argv*/);
-                            return EXIT_FAILURE;
+                            throw usage_exception("bad clf argument");
                         }
                     }
 
@@ -291,16 +281,15 @@ int main(int argn, char **argv) {
                               synthesizer.setOutXML(strdup(argv[++arg]));
                            }
                            else {
-                              Usage(/*argv*/);
-                              return EXIT_FAILURE;
+                            throw usage_exception("bad xml argument");
                            }
                         }
 #endif
 
                     else {
-                        std::cerr << "Unknown argument: " << argv[arg] + 1 << std::endl;
-                        Usage(/*argv*/);
-                        return EXIT_FAILURE;
+                        std::ostringstream oss;
+                        oss << "Unknown argument: " << argv[arg] + 1 << std::endl;
+                        throw usage_exception(oss);
                     }
                 } else {
                     synthesizer.addInput(argv[arg]);
@@ -308,22 +297,19 @@ int main(int argn, char **argv) {
             }
 
             if (synthesizer.getLexiconFileName().length() > 0) {
-                if (parser.parseFile("@lexicon", synthesizer.getLexiconFileName()))
-                    return EXIT_FAILURE;
+                parser.parseFile("@lexicon", synthesizer.getLexiconFileName());
             }
 
-            if (synthesizer.getGrammarFileName().length() > 0) {
-                if (parser.parseFile("@grammar", synthesizer.getGrammarFileName())) {
-                    return EXIT_FAILURE;
-                }
-                parser.getGrammar().analyseTerms(parser);
+            if (synthesizer.getRulesFileName().length() > 0) {
+                parser.parseFile("@rules", synthesizer.getRulesFileName());
+                parser.getRules().analyseTerms(parser);
             }
 
             if (synthesizer.getCompactedLexiconFileName().length() > 0) {
-                char *dir = strdup((synthesizer.getCompactedDirectoryName().length() > 0)
+                char* dir = strdup((synthesizer.getCompactedDirectoryName().length() > 0)
                                    ? synthesizer.getCompactedDirectoryName().c_str() : ".");
-                char *file = strdup(synthesizer.getCompactedLexiconFileName().c_str());
-                auto *lex = new CompactedLexicon(std::string(dir), std::string(file));
+                char* file = strdup(synthesizer.getCompactedLexiconFileName().c_str());
+                auto* lex = new CompactedLexicon(std::string(dir), std::string(file));
                 synthesizer.setCompactedLexicon(lex);
                 lex->openFiles("r");
                 lex->loadFsa();
@@ -342,19 +328,14 @@ int main(int argn, char **argv) {
         }
         srand(time(nullptr));
         if (synthesizer.getInputFileName().length() > 0) {
-            if (!parser.parseFile("@input", synthesizer.getInputFileName()))
-                generate();
-            else
-                return EXIT_FAILURE;
+            parser.parseFile("@input", synthesizer.getInputFileName());
+            generate();
         }
 
         for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin();
              i != synthesizer.getInputs().end(); ++i) {
-            if (!parser.parseBuffer("@input", *i, "input")) {
-                generate();
-            } else {
-                return EXIT_FAILURE;
-            }
+            parser.parseBuffer("@input", *i, "input");
+            generate();
         }
 
 #ifdef OUTPUT_XML
@@ -366,7 +347,19 @@ int main(int argn, char **argv) {
 
     }
     catch (fatal_exception &e) {
-        std::cerr << e.getMessage() << std::endl;
+        std::cerr << "*** fatal error: " << e.getMessage() << std::endl;
+        std::flush(std::cerr);
+    }
+    catch (usage_exception &e) {
+        std::cerr << "*** usage error: " << e.getMessage() << std::endl;
+        describeUsage();
+        std::flush(std::cerr);
+        return EXIT_FAILURE;
+    }
+    catch (parser_exception &e) {
+        std::cerr << "*** parser error: " << e.getMessage() << std::endl;
+        std::flush(std::cerr);
+        return EXIT_FAILURE;
     }
 #ifdef TRACE_OPTION
     std::cout << "</body></html>" << std::endl;

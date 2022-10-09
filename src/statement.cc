@@ -1051,7 +1051,8 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
             if (!fs) {
                 resultFeatures = featuresPtr();
             }
-            if (!synthesizer->getCompactedLexicon()) FATAL_ERROR("search operator error: No compact lexicon defined.")
+            if (!synthesizer->getCompactedLexicon())
+                throw fatal_exception("search operator error: No compact lexicon defined.");
             entriesPtr entries = synthesizer->findCompactedLexicon(parser, 0, getBits()->toString(), fs->assignPred());
             if (entries) {
                 //if (entries->size() > 1) {
@@ -1063,12 +1064,12 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
                 if (_fs) {
                     std::stringstream stringStream;
                     _fs->flatPrint(stringStream);
-                    if (parser.parseBuffer("#", stringStream.str(), stringStream.str())) FATAL_ERROR_UNEXPECTED
-                    else {
-                        resultFeatures = parser.getLocalFeatures();
-                    }
+                    parser.parseBuffer("#", stringStream.str(), stringStream.str());
+                    resultFeatures = parser.getLocalFeatures();
                 }
-            } else FATAL_ERROR("search operator error: No entry for " + Vartable::codeToIdentifier(fs->assignPred()))
+            } else {
+                throw fatal_exception("search operator error: No entry for " + Vartable::codeToIdentifier(fs->assignPred()));
+            }
 
         }
             break;
@@ -1126,7 +1127,8 @@ listPtr Statement::evalList(const itemPtr &item, bool replaceVariables) {
         case FCT:
         case FINISHED:
         case SEARCH:
-        case ANONYMOUS: FATAL_ERROR_STM
+        case ANONYMOUS:
+            FATAL_ERROR_STM;
 
         case LIST:
             resultList = getList()->clone();
@@ -1139,7 +1141,7 @@ listPtr Statement::evalList(const itemPtr &item, bool replaceVariables) {
             if (item->getEnvironment()) {
                 valuePtr _value = item->getEnvironment()->find(getBits());
                 if (!_value) {
-                    FATAL_ERROR_STM
+                    FATAL_ERROR_STM;
                     //               resultList = listPtr();
                 } else if (_value->_isNil())
                     resultList = List::NIL_LIST;
@@ -1356,7 +1358,7 @@ valuePtr Statement::evalValue(const itemPtr &item, Parser &parser, Synthesizer *
                         resultValue = Value::create(Value::_FORM, v1str + v2str);
 
                     else if ((v1->_isList()) && (v2->_isList())) {
-                        WARNING_STM
+                        WARNING_STM;
                         resultValue = valuePtr();
                     }
 
@@ -2035,7 +2037,7 @@ void Statement::buildEnvironmentWithSynthesize(const itemPtr &item, Parser &pars
             featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
             if (!left) {
 
-                WARNING_STM
+                WARNING_STM;
             } else {
 
                 environmentPtr environment;
@@ -2083,7 +2085,7 @@ void Statement::buildEnvironmentWithInherited(const itemPtr &item, Parser &parse
             // $X = ↑;
             featuresPtr right = rhs->evalFeatures(item, parser, synthesizer, true);
             if (!right) {
-                WARNING_STM
+                WARNING_STM;
             } else {
                 environmentPtr environment;
                 if (item->getEnvironment()) {
@@ -2100,11 +2102,11 @@ void Statement::buildEnvironmentWithInherited(const itemPtr &item, Parser &parse
         case SUBSUME: {
             featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
             if (!left) {
-                WARNING_STM
+                WARNING_STM;
             } else {
                 featuresPtr right = rhs->evalFeatures(item, parser, synthesizer, true);
                 if (!right) {
-                    WARNING_STM
+                    WARNING_STM;
                 } else {
                     environmentPtr environment;
                     if (item->getEnvironment()) {
@@ -2162,7 +2164,7 @@ void Statement::buildEnvironmentWithValue(const itemPtr &item, Parser &parser, S
                 valuePtr right = rhs->evalValue(item, parser, synthesizer, true);
                 if (!right) {
                     this->print(std::cerr, 0);
-                    WARNING_STM
+                    WARNING_STM;
                 } else {
                     environmentPtr environment;
                     if (item->getEnvironment()) {
@@ -2183,7 +2185,7 @@ void Statement::buildEnvironmentWithValue(const itemPtr &item, Parser &parser, S
                 listPtr right = rhs->evalList(item, true);
                 if (!right) {
                     FATAL_ERROR_STM
-                    WARNING_STM
+                    WARNING_STM;
                 } else {
                     if (right->isNil()) {
                         FATAL_ERROR_STM
@@ -2191,7 +2193,7 @@ void Statement::buildEnvironmentWithValue(const itemPtr &item, Parser &parser, S
                     }
                     listPtr left = lhs->evalList(item, false);
                     if (!left) {
-                        WARNING_STM
+                        WARNING_STM;
                     } else {
                         environmentPtr environment;
                         if (item->getEnvironment()) {
@@ -2211,7 +2213,7 @@ void Statement::buildEnvironmentWithValue(const itemPtr &item, Parser &parser, S
         case SUBSUME: {
             featuresPtr right = rhs->evalFeatures(item, parser, synthesizer, true);
             if (!right) {
-                WARNING_STM
+                WARNING_STM;
             } else {
                 if (right->isNil()) {} // empty
                 featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
@@ -2316,7 +2318,8 @@ void Statement::stmForeach(const itemPtr &item, Parser &parser, Synthesizer *syn
     statementPtr variable = getLhs();
     valuePtr _value = getRhs()->getLhs()->evalValue(item, parser, synthesizer, true);
     statementPtr body = getRhs()->getRhs();
-    if (!_value->_isList()) FATAL_ERROR_MSG_STM("foreach does'nt apply a list")
+    if (!_value->_isList())
+        FATAL_ERROR_MSG_STM("foreach does'nt apply a list")
     listPtr _list = _value->getList();
     _list->apply(item, parser, synthesizer, variable, body, effect);
     /***

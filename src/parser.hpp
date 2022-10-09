@@ -26,7 +26,7 @@
 #include <unordered_map>
 #include <deque>
 #include "shared_ptr.hpp"
-#include "grammar.hpp"
+#include "rules.hpp"
 #include "entry.hpp"
 #include "entries.hpp"
 #include "features.hpp"
@@ -43,7 +43,7 @@ public:
     void listMacros();
 
 private:
-    Grammar grammar;
+    Rules rules;
     entries_map_map lexicon;
     entry_map mapLocalEntry;
     std::unordered_map<std::string, featuresPtr> macros;
@@ -69,7 +69,7 @@ public:
 
     unsigned int getTopLineno();
 
-    class Grammar &getGrammar();
+    class Rules &getRules();
 
     std::string getTopBufferName();
 
@@ -107,12 +107,12 @@ public:
 
     featuresPtr findMacros(const std::string&);
 
-    unsigned int parseFile(std::string prefix, std::string fileName);
+    void parseFile(std::string prefix, std::string fileName);
 
-    unsigned int parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
+    void parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
 
 private:
-    unsigned int parseString(std::string buffer);
+    void parseString(std::string buffer);
 
 };
 

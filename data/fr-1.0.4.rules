@@ -1,0 +1,178 @@
+#include fr-1.0.4.rhetoric.rules
+#include fr-1.0.4.noun.rules
+
+/* **************************************************
+ * Start with an NP or a Narative Sentence
+ ************************************************** */
+@trace
+text → NP {
+  [PRED:$pred];
+  attest $pred ≠ paragraph;
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Start with an NP or a Narative Sentence
+ ************************************************** */
+@trace
+text → rhetoricalStructure {
+  [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality] ⊂ ↑;
+  attest $pred ≠ paragraph;
+  if (($pred ≠ cause) ∧ ($pred ≠ succ) ∧ ($pred ≠ hello) ∧ ($pred ≠ see_you_soon))
+    $rhet = neutral;
+  else
+    $rhet = $pred;
+  if (¬ $illocutionary)
+    $illocutionary = neutral;
+  if (¬ $modality)
+    $modality = neutral;
+  ↓1 = ↑ ∪ [vform:$vform, mode:$mode, rhet:$rhet, illocutionary:$illocutionary, modality:$modality];
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Greetings, hello, etc
+ ************************************************** */
+@trace
+letter → dear name comma newParagraph text newParagraph regards newline signature {
+  [to:$to, body:$body, from:$from];
+  [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality, language_register:$language_register, lexical_function:$lexical_function] ⊂ ↑;
+  if (¬ $vform) 
+    $vform = tensed;
+  if (¬ $mode)
+    $mode = indicative;
+  if (($pred ≠ cause) ∧ ($pred ≠ succ))
+    $rhet = neutral;
+  else
+    $rhet = $pred;
+  if (¬ $illocutionary)
+    $illocutionary = neutral;
+  if (¬ $modality)
+    $modality = neutral;
+  ↓1 = $to;
+  ↓2 = $to;
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $body ∪ [vform:$vform, mode:$mode, language_register:$language_register, lexical_function:$lexical_function, rhet:$rhet, illocutionary:$illocutionary, modality:$modality];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = $from;
+}
+
+/* **************************************************
+ ************************************************** */
+text → texts {
+  [PRED:paragraph, $rest];
+  ↓1 = $rest;
+  ⇑ = [];
+}
+
+/* **************************************************
+ ************************************************** */
+texts → paragraph texts {
+  [texts: <$car :: <$cadr :: $cddr> >];
+  ↓1 = $car;
+  [i:[id:$id_i1], ii:[id:$id_ii1], iii:[id:$id_iii1]] ⊂ $car;
+  [i:[id:$id_i2], ii:[id:$id_ii2], iii:[id:$id_iii2]] ⊂ $cadr;
+  
+  // Jean ronfle. Il s'endort.
+  if ($id_i1 ∧ ($id_i1 == $id_i2)) {
+    [i:[PRED:$predi, $m_i]] ⊂ ⇓1;
+    $i = [PRED:__pro, clitic:yes, $m_i];
+  }
+  // Jean parle à Marie. Elle s'endort.
+  else if ($id_ii1 ∧ ($id_ii1 == $id_i2)) {
+    [ii:[PRED:$predii, $m_ii]] ⊂ ⇓1;
+    $i = [PRED:__pro, clitic:yes, $m_ii];
+  }
+  // Jean parle à Marie des fleurs. Elles fannent.
+  else if ($id_iii1 ∧ ($id_iii1 == $id_i2)) {
+    [iii:[PRED:$prediii, $m_iii]] ⊂ ⇓1;
+    $i = [PRED:__pro, clitic:yes, $m_iii];
+  } else {
+    [i:$i] ⊂ $cadr;
+  }
+  
+  // Jean parle à Marie. Luc lui parle.
+  if ($id_ii1 ∧ ($id_ii1 == $id_ii2)) {
+    [ii:[PRED:$predii, $m_ii]] ⊂ ⇓1;
+    $ii = [PRED:__pro, clitic:yes, $m_ii];
+  } else {
+    [ii:$ii] ⊂ $cadr;
+  }
+
+  if ($id_i1 ∧ ($id_i1 == $id_iii2)) {
+    [i:[PRED:$predi, $m_i]] ⊂ ⇓1;
+    $iii = [PRED:__pro, clitic:yes, $m_i];
+  }
+  else  if ($id_iii1 ∧ ($id_iii1 == $id_iii2)) {
+    [iii:[PRED:$prediii, $m_iii]] ⊂ ⇓1;
+    $iii = [PRED:__pro, clitic:yes, $m_iii];
+  } else {
+    [iii:$iii] ⊂ $cadr;
+  }
+
+  [i:_, ii:_, iii:_, $rest] ⊂ $cadr;
+  ↓2 = [texts:<[i:$i, ii:$ii, iii:$iii, $rest] :: $cddr>];
+  ⇑ = [];
+}
+
+texts → paragraph {
+  [texts:<$car>];
+  ↓1 = $car;
+  ⇑ = [];
+}
+
+texts → {
+  [texts:NIL];
+  ⇑ = [];
+}
+
+paragraph → text newline {
+  ↓1 = ↑;
+  ↓2 = [];
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ ************************************************** */
+text → text text [text] [text] [text] [text] [text] [text] [text] [text] {
+  [PRED:succ, i:$i, ii:$ii];
+  [iii:$iii, iv:$iv, v:$v,  vi:$vi, vii:$vii, viii:$viii, ix:$ix, x:$x] ⊂ ↑;
+  ↓1 = $i;
+  ↓2 = $ii;
+  if ($iii) {
+    attest #3;
+    ↓3 = $iii;
+  }
+    if ($iv) {
+    attest #4;
+    ↓4 = $iv;
+  }
+  if ($v) {
+    attest #5;
+    ↓5 = $v;
+  }
+  if ($vi) {
+    attest #6;
+    ↓6 = $vi;
+  }
+  if ($vii) {
+    attest #7;
+    ↓7 = $vii;
+  }
+  if ($viii) {
+    attest #8;
+    ↓8 = $viii;
+  }
+  if ($ix) {
+    attest #9;
+    ↓9 = $ix;
+  }
+  if ($x) {
+    attest #10;
+    ↓10 = $x;
+  }
+}

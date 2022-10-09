@@ -26,6 +26,8 @@
 #include "messages.hpp"
 #include "synthesizer.hpp"
 #include "config.hpp"
+#include "parser_exception.hpp"
+#include "fatal_exception.hpp"
 
 Parser parser = Parser();
 
@@ -131,10 +133,13 @@ int main(int argn, char **argv) {
                         stream.str("");
                         stream << '[' << f << ']';
                         std::string fsString = stream.str();
-                        if (parser.parseBuffer("#", fsString, "morphology")) {
-                            stream.str("");
-                            stream << "error in lexicon: " << f << std::endl;
-                            FATAL_ERROR(stream.str())
+                        try {
+                            parser.parseBuffer("#", fsString, "morphology");
+                        }
+                        catch (parser_exception& e) {
+                            std::ostringstream oss;
+                            oss << "error in lexicon: " << f;
+                            throw fatal_exception(oss);
                         }
                         features = parser.getLocalFeatures();
                         //features->flatPrint(std::cerr);

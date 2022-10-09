@@ -1,0 +1,91 @@
+#include fr-1.0.4.verb.rules
+#include fr-1.0.4.clitics.rules
+//#include fr-1.0.4.noun.rules
+
+sentence → form S form {
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓3 = [FORM:"</VP>"];
+  ↓1 = [FORM:" "];
+  ↓3 = [FORM:" "];
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  //[subj:$subj, modS:NIL];
+  [voice:$voice, lexical_function:$lexical_function] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  if (¬ $voice)
+    $voice = active;
+  ↓2 = ↑ U [voice:$voice, lexical_function:$lexical_function];
+  ⇑ = ⇓2;
+}
+
+/*
+sentence → form VP form {
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓3 = [FORM:"</VP>"];
+  ↓1 = [FORM:" "];
+  ↓3 = [FORM:" "];
+  //  println __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [subj:NIL, modS:NIL, $rest];
+  [voice:$voice, lexical_function:$lexical_function, $rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  if (¬ $voice)
+    $voice = active;
+  ↓2 = [voice:$voice, lexical_function:$lexical_function, $rest];
+  ⇑ = ⇓2;
+}
+*/
+
+/* **************************************************
+ * Phrase
+ * problème de dépendance entre 
+ * ↓2 = [subj:[number:$N, gender:$G, person:$P], $rest] ∪ [subj:$subjSynt];       
+ * et
+ * [number:$N, gender:$G, person:$P] ⊂ ⇓1;
+ * revoir if!
+ ************************************************** */
+S → [ NP | cln ] VP {
+  [subj:$subj, $rest];
+  //println __FILE__ + " (" + __LINE__ + ")";
+  //println $rest;
+  [aggrSubjSCompSubj:$aggrSubjSCompSubj, inv:$inv, mode:$mode, language_register:$language_register] ⊂ ↑;
+  [PRED:$predSubj] ⊂ $subj;
+  if (#1){
+    attest (#1.1 ⇒ ($predSubj ≠ __pro));
+    ↓1 = $subj ∪ [det:yes, language_register:$language_register];
+    attest ($mode != imperative) ∧ (($inv != yes) ∨ ($predSubj != __pro));
+    $subjSynt = ⇓1;
+    [number:$N, gender:$G, person:$P] ⊂ ⇓1;
+    if ($aggrSubjSCompSubj == yes){
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], scomp:[subj:[number:$N, gender:$G, person:$P]], $rest] ∪ [subj:$subjSynt];
+    } else {
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], $rest] ∪ [subj:$subjSynt];
+    }
+  }
+  else {
+    attest ($mode == imperative) ∨ (($inv == yes) ∧ ($predSubj == __pro));
+    [number:$N, gender:$G, person:$P] ⊂ $subj;
+    $subjSynt = [];
+    if ($aggrSubjSCompSubj == yes){
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], scomp:[subj:[number:$N, gender:$G, person:$P]], mode:$mode, $rest];
+    } else {
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], mode:$mode, $rest];
+    }
+  }
+  ⇑ = ⇓2 ∪ [subj:$subjSynt];
+}
+
+S → form VP {
+//  println __FILE__ + " (" + __LINE__ + ")";
+//  println ↑;
+  [subj:NIL];
+  [language_register:$language_register] ⊂ ↑;
+  //↓2 = ↑ ∪ [subj:[person:three, number:sg], language_register:$language_register];
+  ↓2 = ↑ ∪ [subj:[person:three, number:sg], language_register:$language_register];
+  [subjC:$subjC] ⊂ ⇓2;
+  ↓1 = $subjC ∪ [language_register:$language_register];
+  $subjSynt = ⇓1;
+  ⇑ = ⇓2 ∪ [subj:$subjSynt];
+}

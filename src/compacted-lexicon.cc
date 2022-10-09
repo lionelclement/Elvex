@@ -148,7 +148,7 @@ void CompactedLexicon::saveFsa() {
     std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
     if (sizeInfo == (unsigned long int) ~0UL) {
-        FATAL_ERROR("*** Error: Data too large")
+        throw fatal_exception("Data too large");
     }
 #ifdef TRACE_DIFF
     std::cout << "---FSA---" << std::endl;
@@ -162,7 +162,8 @@ void CompactedLexicon::saveFsa() {
     std::cerr << "*** Writing Data" << std::endl;
     // table
     fflush(fsaFile);
-    if (!fwrite(&init, sizeof(init), 1, fsaFile)) FATAL_ERROR_UNEXPECTED
+    if (!fwrite(&init, sizeof(init), 1, fsaFile))
+        FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     std::cout << "init:" << init << std::endl;
 #endif //TRACE_DIFF
@@ -174,25 +175,29 @@ void CompactedLexicon::saveFsa() {
 void CompactedLexicon::loadFsa() {
     std::cerr << "*** Loading Finite State Automata" << std::endl;
     int nbrBytes;
-    if (!fread(&nbrBytes, sizeof(nbrBytes), 1, fsaFile)) FATAL_ERROR_UNEXPECTED
+    if (!fread(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
+        FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif //TRACE_DIFF
     unsigned long int maxSize;
-    if (!fread(&maxSize, sizeof(maxSize), 1, fsaFile)) FATAL_ERROR_UNEXPECTED
+    if (!fread(&maxSize, sizeof(maxSize), 1, fsaFile))
+        FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     std::cout << "maxSize:" << maxSize << std::endl;
 #endif //TRACE_DIFF
     if (nbrBytes != (sizeof(unsigned long int)) || (maxSize != (unsigned long int) ~0UL)) {
-        FATAL_ERROR("*** lexicon compiled with an incompatible system")
+        throw fatal_exception("lexicon compiled with an incompatible system");
     }
     unsigned long int sizeFsa;
-    if (!fread(&sizeFsa, sizeof(sizeFsa), 1, fsaFile)) FATAL_ERROR_UNEXPECTED
+    if (!fread(&sizeFsa, sizeof(sizeFsa), 1, fsaFile))
+        FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif //TRACE_DIFF
     unsigned long int sizeInfo;
-    if (!fread(&sizeInfo, sizeof(sizeInfo), 1, fsaFile)) FATAL_ERROR_UNEXPECTED
+    if (!fread(&sizeInfo, sizeof(sizeInfo), 1, fsaFile))
+        FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif //TRACE_DIFF
@@ -201,7 +206,8 @@ void CompactedLexicon::loadFsa() {
     std::cout << "---FSA---" << std::endl;
 #endif //TRACE_DIFF
     fsa = new CompactedLexiconFsa[sizeFsa + 1]();
-    if (!fread(fsa, sizeof(CompactedLexiconFsa), sizeFsa, fsaFile)) FATAL_ERROR_UNEXPECTED
+    if (!fread(fsa, sizeof(CompactedLexiconFsa), sizeFsa, fsaFile))
+        FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     for(unsigned long int sizeSy=0;sizeSy<sizeFsa;sizeSy++) {
        fsa[sizeSy].print(std::cout);
@@ -212,7 +218,8 @@ void CompactedLexicon::loadFsa() {
     std::cout << "---Info---" << std::endl;
 #endif //TRACE_DIFF
     info = new CompactedLexiconBuffer[sizeInfo + 1]();
-    if (!fread(info, sizeof(CompactedLexiconBuffer), sizeInfo, fsaFile)) FATAL_ERROR_UNEXPECTED
+    if (!fread(info, sizeof(CompactedLexiconBuffer), sizeInfo, fsaFile))
+        FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     for(unsigned long int sizeSy=0;sizeSy<sizeInfo;sizeSy++) {
        std::cout << sizeSy << ' ';
@@ -235,7 +242,9 @@ void CompactedLexicon::openFiles(const std::string &mode) {
     dataFileName = oss.str();
     dataFile = fopen(dataFileName.c_str(), mode.c_str());
     if (dataFile == nullptr) {
-        FATAL_ERROR("Unable to open file " << dataFileName << " for writing")
+        std::ostringstream oss;
+        oss << "Unable to open file " << dataFileName << " for writing";
+        throw fatal_exception(oss);
     }
 
     oss.str("");
@@ -243,7 +252,9 @@ void CompactedLexicon::openFiles(const std::string &mode) {
     fsaFileName = oss.str();
     fsaFile = fopen(fsaFileName.c_str(), mode.c_str());
     if (fsaFile == nullptr) {
-        FATAL_ERROR("Unable to open file " << fsaFileName << " for writing")
+        std::ostringstream oss;
+        oss << "Unable to open file " << fsaFileName << " for writing";
+        throw fatal_exception(oss);
     }
 }
 
@@ -266,12 +277,7 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
         stringStream.str("");
         stringStream << '[' << fs1 << ']';
         std::string fsString = stringStream.str();
-        if (parser.parseBuffer("#", fsString, "morphology")) {
-            //stringStream.str("");
-            //stringStream <<  << std::endl;
-            FATAL_ERROR("error in lexicon: " << fs1)
-            //stringStream.str())
-        }
+        parser.parseBuffer("#", fsString, "morphology");
         features1 = parser.getLocalFeatures();
     } else
         features1 = featuresPtr();
@@ -281,11 +287,7 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
         stringStream.str("");
         stringStream << '[' << fs2 << ']';
         std::string fsString = stringStream.str();
-        if (parser.parseBuffer("#", fsString, "morphology")) {
-            stringStream.str("");
-            stringStream << "error in lexicon: " << fs2 << std::endl;
-            FATAL_ERROR(stringStream.str())
-        }
+        parser.parseBuffer("#", fsString, "morphology");
         features2 = parser.getLocalFeatures();
     } else
         features2 = featuresPtr();
