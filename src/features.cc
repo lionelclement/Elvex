@@ -406,7 +406,7 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
         // i1: X
         if (i1->getType() == Feature::VARIABLE) {
             if (i1->getValue()) {
-                FATAL_ERROR("A variable attribute is not allowed in this context: " +
+                throw fatal_exception("A variable attribute is not allowed in this context: " +
                       i1->getAttribute()->toString());
                 //if (!i1->getValue()->buildEnvironment(environment, i2->getValue(), acceptToFilterNULLVariables, false)){
                 //ret = false;

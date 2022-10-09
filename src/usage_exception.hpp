@@ -17,23 +17,24 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_FATAL_EXCEPTION_HPP
-#define ELVEX_FATAL_EXCEPTION_HPP
+#ifndef ELVEX_USAGE_EXCEPTION_HPP
+#define ELVEX_USAGE_EXCEPTION_HPP
 
 #include <string>
 #include <exception>
+#include <sstream>
 
-class fatal_exception :
+class usage_exception :
     public std::exception {
 
 private:
     std::string message;
 
 public:
-    fatal_exception(std::string message);
-    fatal_exception(std::ostringstream& _oss);
+    usage_exception(std::string);
+    usage_exception(std::ostringstream& oss);
     std::string getMessage();
 };
 
 
-#endif //ELVEX_FATAL_EXCEPTION_HPP
+#endif //ELVEX_USAGE_EXCEPTION_HPP

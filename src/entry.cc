@@ -17,7 +17,6 @@
  *
  ************************************************** */
 
-//#include <regex>
 #include <iterator>
 #include <iostream>
 #include <string>
@@ -87,8 +86,8 @@ unsigned int Entry::getPos() const {
 /* **************************************************
  *
  ************************************************** */
-void Entry::setPos(unsigned int _pos) {
-    this->pos = _pos;
+void Entry::setPos(unsigned int pos) {
+    this->pos = pos;
 }
 
 /* **************************************************
@@ -101,7 +100,7 @@ unsigned int Entry::getPred() const {
 /* **************************************************
  *
  ************************************************** */
-std::string &
+std::string&
 Entry::getForm() {
     return form;
 }
@@ -109,8 +108,8 @@ Entry::getForm() {
 /* **************************************************
  *
  ************************************************** */
-void Entry::setForm(std::string _form) {
-    this->form = std::move(_form);
+void Entry::setForm(std::string form) {
+    this->form = std::move(form);
 }
 
 /* **************************************************

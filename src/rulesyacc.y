@@ -31,12 +31,12 @@
 #include "features.hpp"
 #include "list.hpp"
 #include "statements.hpp"
-
 #include "statement.hpp"
 #include "terms.hpp"
 #include "messages.hpp"
 #include "rule.hpp"
 #include "shared_ptr.hpp"
+#include "parser_exception.hpp"
 
 #if false
 #define DBUG(x)x
@@ -52,26 +52,16 @@
  unsigned int headLineno;
  bool headTrace;
    
-  void ruleserror(const char *str) {
-    try {
+  void ruleserror(const char* str) {
       std::ostringstream oss;
-      oss << "error: " << str << " " << parser.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
-      throw oss.str();
-    }
-    catch (std::string msg) {
-      std::cerr << msg << std::endl;
-    }
+      oss << str << " " << parser.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
+      throw parser_exception(oss);
   }
   
-  void yywarning(const char *str){
-    try {
+  void yywarning(const char* str){
       std::ostringstream oss;
       oss << "warning: " << str << " " << parser.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
-      throw oss.str();	     
-    }
-    catch (std::string msg) {
-      std::cerr << msg << std::endl;
-    }
+      std::cerr << oss.str() << std::endl;
   }
   
   %}
@@ -107,7 +97,7 @@
 %token TOKEN_SEMI TOKEN_DOT TOKEN_COLON TOKEN_DOUBLECOLON TOKEN_COMMA
 
 // KEYWORDS
-%token TOKEN_GRAMMAR TOKEN_INPUT TOKEN_LEXICON
+%token TOKEN_RULES TOKEN_INPUT TOKEN_LEXICON
 %token TOKEN_LEMMA TOKEN_PRED TOKEN_FORM
 %token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN
 %token TOKEN_IF TOKEN_ELSE
@@ -141,7 +131,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<entry_slot> lexical_entry
 
 %type<features_slot> features features_components
-%type<feature_slot> feature
+%type<feature_slot> feature features_components_tail
 %type<bits_slot> variable identifier constant
 %type<value_slot> feature_value 
 %type<list_slot> list list_elements list_element
@@ -172,7 +162,7 @@ axiom:
 	};
 
 begin:
-	TOKEN_GRAMMAR rules {
+	TOKEN_RULES rules {
 	  DBUGPRT("begin grammar");
 	}
 
@@ -390,9 +380,9 @@ rule:
 	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), $2, *$4, $5 ? *$5 : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
-	  parser.getGrammar().addRule(rule);
-	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm($2);
+	  parser.getRules().addRule(rule);
+	  if (!parser.getRules().getStartTerm()){
+	    parser.getRules().setStartTerm($2);
 	  }
 	  free($4);
 	  if ($5)
@@ -405,9 +395,9 @@ rule:
 	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), $2, $4 ? *$4 : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
-	  parser.getGrammar().addRule(rule);
-	  if (!parser.getGrammar().getStartTerm()){
-	    parser.getGrammar().setStartTerm($2);
+	  parser.getRules().addRule(rule);
+	  if (!parser.getRules().getStartTerm()){
+	    parser.getRules().setStartTerm($2);
 	  }
 	  if ($4)
 	    free($4);
@@ -1069,10 +1059,14 @@ downdouble:
 // Features
 //////////////////////////
 features:
-	TOKEN_LBRACKET features_components TOKEN_RBRACKET
+	TOKEN_LBRACKET features_components features_components_tail TOKEN_RBRACKET
 	{
 	  DBUGPRT("features");
- 	  $$=$2;
+ 	  $$ = $2;
+	  if ($3) {
+	    (*$$)->add(*$3);
+	    free($3);
+	  }
 	}
 
 	|TOKEN_LBRACKET TOKEN_RBRACKET
@@ -1081,11 +1075,22 @@ features:
 	  $$ = new featuresPtr(Features::create());
 	};
 
+features_components_tail:
+	/* empty */
+	{
+	    $$ = NULL;
+	}
+
+	|TOKEN_COMMA variable
+	{
+        $$ = new featurePtr(Feature::create(Feature::VARIABLE, *$2, valuePtr()));
+    };
+
 features_components:
 	features_components TOKEN_COMMA feature
 	{
 	  DBUGPRT("feature_components");
-	  $$=$1; 
+	  $$ = $1;
 	  (*$$)->add(*$3);
 	  free($3);
 	}
@@ -1195,12 +1200,13 @@ feature:
 	  free($3);
 	}
 
-	|variable
-	{
-	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::VARIABLE, *$1, valuePtr()));
-	  free($1);
-	};
+	//|variable
+	//{
+	//  DBUGPRT("feature");
+	//  $$ = new featurePtr(Feature::create(Feature::VARIABLE, *$1, valuePtr()));
+	//  free($1);
+	//}
+	;
 
 feature_value:
 	variable

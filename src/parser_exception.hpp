@@ -17,23 +17,23 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_FATAL_EXCEPTION_HPP
-#define ELVEX_FATAL_EXCEPTION_HPP
+#ifndef ELVEX_PARSER_EXCEPTION_HPP
+#define ELVEX_PARSER_EXCEPTION_HPP
 
 #include <string>
 #include <exception>
 
-class fatal_exception :
+class parser_exception :
     public std::exception {
 
 private:
     std::string message;
 
 public:
-    fatal_exception(std::string message);
-    fatal_exception(std::ostringstream& _oss);
+    parser_exception(std::string message);
+    parser_exception(std::ostringstream& _oss);
     std::string getMessage();
 };
 
 
-#endif //ELVEX_FATAL_EXCEPTION_HPP
+#endif //ELVEX_PARSER_EXCEPTION_HPP

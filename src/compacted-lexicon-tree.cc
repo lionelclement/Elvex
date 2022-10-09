@@ -88,7 +88,7 @@ void CompactedLexiconTree::printStaticFSA(FILE *out, class CompactedLexicon *lex
                 (lexiconSy->info == nullptr) ? (unsigned long int) ~0UL : lexiconSy->info->getAddress(),
                 lexiconSy->character);
         if (!fwrite(elt, sizeof(CompactedLexiconFsa), 1, out)) {
-            FATAL_ERROR_UNEXPECTED
+            FATAL_ERROR_UNEXPECTED;
         }
 #ifdef TRACE_DIFF
         elt->print(std::cout);
@@ -129,7 +129,7 @@ void CompactedLexiconTree::printStaticInfo(FILE *out) const {
                     (infoSy->getNext() != nullptr) ? infoSy->getNext()->getAddress() : (unsigned long int) (~(0UL)),
                     infoSy->getOffset());
             if (!fwrite(elt, sizeof(CompactedLexiconBuffer), 1, out)) {
-                FATAL_ERROR_UNEXPECTED
+                FATAL_ERROR_UNEXPECTED;
             }
 #ifdef TRACE_DIFF
             std::cout << infoSy->getAddress() << ' ';

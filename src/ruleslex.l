@@ -299,9 +299,9 @@ downDoubleArrow "⇓"
     return TOKEN_INPUT;
   }
   
-  "@grammar" {
-    DBUGPRT("TOKEN_GRAMMAR\n");
-    return TOKEN_GRAMMAR;
+  "@rules" {
+    DBUGPRT("TOKEN_RULES\n");
+    return TOKEN_RULES;
   }
   
   "@lexicon" {

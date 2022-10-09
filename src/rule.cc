@@ -146,7 +146,7 @@ statementsPtr Rule::getStatements(void) const {
  ************************************************************ */
 void Rule::incUsages(class Synthesizer *synthesizer) {
     if (++usages > synthesizer->getMaxUsages()) {
-        FATAL_ERROR("*** error: too much usages of the same rule: " + this->toString())
+        throw fatal_exception("too much usages of the same rule: " + this->toString());
     }
 }
 

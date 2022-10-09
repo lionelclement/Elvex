@@ -222,7 +222,7 @@ void Environment::replaceVariables(const featuresPtr& features, bool &effect) {
                     effect = true;
                     goto redo;
                 } else {
-                    FATAL_ERROR("environment: variable substitution failed")
+                    throw fatal_exception("environment: variable substitution failed");
                 }
             }
                 break;
