@@ -19,9 +19,9 @@ VP → V [ADVM] [NP] [AP] [PP] [VComp] {
     [objC:$objInherited] ⊂ ↑;
     [lexical_function:$lexical_functionInherited] ⊂ $objInherited;
     if (¬ $lexical_functionInherited)
-      ↓3 = [neg:$neg, $objSynt, language_register:$language_register];
+      ↓3 = [neg:$neg, language_register:$language_register, $objSynt];
     else
-      ↓3 = [neg:$neg, lexical_function:$lexical_functionInherited, $objSynt, language_register:$language_register];
+      ↓3 = [neg:$neg, lexical_function:$lexical_functionInherited, language_register:$language_register, $objSynt];
   }
   else {
     attest (¬$objSynt);
@@ -31,9 +31,9 @@ VP → V [ADVM] [NP] [AP] [PP] [VComp] {
     [vcompC:$vcompInherited] ⊂ ↑;
     [lexical_function:$lexical_functionInherited] ⊂ $vcompInherited;
     if (¬ $lexical_functionInherited)
-      ↓6 = [neg:$neg, $vcompSynt, language_register:$language_register];
+      ↓6 = [neg:$neg, language_register:$language_register, $vcompSynt];
     else
-      ↓6 = [neg:$neg, lexical_function:$lexical_functionInherited, $vcompSynt, language_register:$language_register];
+      ↓6 = [neg:$neg, lexical_function:$lexical_functionInherited, language_register:$language_register, $vcompSynt];
   }
   else {
     attest (¬$vcompSynt);
@@ -113,9 +113,9 @@ VP → VP [PP] {
     attest $pred ≠ _pro;
     ↓1 = $rest;
     if ($prep_objSynt && $pcasSynt)
-      ↓2 = [pcas:$pcas, $pObj, language_register:$language_register] ∪ [pcas:$pcasSynt];
+      ↓2 = [pcas:$pcas, language_register:$language_register, $pObj] ∪ [pcas:$pcasSynt];
     else
-      ↓2 = [pcas:$pcas, $pObj, language_register:$language_register];
+      ↓2 = [pcas:$pcas, language_register:$language_register, $pObj];
     $prepObjSynt = ⇓2;
     ⇑ = ⇓1 ∪ [prep_obj:$prepObjSynt];
   }
@@ -137,12 +137,12 @@ VP → VP PP {
   [pcas:$pcasSynt] ⊂ $prep_objSynt;
   [pcas:$pcas] ⊂ $pObj;
   [prep_obj2:[PRED:$pred], language_register:$language_register] ⊂ ↑;
-  attest $pred ≠ _pro; 
+  attest $pred ≠ _pro;
   ↓1 = $rest;
   if ($prep_objSynt && $pcasSynt)
-    ↓2 = [pcas:$pcas, $pObj, language_register:$language_register] ∪ [pcas:$pcasSynt];
+    ↓2 = [pcas:$pcas, language_register:$language_register, $pObj] ∪ [pcas:$pcasSynt];
   else
-    ↓2 = [pcas:$pcas, $pObj, language_register:$language_register];
+    ↓2 = [pcas:$pcas, language_register:$language_register, $pObj];
   ⇑ = ⇓1;
 }
 
@@ -157,13 +157,13 @@ VP → VP SComp {
   ↓1 = $rest;
 
   [scomp:$scompSynt, vtense:$mainClauseVtense, mode:$mainClauseMode, auxVtense:$mainClauseAuxVtense] ⊂ ⇓1;
-  
+
   if ($mainClauseAuxVtense)
     $mainClauseVtense = $mainClauseAuxVtense;
 
   [mode:$objectClauseMode] ⊂ $scompSynt;
 
-  $objectClauseTense = present;  
+  $objectClauseTense = present;
   if ($mainClauseVtense == present){
     if ($conc==simul|post && $objectClauseMode==subjonctive)
       $objectClauseTense = present;
@@ -183,7 +183,7 @@ VP → VP SComp {
       $objectClauseTense = pluperfect;
     }
  else
-   $objectClauseTense = present;  
+   $objectClauseTense = present;
 
   ↓2 = $scomp ∪ $scompSynt ∪ [vform:tensed, mode:$objectClauseMode, tense:$objectClauseTense, language_register:$language_register];
 
@@ -194,8 +194,8 @@ VP → VP SComp {
   //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
   //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect))
   //    );
-  
-  
+
+
 
   // [vtense:$objectClauseVtense, auxVtense:$objectClauseAuxVtense, mode:$objectClauseMode] ⊂ ⇓2;
   // if ($objectClauseAuxVtense)
@@ -227,7 +227,7 @@ VP → VP SComp {
   //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
   //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect))
   //    );
-  
+
   // attest ($mainClauseVtense==past_historic) =>
   //   ((($conc==simul) && ($objectClauseMode==indicative) && ($objectClauseVtense==imperfect|past_historic|passe_compose))
   //    || (($conc==ant) && ($objectClauseMode==indicative) && ($objectClauseVtense==pluperfect|past_anterieur))
@@ -242,7 +242,7 @@ VP → VP SComp {
   //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
   //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect)));
 
-  // 
+  //
   //   $scompSynt2 = ⇓2;
   // ⇑ = ⇓1 ∪ [scomp:$scompSynt2];
   ⇑ = ⇓1;
@@ -306,7 +306,7 @@ V → [clneg] [advneg] CLITICS Verb [clint] [advneg] [ADVM] [CN] {
     ↓6 = [language_register:$language_register];
     attest ($neg == yes || $negC == yes);
     [vform:tensed] ⊂ ↑;
-  } 
+  }
   else {
     attest ($neg!=yes && $negC!=yes);
   }
@@ -319,7 +319,7 @@ V → [clneg] [advneg] CLITICS Verb [clint] [advneg] [ADVM] [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   [refl:$refl, negC:$negC] ⊂ ⇓4;
   if (($refl == yes) ∧ ($resObj ≠ yes)){
     [subj:[number:$n, gender:$g, person:$p]] ⊂ ↑;
@@ -340,7 +340,7 @@ V → [clneg] [advneg] CLITICS Verb [clint] [advneg] [ADVM] [CN] {
   } else {
     [modV:NIL];
   }
-  
+
   if (#8) {
     [nounC:$nounC] ⊂ ⇓4;
     ↓8 = $nounC ∪ [language_register:$language_register];
@@ -367,7 +367,7 @@ V → [clneg] [advneg] Verb CLITICS [clint] [advneg] [ADVM] [CN] {
   else {
     [modV:NIL];
   }
-  
+
   //[language_register:$language_register] ⊂ $rest;
   ↓3 = $rest;
   //[language_register:$Synth_language_register] ⊂ ⇓3;
@@ -384,7 +384,7 @@ V → [clneg] [advneg] Verb CLITICS [clint] [advneg] [ADVM] [CN] {
     ↓6 = [];
     [neg:yes];
     [vform:tensed] ⊂ ↑;
-  } 
+  }
   else {
     [neg:no] ⊂ ↑;
   }
@@ -396,7 +396,7 @@ V → [clneg] [advneg] Verb CLITICS [clint] [advneg] [ADVM] [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   [refl:$refl] ⊂ ⇓3;
   if (($refl == yes) ∧ ($resObj ≠ yes)){
     [subj:[number:$n, gender:$g, person:$p]] ⊂ ↑;
@@ -443,7 +443,7 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] Verb [CN] {
     attest #1 ⇔ #5;
   if (#1) {
     ↓1 = [];
-  } 
+  }
   if (#5) {
     [neg:yes];
     ↓5 = [];
@@ -468,7 +468,7 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] Verb [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   // être
   if (#3.1){
     [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
@@ -487,7 +487,7 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] Verb [CN] {
 	  attest ($aux == être);
 	  attest ($resObj ≠ yes);
 	  [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
-	  ↓2 = [$rest];
+	  ↓2 = $rest;
     }
     [subj:[number:$npart, gender:$gpart]] ⊂ ↑;
     ↓3 = ↑ ∪ [voice:active];
@@ -537,7 +537,7 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] Verb [CN] {
 // passive
 // X est mangé(es)
 // X est ordonné(es) par Y
-// n'en est pas souvent troublé 
+// n'en est pas souvent troublé
 V → [clneg] CLITICS aux_être [clint] [advneg] [ADVM] Verb [CN] {
   [vtense:present|imperfect|future, voice:passive];
   attest #1 ⇔ #5;
@@ -560,7 +560,7 @@ V → [clneg] CLITICS aux_être [clint] [advneg] [ADVM] Verb [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   ↓7 = [$rest, vform:participle, vtense:past];
   // On récupère les informations du verbe
   if (⇓7){
@@ -617,7 +617,7 @@ V → [clneg] CLITICS aux_avoir [clint] [advneg] aux_être [ADVM] Verb [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   ↓8 = [$rest, vform:participle, vtense:past];
   // On récupère les informations du verbe
   if (⇓8){
@@ -674,17 +674,17 @@ V → [clneg] aux_être [clint] [advneg] en_train_de [ADVM] CLITICS Verb [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   ↓2 = ↑;
   ↓5 = [];
-  
+
   [genCl:$genCl, refl:$refl] ⊂ ⇓8;
   [resObj:$resObj] ⊂ ↑;
   if (($refl == yes) ∧ ($resObj ≠ yes)){
     [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
     ↓7 = [objRefl:[PRED:_pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
   }
-  else 
+  else
     ↓7 = ⇓8;
 
   ↓8 = [vform:infinitive, $rest];
@@ -732,7 +732,7 @@ V → [clneg] aux_aller [clint] [advneg] [ADVM] CLITICS Verb [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   [genCl:$genCl, subjC:[number:$n, person:$p], refl:$refl] ⊂ ⇓7;
 
   ↓2 = ↑ ∪ [subj:[number:$n, person:$p]];
@@ -741,11 +741,11 @@ V → [clneg] aux_aller [clint] [advneg] [ADVM] CLITICS Verb [CN] {
     [subj:[number:$n, gender:$g, person:$p]] ⊂ ↑;
     ↓6 = ⇓7 ∪ [mode:$mode, subj:[number:$n, person:$p], objRefl:[PRED:_pro, number:$n, gender:$g, person:$p]];
   }
-  else 
+  else
     ↓6 = ⇓7;
 
   ↓7 = [vform:infinitive, $rest];
-  
+
   if (#5) {
     [modV:$modV];
     ↓5 = [modV:$modV];
@@ -790,7 +790,7 @@ V → [clneg] aux_venir [clint] [advneg] [ADVM] de CLITICS Verb [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   ↓6 = [];
   [refl:$refl] ⊂ ⇓8;
   [resObj:$resObj] ⊂ ↑;
@@ -798,7 +798,7 @@ V → [clneg] aux_venir [clint] [advneg] [ADVM] de CLITICS Verb [CN] {
     [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
     ↓7 = [objRefl:[PRED:_pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
   }
-  else 
+  else
     ↓7 = ⇓8;
   ↓8 = [vform:infinitive, $rest];
 
@@ -846,7 +846,7 @@ V → [clneg] aux_commencer [clint] [advneg] [ADVM] à CLITICS Verb [CN] {
   else {
     attest ($inv != yes);
   }
-  
+
   ↓6 = [];
   [refl:$refl] ⊂ ⇓8;
   [resObj:$resObj] ⊂ ↑;
@@ -854,7 +854,7 @@ V → [clneg] aux_commencer [clint] [advneg] [ADVM] à CLITICS Verb [CN] {
     [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
     ↓7 = [objRefl:[PRED:_pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
   }
-  else 
+  else
     ↓7 = ⇓8;
   ↓8 = [vform:infinitive, $rest];
 
@@ -893,10 +893,10 @@ V → [clneg] aux_être [clint] [advneg] [ADVM] NP|ADJ {
     [neg:no] ⊂ ↑;
     $neg = no;
   }
-  
+
   [mode:$mode, vtense:$vtense, vform:$vform, subj:$subj, inv:$inv, finite:$finite, $rest] ⊂ ↑;
   [number:$number, gender:$gender] ⊂ $subj;
-  
+
   if (#3){
     attest ($inv == yes);
     ↓3 = $subj;
@@ -904,7 +904,7 @@ V → [clneg] aux_être [clint] [advneg] [ADVM] NP|ADJ {
   else {
     attest ($inv != yes);
   }
-  
+
   ↓2 = [subj:$subj, mode:$mode, vtense:$vtense, vform:$vform, finite:$finite, voice:passive];
   ↓6 = ↑ ∪ [number:$number, gender:$gender, det:no];
   if (#6.1){
@@ -940,7 +940,7 @@ V → [clneg] aux_avoir [clint] [advneg] aux_être [ADVM] NP|ADJ {
   else {
     attest ($inv != yes);
   }
-  
+
   ↓2 = [subj:$subj, mode:$mode, vtense:$vtense, vform:$vform, finite:$finite, voice:passive];
   ↓7 = ↑ ∪ [number:$number, gender:$gender, det:no];
   // ↓5 = [$rest, vform:participle, vtense:past];
@@ -992,7 +992,7 @@ SComp → csu modalClause {
   if (($modality != pouvoir) && ($modality != vouloir) && ($modality != devoir) && ($modality != savoir))
     $modality = default;
   ↓2 = ↑ ∪ [vform:tensed, rhet:$rhet, illocutionary:$illocutionary, modality:$modality];
-  
+
   ⇑ = ⇓1 ∪ ⇓2;
 }
 
@@ -1046,4 +1046,3 @@ CN → n|form {
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
-

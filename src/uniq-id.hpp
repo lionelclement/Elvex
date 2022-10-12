@@ -29,7 +29,7 @@ private:
     size_t id;
 
 public:
-    UniqId(size_t id = 0); // if zero => autoinc
+    explicit UniqId(size_t id = 0); // if zero => autoinc
     size_t getId(void) const;
 
 };

@@ -33,7 +33,10 @@
 #include "variableflag.hpp"
 
 class Features :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Features> {
+        public UniqId, 
+        public Flags, 
+        public Serializable, 
+        public std::enable_shared_from_this<class Features> {
 
 public:
     static featuresPtr NIL;

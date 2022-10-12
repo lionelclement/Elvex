@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2020 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -34,19 +34,27 @@
 class Parser {
 
 public:
-    typedef std::unordered_map<std::string, entryPtr> entry_map;
     // POS => (LEMMA => ENTRIES)
     // i.e.: verb => (manger => (mangions, mange|mange))
-    typedef std::map<unsigned int, entriesPtr> entries_map;
-    typedef std::map<unsigned int, entries_map *> entries_map_map;
+    typedef std::unordered_map<std::string, entryPtr> entry_map;
+    typedef entry_map::const_iterator entry_map_const_iterator;
 
-    void listMacros();
+    // see below
+    typedef std::map<unsigned int, entriesPtr> entries_map;
+    // POS => (LEMMA => ENTRIES)
+    // i.e.: verb => (manger => (mangions, mange|mange))
+    typedef std::map<unsigned int, entries_map*> entries_map_map;
+    typedef entries_map_map::const_iterator entries_map_map_const_iterator;
+
+    // macro => featuresPtr  
+    typedef std::unordered_map<std::string, featuresPtr> macro_map;
+    typedef macro_map::const_iterator macro_map_const_iterator;
 
 private:
     Rules rules;
     entries_map_map lexicon;
     entry_map mapLocalEntry;
-    std::unordered_map<std::string, featuresPtr> macros;
+    macro_map macros;
     featuresPtr startFeatures;
     unsigned int startTerm;
     bool verbose;
@@ -85,21 +93,25 @@ public:
 
     void setLocalFeatures(featuresPtr);
 
-    entries_map_map &getLexicon();
+  void insertLexicon(std::pair<unsigned int, entries_map*>);
 
-    void setLexicon(entries_map_map &);
+  void printLexicon();
+  
+    entries_map_map_const_iterator findLexicon(unsigned int) const;
 
-    entries_map_map::const_iterator findLexicon(unsigned int i) const;
+    entries_map_map_const_iterator cbeginLexicon() const;
 
-    entries_map_map::const_iterator beginLexicon() const;
-
-    entries_map_map::const_iterator endLexicon() const;
+    entries_map_map_const_iterator cendLexicon() const;
 
     void setVerbose(bool);
 
     bool getVerbose() const;
 
-    entry_map &getMapLocalEntry();
+  entry_map_const_iterator findMapLocalEntry(std::string&) const;
+
+  entry_map_const_iterator cendMapLocalEntry() const;
+
+  void insertMapLocalEntry(std::pair<std::string, entryPtr>);
 
     void printLexicon(std::ostream &) const;
 
@@ -110,6 +122,8 @@ public:
     void parseFile(std::string prefix, std::string fileName);
 
     void parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
+
+    void listMacros();
 
 private:
     void parseString(std::string buffer);

@@ -19,7 +19,6 @@
 
 #include <sstream>
 #include "rule.hpp"
-//#include "../trash/term.hpp"
 #include "terms.hpp"
 #include "statements.hpp"
 #include "messages.hpp"
@@ -203,20 +202,22 @@ rulePtr Rule::clone() const {
  *
  ************************************************** */
 void
-Rule::toXML(/*xmlNodePtr nodeRoot*/)
+Rule::toXML(xmlNodePtr nodeRoot)
 {
-   // xmlNodePtr r=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"RULE", NULL);
-   // xmlSetProp(r, (xmlChar*)"id", (xmlChar*)(toStr(id)).c_str());
-   // xmlNodePtr hs=xmlNewChild(r, NULL, (const xmlChar*)"LHS", NULL);
-   // lhs->toXML(hs);
-   // hs=xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
-   // for(unsigned int i=0; i<rhs.size(); i++){
-   //   for (featuresVector <termsPtr >::const_iterator term=rhs[i]->begin();
-   // 	 term != rhs[i]->end();
-   // 	 term++) {
-   //     (*term)->toXML(hs);
-   //   }
-   // }
+   xmlNodePtr r = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"RULE", NULL);
+   //xmlNodePtr hs = 
+   xmlNewChild(r, NULL, (const xmlChar*)"LHS", NULL);
+   /*
+   lhs->toXML(hs);
+   hs = xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
+   for(unsigned int i = 0; i < rhs.size(); ++i){
+    for (featuresVector<termsPtr>::const_iterator term=rhs[i]->begin();
+    term != rhs[i]->end();
+    term++) {
+   (*term)->toXML(hs);
+      }
+   }
+   */
 }
 #endif
 

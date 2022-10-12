@@ -45,8 +45,9 @@
 class Synthesizer {
 
 public:
-    typedef std::map<unsigned int, itemPtr> Item_map;
-    typedef std::map<unsigned int, itemSetPtr> ItemSet_map;
+    typedef std::map<unsigned int, itemPtr> item_map;
+    typedef std::map<unsigned int, itemSetPtr> itemSet_map;
+    typedef itemSet_map::const_iterator itemSet_map_const_iterator;
     enum Stage {
         MORPHO_FEATURES,
         FORM_FEATURES,
@@ -54,12 +55,12 @@ public:
     };
 
 private:
-    ItemSet_map states;
+    itemSet_map states;
     ForestMap forestMap;
-    Item_map itemMap;
+    item_map itemMap;
     nodePtr nodeRoot;
 
-    class CompactedLexicon *compactedLexicon;
+    class CompactedLexicon* compactedLexicon;
 
     unsigned int maxLength;
     unsigned int maxUsages;
@@ -93,7 +94,7 @@ private:
 #endif
 
 #ifdef OUTPUT_XML
-    char *outXML;
+    char* outXML;
 #endif
 
 
@@ -103,23 +104,23 @@ public:
 
     ~Synthesizer();
 
-    ItemSet_map::const_iterator begin() const;
+    itemSet_map_const_iterator cbegin() const;
 
-    ItemSet_map::const_iterator end() const;
+    itemSet_map_const_iterator cend() const;
 
     size_t size() const;
 
-    std::list<std::string> &getInputs();
+    std::list<std::string>& getInputs();
 
-    void setInputFileName(char *);
+    void setInputFileName(char*);
 
-    void setLexiconFileName(char *);
+    void setLexiconFileName(char*);
 
-    void setRulesFileName(char *);
+    void setRulesFileName(char*);
 
     void setCompactedLexiconFileName(char *);
 
-    void setCompactedDirectoryName(char *);
+    void setCompactedDirectoryName(char*);
 
     std::string getInputFileName() const;
 
@@ -141,14 +142,12 @@ public:
 
     unsigned int getMaxCardinal() const;
 
-    class CompactedLexicon *getCompactedLexicon() const;
-
-    void setCompactedLexicon(class CompactedLexicon *);
+    void setCompactedLexicon(class CompactedLexicon*);
 
     void addInput(const std::string&);
 
 #ifdef OUTPUT_XML
-    void setOutXML(char *);
+    void setOutXML(char*);
     char *getOutXML() const;
 #endif
 
@@ -183,36 +182,35 @@ public:
 
     void setRandom(bool);
 
-    bool getRandom() const;
+    bool getRandom(void) const;
 
     void setOne(bool);
 
-    bool getOne() const;
+    bool getOne(void) const;
 
-    void printState(std::ostream &, const itemSetPtr&);
+    void printState(std::ostream&, const itemSetPtr&);
 
-    void close(class Parser &, const itemSetPtr&, unsigned int);
+    void close(class Parser&, const itemSetPtr&, unsigned int);
 
-    bool shift(class Parser &, const itemSetPtr&, unsigned int);
+    bool shift(class Parser&, const itemSetPtr&, unsigned int);
 
     void clear();
 
     static itemPtr createItem(const itemPtr&, unsigned int);
 
-    void generate(class Parser &);
+    void generate(class Parser&);
 
-    entriesPtr
-    findCompactedLexicon(class Parser &, unsigned int code, const std::string& str, unsigned int pred);
+    entriesPtr _findCompactedLexicon(class Parser&, unsigned int code, const std::string& str, unsigned int pred);
 
     std::string keyMemoization(const itemPtr&, const itemPtr&);
 
     void setVerbose(bool _verbose);
 
-    entriesPtr findByPos(Parser &parser, Parser::entries_map *pMap, unsigned int term);
+    entriesPtr findByPos(Parser& parser, Parser::entries_map* pMap, unsigned int term);
 
-    entriesPtr findByForm(Parser::entries_map *pMap);
+    entriesPtr findByForm(Parser::entries_map* pMap);
 
-    entriesPtr findByPred(Parser &parser, Parser::entries_map *listPred, unsigned int term, unsigned int pred);
+    entriesPtr findByPred(Parser& parser, Parser::entries_map* listPred, unsigned int term, unsigned int pred);
 };
 
 #endif // ELVEX_SYNTHESIZER_H

@@ -64,7 +64,7 @@ public:
 
     void printResults(std::ostream &, unsigned long int index, bool sep) const;
 
-    unsigned long int searchStatic(unsigned long int index, const std::string&) const;
+    unsigned long int search(unsigned long int index, const std::string&) const;
 
     void saveFsa();
 
@@ -89,8 +89,10 @@ public:
 
     void consult();
 
-    void list();
-    void list(unsigned int, const std::string&);
+    void list(std::ostream&);
+
+private:
+    void list(unsigned int, const std::string&, std::ostream&);
 };
 
 #endif // COMPACTEDLEXICON_H

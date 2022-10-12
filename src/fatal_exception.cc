@@ -34,7 +34,7 @@ fatal_exception::fatal_exception(std::string message) {
  *
  ************************************************** */
 fatal_exception::fatal_exception(std::ostringstream& oss) {
-    fatal_exception(oss.str());
+  this->message = oss.str();
 }
 
 /* **************************************************

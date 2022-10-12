@@ -19,9 +19,9 @@ VP → form V [ADVM] [NP] [PP] [ADJ] [VComp] form {
     [objC:$objInherited] ⊂ ↑;
     [lexical_function:$lexical_functionInherited] ⊂ $objInherited;
     if (¬ $lexical_functionInherited)
-      ↓4 = [neg:$neg, $objSynt, language_register:$language_register];
+      ↓4 = [neg:$neg, language_register:$language_register, $objSynt];
     else
-      ↓4 = [neg:$neg, lexical_function:$lexical_functionInherited, $objSynt, language_register:$language_register];
+      ↓4 = [neg:$neg, lexical_function:$lexical_functionInherited, language_register:$language_register, $objSynt];
   }
   else {
     attest (¬$objSynt);
@@ -31,9 +31,9 @@ VP → form V [ADVM] [NP] [PP] [ADJ] [VComp] form {
     [vcompC:$vcompInherited] ⊂ ↑;
     [lexical_function:$lexical_functionInherited] ⊂ $vcompInherited;
     if (¬ $lexical_functionInherited)
-      ↓7 = [neg:$neg, $vcompSynt, language_register:$language_register];
+      ↓7 = [neg:$neg, language_register:$language_register, $vcompSynt];
     else
-      ↓7 = [neg:$neg, lexical_function:$lexical_functionInherited, $vcompSynt, language_register:$language_register];
+      ↓7 = [neg:$neg, lexical_function:$lexical_functionInherited, language_register:$language_register, $vcompSynt];
   }
   else {
     attest (¬$vcompSynt);
@@ -105,9 +105,9 @@ VP → form VP [PP] form {
     attest $pred ≠ __pro; 
     ↓2 = $rest;
     if ($prep_objSynt && $pcasSynt)
-      ↓3 = [pcas:$pcas, $pObj, language_register:$language_register] ∪ [pcas:$pcasSynt];
+      ↓3 = [pcas:$pcas, language_register:$language_register, $pObj] ∪ [pcas:$pcasSynt];
     else
-      ↓3 = [pcas:$pcas, $pObj, language_register:$language_register];
+      ↓3 = [pcas:$pcas, language_register:$language_register, $pObj];
     $prepObjSynt = ⇓3;
     ⇑ = ⇓2 ∪ [prep_obj:$prepObjSynt];
   }
@@ -136,9 +136,9 @@ VP → form VP PP form {
   attest $pred ≠ __pro; 
   ↓2 = $rest;
   if ($prep_objSynt && $pcasSynt)
-    ↓3 = [pcas:$pcas, $pObj, language_register:$language_register] ∪ [pcas:$pcasSynt];
+    ↓3 = [pcas:$pcas, language_register:$language_register, $pObj] ∪ [pcas:$pcasSynt];
   else
-    ↓3 = [pcas:$pcas, $pObj, language_register:$language_register];
+    ↓3 = [pcas:$pcas, language_register:$language_register, $pObj];
   ⇑ = ⇓2;
 }
 
@@ -460,7 +460,7 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] v {
 	attest ($aux == être);
 	attest ($resObj ≠ yes);
 	[subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
-	↓2 = [$rest];
+	↓2 = $rest;
       }
       [subj:[number:$npart, gender:$gpart]] ⊂ ↑;
       ↓3 = ↑ ∪ [voice:active];
@@ -468,10 +468,10 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] v {
   }
   else if (#3.2){
     if ($resObjEx ≠ yes){
-      ↓7 = [$rest, vform:participle, vtense:past, number:sg, gender:ms];
+      ↓7 = [vform:participle, vtense:past, number:sg, gender:ms, $rest];
     } else {
       [resObjExNumber:$resObjExNumber, resObjExGender:$resObjExGender] ⊂ ↑;
-      ↓7 = [$rest, vform:participle, vtense:past, number:$resObjExNumber, gender:$resObjExGender];
+      ↓7 = [vform:participle, vtense:past, number:$resObjExNumber, gender:$resObjExGender, $rest];
     }
     if (⇓7){
       [number:$npart, gender:$gpart, aux:$aux, refl:$refl, $rest] ⊂ ⇓7;
@@ -524,7 +524,7 @@ V → [clneg] CLITICS aux_être [clint] [advneg] [ADVM] v {
     attest ($inv != yes);
   }
   
-  ↓7 = [$rest, vform:participle, vtense:past];
+  ↓7 = [vform:participle, vtense:past, $rest];
   // On récupère les informations du verbe
   if (⇓7){
     [subjC:$subjC, objC:$objC, modC:$modC, pobjC:$pOC, number:$npart, gender:$gpart] ⊂ ⇓7;
@@ -574,7 +574,7 @@ V → [clneg] CLITICS aux_avoir [clint] [advneg] aux_être [ADVM] v {
     attest ($inv != yes);
   }
   
-  ↓8 = [$rest, vform:participle, vtense:past];
+  ↓8 = [vform:participle, vtense:past, $rest];
   // On récupère les informations du verbe
   if (⇓8){
     [subjC:$subjC, objC:$objC, modC:$modC, pobjC:$pOC, number:$npart, gender:$gpart] ⊂ ⇓8;

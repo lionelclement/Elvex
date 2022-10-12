@@ -1051,9 +1051,7 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
             if (!fs) {
                 resultFeatures = featuresPtr();
             }
-            if (!synthesizer->getCompactedLexicon())
-                throw fatal_exception("search operator error: No compact lexicon defined.");
-            entriesPtr entries = synthesizer->findCompactedLexicon(parser, 0, getBits()->toString(), fs->assignPred());
+            entriesPtr entries = synthesizer->_findCompactedLexicon(parser, 0, getBits()->toString(), fs->assignPred());
             if (entries) {
                 //if (entries->size() > 1) {
                 // ERROR("pred ambiguous")

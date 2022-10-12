@@ -31,7 +31,10 @@
 #endif
 
 class Feature :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Feature> {
+        public UniqId, 
+        public Flags, 
+        public Serializable, 
+        public std::enable_shared_from_this<class Feature> {
 
 public:
     enum Type {

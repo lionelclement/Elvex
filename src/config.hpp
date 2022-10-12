@@ -17,23 +17,13 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_FATAL_EXCEPTION_HPP
-#define ELVEX_FATAL_EXCEPTION_HPP
+#ifndef CONFIG_H
+#define CONFIG_H
 
-#include <string>
-#include <exception>
+#define ELVEX_VERSION_MAJOR "2"
+#define ELVEX_VERSION_MINOR "17"
+#define ELVEX_VERSION_PATCH "0"
+#define ELVEX_VERSION "2.17.0"
+#define PROJECT_NAME "elvex"
 
-class fatal_exception :
-    public std::exception {
-
-private:
-    std::string message;
-
-public:
-    fatal_exception(std::string message);
-    fatal_exception(std::ostringstream& oss);
-    std::string getMessage();
-};
-
-
-#endif //ELVEX_FATAL_EXCEPTION_HPP
+#endif // CONFIG_H

@@ -67,14 +67,28 @@ ItemSet::set &ItemSet::getItems() {
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::begin() const {
+ItemSet::const_iterator ItemSet::cbegin() const {
+    return items.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+ItemSet::const_iterator ItemSet::cend() const {
+    return items.cend();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+ItemSet::iterator ItemSet::begin() const {
     return items.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::end() const {
+ItemSet::iterator ItemSet::end() const {
     return items.end();
 }
 

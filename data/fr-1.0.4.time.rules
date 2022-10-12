@@ -37,14 +37,14 @@ timeClause → time|adv bindingClause {
   [modSType:time, vform:tensed];
   [modSType:time, modS:<$Head::$Tail>, $rest];
   ↓1 = [type:time, $Head];
-  ↓2 = [$rest, modS:$Tail];
+  ↓2 = [modS:$Tail, $rest];
   ⇑ = ⇓2;
 }
 
 timeClause → bindingClause time {
   [modSType:time, vform:infinitive];
   [modSType:time, modS:<$Head::$Tail>, $rest];
-  ↓1 = [$rest, modS:$Tail];
+  ↓1 = [modS:$Tail, $rest];
   ↓2 = [type:time, $Head];
   ⇑ = ⇓1;
 }

@@ -1,4 +1,5 @@
 # lexeme	pos	lemma	features
+# lexeme#pos	lemma	PRED:_lexeme,...
 TO_FEEL	verb	TO_FEEL	PRED:_TO_FEEL,SUBJECT:[human:true],iiReal:PRED_ADJ|SCOMP|OBJ_THETA,ii_pcase:_at,ii_csu:_if|_that
 TO_FEEL_THE_PAIN	verb	TO_FEEL	PRED:_TO_FEEL_THE_PAIN,iiReal:OBJECT,OBJECT:[PRED:_PAIN,def:true,@s]
 
@@ -30,7 +31,7 @@ TO_WANT	verb	TO_WANT	PRED:_TO_WANT,SUBJECT:[],iiReal:VCOMP,VCOMP:[]
 
 TO_TELL	verb	TO_TELL	PRED:_TO_TELL,SUBJECT:[human:true],iiReal:OBJECT,iiiReal:SCOMP,ii_csu:_that
 
-  // Nouns
+# Nouns
 PAIN	common_noun	PAIN	PRED:_PAIN,countable:false
 SADNESS	common_noun	SADNESS	PRED:_SADNESS,countable:false
 HOPE	common_noun	HOPE	PRED:_HOPE,countable:false

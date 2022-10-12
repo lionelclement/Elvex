@@ -16,6 +16,16 @@ text → NP {
  * Start with an NP or a Narative Sentence
  ************************************************** */
 @trace
+noun → NP {
+  [PRED:$pred];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Start with an NP or a Narative Sentence
+ ************************************************** */
+@trace
 text → rhetoricalStructure {
   [PRED:$pred, vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality] ⊂ ↑;
   attest $pred ≠ paragraph;

@@ -85,15 +85,15 @@ void Synthesizer::setTrace(bool _trace) {
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::ItemSet_map::const_iterator Synthesizer::begin() const {
-    return states.begin();
+Synthesizer::itemSet_map_const_iterator Synthesizer::cbegin() const {
+    return states.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::ItemSet_map::const_iterator Synthesizer::end() const {
-    return states.end();
+Synthesizer::itemSet_map_const_iterator Synthesizer::cend() const {
+    return states.cend();
 }
 
 /* **************************************************
@@ -211,24 +211,11 @@ unsigned int Synthesizer::getMaxUsages() const {
 /* **************************************************
  *
  ************************************************** */
-class CompactedLexicon *
-Synthesizer::getCompactedLexicon() const {
-    return compactedLexicon;
+void Synthesizer::setCompactedLexicon(class CompactedLexicon* compactedLexicon) {
+    this->compactedLexicon = compactedLexicon;
+    CERR_LINE;
+    compactedLexicon->list(std::cerr);
 }
-
-/* **************************************************
- *
- ************************************************** */
-void Synthesizer::setCompactedLexicon(class CompactedLexicon *_compactedLexicon) {
-    this->compactedLexicon = _compactedLexicon;
-}
-
-/* **************************************************
- *
- ************************************************** */
-//bool Synthesizer::getReduceAll() const {
-//    return reduceAll;
-//}
 
 /* **************************************************
  *
@@ -481,8 +468,8 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
         modification = false;
 
         // Iterate through list
-        for (auto actualItem = state->begin();
-             actualItem != state->end() && !modification; ++actualItem) {
+        for (auto actualItem = state->cbegin();
+             actualItem != state->cend() && !modification; ++actualItem) {
 
             if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM))
                 continue;
@@ -507,7 +494,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                                                   row,
                                                                   row);
                 auto forestMapIt = forestMap.find(fi);
-                if (forestMapIt != forestMap.end()) {
+                if (forestMapIt != forestMap.cend()) {
                     forestFound = forestMapIt->second;
                     fi.reset();
                     it->addForestIdentifiers(it->getIndex(), forestMapIt->first);
@@ -652,7 +639,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
 
                             // record the item
                             auto found = state->find(it);
-                            if (found != state->end()) {
+                            if (found != state->cend()) {
                                 (*found)->addRef((*actualItem)->getId());
                                 it.reset();
                             } else {
@@ -736,7 +723,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                                                               (*actualItem)->getRanges()[0],
                                                                               row);
                             auto forestMapIt = forestMap.find(fi);
-                            if (forestMapIt != forestMap.end()) {
+                            if (forestMapIt != forestMap.cend()) {
                                 forestFound = (*forestMapIt).second;
                                 fi.reset();
                             } else {
@@ -750,7 +737,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                             nodePtr node = Node::create();
                             for (auto &k : (*actualItem)->getForestIdentifiers()) {
                                 auto _forestMapIt = forestMap.find(k);
-                                if (_forestMapIt != forestMap.end()) {
+                                if (_forestMapIt != forestMap.cend()) {
                                     node->getForests().push_back((*_forestMapIt).second);
                                 }
                             }
@@ -806,7 +793,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                         it->setRefs(previousItem->getRefs());
 
                                         auto found = states[row]->find(it);
-                                        if (found != states[row]->end()) {
+                                        if (found != states[row]->cend()) {
                                             (*found)->addRefs(previousItem->getRefs());
                                             it.reset();
                                         } else {
@@ -844,7 +831,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                     for (auto &k : (*actualItem)->getForestIdentifiers()) {
                                         auto forestMapIt = forestMap.find(
                                                 k);
-                                        if (forestMapIt == forestMap.end()) {
+                                        if (forestMapIt == forestMap.cend()) {
                                             FATAL_ERROR_UNEXPECTED
                                         }
                                         forestPtr forest = (*forestMapIt).second;
@@ -856,7 +843,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                                                                       (*actualItem)->getRanges()[0],
                                                                                       row);
                                     auto forestMapIt = forestMap.find(fi);
-                                    if (forestMapIt != forestMap.end()) {
+                                    if (forestMapIt != forestMap.cend()) {
                                         forestFound = forestMapIt->second;
                                         it->addForestIdentifiers(previousItem->getIndex(), forestMapIt->first);
                                         fi.reset();
@@ -888,7 +875,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                     }
 
                                     auto found = states[row]->find(it);
-                                    if (found != states[row]->end()) {
+                                    if (found != states[row]->cend()) {
                                         (*found)->addRefs(previousItem->getRefs());
                                         it.reset();
                                     } else {
@@ -922,7 +909,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                      && parser.getRules().isTerminal((*actualItem)->getCurrentTerm()) &&
                      !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
             } else {
-                (*actualItem)->successor(/*state, *//*this, */modification);
+                (*actualItem)->successor(modification);
             }
         }
     } while (modification);
@@ -996,10 +983,9 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                      std::cerr << "form:" << form << std::endl;
                      //std::cerr << "POS : " << Vartable::codeToIdentifier((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
                      */
-                    auto foundCode = parser.getLexicon().find(
-                            (*actualItem)->getCurrentTerm());
-                    if (foundCode != parser.getLexicon().end() && (!foundCode->second->empty())) {
-                        Parser::entries_map *listPred = foundCode->second;
+                    auto foundCode = parser.findLexicon((*actualItem)->getCurrentTerm());
+                    if (foundCode != parser.cendLexicon() && (!foundCode->second->empty())) {
+                        Parser::entries_map* listPred = foundCode->second;
                         if (listPred) {
                             Parser::entries_map::const_iterator found;
                             entriesPtr entries = entriesPtr();
@@ -1103,7 +1089,7 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                                                                                           resultFeatures->peekSerialString(),
                                                                                           row - 1, row);
                                         auto forestMapIt = forestMap.find(fi);
-                                        if (forestMapIt != forestMap.end()) {
+                                        if (forestMapIt != forestMap.cend()) {
                                             it->addForestIdentifiers((*actualItem)->getIndex(),
                                                                      (*forestMapIt).first);
                                             fi.reset();
@@ -1247,10 +1233,20 @@ void Synthesizer::generate(class Parser& parser) {
 }
 
 /* **************************************************
- *
+ * search 
+ * |str(pred)#str(code)
+ * |str(pred)#codeStr
+ * |_#str(code)
+ * |_#codeStr
+ * 
+ * returns entries= (entry1, entry2, ...)
+ * where entryi= (unsigned int pos, unsigned int pred, std::string form, featuresPtr features)
  ************************************************** */
-entriesPtr Synthesizer::findCompactedLexicon(Parser& parser, const unsigned int code, const std::string& codeStr,
-                                             const unsigned int pred) {
+entriesPtr Synthesizer::_findCompactedLexicon(
+        Parser& parser, 
+        const unsigned int code, 
+        const std::string& codeStr,
+        const unsigned int pred) {
     unsigned long int info = ~0UL;
     std::string str;
     if (pred) {
@@ -1260,7 +1256,8 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser& parser, const unsigned int 
             str = Vartable::codeToIdentifier(pred) + "#" + codeStr;
         else
             str = Vartable::codeToIdentifier(pred);
-    } else {
+    } 
+    else {
         if (code)
             str = "_#" + Vartable::codeToIdentifier(code);
         else if (!codeStr.empty())
@@ -1268,14 +1265,19 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser& parser, const unsigned int 
         else
             throw fatal_exception("pred and code null");
     }
-    info = compactedLexicon->searchStatic(compactedLexicon->init, str);
+    if (!compactedLexicon)
+        throw fatal_exception("search operator error: No compact lexicon defined.");
+
+    CERR_LINE;
+    std::cerr << "search " << str << " in compactedLexicon" << std::endl;
+    info = compactedLexicon->search(compactedLexicon->init, str);
     // in : pos#lemma
     // out : form#fs
 #ifdef TRACE_LEXICON
     std::cout << "<H3>####################### FIND IN THE COMPACT LEXICON #######################</H3>" << std::endl;
     std::cout << "<DIV>" << std::endl;
     std::cout << str << " => ";
-    compactLexicon->printResults(std::cout, info, 1);
+    compactedLexicon->printResults(std::cout, info, 1);
     std::cout << "</DIV>" << std::endl;
     std::cout << std::endl;
 #endif
@@ -1295,11 +1297,11 @@ entriesPtr Synthesizer::findCompactedLexicon(Parser& parser, const unsigned int 
                     _localEntry->setPos(code);
                     _localEntry->setForm(form);
                     std::string localEntrySerialString = _localEntry->peekSerialString();
-                    auto found = parser.getMapLocalEntry().find(localEntrySerialString);
-                    if (found != parser.getMapLocalEntry().end()) {
+                    auto found = parser.findMapLocalEntry(localEntrySerialString);
+                    if (found != parser.cendMapLocalEntry()) {
                         entries->add(found->second);
                     } else {
-                        parser.getMapLocalEntry().insert(std::make_pair(localEntrySerialString, _localEntry));
+                        parser.insertMapLocalEntry(std::make_pair(localEntrySerialString, _localEntry));
                         entries->add(_localEntry);
                     }
                 }
@@ -1325,18 +1327,19 @@ void Synthesizer::setVerbose(bool _verbose) {
     this->verbose = _verbose;
 }
 
-entriesPtr Synthesizer::findByPos(Parser& parser, Parser::entries_map *listPred, unsigned int term) {
-    //entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+entriesPtr Synthesizer::findByPos(Parser& parser, Parser::entries_map* listPred, unsigned int term) {
     entriesPtr entries = entriesPtr();
     auto found = listPred->find(UINT_MAX);        // Without pred : UINT_MAX = > ...
     if (found != listPred->end()) {
         entries = found->second;
     } else if (compactedLexicon) {
         // Compact lexicon
-        entries = findCompactedLexicon(parser,
+        entries = _findCompactedLexicon(parser,
                                        term,
                                        std::string(),
                                        0);
+	    //zeroToEntries = new Parser::entries_map();
+        //listPred->insert(std::make_pair(code, zeroToEntries));
     }
     return entries;
 
@@ -1358,7 +1361,7 @@ entriesPtr Synthesizer::findByPred(Parser& parser, Parser::entries_map* listPred
         entries = found->second;
     } else if (compactedLexicon) {
         // Compact lexicon
-        entries = findCompactedLexicon(parser,
+        entries = _findCompactedLexicon(parser,
                                        term,
                                        std::string(),
                                        pred);

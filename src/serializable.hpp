@@ -33,7 +33,7 @@ protected:
     std::string serialString;
 
 public:
-    Serializable();
+    explicit Serializable();
 
     virtual ~Serializable();
 

@@ -39,9 +39,9 @@ public:
 
     map::const_iterator find(const forestIdentifierPtr &) const;
 
-    map::const_iterator begin() const;
+    map::const_iterator cbegin() const;
 
-    map::const_iterator end() const;
+    map::const_iterator cend() const;
 
     void clear();
 

@@ -245,12 +245,12 @@ void Rules::analyseTerms(class Parser& parser) {
                     unsigned long int code = (*term);
                     terminals.insert(code);
 
-                    Parser::entries_map *predToEntries;
-                    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find(code);
-                    if (foundCode == parser.getLexicon().end()) {
+                    Parser::entries_map* predToEntries;
+                    Parser::entries_map_map_const_iterator foundCode = parser.findLexicon(code);
+                    if (foundCode == parser.cendLexicon()) {
                         predToEntries = new std::map<unsigned int, entriesPtr>;
                         predToEntries->insert(std::make_pair(code, Entries::create()));
-                        parser.getLexicon().insert(std::make_pair(code, predToEntries));
+                        parser.insertLexicon(std::make_pair(code, predToEntries));
                     }
                 }
             }
@@ -265,10 +265,10 @@ void Rules::analyseTerms(class Parser& parser) {
 void
 Rules::toXML(xmlNodePtr nodeRoot)
 {
-   xmlNodePtr g=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"GRAMMAR", NULL);
-   xmlNodePtr t=xmlNewChild(g, NULL, (const xmlChar*)"TERMINALS", NULL);
+   xmlNodePtr g = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"GRAMMAR", NULL);
+   xmlNodePtr t = xmlNewChild(g, NULL, (const xmlChar*)"TERMINALS", NULL);
    std::set<unsigned int>::const_iterator iter;
-   for (iter=terminals.begin(); iter != terminals.end(); ++iter) {
+   for (iter = terminals.begin(); iter != terminals.end(); ++iter) {
       xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
    }
    t=xmlNewChild(g, NULL, (const xmlChar*)"NON-TERMINALS", NULL);
@@ -277,8 +277,8 @@ Rules::toXML(xmlNodePtr nodeRoot)
    }
    //xmlNodePtr r = xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
    ruleList::const_iterator iterRules;
-   for (iterRules=rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
-      (*iterRules)->toXML(/*r*/);
+   for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+      (*iterRules)->toXML(g);
    }
 }
 #endif

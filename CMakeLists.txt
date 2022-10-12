@@ -130,6 +130,7 @@ if (LibXml2_FOUND)
             MAXCARDINAL=1000000
             MAXATTEMPTS=100
             #MAXBITS=512
+            #TRACE_LEXICON
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})

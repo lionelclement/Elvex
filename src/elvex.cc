@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2020 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -47,7 +47,7 @@ xmlDocPtr document;
 /* **************************************************
  *
  ************************************************** */
-void describeUsage() {
+void usage() {
     std::cerr << "Usage: " << PROJECT_NAME << " [options] [<input>]*\n";
     std::cerr << "\
 options\n\
@@ -114,7 +114,7 @@ void generate() {
             while (forestIt != synthesizer.getNodeRoot()->getForests().end()) {
                 if (!synthesizer.getRandom())
                     forest = *forestIt;
-                for (const auto & i : forest->getOutput()) {
+                for (const auto&  i : forest->getOutput()) {
 #ifdef TRACE_OPTION
                     std::cout << "<li>" << std::endl;
 #endif
@@ -161,7 +161,7 @@ int main(int argn, char** argv) {
                         parser.setVerbose(true);
 
                     } else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
-                        describeUsage();
+                        usage();
                         return EXIT_SUCCESS;
 
                     } else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace")) {
@@ -310,11 +310,11 @@ int main(int argn, char** argv) {
                                    ? synthesizer.getCompactedDirectoryName().c_str() : ".");
                 char* file = strdup(synthesizer.getCompactedLexiconFileName().c_str());
                 auto* lex = new CompactedLexicon(std::string(dir), std::string(file));
-                synthesizer.setCompactedLexicon(lex);
                 lex->openFiles("r");
                 lex->loadFsa();
                 lex->loadData();
                 lex->closeFiles();
+                synthesizer.setCompactedLexicon(lex);
             }
 
 #ifdef OUTPUT_XML
@@ -346,19 +346,23 @@ int main(int argn, char** argv) {
 #endif
 
     }
-    catch (fatal_exception &e) {
+    catch (fatal_exception& e) {
         std::cerr << "*** fatal error: " << e.getMessage() << std::endl;
         std::flush(std::cerr);
     }
-    catch (usage_exception &e) {
+    catch (usage_exception& e) {
         std::cerr << "*** usage error: " << e.getMessage() << std::endl;
-        describeUsage();
+        usage();
         std::flush(std::cerr);
         return EXIT_FAILURE;
     }
-    catch (parser_exception &e) {
+    catch (parser_exception& e) {
         std::cerr << "*** parser error: " << e.getMessage() << std::endl;
         std::flush(std::cerr);
+        return EXIT_FAILURE;
+    }
+    catch (std::string s) {
+      std::cerr << "*** error" << s << std::endl;
         return EXIT_FAILURE;
     }
 #ifdef TRACE_OPTION

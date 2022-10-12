@@ -31,7 +31,10 @@
 #endif
 
 class List :
-        public Serializable, public Flags, public UniqId, public std::enable_shared_from_this<List> {
+        public Serializable, 
+        public Flags, 
+        public UniqId, 
+        public std::enable_shared_from_this<List> {
 
 public:
     enum Type {

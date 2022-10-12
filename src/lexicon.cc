@@ -25,7 +25,7 @@
 #include <sstream>
 #include "messages.hpp"
 
-std::list<std::string> *Lexicon::emptyList = new std::list<std::string>();
+std::list<std::string>* Lexicon::emptyList = new std::list<std::string>();
 
 /* **************************************************
  *

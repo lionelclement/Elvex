@@ -22,21 +22,21 @@ cd data
 
 #echo "--------------------------------------------------------"
 (cd lefff ; make -s)
-#elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon "\
+#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon "\
 #letter [\
 #       from:[FORM:\"Lionel Clément\"], \
 #       to:[FORM:\"`whoami`\", number:sg, gender:ms], \
 #       body:[PRED:ESSAYER, i:[PRED:_pro, number:pl, person:two], ii:[FORM:\"`which elvex` `elvex --version`\"], tense:recent_past ]\
 #]"\
-#     |tr '@' "\n" | elvexpostedition_fr | sed -e 's/^ *//' -e 's/  */ /g'
+#     |tr '@' "\n" | ../bin/elvexpostedition_fr | sed -e 's/^ *//' -e 's/  */ /g'
 
-#make en-1.1.0.fsa
-#elvex -compactedLexiconDirectory . -compactedLexiconFile en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "\
-#Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]"\
-# | elvexpostedition_en | sed 's/^ *//'
+make en-1.1.0.fsa
+../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "\
+Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]"\
+ | elvexpostedition_en | sed 's/^ *//'
 #elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactedLexiconDirectory . -compactedLexiconFile en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]'
 
-../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr | sed 's/^ *//'
+#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr | sed 's/^ *//'
 #../bin/elvex -t -V -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug --traceShift -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 

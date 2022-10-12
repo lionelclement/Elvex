@@ -212,7 +212,7 @@ N → N PP {
   [de_obj:[PRED:$P], language_register:$language_register] ⊂ ↑;
   attest $P ≠ _pro; 
   ↓1 = $rest;
-  ↓2 = [$deObj, pcas:de, language_register:$language_register];
+  ↓2 = [pcas:de, language_register:$language_register, $deObj];
   ⇑ = ⇓1;
 }
 
@@ -224,7 +224,7 @@ N → N PP {
   [à_obj:[PRED:$P], language_register:$language_register] ⊂ ↑;
   attest $P ≠ _pro; 
   ↓1 = $rest;
-  ↓2 = [$àObj, pcas:à, language_register:$language_register];
+  ↓2 = [pcas:à, language_register:$language_register, $àObj];
   ⇑ = ⇓1;
 }
  
@@ -276,7 +276,8 @@ N2 → n [n] {
   [language_register:$language_register] ⊂ $rest;
   ↓1 = $rest;
   [obj:$Synth_obj, language_register:$Synth_language_register] ⊂ ⇓1;
-  attest ($language_register <=> $Synth_language_register);
+  if ($Synth_language_register)
+     attest ($language_register <=> $Synth_language_register);
   if (#2)
     ↓2 = [language_register:$language_register, $Synth_obj];
   else
@@ -289,7 +290,7 @@ AP → adv AP {
  	//println ↑;
    [mod:<$head::$tail>, $rest];
    ↓1 = $head;
-   ↓2 = [$rest, mod:$tail];
+   ↓2 = [mod:$tail, $rest];
    ⇑ = ⇓2;
 }
 

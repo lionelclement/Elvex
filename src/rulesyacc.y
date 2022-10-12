@@ -4,17 +4,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2020 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -45,25 +45,25 @@
 #endif
 #define DBUGPRT(x) DBUG(std::cerr << "*** " << x << std::endl)
 #define DBUGPRTARG(x,s) DBUG(std::cerr << "*** " << x << " " << s << std::endl)
-  
+
  extern unsigned int ruleslineno;
  extern unsigned int ruleslex();
  extern Parser parser;
  unsigned int headLineno;
  bool headTrace;
-   
+
   void ruleserror(const char* str) {
       std::ostringstream oss;
-      oss << str << " " << parser.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
+      oss << str << " in " << parser.getTopBufferName() << " (line " << ruleslineno << ")";
       throw parser_exception(oss);
   }
-  
+
   void yywarning(const char* str){
       std::ostringstream oss;
       oss << "warning: " << str << " " << parser.getTopBufferName() << " (" << ruleslineno << ")" << std::endl;
       std::cerr << oss.str() << std::endl;
   }
-  
+
   %}
 
 %union{
@@ -85,10 +85,10 @@
  }
 
 // ARROWS
-%token TOKEN_RIGHTARROW TOKEN_UPARROW TOKEN_UP2ARROW TOKEN_DOWNARROW TOKEN_DOWN2ARROW 
+%token TOKEN_RIGHTARROW TOKEN_UPARROW TOKEN_UP2ARROW TOKEN_DOWNARROW TOKEN_DOWN2ARROW
 
 // PAR
-%token TOKEN_LPAR TOKEN_RPAR 
+%token TOKEN_LPAR TOKEN_RPAR
 %token TOKEN_LBRACE TOKEN_RBRACE TOKEN_LBRACKET TOKEN_RBRACKET
 
 // PONCT
@@ -117,7 +117,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 
 %token<integer_slot> TOKEN_INTEGER
 
-%token<double_slot> TOKEN_DOUBLE 
+%token<double_slot> TOKEN_DOUBLE
 
  // VARIABLES
 %token<string_slot> TOKEN_VARIABLE
@@ -127,13 +127,13 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<integer_slot> term
 %type<terms_slot> terms terms_disj
 %type<vector_terms_slot> terms_vector
-%type<entries_slot> lexical_entries  
+%type<entries_slot> lexical_entries
 %type<entry_slot> lexical_entry
 
 %type<features_slot> features features_components
 %type<feature_slot> feature features_components_tail
 %type<bits_slot> variable identifier constant
-%type<value_slot> feature_value 
+%type<value_slot> feature_value
 %type<list_slot> list list_elements list_element
 
 %type<statements_slot> structure_statement list_statement
@@ -150,8 +150,8 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %left TOKEN_TIMES TOKEN_DIVIDE
 %left TOKEN_MODULO
 %right TOKEN_MINUS_U
-%nonassoc TOKEN_NOELSE 
-%nonassoc TOKEN_ELSE 
+%nonassoc TOKEN_NOELSE
+%nonassoc TOKEN_ELSE
 
 %%
 
@@ -180,8 +180,9 @@ begin:
 	  parser.setStartFeatures(Features::create());
 	 }
 
-	|TOKEN_LEXICON dictionary {      
+	|TOKEN_LEXICON dictionary {
 	  DBUGPRT("begin lexicon");
+	  //parser.printLexicon();
 	}
 
 	|TOKEN_DASH features
@@ -225,23 +226,23 @@ dictionary_line:
 	  unsigned int code = Vartable::identifierToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  auto foundCode = parser.getLexicon().find(code);
-	  Parser::entries_map *zeroToEntries;
-	  if (foundCode != parser.getLexicon().end()){
+	  auto foundCode = parser.findLexicon(code);
+	  Parser::entries_map* zeroToEntries;
+	  if (foundCode != parser.cendLexicon()){
 	    zeroToEntries = foundCode->second;
 	  } else {
 	    zeroToEntries = new Parser::entries_map();
-	    parser.getLexicon().insert(std::make_pair(code, zeroToEntries));
+	    parser.insertLexicon(std::make_pair(code, zeroToEntries));
 	  }
 	  auto foundPred = zeroToEntries->find(0);
-	  entriesPtr lp;
+	  entriesPtr entries;
 	  if (foundPred != zeroToEntries->end()){
-	    lp = foundPred->second;
+	    entries = foundPred->second;
 	  } else {
-	    lp = Entries::create();
-	    zeroToEntries->insert(std::make_pair(0, lp));
+	    entries = Entries::create();
+	    zeroToEntries->insert(std::make_pair(0, entries));
 	  }
-	  lp->add(Entry::create(code, UINT_MAX, std::string(), Features::create()));
+	  entries->add(Entry::create(code, UINT_MAX, std::string(), Features::create()));
 	}
 
 	|TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
@@ -250,23 +251,23 @@ dictionary_line:
 	  unsigned int code=Vartable::identifierToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  auto foundCode = parser.getLexicon().find(code);
-	  Parser::entries_map *zeroToEntries;
-	  if (foundCode!=parser.getLexicon().end()) {
-	    zeroToEntries=foundCode->second;
+	  auto foundCode = parser.findLexicon(code);
+	  Parser::entries_map* zeroToEntries;
+	  if (foundCode != parser.cendLexicon()) {
+	    zeroToEntries = foundCode->second;
 	  } else {
 	    zeroToEntries = new Parser::entries_map;
-	    parser.getLexicon().insert(std::make_pair(code, zeroToEntries));
+	    parser.insertLexicon(std::make_pair(code, zeroToEntries));
 	  }
 	  auto foundPred = zeroToEntries->find(0);
-	  entriesPtr lp;
-	  if (foundPred!=zeroToEntries->end()){
-	    lp = foundPred->second;
+	  entriesPtr entries;
+	  if (foundPred != zeroToEntries->end()){
+	    entries = foundPred->second;
 	  } else {
-	    lp = Entries::create();
-	    zeroToEntries->insert(std::make_pair(0, lp));
+	    entries = Entries::create();
+	    zeroToEntries->insert(std::make_pair(0, entries));
 	  }
-	  lp->add(Entry::create(code, UINT_MAX, std::string(), *$3));
+	  entries->add(Entry::create(code, UINT_MAX, std::string(), *$3));
 	  free($3);
 	}
 
@@ -279,12 +280,12 @@ dictionary_line:
 	    entriesPtr lp;
 	    Parser::entries_map *predToEntries;
 	    //std::cerr << entry->getCode() << std::endl;
-	    Parser::entries_map_map::iterator foundCode = parser.getLexicon().find((*entry)->getPos());
-	    if (foundCode != parser.getLexicon().end()){
+	    auto foundCode = parser.findLexicon((*entry)->getPos());
+	    if (foundCode != parser.cendLexicon()){
 	      predToEntries = foundCode->second;
 	    } else {
 	      predToEntries = new Parser::entries_map;
-	      parser.getLexicon().insert(std::make_pair((*entry)->getPos(), predToEntries));
+	      parser.insertLexicon(std::make_pair((*entry)->getPos(), predToEntries));
 	    }
 	    Parser::entries_map::iterator foundPred = predToEntries->find((*entry)->getPred());
 	    if (foundPred != predToEntries->end()){
@@ -306,7 +307,7 @@ dictionary_line:
 	  parser.addMacros(*$2, *$4);
 	  free($2);
 	  free($4);
-	  
+
 	}
 
 	|TOKEN_SEMI
@@ -316,13 +317,13 @@ dictionary_line:
 
 lexical_entries:
 	lexical_entry TOKEN_PIPE lexical_entries
-	{	  
+	{
 	  DBUGPRT("lexical_entries");
 	  $$ = $3;
 	  (*$$)->add(*$1);
 	  free($1);
 	}
-	
+
 	|lexical_entry {
 	  DBUGPRT("lexical_entries");
 	  $$ = new entriesPtr(Entries::create(*$1));
@@ -340,7 +341,7 @@ lexical_entry:
 	  free($2);
 	}
 
-	|TOKEN_IDENTIFIER 
+	|TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("lexical_entry");
 	  $$ = new entryPtr(Entry::create(Vartable::identifierToCode(*$1), UINT_MAX, std::string(), Features::create()));
@@ -353,12 +354,12 @@ lexical_entry:
 rules:
 	{headLineno = ruleslineno;} rule rules
 	{
-	  DBUGPRT("rules"); 
+	  DBUGPRT("rules");
 	}
-	
+
 	|{headLineno = ruleslineno;} /*empty*/
 	{
-	  DBUGPRT("rules"); 
+	  DBUGPRT("rules");
 	};
 
 pref_rule:
@@ -404,25 +405,25 @@ rule:
 	};
 
 terms_vector:
-	terms_vector terms { 
+	terms_vector terms {
 	  DBUGPRT("term_vector");
 	  $$=$1;
 	  $$->push_back(*$2);
 	}
 
-	|terms { 
-	  DBUGPRT("term_vector"); 
+	|terms {
+	  DBUGPRT("term_vector");
 	  $$ = new std::vector< termsPtr >;
 	  $$->push_back(*$1);
 	};
-	
+
 terms:
-	terms_disj { 
+	terms_disj {
 	  DBUGPRT("term");
 	  $$=$1;
 	}
 
-	|TOKEN_LBRACKET terms_disj TOKEN_RBRACKET { 
+	|TOKEN_LBRACKET terms_disj TOKEN_RBRACKET {
 	  DBUGPRT("term");
 	  $$ = $2;
 	  (*$$)->setOptional();
@@ -430,34 +431,34 @@ terms:
 
 terms_disj:
 	terms_disj TOKEN_PIPE term
-	{ 
+	{
 	  DBUGPRT("term_disj");
 	  $$ = $1;
 	  (*$$)->push_back($3);
 	}
 
 	|term
-	{ 
-	  DBUGPRT("term_disj"); 
+	{
+	  DBUGPRT("term_disj");
 	  $$ = new termsPtr(Terms::create($1));
 	};
-	
+
 term:
 	TOKEN_IDENTIFIER
-	{ 
+	{
 	  DBUGPRT("term_id");
 	  $$ = Vartable::identifierToCode(*$1);
 	  free($1);
 	}
 
 	|TOKEN_VARIABLE
-	{ 
+	{
 	  DBUGPRT("term_id");
 	  $$ = Vartable::identifierToCode(*$1);
 	  free($1);
 	}
 
-	|error 
+	|error
 	{
 	  YYABORT;
 	};
@@ -505,13 +506,13 @@ statements:
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::STMS, *$2));
 	  free($2);
 	}
-	
+
 	|TOKEN_LBRACE TOKEN_RBRACE
 	{
 	  DBUGPRT("statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::STMS, Statements::create()));
 	};
-	
+
 statement:
 	statements {
 	  DBUGPRT("statement");
@@ -572,7 +573,7 @@ statement:
 	  // $X = ⇓j
 	  // $X = <expr>
 	  // $X = search
-	  else if (((*$1)->isVariable()) 
+	  else if (((*$1)->isVariable())
 		   &&(((*$3)->isVariable())
 		      ||((*$3)->isConstant())
 		      ||((*$3)->isList())
@@ -593,13 +594,13 @@ statement:
 	|left_hand_side_subset_statement TOKEN_SUBSUME right_hand_side_subset_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::SUBSUME, (*$1), (*$3)));
-	  // […] ⊂ ↑ 
-	  // […] ⊂ ⇓j 
-	  // […] ⊂ $X 
-	  // […] ⊂ search  
+	  // […] ⊂ ↑
+	  // […] ⊂ ⇓j
+	  // […] ⊂ $X
+	  // […] ⊂ search
 	  if (((*$1)->isFeatures()) && (((*$3)->isUp())||((*$3)->isDown2())||((*$3)->isVariable())||((*$3)->isSearch())))
 	    ;
-	  else 
+	  else
 	    yyerror((char *)"syntax error");
 	  free($1);
 	  free($3);
@@ -612,7 +613,7 @@ statement:
 	  if (((*$1)->isDown())
 	       && (((*$3)->isList())))
 	    ;
-	    else 
+	    else
 	  yyerror((char *)"syntax error");
 	  free($1);
 	  free($3);
@@ -628,9 +629,9 @@ statement:
 	  }
 	  else
 	    stm = *$5;
-	  $$ = new statementPtr(Statement::create(ruleslineno, 
+	  $$ = new statementPtr(Statement::create(ruleslineno,
 						Statement::IF,
-						  *$3, 
+						  *$3,
 						  Statement::create(ruleslineno, Statement::THENELSE, stm, statementPtr())));
 	  free($3);
 	  free($5);
@@ -654,9 +655,9 @@ statement:
 	  }
 	  else
 	    stm2 = *$7;
-	  $$ = new statementPtr(Statement::create(ruleslineno, 
-						  Statement::IF, 
-						  (*$3), 
+	  $$ = new statementPtr(Statement::create(ruleslineno,
+						  Statement::IF,
+						  (*$3),
 						  Statement::create(ruleslineno, Statement::THENELSE, stm1, stm2)));
 	  free($3);
 	  free($5);
@@ -673,7 +674,7 @@ statement:
 	  }
 	  else
 	    stm = *$5;
-	  $$ = new statementPtr(Statement::create(ruleslineno, 
+	  $$ = new statementPtr(Statement::create(ruleslineno,
 						  Statement::FOREACH,
 						  Statement::create(ruleslineno, Statement::VARIABLE, (*$2)),
 						  Statement::create(ruleslineno, Statement::IN, (*$4), stm)));
@@ -688,7 +689,7 @@ left_hand_side_subset_statement:
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FEATURES, *$1));
 	  free($1);
 	};
-	
+
 right_hand_side_subset_statement:
 	variable {
 	  DBUGPRT("right_hand_side_subset_statement");
@@ -714,25 +715,33 @@ right_hand_side_subset_statement:
 
 	|TOKEN_SEARCH TOKEN_LPAR identifier TOKEN_COMMA expression_statement TOKEN_RPAR  {
 	  DBUGPRT("right_hand_side_subset_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, 
-						  Statement::SEARCH, 
+	  $$ = new statementPtr(Statement::create(ruleslineno,
+						  Statement::SEARCH,
 						  *$3,
 						  *$5));
 	  free($3);
 	  free($5);
-	 };
-	
+	 }
+
+   |TOKEN_SEARCH TOKEN_LPAR expression_statement TOKEN_RPAR  {
+ 	  DBUGPRT("expression_statement");
+ 	  $$ = new statementPtr(Statement::create(ruleslineno,
+ 						  Statement::SEARCH,
+ 						  *$3));
+ 	  free($3);
+ 	 };
+
 left_hand_side_inset_statement:
 	down {
 	  DBUGPRT("left_hand_side_statement");
 	  $$=$1;
 	};
-	
+
 right_hand_side_inset_statement:
 	expression_statement {
 	  DBUGPRT("right_hand_side_statement");
 	  $$=$1;
-	};	
+	};
 
 left_hand_side_aff_statement:
 	updouble {
@@ -765,7 +774,7 @@ right_hand_side_aff_statement:
 	expression_statement {
 	  DBUGPRT("right_hand_side_statement");
 	  $$=$1;
-	};	
+	};
 
 expression_statement:
 	//////////////////////////////////////////////////
@@ -817,42 +826,42 @@ expression_statement:
 	  free($1);
 	  free($3);
 	}
-	
-	|expression_statement TOKEN_DIFF expression_statement { 
+
+	|expression_statement TOKEN_DIFF expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::DIFF, (*$1), (*$3))); 
-	  free($1);
-	  free($3);
-	}
-	
-	|expression_statement TOKEN_LT expression_statement { 
-	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::LT, (*$1), (*$3))); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::DIFF, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
-	|expression_statement TOKEN_LE expression_statement { 
+	|expression_statement TOKEN_LT expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::LE, (*$1), (*$3))); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::LT, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
-	|expression_statement TOKEN_GT expression_statement { 
+	|expression_statement TOKEN_LE expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::GT, (*$1), (*$3))); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::LE, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
-	|expression_statement TOKEN_GE expression_statement { 
+	|expression_statement TOKEN_GT expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::GE, (*$1), (*$3))); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::GT, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
-	
+
+	|expression_statement TOKEN_GE expression_statement {
+	  DBUGPRT("expression_statement");
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::FCT, Statement::GE, (*$1), (*$3)));
+	  free($1);
+	  free($3);
+	}
+
 	//////////////////////////////////////////////////
 	// arithmetic, string, lists
 	//////////////////////////////////////////////////
@@ -936,7 +945,7 @@ expression_statement:
 	  free($1);
 	  free($3);
 	}
- 	
+
 	|up {
 	  DBUGPRT("expression_statement");
 	  $$=$1;
@@ -991,7 +1000,7 @@ expression_statement:
 	  DBUGPRT("expression_statement");
 	  $$=$2;
 	}
-	
+
 	|list {
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::LIST, *$1));
@@ -1005,54 +1014,54 @@ expression_statement:
 
 	|TOKEN_SEARCH TOKEN_LPAR expression_statement TOKEN_RPAR  {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, 
-						  Statement::SEARCH, 
+	  $$ = new statementPtr(Statement::create(ruleslineno,
+						  Statement::SEARCH,
 						  *$3));
 	  free($3);
 	 };
 
 up:
-	TOKEN_UPARROW {  
+	TOKEN_UPARROW {
 	  DBUGPRT("up");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::UP));
 	};
 
 updouble:
-	TOKEN_UP2ARROW {  
+	TOKEN_UP2ARROW {
 	  DBUGPRT("updouble");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::UP2));
 	};
 
 down:
 	TOKEN_DOWNARROW TOKEN_INTEGER
-	{ 
+	{
 	  DBUGPRT("down");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWN, (unsigned int)$2-1)); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWN, (unsigned int)$2-1));
 	};
 
 dash_statement:
 	TOKEN_DASH TOKEN_INTEGER TOKEN_DOT TOKEN_INTEGER
-	{ 
+	{
 	  DBUGPRT("dash_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DASH, (unsigned int)($2-1), (unsigned int)($4-1))); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DASH, (unsigned int)($2-1), (unsigned int)($4-1)));
 	}
 
 	|TOKEN_DASH TOKEN_INTEGER
-	{ 
+	{
 	  DBUGPRT("dash_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DASH, (unsigned int)($2-1))); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DASH, (unsigned int)($2-1)));
 	};
 
 downdouble:
-	TOKEN_DOWN2ARROW {  
+	TOKEN_DOWN2ARROW {
 	  DBUGPRT("downdouble");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWN2, (unsigned int)0)); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWN2, (unsigned int)0));
 	}
 
 	|TOKEN_DOWN2ARROW TOKEN_INTEGER
-	{ 
+	{
 	  DBUGPRT("downdouble");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWN2, (unsigned int)($2-1))); 
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::DOWN2, (unsigned int)($2-1)));
 	};
 
 //////////////////////////
@@ -1095,7 +1104,7 @@ features_components:
 	  free($3);
 	}
 
-	|feature 
+	|feature
 	{
 	  DBUGPRT("features_components");
 	  $$ = new featuresPtr(Features::create());
@@ -1108,7 +1117,7 @@ features_components:
 	{
 	  DBUGPRT("features_components");
 	  featuresPtr found = parser.findMacros(*$4);
-	  $$ = $1; 
+	  $$ = $1;
 	  if (!(found)){
 	     std::ostringstream oss; oss << "unknown macro: @" << *$4;
 	     yyerror((char*)oss.str().c_str());
@@ -1293,7 +1302,7 @@ variable:
 	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(str)));
 	  free($1);
 	};
-	
+
 list:
 	TOKEN_LT list_elements TOKEN_GT
 	{
@@ -1329,7 +1338,7 @@ list:
 	};
 
 list_elements:
-	list_element TOKEN_COMMA list_elements 
+	list_element TOKEN_COMMA list_elements
 	{
 	  DBUGPRT("list_elements");
 	  $$ = new listPtr(List::create(*$1, *$3));

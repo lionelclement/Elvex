@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2020 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -102,44 +102,43 @@ bool Parser::getVerbose() const {
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map &
-Parser::getLexicon() {
-    return lexicon;
+Parser::entry_map_const_iterator Parser::findMapLocalEntry(std::string& key) const {
+        return mapLocalEntry.find(key);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setLexicon(entries_map_map &_lexicon) {
-    this->lexicon = _lexicon;
+Parser::entry_map_const_iterator Parser::cendMapLocalEntry() const {
+    return mapLocalEntry.cend();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entry_map &Parser::getMapLocalEntry() {
-    return mapLocalEntry;
+void Parser::insertMapLocalEntry(std::pair<std::string, entryPtr> pair){
+    mapLocalEntry.insert(pair);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::findLexicon(unsigned int i) const {
+Parser::entries_map_map_const_iterator Parser::findLexicon(unsigned int i) const {
     return lexicon.find(i);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::beginLexicon() const {
-    return lexicon.begin();
+Parser::entries_map_map_const_iterator Parser::cbeginLexicon() const {
+    return lexicon.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map::const_iterator Parser::endLexicon() const {
-    return lexicon.end();
+Parser::entries_map_map_const_iterator Parser::cendLexicon() const {
+    return lexicon.cend();
 }
 
 /* **************************************************
@@ -207,7 +206,7 @@ unsigned int Parser::getTopLineno() {
  ************************************************** */
 void Parser::printLexicon(std::ostream &out) const {
     out << "<ul>";
-    for (entries_map_map::const_iterator i = beginLexicon(); i != endLexicon(); ++i) {
+    for (entries_map_map_const_iterator i = cbeginLexicon(); i != cendLexicon(); ++i) {
         out << "<li>";
         out << Vartable::codeToIdentifier((*i).first);
         out << "<ul>";
@@ -243,7 +242,7 @@ void Parser::addMacros(std::string key, featuresPtr features) {
  ************************************************************ */
 featuresPtr Parser::findMacros(const std::string& str) {
     //std::cerr << "find @" << str << ":";
-    std::unordered_map<std::string, featuresPtr>::const_iterator found;
+    macro_map_const_iterator found;
     found = macros.find(str);
     if (found == macros.end()) {
         return featuresPtr();
@@ -284,4 +283,29 @@ void Parser::listMacros() {
     for (auto iterator : macros) {
         std::cerr << "\"" << iterator.first << "\"" << std::endl;
     }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Parser::insertLexicon(std::pair<unsigned int, entries_map*> pair){
+  lexicon.insert(pair);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Parser::printLexicon(){
+  for (auto i = lexicon.begin(); i != lexicon.end(); ++i){
+    std::cerr << Vartable::codeToIdentifier((*i).first) << "=>\n";
+    entries_map* v = (*i).second;
+      for (auto j = v->begin(); j != v->end(); ++j){
+        std::cerr << "\t" << Vartable::codeToIdentifier((*j).first) << "=>";
+        entriesPtr cddr = (*j).second;
+        cddr->print(std::cerr);
+        std::cerr << std::endl;
+    }
+    std::cerr << std::endl;
+  }
+  CERR_LINE;
 }

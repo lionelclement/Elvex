@@ -1,7 +1,8 @@
 # form	pos	lemma	features
-# @macro	features
+# @id features
+# try it with "lemma#pos"
 # ***********************************************************
-# Macros
+# Patterns
 # ***********************************************************/
 @m	gender:ms
 @f	gender:fm
@@ -123,26 +124,26 @@ tell	verb	TO_TELL	vtense:infinitive,tensed:false
 # ***********************************************************
 #  Nouns
 # ***********************************************************/
-pain	common_noun	PAIN	
-sadness	common_noun	SADNESS	
-hope	common_noun	HOPE	
-tenderness	common_noun	TENDERNESS	
-warning	common_noun	WARNING	
-divine blessings	common_noun	DIVINE_BLESSINGS	
-chair	common_noun	CHAIR		
+pain	common_noun	PAIN
+sadness	common_noun	SADNESS
+hope	common_noun	HOPE
+tenderness	common_noun	TENDERNESS
+warning	common_noun	WARNING
+divine blessings	common_noun	DIVINE_BLESSINGS
+chair	common_noun	CHAIR
 chair man	common_noun	CHAIR_MAN	@s
 
 # ***********************************************************
 #  Adjectives
 # ***********************************************************/
-nice	adj	NICE	
-bad	adj	BAD	
-good	adj	GOOD	
-happy	adj	HAPPY	
+nice	adj	NICE
+bad	adj	BAD
+good	adj	GOOD
+happy	adj	HAPPY
 
 # ***********************************************************
 #  Adverbs
 # ***********************************************************/
-very	adv	VERY	
+very	adv	VERY
 
 # end

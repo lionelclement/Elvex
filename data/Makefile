@@ -2,85 +2,86 @@
 #
 # ELVEX
 #
-# Copyright 2019 LABRI, 
+# Copyright 2019 LABRI,
 # CNRS (UMR 5800), the University of Bordeaux,
 # and the Bordeaux INP
 #
-# Author: 
+# Author:
 # Lionel Clément
-# LaBRI -- Université Bordeaux 
+# LaBRI -- Université Bordeaux
 # 351, cours de la Libération
 # 33405 Talence Cedex - France
 # lionel.clement@labri.fr
-# 
+#
 # This file is part of ELVEX.
 #
 ################################################## #
 
-.PHONY: all output debug
+.PHONY: all output debug check
 
 SUBDIRS = lefff
 ELVEX = ../bin/elvex
-ELVEXDEBUG = ../bin/elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction 
+ELVEXDEBUG = ../bin/elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction
 BUILDLEXICON = ../bin/elvexbuildlexicon
-POSTEDITION = ../bin/elvexpostedition
+POSTEDITION_FR = ../bin/elvexpostedition_fr
+XSL = ../xsl/xml2dot.xsl
 CLEANFILES = $(patsubst %.input, %.output, $(wildcard *.input)) $(patsubst %.input, %.xml, $(wildcard *.input)) $(patsubst %.input, %.err, $(wildcard *.input)) $(patsubst %.input, %.html, $(wildcard *.input)) $(patsubst %.input, %.jpg, $(wildcard *.input))
+
+.SUFFIXES: .xml .dot .jpg
 
 all: $(patsubst %.input, %.output, $(wildcard *.input))
 
-check: $(ELVEX) $(POSTEDITION) lefff/lefff.fsa Makefile
-	@$(ELVEX) -compactedLexiconDirectory lefff -compactedLexiconFile lefff -grammarFile fr-1.0.4.grammar -lexiconFile fr-1.0.4.lexicon "letter [PRED:letter, i:[FORM:\"`whoami`\", number:sg, gender:ms], ii:[PRED:_installer, i:[PRED:__pro, number:pl, person:two], ii:[FORM:\"elvex\"], tense:recent_past], iii:[FORM:\"Lionel Clément\"]]" |tr '@' "\n" | $(POSTEDITION) | sed -e 's/^ *//'
+check: lefff/lefff.fsa
+	@$(ELVEX) -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon "noun [PRED:ARBRE, mod:<[PRED:CREUX], [PRED:PETIT]>]" | $(POSTEDITION_FR)
 
 clean:
 	rm $(CLEANFILES)
 
-adj: $(patsubst %.input, %.output, $(wildcard adj.input)) $(patsubst %.input, %.xml, $(wildcard adj.input))
-
-p1: $(patsubst %.input, %.output, $(wildcard p1.input)) $(patsubst %.input, %.xml, $(wildcard p1.input))
-
-%.output: %.input %.lexicon %.grammar $(ELVEX) $(POSTEDITION) lefff/lefff.fsa Makefile
-	@echo $@ ':'
-	@$(ELVEX) -maxTime 300 -compactedLexiconDirectory lefff -compactedLexiconFile lefff -grammarFile $*.grammar -lexiconFile $*.lexicon -inputFile $*.input 2> $*.err | $(POSTEDITION) | sed -e 's/^ //' > $@
+adj.output: adj.input adj.lexicon adj.rules
+	@$(ELVEX) -rulesFile adj.rules -lexiconFile adj.lexicon -inputFile adj.input 2> adj.err > $@
 	@cat $@
-	@echo "\n"
 
-%.xml: %.input %.lexicon %.grammar $(ELVEX) $(POSTEDITION) lefff/lefff.fsa Makefile
-	$(ELVEXDEBUG) -compactedLexiconDirectory lefff -compactedLexiconFile lefff -grammarFile $*.grammar -lexiconFile $*.lexicon -inputFile $*.input -xml $*.xml &> $*.html
+%.output: %.input %.lexicon %.rules $(ELVEX) $(POSTEDITION_FR) lefff/lefff.fsa Makefile
+	@$(ELVEX) -maxTime 300 -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $*.input 2> $*.err | $(POSTEDITION_FR) | sed -e 's/^ //' > $@
+	@cat $@
 
-%.dot: %.xml ../xsl/xml2dot.xsl
-	xsltproc ../xsl/xml2dot.xsl $*.xml > $@
+%.xml: %.input %.lexicon %.rules $(ELVEX) $(POSTEDITION_FR) lefff/lefff.fsa Makefile
+	$(ELVEXDEBUG) -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $*.input -xml $*.xml &> $*.html
+
+%.dot: %.xml $(XSL)
+	xsltproc $(XSL) $*.xml > $@
 
 %.jpg: %.dot
 	dot -T jpg -o $@ $<
 
-%.fsa: %.formPosLemmaFeatures %.tmp-pattern
-	@echo "build $@ from $*.formPosLemmaFeatures $*.pattern"
-	$(BUILDLEXICON) -compactedLexiconDirectory . -compactedLexiconFile $* -patternFile $*.pattern -morphoFile $*.formPosLemmaFeatures build
+%.fsa: %.tmp-morpho %.tmp-pattern
+	@echo "build $@ from $*.tmp-morpho $*.tmp-pattern"
+	$(BUILDLEXICON) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build
 
-%.formPosLemmaFeatures: %.form %.pos %.lemma %.features
+%.tmp-morpho: %.tmp-form %.tmp-pos %.tmp-lemma %.tmp-features
 	@echo "build $@ from $^"
-	@paste $*.form $*.pos $*.lemma $*.features > $@
+	@paste $*.tmp-form $*.tmp-pos $*.tmp-lemma $*.tmp-features > $@
 
-%.form: %.tmp-morpho
+%.tmp-form: %.tmp-fplf
 	@echo "build $@ from $^"
 	@grep -v '^//' < $< | cut -f1 > $@
 
-%.pos: %.tmp-morpho
+%.tmp-pos: %.tmp-fplf
 	@echo "build $@ from $^"
 	@grep -v '^//' < $< | cut -f2 > $@
 
-%.lemma: %.tmp-morpho
+%.tmp-lemma: %.tmp-fplf
 	@echo "build $@ from $^"
 	@cut -f3 < $< | tr '\-/\.' '____' > $@
 
-%.features: %.tmp-morpho
+%.tmp-features: %.tmp-fplf
 	@echo "build $@ from $^"
 	@cut -f4 < $< | tr '\-/\.' '____' > $@
 
 %.tmp-pattern: %.pattern
 	@echo "build $@ from $^"
-	@sed -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | tr '\-/\.' '____' | sort -u > $@
+	@sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | tr '\-/\.' '____' | sort -u > $@
 
-%.tmp-morpho: %.morpho
+%.tmp-fplf: %.morpho
 	@echo "build $@ from $^"
 	@sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | sort -u > $@

@@ -54,15 +54,15 @@ ForestMap::map::const_iterator ForestMap::find(const forestIdentifierPtr& forest
 /* **************************************************
  *
  ************************************************** */
-ForestMap::map::const_iterator ForestMap::begin() const {
-    return data.begin();
+ForestMap::map::const_iterator ForestMap::cbegin() const {
+    return data.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ForestMap::map::const_iterator ForestMap::end() const {
-    return data.end();
+ForestMap::map::const_iterator ForestMap::cend() const {
+    return data.cend();
 }
 
 /* **************************************************

@@ -34,7 +34,8 @@ class ItemSet :
 
 public:
     typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to> set;
-    typedef std::unordered_set<itemPtr, Item::hash, Item::equal_to>::const_iterator const_iterator;
+    typedef set::const_iterator const_iterator;
+    typedef set::iterator iterator;
 
 private:
     unsigned int id;
@@ -51,9 +52,13 @@ public:
 
     set &getItems(void);
 
-    const_iterator begin(void) const;
+    const_iterator cbegin(void) const;
 
-    const_iterator end(void) const;
+    const_iterator cend(void) const;
+
+    iterator begin(void) const;
+
+    iterator end(void) const;
 
     const_iterator find(const itemPtr&) const;
 
