@@ -42,7 +42,7 @@ Rules::~Rules(void) {
     DELETE
     terminals.clear();
     nonTerminals.clear();
-    for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    for (list_of_rule::const_iterator iterRules = cbegin(); iterRules != cend(); ++iterRules) {
         rulePtr tmp = *iterRules;
         if (tmp)
             tmp.reset();
@@ -56,21 +56,21 @@ Rules::~Rules(void) {
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int>& Rules::getTerminals(void) {
+Rules::set_of_unsigned_int& Rules::getTerminals(void) {
     return terminals;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int>& Rules::getNonTerminals(void) {
+Rules::set_of_unsigned_int& Rules::getNonTerminals(void) {
     return nonTerminals;
 }
 
 /* **************************************************
  *
  ************************************************** */
-const Rules::ruleList& Rules::getRules(void) const {
+const Rules::list_of_rule& Rules::getRules(void) const {
     return rules;
 }
 
@@ -105,15 +105,15 @@ void Rules::setStartTerm(unsigned int _startTerm) {
 /* **************************************************
  *
  ************************************************** */
-Rules::ruleList::const_iterator Rules::rulesBegin(void) const {
-    return rules.begin();
+Rules::list_of_rule::const_iterator Rules::cbegin(void) const {
+    return rules.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Rules::ruleList::const_iterator Rules::rulesEnd(void) const {
-    return rules.end();
+Rules::list_of_rule::const_iterator Rules::cend(void) const {
+    return rules.cend();
 }
 
 /* **************************************************
@@ -121,7 +121,7 @@ Rules::ruleList::const_iterator Rules::rulesEnd(void) const {
  ************************************************** */
 void Rules::addRule(rulePtr rule) {
     rules.push_back(rule);
-    //std::pair<ruleList::iterator, bool> result = rules.insert(rule);
+    //std::pair<list_of_rule::iterator, bool> result = rules.insert(rule);
     //return result.second;
 }
 
@@ -133,19 +133,19 @@ void Rules::addNewStartTerm(bool addENDTerminal) {
     std::vector<termsPtr> rhs;
 
     if (addENDTerminal) {
-        terminals.insert(Vartable::END_);
+        terminals.insert(Vartable::_END_);
     }
 
-    Vartable::insertCodeMap(Vartable::STARTTERM_, "_STARTTERM_");
-    nonTerminals.insert(Vartable::STARTTERM_);
+    Vartable::insertCodeMap(Vartable::_START_TERM_, "_START_TERM_");
+    nonTerminals.insert(Vartable::_START_TERM_);
 
     rhs.push_back(Terms::create(getStartTerm()));
     if (addENDTerminal) {
-        rhs.push_back(Terms::create(Vartable::END_));
+        rhs.push_back(Terms::create(Vartable::_END_));
     }
 
     std::string fileName = "";
-    r = Rule::create(0, fileName, Vartable::STARTTERM_, rhs);
+    r = Rule::create(0, fileName, Vartable::_START_TERM_, rhs);
     setStartTerm(startTerm);
     rules.push_back(r);
     firstRule = r;
@@ -157,14 +157,14 @@ void Rules::addNewStartTerm(bool addENDTerminal) {
 void Rules::print(std::ostream& outStream) const {
     outStream << "<table border=\"1\"><tr><td>";
     outStream << "Terminals</td><td>";
-    std::set<unsigned int>::const_iterator iter;
+    set_of_unsigned_int::const_iterator iter;
     bool first = true;
     for (iter = terminals.begin(); iter != terminals.end(); ++iter) {
         if (first)
             first = false;
         else
             outStream << ", ";
-        outStream << Vartable::codeToIdentifier(*iter);
+        outStream << Vartable::codeToString(*iter);
 
     }
     outStream << "</td></tr><tr><td>";
@@ -175,18 +175,18 @@ void Rules::print(std::ostream& outStream) const {
             first = false;
         else
             outStream << ", ";
-        outStream << Vartable::codeToIdentifier(*iter);
+        outStream << Vartable::codeToString(*iter);
 
     }
     outStream << "</td></tr><tr><td>";
     outStream << "StartTerm</td><td>";
     if (startTerm)
-        outStream << Vartable::codeToIdentifier(startTerm);
+        outStream << Vartable::codeToString(startTerm);
     else
         outStream << "NULL";
     outStream << std::endl;
     outStream << "</td></tr><tr><td>Rules</td><td><table>";
-    for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    for (list_of_rule::const_iterator iterRules = cbegin(); iterRules != cend(); ++iterRules) {
         outStream << "<tr><td>";
         (*iterRules)->print(outStream, -1, true);
         outStream << "</td></tr>";
@@ -214,7 +214,7 @@ void Rules::addTerminal(unsigned int s) {
  *
  ************************************************** */
 bool Rules::isTerminal(unsigned int t) const {
-    std::set<unsigned int>::const_iterator iter = terminals.find(t);
+    set_of_unsigned_int::const_iterator iter = terminals.find(t);
     return (iter != terminals.end());
 }
 
@@ -222,7 +222,7 @@ bool Rules::isTerminal(unsigned int t) const {
  *
  ************************************************** */
 bool Rules::isNonTerminal(unsigned int t) const {
-    std::set<unsigned int>::const_iterator iter = nonTerminals.find(t);
+    set_of_unsigned_int::const_iterator iter = nonTerminals.find(t);
     return (iter != nonTerminals.end());
 }
 
@@ -232,11 +232,11 @@ bool Rules::isNonTerminal(unsigned int t) const {
 void Rules::analyseTerms(class Parser& parser) {
     nonTerminals.clear();
     terminals.clear();
-    ruleList::const_iterator iterRules;
-    for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    list_of_rule::const_iterator iterRules;
+    for (iterRules = cbegin(); iterRules != cend(); ++iterRules) {
         nonTerminals.insert((*iterRules)->getLhs());
     }
-    for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    for (iterRules = cbegin(); iterRules != cend(); ++iterRules) {
         unsigned int i;
         for (i = 0; i < (*iterRules)->getRhs().size(); ++i) {
             for (std::vector<unsigned int>::const_iterator term = (*iterRules)->getTerms(i)->begin();
@@ -246,11 +246,11 @@ void Rules::analyseTerms(class Parser& parser) {
                     terminals.insert(code);
 
                     Parser::entries_map* predToEntries;
-                    Parser::entries_map_map_const_iterator foundCode = parser.findLexicon(code);
-                    if (foundCode == parser.cendLexicon()) {
-                        predToEntries = new std::map<unsigned int, entriesPtr>;
+                    Parser::entries_map_map_const_iterator foundCode = parser.findCacheLexicon(code);
+                    if (foundCode == parser.cendCacheLexicon()) {
+                        predToEntries = new Parser::entries_map;
                         predToEntries->insert(std::make_pair(code, Entries::create()));
-                        parser.insertLexicon(std::make_pair(code, predToEntries));
+                        parser.insertCacheLexicon(std::make_pair(code, predToEntries));
                     }
                 }
             }
@@ -267,19 +267,19 @@ Rules::toXML(xmlNodePtr nodeRoot)
 {
    xmlNodePtr g = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"GRAMMAR", NULL);
    xmlNodePtr t = xmlNewChild(g, NULL, (const xmlChar*)"TERMINALS", NULL);
-   std::set<unsigned int>::const_iterator iter;
+   set_of_unsigned_int::const_iterator iter;
    for (iter = terminals.begin(); iter != terminals.end(); ++iter) {
-      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
+      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToString(*iter).c_str()));
    }
    t=xmlNewChild(g, NULL, (const xmlChar*)"NON-TERMINALS", NULL);
    for (iter=nonTerminals.begin(); iter != nonTerminals.end(); ++iter) {
-      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
+      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToString(*iter).c_str()));
    }
    //xmlNodePtr r = xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
-   ruleList::const_iterator iterRules;
-   for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
-      (*iterRules)->toXML(g);
-   }
+   //list_of_rule::const_iterator iterRules;
+   //for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+   //   (*iterRules)->toXML(g);
+   //}
 }
 #endif
 
@@ -289,8 +289,8 @@ Rules::toXML(xmlNodePtr nodeRoot)
 std::list<rulePtr> *
 Rules::findRules(unsigned int lhs) {
     std::list<rulePtr> *result = new std::list<rulePtr>;
-    ruleList::const_iterator iterRules;
-    for (iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++) {
+    list_of_rule::const_iterator iterRules;
+    for (iterRules = cbegin(); iterRules != cend(); iterRules++) {
         if (lhs == (*iterRules)->getLhs()) {
             result->push_back(*iterRules);
         }

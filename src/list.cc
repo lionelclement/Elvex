@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <iostream>
 #include "value.hpp"
 #include "list.hpp"
 
@@ -605,7 +606,7 @@ bool List::containsVariable() {
             break;
     }
     if (result)
-        this->variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        this->variableFlag.setFlag(VariableFlag::CONTAINS);
     else
         this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     /***

@@ -21,6 +21,8 @@
 #define ELVEX_SYNTHESIZER_H
 
 #include <map>
+#include <unordered_map>
+
 #include "shared_ptr.hpp"
 #include "forestmap.hpp"
 #include "memoization-map.hpp"
@@ -45,14 +47,18 @@
 class Synthesizer {
 
 public:
-    typedef std::map<unsigned int, itemPtr> item_map;
-    typedef std::map<unsigned int, itemSetPtr> itemSet_map;
-    typedef itemSet_map::const_iterator itemSet_map_const_iterator;
+
     enum Stage {
         MORPHO_FEATURES,
         FORM_FEATURES,
         PRED_FEATURES
     };
+
+    typedef std::unordered_map<unsigned int, itemPtr> item_map;
+    typedef std::unordered_map<unsigned int, itemSetPtr> itemSet_map;
+    //typedef std::map<unsigned int, itemPtr> item_map;
+    //typedef std::map<unsigned int, itemSetPtr> itemSet_map;
+    typedef itemSet_map::const_iterator itemSet_map_const_iterator;
 
 private:
     itemSet_map states;
@@ -60,6 +66,8 @@ private:
     item_map itemMap;
     nodePtr nodeRoot;
 
+    std::string compactedLexiconFileName;
+    std::string compactedDirectoryName;
     class CompactedLexicon* compactedLexicon;
 
     unsigned int maxLength;
@@ -70,9 +78,6 @@ private:
     std::string inputFileName;
 
     std::list<std::string> inputs;
-
-    std::string compactedLexiconFileName;
-    std::string compactedDirectoryName;
 
     bool reduceAll;
     bool trace;
@@ -200,7 +205,7 @@ public:
 
     void generate(class Parser&);
 
-    entriesPtr _findCompactedLexicon(class Parser&, unsigned int code, const std::string& str, unsigned int pred);
+    entriesPtr findCompactedLexicon(class Parser&, unsigned int code, const std::string& str, unsigned int pred);
 
     std::string keyMemoization(const itemPtr&, const itemPtr&);
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.17.0)
+project(elvex VERSION 2.18.0)
 
 set(CMAKE_CXX_STANDARD 11)
 include_directories(src)
@@ -129,14 +129,15 @@ if (LibXml2_FOUND)
             MAXUSAGES=10000
             MAXCARDINAL=1000000
             MAXATTEMPTS=100
-            #MAXBITS=512
+            MAXBITS=512
             #TRACE_LEXICON
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
     target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
+        MEMOIZATION
         TRACE_OPTION
-        #TRACE_MEMOIZATION
+        TRACE_MEMOIZATION
         #TRACE_EVAL
 )
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})

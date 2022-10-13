@@ -114,11 +114,11 @@ void generate() {
             while (forestIt != synthesizer.getNodeRoot()->getForests().end()) {
                 if (!synthesizer.getRandom())
                     forest = *forestIt;
-                for (const auto&  i : forest->getOutput()) {
+                for (auto i = forest->getOutput_cbegin() ; i != forest->getOutput_cend() ; ++i) {
 #ifdef TRACE_OPTION
                     std::cout << "<li>" << std::endl;
 #endif
-                    std::cout << i << std::endl;
+                    std::cout << (*i) << std::endl;
 #ifdef TRACE_OPTION
                     std::cout << "</li>" << std::endl;
 #endif

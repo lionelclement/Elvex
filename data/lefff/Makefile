@@ -18,7 +18,7 @@
 ################################################## #
 
 CLEANFILES = lefff.fsa lefff.tbl
-BUILDLEXICON = elvexbuildlexicon
+BUILDLEXICON = ../../bin/elvexbuildlexicon
 
 all: lefff.fsa
 

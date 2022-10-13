@@ -21,6 +21,9 @@
 #include <cstring>
 #include <cmath>
 #include <utility>
+#include <string>
+#include <ostream>
+#include <sstream>
 
 #include "compacted-lexicon.hpp"
 #include "compacted-lexicon-tree.hpp"
@@ -33,6 +36,7 @@
 #include "lexicon.hpp"
 #include "parser.hpp"
 #include "statement.hpp"
+#include "parser_exception.hpp"
 
 /* **************************************************
  *
@@ -277,7 +281,14 @@ std::string CompactedLexicon::unif(const std::string& fs1, const std::string& fs
         stringStream.str("");
         stringStream << '[' << fs1 << ']';
         std::string fsString = stringStream.str();
-        parser.parseBuffer("#", fsString, "morphology");
+try {
+            parser.parseBuffer("#", fsString, "morphology");
+	}
+    	catch (parser_exception& e) {
+		  std::ostringstream oss;
+		  oss << e.getMessage() << ":\"" << fs1 << "\"";
+		  throw fatal_exception(oss);
+		}
         features1 = parser.getLocalFeatures();
     } else
         features1 = featuresPtr();
@@ -287,7 +298,14 @@ std::string CompactedLexicon::unif(const std::string& fs1, const std::string& fs
         stringStream.str("");
         stringStream << '[' << fs2 << ']';
         std::string fsString = stringStream.str();
-        parser.parseBuffer("#", fsString, "morphology");
+try{
+            parser.parseBuffer("#", fsString, "morphology");
+    }
+    	catch (parser_exception& e) {
+		  std::ostringstream oss;
+		  oss << e.getMessage() << ":\"" << fs2 << "\"";
+		  throw fatal_exception(oss);
+		}
         features2 = parser.getLocalFeatures();
     } else
         features2 = featuresPtr();
@@ -332,8 +350,8 @@ void CompactedLexicon::addForms(const std::string& input, std::string inputSearc
                                 Lexicon& morpho) {
     //std::cerr << "addForms " << inputSearch << std::endl;
 
-    std::list<std::string>* o = morpho.find(std::move(inputSearch));
-    for (std::list<std::string>::const_iterator it = o->begin(); it != o->end(); ++it) {
+    std::vector<std::string> o = morpho.find(std::move(inputSearch));
+    for (std::vector<std::string>::const_iterator it = o.cbegin(); it != o.cend(); ++it) {
 
         char form[MAXSTRING];
         strcpy(form, it->c_str());
@@ -355,21 +373,19 @@ void CompactedLexicon::addForms(const std::string& input, std::string inputSearc
 void
 CompactedLexicon::addPattern(Lexicon& pattern, Lexicon& morpho, const std::string& input, const std::string& patternFs,
                              const std::string& lemma, const std::string& pos) {
-    //std::cout << "addPattern with " << '(' << input << ',' << patternFs << ',' << lemma << ',' << pos << ')' << std::endl;
+    //std::cout << "addPattern with " << "[input:" << input << ";patternFs:[" << patternFs << "];lemma:" << lemma << ";pos:" << pos << ']' << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
-    stringStream << lemma << '#' << pos;
+    stringStream << pos << '#' << lemma;
     std::string inputSearch = std::string(stringStream.str());
     if (morpho.count(inputSearch)) {
-        //std::cerr << "addForms with " << inputSearch << '(' << input << ',' << lemma << ',' << pos << ',' << patternFs << ')' << std::endl;
-        addForms(input, inputSearch, patternFs/*, pattern*/, morpho);
+        addForms(input, inputSearch, patternFs, morpho);
     } else if (pattern.count(inputSearch)) {
-        //std::cerr << "find " << inputSearch << std::endl;
-        std::list<std::string>* o = pattern.find(inputSearch);
-        for (auto&  it : *o) {
+        std::vector<std::string> o = pattern.find(inputSearch);
+        for (auto&  it : o) {
             char patternLemma[MAXSTRING];
             strcpy(patternLemma, it.c_str());
-            char *rhs = strchr(patternLemma, '#');
+            char* rhs = strchr(patternLemma, '#');
             *rhs = 0;
             char line2[MAXSTRING];
             strcpy(line2, it.c_str());
@@ -390,21 +406,16 @@ void CompactedLexicon::buildEntries(Lexicon& pattern, Lexicon& morpho) {
     std::stringstream _inputStream;
     std::size_t size = pattern.size();
     std::size_t range = 0;
-    for (auto patternIt = pattern.cbegin();
-         patternIt != pattern.cend(); ++patternIt) {
-        //std::cout << "pattern:" << patternIt->first << std::endl;
-        for (const auto& it2 : *patternIt->second) {
+    for (auto patternIt = pattern.cbegin(); patternIt != pattern.cend(); ++patternIt) {
+        //std::cerr << "pattern:" << patternIt->first << std::endl;
+        char pos[MAXSTRING];
+        strcpy(pos, patternIt->first.c_str());
+        char *rhs = strchr(pos, '#');
+        *rhs = 0;
+
+        for (const auto& it2 : patternIt->second) {
 
             //std::cout << "str:" << it2 << std::endl;
-
-            char lexeme[MAXSTRING];
-            strcpy(lexeme, patternIt->first.c_str());
-            char *rhs = strchr(lexeme, '#');
-            *rhs = 0;
-
-            char line2[MAXSTRING];
-            strcpy(line2, patternIt->first.c_str());
-            char *pos = strchr(line2, '#') + 1;
 
             char lemma[MAXSTRING];
             strcpy(lemma, it2.c_str());
@@ -416,7 +427,6 @@ void CompactedLexicon::buildEntries(Lexicon& pattern, Lexicon& morpho) {
             char *features = strchr(line4, '#') + 1;
 
             std::string patternFs = ((*features) ? features : std::string());
-            //std::cout << "lexeme:" << lexeme << " patternFs:[" << patternFs << "] lemma:" << lemma << " pos:" << pos << std::endl;
             addPattern(pattern, morpho, patternIt->first, patternFs, lemma, pos);
 
         }
@@ -473,21 +483,21 @@ void CompactedLexicon::consult() {
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::list(std::ostream& os) {
-    list(init + 1, "", os);
+void CompactedLexicon::print(std::ostream& os) {
+    print(init + 1, "", os);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::list(unsigned int index, const std::string& prefix, std::ostream& os) {
+void CompactedLexicon::print(unsigned int index, const std::string& prefix, std::ostream& os) {
     if (fsa[index].hasChild())
-        list(fsa[index].getChild(), prefix + fsa[index].getCharacter(), os);
+        print(fsa[index].getChild(), prefix + fsa[index].getCharacter(), os);
     if (fsa[index].hasNext())
-        list(fsa[index].getNext(), prefix, os);
+        print(fsa[index].getNext(), prefix, os);
     if (fsa[index].hasInfo()) {
-        os << prefix + fsa[index].getCharacter() << '\t';
-        this->printResults(std::cout, fsa[index].getInfo(), false);
+        os << prefix + fsa[index].getCharacter() << "\t=>\t";
+        this->printResults(os, fsa[index].getInfo(), false);
         os << std::endl;
     }
 }

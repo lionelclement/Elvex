@@ -25,7 +25,7 @@ class VariableFlag {
 public:
 
     enum flagValues {
-        DOES_CONTAIN,
+        CONTAINS,
         DOES_NOT_CONTAIN,
         NONE
     };

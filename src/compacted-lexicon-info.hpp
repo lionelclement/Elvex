@@ -22,17 +22,17 @@
 
 class CompactedLexiconInfo {
 private:
-    class CompactedLexiconInfo *next;
+    class CompactedLexiconInfo* next;
 
     unsigned long int offset;
     unsigned long int address;
 
 public:
-    CompactedLexiconInfo(class CompactedLexiconInfo *next = nullptr, unsigned long int offset = 0);
+    CompactedLexiconInfo(class CompactedLexiconInfo* next = nullptr, unsigned long int offset = 0);
 
     ~CompactedLexiconInfo();
 
-    class CompactedLexiconInfo *getNext(void) const;
+    class CompactedLexiconInfo* getNext(void) const;
 
     unsigned long int getOffset(void) const;
 

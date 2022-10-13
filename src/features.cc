@@ -35,8 +35,9 @@ featuresPtr Features::NIL = createNil();
  *
  ************************************************** */
 Features::Features(const featurePtr& feature) {
-    if (feature)
-        features.push_front(feature);
+    if (feature){
+        features.push_back(feature);
+    }
     this->pred = 0;
     this->form = "";
     NEW
@@ -81,28 +82,22 @@ featuresPtr Features::createNil() {
 /* **************************************************
  *
  ************************************************** */
-void Features::add(const featurePtr& feature, bool front) {
-    if (front)
-        this->features.push_front(feature);
-    else
-        this->features.push_back(feature);
+void Features::add(const featurePtr& feature) {
+    this->features.push_back(feature);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Features::add(const featuresPtr& _features, bool front) {
+void Features::add(const featuresPtr& _features) {
     for (const auto& j : *_features)
-        if (front)
-            this->features.push_front(j);
-        else
-            this->features.push_back(j);
+        this->features.push_back(j);
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::list<featurePtr>::iterator Features::erase(std::list<featurePtr>::iterator i) {
+Features::list_of_feature::iterator Features::erase(Features::list_of_feature::iterator i) {
     return features.erase(i);
 }
 
@@ -116,14 +111,14 @@ size_t Features::size() const {
 /* **************************************************
  *
  ************************************************** */
-std::list<featurePtr>::iterator Features::begin() {
+Features::list_of_feature::iterator Features::begin() {
     return features.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::list<featurePtr>::iterator Features::end() {
+Features::list_of_feature::iterator Features::end() {
     return features.end();
 }
 
@@ -272,7 +267,7 @@ Features::toXML(xmlNodePtr nodeRoot)
    xmlNodePtr f = xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"FS", nullptr);
    xmlSetProp(f, (xmlChar*)"id", (xmlChar*)std::to_string(this->getId()).c_str());
    if (!features.empty())
-   for (std::list<featurePtr>::const_iterator i = features.begin();
+   for (list_of_feature::const_iterator i = features.begin();
          i != features.end();
          ++i)
    (*i)->toXML(f);
@@ -589,7 +584,7 @@ bool Features::containsVariable() {
         }
     }
     if (result)
-        variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        variableFlag.setFlag(VariableFlag::CONTAINS);
     else
         variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     return result;

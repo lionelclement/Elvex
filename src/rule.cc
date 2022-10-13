@@ -236,7 +236,7 @@ void Rule::addDefaults() {
 void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic, bool html) const {
     std::string space = (html ? "&nbsp;" : " ");
     bool first = true;
-    outStream << Vartable::codeToIdentifier(lhs) << space << "→" << space;
+    outStream << Vartable::codeToString(lhs) << space << "→" << space;
     for (unsigned int i = 0; i < rhs.size(); i++) {
         if (first)
             first = false;

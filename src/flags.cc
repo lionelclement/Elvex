@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <iostream>
 #include "flags.hpp"
 #include "messages.hpp"
 
@@ -49,13 +50,6 @@ Flags::Flags(const std::bitset<FLAGS> &flags) {
 std::bitset<FLAGS> &Flags::getFlags() {
     return this->flags;
 }
-
-/* **************************************************
- *
- ************************************************** */
-//void Flags::resetFlags() {
-//    this->flags = 0;
-//}
 
 /* **************************************************
  *

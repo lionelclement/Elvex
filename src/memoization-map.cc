@@ -44,8 +44,8 @@ MemoizationMap::map::const_iterator MemoizationMap::find(std::string const& key)
 /* ************************************************************
  * 
  ************************************************************ */
-MemoizationMap::map::const_iterator MemoizationMap::end() const {
-    return memoizationMap.end();
+MemoizationMap::map::const_iterator MemoizationMap::cend() const {
+    return memoizationMap.cend();
 }
 
 /* ************************************************************
@@ -62,7 +62,7 @@ void MemoizationMap::insert(std::string const& key, featuresPtr features, forest
     if (memItem != memoizationMap.end()) {
         memItem->second.push_back(value);
     } else {
-        std::list<memoizationValuePtr> values;
+        std::vector<memoizationValuePtr> values;
         values.push_back(value);
         memoizationMap[key] = values;
     }

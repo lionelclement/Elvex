@@ -20,8 +20,6 @@
 #ifndef COMPACTEDLEXICONFSA_H
 #define COMPACTEDLEXICONFSA_H
 
-#include <ostream>
-
 struct CompactedLexiconFsa {
 private:
     unsigned long int child;

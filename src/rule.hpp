@@ -20,7 +20,7 @@
 #ifndef ELVEX_RULE_H
 #define ELVEX_RULE_H
 
-#include <climits>
+//#include <climits>
 #include <string>
 #include <vector>
 
@@ -32,7 +32,8 @@
 #include "shared_ptr.hpp"
 
 class Rule :
-public UniqId, public std::enable_shared_from_this<class Rule> {
+    public UniqId, 
+    public std::enable_shared_from_this<class Rule> {
 
 private:
     unsigned int lhs;

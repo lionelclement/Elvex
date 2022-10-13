@@ -20,10 +20,6 @@
 #ifndef BITSET_H
 #define BITSET_H
 
-#ifndef MAXBITS
-#define MAXBITS 512
-#endif
-
 #include <unordered_map>
 #include <bitset>
 
@@ -34,8 +30,14 @@
 #include <libxml/tree.h>
 #endif
 
+#ifndef MAXBITS
+#define MAXBITS 512
+#endif
+
 class Bitset :
-        public std::bitset<MAXBITS>, public Serializable, public std::enable_shared_from_this<Bitset> {
+        public std::bitset<MAXBITS>, 
+        public Serializable, 
+        public std::enable_shared_from_this<Bitset> {
 
 private:
 
@@ -61,6 +63,7 @@ public:
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
 #endif
+
 };
 
 #endif // BITSET_H

@@ -166,10 +166,10 @@ void Terms::print(std::ostream &outStream) {
                 first = false;
             else
                 outStream << '|';
-            outStream << Vartable::codeToIdentifier(*term);
+            outStream << Vartable::codeToString(*term);
         }
     } else {
-        outStream << Vartable::codeToIdentifier(terms[0]);
+        outStream << Vartable::codeToString(terms[0]);
     }
     if (optional)
         outStream << ']';

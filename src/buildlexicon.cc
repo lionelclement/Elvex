@@ -18,6 +18,8 @@
  ************************************************** */
 
 #include <cstring>
+#include <iostream>
+#include <fstream>
 
 #include "buildlexicon.hpp"
 #include "compacted-lexicon.hpp"
@@ -240,16 +242,15 @@ int main(int argn, char** argv) {
 		//std::cerr << "/features:/" << features << '/' << std::endl;
 
 		std::stringstream stream;
-		stream << lemma << '#' << pos;
+		stream << pos << '#' << lemma;
 		std::string _input = stream.str();
 
 		stream.str("");
 		stream << form << '#' << features;
 		std::string _output = stream.str();
-		//std::cerr << "morpho/input:/" << _input << '/' << std::endl;
-		//std::cerr << "morpho/output:/" << _output << '/' << std::endl;
+		//std::cerr << "morpho/input:/" << _input << "/output:/" << _output << "/" << std::endl;
 		morpho.add(_input, _output);
-	      }
+	    }
 
 	    }
 	    lineno++;
@@ -311,15 +312,14 @@ int main(int argn, char** argv) {
 	      //std::cerr << "/features:/" << features << '/' << std::endl;
 
 	      std::stringstream stream;
-	      stream << lexeme << '#' << pos;
+	      stream << pos << '#' << lexeme;
 	      std::string input = stream.str();
 
 	      stream.str("");
 	      stream << lemma << '#' << features;
 	      std::string output = stream.str();
 
-	      //std::cerr << "pattern/input:/" << input << '/' << std::endl;
-	      //std::cerr << "pattern/output:/" << output << '/' << std::endl;
+	      //std::cerr << "pattern/input:/" << input << '/' << "/output:/" << output << '/' << std::endl;
 
 	      pattern.add(input, output);
 
@@ -355,7 +355,7 @@ int main(int argn, char** argv) {
 	  lex->openFiles("r");
 	  lex->loadFsa();
 	  lex->loadData();
-	  lex->list(std::cout);
+	  lex->print(std::cout);
 	  lex->closeFiles();
 	  return EXIT_SUCCESS;
 	}

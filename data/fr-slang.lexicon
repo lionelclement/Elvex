@@ -175,6 +175,7 @@ en	clg [PRED:_pro, number:sg, person:three, clitic:yes];
  * Prepositions
  ************************************************** */
 // Préposition
+/*
 de prep[pcas:de];
 à prep[pcas:à];
 par prep[pcas:par];
@@ -185,6 +186,7 @@ après prep[pcas:après];
 avec prep[pcas:avec];
 contre prep[pcas:contre];
 dans prep[pcas:dans];
+*/
 
 /* **************************************************
  * Conjunctions

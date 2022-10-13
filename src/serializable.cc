@@ -49,7 +49,7 @@ size_t Serializable::hashCode() {
 std::string Serializable::peekSerialString() {
   if (serialString.empty()) {
         makeSerialString();
-        serialHashCode = std::hash<std::string>()(serialString);
+        serialHashCode = std::hash<std::string>{}(serialString);
     }
     return serialString;
 }

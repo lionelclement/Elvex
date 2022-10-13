@@ -28,7 +28,6 @@
 #include "features.hpp"
 #include "value.hpp"
 #include "vartable.hpp"
-//#include "term.h"
 #include "shared_ptr.hpp"
 
 /* **************************************************
@@ -47,7 +46,7 @@ Entry::Entry(unsigned int pos, unsigned int pred, std::string form, featuresPtr 
  ************************************************** */
 Entry::Entry(unsigned int pos, std::string pred, std::string form, featuresPtr features) {
     this->pos = pos;
-    this->pred = Vartable::identifierToCode(std::move(pred));
+    this->pred = Vartable::stringToCode(std::move(pred));
     this->form = std::move(form);
     this->features = std::move(features);
     NEW
@@ -129,12 +128,12 @@ Entry::toXML(xmlNodePtr nodeRoot) const
    xmlNodePtr entry = xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"ENTRY", nullptr);
    if (this->pos != (unsigned int)-1) {
       xmlSetProp(entry, (xmlChar*)"pos", (xmlChar*)std::to_string(this->pos).c_str());
-      xmlSetProp(entry, (xmlChar*)"posStr", (xmlChar*)Vartable::codeToIdentifier(this->pos).c_str());
+      xmlSetProp(entry, (xmlChar*)"posStr", (xmlChar*)Vartable::codeToString(this->pos).c_str());
 
    }
    if (this->pred != (unsigned int)-1) {
       xmlSetProp(entry, (xmlChar*)"codePred", (xmlChar*)std::to_string(this->pred).c_str());
-      xmlSetProp(entry, (xmlChar*)"codePredStr", (xmlChar*)Vartable::codeToIdentifier(this->pred).c_str());
+      xmlSetProp(entry, (xmlChar*)"codePredStr", (xmlChar*)Vartable::codeToString(this->pred).c_str());
 
    }
    if (!this->form.empty()) {
@@ -149,13 +148,17 @@ Entry::toXML(xmlNodePtr nodeRoot) const
 /* **************************************************
  *
  ************************************************** */
-void Entry::print(std::ostream &out) const {
-    out << "(id: " << this->getId() << ", term: " << Vartable::codeToIdentifier(this->pos);
+void Entry::print(std::ostream& os) const {
+    os << "(id:" << this->getId() << ", pos:" << Vartable::codeToString(this->pos);
     if ((this->pred != UINT_MAX))
-        out << ", pred: " << Vartable::codeToIdentifier(this->pred);
+        os << ", pred:" << Vartable::codeToString(this->pred);
+    else
+        os << ", pred:UINT_MAX";
     if (!this->form.empty())
-        out << ", form: " << this->form;
-    out << ")";
+        os << ", form:" << this->form;
+    else
+        os << ", form:\"\"";
+    os << ")";
 }
 
 /* **************************************************

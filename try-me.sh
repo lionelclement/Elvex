@@ -31,18 +31,20 @@ cd data
 #     |tr '@' "\n" | ../bin/elvexpostedition_fr | sed -e 's/^ *//' -e 's/  */ /g'
 
 make en-1.1.0.fsa
-../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "\
-Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]"\
- | elvexpostedition_en | sed 's/^ *//'
-#elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactedLexiconDirectory . -compactedLexiconFile en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon 'Text[PRED:_TO_APPRECIATE, i:[PRED:__YOU], ii:[PRED:_ELVEX], vtense:future]'
+#../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | elvexpostedition_en | sed 's/^ *//'
+#../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactedLexiconDirectory . -compactedLexiconFile en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon 'Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]'
 
 #../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr | sed 's/^ *//'
 #../bin/elvex -t -V -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug --traceShift -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 
-#elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input | elvexpostedition_fr |tr '@' "\n" |sed -e 's/^ *//' |tr '@' "\n"
-##elvex -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
-#elvex -t -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
-#elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
+#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input | elvexpostedition_fr |tr '@' "\n" |sed -e 's/^ *//' |tr '@' "\n"
+##../bin/elvex -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
+#../bin/elvex -t -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
+#../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
+
+make essai-20221012.fsa
+../bin/elvex -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
+#../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
 
 cd ..

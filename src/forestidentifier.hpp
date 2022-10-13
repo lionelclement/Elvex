@@ -24,7 +24,8 @@
 #include "shared_ptr.hpp"
 
 class ForestIdentifier :
-        public Serializable, public std::enable_shared_from_this<ForestIdentifier> {
+        public Serializable, 
+        public std::enable_shared_from_this<ForestIdentifier> {
 
 private:
 
@@ -33,12 +34,12 @@ private:
     unsigned int from;
     unsigned int to;
 
-    ForestIdentifier(unsigned int, const std::string &, unsigned int, unsigned int);
+    ForestIdentifier(unsigned int, const std::string&, unsigned int, unsigned int);
 
 public:
     ~ForestIdentifier() override;
 
-    static forestIdentifierPtr create(unsigned int code, const std::string &featuresSerialString, unsigned int from,
+    static forestIdentifierPtr create(unsigned int code, const std::string& featuresSerialString, unsigned int from,
                                        unsigned int to);
 
     void makeSerialString() override;
@@ -55,9 +56,9 @@ public:
         return code;
     };
 
-    bool operator<(ForestIdentifier const &) const;
+    bool operator<(ForestIdentifier const&) const;
 
-    bool operator!=(ForestIdentifier const &) const;
+    bool operator!=(ForestIdentifier const&) const;
 
     struct hash {
         size_t operator()(const forestIdentifierPtr) const;

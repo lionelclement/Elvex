@@ -17,10 +17,6 @@
  *
  ************************************************** */
 
-//#include <cstring>
-//#include <cstdlib>
-//#include <iostream>
-//#include <ctime>
 #include "node.hpp"
 #include "messages.hpp"
 #include "forest.hpp"
@@ -50,7 +46,7 @@ nodePtr Node::create() {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-std::vector<forestPtr> &Node::getForests() {
+std::vector<forestPtr>& Node::getForests() {
     return forests;
 }
 
@@ -99,8 +95,8 @@ Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
  *
  ************************************************** */
 void Node::generate(std::vector<forestPtr>::const_iterator forest) {
-   if ((*forest)->getOutput().size() > 0) {
-      for (auto s = (*forest)->getOutput().begin(); s != (*forest)->getOutput().end(); ++s) {
+   if ((*forest)->getOutput_size() > 0) {
+      for (auto s = (*forest)->getOutput_cbegin(); s != (*forest)->getOutput_cend(); ++s) {
          if (output.size() == 0) {
             output.push_back(*s);
          }

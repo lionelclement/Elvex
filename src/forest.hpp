@@ -31,7 +31,9 @@
 #include "shared_ptr.hpp"
 
 class Forest :
-        public UniqId, public Flags, public std::enable_shared_from_this<class Forest> {
+        public UniqId, 
+        public Flags, 
+        public std::enable_shared_from_this<class Forest> {
 
 public:
     typedef std::vector<nodePtr> vectorNodes;
@@ -50,15 +52,17 @@ public:
 
     static forestPtr create(entryPtr entry, unsigned int from, unsigned int to);
 
-    const vectorNodes &getNodes(void) const;
-
     unsigned int getFrom(void) const;
 
     unsigned int getTo(void) const;
 
     bool isEmpty(void) const;
 
-    const std::vector<std::string> &getOutput(void) const;
+    size_t getOutput_size(void) const;
+
+    const std::vector<std::string>::const_iterator getOutput_cbegin(void) const;
+
+    const std::vector<std::string>::const_iterator getOutput_cend(void) const;
 
     void addNode(const nodePtr&);
 

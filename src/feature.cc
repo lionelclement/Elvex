@@ -358,7 +358,7 @@ bool Feature::containsVariable() {
             break;
     }
     if (result)
-        variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        variableFlag.setFlag(VariableFlag::CONTAINS);
     else
         variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     return result;

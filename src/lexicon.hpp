@@ -21,16 +21,23 @@
 #define ELVEX_LEXICON_H
 
 #include <string>
-#include <list>
+#include <vector>
 #include <unordered_map>
 
 class Lexicon {
 
 public:
-    typedef std::unordered_map<const std::string, std::list<std::string>*, std::hash<std::string>, std::equal_to<std::string>,
-            std::allocator<std::pair<const std::string, std::list<std::string>* > > > unordered_map;
+    typedef std::unordered_map< const std::string, 
+                                std::vector<std::string>, 
+                                std::hash<std::string>, 
+                                std::equal_to<std::string>,
+                                std::allocator<std::pair<const std::string, std::vector<std::string> > > > 
+                    unordered_map;
+    // typedef std::unordered_map< const std::string, 
+    //                             std::vector<std::string>* > unordered_map;
     unordered_map the_map;
-    static std::list<std::string>* emptyList;
+
+    static std::vector<std::string> emptyList;
 
     Lexicon(void);
 
@@ -42,7 +49,7 @@ public:
 
     void add(const std::string key, std::string value);
 
-    std::list<std::string>* find(const std::string key);
+    std::vector<std::string> find(const std::string key);
 
     std::size_t count(const std::string key);
 

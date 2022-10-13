@@ -21,8 +21,6 @@
 #define ELVEX_MESSAGES_H
 
 #include <iostream>
-#include <sstream>
-#include <string>
 #include "fatal_exception.hpp"
 
 #ifdef TRACE_MALLOC

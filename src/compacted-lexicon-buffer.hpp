@@ -20,7 +20,7 @@
 #ifndef COMPACTEDLEXICONBUFFER_H
 #define COMPACTEDLEXICONBUFFER_H
 
-#include <ostream>
+#include <iostream>
 
 struct CompactedLexiconBuffer {
 private:

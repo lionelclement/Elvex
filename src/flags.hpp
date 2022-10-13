@@ -50,8 +50,6 @@ public:
 
     bool isUnsetFlags(const std::bitset<FLAGS> &cmp) const;
 
-//    void resetFlags();
-
     void addFlags(const std::bitset<FLAGS> &f);
 
     void subFlags(const std::bitset<FLAGS> &f);

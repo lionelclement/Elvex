@@ -44,7 +44,7 @@ Value::Value(Value::Type const type, const std::string &str) {
     this->number = 0;
     //unsigned int found = 0;
     if (type == _CODE) {
-        this->code = Vartable::identifierToCode(str);
+        this->code = Vartable::stringToCode(str);
     } else if (type == _FORM) {
         this->str = str;
     }
@@ -274,7 +274,7 @@ void Value::print(std::ostream &outStream) const {
             outStream << '_';
             break;
         case _CODE:
-            outStream << Vartable::codeToIdentifier(code);
+            outStream << Vartable::codeToString(code);
             break;
         case _NUMBER:
             outStream << number;
@@ -310,7 +310,7 @@ void Value::flatPrint(std::ostream &outStream) const {
             outStream << '_';
             break;
         case _CODE:
-            outStream << Vartable::codeToIdentifier(code);
+            outStream << Vartable::codeToString(code);
             break;
         case _NUMBER:
             outStream << number;
@@ -396,7 +396,7 @@ Value::toXML(xmlNodePtr nodeRoot) const
     break;
   case _CODE:
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"identifier");
-    xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)Vartable::codeToIdentifier(getCode()).c_str());
+    xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)Vartable::codeToString(getCode()).c_str());
     break;
   case _NUMBER:
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"double");
@@ -515,7 +515,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
                 if ((*bits & *value->bits).none())
                     ret = false;
             } else if (value->type == _CODE) {
-                if (bits->toString() != Vartable::codeToIdentifier(value->getCode()))
+                if (bits->toString() != Vartable::codeToString(value->getCode()))
                     ret = false;
             } else if (value->type == _ANONYMOUS) {
             } else {
@@ -527,7 +527,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
             if (value->type == _VARIABLE) {
                 environment->add(value->bits, shared_from_this());
             } else if (value->type == _CONSTANT) {
-                if (Vartable::codeToIdentifier(code) != value->bits->toString())
+                if (Vartable::codeToString(code) != value->bits->toString())
                     ret = false;
             } else if (value->type == _CODE) {
                 if (code != value->getCode())
@@ -720,7 +720,7 @@ bool Value::eq(valuePtr o) const {
             case _CONSTANT:
                 if ((type == _CONSTANT) && ((*bits & *o->bits).any()))
                     ret = true;
-                else if ((type == _CODE) && (o->bits->toString() == Vartable::codeToIdentifier(code)))
+                else if ((type == _CODE) && (o->bits->toString() == Vartable::codeToString(code)))
                     ret = true;
                 break;
             case _FORM:
@@ -932,7 +932,7 @@ bool Value::containsVariable() {
             break;
     }
     if (result)
-        this->variableFlag.setFlag(VariableFlag::DOES_CONTAIN);
+        this->variableFlag.setFlag(VariableFlag::CONTAINS);
     else
         this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     return result;

@@ -59,7 +59,7 @@ them	pro [PRED:_pro, @_3p, _case:accusative];
 ************************************************************/
 myself	pro [PRED:_pro, @_1s, _case:reflexive];
 yourself pro [PRED:_pro, @_2s, _case:reflexive];
-himself pro [PRED:_pro, @_3s, _case:reflexive];
+himself catpro [PRED:_pro, @_3s, _case:reflexive];
 
 // Déterminants
 a	det	[number:sg, def:false, poss:false, part:false, dem:false];

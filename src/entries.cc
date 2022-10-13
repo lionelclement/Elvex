@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <vector>
 #include "messages.hpp"
 #include "entries.hpp"
 #include "entry.hpp"
@@ -31,7 +32,7 @@ Entries::Entries() {
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(const entryPtr &entry) {
+Entries::Entries(const entryPtr& entry) {
     this->entries.insert(this->entries.begin(), entry);
     NEW
 }
@@ -47,7 +48,7 @@ Entries::Entries(const std::vector<entryPtr>& entries) {
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(unsigned int codePos, unsigned int codeLemma, std::string &form) {
+Entries::Entries(unsigned int codePos, unsigned int codeLemma, std::string& form) {
     this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
     NEW
 }
@@ -73,7 +74,7 @@ entriesPtr Entries::create() {
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(const entryPtr &entry) {
+entriesPtr Entries::create(const entryPtr& entry) {
     return entriesPtr(new Entries(entry));
 }
 
@@ -87,7 +88,7 @@ entriesPtr Entries::create(const std::vector<entryPtr>& entries) {
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string &form) {
+entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string& form) {
     return entriesPtr(new Entries(codePos, codeLemma, form));
 }
 
@@ -115,7 +116,7 @@ std::vector<entryPtr>::iterator  Entries::end() {
 /* **************************************************
  *
  ************************************************** */
-void Entries::add(const entryPtr &entry) {
+void Entries::add(const entryPtr& entry) {
     this->entries.push_back(entry);
 }
 
@@ -142,7 +143,7 @@ Entries::toXML(xmlNodePtr nodeRoot) const
 /* **************************************************
  *
  ************************************************** */
-void Entries::print(std::ostream &out) const {
+void Entries::print(std::ostream& out) const {
   for (const auto& i : entries)
         i->print(out);
 }

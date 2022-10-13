@@ -38,7 +38,7 @@
  ************************************************** */
 Item::Item(rulePtr rule, unsigned int index, statementsPtr statements) {
     this->rule = std::move(rule);
-    this->trace = this->rule->getTrace();
+    //this->trace = this->rule->getTrace();
     this->index = index;
     this->statements = std::move(statements);
     this->environment = environmentPtr();
@@ -71,7 +71,7 @@ Item::Item(const rulePtr& rule, unsigned int index, unsigned int indexTerm, stat
 /* **************************************************
  *
  ************************************************** */
-Item::Item(const rulePtr& rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
+Item::Item(const rulePtr& rule, unsigned int index, std::vector<unsigned int>& indexTerms, statementsPtr statements)
         : Item(rule, index, std::move(statements)) {
     this->indexTerms = indexTerms;
     std::vector<termsPtr> terms = rule->getRhs();
@@ -125,7 +125,7 @@ itemPtr Item::create(const rulePtr& rule, unsigned int index, unsigned int index
  *
  ************************************************** */
 itemPtr
-Item::create(const rulePtr& rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements) {
+Item::create(const rulePtr& rule, unsigned int index, std::vector<unsigned int>& indexTerms, statementsPtr statements) {
     return itemPtr(new Item(rule, index, indexTerms, std::move(statements)));
 }
 
@@ -146,28 +146,42 @@ void Item::setRule(rulePtr _rule) {
 /* **************************************************
  *
  ************************************************** */
-bool Item::getTrace() const {
-    return trace;
+bool Item::getRuleTrace() const {
+    return rule->getTrace();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setTrace(bool _trace) {
-    this->trace = _trace;
-}
-
-/* **************************************************
- *
- ************************************************** */
-unsigned int Item::getLineno() const {
+unsigned int Item::getRuleLineno() const {
     return rule->getLineno();
 }
 
 /* **************************************************
  *
  ************************************************** */
-const std::string &Item::getFilename() const {
+void Item::rulePrint(std::ostream &os, unsigned int index, bool withSemantic, bool html) const {
+    rule->print(os, index, withSemantic, html);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+unsigned int Item::getRuleId() const {
+    return rule->getId();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::ruleResetUsages(void) {
+    rule->resetUsages();
+}
+    
+/* **************************************************
+ *
+ ************************************************** */
+const std::string& Item::getRuleFilename() const {
     return rule->getFilename();
 }
 
@@ -188,7 +202,7 @@ void Item::setIndex(unsigned int _index) {
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int> &Item::getIndexTerms() {
+std::vector<unsigned int>& Item::getIndexTerms() {
     return indexTerms;
 }
 
@@ -210,7 +224,7 @@ termsPtr Item::getTerms(const unsigned int _index) const {
  *
  ************************************************** */
 termsPtr Item::getCurrentTerms() const {
-    if ((this->index == UINT_MAX) || (this->index >= this->getRhs().size()))
+    if ((this->index == UINT_MAX) || (this->index >= this->getRuleRhs().size()))
         return nullptr;
     return rule->getRhs()[this->index];
 }
@@ -235,29 +249,28 @@ unsigned int Item::getCurrentTerm() const {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getLhs() const {
+unsigned int Item::getRuleLhs() const {
     return rule->getLhs();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<termsPtr> &
-Item::getRhs() const {
+std::vector<termsPtr>&  Item::getRuleRhs() const {
     return rule->getRhs();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int> &Item::getRefs() {
+Item::set_of_unsigned_int& Item::getRefs() {
     return refs;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setRefs(std::set<unsigned int> &_refs) {
+void Item::setRefs(set_of_unsigned_int& _refs) {
     this->refs = _refs;
 }
 
@@ -271,7 +284,7 @@ void Item::addRef(unsigned int ref) {
 /* **************************************************
  *
  ************************************************** */
-void Item::addRefs(std::set<unsigned int> &_refs) {
+void Item::addRefs(set_of_unsigned_int& _refs) {
     for (auto _ref : _refs)
         addRef(_ref);
 }
@@ -279,14 +292,14 @@ void Item::addRefs(std::set<unsigned int> &_refs) {
 /* **************************************************
  *
  ************************************************** */
-std::vector<bool> &Item::getSeen() {
+std::vector<bool>& Item::getSeen() {
     return this->seen;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setSeen(std::vector<bool> &_seen) {
+void Item::setSeen(std::vector<bool>& _seen) {
     this->seen = _seen;
 }
 
@@ -307,14 +320,14 @@ void Item::setSeen(unsigned int _index, bool b) {
 /* **************************************************
  *
  ************************************************** */
-void Item::addItem(std::unordered_map<unsigned int, itemPtr> &table, unsigned int key, itemPtr item) {
+void Item::addItem(std::unordered_map<unsigned int, itemPtr>& table, unsigned int key, itemPtr item) {
     table.insert(std::make_pair(key, item));
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int> &Item::getRanges() {
+std::vector<unsigned int>& Item::getRanges() {
     return ranges;
 }
 
@@ -328,7 +341,7 @@ void Item::addRanges(unsigned int k) {
 /* **************************************************
  *
  ************************************************** */
-void Item::addRanges(std::vector<unsigned int> &l) {
+void Item::addRanges(std::vector<unsigned int>& l) {
     for (std::vector<unsigned int>::const_iterator i = l.begin(); i != l.end(); ++i)
         addRanges(*i);
 }
@@ -336,7 +349,7 @@ void Item::addRanges(std::vector<unsigned int> &l) {
 /* **************************************************
  *
  ************************************************** */
-std::vector<forestIdentifierPtr> &Item::getForestIdentifiers() {
+std::vector<forestIdentifierPtr>& Item::getForestIdentifiers() {
     return forestIdentifiers;
 }
 
@@ -350,7 +363,7 @@ void Item::addForestIdentifiers(unsigned int key, forestIdentifierPtr forestIden
 /* **************************************************
  *
  ************************************************** */
-void Item::addForestIdentifiers(std::vector<forestIdentifierPtr> &_forestIdentifiers) {
+void Item::addForestIdentifiers(std::vector<forestIdentifierPtr>& _forestIdentifiers) {
     for (unsigned int it = 0 ; it < _forestIdentifiers.size() ; ++it)
         this->forestIdentifiers[it] = _forestIdentifiers[it];
 }
@@ -450,7 +463,7 @@ void Item::addStatements(const statementsPtr& _statements) {
  *
  ************************************************** */
 bool Item::isCompleted() {
-    return ranges.size() == (this->getRhs().size() + 1);
+    return ranges.size() == (this->getRuleRhs().size() + 1);
 }
 
 /* **************************************************
@@ -475,12 +488,12 @@ void Item::addEnvironment(environmentPtr _environment, environmentPtr where) {
  *
  ************************************************** */
 void Item::defaultInheritedSonFeatures() {
-    std::vector<termsPtr> terms = this->getRhs();
+    std::vector<termsPtr> terms = this->getRuleRhs();
     std::vector<bool> assignedInheritedSonFeatures;
     for (std::vector<termsPtr>::const_iterator it = terms.begin(); it != terms.end(); ++it)
         assignedInheritedSonFeatures.push_back(false);
     if (statements)
-        for (const auto & statement : *this->statements)
+        for (const auto&  statement : *this->statements)
             statement->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
     unsigned int j = 0;
     for (std::vector<bool>::const_iterator it = assignedInheritedSonFeatures.begin();
@@ -492,7 +505,7 @@ void Item::defaultInheritedSonFeatures() {
 /* **************************************************
  *
  ************************************************** */
-void Item::print(std::ostream &out) const {
+void Item::print(std::ostream& out) const {
     out << "<table border=\"1\" style=\"color:black; ";
     if (isSetFlags(Flags::BOTTOM)) {
         out << " background-color:Pink;";
@@ -544,12 +557,12 @@ void Item::print(std::ostream &out) const {
     }
     if (s_ruleId) {
         out << "<td>";
-        out << this->getRule()->getId();
+        out << this->getRuleId();
         out << "</td>";
     }
     if (s_rule) {
         out << "<td>";
-        this->getRule()->print(out);
+        this->rulePrint(out);
         out << "</td>";
     }
     if (s_flags) {
@@ -585,10 +598,10 @@ void Item::print(std::ostream &out) const {
     }
     if (s_index) {
         out << "<td>";
-        if (getIndex() == UINT_MAX)
+        if (index == UINT_MAX)
             out << "UINT_MAX";
         else
-            out << getIndex();
+            out << index;
         out << "</td>";
     }
     if (s_indexTerms) {
@@ -650,7 +663,7 @@ void Item::print(std::ostream &out) const {
     if (s_inheritedSonFeatures) {
         out << "<td bgcolor=\"lightyellow\"><table>"; //<center>↓i</center><br>";
         int k = 1;
-	for (const auto & i : *inheritedSonFeatures) {
+	for (const auto&  i : *inheritedSonFeatures) {
 	  out << "<tr><td>" << k++ << "</td><td>";
             if (i)
                 i->print(out);
@@ -668,7 +681,7 @@ void Item::print(std::ostream &out) const {
     if (s_synthesizedSonFeatures) {
         out << "<td bgcolor=\"lightcyan\"><table>"; //<center>⇓i</center><br>";
         int k = 1;
-	for (const auto & i : *synthesizedSonFeatures) {
+	for (const auto&  i : *synthesizedSonFeatures) {
 	  out << "<tr><td>" << k++ << "</td><td>";
             if (i)
                 i->print(out);
@@ -699,7 +712,7 @@ void Item::print(std::ostream &out) const {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Item::clone(const std::bitset<FLAGS> &protectedFlags) {
+itemPtr Item::clone(const std::bitset<FLAGS>& protectedFlags) {
     itemPtr it = Item::create(this->rule, this->index, this->indexTerms,
                               this->statements ? this->statements->clone(protectedFlags) : statementsPtr());
     it->environment = (this->environment) ? this->environment->clone() : environmentPtr();
@@ -717,14 +730,14 @@ itemPtr Item::clone(const std::bitset<FLAGS> &protectedFlags) {
 /* **************************************************
  *
  ************************************************** */
-void Item::successor(bool &effect) {
+void Item::successor(bool& effect) {
 #ifdef TRACE_SUCCESSOR
     std::cout << "<H3>####################### SUCCESSOR #######################</H3>" << std::endl;
     this->print(std::cout);
     std::cout << std::endl;
 #endif
-    for (unsigned int i = 0; i < this->getRhs().size(); ++i) {
-        if ((i == index) || ((*this->getInheritedSonFeatures())[i]->isNil() && !this->getTerms(i)->isOptional() &&
+    for (unsigned int i = 0; i < this->getRuleRhs().size(); ++i) {
+        if ((i == index) || ((*this->inheritedSonFeatures)[i]->isNil() && !this->getTerms(i)->isOptional() &&
                              this->getTerms(i)->size() == 1))
             continue;
         if (!this->forestIdentifiers[i]) {
@@ -735,7 +748,7 @@ void Item::successor(bool &effect) {
     }
 
     if (!effect && (index == UINT_MAX) && isCompleted()) {
-        this->index = this->getRhs().size();
+        this->index = this->getRuleRhs().size();
     }
     if (this->index != UINT_MAX)
         this->setSeen(this->index, true);
@@ -750,7 +763,7 @@ void Item::successor(bool &effect) {
 /* **************************************************
  *
  ************************************************** */
-void Item::apply(Parser &parser, Synthesizer *synthesizer) {
+void Item::apply(Parser& parser, Synthesizer *synthesizer) {
     if (statements) {
         //unsigned int k = 1;
         bool effect = true;
@@ -783,18 +796,18 @@ void Item::apply(Parser &parser, Synthesizer *synthesizer) {
  ************************************************** */
 void Item::makeSerialString() {
 
-     serialString = std::to_string(getRule()->getId());
-   if (getIndex() == UINT_MAX)
+     serialString = std::to_string(getRuleId());
+   if (index == UINT_MAX)
       serialString += '+';
    else
-      serialString += std::to_string(getIndex());
+      serialString += std::to_string(index);
    serialString += '|';
    std::vector<unsigned int>::const_iterator ind = indexTerms.begin();
    while (ind != indexTerms.end())
       serialString += std::to_string(*(ind++)) + '-';
 
    serialString += '|';
-   std::set<unsigned int>::const_iterator ref = refs.begin();
+   set_of_unsigned_int_const_iterator ref = refs.begin();
    while (ref != refs.end())
       serialString += std::to_string(*(ref++)) + '-';
 
@@ -810,43 +823,14 @@ void Item::makeSerialString() {
 
    serialString += '|';
    serialString += inheritedFeatures->peekSerialString();
-
-   /*
-    serialString = std::to_string(getRule()->getId());
-    if (getIndex() == UINT_MAX)
-        serialString += '+';
-    else
-        serialString += std::to_string(getIndex());
-    serialString += '|';
-    std::vector<unsigned int>::const_iterator ind = indexTerms.begin();
-    while (ind != indexTerms.end())
-        serialString += std::to_string(*(ind++)) + '-';
-
-    serialString += '|';
-    auto ref = refs.begin();
-    while (ref != refs.end())
-        serialString += std::to_string(*(ref++)) + '-';
-
-    serialString += '|';
-    std::vector<forestIdentifierPtr>::const_iterator fi = forestIdentifiers.begin();
-    while (fi != forestIdentifiers.end()) {
-        if (*fi)
-            serialString += (*fi)->peekSerialString() + '-';
-        else
-            serialString += '.';
-        ++fi;
-    }
-
-    serialString += '|';
-    serialString += inheritedFeatures->peekSerialString();
-   */
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Item::hash::operator()(itemPtr const& i) const {
-    return i->hashCode();
+size_t Item::hash::operator()(itemPtr const& item) const {
+    // defined in serialisable.hpp : std::hash<std::string>{}(serialString)
+    return item->hashCode();
 }
 
 /* **************************************************

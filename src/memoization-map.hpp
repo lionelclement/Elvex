@@ -21,15 +21,15 @@
 #define ELVEX_MEMOIZATIONMAP_H
 
 #include <string>
-#include <list>
 #include <unordered_map>
+#include <vector>
 #include "memoization-value.hpp"
 
 class MemoizationMap :
         public std::enable_shared_from_this<class MemoizationMap> {
 
 public:
-    typedef std::unordered_map<std::string, std::list<memoizationValuePtr> > map;
+    typedef std::unordered_map<std::string, std::vector<memoizationValuePtr> > map;
 
 private:
     map memoizationMap;
@@ -37,7 +37,7 @@ private:
 public:
     void clear(void);
 
-    map::const_iterator end(void) const;
+    map::const_iterator cend(void) const;
 
     map::const_iterator find(const std::string&) const;
 

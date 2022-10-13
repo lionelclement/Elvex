@@ -60,42 +60,42 @@ unsigned int ItemSet::getId(void) {
 /* **************************************************
  *
  ************************************************** */
-ItemSet::set &ItemSet::getItems() {
+ItemSet::set_of_item &ItemSet::getItems() {
     return items;
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::cbegin() const {
+ItemSet::set_of_item_const_iterator ItemSet::cbegin() const {
     return items.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::cend() const {
+ItemSet::set_of_item_const_iterator ItemSet::cend() const {
     return items.cend();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::iterator ItemSet::begin() const {
+ItemSet::set_of_item_iterator ItemSet::begin() const {
     return items.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::iterator ItemSet::end() const {
+ItemSet::set_of_item_iterator ItemSet::end() const {
     return items.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::const_iterator ItemSet::find(const itemPtr& item) const {
+ItemSet::set_of_item_const_iterator ItemSet::find(const itemPtr& item) const {
     return items.find(item);
 }
 
@@ -135,9 +135,8 @@ size_t ItemSet::size() const {
  *
  ************************************************** */
 void ItemSet::resetUsages() {
-    for (const auto & item : items) {
-        item->getRule()->resetUsages();
-
+    for (const auto& item : items) {
+        item->ruleResetUsages();
     }
 }
 

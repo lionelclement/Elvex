@@ -50,7 +50,9 @@ public:
 
 private:
     enum Type type;
+
     bitsetPtr attribute;
+
     valuePtr value;
 
     Feature(Type, bitsetPtr, valuePtr);

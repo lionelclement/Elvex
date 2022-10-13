@@ -21,7 +21,6 @@
 #define ELVEX_NODE_H
 
 #include <vector>
-#include <list>
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -32,25 +31,27 @@
 #include "shared_ptr.hpp"
 
 class Node :
-        public Flags, public UniqId, public std::enable_shared_from_this<class Node> {
+        public Flags, 
+        public UniqId, 
+        public std::enable_shared_from_this<class Node> {
 
 private:
     unsigned int nbrCS;
     std::vector<forestPtr> forests;
     std::vector<std::string> output;
 
-    Node();
+    Node(void);
 
     void generate(std::vector<forestPtr>::const_iterator);
 
 public:
-    ~Node();
+    ~Node(void);
 
-    static nodePtr create();
+    static nodePtr create(void);
 
-    std::vector<forestPtr> &getForests();
+    std::vector<forestPtr>& getForests(void);
 
-    const std::vector<std::string> &getOutput() const;
+    const std::vector<std::string>& getOutput(void) const;
 
     void addForest(const forestPtr&);
 

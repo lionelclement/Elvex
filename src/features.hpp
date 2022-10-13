@@ -20,7 +20,7 @@
 #ifndef ELVEX_FEATURES_H
 #define ELVEX_FEATURES_H
 
-#include <list>
+#include <vector>
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -42,7 +42,9 @@ public:
     static featuresPtr NIL;
     static featuresPtr BOTTOM;
 
-    std::list<featurePtr> features;
+    typedef std::vector<featurePtr> list_of_feature;
+    list_of_feature features;
+
 private:
     unsigned int pred;
     std::string form;
@@ -63,17 +65,17 @@ public:
 
     void putId(unsigned int id);
 
-    void add(const featurePtr&, bool = false);
+    void add(const featurePtr&);
 
-    void add(const featuresPtr&, bool = false);
+    void add(const featuresPtr&);
 
     size_t size() const;
 
-    std::list<featurePtr>::iterator begin();
+    list_of_feature::iterator begin();
 
-    std::list<featurePtr>::iterator end();
+    list_of_feature::iterator end();
 
-    std::list<featurePtr>::iterator erase(std::list<featurePtr>::iterator);
+    list_of_feature::iterator erase(list_of_feature::iterator);
 
     featurePtr front() const;
 

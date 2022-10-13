@@ -24,15 +24,15 @@
 #include "vartable.hpp"
 #include "messages.hpp"
 
-const unsigned int Vartable::END_;
-const unsigned int Vartable::STARTTERM_;
+const unsigned int Vartable::_END_;
+const unsigned int Vartable::_START_TERM_;
 
 unsigned int Vartable::codeMapIndex;
 std::bitset<MAXBITS> Vartable::variableMapIndex;
-std::unordered_map<std::string, bitsetPtr> Vartable::variableMap;
-std::map<const unsigned int, std::string> Vartable::codeMap;
-std::unordered_map<std::string, unsigned int> Vartable::identifierMap;
-std::unordered_map<unsigned int, std::string> Vartable::bitMap;
+Vartable::string_to_bitset Vartable::variableMap;
+Vartable::unsigned_int_to_string Vartable::codeMap;
+Vartable::string_to_unsigned_int Vartable::stringMap;
+Vartable::unsigned_int_to_string Vartable::bitMap;
 
 Vartable vartable;
 
@@ -42,8 +42,8 @@ Vartable vartable;
 Vartable::Vartable() {
     codeMapIndex = 0;
     variableMapIndex = 1;
-    insertCodeMap(END_, "_END_");
-    insertCodeMap(STARTTERM_, "_STARTTERM_");
+    insertCodeMap(_END_, "_END_");
+    insertCodeMap(_START_TERM_, "_STARTTERM_");
 }
 
 /* ************************************************************
@@ -54,7 +54,7 @@ Vartable::Vartable() {
  ************************************************************ */
 bitsetPtr Vartable::createVariable(std::string str) {
     bitsetPtr result = bitsetPtr();
-    std::unordered_map<std::string, bitsetPtr>::const_iterator varTableIt;
+    string_to_bitset_const_iterator varTableIt;
     varTableIt = variableMap.find(str);
     if (varTableIt == variableMap.end()) {
         result = Bitset::create(variableMapIndex);
@@ -65,7 +65,7 @@ bitsetPtr Vartable::createVariable(std::string str) {
         Vartable::bitMap[i] = str;
         variableMapIndex <<= 1;
         if (variableMapIndex.none())
-            throw fatal_exception("Too much values");
+            throw fatal_exception("Too much values to create a new variable");
     } else {
         result = varTableIt->second;
     }
@@ -75,13 +75,15 @@ bitsetPtr Vartable::createVariable(std::string str) {
 /* ************************************************************
  *
  ************************************************************ */
-unsigned int Vartable::identifierToCode(const std::string& str) {
+unsigned int Vartable::stringToCode(const std::string& str) {
     unsigned int code;
-    std::unordered_map<std::string, unsigned int>::const_iterator it(identifierMap.find(str));
-    if (it == identifierMap.end()) {
+    string_to_unsigned_int_iterator it(stringMap.find(str));
+    if (it == stringMap.end()) {
         code = codeMapIndex;
-        identifierMap[str] = codeMapIndex;
-        codeMap[codeMapIndex++] = str;
+        stringMap.insert(std::make_pair(str, codeMapIndex));
+        codeMap.insert(std::make_pair(codeMapIndex++, str));
+        //stringMap[str] = codeMapIndex;
+        //codeMap[codeMapIndex++] = str;
     } else
         code = it->second;
     return code;
@@ -90,7 +92,7 @@ unsigned int Vartable::identifierToCode(const std::string& str) {
 /* ************************************************************
  *
  ************************************************************ */
-std::string Vartable::codeToIdentifier(unsigned int i) {
+std::string Vartable::codeToString(unsigned int i) {
     if (i != UINT_MAX)
         return codeMap[i];
     else
@@ -109,15 +111,15 @@ void Vartable::insertCodeMap(const unsigned int key, std::string value) {
 /* ************************************************************
  *
  ************************************************************ */
-std::unordered_map<unsigned int, std::string>::const_iterator Vartable::bitMapFind(unsigned int key) {
+Vartable::unsigned_int_to_string_iterator Vartable::bitMapFind(unsigned int key) {
     return bitMap.find(key);
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-std::unordered_map<unsigned int, std::string>::const_iterator Vartable::bitMapEnd() {
-    return bitMap.end();
+Vartable::unsigned_int_to_string_const_iterator Vartable::bitMapcEnd() {
+    return bitMap.cend();
 }
 
 /* ************************************************************

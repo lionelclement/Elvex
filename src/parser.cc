@@ -20,6 +20,7 @@
 #include <climits>
 #include <stack>
 #include <string>
+#include <iostream>
 #include "parser.hpp"
 #include "vartable.hpp"
 #include "messages.hpp"
@@ -123,22 +124,22 @@ void Parser::insertMapLocalEntry(std::pair<std::string, entryPtr> pair){
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::findLexicon(unsigned int i) const {
-    return lexicon.find(i);
+Parser::entries_map_map_const_iterator Parser::findCacheLexicon(unsigned int i) const {
+    return cacheLexicon.find(i);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::cbeginLexicon() const {
-    return lexicon.cbegin();
+Parser::entries_map_map_const_iterator Parser::cbeginCacheLexicon() const {
+    return cacheLexicon.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::cendLexicon() const {
-    return lexicon.cend();
+Parser::entries_map_map_const_iterator Parser::cendCacheLexicon() const {
+    return cacheLexicon.cend();
 }
 
 /* **************************************************
@@ -204,11 +205,11 @@ unsigned int Parser::getTopLineno() {
 /* **************************************************
  *
  ************************************************** */
-void Parser::printLexicon(std::ostream &out) const {
+void Parser::printCacheLexicon(std::ostream &out) const {
     out << "<ul>";
-    for (entries_map_map_const_iterator i = cbeginLexicon(); i != cendLexicon(); ++i) {
+    for (entries_map_map_const_iterator i = cbeginCacheLexicon(); i != cendCacheLexicon(); ++i) {
         out << "<li>";
-        out << Vartable::codeToIdentifier((*i).first);
+        out << Vartable::codeToString((*i).first);
         out << "<ul>";
         for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
             out << "<li>";
@@ -217,7 +218,7 @@ void Parser::printLexicon(std::ostream &out) const {
             else if ((*j).first == UINT_MAX)
                 out << "UINT_MAX = &gt; ";
             else
-                out << Vartable::codeToIdentifier((*j).first) << " = &gt; ";
+                out << Vartable::codeToString((*j).first) << " = &gt; ";
 
             (*j).second->print(out);
             out << "</li>";
@@ -288,15 +289,16 @@ void Parser::listMacros() {
 /* **************************************************
  *
  ************************************************** */
-void Parser::insertLexicon(std::pair<unsigned int, entries_map*> pair){
-  lexicon.insert(pair);
+void Parser::insertCacheLexicon(std::pair<unsigned int, entries_map*> pair){
+  cacheLexicon.insert(pair);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::printLexicon(){
-  for (auto i = lexicon.begin(); i != lexicon.end(); ++i){
+/*
+void Parser::printCacheLexicon(){
+  for (auto i = cacheLexicon.begin(); i != cacheLexicon.end(); ++i){
     std::cerr << Vartable::codeToIdentifier((*i).first) << "=>\n";
     entries_map* v = (*i).second;
       for (auto j = v->begin(); j != v->end(); ++j){
@@ -309,3 +311,4 @@ void Parser::printLexicon(){
   }
   CERR_LINE;
 }
+*/

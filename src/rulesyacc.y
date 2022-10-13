@@ -182,7 +182,8 @@ begin:
 
 	|TOKEN_LEXICON dictionary {
 	  DBUGPRT("begin lexicon");
-	  //parser.printLexicon();
+	  //CERR_LINE;
+	  //parser.printCacheLexicon(std::cerr);
 	}
 
 	|TOKEN_DASH features
@@ -201,42 +202,25 @@ dictionary:
 	  DBUGPRT("dictionary");
 	 };
 
-stringOrIdentifier:
-	TOKEN_IDENTIFIER {
-	  DBUGPRT("stringOrIdentifier");
-	  $$ = $1;
-	}
-
-	|TOKEN_STRING {
-	  DBUGPRT("stringOrIdentifier");
-	  $$ = $1;
-	 }
-
-	|stringOrIdentifier TOKEN_PLUS TOKEN_STRING {
-	  DBUGPRT("string");
-	  $$ = $1;
-	  *$$ += *$3;
-	 };
-
 dictionary_line:
 	// FORM constantNoun ;
 	TOKEN_FORM TOKEN_IDENTIFIER TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  unsigned int code = Vartable::identifierToCode(*$2);
+	  unsigned int code = Vartable::stringToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  auto foundCode = parser.findLexicon(code);
+	  auto foundCode = parser.findCacheLexicon(code);
 	  Parser::entries_map* zeroToEntries;
-	  if (foundCode != parser.cendLexicon()){
+	  if (foundCode != parser.cendCacheLexicon()){
 	    zeroToEntries = foundCode->second;
 	  } else {
 	    zeroToEntries = new Parser::entries_map();
-	    parser.insertLexicon(std::make_pair(code, zeroToEntries));
+	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
 	  }
 	  auto foundPred = zeroToEntries->find(0);
 	  entriesPtr entries;
-	  if (foundPred != zeroToEntries->end()){
+	  if (foundPred != zeroToEntries->cend()){
 	    entries = foundPred->second;
 	  } else {
 	    entries = Entries::create();
@@ -248,20 +232,20 @@ dictionary_line:
 	|TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  unsigned int code=Vartable::identifierToCode(*$2);
+	  unsigned int code = Vartable::stringToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
-	  auto foundCode = parser.findLexicon(code);
+	  auto foundCode = parser.findCacheLexicon(code);
 	  Parser::entries_map* zeroToEntries;
-	  if (foundCode != parser.cendLexicon()) {
+	  if (foundCode != parser.cendCacheLexicon()) {
 	    zeroToEntries = foundCode->second;
 	  } else {
 	    zeroToEntries = new Parser::entries_map;
-	    parser.insertLexicon(std::make_pair(code, zeroToEntries));
+	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
 	  }
 	  auto foundPred = zeroToEntries->find(0);
 	  entriesPtr entries;
-	  if (foundPred != zeroToEntries->end()){
+	  if (foundPred != zeroToEntries->cend()){
 	    entries = foundPred->second;
 	  } else {
 	    entries = Entries::create();
@@ -280,15 +264,15 @@ dictionary_line:
 	    entriesPtr lp;
 	    Parser::entries_map *predToEntries;
 	    //std::cerr << entry->getCode() << std::endl;
-	    auto foundCode = parser.findLexicon((*entry)->getPos());
-	    if (foundCode != parser.cendLexicon()){
+	    auto foundCode = parser.findCacheLexicon((*entry)->getPos());
+	    if (foundCode != parser.cendCacheLexicon()){
 	      predToEntries = foundCode->second;
 	    } else {
 	      predToEntries = new Parser::entries_map;
-	      parser.insertLexicon(std::make_pair((*entry)->getPos(), predToEntries));
+	      parser.insertCacheLexicon(std::make_pair((*entry)->getPos(), predToEntries));
 	    }
-	    Parser::entries_map::iterator foundPred = predToEntries->find((*entry)->getPred());
-	    if (foundPred != predToEntries->end()){
+	    Parser::entries_map_iterator foundPred = predToEntries->find((*entry)->getPred());
+	    if (foundPred != predToEntries->cend()){
 	      lp = foundPred->second;
 	    } else {
 	      lp = Entries::create();
@@ -307,13 +291,29 @@ dictionary_line:
 	  parser.addMacros(*$2, *$4);
 	  free($2);
 	  free($4);
-
 	}
 
 	|TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
 	};
+
+stringOrIdentifier:
+	TOKEN_IDENTIFIER {
+	  DBUGPRT("stringOrIdentifier");
+	  $$ = $1;
+	}
+
+	|TOKEN_STRING {
+	  DBUGPRT("stringOrIdentifier");
+	  $$ = $1;
+	 }
+
+	|stringOrIdentifier TOKEN_PLUS TOKEN_STRING {
+	  DBUGPRT("string");
+	  $$ = $1;
+	  *$$ += *$3;
+	 };
 
 lexical_entries:
 	lexical_entry TOKEN_PIPE lexical_entries
@@ -336,7 +336,7 @@ lexical_entry:
 	{
 	  DBUGPRT("lexical_entry");
 	  unsigned int pred = (*$2)->assignPred();
-	  $$ = new entryPtr(Entry::create(Vartable::identifierToCode(*$1), pred, std::string(), *$2));
+	  $$ = new entryPtr(Entry::create(Vartable::stringToCode(*$1), pred, std::string(), *$2));
 	  free($1);
 	  free($2);
 	}
@@ -344,7 +344,7 @@ lexical_entry:
 	|TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("lexical_entry");
-	  $$ = new entryPtr(Entry::create(Vartable::identifierToCode(*$1), UINT_MAX, std::string(), Features::create()));
+	  $$ = new entryPtr(Entry::create(Vartable::stringToCode(*$1), UINT_MAX, std::string(), Features::create()));
 	  free($1);
 	};
 
@@ -447,14 +447,14 @@ term:
 	TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("term_id");
-	  $$ = Vartable::identifierToCode(*$1);
+	  $$ = Vartable::stringToCode(*$1);
 	  free($1);
 	}
 
 	|TOKEN_VARIABLE
 	{
 	  DBUGPRT("term_id");
-	  $$ = Vartable::identifierToCode(*$1);
+	  $$ = Vartable::stringToCode(*$1);
 	  free($1);
 	}
 

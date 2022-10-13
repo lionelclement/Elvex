@@ -53,7 +53,7 @@ ForestIdentifier::create(unsigned int code, const std::string &featuresSerialStr
  *
  ************************************************** */
 void ForestIdentifier::makeSerialString() {
-    serialString = std::to_string(code) + '-' + Vartable::codeToIdentifier(code) + '[' + std::to_string(from) + '-' + std::to_string(to) + ']'
+    serialString = std::to_string(code) + '-' + Vartable::codeToString(code) + '[' + std::to_string(from) + '-' + std::to_string(to) + ']'
                     + featuresSerialString;
 }
 

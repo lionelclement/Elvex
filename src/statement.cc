@@ -984,7 +984,8 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
         case FEATURES:
         case GUARD: {
             resultFeatures = getFeatures()->clone();
-            if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
+            if (replaceVariables && item->getEnvironment() 
+                    && item->getEnvironment()->size() > 0) {
                 bool effect = false;
                 item->getEnvironment()->replaceVariables(resultFeatures, effect);
             }
@@ -1051,7 +1052,8 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
             if (!fs) {
                 resultFeatures = featuresPtr();
             }
-            entriesPtr entries = synthesizer->_findCompactedLexicon(parser, 0, getBits()->toString(), fs->assignPred());
+            CERR_LINE;
+            entriesPtr entries = synthesizer->findCompactedLexicon(parser, 0, getBits()->toString(), fs->assignPred());
             if (entries) {
                 //if (entries->size() > 1) {
                 // ERROR("pred ambiguous")
@@ -1066,7 +1068,7 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
                     resultFeatures = parser.getLocalFeatures();
                 }
             } else {
-                throw fatal_exception("search operator error: No entry for " + Vartable::codeToIdentifier(fs->assignPred()));
+                throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(fs->assignPred()));
             }
 
         }
@@ -1130,7 +1132,8 @@ listPtr Statement::evalList(const itemPtr &item, bool replaceVariables) {
 
         case LIST:
             resultList = getList()->clone();
-            if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
+            if (replaceVariables && item->getEnvironment() 
+                    && item->getEnvironment()->size() > 0) {
                 bool effect = false;
                 item->getEnvironment()->replaceVariables(resultList, effect);
             }
@@ -1148,7 +1151,7 @@ listPtr Statement::evalList(const itemPtr &item, bool replaceVariables) {
                 else {
                     std::ostringstream oss1, oss2;
                     this->print(oss1);
-                    item->getRule()->print(oss2, -1, true);
+                    item->rulePrint(oss2, -1, true);
                     WARNING_STM
                     "<P>Variable " + oss1.str() + " not initialized in</P>" + oss2.str();
                 }
@@ -1325,7 +1328,7 @@ valuePtr Statement::evalValue(const itemPtr &item, Parser &parser, Synthesizer *
                         if (v1->_isVariable())
                             v1str = v1->getBits()->toString();
                         else if (v1->_isIdentifier())
-                            v1str = Vartable::codeToIdentifier(v1->getCode());
+                            v1str = Vartable::codeToString(v1->getCode());
                         else if (v1->_isForm())
                             v1str = v1->getStr();
                         else
@@ -1339,7 +1342,7 @@ valuePtr Statement::evalValue(const itemPtr &item, Parser &parser, Synthesizer *
                         if (v2->_isVariable())
                             v2str = v2->getBits()->toString();
                         else if (v2->_isIdentifier())
-                            v2str = Vartable::codeToIdentifier(v2->getCode());
+                            v2str = Vartable::codeToString(v2->getCode());
                         else if (v2->_isForm())
                             v2str = v2->getStr();
                         else
@@ -1678,10 +1681,10 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr& fs2, cons
         goto endUnif;
     }
     result = Features::create();
-    for (std::list<featurePtr>::const_iterator i1 = fs1->begin(); i1 != fs1->end(); ++i1) {
+    for (Features::list_of_feature::const_iterator i1 = fs1->begin(); i1 != fs1->end(); ++i1) {
 
         if (((*i1)->getType() == Feature::PRED) || ((*i1)->getType() == Feature::LEMMA) ) {
-            std::list<featurePtr>::const_iterator i2 = fs2->begin();
+            Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end()) {
                 if ((*i2)->getType() == (*i1)->getType()) {
                     (*i2)->addFlags(Flags::SEEN);
@@ -1738,7 +1741,7 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr& fs2, cons
             result->add(*i1);
         }
         else if ((*i1)->getType() == Feature::FORM) {
-            std::list<featurePtr>::const_iterator i2 = fs2->begin();
+            Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end()) {
                 if ((*i2)->getType() == Feature::FORM) {
 
@@ -1757,7 +1760,7 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr& fs2, cons
             result->add(*i1);
         }
         else if ((*i1)->getType() == Feature::CONSTANT) {
-            std::list<featurePtr>::const_iterator i2 = fs2->begin();
+            Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end()) {
                 if (((*i2)->getType() == Feature::CONSTANT) &&
                     (*(*i1)->getAttribute() & *(*i2)->getAttribute()).any()) {
@@ -1947,15 +1950,15 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr& fs2, cons
             }
         }
     }
-    for (std::list<featurePtr>::const_iterator i2 = fs2->begin(); i2 != fs2->end(); ++i2) {
+    for (Features::list_of_feature::const_iterator i2 = fs2->begin(); i2 != fs2->end(); ++i2) {
         if ((*i2)->isUnsetFlags(Flags::SEEN))
             result->add(*i2);
     }
 
-    for (std::list<featurePtr>::const_iterator i1 = fs1->begin(); i1 != fs1->end(); ++i1) {
+    for (Features::list_of_feature::const_iterator i1 = fs1->begin(); i1 != fs1->end(); ++i1) {
         (*i1)->subFlags(Flags::SEEN);
     }
-    for (std::list<featurePtr>::const_iterator i2 = fs2->begin(); i2 != fs2->end(); ++i2) {
+    for (Features::list_of_feature::const_iterator i2 = fs2->begin(); i2 != fs2->end(); ++i2) {
         (*i2)->subFlags(Flags::SEEN);
     }
 
@@ -2287,7 +2290,7 @@ void Statement::stmGuard(const itemPtr &item/*, Synthesizer *synthesizer*/) {
         }
         featuresPtr localRhs = item->getInheritedFeatures();
 
-        if (!localFeatures->buildEnvironment(environment, localRhs, false/*, true*/)) {
+        if (!localFeatures->buildEnvironment(environment, localRhs, false)) {
             addFlags(Flags::BOTTOM);
         }
         if (item->getEnvironment()->size() == 0) {

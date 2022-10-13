@@ -20,9 +20,9 @@
 #ifndef ELVEX_PARSER_H
 #define ELVEX_PARSER_H
 
-#include <functional>
-#include <string>
-#include <map>
+//#include <functional>
+//#include <string>
+//#include <map>
 #include <unordered_map>
 #include <deque>
 #include "shared_ptr.hpp"
@@ -34,25 +34,29 @@
 class Parser {
 
 public:
-    // POS => (LEMMA => ENTRIES)
-    // i.e.: verb => (manger => (mangions, mange|mange))
     typedef std::unordered_map<std::string, entryPtr> entry_map;
     typedef entry_map::const_iterator entry_map_const_iterator;
+    typedef entry_map::iterator entry_map_iterator;
 
-    // see below
-    typedef std::map<unsigned int, entriesPtr> entries_map;
-    // POS => (LEMMA => ENTRIES)
+    //typedef std::map<unsigned int, entriesPtr> entries_map;
+    typedef std::unordered_map<unsigned int, entriesPtr> entries_map;
+    typedef entries_map::const_iterator entries_map_const_iterator;
+    typedef entries_map::iterator entries_map_iterator;
+
+    // POS => (LEMMA => ENTRY)
     // i.e.: verb => (manger => (mangions, mange|mange))
-    typedef std::map<unsigned int, entries_map*> entries_map_map;
+    //typedef std::map<unsigned int, entries_map*> entries_map_map;
+    typedef std::unordered_map<unsigned int, entries_map*> entries_map_map;
     typedef entries_map_map::const_iterator entries_map_map_const_iterator;
-
+    typedef entries_map_map::iterator entries_map_map_iterator;
+    
     // macro => featuresPtr  
     typedef std::unordered_map<std::string, featuresPtr> macro_map;
     typedef macro_map::const_iterator macro_map_const_iterator;
 
 private:
     Rules rules;
-    entries_map_map lexicon;
+    entries_map_map cacheLexicon;
     entry_map mapLocalEntry;
     macro_map macros;
     featuresPtr startFeatures;
@@ -77,7 +81,7 @@ public:
 
     unsigned int getTopLineno();
 
-    class Rules &getRules();
+    class Rules& getRules();
 
     std::string getTopBufferName();
 
@@ -93,15 +97,15 @@ public:
 
     void setLocalFeatures(featuresPtr);
 
-  void insertLexicon(std::pair<unsigned int, entries_map*>);
+  void insertCacheLexicon(std::pair<unsigned int, entries_map*>);
 
-  void printLexicon();
-  
-    entries_map_map_const_iterator findLexicon(unsigned int) const;
+    entries_map_map_const_iterator findCacheLexicon(unsigned int) const;
 
-    entries_map_map_const_iterator cbeginLexicon() const;
+    entries_map_map_const_iterator cbeginCacheLexicon() const;
 
-    entries_map_map_const_iterator cendLexicon() const;
+    entries_map_map_const_iterator cendCacheLexicon() const;
+
+    void printCacheLexicon(std::ostream &) const;
 
     void setVerbose(bool);
 
@@ -112,8 +116,6 @@ public:
   entry_map_const_iterator cendMapLocalEntry() const;
 
   void insertMapLocalEntry(std::pair<std::string, entryPtr>);
-
-    void printLexicon(std::ostream &) const;
 
     void addMacros(std::string, featuresPtr);
 

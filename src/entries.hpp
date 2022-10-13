@@ -20,12 +20,11 @@
 #ifndef ENTRIES_H
 #define ENTRIES_H
 
-#include <vector>
-
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 
+#include <vector>
 #include "shared_ptr.hpp"
 
 class Entries :
@@ -36,22 +35,22 @@ private:
 
     Entries();
 
-    Entries(const entryPtr &);
+    Entries(const entryPtr& );
 
-    Entries(const std::vector<entryPtr> &);
+    Entries(const std::vector<entryPtr>& );
 
-    Entries(unsigned int codePos, unsigned int codeLemma, std::string &form);
+    Entries(unsigned int codePos, unsigned int codeLemma, std::string& form);
 
 public:
     ~Entries();
 
     static entriesPtr create();
 
-    static entriesPtr create(const entryPtr &);
+    static entriesPtr create(const entryPtr& );
 
-    static entriesPtr create(const std::vector<entryPtr> &);
+    static entriesPtr create(const std::vector<entryPtr>& );
 
-    static entriesPtr create(unsigned int codePos, unsigned int codeLemma, std::string &form);
+    static entriesPtr create(unsigned int codePos, unsigned int codeLemma, std::string& form);
 
     size_t size() const;
 
@@ -61,13 +60,13 @@ public:
 
     entryPtr get(unsigned int) const;
 
-    void add(const entryPtr &);
+    void add(const entryPtr& );
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr) const;
 #endif
 
-    void print(std::ostream &) const;
+    void print(std::ostream& ) const;
 };
 
 #endif // ENTRIES_H

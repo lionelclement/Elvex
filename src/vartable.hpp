@@ -30,31 +30,51 @@
 class Vartable {
 
 public:
-    static const unsigned int END_ = 0;
-    static const unsigned int STARTTERM_ = 1;
+    static const unsigned int _END_ = 0;
+    static const unsigned int _START_TERM_ = 1;
 
+    // variable => bitset
+    // i.e. subject => 36 (MAXBITS values)
+    typedef std::unordered_map<std::string, bitsetPtr> string_to_bitset;
+    typedef string_to_bitset::iterator string_to_bitset_iterator;
+    typedef string_to_bitset::const_iterator string_to_bitset_const_iterator;
+
+    // int => variable
+    typedef std::unordered_map<unsigned int, std::string> unsigned_int_to_string;
+    typedef unsigned_int_to_string::iterator unsigned_int_to_string_iterator;
+    typedef unsigned_int_to_string::const_iterator unsigned_int_to_string_const_iterator;
+
+    // string => int
+    // i.e. "TO_SAY" => 89 (MAX_UINT values)
+    typedef std::unordered_map<std::string, unsigned int> string_to_unsigned_int;
+    typedef string_to_unsigned_int::iterator string_to_unsigned_int_iterator;
+    typedef string_to_unsigned_int::const_iterator string_to_unsigned_int_const_iterator;
+    
 private:
-    static unsigned int codeMapIndex;
+
     static std::bitset<MAXBITS> variableMapIndex;
-    static std::unordered_map<std::string, bitsetPtr> variableMap;
-    static std::map<const unsigned int, std::string> codeMap;
-    static std::unordered_map<std::string, unsigned int> identifierMap;
-    static std::unordered_map<unsigned int, std::string> bitMap;
+    static unsigned int codeMapIndex;
+    static string_to_bitset variableMap;
+    static unsigned_int_to_string codeMap;
+    static string_to_unsigned_int stringMap;
+    static unsigned_int_to_string bitMap;
 
 public:
     Vartable();
 
     static bitsetPtr createVariable(std::string); // variable -> bitset
-    static unsigned int identifierToCode(const std::string&); // identifier -> code
-    static std::string codeToIdentifier(unsigned int);
+    
+    static unsigned int stringToCode(const std::string&); // identifier -> code
+    
+    static std::string codeToString(unsigned int);
 
     static std::string bitToVariable(unsigned int);
 
     static void insertCodeMap(const unsigned int, std::string);
 
-    static std::unordered_map<unsigned int, std::string>::const_iterator bitMapFind(unsigned int);
+    static unsigned_int_to_string_iterator bitMapFind(unsigned int);
 
-    static std::unordered_map<unsigned int, std::string>::const_iterator bitMapEnd(void);
+    static unsigned_int_to_string_const_iterator bitMapcEnd(void);
 };
 
 #endif // ELVEX_VARTABLE_H

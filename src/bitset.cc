@@ -19,7 +19,6 @@
 
 #include <bitset>
 #include <sstream>
-
 #include "bitset.hpp"
 #include "vartable.hpp"
 #include "messages.hpp"
@@ -119,15 +118,15 @@ serialString = std::string();
 void Bitset::toXML(xmlNodePtr nodeRoot)
 {
    xmlNodePtr f = xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"ALT", nullptr);
-   std::unordered_map<unsigned int, std::string>::const_iterator varTableIt;
+   Vartable::unsigned_int_to_string_iterator varTableIt;
    size_t c=this->count();
    size_t sz=this->size();
    for(unsigned int i = 0; i < sz && c > 0; ++i)
    if (this->test(i)) {
       --c;
       varTableIt = Vartable::bitMapFind(i);
-      if (varTableIt != Vartable::bitMapEnd())
-      xmlNewChild(f, nullptr, (const xmlChar*)"OPT", (const xmlChar*)varTableIt->second.c_str());
+      if (varTableIt != Vartable::bitMapcEnd())
+        xmlNewChild(f, nullptr, (const xmlChar*)"OPT", (const xmlChar*)varTableIt->second.c_str());
    }
 }
 #endif

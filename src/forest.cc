@@ -19,7 +19,6 @@
 
 //#include <stdio.h>
 #include <string.h>
-
 #include <utility>
 
 #include "forest.hpp"
@@ -65,9 +64,9 @@ Forest::~Forest() {
 /* **************************************************
  *
  ************************************************** */
-const Forest::vectorNodes &Forest::getNodes() const {
-    return nodes;
-}
+// const Forest::vectorNodes& Forest::getNodes() const {
+//     return nodes;
+// }
 
 /* **************************************************
  *
@@ -93,10 +92,30 @@ bool Forest::isEmpty() const {
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string> &
-Forest::getOutput() const {
-    return this->output;
+size_t Forest::getOutput_size() const {
+    return this->output.size();
 }
+
+/* **************************************************
+ *
+ ************************************************** */
+const std::vector<std::string>::const_iterator Forest::getOutput_cbegin() const {
+    return this->output.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const std::vector<std::string>::const_iterator Forest::getOutput_cend() const {
+     return this->output.cend();
+ }
+
+/* **************************************************
+ *
+ ************************************************** */
+// const std::vector<std::string>& Forest::getOutput() const {
+//     return this->output;
+// }
 
 /* **************************************************
  *

@@ -18,6 +18,8 @@
  ************************************************** */
 
 #include <regex>
+#include <string>
+#include <iostream>
 #include <sstream>
 #include <list>
 #include <utility>

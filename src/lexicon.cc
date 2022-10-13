@@ -18,14 +18,12 @@
  ************************************************** */
 
 #include "lexicon.hpp"
-
-//#include <iostream>
-//#include <string>
 #include <unordered_map>
 #include <sstream>
 #include "messages.hpp"
 
-std::list<std::string>* Lexicon::emptyList = new std::list<std::string>();
+//std::vector<std::string>* Lexicon::emptyList = new std::vector<std::string>();
+std::vector<std::string> Lexicon::emptyList = std::vector<std::string>();
 
 /* **************************************************
  *
@@ -61,10 +59,10 @@ std::size_t Lexicon::size(void) {
 void Lexicon::add(std::string key, const std::string value) {
     unordered_map::iterator it = the_map.find(key);
     if (it != the_map.end())
-        (*it).second->push_back(value);
+        (*it).second.push_back(value);
     else {
-        std::list<std::string> *list = new std::list<std::string>();
-        list->push_back(value);
+        std::vector<std::string> list = std::vector<std::string>();
+        list.push_back(value);
         the_map[key] = list;
     }
 }
@@ -72,7 +70,7 @@ void Lexicon::add(std::string key, const std::string value) {
 /* **************************************************
  *
  ************************************************** */
-std::list<std::string> *Lexicon::find(const std::string key) {
+std::vector<std::string> Lexicon::find(const std::string key) {
     unordered_map::const_iterator it = the_map.find(key);
     if (it != the_map.end()) {
         return (*it).second;

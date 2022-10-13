@@ -28,16 +28,14 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include "compacted-lexicon-tree.hpp"
 #include "lexicon.hpp"
 
 extern bool isLexString;
-extern char *lexString;
-extern char *currentLexString;
+extern char* lexString;
+extern char* currentLexString;
 
-extern class Entry *localEntry;
+extern class Entry* localEntry;
 
 class CompactedLexicon {
 
@@ -45,24 +43,24 @@ private:
 
     std::string directoryName;
     std::string fileName;
-    FILE *fsaFile;
+    FILE* fsaFile;
     std::string fsaFileName;
-    FILE *dataFile;
+    FILE* dataFile;
     std::string dataFileName;
-    std::istream *inputStream = &std::cin;
-    CompactedLexiconTree *compactedLexicon;
+    std::istream* inputStream = &std::cin;
+    CompactedLexiconTree* compactedLexicon;
 
 public:
-    char *buffer;
-    struct CompactedLexiconFsa *fsa;
-    struct CompactedLexiconBuffer *info;
+    char* buffer;
+    struct CompactedLexiconFsa* fsa;
+    struct CompactedLexiconBuffer* info;
     unsigned long int init;
-    class CompactedLexiconTree *lexiconInit;
+    class CompactedLexiconTree* lexiconInit;
 
 public:
     CompactedLexicon(std::string directoryName, std::string fileName);
 
-    void printResults(std::ostream &, unsigned long int index, bool sep) const;
+    void printResults(std::ostream& , unsigned long int index, bool sep) const;
 
     unsigned long int search(unsigned long int index, const std::string&) const;
 
@@ -78,21 +76,21 @@ public:
 
     void addToData(const std::string& entry, const std::string& form, const std::string& features);
 
-    void addPattern(Lexicon &pattern, Lexicon &morpho, const std::string& input, const std::string& fs, const std::string& lemma,
+    void addPattern(Lexicon& pattern, Lexicon& morpho, const std::string& input, const std::string& fs, const std::string& lemma,
                     const std::string& pos);
 
-    void addForms(const std::string& input, std::string inputSearch, const std::string& features/*, Lexicon &pattern*/, Lexicon &morpho);
+    void addForms(const std::string& input, std::string inputSearch, const std::string& features, Lexicon& morpho);
 
-    void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
+    void buildEntries(class Lexicon& pattern, class Lexicon& morpho);
 
     void loadData();
 
     void consult();
 
-    void list(std::ostream&);
+    void print(std::ostream&);
 
 private:
-    void list(unsigned int, const std::string&, std::ostream&);
+    void print(unsigned int, const std::string&, std::ostream&);
 };
 
 #endif // COMPACTEDLEXICON_H
