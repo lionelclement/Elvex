@@ -69,19 +69,19 @@
 %union{
   unsigned int integer_slot;
   double double_slot;
-  termsPtr *terms_slot; //(A|B)
-  std::vector< termsPtr  > *vector_terms_slot; // X Y
-  std::string *string_slot;
-  entryPtr *entry_slot;
-  entriesPtr *entries_slot;
-  bitsetPtr *bits_slot;
-  valuePtr *value_slot;
-  featurePtr *feature_slot;
-  featuresPtr *features_slot;
-  listPtr *list_slot;
-  statementPtr *statement_slot;
-  statementsPtr *statements_slot;
-  std::list<  bitsetPtr > *list_args;
+  termsPtr* terms_slot; //(A|B)
+  std::vector< termsPtr  >* vector_terms_slot; // X Y
+  std::string* string_slot;
+  entryPtr* entry_slot;
+  entriesPtr* entries_slot;
+  bitsetPtr* bits_slot;
+  valuePtr* value_slot;
+  featurePtr* feature_slot;
+  featuresPtr* features_slot;
+  listPtr* list_slot;
+  statementPtr* statement_slot;
+  statementsPtr* statements_slot;
+  std::list<  bitsetPtr >* list_args;
  }
 
 // ARROWS
@@ -262,7 +262,7 @@ dictionary_line:
 	  for (auto entry = (*$2)->begin() ; entry != (*$2)->end() ; ++entry) {
 	    (*entry)->setForm(*$1);
 	    entriesPtr lp;
-	    Parser::entries_map *predToEntries;
+	    Parser::entries_map* predToEntries;
 	    //std::cerr << entry->getCode() << std::endl;
 	    auto foundCode = parser.findCacheLexicon((*entry)->getPos());
 	    if (foundCode != parser.cendCacheLexicon()){
@@ -601,7 +601,7 @@ statement:
 	  if (((*$1)->isFeatures()) && (((*$3)->isUp())||((*$3)->isDown2())||((*$3)->isVariable())||((*$3)->isSearch())))
 	    ;
 	  else
-	    yyerror((char *)"syntax error");
+	    yyerror((char* )"syntax error");
 	  free($1);
 	  free($3);
 	}
@@ -614,7 +614,7 @@ statement:
 	       && (((*$3)->isList())))
 	    ;
 	    else
-	  yyerror((char *)"syntax error");
+	  yyerror((char* )"syntax error");
 	  free($1);
 	  free($3);
 	}
@@ -1208,13 +1208,6 @@ feature:
 	  free($1);
 	  free($3);
 	}
-
-	//|variable
-	//{
-	//  DBUGPRT("feature");
-	//  $$ = new featurePtr(Feature::create(Feature::VARIABLE, *$1, valuePtr()));
-	//  free($1);
-	//}
 	;
 
 feature_value:
