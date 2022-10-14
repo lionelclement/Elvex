@@ -31,14 +31,16 @@ cd data
 #     |tr '@' "\n" | ../bin/elvexpostedition_fr | sed -e 's/^ *//' -e 's/  */ /g'
 
 make en-1.1.0.fsa
-../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | elvexpostedition_en
+echo '../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | elvexpostedition_en'
+../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en'
+
 #../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactedLexiconDirectory . -compactedLexiconFile en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon 'Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]'
 
 #../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr | sed 's/^ *//'
 #../bin/elvex -t -V -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug --traceShift -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 
-#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input | elvexpostedition_fr |tr '@' "\n" |sed -e 's/^ *//' |tr '@' "\n"
+#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input | ../bin/elvexpostedition_fr |tr '@' "\n" |sed -e 's/^ *//' |tr '@' "\n"
 ##../bin/elvex -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
 #../bin/elvex -t -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
 #../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
