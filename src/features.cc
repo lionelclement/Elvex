@@ -90,8 +90,8 @@ void Features::add(const featurePtr& feature) {
  *
  ************************************************** */
 void Features::add(const featuresPtr& _features) {
-    for (const auto& j : *_features)
-        this->features.push_back(j);
+    for (auto j = _features->cbegin() ; j != _features->cend() ; ++j)
+        this->features.push_back(*j);
 }
 
 /* **************************************************
@@ -106,6 +106,20 @@ Features::list_of_feature::iterator Features::erase(Features::list_of_feature::i
  ************************************************** */
 size_t Features::size() const {
     return features.size();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Features::list_of_feature::const_iterator Features::cbegin() {
+    return features.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Features::list_of_feature::const_iterator Features::cend() {
+    return features.cend();
 }
 
 /* **************************************************
@@ -542,7 +556,7 @@ void Features::enable(const statementPtr& root, const itemPtr& item, Synthesizer
  ************************************************** */
 void Features::deleteAnonymousVariables() {
     redo:
-    for (auto iterator = begin() ; iterator != end() ; ++iterator) {
+    for (auto iterator = cbegin() ; iterator != cend() ; ++iterator) {
         switch ((*iterator)->getType()) {
             case Feature::PRED:
             case Feature::LEMMA:

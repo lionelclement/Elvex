@@ -32,7 +32,7 @@
 #include "shared_ptr.hpp"
 #include "variableflag.hpp"
 
-class Features :
+class Features:
         public UniqId, 
         public Flags, 
         public Serializable, 
@@ -70,6 +70,10 @@ public:
     void add(const featuresPtr&);
 
     size_t size() const;
+
+    list_of_feature::const_iterator cbegin();
+
+    list_of_feature::const_iterator cend();
 
     list_of_feature::iterator begin();
 
