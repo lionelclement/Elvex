@@ -43,9 +43,9 @@ public:
     static featuresPtr BOTTOM;
 
     typedef std::vector<featurePtr> list_of_feature;
-    list_of_feature features;
 
 private:
+    list_of_feature features;
     unsigned int pred;
     std::string form;
     VariableFlag variableFlag;
