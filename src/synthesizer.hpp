@@ -20,7 +20,6 @@
 #ifndef ELVEX_SYNTHESIZER_H
 #define ELVEX_SYNTHESIZER_H
 
-#include <map>
 #include <unordered_map>
 
 #include "shared_ptr.hpp"
@@ -56,8 +55,6 @@ public:
 
     typedef std::unordered_map<unsigned int, itemPtr> item_map;
     typedef std::unordered_map<unsigned int, itemSetPtr> itemSet_map;
-    //typedef std::map<unsigned int, itemPtr> item_map;
-    //typedef std::map<unsigned int, itemSetPtr> itemSet_map;
     typedef itemSet_map::const_iterator itemSet_map_const_iterator;
 
 private:
