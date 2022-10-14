@@ -19,7 +19,6 @@
 
 #include <climits>
 #include <sstream>
-
 #include "feature.hpp"
 #include "features.hpp"
 #include "environment.hpp"

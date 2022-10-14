@@ -40,6 +40,7 @@ class Features:
 
 public:
     static featuresPtr NIL;
+
     static featuresPtr BOTTOM;
 
     typedef std::vector<featurePtr> list_of_feature;
