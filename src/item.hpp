@@ -44,14 +44,14 @@ private:
     unsigned int index; // the \bullet position
     std::vector<unsigned int> indexTerms; // term in a disjunction
     statementsPtr statements; // the semantics
-    set_of_unsigned_int refs; // item from which this one is derived
+    set_of_unsigned_int refs; // set of items from which this one is derived
     std::vector<bool> seen; // seen flags
     std::vector<unsigned int> ranges; // ranges
-    featuresPtr inheritedFeatures; //↑
-    listFeaturesPtr inheritedSonFeatures; //↓
-    featuresPtr synthesizedFeatures; //⇑
-    listFeaturesPtr synthesizedSonFeatures; //⇓
-    std::vector<forestIdentifierPtr> forestIdentifiers; // identifiers to forests
+    featuresPtr inheritedFeatures; // ↑
+    listFeaturesPtr inheritedSonFeatures; // ↓
+    featuresPtr synthesizedFeatures; // ⇑
+    listFeaturesPtr synthesizedSonFeatures; // ⇓
+    std::vector<forestIdentifierPtr> forestIdentifiers; // forest identifiers
     environmentPtr environment; // variable environment
 
     bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = true, 

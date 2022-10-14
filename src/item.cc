@@ -802,18 +802,18 @@ void Item::makeSerialString() {
    else
       serialString += std::to_string(index);
    serialString += '|';
-   std::vector<unsigned int>::const_iterator ind = indexTerms.begin();
-   while (ind != indexTerms.end())
+   std::vector<unsigned int>::const_iterator ind = indexTerms.cbegin();
+   while (ind != indexTerms.cend())
       serialString += std::to_string(*(ind++)) + '-';
 
    serialString += '|';
-   set_of_unsigned_int_const_iterator ref = refs.begin();
-   while (ref != refs.end())
+   set_of_unsigned_int_const_iterator ref = refs.cbegin();
+   while (ref != refs.cend())
       serialString += std::to_string(*(ref++)) + '-';
 
    serialString += '|';
-   std::vector<forestIdentifierPtr>::const_iterator fi = forestIdentifiers.begin();
-   while (fi != forestIdentifiers.end()) {
+   std::vector<forestIdentifierPtr>::const_iterator fi = forestIdentifiers.cbegin();
+   while (fi != forestIdentifiers.cend()) {
       if (*fi)
          serialString += (*fi)->peekSerialString() + '-';
       else
