@@ -108,9 +108,11 @@
 %token TOKEN_TRACE
 
 // OPERATORS
-%token TOKEN_UNION TOKEN_SUBSUME TOKEN_INSET TOKEN_AFF TOKEN_PIPE TOKEN_NOT TOKEN_OR TOKEN_AND TOKEN_IMPLICATION TOKEN_EQUIV
+%token TOKEN_UNION TOKEN_SUBSUME TOKEN_AFF TOKEN_PIPE TOKEN_NOT 
+TOKEN_OR TOKEN_AND TOKEN_IMPLICATION TOKEN_EQUIV
 TOKEN_PLUS TOKEN_MINUS TOKEN_TIMES TOKEN_DIVIDE TOKEN_MODULO
 TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
+//TOKEN_INSET 
 
  // LITERALS
 %token<string_slot> TOKEN_IDENTIFIER TOKEN_STRING
@@ -137,7 +139,8 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<list_slot> list list_elements list_element
 
 %type<statements_slot> structure_statement list_statement
-%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_inset_statement right_hand_side_inset_statement left_hand_side_aff_statement right_hand_side_aff_statement up down updouble downdouble dash_statement
+%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_aff_statement right_hand_side_aff_statement up down updouble downdouble dash_statement
+// left_hand_side_inset_statement right_hand_side_inset_statement 
 %type<statement_slot> expression_statement
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
@@ -547,24 +550,36 @@ statement:
 	  DBUGPRT("statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::AFF, *$1, *$3));
 	  // <X, …> = <…>
-	  // <X, …> = Z
-	  if (((*$1)->isList()) && (((*$3)->isList())||((*$3)->isVariable()))) {
+	  // <X, …> = $X
+	  if (((*$1)->isList()) 
+	  		&& (((*$3)->isList())
+					||((*$3)->isVariable()))) {
 	    }
 	  // ↓i = $X
 	  // ↓i = […]
 	  // ↓i = ↑
 	  // ↓i = … ∪ …
 	  // ↓i = ⇓j
-	  else if (((*$1)->isDown()) && (((*$3)->isVariable())||((*$3)->isFeatures())||((*$3)->isUp())||((*$3)->isUnif())||((*$3)->isDown2())))
+	  else if (((*$1)->isDown()) 
+	  		&& (((*$3)->isVariable())
+					||((*$3)->isFeatures())
+					||((*$3)->isUp())
+					||((*$3)->isUnif())
+					||((*$3)->isDown2())))
 	    ;
 	  // ⇑ = $X
 	  // ⇑ = […]
 	  // ⇑ = ↑
 	  // ⇑ = … ∪ …
 	  // ⇑ = ⇓j
-	  else if (((*$1)->isUp2()) && (((*$3)->isVariable())||((*$3)->isFeatures())||((*$3)->isUp())||((*$3)->isUnif())||((*$3)->isDown2())))
+	  else if (((*$1)->isUp2()) 
+	  		&& (((*$3)->isVariable())
+					||((*$3)->isFeatures())
+					||((*$3)->isUp())
+					||((*$3)->isUnif())
+					||((*$3)->isDown2())))
 	    ;
-	  // $X = Y
+	  // $X = $Y
 	  // $X = a
 	  // $X = <…>
 	  // $X = […]
@@ -598,7 +613,11 @@ statement:
 	  // […] ⊂ ⇓j
 	  // […] ⊂ $X
 	  // […] ⊂ search
-	  if (((*$1)->isFeatures()) && (((*$3)->isUp())||((*$3)->isDown2())||((*$3)->isVariable())||((*$3)->isSearch())))
+	  if (((*$1)->isFeatures()) 
+	  		&& (((*$3)->isUp())
+					||((*$3)->isDown2())
+					||((*$3)->isVariable())
+					||((*$3)->isSearch())))
 	    ;
 	  else
 	    yyerror((char* )"syntax error");
@@ -606,18 +625,18 @@ statement:
 	  free($3);
 	}
 
-	|left_hand_side_inset_statement TOKEN_INSET right_hand_side_inset_statement TOKEN_SEMI {
-	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::INSET, (*$1), (*$3)));
-	  // ↓i ∈ <...>
-	  if (((*$1)->isDown())
-	       && (((*$3)->isList())))
-	    ;
-	    else
-	  yyerror((char* )"syntax error");
-	  free($1);
-	  free($3);
-	}
+//	|left_hand_side_inset_statement TOKEN_INSET right_hand_side_inset_statement TOKEN_SEMI {
+//	  DBUGPRT("statement");
+//	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::INSET, (*$1), (*$3)));
+//	  // ↓i ∈ <...>
+//	  if (((*$1)->isDown())
+//	       && (((*$3)->isList())))
+//	    ;
+//	    else
+//	  yyerror((char* )"syntax error");
+//	  free($1);
+//	  free($3);
+//	}
 
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement %prec TOKEN_NOELSE {
 	  DBUGPRT("statement");
@@ -731,17 +750,17 @@ right_hand_side_subset_statement:
  	  free($3);
  	 };
 
-left_hand_side_inset_statement:
-	down {
-	  DBUGPRT("left_hand_side_statement");
-	  $$=$1;
-	};
+//left_hand_side_inset_statement:
+//	down {
+//	  DBUGPRT("left_hand_side_statement");
+//	  $$=$1;
+//	};
 
-right_hand_side_inset_statement:
-	expression_statement {
-	  DBUGPRT("right_hand_side_statement");
-	  $$=$1;
-	};
+//right_hand_side_inset_statement:
+//	expression_statement {
+//	  DBUGPRT("right_hand_side_statement");
+//	  $$=$1;
+//	};
 
 left_hand_side_aff_statement:
 	updouble {
