@@ -5,7 +5,9 @@ Elvex
 
 It is written by Lionel Clément at Bordeaux University - France and released by LaBRI under GNU GPL License.
 
-The system is using handwritten *lexicon* and *rules* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the "concept". The "concept" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc.
+The system is using handwritten *lexicon* and *rules* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the input. The "concept" or "What to say" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc.
+
+Although it is an Artificial Intelligence program, it is not a stochastic system based on neural networks.
 
 programming language used
 -------
@@ -35,20 +37,21 @@ Write automatically and quickly relevant and adequate texts in natural language,
 given a meaning and elements of speech.
 Rest assured that **Elvex** avoids any misunderstanding.
 
-Note that unlike other systems, the concepts that are expressed may not depend on prior lexical choices.
-
 Theoretical aspects
 -----------------
 
 **Elvex** is freely inspired by some syntactic formalisms such as:
 
 -Lexique-Grammaire (M. Gross 1960)
+
 -Functional Grammar (M. Kay 1979)
+
 -Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982)
+
 -Systemic Functional Grammar (M. Halliday 1994).
 
-It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon but not with learning data.
-I don’t explain the algorithms here. It’s efficient and monotonic (each rule adds something and never removes the effect of another rule).
+It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon.
+I don’t explain the algorithms here. It’s efficient and monotonic (each rule adds something and never removes the effect of other rules).
 
 Practically speaking: to build Text Generator with Elvex for an application (Chatbot, Letter-writer, etc)
 --------------------
@@ -118,3 +121,4 @@ S'il pleuvait, tu prendrais un parapluie.
 
 ### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:future, aspect:continuous]
 S'il était en train de pleuvoir, tu prendrais un parapluie.
+
