@@ -625,19 +625,6 @@ statement:
 	  free($3);
 	}
 
-//	|left_hand_side_inset_statement TOKEN_INSET right_hand_side_inset_statement TOKEN_SEMI {
-//	  DBUGPRT("statement");
-//	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::INSET, (*$1), (*$3)));
-//	  // ↓i ∈ <...>
-//	  if (((*$1)->isDown())
-//	       && (((*$3)->isList())))
-//	    ;
-//	    else
-//	  yyerror((char* )"syntax error");
-//	  free($1);
-//	  free($3);
-//	}
-
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement %prec TOKEN_NOELSE {
 	  DBUGPRT("statement");
 	  statementPtr stm;
@@ -749,18 +736,6 @@ right_hand_side_subset_statement:
  						  *$3));
  	  free($3);
  	 };
-
-//left_hand_side_inset_statement:
-//	down {
-//	  DBUGPRT("left_hand_side_statement");
-//	  $$=$1;
-//	};
-
-//right_hand_side_inset_statement:
-//	expression_statement {
-//	  DBUGPRT("right_hand_side_statement");
-//	  $$=$1;
-//	};
 
 left_hand_side_aff_statement:
 	updouble {

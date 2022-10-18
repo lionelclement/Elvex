@@ -63,14 +63,6 @@
     yy_scan_string(str.c_str());
   }
 
-
-/*
-*  "∈" {
-*    DBUGPRT("TOKEN_INSET\n");
-*    return TOKEN_INSET;
-*  }
-*/
-
 %}
 
 alphaMin [a-z]|à|á|â|ã|ä|å|æ|ç|è|é|ë|ê|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ
@@ -511,4 +503,3 @@ downDoubleArrow "⇓"
 }
 
 %%
-
