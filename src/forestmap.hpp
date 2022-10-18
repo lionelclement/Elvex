@@ -45,7 +45,7 @@ public:
 
     void clear();
 
-    bool _insert(forestIdentifierPtr, forestPtr);
+    bool insert(forestIdentifierPtr, forestPtr);
 
 };
 

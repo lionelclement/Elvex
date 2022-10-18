@@ -17,7 +17,6 @@
  *
  ************************************************** */
 
-//#include <stdio.h>
 #include <string.h>
 #include <utility>
 
@@ -64,13 +63,6 @@ Forest::~Forest() {
 /* **************************************************
  *
  ************************************************** */
-// const Forest::vectorNodes& Forest::getNodes() const {
-//     return nodes;
-// }
-
-/* **************************************************
- *
- ************************************************** */
 unsigned int Forest::getFrom() const {
     return from;
 }
@@ -113,14 +105,7 @@ const std::vector<std::string>::const_iterator Forest::getOutput_cend() const {
 /* **************************************************
  *
  ************************************************** */
-// const std::vector<std::string>& Forest::getOutput() const {
-//     return this->output;
-// }
-
-/* **************************************************
- *
- ************************************************** */
-void Forest::addNode(const nodePtr& node) {
+void Forest::push_back_node(const nodePtr& node) {
     empty = false;
     nodes.push_back(node);
 }
@@ -185,7 +170,7 @@ void Forest::generate(bool random, bool one) {
                     node = *nodeIt;
                 if (node->isUnsetFlags(Flags::GENERATED))
                     node->generate(random, one);
-		for (std::vector<std::string>::const_iterator s = node->getOutput().begin(); s != node->getOutput().end(); ++s)
+		for (std::vector<std::string>::const_iterator s = node->getOutput().cbegin(); s != node->getOutput().cend(); ++s)
 		  output.push_back(*s);
                 if (random || one)
                     break;

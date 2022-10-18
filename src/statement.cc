@@ -485,11 +485,11 @@ void Statement::print(std::ostream &outStream, unsigned int tabulation, int yetC
             outStream << "&nbsp;⊂&nbsp;";
             rhs->print(outStream);
             break;
-        case INSET:
-            lhs->print(outStream);
-            outStream << "&nbsp;∈&nbsp;";
-            rhs->print(outStream);
-            break;
+        // case INSET:
+        //     lhs->print(outStream);
+        //     outStream << "&nbsp;∈&nbsp;";
+        //     rhs->print(outStream);
+        //     break;
         case FCT:
             switch (this->getFct()) {
                 case NOP:
@@ -744,9 +744,9 @@ void Statement::makeSerialString() {
         case SUBSUME:
             serialString = lhs->peekSerialString() + "⊂" + rhs->peekSerialString();
             break;
-        case INSET:
-            serialString = lhs->peekSerialString() + "∈" + rhs->peekSerialString();
-            break;
+        // case INSET:
+        //     serialString = lhs->peekSerialString() + "∈" + rhs->peekSerialString();
+        //     break;
         case FCT:
             switch (this->getFct()) {
                 case NOP:
@@ -920,8 +920,8 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags) {
         case UNIF:
         case AFF:
         case SUBSUME:
-        case INSET:
-            statement = Statement::create(this->lineno, this->op, lhs ? lhs->clone(protectedFlags) : statementPtr(),
+        // case INSET:
+             statement = Statement::create(this->lineno, this->op, lhs ? lhs->clone(protectedFlags) : statementPtr(),
                                           rhs ? rhs->clone(protectedFlags) : statementPtr());
             break;
         case FCT:
@@ -970,7 +970,7 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
         case IN:
         case AFF:
         case SUBSUME:
-        case INSET:
+        // case INSET:
         case UP2:
         case LIST:
         case STMS:
@@ -1114,7 +1114,7 @@ listPtr Statement::evalList(const itemPtr &item, bool replaceVariables) {
         case IN:
         case AFF:
         case SUBSUME:
-        case INSET:
+        // case INSET:
         case DOWN:
         case UP2:
         case FEATURES:
@@ -1207,7 +1207,7 @@ valuePtr Statement::evalValue(const itemPtr &item, Parser &parser, Synthesizer *
         case IN:
         case AFF:
         case SUBSUME:
-        case INSET:
+        // case INSET:
         case GUARD:
         case STMS: FATAL_ERROR_STM
             break;
@@ -2433,7 +2433,7 @@ void Statement::renameVariables(size_t i) {
             break;
         case AFF:
         case SUBSUME:
-        case INSET:
+        // case INSET:
         case FCT:
         case UNIF:
         case ATTEST:
@@ -2515,7 +2515,7 @@ void Statement::enable(const statementPtr &root, const itemPtr &item, Synthesize
 
         case AFF:
         case SUBSUME:
-        case INSET:
+        // case INSET:
             rhs->enable(shared_from_this(), item, synthesizer, effect, on);
             break;
 
@@ -2839,7 +2839,7 @@ bool Statement::findVariable(const bitsetPtr &variable) {
 
         case AFF:
         case SUBSUME:
-        case INSET:
+        // case INSET:
             if (rhs->findVariable(variable))
                 return true;
             break;

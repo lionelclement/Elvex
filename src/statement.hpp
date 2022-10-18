@@ -39,7 +39,7 @@ public:
         DASH,
         AFF,
         SUBSUME,
-        INSET,
+        //INSET,
         UP,
         UP2,
         DOWN,

@@ -64,7 +64,7 @@ public:
 
     const std::vector<std::string>::const_iterator getOutput_cend(void) const;
 
-    void addNode(const nodePtr&);
+    void push_back_node(const nodePtr&);
 
 #ifdef OUTPUT_XML
     void toXML(const xmlNodePtr, bool);

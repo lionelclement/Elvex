@@ -488,9 +488,9 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                 itemPtr it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
                 forestPtr forestFound = forestPtr();
                 forestIdentifierPtr fi = ForestIdentifier::create(it->getCurrentTerm(),
-                                                                  std::string(),
                                                                   row,
-                                                                  row);
+                                                                  row,
+                                                                  std::string());
                 auto forestMapIt = forestMap.find(fi);
                 if (forestMapIt != forestMap.cend()) {
                     forestFound = forestMapIt->second;
@@ -498,7 +498,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                     it->addForestIdentifiers(it->getIndex(), forestMapIt->first);
                 } else {
                     forestFound = Forest::create(Entry::create(it->getCurrentTerm()), row, row);
-                    forestMap._insert(fi, forestFound);
+                    forestMap.insert(fi, forestFound);
                     it->addForestIdentifiers(it->getIndex(), fi);
                 }
                 it->setIndex((*actualItem)->getIndex() + 1);
@@ -715,11 +715,11 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
 
                             forestPtr forestFound = forestPtr();
                             forestIdentifierPtr fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
+                                                                              (*actualItem)->getRanges()[0],
+                                                                              row, 
                                                                               ((*actualItem)->getSynthesizedFeatures()
                                                                                ? (*actualItem)->getSynthesizedFeatures()->peekSerialString()
-                                                                               : nullptr),
-                                                                              (*actualItem)->getRanges()[0],
-                                                                              row);
+                                                                               : std::string()));
                             auto forestMapIt = forestMap.find(fi);
                             if (forestMapIt != forestMap.cend()) {
                                 forestFound = (*forestMapIt).second;
@@ -727,19 +727,19 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                             } else {
                                 forestFound = Forest::create(Entry::create((*actualItem)->getRuleLhs()),
                                                              (*actualItem)->getRanges()[0], row);
-                                forestMap._insert(fi, forestFound);
+                                forestMap.insert(fi, forestFound);
                                 nodePtr node = Node::create();
-                                node->addForest(forestFound);
-                                nodeRoot->addForest(forestFound);
+                                node->push_back(forestFound);
+                                nodeRoot->push_back(forestFound);
                             }
                             nodePtr node = Node::create();
-                            for (auto &k : (*actualItem)->getForestIdentifiers()) {
-                                auto _forestMapIt = forestMap.find(k);
+                            for (auto &forestIdentifierPtr : (*actualItem)->getForestIdentifiers()) {
+                                auto _forestMapIt = forestMap.find(forestIdentifierPtr);
                                 if (_forestMapIt != forestMap.cend()) {
-                                    node->getForests().push_back((*_forestMapIt).second);
+                                    node->push_back((*_forestMapIt).second);
                                 }
                             }
-                            forestFound->addNode(node);
+                            forestFound->push_back_node(node);
                         }
                         for (auto ref : (*actualItem)->getRefs()) {
                             itemPtr previousItem = getItemMap(ref);
@@ -826,20 +826,19 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
 
                                     // On transmet le contexte de previousItem
                                     nodePtr node = Node::create();
-                                    for (auto &k : (*actualItem)->getForestIdentifiers()) {
-                                        auto forestMapIt = forestMap.find(
-                                                k);
+                                    for (auto &forestIdentifierPtr : (*actualItem)->getForestIdentifiers()) {
+                                        auto forestMapIt = forestMap.find(forestIdentifierPtr);
                                         if (forestMapIt == forestMap.cend()) {
                                             FATAL_ERROR_UNEXPECTED
                                         }
                                         forestPtr forest = (*forestMapIt).second;
-                                        node->getForests().push_back(forest);
+                                        node->push_back(forest);
                                     }
                                     forestPtr forestFound = forestPtr();
                                     forestIdentifierPtr fi = ForestIdentifier::create((*actualItem)->getId(),
-                                                                                      std::string(),
                                                                                       (*actualItem)->getRanges()[0],
-                                                                                      row);
+                                                                                      row,
+                                                                                      std::string());
                                     auto forestMapIt = forestMap.find(fi);
                                     if (forestMapIt != forestMap.cend()) {
                                         forestFound = forestMapIt->second;
@@ -848,10 +847,10 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                     } else {
                                         forestFound = Forest::create(Entry::create((*actualItem)->getRuleLhs()),
                                                                      (*actualItem)->getRanges()[0], row);
-                                        forestMap._insert(fi, forestFound);
+                                        forestMap.insert(fi, forestFound);
                                         it->addForestIdentifiers(previousItem->getIndex(), fi);
                                     }
-                                    forestFound->addNode(node);
+                                    forestFound->push_back_node(node);
 #ifdef TRACE_OPTION
                                     if (traceReduce) {
                                        std::cout << "<H3>####################### REDUCE (X -> α Y • β) #######################</H3>" << std::endl;
@@ -1085,8 +1084,9 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                                             }
                                         }
                                         forestIdentifierPtr fi = ForestIdentifier::create(word->getId(),
-                                                                                          resultFeatures->peekSerialString(),
-                                                                                          row - 1, row);
+                                                                                           row - 1, 
+                                                                                            row,
+                                                                                            resultFeatures->peekSerialString());
                                         auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend()) {
                                             it->addForestIdentifiers((*actualItem)->getIndex(),
@@ -1096,7 +1096,7 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                                             //std::cerr << "pred : " << Vartable::codeToString(pred) << "<BR>" << std::endl;
                                             //std::cout << "form : " << form << "<BR>" << std::endl;
                                         } else {
-                                            forestMap._insert(fi, Forest::create(word, row - 1, row));
+                                            forestMap.insert(fi, Forest::create(word, row - 1, row));
                                             it->addForestIdentifiers((*actualItem)->getIndex(), fi);
                                         }
                                         it->setRefs((*actualItem)->getRefs());
@@ -1325,10 +1325,16 @@ entriesPtr Synthesizer::findCompactedLexicon(
     }
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 void Synthesizer::setVerbose(bool _verbose) {
     this->verbose = _verbose;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 entriesPtr Synthesizer::findByPos(Parser& parser, Parser::entries_map* listPred, 
         unsigned int term) {
     entriesPtr entries = entriesPtr();
@@ -1348,6 +1354,9 @@ entriesPtr Synthesizer::findByPos(Parser& parser, Parser::entries_map* listPred,
 
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred) {
     entriesPtr entries = entriesPtr();
     // FORM : 0 => ...
@@ -1357,6 +1366,9 @@ entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred) {
     return entries;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 entriesPtr Synthesizer::findByPred(Parser& parser, Parser::entries_map* listPred, 
         unsigned int term, unsigned int pred) {
     entriesPtr entries = entriesPtr();

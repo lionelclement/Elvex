@@ -46,22 +46,63 @@ nodePtr Node::create() {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-std::vector<forestPtr>& Node::getForests() {
-    return forests;
+bool Node::empty() const{
+   return forests.empty();
+}
+
+    /* ************************************************************
+ *                                                            *
+ ************************************************************ */
+Node::vectorForests_iterator Node::begin(){
+   return forests.begin();
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Node::addForest(const forestPtr& forest) {
-    forests.push_back(forest);
-}
+    Node::vectorForests_iterator Node::end() {
+      return forests.end();
+    }
 
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+    Node::vectorForests_const_iterator Node::cbegin() const{
+      return forests.cbegin();
+    }
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+    Node::vectorForests_const_iterator Node::cend() const{
+      return forests.cend();
+    }
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+    size_t Node::size() const{
+      return forests.size();
+    }
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+    forestPtr Node::at(size_t index){
+      return forests.at(index);
+    }
+    
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+    void Node::push_back(const forestPtr& forestPtr){
+      forests.push_back(forestPtr);
+    }
+    
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string> &
-Node::getOutput() const {
+const std::vector<std::string>& Node::getOutput() const {
     return this->output;
 }
 
@@ -94,7 +135,7 @@ Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 /* **************************************************
  *
  ************************************************** */
-void Node::generate(std::vector<forestPtr>::const_iterator forest) {
+void Node::generate(vectorForests::const_iterator forest) {
    if ((*forest)->getOutput_size() > 0) {
       for (auto s = (*forest)->getOutput_cbegin(); s != (*forest)->getOutput_cend(); ++s) {
          if (output.size() == 0) {
@@ -123,7 +164,7 @@ void Node::generate(std::vector<forestPtr>::const_iterator forest) {
 void Node::generate(bool random, bool one) {
    if (isUnsetFlags(Flags::GENERATED)) {
       addFlags(Flags::GENERATED);
-      for (std::vector<forestPtr>::const_iterator forestIterator = forests.begin(); forestIterator != forests.end(); ++forestIterator) {
+      for (vectorForests::const_iterator forestIterator = forests.cbegin(); forestIterator != forests.cend(); ++forestIterator) {
          if ((*forestIterator)->isUnsetFlags(Flags::GENERATED))
 	   (*forestIterator)->generate(random, one);
       }

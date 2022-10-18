@@ -104,14 +104,14 @@ void generate() {
 #ifdef TRACE_OPTION
         std::cout << "<ul>" << std::endl;
 #endif
-        if (synthesizer.getNodeRoot() && !synthesizer.getNodeRoot()->getForests().empty()) {
-            std::vector<forestPtr>::const_iterator forestIt = synthesizer.getNodeRoot()->getForests().begin();
+        if (synthesizer.getNodeRoot() && !synthesizer.getNodeRoot()->empty()) {
+            std::vector<forestPtr>::const_iterator forestIt = synthesizer.getNodeRoot()->cbegin();
             forestPtr forest;
             if (synthesizer.getRandom()) {
-                int rv = std::rand() / ((RAND_MAX + 1u) / synthesizer.getNodeRoot()->getForests().size());
-                forest = synthesizer.getNodeRoot()->getForests().at(rv);
+                unsigned int rv = std::rand() / ((RAND_MAX + 1u) / synthesizer.getNodeRoot()->size());
+                forest = synthesizer.getNodeRoot()->at(rv);
             }
-            while (forestIt != synthesizer.getNodeRoot()->getForests().end()) {
+            while (forestIt != synthesizer.getNodeRoot()->cend()) {
                 if (!synthesizer.getRandom())
                     forest = *forestIt;
                 for (auto i = forest->getOutput_cbegin() ; i != forest->getOutput_cend() ; ++i) {
@@ -131,7 +131,7 @@ void generate() {
 #ifdef TRACE_OPTION
         std::cout << "</ul>" << std::endl;
 #endif
-    } while (synthesizer.getRandom() && synthesizer.getNodeRoot()->getForests().empty() &&
+    } while (synthesizer.getRandom() && synthesizer.getNodeRoot()->empty() &&
              randomTry++ < MAXATTEMPTS);
 }
 
