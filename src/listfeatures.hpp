@@ -26,7 +26,9 @@
 #include "uniq_id.hpp"
 
 class ListFeatures :
-        public UniqId, public Flags, public std::enable_shared_from_this<class ListFeatures> {
+        public UniqId, 
+        public Flags, 
+        public std::enable_shared_from_this<class ListFeatures> {
 
 private:
     std::vector<featuresPtr> listFeatures;

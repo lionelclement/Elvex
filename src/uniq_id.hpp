@@ -25,12 +25,12 @@
 class UniqId {
 
 private:
-    static size_t uniqId;
-    size_t id;
+    static std::size_t uniqId;
+    std::size_t id;
 
 public:
-    explicit UniqId(size_t id = 0); // if zero => autoinc
-    size_t getId(void) const;
+    explicit UniqId(std::size_t id = 0); // if zero => autoinc
+    std::size_t getId(void) const;
 
 };
 

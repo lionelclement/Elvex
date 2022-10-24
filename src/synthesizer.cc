@@ -517,25 +517,24 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                 } else {
                     insertItemMap(it);
                 }
-
-                //it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
-                (*actualItem)->setRule((*actualItem)->getRule()->clone());
-                //(*actualItem)->setIndex((*actualItem)->getIndex());
-                (*actualItem)->currentTerms()->unsetOptional();
+                
+                it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+                it->setRule((*actualItem)->getRule()->clone());
+                it->setIndex((*actualItem)->getIndex());
+                it->currentTerms()->unsetOptional();
 
 #ifdef TRACE_UNHIDE
                 std::cout << "<H3>####################### UNHIDE: X -> alpha • Y gamma #######################</H3>" << std::endl;
                 (*actualItem)->print(std::cout);
                 std::cout << std::endl;
 #endif
-                //if (!state->insert(it, this)) {
-                //    state->print(std::cout);
-                //    FATAL_ERROR_UNEXPECTED;
-                //} else {
-                //    insertItemMap(it);
-                //}
-                //state->erase(*actualItem);
-                //eraseItemMap((*actualItem)->getId());
+                if (!state->insert(it, this)) {
+                    FATAL_ERROR_UNEXPECTED;
+                } else {
+                    insertItemMap(it);
+                }
+                state->erase(*actualItem);
+                eraseItemMap((*actualItem)->getId());
                 modification = true;
                 break;
             }

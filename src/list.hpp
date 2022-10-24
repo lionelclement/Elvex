@@ -31,9 +31,9 @@
 #endif
 
 class List :
+        public UniqId, 
         public Serializable, 
         public Flags, 
-        public UniqId, 
         public std::enable_shared_from_this<List> {
 
 public:

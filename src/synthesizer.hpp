@@ -196,8 +196,6 @@ public:
 
 private:
 
-    static itemPtr __newItem(const itemPtr&, unsigned int);
-
     void close(class Parser&, const itemSetPtr&, unsigned int);
 
     bool shift(class Parser&, const itemSetPtr&, unsigned int);

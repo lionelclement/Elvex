@@ -29,7 +29,9 @@
 #endif
 
 class Entry :
-        public UniqId, public Serializable, public std::enable_shared_from_this<class Entry> {
+        public UniqId, 
+        public Serializable, 
+        public std::enable_shared_from_this<class Entry> {
 
 private:
     unsigned int pos;

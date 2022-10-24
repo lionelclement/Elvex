@@ -31,7 +31,10 @@
 #endif
 
 class Value :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Value> {
+        public UniqId, 
+        public Flags, 
+        public Serializable, 
+        public std::enable_shared_from_this<class Value> {
 
 public:
     enum Type {

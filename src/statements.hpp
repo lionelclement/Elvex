@@ -28,7 +28,10 @@
 #include "shared_ptr.hpp"
 
 class Statements :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Statements> {
+        public UniqId, 
+        public Flags, 
+        public Serializable, 
+        public std::enable_shared_from_this<class Statements> {
 
 public:
     typedef std::list<statementPtr> list;

@@ -275,8 +275,8 @@ std::string Rule::toString() const {
  ************************************************** */
 void Rule::makeSerialString() {
     serialString = std::to_string(lhs);
-    for (std::vector<termsPtr>::const_iterator term = rhs.cbegin(); 
-    term != rhs.cend(); ++term) {
-        serialString += (*term)->peekSerialString(); 
+    for (std::vector<termsPtr>::const_iterator terms = rhs.cbegin(); 
+    terms != rhs.cend(); ++terms) {
+        serialString += (*terms)->peekSerialString(); 
     }
 }
