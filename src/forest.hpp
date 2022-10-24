@@ -21,7 +21,7 @@
 #define ELVEX_FOREST_H
 
 #include <vector>
-#include "uniq-id.hpp"
+#include "uniq_id.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>

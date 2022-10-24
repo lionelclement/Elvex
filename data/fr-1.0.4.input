@@ -73,7 +73,9 @@
 ///text [PRED:VOITURE, language_register:slang]
 ///text [PRED:VOITURE, language_register:slang, number:sg, mod:<[PRED:CASSÉ]>]
 
-text [PRED:HOMME, language_register:slang]
+//text [PRED:HOMME, language_register:slang]
+//text [PRED:HOMME]
+NP [PRED:PARAPLUIE]
 
 //text [PRED:VOITURE, mod:<[PRED:petit]>]
 //text [PRED:VOITURE, mod:<[PRED:rose]>]

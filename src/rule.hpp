@@ -20,19 +20,23 @@
 #ifndef ELVEX_RULE_H
 #define ELVEX_RULE_H
 
-//#include <climits>
+#include <bitset>
 #include <string>
 #include <vector>
+#include <climits>
+#include "flags.hpp"
+#include "serializable.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 
-#include "uniq-id.hpp"
+#include "uniq_id.hpp"
 #include "shared_ptr.hpp"
 
 class Rule :
     public UniqId, 
+    public Serializable,
     public std::enable_shared_from_this<class Rule> {
 
 private:
@@ -53,6 +57,8 @@ private:
 
     Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
+
+    void makeSerialString(void);
 
 public:
     static rulePtr create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs,
@@ -95,7 +101,7 @@ public:
 
     void setTrace(bool trace);
 
-    rulePtr clone() const;
+    rulePtr clone(void) const;
 
     void print(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
 

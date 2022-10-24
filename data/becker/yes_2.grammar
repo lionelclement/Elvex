@@ -1,0 +1,59 @@
+@grammar
+
+S → NP VP {
+    [agent: $SUBJECT, $REST];
+    ↓1 = $SUBJECT;
+    [person:$personSynt, number:$numberSynt] ⊂ ⇓1;
+    ↓2 = $REST ∪ [subject: [person:$personSynt, number:$numberSynt]];
+}
+
+NP → det noun {
+    ↓1 = ↑ ∪ ⇓2;
+    ↓2 = ↑;
+    ⇑ = ⇓2 ∪ [person:three];
+}
+
+NP → pn {
+    ↓1 = ↑;
+    ⇑ = ⇓1 ∪ [person:three];
+}
+
+VP → V NP {
+    [patient: $OBJECT, $REST];
+    ↓1 = $REST;
+    ↓2 = $OBJECT;
+    ⇑ = ⇓1;
+}
+
+V → verb {
+    ↓1 = ↑ ∪ [tensed:yes];
+    ⇑ = ⇓1;
+}
+
+V → aux verb {
+    ↓1 = ↑;
+    ↓2 = ↑ ∪ ⇓1 ∪ [person:three];
+    ⇑ = ⇓2;
+}
+
+V → aux1 aux2 verb {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑ ∪ ⇓1 ∪ [person:three];
+    ⇑ = ⇓3;
+}
+
+V → zzzaux3 aux2 verb {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑ ∪ ⇓1 ∪ [person:three];
+    ⇑ = ⇓3;
+}
+
+V → zzzaux4 aux2 verb {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑ ∪ ⇓1 ∪ [person:three];
+    ⇑ = ⇓3;
+}
+

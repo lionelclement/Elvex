@@ -9,6 +9,9 @@
 ************************************************************/
 boat	noun	[PRED:BOAT, @s];
 boats	noun	[PRED:BOAT, @p];
-the	det	[defined:true];
+//the	det	[defined:true];
 a	det	[@s, defined:false];
 ""	det	[@p, defined:false];
+
+sails   verb    [PRED:TO_SAIL, @s];
+sail   verb    [PRED:TO_SAIL, @p];

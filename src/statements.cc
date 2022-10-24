@@ -196,7 +196,6 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
             }
             if (effect) {
                 goto loopStatements;
-                //break;
             }
         }
     }

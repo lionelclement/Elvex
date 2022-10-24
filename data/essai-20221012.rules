@@ -1,9 +1,17 @@
 /* **************************************************
  * 
  ************************************************** */
-text → det noun {
-  ↓2 = ↑;
-  [number:$N] ⊂ ⇓2;
-  ↓1 = [number:$N];
+text → N verb {
+  [PRED:$pred, agent:$agent];
+  ↓1 = $agent;
+  ↓2 = [PRED:$pred, number:$number];
+  [number:$number] ⊂ ⇓1;
   ⇑ = ⇓2;
+}
+
+N → det noun {
+  ↓2 = ↑;
+  [number:$number] ⊂ ⇓2;
+  ↓1 = [number:$number];
+  ⇑ = ⇓2 U [number:$number];
 }

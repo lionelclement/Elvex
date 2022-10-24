@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <sys/time.h>
 #include <csignal>
 #include <cstring>
 #include <unistd.h>
@@ -70,7 +71,7 @@ options\n\
     std::cerr << "\
 \t-maxLength <number>                         max number of length\n\
 \t-maxUsages <number>                         max number of rule usage\n\
-\t-maxCardinal <number>                       max number of items per set\n\
+\t-maxItems <number>                          max number of items per set\n\
 \t-maxTime <seconds>                          max time in seconds\n\
 \t-rulesFile <file>                           the rules\n\
 \t-lexiconFile <file>                         the lexicon\n\
@@ -229,17 +230,17 @@ int main(int argn, char** argv) {
                         else {
                             throw usage_exception("bad maxLength argument");
                         }
-                    } else if (!strcmp(argv[arg] + 1, "maxLength")) {
+                    } else if (!strcmp(argv[arg] + 1, "maxUsages")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setMaxUsages(atoi(argv[++arg]));
                         else {
-                            throw usage_exception("bad maxLength argument");
+                            throw usage_exception("bad maxUsages argument");
                         }
-                    } else if (!strcmp(argv[arg] + 1, "maxCardinal")) {
+                    } else if (!strcmp(argv[arg] + 1, "maxItems")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setMaxCardinal(atoi(argv[++arg]));
+                            synthesizer.setMaxItems(atoi(argv[++arg]));
                         else {
-                            throw usage_exception("bad maxCardinal argument");
+                            throw usage_exception("bad maxItems argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "maxTime")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-')) {
@@ -326,14 +327,17 @@ int main(int argn, char** argv) {
 #endif
 
         }
-        srand(time(nullptr));
+        struct timeval time; 
+        gettimeofday(&time,NULL);
+        srand((time.tv_sec * 1000) + (time.tv_usec / 1000));
+        // srand(time(0));
         if (synthesizer.getInputFileName().length() > 0) {
             parser.parseFile("@input", synthesizer.getInputFileName());
             generate();
         }
 
-        for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin();
-             i != synthesizer.getInputs().end(); ++i) {
+        for (std::list<std::string>::const_iterator i = synthesizer.getInputs().cbegin();
+             i != synthesizer.getInputs().cend(); ++i) {
             parser.parseBuffer("@input", *i, "input");
             generate();
         }

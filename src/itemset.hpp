@@ -21,6 +21,7 @@
 #define ELVEX_ITEMSET_H
 
 #include <unordered_set>
+#include <climits>
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -50,19 +51,19 @@ public:
 
     unsigned int getId(void);
 
-    set_of_item &getItems(void);
+    set_of_item& getItems(void);
 
     set_of_item_const_iterator cbegin(void) const;
 
     set_of_item_const_iterator cend(void) const;
 
-    set_of_item_iterator begin(void) const;
+    set_of_item_iterator begin(void);
 
-    set_of_item_iterator end(void) const;
+    set_of_item_iterator end(void);
 
     set_of_item_const_iterator find(const itemPtr&) const;
 
-    bool insert(const itemPtr&, class Synthesizer *);
+    bool insert(const itemPtr&, class Synthesizer*);
 
     void erase(const itemPtr&);
 
@@ -70,7 +71,7 @@ public:
 
     void resetUsages(void);
 
-    void print(std::ostream &);
+    void print(std::ostream&);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);

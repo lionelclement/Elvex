@@ -27,9 +27,9 @@ VISAGE	n	vitrine	PRED:VISAGE, language_register:slang
 
 # Homme
 HOMME	n	mec	PRED:HOMME, language_register:slang
-HOMME	n	type	PRED:HOMME, language_register:slang
-HOMME	n	mecton	PRED:HOMME, language_register:slang
-HOMME	n	keum	PRED:HOMME, language_register:slang
+#HOMME	n	type	PRED:HOMME, language_register:slang
+#HOMME	n	mecton	PRED:HOMME, language_register:slang
+#HOMME	n	keum	PRED:HOMME, language_register:slang
 
 # Idiot
 IDIOT	n	con	PRED:IDIOT, language_register:slang

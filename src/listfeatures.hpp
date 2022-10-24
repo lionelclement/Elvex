@@ -23,7 +23,7 @@
 #include <vector>
 #include "shared_ptr.hpp"
 #include "flags.hpp"
-#include "uniq-id.hpp"
+#include "uniq_id.hpp"
 
 class ListFeatures :
         public UniqId, public Flags, public std::enable_shared_from_this<class ListFeatures> {

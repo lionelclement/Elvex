@@ -145,7 +145,10 @@ statementsPtr Rule::getStatements(void) const {
  ************************************************************ */
 void Rule::incUsages(class Synthesizer *synthesizer) {
     if (++usages > synthesizer->getMaxUsages()) {
-        throw fatal_exception("too much usages of the same rule: " + this->toString());
+        std::ostringstream oss;
+        oss << "too much usages of the same rule: " << this->toString() << " (" 
+            << synthesizer->getMaxUsages() << " max)";
+        throw fatal_exception(oss);
     }
 }
 
@@ -191,7 +194,8 @@ rulePtr Rule::clone() const {
     std::vector<termsPtr> rhsCopy;
     for (unsigned int i = 0; i < rhs.size(); ++i)
         rhsCopy.push_back(rhs[i]->clone());
-    rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, lhs, rhsCopy, statements);
+    rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, 
+            lhs, rhsCopy, statements);
     rule->usages = usages;
     rule->trace = trace;
     return rule;
@@ -263,4 +267,16 @@ std::string Rule::toString() const {
     std::stringstream s;
     print(s, UINT_MAX, false, false);
     return s.str();
+}
+
+
+/* **************************************************
+ *
+ ************************************************** */
+void Rule::makeSerialString() {
+    serialString = std::to_string(lhs);
+    for (std::vector<termsPtr>::const_iterator term = rhs.cbegin(); 
+    term != rhs.cend(); ++term) {
+        serialString += (*term)->peekSerialString(); 
+    }
 }

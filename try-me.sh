@@ -18,34 +18,54 @@
 #
 ################################################## #
 
+
 cd data
 
-#echo "--------------------------------------------------------"
-#(cd lefff ; make -s)
-#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon "\
-#letter [\
-#       from:[FORM:\"Lionel Clément\"], \
-#       to:[FORM:\"`whoami`\", number:sg, gender:ms], \
-#       body:[PRED:ESSAYER, i:[PRED:_pro, number:pl, person:two], ii:[FORM:\"`which elvex` `elvex --version`\"], tense:recent_past ]\
-#]"\
-#     |tr '@' "\n" | ../bin/elvexpostedition_fr | sed -e 's/^ *//' -e 's/  */ /g'
-
+##################################################
+# en-1.1.0.fsa
 #make en-1.1.0.fsa
 #echo 'bin/elvex -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | bin/elvexpostedition_en'
 #../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
 #../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce --traceAction -compactedLexiconDirectory . -compactedLexiconFile en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon 'Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]'
+#../bin/elvexdebug --traceShift --traceInit --traceStage --traceClose --traceReduce -compactedLexiconDirectory . -compactedLexiconFile en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon 'Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]'
 
+##################################################
+# slang
+(cd lefff ; make -s)
+(cd .. ; make -j 31)
+(cd /Users/clement/tmp/Elvex ; make -j 31)
 #../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr
 #../bin/elvex -t -V -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
-#../bin/elvexdebug --traceShift -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#../bin/elvexdebug -t -V --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+../bin/elvexdebug --traceStage -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input > ../bad.html
+/Users/clement/tmp/Elvex/bin/elvexdebug --traceStage -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input > ../good.html
 
+##################################################
+# fr-1.0.4
+#(cd lefff ; make -s)
 #../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input | ../bin/elvexpostedition_fr |tr '@' "\n" |sed -e 's/^ *//' |tr '@' "\n"
-##../bin/elvex -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
-#../bin/elvex -t -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
-#../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile greg.rules -lexiconFile greg.lexicon -inputFile greg.input
+#../bin/elvexdebug -t -V --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input
+#../bin/elvexdebug --traceAction --traceInit --traceClose --traceShift --traceReduce --traceStage -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input
+#/Users/clement/tmp/Elvex/bin/elvexdebug --traceClose --traceShift --traceReduce --traceStage -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon -inputFile fr-1.0.4.input
 
-make essai-20221012.fsa
-../bin/elvex -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
-#../bin/elvexdebug --traceInit --traceShift --traceClose --traceReduce -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
+##################################################
+# essai-20221012
+#make essai-20221012.fsa
+#../bin/elvex -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
+#../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
+
+##################################################
+# test1
+#../bin/elvexdebug --traceAction --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile test1.rules -lexiconFile test1.lexicon -inputFile test1.input
+#../bin/elvex -rulesFile test1.rules -lexiconFile test1.lexicon -inputFile test1.input
+#/Users/clement/tmp/Elvex/bin/elvex -rulesFile test1.rules -lexiconFile test1.lexicon -inputFile test1.input
+
+##################################################
+# test2
+#../bin/elvexdebug --traceAction --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile test2.rules -lexiconFile test2.lexicon -inputFile test2.input
+#../bin/elvex -rulesFile test2.rules -lexiconFile test2.lexicon -inputFile test2.input
+#echo "_____"
+#elvex -rulesFile test2.rules -lexiconFile test2.lexicon -inputFile test2.input
 
 cd ..

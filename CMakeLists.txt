@@ -1,8 +1,30 @@
-cmake_minimum_required(VERSION 3.5)
+# ##################################################
+#
+# ELVEX
+#
+# Copyright 2014-2022 LABRI, 
+# CNRS (UMR 5800), the University of Bordeaux,
+# and the Bordeaux INP
+#
+# Author: 
+# Lionel Clément
+# LaBRI -- Université Bordeaux 
+# 351, cours de la Libération
+# 33405 Talence Cedex - France
+# lionel.clement@labri.fr
+# 
+# This file is part of ELVEX.
+#
+################################################## #
+
+ cmake_minimum_required(VERSION 3.5)
 
 project(elvex VERSION 2.18.0)
 
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+
 include_directories(src)
 
 find_package(BISON)
@@ -62,8 +84,6 @@ set(ELVEX_COMMON_SOURCES
         src/forestidentifier.hpp
         src/forestmap.cc
         src/forestmap.hpp
-        src/uniq-id.cc
-        src/uniq-id.hpp
         src/item.cc
         src/item.hpp
         src/itemset.cc
@@ -102,6 +122,8 @@ set(ELVEX_COMMON_SOURCES
         src/terms.hpp
         src/usage_exception.cc
         src/usage_exception.hpp
+        src/uniq_id.cc
+        src/uniq_id.hpp
         src/value.cc
         src/value.hpp
         src/variableflag.cc
@@ -117,7 +139,7 @@ configure_file(
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
 target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
 add_executable(elvexdebug ${ELVEX_COMMON_SOURCES} src/elvex.cc)
-target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexdebug PUBLIC -g -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
@@ -130,16 +152,24 @@ if (LibXml2_FOUND)
             MAXCARDINAL=1000000
             MAXATTEMPTS=100
             MAXBITS=512
-            #TRACE_LEXICON
+            TRACE_UNHIDE
+            TRACE_UNFOLD
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
+    
     target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
-        MEMOIZATION
+        #MEMOIZATION
         TRACE_OPTION
-        TRACE_MEMOIZATION
-        #TRACE_EVAL
-)
+        #TRACE_MEMOIZATION
+        #TRACE_INSERT
+        #TRACE_LEXICON
+        #TRACE_UNHIDE
+        #TRACE_UNFOLD
+        #TRACE_NEXT
+        #TRACE_ACTION_DETAIL
+        TRACE_INSERT
+        )
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})
 else()

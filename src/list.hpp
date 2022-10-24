@@ -21,7 +21,7 @@
 #define ELVEX_LIST_H
 
 #include "flags.hpp"
-#include "uniq-id.hpp"
+#include "uniq_id.hpp"
 #include "serializable.hpp"
 #include "variableflag.hpp"
 #include "shared_ptr.hpp"
