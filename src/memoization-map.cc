@@ -24,7 +24,7 @@
 #include "memoization-map.hpp"
 #include "features.hpp"
 #include "forestidentifier.hpp"
-//#include "messages.hpp"
+#include "messages.hpp"
 
 /* ************************************************************
  * 
@@ -64,7 +64,8 @@ void MemoizationMap::insert(std::string const& key, featuresPtr features, forest
     } else {
         std::vector<memoizationValuePtr> values;
         values.push_back(value);
-        memoizationMap[key] = values;
+        if (!memoizationMap.insert(std::make_pair(key, values)).second)
+            FATAL_ERROR_UNEXPECTED;
     }
 }
 
