@@ -81,14 +81,14 @@ ItemSet::set_of_item_const_iterator ItemSet::cend() const {
 /* **************************************************
  *
  ************************************************** */
-ItemSet::set_of_item_iterator ItemSet::begin() const {
+ItemSet::set_of_item_iterator ItemSet::begin() {
     return items.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ItemSet::set_of_item_iterator ItemSet::end() const {
+ItemSet::set_of_item_iterator ItemSet::end() {
     return items.end();
 }
 
@@ -103,25 +103,27 @@ ItemSet::set_of_item_const_iterator ItemSet::find(const itemPtr& item) const {
  *
  ************************************************** */
 bool ItemSet::insert(const itemPtr& item, Synthesizer* synthesizer) {
-    if (items.size() > synthesizer->getMaxCardinal()) {
+    if (items.size() > synthesizer->getMaxItems()) {
         std::ostringstream oss;
-        oss << "too much items build : " << items.size() << " (" << synthesizer->getMaxCardinal() << " Max)";
+        oss << "too much items " << " (" << synthesizer->getMaxItems() << " Max)";
         throw fatal_exception(oss);
     }
+    bool result = items.insert(item).second;
 #ifdef TRACE_INSERT
-    std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
-    item->print(std::cout);
+    if (result)
+        std::cout << "<H3>####################### INSERT SUCCEED #######################</H3>" << std::endl;
+    else
+        std::cout << "<H3>####################### INSERT FAILS #######################</H3>" << std::endl;
     std::cout << std::endl;
 #endif
-    //std::cerr << items.size() << std::endl;
-    return items.insert(item).second;
+    return result;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void ItemSet::erase(const itemPtr& item) {
-    items.erase(item);
+size_t ItemSet::erase(const itemPtr& item) {
+    return items.erase(item);
 }
 
 /* **************************************************
@@ -143,15 +145,14 @@ void ItemSet::resetUsages() {
 /* **************************************************
  *
  ************************************************** */
-void ItemSet::print(std::ostream &oss) {
+void ItemSet::print(std::ostream& oss) {
     oss << "<TABLE border=\"0\">";
-    for (const auto & item : items) {
+    for (const auto& item : items) {
         oss << "<TR>";
         oss << "<TD align=\"LEFT\">";
         item->print(oss);
         oss << "</TD>";
         oss << "</TR>";
-
     }
     oss << "</TABLE>";
 }

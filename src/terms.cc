@@ -107,15 +107,15 @@ size_t Terms::size(void) const {
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int>::const_iterator Terms::begin(void) const {
-    return terms.begin();
+std::vector<unsigned int>::const_iterator Terms::cbegin(void) const {
+    return terms.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int>::const_iterator Terms::end(void) const {
-    return terms.end();
+std::vector<unsigned int>::const_iterator Terms::cend(void) const {
+    return terms.cend();
 }
 
 /* **************************************************
@@ -142,9 +142,9 @@ bool Terms::Less::operator()(const termsPtr t1, const termsPtr t2) const {
     if (t1->size() != t2->size())
         return (t1->size() < t2->size());
 
-    auto s1 = t1->begin();
-    auto s2 = t2->begin();
-    while (s1 != t1->end()) {
+    auto s1 = t1->cbegin();
+    auto s2 = t2->cbegin();
+    while (s1 != t1->cend()) {
         if ((*s1) != (*s2))
             return ((*s1) < (*s2));
         ++s1;
@@ -161,7 +161,7 @@ void Terms::print(std::ostream &outStream) {
         outStream << '[';
     if (size() > 1) {
         bool first = true;
-        for (auto term = this->begin(); term != this->end(); ++term) {
+        for (auto term = cbegin(); term != cend(); ++term) {
             if (first)
                 first = false;
             else
@@ -180,11 +180,15 @@ void Terms::print(std::ostream &outStream) {
  ************************************************** */
 termsPtr Terms::clone(void) const {
     std::vector<unsigned int> new_terms;
-    for (auto t = begin(); t != end(); ++t)
+    for (auto t = cbegin(); t != cend(); ++t)
         new_terms.push_back((*t));
     return Terms::create(new_terms, optional);
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 unsigned int Terms::operator[](unsigned int i) {
     return terms[i];
 }
+

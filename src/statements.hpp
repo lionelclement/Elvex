@@ -23,12 +23,15 @@
 #include <list>
 #include <vector>
 #include "flags.hpp"
-#include "uniq-id.hpp"
+#include "uniq_id.hpp"
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
 class Statements :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Statements> {
+        public UniqId, 
+        public Flags, 
+        public Serializable, 
+        public std::enable_shared_from_this<class Statements> {
 
 public:
     typedef std::list<statementPtr> list;
@@ -60,7 +63,7 @@ public:
 
     statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 
-    void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
     void enable(itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
 

@@ -33,7 +33,7 @@ MemoizationMap::map::const_iterator MemoizationMap::find(std::string const& key)
     auto memItem = memoizationMap.find(key);
 #ifdef TRACE_MEMOIZATION
     if (memItem != memoizationMap.end()) {
-       std::cout << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
+       std::cout << "<H3>####################### RECORDED VALUE FOUND #######################</H3>" << std::endl;
        std::cout << "<BR>";
        std::cout << std::endl;
     }
@@ -53,7 +53,7 @@ MemoizationMap::map::const_iterator MemoizationMap::cend() const {
  ************************************************************ */
 void MemoizationMap::insert(std::string const& key, featuresPtr features, forestIdentifierPtr forestIdentifier) {
 #ifdef TRACE_MEMOIZATION
-    std::cout << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
+    std::cout << "<H3>####################### RECORD VALUE #######################</H3>" << std::endl;
     std::cout << "<BR>";
     std::cout << std::endl;
 #endif

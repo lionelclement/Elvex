@@ -35,8 +35,8 @@
 #define MAXUSAGES 1000
 #endif
 
-#ifndef MAXCARDINAL
-#define MAXCARDINAL 1000
+#ifndef MAXITEMS
+#define MAXITEMS 1000
 #endif
 
 #ifndef MAXATTEMPTS
@@ -69,7 +69,7 @@ private:
 
     unsigned int maxLength;
     unsigned int maxUsages;
-    unsigned int maxCardinal;
+    unsigned int maxItems;
     std::string lexiconFileName;
     std::string rulesFileName;
     std::string inputFileName;
@@ -140,9 +140,9 @@ public:
 
     unsigned int getMaxUsages() const;
 
-    void setMaxCardinal(unsigned int);
+    void setMaxItems(unsigned int);
 
-    unsigned int getMaxCardinal() const;
+    unsigned int getMaxItems() const;
 
     void setCompactedLexicon(class CompactedLexicon*);
 
@@ -170,12 +170,6 @@ public:
 
     nodePtr getNodeRoot();
 
-    bool insertItemMap(const itemPtr&);
-
-    void eraseItemMap(unsigned int);
-
-    itemPtr getItemMap(unsigned int);
-
     bool getTrace() const;
 
     void setTrace(bool);
@@ -192,27 +186,34 @@ public:
 
     void printState(std::ostream&, const itemSetPtr&);
 
+    void generate(class Parser&);
+
+    void setVerbose(bool _verbose);
+
+    entriesPtr findCompactedLexicon(class Parser&, unsigned int code, const std::string& str, unsigned int pred);
+
+    void clear();
+
+private:
+
     void close(class Parser&, const itemSetPtr&, unsigned int);
 
     bool shift(class Parser&, const itemSetPtr&, unsigned int);
 
-    void clear();
-
-    static itemPtr createItem(const itemPtr&, unsigned int);
-
-    void generate(class Parser&);
-
-    entriesPtr findCompactedLexicon(class Parser&, unsigned int code, const std::string& str, unsigned int pred);
-
     std::string keyMemoization(const itemPtr&, const itemPtr&);
-
-    void setVerbose(bool _verbose);
 
     entriesPtr findByPos(Parser& parser, Parser::entries_map* pMap, unsigned int term);
 
     entriesPtr findByForm(Parser::entries_map* pMap);
 
     entriesPtr findByPred(Parser& parser, Parser::entries_map* listPred, unsigned int term, unsigned int pred);
+
+    bool insertItemMap(const itemPtr&);
+
+    void eraseItemMap(unsigned int);
+
+    itemPtr getItemMap(unsigned int);
+
 };
 
 #endif // ELVEX_SYNTHESIZER_H

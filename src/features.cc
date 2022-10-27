@@ -538,7 +538,7 @@ bool Features::renameVariables(size_t i) {
             effect = true;
     }
     if (effect)
-        resetSerial();
+        _resetSerial();
     return effect;
 }
 

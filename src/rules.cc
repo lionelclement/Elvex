@@ -239,8 +239,8 @@ void Rules::analyseTerms(class Parser& parser) {
     for (iterRules = cbegin(); iterRules != cend(); ++iterRules) {
         unsigned int i;
         for (i = 0; i < (*iterRules)->getRhs().size(); ++i) {
-            for (std::vector<unsigned int>::const_iterator term = (*iterRules)->getTerms(i)->begin();
-                 term != (*iterRules)->getTerms(i)->end(); ++term) {
+            for (std::vector<unsigned int>::const_iterator term = (*iterRules)->getTerms(i)->cbegin();
+                 term != (*iterRules)->getTerms(i)->cend(); ++term) {
                 if (nonTerminals.find(*term) == nonTerminals.end()) {
                     unsigned long int code = (*term);
                     terminals.insert(code);

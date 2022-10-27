@@ -22,9 +22,9 @@
 
 #include <unordered_set>
 #include <vector>
-#include <unordered_map>
+#include <climits>
 #include "flags.hpp"
-#include "uniq-id.hpp"
+#include "uniq_id.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 
@@ -41,10 +41,10 @@ public:
 
 private:
     rulePtr rule; // the grammar rule
-    unsigned int index; // the \bullet position
-    std::vector<unsigned int> indexTerms; // term in a disjunction
+    unsigned int index; // the actual terms (UINT_MAX when not positionned)
+    std::vector<unsigned int> indexTerms; // the actual term in disjunction for each terms (UINT_MAX when not positionned)
     statementsPtr statements; // the semantics
-    set_of_unsigned_int refs; // set of items from which this one is derived
+    set_of_unsigned_int refs;  // set of items from which this one is derived
     std::vector<bool> seen; // seen flags
     std::vector<unsigned int> ranges; // ranges
     featuresPtr inheritedFeatures; // ↑
@@ -54,17 +54,15 @@ private:
     std::vector<forestIdentifierPtr> forestIdentifiers; // forest identifiers
     environmentPtr environment; // variable environment
 
-    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, 
-        s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
-        s_ranges = true, s_forestIdentifiers = true, s_inheritedFeatures = true, 
-        s_inheritedSonFeatures = true, s_synthesizedFeatures = true, 
-        s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
+    // trace flags:
+    bool s_id = true, s_serial = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, 
+        s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_currentTerm = false,
+        s_ranges = true, s_forestIdentifiers = true, 
+        s_inheritedFeatures = true, s_inheritedSonFeatures = true, 
+        s_synthesizedFeatures = true,  s_synthesizedSonFeatures = true, 
+        s_statements = true, s_environment = true;
 
-    Item(rulePtr rule, unsigned int index, statementsPtr statements);
-
-    Item(const rulePtr& rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
-
-    Item(const rulePtr& rule, unsigned int index, std::vector<unsigned int>& indexTerms, statementsPtr statements);
+    Item(const rulePtr& rule, statementsPtr statements);
 
     void makeSerialString(void);
 
@@ -72,17 +70,16 @@ public:
     ~Item();
 
     // static constructors
-    
-    static itemPtr create(const rulePtr&, unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
+    static itemPtr create(const rulePtr& rule, statementsPtr statements = statementsPtr());
 
-    static itemPtr create(const rulePtr&, unsigned int, std::vector<unsigned int>& , statementsPtr);
+    // terms[index][0] if terms[index].size()==1 and !terms[index].optionnal(), exception otherwise
+    unsigned int currentTerm(void) ;
 
-    unsigned int getCurrentTerm(void) const;
+    // terms[index]
+    termsPtr currentTerms() const;
 
     // getters
     
-    termsPtr getCurrentTerms() const;
-
     rulePtr getRule(void) const;
 
     unsigned int getIndex(void) const;
@@ -91,17 +88,17 @@ public:
 
     unsigned int getRuleLhs(void) const;
 
-    std::vector<termsPtr>& getRuleRhs(void) const;
+    std::vector<termsPtr>& getRuleRhs(void);
 
-    statementsPtr getStatements(void);
+    statementsPtr getStatements(void) const;
 
-    set_of_unsigned_int& getRefs(void);
+    set_of_unsigned_int& getRefs(void) ;
 
-    listFeaturesPtr getSynthesizedSonFeatures(void);
+    listFeaturesPtr getSynthesizedSonFeatures(void) ;
 
-    listFeaturesPtr getInheritedSonFeatures(void);
+    listFeaturesPtr getInheritedSonFeatures(void) ;
 
-    featuresPtr getSynthesizedFeatures() const;
+    featuresPtr getSynthesizedFeatures();
 
     featuresPtr getInheritedFeatures(void) const;
 
@@ -115,15 +112,19 @@ public:
 
     std::vector<bool>& getSeen(void);
 
+    termsPtr getTerms(unsigned int) const;
+
+    std::vector<unsigned int>& getRanges(void);
+
+    std::vector<forestIdentifierPtr>& getForestIdentifiers(void);
+
     // setters
     
     void setCurrentTerms(termsPtr);
 
     void setRule(rulePtr);
 
-    void setIndex(unsigned int);
-
-    void setRefs(set_of_unsigned_int&);
+    void setRefs(set_of_unsigned_int);
 
     void setSynthesizedSonFeatures(listFeaturesPtr);
 
@@ -139,62 +140,58 @@ public:
 
     void setSeen(unsigned int, bool);
 
+    void setRanges(std::vector<unsigned int>&);
+
+    void setForestIdentifiers(std::vector<forestIdentifierPtr>&);
+
+    void setStatements(const statementsPtr&);
+
     // rule methods
     
+    size_t sizeRuleRhs() const noexcept;
+
     void rulePrint(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
     
-    void ruleResetUsages(void);
+    void ruleResetUsages(void) ;
 
     const std::string& getRuleFilename() const;
 
-    termsPtr getTerms(unsigned int) const;
-
     void addRef(unsigned int);
 
-    void addRefs(set_of_unsigned_int&);
+    void putIndexTerms(unsigned int, unsigned int);
 
     bool isSeen(unsigned int) const;
 
-    void addItem(std::unordered_map<unsigned int, itemPtr>& , unsigned int, itemPtr);
-
-    std::vector<unsigned int>& getRanges(void);
-
     void addRanges(unsigned int);
-
-    void addRanges(std::vector<unsigned int>&);
-
-    std::vector<forestIdentifierPtr>& getForestIdentifiers(void);
 
     void addForestIdentifiers(unsigned int i, forestIdentifierPtr);
 
-    void addForestIdentifiers(std::vector<forestIdentifierPtr>&);
+    void buildSynthesizedFeatures(class Synthesizer *) const;
 
-    void buildSynthesizedFeatures(class Synthesizer *);
-
-    void buildInheritedSonFeatures(class Synthesizer *);
+    void buildInheritedSonFeatures(class Synthesizer *) const;
 
     void addEnvironment(environmentPtr);
 
-    void addEnvironment(environmentPtr, environmentPtr);
-
-    void addStatements(const statementsPtr&);
-
-    void print(std::ostream&) const;
+    void print(std::ostream&);
 
     void renameVariables(size_t);
 
-    bool isCompleted(void);
+    bool isCompleted(void) const noexcept;
 
-    bool isStarted(void);
+    bool isStarted(void) const noexcept;
 
-    void successor(bool&);
+    void setIndex(unsigned int);
+    
+    void next(bool&);
 
     void defaultInheritedSonFeatures(void);
 
     void apply(class Parser& parser, class Synthesizer* synthesizer);
 
-    itemPtr clone(const std::bitset<FLAGS>& savedFlags);
-
+    itemPtr clone(const std::bitset<FLAGS>& savedFlags = Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+   
+    bool emptyRefs() const noexcept;
+    
     struct hash {
         size_t operator()(itemPtr const&) const;
     };

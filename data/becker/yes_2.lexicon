@@ -1,0 +1,62 @@
+@lexicon
+
+George pn [PRED:GEORGE, number:sg, gender:masc];
+is aux [tense:present_continuous, form:ing, subject:[person:three, number:sg]];
+brave adj [PRED:BRAVE, number:sg];
+because csu[compl:BECAUSE];
+he cln [PRED:_pro, number:sg, person:three, gender:ms];
+english adj [PRED:ENGLISH, number:sg];
+
+letter noun [PRED:LETTER, number:sg];
+government noun [PRED:GOVERNMENT, number:sg];
+governments noun [PRED:GOVERNMENTS, number:pl];
+proposal noun [PRED:PROPOSAL, number:sg];
+
+present verb [PRED:TO_PRESENT, tensed:no, form:infinitive]; //futur, 
+
+presenting verb [PRED:TO_PRESENT, tensed:present_continuous, form:pastpart, subject:[person:one|two|three|four|five|six]]; // present continous, preterit continous, present perfect cont, +perfect cont, fut cont
+
+presenting verb [PRED:TO_PRESENT, tensed:present_continuous, form:ing, subject:[person:one|two|three|four|five|six]];
+
+presents verb [PRED:TO_PRESENT, tense:present_continuous, tense:present, subject:[person:three, number:sg]]; // produit le present
+presented verb [PRED:TO_PRESENT, tense:preterit, subject:[person:three]]; //produit le present perfect, plusqueperfect, prétérit
+
+
+
+//presented verb [PRED:TO_PRESENT, tensed:yes, tense:preterit];
+
+
+am aux [tense:present_continuous, form:ing, subject:[person:one, number:sg]];
+are aux [tense:present_continuous, form:ing, subject:[person:two, number:sg]];
+
+are aux [tense:present_continuous, form:ing, subject:[number:pl]];
+
+was aux [tense:present_continuous, form:ing, subject:[person:one|three, number:sg]];
+
+were aux [tense:present_continuous, form:ing, subject:[person:two, number:sg]];
+were aux [tense:present_continuous, form:ing, subject:[number:pl]];
+
+//have aux [tense:present_perfect, form:pastpart, subject:[person:one|two, number:sg]];
+//have aux [tense:present_perfect, form:pastpart, subject:[number:pl]];
+//have aux [tense:present_perfect, form:pastpart, subject:[person:three, number:sg]]; //will have
+
+has aux3 [tense:present_continuous, form:ing, subject:[person:three, number:sg]]; // test
+
+had aux4 [tense:present_continuous, form:ing, subject:[person:three]]; // test
+
+//had aux [tense:preterit, form:pastpart, subject:[person:three]]; 
+
+have aux1 [tense:present_continuous, form:ing, subject:[person:one|two|four|five|six]]; //test
+
+//will aux [tense:future, form:infinitive]; modal pas aux
+
+be aux [PRED:TO_BE, tensed:no, form:infinitive];
+//been aux [tense:present_perfect, form:ing, subject:[person:three, number:sg]];
+
+been aux2 [tense:present_continuous, form:ing, subject:[person:one|two|three|four|five|six]]; //test
+
+a det [number:sg, def:no];
+"" det [number:pl, def:no];
+the det [number:sg, def:yes];
+
+

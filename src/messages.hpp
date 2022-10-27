@@ -35,6 +35,7 @@
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
 #define FATAL_ERROR_UNEXPECTED {CERR_LINE; throw fatal_exception("*** unexpected");}
+#define WARNING_UNEXPECTED {CERR_LINE; std::cerr << "*** unexpected";}
 #define WARNING(msg) {std::cerr << "*** " << msg << std::endl;}
 
 #endif // ELVEX_MESSAGES_H

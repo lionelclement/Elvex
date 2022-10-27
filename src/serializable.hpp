@@ -39,9 +39,9 @@ public:
 
     std::string peekSerialString();
 
-    size_t hashCode();
+    std::size_t hashCode();
 
-    void resetSerial();
+    void _resetSerial();
 
 };
 

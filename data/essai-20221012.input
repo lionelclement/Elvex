@@ -1,1 +1,2 @@
-text [PRED:BOAT]
+text [PRED:TO_SAIL, agent:[PRED:BOAT]]
+

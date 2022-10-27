@@ -1,0 +1,29 @@
+@lexicon
+
+"if" _if_;
+"then" _then_;
+"instead of" _instead_of_;
+"otherwise" _otherwise_;
+"unless" _unless_;
+"even if" _even_if_;
+
+
+"unless" conj[];
+"as long as" conj[];
+
+"I" pro [PRED:EGO, number:sg, person:one];
+
+"tell" verb [PRED:TO_TELL, form:infinitive];
+"go" verb [PRED:TO_GO, form:infinitive];
+"end up" verb [PRED:TO_END_UP, form:infinitive];
+
+"this" det [number:sg, def:none, poss:none, dem:yes, part:no];
+
+"story" noun [PRED:STORY, number:sg];
+
+"will" aux [tense:future];
+
+"in" prep;
+
+"jail" noun [PRED:JAIL, number:sg];
+

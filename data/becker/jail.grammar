@@ -1,0 +1,111 @@
+@grammar
+
+//"If i tell this story then i will go to jail"--> "si je raconte cette histoire j'irai alors en prison"
+//"If i tell this story i will go to jail anyway"--> "si je raconte cette histoire j'irai de toute façon en prison"
+SENTENSE → _if_ SENTENSE [_then_] SENTENSE {     
+   [PRED:cause, i:$i, ii:$ii];
+   ↓1 = [];
+   ↓2 = $i;
+   ↓3 = [];
+   ↓4 = $ii;
+}
+
+
+//"Instead of telling this story i will go to jail"--> "au lieu de (pouvoir) raconter cette histoire j'irai en prison"
+SENTENSE → _instead_of_ SENTENSE SENTENSE {     
+   [PRED:instead, i:$i, ii:$ii];
+   ↓1 = [];
+   ↓2 = $i;
+   ↓3 = $ii;
+}
+
+//"I must tell this story otherwise i will go to jail"--> "je dois raconter cette histoire sinon j'irai en prison"
+SENTENSE → SENTENSE _otherwise_ SENTENSE {     
+   [PRED:otherwise, i:$i, ii:$ii];
+   ↓1 = $i;
+   ↓2 = [];
+   ↓3 = $ii;
+}
+
+//"He will go to jail unless he tells the story"--> "il ira en prison à moins qu'il ne raconte l'histoire"
+SENTENSE → SENTENSE _unless_ SENTENSE {     
+   [PRED:unless, i:$i, ii:$ii];
+   ↓1 = $i;
+   ↓2 = [];
+   ↓3 = $ii;
+}
+
+//"Even if he tells the story he will still go to jail"--> "même s'il raconte cette histoire il ira quand même en prison"
+SENTENSE → _even_if_ SENTENSE SENTENSE {     
+   [PRED:even_if, i:$i, ii:$ii];
+   ↓1 = [];
+   ↓2 = $i;
+   ↓3 = $ii;
+}
+
+// He tells the story
+SENTENSE → NP VP {     
+   [agent:$SUBJECT, $REST];
+   ↓1 = $SUBJECT;
+   [person:$personSynt, number:$numberSynt] ⊂ ⇓1;
+   ↓2 = $REST ∪ [subject: [person:$personSynt, number:$numberSynt]];
+   ⇑ = ⇓2;
+}
+
+// I
+NP → pro {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+// tells
+V → verb {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+// will go
+V → aux verb { 
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ⇑ = ⇓2;
+}
+
+// this story
+NP → det noun { 
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ⇑ = ⇓2;
+}
+
+
+// will go in jail
+VP → VP PP { 
+    [oblique: $OBLIQUE, $REST];
+    ↓1 = $REST;
+    ↓2 = $OBLIQUE;
+    ⇑ = ⇓1;
+}
+
+// will tell the story
+VP → VP NP { 
+    [patient: $PATIENT, $REST];
+    ↓1 = $REST;
+    ↓2 = $PATIENT;
+    ⇑ = ⇓1;
+}
+
+// will go in jail
+VP → V { 
+    [patient:NIL, oblique: NIL];
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+// in jail
+PP → prep noun {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ⇑ = ⇓2;
+}
+

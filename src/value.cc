@@ -804,7 +804,7 @@ bool Value::renameVariables(size_t i) {
             std::string _str = oss.str();
             bitsetPtr variableBits = Vartable::createVariable(_str);
             this->bits = variableBits;
-            resetSerial();
+            _resetSerial();
             effect = true;
         }
             break;

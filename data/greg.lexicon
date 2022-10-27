@@ -1,0 +1,130 @@
+/************************************************************
+* Patterns
+************************************************************/
+@m: [gender:ms];
+@f: [gender:fm];
+@_1: [person:one];
+@_2: [person:two];
+@_3: [person:three];
+@s: [number:sg];
+@p: [number:pl];
+@_1s: [@_1, @s];
+@_2s: [@_2, @s];
+@_3s: [@_3, @s];
+@_1p: [@_1, @p];
+@_2p: [@_2, @p];
+@_3p: [@_3, @p];
+@_3ms: [@_3s, @m];
+@_3fs: [@_3s, @f];
+
+/************************************************************
+* Noms propres
+************************************************************/
+John	proper_noun [PRED:JOHN, number:sg, person:three, human:true];
+
+/************************************************************
+* Pronoms nominatifs
+************************************************************/
+I	cln [PRED:__pro, number:sg, person:one, human:true, _case:nominative]
+	| cln [PRED:__EGO, number:sg, person:one, human:true, _case:nominative];
+you	cln [PRED:__pro, number:sg, person:two, human:true, _case:nominative]
+	| cln [PRED:__YOU, number:sg, person:two, human:true, _case:nominative];
+he	cln [PRED:__pro, number:sg, person:three, gender:ms, human:true, _case:nominative];
+she	cln [PRED:__pro, number:sg, person:three, gender:fm, human:true, _case:nominative];
+it	cln [PRED:__pro, number:sg, person:three, gender:fm, human:false, _case:nominative];
+we	cln [PRED:__pro, number:pl, person:one, human:true, _case:nominative];
+they	cln [PRED:__pro, number:pl, person:three, _case:nominative];
+
+/************************************************************
+* Pronoms accusatifs
+************************************************************/
+me	pro [PRED:__pro, number:sg, person:one, human:true, _case:accusative];
+you	pro [PRED:__pro, person:two, human:true, _case:accusative];
+him	pro [PRED:__pro, number:sg, person:three, gender:ms, human:true, _case:accusative];
+her	pro [PRED:__pro, number:sg, person:three, gender:fm, human:true, _case:accusative];
+it	pro [PRED:__pro, number:sg, person:three, human:false, _case:accusative];
+us	pro [PRED:__pro, number:pl, person:one, human:true, _case:accusative];
+them	pro [PRED:__pro, number:pl, person:three, _case:accusative];
+
+/************************************************************
+* Pronoms réflexifs
+************************************************************/
+myself	pro [PRED:__pro, number:sg, person:one, _case:reflexive];
+yourself pro [PRED:__pro, number:sg, person:two, _case:reflexive];
+himself pro [PRED:__pro, number:sg|pl, person:three, _case:reflexive];
+
+/************************************************************
+* Verbes
+************************************************************/
+// feel (sth.) verbe (felt, felt)
+// Différents concepts:
+// to feel good / bad / at home / at ease / better / free / happy / safe / secure
+// to feel that smth
+// to feel adj
+
+feel	verb	[PRED:TO_FEEL, vtense:present, SUBJECT:[person:one|two, number:sg], iiReal:PRED_ADJ]
+		| verb	[PRED:TO_FEEL, vtense:present, SUBJECT:[person:three, number:pl]]
+		| verb [PRED:TO_FEEL_GOOD, vtense:present, SUBJECT:[person:one|two, number:sg], PRED_ADJ:[PRED:GOOD]]
+		| verb	[PRED:TO_FEEL_GOOD, vtense:present, SUBJECT:[person:three, number:pl], iiReal:Adj, PRED_ADJ:[PRED:GOOD]]
+		| verb [PRED:TO_FEEL_BAD, vtense:present, SUBJECT:[person:one|two, number:sg], PRED_ADJ:[PRED:BAD]]
+		| verb	[PRED:TO_FEEL_BAD, vtense:present, SUBJECT:[person:three, number:pl], iiReal:Adj, PRED_ADJ:[PRED:BAD]];
+
+feels	verb	[PRED:TO_FEEL, vtense:present, SUBJECT:[person:three, number:sg]]
+		| verb [PRED:TO_FEEL, vtense:present, SUBJECT:[person:three, number:sg], refl:true];
+
+enjoy	verb	[PRED:TO_ENJOY, vtense:present, SUBJECT:[person:one|two, number:sg, human:true], iiReal:OBJECT]
+		| verb	[PRED:TO_ENJOY, vtense:present, SUBJECT:[person:three, number:pl, human:true], iiReal:OBJECT];
+enjoys	verb	[PRED:TO_ENJOY, vtense:present, SUBJECT:[person:three, number:sg, human:true], iiReal:OBJECT];
+
+appreciate	verb	[PRED:TO_APPRECIATE, vtense:present, SUBJECT:[person:one|two, number:sg, human:true], iiReal:OBJECT]
+		| verb	[PRED:TO_APPRECIATE, vtense:present, SUBJECT:[person:three, number:pl, human:true], iiReal:OBJECT];
+appreciates	verb	[PRED:TO_APPRECIATE, vtense:present, SUBJECT:[person:three, number:sg, human:true], iiReal:OBJECT];
+
+suffer	verb	[PRED:TO_SUFFER, vtense:present, SUBJECT:[person:one|two, number:sg]]
+		| verb	[PRED:TO_SUFFER, vtense:present, SUBJECT:[person:three, number:pl]];
+suffers	verb	[PRED:TO_SUFFER, vtense:present, SUBJECT:[person:three, number:sg]];
+
+endure	verb	[PRED:TO_ENDURE, vtense:present, SUBJECT:[person:one|two, number:sg]]
+		| verb	[PRED:TO_ENDURE, vtense:present, SUBJECT:[person:three, number:pl]];
+endures	verb	[PRED:TO_ENDURE, vtense:present, SUBJECT:[person:three, number:sg]];
+
+//stay away
+//call down
+
+// Déterminants
+
+a	det	[number:sg, def:false, poss:false, part:false, dem:false];
+""	det	[number:pl, def:false, poss:false, part:false, dem:false];
+the	det	[number:sg, def:true, poss:false, part:false, dem:false];
+
+my	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_1s]];
+your	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_2s]];
+our	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_1p]];
+their	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_3p]];
+his	det [number:sg, gender:ms, def:false, poss:true, part:false, dem:false, owner:[@_3ms]];
+her	det [number:sg, gender:fs, def:false, poss:true, part:false, dem:false, owner:[@_3fs]];
+
+// Nouns
+pain	common_noun	[PRED:PAIN, countable:false];
+sadness	common_noun	[PRED:SADNESS, countable:false];
+hope	common_noun	[PRED:HOPE, countable:false];
+tenderness	common_noun	[PRED:TENDERNESS, countable:false];
+
+// Adjectifs
+
+// A voir ce que cela veut dire...
+//@nice: [type:psy];
+//@bad: [type:psy];
+//@good: [type:psy];
+//@psy: [type:psy];
+
+
+nice	adj [PRED:NICE];
+bad	adj [PRED:BAD,lexical_function:none]
+	| adj [PRED:BAD,lexical_function:magn,MOD:[PRED:VERY]];
+good	adj [PRED:GOOD];
+happy	adj [PRED:HAPPY];
+
+// Adverbes
+
+very adv [PRED:VERY];
