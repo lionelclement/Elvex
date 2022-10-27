@@ -17,7 +17,6 @@
  *
  ************************************************** */
 
-
 #ifndef ELVEX_ITEM_H
 #define ELVEX_ITEM_H
 
@@ -71,7 +70,6 @@ public:
     ~Item();
 
     // static constructors
-    
     static itemPtr create(const rulePtr& rule, statementsPtr statements = statementsPtr());
 
     // terms[index][0] if terms[index].size()==1 and !terms[index].optionnal(), exception otherwise
