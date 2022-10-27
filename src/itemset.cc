@@ -27,6 +27,7 @@
  *
  ************************************************** */
 ItemSet::ItemSet(unsigned int id) {
+    this->items.clear();
     this->id = id;
     NEW
 }
@@ -102,28 +103,22 @@ ItemSet::set_of_item_const_iterator ItemSet::find(const itemPtr& item) const {
 /* **************************************************
  *
  ************************************************** */
-bool ItemSet::insert(const itemPtr& item, Synthesizer* synthesizer) {
+void ItemSet::insert(const itemPtr& item, Synthesizer* synthesizer) {
     if (items.size() > synthesizer->getMaxItems()) {
         std::ostringstream oss;
         oss << "too much items " << " (" << synthesizer->getMaxItems() << " Max)";
         throw fatal_exception(oss);
     }
-    bool result = items.insert(item).second;
-#ifdef TRACE_INSERT
-    if (result)
-        std::cout << "<H3>####################### INSERT SUCCEED #######################</H3>" << std::endl;
-    else
-        std::cout << "<H3>####################### INSERT FAILS #######################</H3>" << std::endl;
-    std::cout << std::endl;
-#endif
-    return result;
+    if (!items.insert(item).second)
+        FATAL_ERROR_UNEXPECTED;
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t ItemSet::erase(const itemPtr& item) {
-    return items.erase(item);
+void ItemSet::erase(const itemPtr& item) {
+    if (!items.erase(item))
+        FATAL_ERROR_UNEXPECTED;
 }
 
 /* **************************************************

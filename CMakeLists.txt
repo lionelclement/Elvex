@@ -162,7 +162,6 @@ if (LibXml2_FOUND)
         #MEMOIZATION
         TRACE_OPTION
         #TRACE_MEMOIZATION
-        #TRACE_INSERT
         #TRACE_LEXICON
         TRACE_PASS
         TRACE_UNFOLD

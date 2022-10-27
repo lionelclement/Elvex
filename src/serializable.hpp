@@ -41,7 +41,7 @@ public:
 
     std::size_t hashCode();
 
-    void _resetSerial();
+    void resetSerial();
 
 };
 

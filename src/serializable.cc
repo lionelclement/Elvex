@@ -18,6 +18,7 @@
  ************************************************** */
 
 #include "serializable.hpp"
+#include "messages.hpp"
 
 /* **************************************************
  *
@@ -57,7 +58,7 @@ std::string Serializable::peekSerialString() {
 /* **************************************************
  *
  ************************************************** */
-void Serializable::_resetSerial() {
+void Serializable::resetSerial() {
     serialHashCode = 0;
     serialString = std::string();
 }

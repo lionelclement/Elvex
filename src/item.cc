@@ -772,7 +772,7 @@ void Item::apply(Parser& parser, Synthesizer* synthesizer) {
  *
  ************************************************** */
 void Item::makeSerialString() {
-    
+
     serialString = std::to_string(rule->getId());
 
     serialString += '/';
@@ -780,11 +780,16 @@ void Item::makeSerialString() {
         serialString += '.';
     else {
         serialString += std::to_string(index);
-        if (rule->getTerms(index)->isOptional())
-            serialString += '?';
-        if (rule->getTerms(index)->size() > 1){
-            serialString += '#';
-            serialString += std::to_string(rule->getTerms(index)->size());
+        if (index < rule->sizeRhs()) {
+            termsPtr terms = rule->getTerms(index);
+            if (terms){
+                if (terms->isOptional())
+                    serialString += '?';
+                if (terms->size() > 1){
+                    serialString += '#';
+                    serialString += std::to_string(terms->size());
+                }
+            }
         }
     }
    

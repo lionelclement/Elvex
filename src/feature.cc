@@ -283,7 +283,7 @@ bool Feature::renameVariables(size_t i) {
             attribute = variableBits;
             if (value)
                 value->renameVariables(i);
-            _resetSerial();
+            resetSerial();
             effect = true;
         }
             break;

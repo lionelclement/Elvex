@@ -63,9 +63,9 @@ public:
 
     set_of_item_const_iterator find(const itemPtr&) const;
 
-    bool insert(const itemPtr&, class Synthesizer*);
+    void insert(const itemPtr&, class Synthesizer*);
 
-    size_t erase(const itemPtr&);
+    void erase(const itemPtr&);
 
     size_t size(void) const;
 

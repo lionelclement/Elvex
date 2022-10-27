@@ -60,7 +60,7 @@ public:
 private:
     itemSet_map states;
     ForestMap forestMap;
-    item_map itemMap;
+    item_map _itemMap;
     nodePtr nodeRoot;
 
     std::string compactedLexiconFileName;
@@ -196,9 +196,9 @@ public:
 
 private:
 
-    void close(class Parser&, const itemSetPtr&, unsigned int);
+    void close(class Parser&, itemSetPtr, unsigned int);
 
-    bool shift(class Parser&, const itemSetPtr&, unsigned int);
+    bool shift(class Parser&, itemSetPtr, unsigned int);
 
     std::string keyMemoization(const itemPtr&, const itemPtr&);
 
@@ -208,7 +208,7 @@ private:
 
     entriesPtr findByPred(Parser& parser, Parser::entries_map* listPred, unsigned int term, unsigned int pred);
 
-    bool insertItemMap(const itemPtr&);
+    void insertItemMap(const itemPtr&);
 
     void eraseItemMap(unsigned int);
 

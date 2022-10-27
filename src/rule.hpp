@@ -78,6 +78,8 @@ public:
 
     std::vector<termsPtr> &getRhs(void);
 
+    size_t sizeRhs(void);
+
     unsigned int getCurrentTerm(void) const;
 
     termsPtr getCurrentTerms() const;
