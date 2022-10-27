@@ -58,9 +58,9 @@ private:
     bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, 
         s_seen = false, s_item = true, s_index = true, s_indexTerms = true, s_currentTerm = false,
         s_ranges = true, s_forestIdentifiers = true, 
-        s_inheritedFeatures = false, s_inheritedSonFeatures = true, 
-        s_synthesizedFeatures = false,  s_synthesizedSonFeatures = false, 
-        s_statements = false, s_environment = false;
+        s_inheritedFeatures = true, s_inheritedSonFeatures = true, 
+        s_synthesizedFeatures = true,  s_synthesizedSonFeatures = true, 
+        s_statements = true, s_environment = true;
 
     Item(const rulePtr& rule, statementsPtr statements);
 
