@@ -114,7 +114,6 @@ bool ItemSet::insert(const itemPtr& item, Synthesizer* synthesizer) {
         std::cout << "<H3>####################### INSERT SUCCEED #######################</H3>" << std::endl;
     else
         std::cout << "<H3>####################### INSERT FAILS #######################</H3>" << std::endl;
-    item->print(std::cout);
     std::cout << std::endl;
 #endif
     return result;
@@ -123,8 +122,8 @@ bool ItemSet::insert(const itemPtr& item, Synthesizer* synthesizer) {
 /* **************************************************
  *
  ************************************************** */
-void ItemSet::erase(const itemPtr& item) {
-    items.erase(item);
+size_t ItemSet::erase(const itemPtr& item) {
+    return items.erase(item);
 }
 
 /* **************************************************

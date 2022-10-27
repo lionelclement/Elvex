@@ -65,7 +65,7 @@ public:
 
     bool insert(const itemPtr&, class Synthesizer*);
 
-    void erase(const itemPtr&);
+    size_t erase(const itemPtr&);
 
     size_t size(void) const;
 

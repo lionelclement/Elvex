@@ -32,8 +32,6 @@
 #include "shared_ptr.hpp"
 
 class Terms :
-    public UniqId,
-    public Serializable,
     public std::enable_shared_from_this<class Terms> {
 
 private:

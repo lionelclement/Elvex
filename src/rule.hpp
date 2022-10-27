@@ -36,7 +36,6 @@
 
 class Rule :
     public UniqId, 
-    public Serializable,
     public std::enable_shared_from_this<class Rule> {
 
 private:

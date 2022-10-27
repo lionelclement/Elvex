@@ -268,15 +268,3 @@ std::string Rule::toString() const {
     print(s, UINT_MAX, false, false);
     return s.str();
 }
-
-
-/* **************************************************
- *
- ************************************************** */
-void Rule::makeSerialString() {
-    serialString = std::to_string(lhs);
-    for (std::vector<termsPtr>::const_iterator terms = rhs.cbegin(); 
-    terms != rhs.cend(); ++terms) {
-        serialString += (*terms)->peekSerialString(); 
-    }
-}

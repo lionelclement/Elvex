@@ -192,16 +192,3 @@ unsigned int Terms::operator[](unsigned int i) {
     return terms[i];
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Terms::makeSerialString() {
-    for (auto i = this->cbegin() ; 
-            i != this->cend() ; 
-            ++i){
-        serialString += '-' + std::to_string(*i);
-    }
-    if (this->optional)
-        serialString += '?';
-}
-

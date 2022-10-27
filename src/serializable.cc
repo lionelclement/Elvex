@@ -36,7 +36,7 @@ Serializable::~Serializable() {
 /* **************************************************
  *
  ************************************************** */
-size_t Serializable::hashCode() {
+std::size_t Serializable::hashCode() {
     if (serialHashCode == 0) {
         peekSerialString();
     }
@@ -57,7 +57,7 @@ std::string Serializable::peekSerialString() {
 /* **************************************************
  *
  ************************************************** */
-void Serializable::resetSerial() {
+void Serializable::_resetSerial() {
     serialHashCode = 0;
     serialString = std::string();
 }

@@ -32,14 +32,19 @@ cd data
 ##################################################
 # slang
 (cd lefff ; make -s)
-(cd .. ; make -j 31)
-(cd /Users/clement/tmp/Elvex ; make -j 31)
-#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr
+#(cd .. ; make -j 7)
+#../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr
+#echo "##################################################"
+#/Users/clement/tmp/Elvex/bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#echo "##################################################"
+#/Users/clement/tmp/Elvex/bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+
 #../bin/elvex -t -V -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug -t -V --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
-../bin/elvexdebug --traceStage -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input > ../bad.html
-/Users/clement/tmp/Elvex/bin/elvexdebug --traceStage -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input > ../good.html
+#../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input > ../bad.html
+#/Users/clement/tmp/Elvex/bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input > ../good.html
 
 ##################################################
 # fr-1.0.4
@@ -57,8 +62,9 @@ cd data
 
 ##################################################
 # test1
-#../bin/elvexdebug --traceAction --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile test1.rules -lexiconFile test1.lexicon -inputFile test1.input
+../bin/elvexdebug --traceAction --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile test1.rules -lexiconFile test1.lexicon -inputFile test1.input
 #../bin/elvex -rulesFile test1.rules -lexiconFile test1.lexicon -inputFile test1.input
+#echo "_____"
 #/Users/clement/tmp/Elvex/bin/elvex -rulesFile test1.rules -lexiconFile test1.lexicon -inputFile test1.input
 
 ##################################################
@@ -66,6 +72,6 @@ cd data
 #../bin/elvexdebug --traceAction --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -rulesFile test2.rules -lexiconFile test2.lexicon -inputFile test2.input
 #../bin/elvex -rulesFile test2.rules -lexiconFile test2.lexicon -inputFile test2.input
 #echo "_____"
-#elvex -rulesFile test2.rules -lexiconFile test2.lexicon -inputFile test2.input
+#/Users/clement/tmp/Elvex/bin/elvex -rulesFile test2.rules -lexiconFile test2.lexicon -inputFile test2.input
 
 cd ..

@@ -145,14 +145,14 @@ find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
             OUTPUT_XML
-            MEMOIZATION
-            RESTORE_MEMORY
+            #MEMOIZATION
+            #RESTORE_MEMORY
             MAXLENGTH=1000
             MAXUSAGES=10000
             MAXCARDINAL=1000000
             MAXATTEMPTS=100
             MAXBITS=512
-            TRACE_UNHIDE
+            TRACE_PASS
             TRACE_UNFOLD
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
@@ -164,11 +164,11 @@ if (LibXml2_FOUND)
         #TRACE_MEMOIZATION
         #TRACE_INSERT
         #TRACE_LEXICON
-        #TRACE_UNHIDE
-        #TRACE_UNFOLD
-        #TRACE_NEXT
+        TRACE_PASS
+        TRACE_UNFOLD
+        TRACE_NEXT
         #TRACE_ACTION_DETAIL
-        TRACE_INSERT
+        #TRACE_INSERT
         )
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})

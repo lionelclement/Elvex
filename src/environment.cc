@@ -241,7 +241,7 @@ void Environment::replaceVariables(const featuresPtr& features, bool &effect) {
      std::cerr << "</td></tr></table>";
      ***/
     if (effect)
-        features->resetSerial();
+        features->_resetSerial();
 }
 
 /* **************************************************
@@ -301,7 +301,7 @@ void Environment::replaceVariables(const valuePtr& value, bool &effect) {
      std::cerr << "</td></tr></table>";
      ***/
     if (effect)
-        value->resetSerial();
+        value->_resetSerial();
 }
 
 /* **************************************************
@@ -354,7 +354,7 @@ void Environment::replaceVariables(const listPtr& list, bool &effect) {
      std::cerr << "</td></tr></table>";
      ***/
     if (effect)
-        list->resetSerial();
+        list->_resetSerial();
 }
 
 /* **************************************************
