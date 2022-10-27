@@ -55,8 +55,8 @@ private:
     environmentPtr environment; // variable environment
 
     // trace flags:
-    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, 
-        s_seen = false, s_item = true, s_index = true, s_indexTerms = true, s_currentTerm = false,
+    bool s_id = true, s_serial = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, 
+        s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_currentTerm = false,
         s_ranges = true, s_forestIdentifiers = true, 
         s_inheritedFeatures = true, s_inheritedSonFeatures = true, 
         s_synthesizedFeatures = true,  s_synthesizedSonFeatures = true, 

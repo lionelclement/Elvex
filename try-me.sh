@@ -31,7 +31,7 @@ cd data
 
 ##################################################
 # slang
-(cd lefff ; make -s)
+#(cd lefff ; make -s)
 #(cd .. ; make -j 7)
 #../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr
 #echo "##################################################"

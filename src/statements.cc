@@ -153,7 +153,7 @@ void Statements::renameVariables(size_t i) {
 /* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
-void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
+void Statements::apply(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
     if (item->isSetFlags(Flags::BOTTOM))
         return;
     if (item->isSetFlags(Flags::SEEN)) {

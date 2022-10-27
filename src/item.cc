@@ -467,7 +467,9 @@ void Item::print(std::ostream& out) {
     out << "<tr>";
     if (s_id){
         out << "<th>ID</th>";
-        out << "<th>INFO</th>";
+    }
+    if (s_serial){
+        out << "<th>SERIAL</th>";
     }
     if (s_ruleId)
         out << "<th>RuleId</th>";
@@ -508,6 +510,8 @@ void Item::print(std::ostream& out) {
         out << "<td>";
         out << '#' << this->getId();
         out << "</td>";
+    }
+    if (s_serial) {
         out << "<td>";
         out << '#' << this->peekSerialString();
         out << "</td>";

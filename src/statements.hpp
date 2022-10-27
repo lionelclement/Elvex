@@ -63,7 +63,7 @@ public:
 
     statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 
-    void apply(itemPtr item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
     void enable(itemPtr item, class Synthesizer *synthesizer, bool &effect, bool on);
 

@@ -2469,7 +2469,7 @@ void Statement::renameVariables(size_t i) {
 /* ************************************************************
  *
  ************************************************************ */
-void Statement::enable(const statementPtr& root, const itemPtr& item, Synthesizer* synthesizer, bool& effect, bool on) {
+void Statement::enable(const statementPtr& root, const itemPtr& item , Synthesizer* synthesizer, bool& effect, bool on) {
 #ifdef TRACE_ACTION_DETAIL
     if (synthesizer->getTraceAction()) {
       std::cout << "<H3>####################### ENABLE #######################</H3>" << std::endl;
