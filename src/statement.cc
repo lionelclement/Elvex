@@ -1218,7 +1218,7 @@ valuePtr Statement::evalValue(const itemPtr& item, Parser& parser, Synthesizer* 
                 }
                     //if (#i:j)
                 else {
-                    if (getSecond() == item->_getIndexTerms()[getFirst()]) {
+                    if (getSecond() == item->getIndexTerms()[getFirst()]) {
                         resultValue = Value::TRUE_VALUE;
                     } else {
                         resultValue = Value::NIL_VALUE;
@@ -1702,7 +1702,7 @@ featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, cons
                                 case Value::_VARIABLE:
                                     result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i1)->getValue()));
                                     if (!item->getEnvironment())
-                                        item->_setEnvironment(Environment::create());
+                                        item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
 
@@ -1719,7 +1719,7 @@ featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, cons
                             else {
                                 if (item) {
                                     if (!item->getEnvironment())
-                                        item->_setEnvironment(Environment::create());
+                                        item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
                                 }
                             }
@@ -1817,7 +1817,7 @@ featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, cons
                                     result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(), 
                                                                 (*i1)->getValue()));
                                     if (!item->getEnvironment())
-                                        item->_setEnvironment(Environment::create());
+                                        item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
                                 default: FATAL_ERROR_STM
@@ -1842,7 +1842,7 @@ featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, cons
                                     result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(), 
                                                                 (*i1)->getValue()));
                                     if (!item->getEnvironment())
-                                        item->_setEnvironment(Environment::create());
+                                        item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
                                 default: FATAL_ERROR_STM
@@ -1867,7 +1867,7 @@ featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, cons
                                     result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(), 
                                                                 (*i1)->getValue()));
                                     if (!item->getEnvironment())
-                                        item->_setEnvironment(Environment::create());
+                                        item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
                                 default: FATAL_ERROR_STM
@@ -1893,7 +1893,7 @@ featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, cons
                                     result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(), 
                                                                 (*i1)->getValue()));
                                     if (!item->getEnvironment())
-                                        item->_setEnvironment(Environment::create());
+                                        item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                                     break;
                                 case Value::_ANONYMOUS:
@@ -1913,7 +1913,7 @@ featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, cons
                             else {
                                 if (item) {
                                     if (!item->getEnvironment())
-                                        item->_setEnvironment(Environment::create());
+                                        item->setEnvironment(Environment::create());
                                     item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
                                 }
                             }
@@ -2011,7 +2011,7 @@ void Statement::buildSynthesizedFeatures(const itemPtr& item, Parser& parser, Sy
     if (_features->isNil())
         addFlags(Flags::BOTTOM);
     else {
-        item->_setSynthesizedFeatures(_features);
+        item->setSynthesizedFeatures(_features);
     }
 }
 
@@ -2028,7 +2028,7 @@ void Statement::buildEnvironmentWithSynthesize(const itemPtr& item, Parser& pars
                 environment = item->getEnvironment();
             } else {
                 environment = Environment::create();
-                item->_setEnvironment(environment);
+                item->setEnvironment(environment);
             }
             featuresPtr sonSynth = rhs->evalFeatures(item, parser, synthesizer, true);
             if (sonSynth) {
@@ -2052,7 +2052,7 @@ void Statement::buildEnvironmentWithSynthesize(const itemPtr& item, Parser& pars
                     environment = item->getEnvironment();
                 else {
                     environment = Environment::create();
-                    item->_setEnvironment(environment);
+                    item->setEnvironment(environment);
                 }
 
                 featuresPtr sonSynth = rhs->evalFeatures(item, parser, synthesizer, true);
@@ -2098,7 +2098,7 @@ void Statement::buildEnvironmentWithInherited(const itemPtr& item, Parser& parse
                     environment = item->getEnvironment();
                 } else {
                     environment = Environment::create();
-                    item->_setEnvironment(environment);
+                    item->setEnvironment(environment);
                 }
                 environment->add(lhs->getBits(), Value::create(Value::_FEATURES, right));
             }
@@ -2119,7 +2119,7 @@ void Statement::buildEnvironmentWithInherited(const itemPtr& item, Parser& parse
                         environment = item->getEnvironment();
                     } else {
                         environment = Environment::create();
-                        item->_setEnvironment(environment);
+                        item->setEnvironment(environment);
                     }
                     if (!left->buildEnvironment(environment, right, true/*, true*/)) {
                         addFlags(Flags::BOTTOM);
@@ -2177,7 +2177,7 @@ void Statement::buildEnvironmentWithValue(const itemPtr& item, Parser& parser, S
                         environment = item->getEnvironment();
                     } else {
                         environment = Environment::create();
-                        item->_setEnvironment(environment);
+                        item->setEnvironment(environment);
                     }
                     environment->add(lhs->getBits(), right);
                 }
@@ -2206,7 +2206,7 @@ void Statement::buildEnvironmentWithValue(const itemPtr& item, Parser& parser, S
                             environment = item->getEnvironment();
                         } else {
                             environment = Environment::create();
-                            item->_setEnvironment(environment);
+                            item->setEnvironment(environment);
                         }
                         if (!left->buildEnvironment(environment, right, true, true)) {
                             addFlags(Flags::BOTTOM);
@@ -2229,7 +2229,7 @@ void Statement::buildEnvironmentWithValue(const itemPtr& item, Parser& parser, S
                         environment = item->getEnvironment();
                     } else {
                         environment = Environment::create();
-                        item->_setEnvironment(environment);
+                        item->setEnvironment(environment);
                     }
                     if (!left->buildEnvironment(environment, right, true/*, true*/)) {
                         addFlags(Flags::BOTTOM);
@@ -2291,7 +2291,7 @@ void Statement::stmGuard(const itemPtr& item/*, Synthesizer* synthesizer*/) {
             environment = item->getEnvironment();
         else {
             environment = Environment::create();
-            item->_setEnvironment(environment);
+            item->setEnvironment(environment);
         }
         featuresPtr localRhs = item->getInheritedFeatures();
 
@@ -2300,7 +2300,7 @@ void Statement::stmGuard(const itemPtr& item/*, Synthesizer* synthesizer*/) {
         }
         if (item->getEnvironment()->size() == 0) {
             item->getEnvironment().reset();
-            item->_setEnvironment(environmentPtr());
+            item->setEnvironment(environmentPtr());
         }
     }
     /***
@@ -2542,7 +2542,7 @@ void Statement::enable(const statementPtr& root, const itemPtr& item, Synthesize
             if (on) {
                 if (item->getTerms(getFirst())
                     && ((!item->getTerms(getFirst())->isOptional() && item->getTerms(getFirst())->size() == 1)
-                        || (item->getTerms(getFirst())->isOptional() && item->_getForestIdentifiers()[getFirst()]))) {
+                        || (item->getTerms(getFirst())->isOptional() && item->getForestIdentifiers()[getFirst()]))) {
                 } else {
                     root->addFlags(Flags::DISABLED);
                     effect = true;

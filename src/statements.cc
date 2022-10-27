@@ -186,7 +186,7 @@ void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, b
                 continue;
             }
             if (!item->getEnvironment() || item->getEnvironment()->size() == 0) {
-                item->_setEnvironment(environmentPtr());
+                item->setEnvironment(environmentPtr());
             }
             effect = false;
             (*statement)->apply(item, parser, synthesizer, effect);

@@ -89,7 +89,7 @@ Item::~Item() {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Item::_create(const rulePtr& rule, statementsPtr statements) {
+itemPtr Item::create(const rulePtr& rule, statementsPtr statements) {
     return itemPtr(new Item(rule, std::move(statements)));
 }
 
@@ -103,7 +103,7 @@ rulePtr Item::getRule() const {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setRule(rulePtr _rule) {
+void Item::setRule(rulePtr _rule) {
     this->rule = _rule;
 }
 
@@ -159,7 +159,7 @@ unsigned int Item::getIndex() const {
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int>& Item::_getIndexTerms() {
+std::vector<unsigned int>& Item::getIndexTerms() {
     return indexTerms;
 }
 
@@ -168,6 +168,13 @@ std::vector<unsigned int>& Item::_getIndexTerms() {
  ************************************************** */
 statementsPtr Item::getStatements() const {
     return statements;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+size_t Item::sizeRuleRhs() const noexcept {
+    return rule->getRhs().size();
 }
 
 /* **************************************************
@@ -190,14 +197,14 @@ termsPtr Item::currentTerms() const {
  /* **************************************************
   *
   ************************************************** */
- void Item::_setCurrentTerms(termsPtr terms) {
+ void Item::setCurrentTerms(termsPtr terms) {
     this->rule->getRhs()[this->index] = std::move(terms);
  }
 
  /* **************************************************
   *
   ************************************************** */
-void Item::_putIndexTerms(unsigned int index, unsigned int indexTerm){
+void Item::putIndexTerms(unsigned int index, unsigned int indexTerm){
     indexTerms[index] = indexTerm;
 }
 
@@ -227,28 +234,35 @@ unsigned int Item::getRuleLhs() const {
 /* **************************************************
  *
  ************************************************** */
-std::vector<termsPtr>& Item::_getRuleRhs() {
+std::vector<termsPtr>& Item::getRuleRhs() {
     return rule->getRhs();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Item::set_of_unsigned_int Item::getRefs() {
+Item::set_of_unsigned_int& Item::getRefs() {
     return refs;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_setRefs(set_of_unsigned_int _refs)  {
+bool Item::emptyRefs() const noexcept{
+    return refs.empty();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::setRefs(set_of_unsigned_int _refs)  {
     this->refs = _refs;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_addRef(unsigned int ref) {
+void Item::addRef(unsigned int ref) {
     this->refs.insert(ref);
 }
 
@@ -262,7 +276,7 @@ std::vector<bool>& Item::getSeen() {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setSeen(std::vector<bool>& _seen) {
+void Item::setSeen(std::vector<bool>& _seen) {
     this->seen = _seen;
 }
 
@@ -276,49 +290,49 @@ bool Item::isSeen(unsigned int _index) const {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setSeen(unsigned int _index, bool b) {
+void Item::setSeen(unsigned int _index, bool b) {
     this->seen[_index] = b;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int>& Item::_getRanges() {
+std::vector<unsigned int>& Item::getRanges() {
     return ranges;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_addRanges(unsigned int k) {
+void Item::addRanges(unsigned int k) {
     ranges.push_back(k);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_setRanges(std::vector<unsigned int>& ranges) {
+void Item::setRanges(std::vector<unsigned int>& ranges) {
     this->ranges = ranges;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<forestIdentifierPtr> Item::_getForestIdentifiers() const {
+std::vector<forestIdentifierPtr>& Item::getForestIdentifiers() {
     return forestIdentifiers;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_addForestIdentifiers(unsigned int key, forestIdentifierPtr forestIdentifier) {
+void Item::addForestIdentifiers(unsigned int key, forestIdentifierPtr forestIdentifier) {
     forestIdentifiers[key] = std::move(forestIdentifier);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_setForestIdentifiers(std::vector<forestIdentifierPtr>& forestIdentifiers) {
+void Item::setForestIdentifiers(std::vector<forestIdentifierPtr>& forestIdentifiers) {
     this->forestIdentifiers = forestIdentifiers;
 }
 
@@ -332,7 +346,7 @@ listFeaturesPtr Item::getSynthesizedSonFeatures() {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setSynthesizedSonFeatures(listFeaturesPtr _synthesizedSonFeatures) {
+void Item::setSynthesizedSonFeatures(listFeaturesPtr _synthesizedSonFeatures) {
     this->synthesizedSonFeatures = std::move(_synthesizedSonFeatures);
 }
 
@@ -346,7 +360,7 @@ listFeaturesPtr Item::getInheritedSonFeatures() {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setInheritedSonFeatures(listFeaturesPtr _inheritedSonFeatures) {
+void Item::setInheritedSonFeatures(listFeaturesPtr _inheritedSonFeatures) {
     this->inheritedSonFeatures = std::move(_inheritedSonFeatures);
 }
 
@@ -360,7 +374,7 @@ featuresPtr Item::getSynthesizedFeatures() {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setSynthesizedFeatures(featuresPtr _synthesizedFeatures) {
+void Item::setSynthesizedFeatures(featuresPtr _synthesizedFeatures) {
     this->synthesizedFeatures = std::move(_synthesizedFeatures);
 }
 
@@ -374,7 +388,7 @@ featuresPtr Item::getInheritedFeatures() const {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setInheritedFeatures(featuresPtr _inheritedFeatures) {
+void Item::setInheritedFeatures(featuresPtr _inheritedFeatures) {
     this->inheritedFeatures = std::move(_inheritedFeatures);
 }
 
@@ -388,35 +402,35 @@ environmentPtr Item::getEnvironment() const {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setEnvironment(environmentPtr _environment) {
+void Item::setEnvironment(environmentPtr _environment) {
     this->environment = std::move(_environment);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::isStarted() {
+bool Item::isStarted() const noexcept {
     return ranges.size() == 1;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::isCompleted() {
+bool Item::isCompleted() const noexcept {
     return ranges.size() == (getRule()->getRhs().size() + 1);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_setStatements(const statementsPtr& statements) {
+void Item::setStatements(const statementsPtr& statements) {
     this->statements = statements;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::_addEnvironment(environmentPtr _environment) {
+void Item::addEnvironment(environmentPtr _environment) {
     if (!this->environment)
         this->environment = Environment::create();
     this->environment->add(std::move(_environment));
@@ -653,8 +667,8 @@ void Item::print(std::ostream& out) {
 /* **************************************************
  *
  ************************************************** */
-itemPtr Item::_clone(const std::bitset<FLAGS>& protectedFlags) {
-    itemPtr it = Item::_create(this->rule,
+itemPtr Item::clone(const std::bitset<FLAGS>& protectedFlags) {
+    itemPtr it = Item::create(this->rule,
                                this->statements ? this->statements->clone(protectedFlags) : statementsPtr());
     it->index = this->index;
     it->indexTerms = this->indexTerms;
@@ -673,7 +687,7 @@ itemPtr Item::_clone(const std::bitset<FLAGS>& protectedFlags) {
 /* **************************************************
  *
  ************************************************** */
-void Item::_setIndex(unsigned int index) {
+void Item::setIndex(unsigned int index) {
     this->index = index;
     termsPtr terms = currentTerms();
     if (!terms || terms->isOptional() || (terms->size() > 1)) {
@@ -687,7 +701,7 @@ void Item::_setIndex(unsigned int index) {
 /* **************************************************
  *
  ************************************************** */
-void Item::_next(bool& modification) {
+void Item::next(bool& modification) {
 #ifdef TRACE_NEXT
     std::cout << "<H3>####################### NEXT #######################</H3>" << std::endl;
     this->print(std::cout);
@@ -700,7 +714,7 @@ void Item::_next(bool& modification) {
             continue;
         }
         if (!this->forestIdentifiers[i]) {
-            _setIndex(i);
+            setIndex(i);
             modification = true;
             break;
         }
@@ -710,7 +724,7 @@ void Item::_next(bool& modification) {
         modification = true;
     }
     if (this->index != UINT_MAX){
-        this->_setSeen(this->index, true);
+        this->setSeen(this->index, true);
     }
     
 #ifdef TRACE_NEXT
@@ -810,7 +824,7 @@ bool Item::equal_to::operator()(itemPtr const& i1, itemPtr const& i2) const {
 /* **************************************************
  *
  ************************************************** */
-void Item::_renameVariables(size_t k) {
+void Item::renameVariables(size_t k) {
     this->statements->renameVariables(k);
 }
 

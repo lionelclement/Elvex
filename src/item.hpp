@@ -71,7 +71,7 @@ public:
 
     // static constructors
     
-    static itemPtr _create(const rulePtr& rule, statementsPtr statements = statementsPtr());
+    static itemPtr create(const rulePtr& rule, statementsPtr statements = statementsPtr());
 
     // terms[index][0] if terms[index].size()==1 and !terms[index].optionnal(), exception otherwise
     unsigned int currentTerm(void) ;
@@ -85,15 +85,15 @@ public:
 
     unsigned int getIndex(void) const;
 
-    std::vector<unsigned int>& _getIndexTerms(void);
+    std::vector<unsigned int>& getIndexTerms(void);
 
     unsigned int getRuleLhs(void) const;
 
-    std::vector<termsPtr>& _getRuleRhs(void);
+    std::vector<termsPtr>& getRuleRhs(void);
 
     statementsPtr getStatements(void) const;
 
-    set_of_unsigned_int getRefs(void) ;
+    set_of_unsigned_int& getRefs(void) ;
 
     listFeaturesPtr getSynthesizedSonFeatures(void) ;
 
@@ -115,80 +115,84 @@ public:
 
     termsPtr getTerms(unsigned int) const;
 
-    std::vector<unsigned int>& _getRanges(void);
+    std::vector<unsigned int>& getRanges(void);
+
+    std::vector<forestIdentifierPtr>& getForestIdentifiers(void);
 
     // setters
     
-    void _setCurrentTerms(termsPtr);
+    void setCurrentTerms(termsPtr);
 
-    void _setRule(rulePtr);
+    void setRule(rulePtr);
 
-    void _setRefs(set_of_unsigned_int);
+    void setRefs(set_of_unsigned_int);
 
-    void _setSynthesizedSonFeatures(listFeaturesPtr);
+    void setSynthesizedSonFeatures(listFeaturesPtr);
 
-    void _setInheritedSonFeatures(listFeaturesPtr);
+    void setInheritedSonFeatures(listFeaturesPtr);
 
-    void _setSynthesizedFeatures(featuresPtr);
+    void setSynthesizedFeatures(featuresPtr);
 
-    void _setInheritedFeatures(featuresPtr);
+    void setInheritedFeatures(featuresPtr);
 
-    void _setEnvironment(environmentPtr);
+    void setEnvironment(environmentPtr);
 
-    void _setSeen(std::vector<bool>&);
+    void setSeen(std::vector<bool>&);
 
-    void _setSeen(unsigned int, bool);
+    void setSeen(unsigned int, bool);
 
-    void _setRanges(std::vector<unsigned int>&);
+    void setRanges(std::vector<unsigned int>&);
 
-    void _setForestIdentifiers(std::vector<forestIdentifierPtr>&);
+    void setForestIdentifiers(std::vector<forestIdentifierPtr>&);
 
-    void _setStatements(const statementsPtr&);
+    void setStatements(const statementsPtr&);
 
     // rule methods
     
+    size_t sizeRuleRhs() const noexcept;
+
     void rulePrint(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
     
     void ruleResetUsages(void) ;
 
     const std::string& getRuleFilename() const;
 
-    void _addRef(unsigned int);
+    void addRef(unsigned int);
 
-    void _putIndexTerms(unsigned int, unsigned int);
+    void putIndexTerms(unsigned int, unsigned int);
 
     bool isSeen(unsigned int) const;
 
-    void _addRanges(unsigned int) ;
+    void addRanges(unsigned int);
 
-    std::vector<forestIdentifierPtr> _getForestIdentifiers(void) const;
-
-    void _addForestIdentifiers(unsigned int i, forestIdentifierPtr);
+    void addForestIdentifiers(unsigned int i, forestIdentifierPtr);
 
     void buildSynthesizedFeatures(class Synthesizer *) const;
 
     void buildInheritedSonFeatures(class Synthesizer *) const;
 
-    void _addEnvironment(environmentPtr);
+    void addEnvironment(environmentPtr);
 
     void print(std::ostream&);
 
-    void _renameVariables(size_t);
+    void renameVariables(size_t);
 
-    bool isCompleted(void);
+    bool isCompleted(void) const noexcept;
 
-    bool isStarted(void);
+    bool isStarted(void) const noexcept;
 
-    void _setIndex(unsigned int);
+    void setIndex(unsigned int);
     
-    void _next(bool&);
+    void next(bool&);
 
     void defaultInheritedSonFeatures(void);
 
     void apply(class Parser& parser, class Synthesizer* synthesizer);
 
-    itemPtr _clone(const std::bitset<FLAGS>& savedFlags = Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+    itemPtr clone(const std::bitset<FLAGS>& savedFlags = Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
    
+    bool emptyRefs() const noexcept;
+    
     struct hash {
         size_t operator()(itemPtr const&) const;
     };
