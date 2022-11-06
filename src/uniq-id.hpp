@@ -17,32 +17,21 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_SERIALIZABLE_H
-#define ELVEX_SERIALIZABLE_H
+#ifndef ELVEX_UNIQ_ID_H
+#define ELVEX_UNIQ_ID_H
 
-#include <string>
+#include <cstddef>
 
-class Serializable {
+class UniqId {
 
 private:
-    int serialHashCode;
-
-    virtual void makeSerialString() = 0;
-
-protected:
-    std::string serialString;
+    static size_t uniqId;
+    size_t id;
 
 public:
-    explicit Serializable();
-
-    virtual ~Serializable();
-
-    std::string peekSerialString();
-
-    size_t hashCode();
-
-    void resetSerial();
+    explicit UniqId(size_t id = 0); // if zero => autoinc
+    size_t getId(void) const;
 
 };
 
-#endif // ELVEX_SERIALIZABLE_H
+#endif // ELVEX_UNIQ_ID_H

@@ -76,6 +76,9 @@ void ForestMap::clear() {
  *
  ************************************************** */
 bool ForestMap::insert(forestIdentifierPtr key, forestPtr value) {
-    return data.insert(std::make_pair(key, value)).second;
+    auto result = data.insert(std::make_pair(key, value)).second;
+    //CERR_LINE
+    //std::cerr << "insert " << key->peekSerialString() << std::endl;
+    return result;
 }
 

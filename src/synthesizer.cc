@@ -44,7 +44,7 @@ Synthesizer::Synthesizer() {
     this->compactedLexicon = nullptr;
     this->maxLength = MAXLENGTH;
     this->maxUsages = MAXUSAGES;
-    this->maxItems = MAXITEMS;
+    this->maxCardinal = MAXCARDINAL;
     this->nodeRoot = nodePtr();
     this->lexiconFileName = std::string();
     this->rulesFileName = std::string();
@@ -190,15 +190,15 @@ void Synthesizer::setMaxUsages(unsigned int _maxUsages) {
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxItems(unsigned int _maxItems) {
-    this->maxItems = _maxItems;
+void Synthesizer::setMaxCardinal(unsigned int _maxCardinal) {
+    this->maxCardinal = _maxCardinal;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::getMaxItems() const {
-    return this->maxItems;
+unsigned int Synthesizer::getMaxCardinal() const {
+    return this->maxCardinal;
 }
 
 /* **************************************************
@@ -422,9 +422,27 @@ void Synthesizer::printState(std::ostream& outStream, const itemSetPtr& state) {
 /* **************************************************
  *
  ************************************************** */
+itemPtr Synthesizer::createItem(const itemPtr& item, unsigned int row) {
+    itemPtr it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
+                              item->getStatements() ? item->getStatements()->clone(
+                                      Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED) : statementsPtr());
+    it->addRanges(item->getRanges());
+    it->addRanges(row);
+    it->addForestIdentifiers(item->getForestIdentifiers());
+    it->setInheritedFeatures(item->getInheritedFeatures()->clone());
+    it->setInheritedSonFeatures(item->getInheritedSonFeatures()->clone());
+    it->setSynthesizedFeatures(item->getSynthesizedFeatures()->clone());
+    it->setSynthesizedSonFeatures(item->getSynthesizedSonFeatures()->clone());
+    it->setSeen(item->getSeen());
+    return it;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 std::string
 Synthesizer::keyMemoization(const itemPtr& actualItem, const itemPtr& previousItem) {
-    return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->currentTerm()) +
+    return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) +
            actualItem->getSynthesizedFeatures()->peekSerialString();
 }
 
@@ -439,185 +457,129 @@ void Synthesizer::clear() {
 }
 
 /* **************************************************
- * erreur:
- * les items sont enregistrés dans state et sont modifiés...
+ *
  ************************************************** */
 void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int row) {
     bool modification;
     do {
+        loop:
         modification = false;
+
         // Iterate through list
-        for (ItemSet::set_of_item_iterator actualItem = state->begin();
-             actualItem != state->end() && !modification; 
-             ++actualItem) {
+        for (auto actualItem = state->cbegin();
+             actualItem != state->cend() && !modification; ++actualItem) {
 
-            if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM)) {
+            if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM))
                 continue;
-            }
-
-#ifdef TRACE_OPTION
-              if (traceClose) {
-                  std::cout << "<H3>####################### LOOP #######################</H3>" << std::endl;
-                  (*actualItem)->print(std::cout);
-                  std::cout << std::endl;
-              }
-#endif
-
-            if ((*actualItem)->isSetFlags(Flags::BOTTOM)) {
-                FATAL_ERROR_UNEXPECTED;
-            }
-
-            if (verbose && trace) {
-                std::cout << "*** Item: " << (*actualItem)->getId() << std::endl;
-            }
 
             // X -> alpha • [Y] gamma
-            if (((*actualItem)->sizeRuleRhs() > (*actualItem)->getIndex())
-                    && !(*actualItem)->isCompleted() 
-                    && !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
-                    && (*actualItem)->currentTerms()->isOptional()) {
+            if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
+                !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
+                && (*actualItem)->getCurrentTerms()->isOptional()) {
 
-                        FATAL_ERROR_UNEXPECTED;
-// #ifdef TRACE_PASS
-//                 //std::cout << "<H3>####################### PASS : X -> alpha • [Y] gamma #######################</H3>" << std::endl;
-//                 //(*actualItem)->print(std::cout);
-//                 //std::cout << std::endl;
-// #endif  
-                
-//                 // itemPtr it = (*actualItem)->_clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
-//                 // it->setRule((*actualItem)->getRule()->clone());
-                
-//                 // // add to Forests
-//                 // forestPtr forestFound = forestPtr();
-//                 // forestIdentifierPtr fi = ForestIdentifier::create(UINT_MAX,
-//                 //                                                   row,
-//                 //                                                   row,
-//                 //                                                   std::string());
-//                 // auto forestMapIt = forestMap.find(fi);
-//                 // if (forestMapIt != forestMap.cend()) {
-//                 //     forestFound = forestMapIt->second;
-//                 //     fi.reset();
-//                 //     it->addForestIdentifiers(it->getIndex(), forestMapIt->first);
-//                 // } else {
-//                 //     forestFound = Forest::create(Entry::create(UINT_MAX), row, row);
-//                 //     forestMap.insert(fi, forestFound);
-//                 //     it->addForestIdentifiers(it->getIndex(), fi);
-//                 // }
-                
-//                 // it->setIndex((*actualItem)->getIndex() + 1);
-//                 // it->addRanges(row);
+#ifdef TRACE_UNHIDE
+                std::cout << "<H3>####################### UNHIDE #######################</H3>" << std::endl;
+                (*actualItem)->print(std::cout);
+                std::cout << std::endl;
+#endif
 
-// // #ifdef TRACE_PASS
-// //                 std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
-// //                 it->print(std::cout);
-// //                 std::cout << std::endl;
-// // #endif
-//                 // if (!state->insert(it, this)) {
-//                 //     state->print(std::cout);
-//                 //     FATAL_ERROR_UNEXPECTED
-//                 // } else {
-//                 //     insertItemMap(it);
-//                 // }
-                
-// //                 it = (*actualItem)->_clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
-// //                 it->setRule((*actualItem)->getRule()->clone());
-// //                 it->setIndex((*actualItem)->getIndex());
-// //                 it->currentTerms()->unsetOptional();
+                (*actualItem)->addFlags(Flags::SEEN);
 
-// // #ifdef TRACE_PASS
-// //                 std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
-// //                 it->print(std::cout);
-// //                 std::cout << std::endl;
-// // #endif
-// //                 if (!state->insert(it, this)) {
-// //                     FATAL_ERROR_UNEXPECTED;
-// //                 } else {
-// //                     insertItemMap(it);
-// //                 }
-
-//                 //(*actualItem)->addFlags(Flags::BOTTOM);
-//  #ifdef TRACE_PASS
-//                  std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
-//                  state->print(std::cout);
-//                  std::cout << "<H3>#######################  #######################</H3>" << std::endl;
-//                  (*actualItem)->print(std::cout);
-//                  std::cout << std::endl;
-//  #endif
-//                 if (state->erase(*actualItem) == 0) {
-//                     FATAL_ERROR_UNEXPECTED;
-//                 }
-//                 eraseItemMap((*actualItem)->getId());
-// #ifdef TRACE_PASS
-//                 std::cout << "<H3>####################### PASS: CON'T #######################</H3>" << std::endl;
-//                 state->print(std::cout);
-//                 std::cout << std::endl;
-// #endif
-
-//                 modification = true;
-//                 break;
-            }
-            
-            // X -> alpha • Y1|Y2 beta
-            if (((*actualItem)->sizeRuleRhs() > (*actualItem)->getIndex()) 
-                    && !(*actualItem)->isCompleted() 
-                    && !(*actualItem)->currentTerms()->isOptional()
-                    && (*actualItem)->currentTerms()->size() > 1) {
-
-                        FATAL_ERROR_UNEXPECTED;
-
-// #ifdef TRACE_UNFOLD
-//                 std::cout << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
-//                 (*actualItem)->print(std::cout);
-//                 std::cout << std::endl;
-// #endif
-
-//                 (*actualItem)->addFlags(Flags::SEEN);
-                
-//                 termsPtr terms = (*actualItem)->currentTerms();
-//                 for (unsigned int indexTerm = 0; indexTerm < terms->size(); ++indexTerm) {
-//                     itemPtr it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
-//                     it->setRule((*actualItem)->getRule()->clone());
-//                     it->setCurrentTerms(Terms::create((*terms)[indexTerm]));
-//                     it->putIndexTerms((*actualItem)->getIndex(), indexTerm);
-                    
-// #ifdef TRACE_PASS
-//                     std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
-//                     it->print(std::cout);
-//                     std::cout << std::endl;
-// #endif
-//                     if (!state->insert(it, this)) {
-//                         FATAL_ERROR_UNEXPECTED;
-//                     } else {
-//                         insertItemMap(it);
-//                     }
-//                 }
-//                 //(*actualItem)->addFlags(Flags::BOTTOM);
-//                 if (state->erase((*actualItem)) == 0)
-//                     FATAL_ERROR_UNEXPECTED;
-//                 eraseItemMap((*actualItem)->getId());
-//                 modification = true;
-//                 break;
-            }
-
-            (*actualItem)->apply(parser, this);
-
-            if ((*actualItem)->isSetFlags(Flags::BOTTOM)) {
-                if (state->erase((*actualItem)) == 0)
-                    FATAL_ERROR_UNEXPECTED;
+                itemPtr it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+                forestPtr forestFound = forestPtr();
+                forestIdentifierPtr fi = ForestIdentifier::create(it->getCurrentTerm(),
+                                                                  row,
+                                                                  row,
+                                                                  std::string());
+                auto forestMapIt = forestMap.find(fi);
+                if (forestMapIt != forestMap.cend()) {
+                    forestFound = forestMapIt->second;
+                    fi.reset();
+                    it->addForestIdentifiers(it->getIndex(), forestMapIt->first);
+                } else {
+                    forestFound = Forest::create(Entry::create(it->getCurrentTerm()), row, row);
+                    forestMap.insert(fi, forestFound);
+                    it->addForestIdentifiers(it->getIndex(), fi);
+                }
+                it->setIndex((*actualItem)->getIndex() + 1);
+                it->addRanges(row);
+#ifdef TRACE_UNHIDE
+                std::cout << "<H3>####################### UNHIDE: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
+                it->print(std::cout);
+                std::cout << std::endl;
+#endif
+                if (!state->insert(it, this)) {
+                    FATAL_ERROR_UNEXPECTED
+                } else {
+                    insertItemMap(it);
+                }
+                it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+                it->setRule((*actualItem)->getRule()->clone());
+                it->setIndex((*actualItem)->getIndex());
+                it->getCurrentTerms()->unsetOptional();
+#ifdef TRACE_UNHIDE
+                std::cout << "<H3>####################### UNHIDE: X -> alpha • Y gamma #######################</H3>" << std::endl;
+                it->print(std::cout);
+                std::cout << std::endl;
+#endif
+                if (!state->insert(it, this)) {
+                    FATAL_ERROR_UNEXPECTED
+                } else {
+                    insertItemMap(it);
+                }
+                state->erase(*actualItem);
                 eraseItemMap((*actualItem)->getId());
-                modification = true;
-                break;
+                goto loop;
             }
 
-            // X -> alpha • Y gamma
-            if (        (*actualItem)->getIndex() != UINT_MAX
-                        && (*actualItem)->sizeRuleRhs() > (*actualItem)->getIndex() 
-                        && !(*actualItem)->isCompleted() 
-                        && !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
-                        && (*actualItem)->currentTerms()->size() == 1 
-                        && !(*actualItem)->currentTerms()->isOptional()
-                        && parser.getRules().isNonTerminal((*actualItem)->currentTerm()) 
-                        && !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
+            // X -> alpha • Y1|Y2 beta
+            if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
+                !(*actualItem)->getCurrentTerms()->isOptional()
+                && (*actualItem)->getCurrentTerms()->size() > 1) {
+
+#ifdef TRACE_UNFOLD
+                std::cout << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
+                (*actualItem)->print(std::cout);
+                std::cout << std::endl;
+#endif
+
+                (*actualItem)->addFlags(Flags::SEEN);
+                termsPtr terms = (*actualItem)->getCurrentTerms();
+                for (unsigned int indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1) {
+                    itemPtr it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+                    it->setRule((*actualItem)->getRule()->clone());
+                    it->setIndex((*actualItem)->getIndex());
+                    it->setCurrentTerms(Terms::create((*terms)[indexTerm1]));
+                    it->getIndexTerms()[(*actualItem)->getIndex()] = indexTerm1;
+
+#ifdef TRACE_UNHIDE
+                    std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
+                    it->print(std::cout);
+                    std::cout << std::endl;
+#endif
+                    if (!state->insert(it, this)) {
+                        FATAL_ERROR_UNEXPECTED
+                    } else {
+                        insertItemMap(it);
+                    }
+                }
+                state->erase((*actualItem));
+                eraseItemMap((*actualItem)->getId());
+                goto loop;
+            }
+
+            (*actualItem)->apply(/*state, */parser, this);
+            if ((*actualItem)->isSetFlags(Flags::BOTTOM)) {
+                state->erase((*actualItem));
+                eraseItemMap((*actualItem)->getId());
+                goto loop;
+            }
+                // X -> alpha • Y gamma
+            else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
+                     !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
+                     && (*actualItem)->getCurrentTerms()->size() == 1 && !(*actualItem)->getCurrentTerms()->isOptional()
+                     && parser.getRules().isNonTerminal((*actualItem)->getCurrentTerm()) &&
+                     !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
 
 #ifdef TRACE_OPTION
                 if (traceClose) {
@@ -643,19 +605,20 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                     }
 
                     for (const auto &iterRules : parser.getRules().getRules()) {
-                        if ((iterRules->getLhs() == (*actualItem)->currentTerm())) {
+                        if ((iterRules->getLhs() == (*actualItem)->getCurrentTerm())) {
 
                             itemPtr it;
                             iterRules->incUsages(this);
-                            it = Item::create(iterRules->clone(), 
+                            it = Item::create(iterRules->clone(), 0, 0,
                                               iterRules->getStatements() ? iterRules->getStatements()->clone(0)
                                                                          : statementsPtr());
                             it->addRanges(row);
+                            //it->renameVariables(it->getId());
                             it->setInheritedFeatures(inheritedSonFeatures->clone());
 
 #ifdef TRACE_OPTION
                             if (traceClose) {
-                               std::cout << "<H3>####################### CLOSE (Y -> γ) #######################</H3>" << std::endl;
+                               std::cout << "<H3>####################### CLOSE (Y -> • γ) #######################</H3>" << std::endl;
                                it->print(std::cout);
                                std::cout << std::endl;
                             }
@@ -675,19 +638,12 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                             // record the item
                             auto found = state->find(it);
                             if (found != state->cend()) {
-                                itemPtr item = (*found);
-                                if (!state->erase((*found)))
-                                    FATAL_ERROR_UNEXPECTED;
-                                eraseItemMap((*found)->getId());
-                                item->addRef((*actualItem)->getId());
-                                if (!state->insert(item, this))
-                                    FATAL_ERROR_UNEXPECTED;
-                                insertItemMap(item);
+                                (*found)->addRef((*actualItem)->getId());
                                 it.reset();
                             } else {
                                 it->addRef((*actualItem)->getId());
                                 if (!state->insert(it, this)) {
-                                    FATAL_ERROR_UNEXPECTED;
+                                    FATAL_ERROR_UNEXPECTED
                                 } else {
                                     insertItemMap(it);
                                 }
@@ -696,9 +652,6 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                             (*actualItem)->addFlags(Flags::SEEN);
                         }
                     }
-                }
-                if (!modification){
-                    FATAL_ERROR_UNEXPECTED;
                 }
             }
 
@@ -712,7 +665,6 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                    std::cout << std::endl;
                 }
 #endif
-                
                 if (verbose && trace && (*actualItem)->getRuleTrace()) {
                     std::cout << "*** Trying Reduce \n";
                     (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
@@ -735,7 +687,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                     if (!(*actualItem)->getSynthesizedFeatures()->isBottom()) {
 
                         // If Axiom reduced or debug Transients
-                        if (reduceAll || (*actualItem)->emptyRefs()) {
+                        if (reduceAll || (*actualItem)->getRefs().empty()) {
 #ifdef TRACE_OPTION
                             if (traceReduce) {
                                std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
@@ -774,16 +726,14 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                 fi.reset();
                             } else {
                                 forestFound = Forest::create(Entry::create((*actualItem)->getRuleLhs()),
-                                                             (*actualItem)->getRanges()[0], 
-                                                             row);
-                                if (!forestMap.insert(fi, forestFound))
-                                    FATAL_ERROR_UNEXPECTED;
+                                                             (*actualItem)->getRanges()[0], row);
+                                forestMap.insert(fi, forestFound);
                                 nodePtr node = Node::create();
                                 node->push_back(forestFound);
                                 nodeRoot->push_back(forestFound);
                             }
                             nodePtr node = Node::create();
-                            for (auto& forestIdentifierPtr : (*actualItem)->getForestIdentifiers()) {
+                            for (auto &forestIdentifierPtr : (*actualItem)->getForestIdentifiers()) {
                                 auto _forestMapIt = forestMap.find(forestIdentifierPtr);
                                 if (_forestMapIt != forestMap.cend()) {
                                     node->push_back((*_forestMapIt).second);
@@ -814,10 +764,11 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                     for (std::vector<memoizationValuePtr>::const_iterator i = result.cbegin();
                                          i != result.cend();
                                          ++i) {
-                                            CERR_LINE;
                                         // New item build
-                                        itemPtr it = previousItem->clone();
-                                        it->addRanges(row);
+                                        itemPtr it = createItem(previousItem, row);
+                                        it->setEnvironment(
+                                                previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
+                                                                               : environmentPtr());
                                         it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
                                                                              (*i)->getFeatures());
                                         //...
@@ -829,6 +780,7 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                                 inheritedFeatures->deleteAnonymousVariables();
                                             }
                                         }
+
                                         it->addForestIdentifiers(previousItem->getIndex(), (*i)->getForestIdentifier());
 
 #ifdef TRACE_MEMOIZATION
@@ -840,9 +792,8 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
 
                                         auto found = states[row]->find(it);
                                         if (found != states[row]->cend()) {
-                                            (*found)->setRefs(previousItem->getRefs());
+                                            (*found)->addRefs(previousItem->getRefs());
                                             it.reset();
-                                                modification = true;
                                         } else {
                                             if (!states[row]->insert(it, this)) {
                                                 FATAL_ERROR_UNEXPECTED
@@ -856,9 +807,10 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                 }
                                     // This reduce action is new
                                 else {
-                                    itemPtr it = previousItem->clone();
-                                    it->setIndex(previousItem->getIndex()+1);
-                                    it->addRanges(row);
+                                    itemPtr it = createItem(previousItem, row);
+                                    it->setEnvironment(
+                                            previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
+                                                                           : environmentPtr());
                                     it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
                                                                          (*actualItem)->getSynthesizedFeatures()->clone());
 
@@ -891,17 +843,13 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                     if (forestMapIt != forestMap.cend()) {
                                         forestFound = forestMapIt->second;
                                         it->addForestIdentifiers(previousItem->getIndex(), forestMapIt->first);
-                                        modification = true;
                                         fi.reset();
                                     } else {
                                         forestFound = Forest::create(Entry::create((*actualItem)->getRuleLhs()),
-                                                                     (*actualItem)->getRanges()[0], 
-                                                                     row);
-                                        if (!forestMap.insert(fi, forestFound))
-                                            FATAL_ERROR_UNEXPECTED;
+                                                                     (*actualItem)->getRanges()[0], row);
+                                        forestMap.insert(fi, forestFound);
                                         it->addForestIdentifiers(previousItem->getIndex(), fi);
                                     }
-
                                     forestFound->push_back_node(node);
 #ifdef TRACE_OPTION
                                     if (traceReduce) {
@@ -917,30 +865,23 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                         std::cout << std::endl << "⇑:";
                                         (*actualItem)->getSynthesizedFeatures()->flatPrint(std::cout);
                                         std::cout << std::endl;
-                                        it->getRule()->print(std::cout, previousItem->getIndex(), false, false);
+                                        it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
                                         std::cout << std::endl << " => " << std::endl;
                                         it->getRule()->print(std::cout, it->getIndex(), false, false);
                                         std::cout << std::endl << std::endl;
                                     }
-                                    
+
                                     auto found = states[row]->find(it);
                                     if (found != states[row]->cend()) {
-                                        itemPtr item = *found;
-                                        if (!state->erase((*found)))
-                                            FATAL_ERROR_UNEXPECTED;
-                                        eraseItemMap((*found)->getId());
-                                        item->setRefs(previousItem->getRefs());
-                                        if (!state->insert(item, this))
-                                            FATAL_ERROR_UNEXPECTED;
-                                        insertItemMap(item);
-                                        modification = true;
+                                        (*found)->addRefs(previousItem->getRefs());
                                         it.reset();
                                     } else {
+
                                         // tabulates this result
                                         // std::string key = keyMemoization(*actualItem, previousItem);
                                         memoizedMap.insert(key,
-                                                           (*it->getSynthesizedSonFeatures())[previousItem->getIndex()],
-                                                           it->getForestIdentifiers()[previousItem->getIndex()]);
+                                                           (*it->getSynthesizedSonFeatures())[it->getIndex() - 1],
+                                                           it->getForestIdentifiers()[it->getIndex() - 1]);
                                         // record the item
                                         it->setRefs(previousItem->getRefs());
                                         if (!states[row]->insert(it, this)) {
@@ -951,7 +892,6 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
                                         }
                                         (*actualItem)->addFlags(Flags::SEEN);
                                     }
-
                                 }
                             }
                         }
@@ -960,49 +900,18 @@ void Synthesizer::close(Parser& parser, const itemSetPtr& state, unsigned int ro
             }
 
                 // X -> alpha • t beta
-            else if (   (*actualItem)->getIndex() != UINT_MAX
-                        && (*actualItem)->sizeRuleRhs() > (*actualItem)->getIndex() 
-                        && !(*actualItem)->isCompleted() 
-                        && !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
-                        && (*actualItem)->currentTerms()->size() == 1 
-                        && !(*actualItem)->currentTerms()->isOptional()
-                        && parser.getRules().isTerminal((*actualItem)->currentTerm()) 
-                        && !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
-            } 
-            
-            else {
-
-                CERR_LINE;
-                itemPtr item = (*actualItem)->clone();
-                if (!state->erase((*actualItem)))
-                    FATAL_ERROR_UNEXPECTED;
-                eraseItemMap((*actualItem)->getId());
-                                        
-                CERR_LINE;
-                item->next(modification);
-                CERR_LINE;
-                if (!state->insert(item, this))
-                    FATAL_ERROR_UNEXPECTED;
-                insertItemMap(item);
-                CERR_LINE;
-                if (!modification){
-                    FATAL_ERROR_UNEXPECTED;
-                }
-                else 
-                    break;
-                
+            else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
+                     !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()]
+                     && (*actualItem)->getCurrentTerms()->size() == 1 && !(*actualItem)->getCurrentTerms()->isOptional()
+                     && parser.getRules().isTerminal((*actualItem)->getCurrentTerm()) &&
+                     !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil()) {
+            } else {
+                (*actualItem)->successor(modification);
             }
         }
     } while (modification);
     for (const auto& i : *state)
         i->subFlags(Flags::SEEN);
-#ifdef TRACE_OPTION
-        if (traceStage) {
-           std::cout << "<H3>####################### STAGE " << state->getId() << " #######################</H3>" << std::endl;
-           state->print(std::cout);
-           std::cout << std::endl;
-        }
-#endif
 }
 
 /* **************************************************
@@ -1016,19 +925,18 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
 
         // Iterate through list
         for (auto actualItem = state->begin();
-            actualItem != state->end() && !modification; 
-            ++actualItem) {
+             actualItem != state->end() && !modification; ++actualItem) {
             if ((*actualItem)->isSetFlags(Flags::SEEN))
                 continue;
             if ((*actualItem)->isSetFlags(Flags::BOTTOM))
                 continue;
-            if ((*actualItem)->currentTerms()) {
+            if ((*actualItem)->getCurrentTerms()) {
                 featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
-                if (!(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] 
-                    && !(*actualItem)->currentTerms()->isOptional() 
-                    && (*actualItem)->currentTerms()->size() == 1
+                if (!(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
+                    !(*actualItem)->getCurrentTerms()->isOptional() && (*actualItem)->getCurrentTerm()
                     && !inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom()
-                    && parser.getRules().getTerminals().find((*actualItem)->currentTerm()) != parser.getRules().getTerminals().end()) {
+                    && parser.getRules().getTerminals().find((*actualItem)->getCurrentTerm()) !=
+                       parser.getRules().getTerminals().end()) {
 
 #ifdef TRACE_OPTION
                     if (traceShift) {
@@ -1050,7 +958,7 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                         inheritedSonFeatures->deleteAnonymousVariables();
                     }
 
-                    std::string* form = nullptr;
+                    std::string *form = nullptr;
                     unsigned int pred = inheritedSonFeatures->assignPred();
                     Stage _stage;
                     if (pred == UINT_MAX) {
@@ -1072,7 +980,7 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                      std::cerr << "form:" << form << std::endl;
                      //std::cerr << "POS : " << Vartable::codeToString((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
                      */
-                    auto foundCode = parser.findCacheLexicon((*actualItem)->currentTerm());
+                    auto foundCode = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
                     if (foundCode != parser.cendCacheLexicon() && (!foundCode->second->empty())) {
                         Parser::entries_map* listPred = foundCode->second;
                         if (listPred) {
@@ -1088,7 +996,7 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                             switch (_stage) {
 
                                 case MORPHO_FEATURES:
-                                    entries = findByPos(parser, listPred, (*actualItem)->currentTerm());
+                                    entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
                                     break;
 
                                 case FORM_FEATURES:
@@ -1096,9 +1004,9 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                                     break;
 
                                 case PRED_FEATURES:
-                                    entries = findByPred(parser, listPred, (*actualItem)->currentTerm(), pred);
+                                    entries = findByPred(parser, listPred, (*actualItem)->getCurrentTerm(), pred);
                                     if (!entries)
-                                        entries = findByPos(parser, listPred, (*actualItem)->currentTerm());
+                                        entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
                                     break;
                             }
 
@@ -1132,9 +1040,8 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                                         (entryFeatures && entryFeatures->subsumes(inheritedSonFeatures, env))) {
 
                                         // New item build
-                                        itemPtr it = (*actualItem)->clone();
-                                        it->setIndex((*actualItem)->getIndex()+1);
-                                        it->addRanges(row);
+                                        itemPtr it = createItem(*actualItem, row);
+
                                         it->setEnvironment(env);
 
                                         featuresPtr resultFeatures = featuresPtr();
@@ -1189,8 +1096,7 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                                             //std::cerr << "pred : " << Vartable::codeToString(pred) << "<BR>" << std::endl;
                                             //std::cout << "form : " << form << "<BR>" << std::endl;
                                         } else {
-                                            if (!forestMap.insert(fi, Forest::create(word, row - 1, row)))
-                                                FATAL_ERROR_UNEXPECTED;
+                                            forestMap.insert(fi, Forest::create(word, row - 1, row));
                                             it->addForestIdentifiers((*actualItem)->getIndex(), fi);
                                         }
                                         it->setRefs((*actualItem)->getRefs());
@@ -1203,12 +1109,11 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
                                         }
 #endif
 
-
                                         if (trace && it->getRuleTrace()) {
                                             std::cout << "*** Shift " << entry->getForm() << std::endl;
-                                            it->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
+                                            it->getRule()->print(std::cout, it->getIndex() - 1, false, false);
                                             std::cout << std::endl << "↓" << it->getIndex() << ':';
-                                            (*it->getInheritedSonFeatures())[(*actualItem)->getIndex()]->flatPrint(
+                                            (*it->getInheritedSonFeatures())[it->getIndex() - 1]->flatPrint(
                                                     std::cout);
                                             std::cout << std::endl << " => " << std::endl;
                                             it->getRule()->print(std::cout, it->getIndex(), false, false);
@@ -1238,13 +1143,16 @@ bool Synthesizer::shift(class Parser& parser, const itemSetPtr& state, unsigned 
             }
         }
     } while (modification);
-    for (const auto& i : *state)
-        i->subFlags(Flags::SEEN);
+    for (
+        const auto& i
+            : *state)
+        i->
+                subFlags(Flags::SEEN);
     return modificationOnce;
 }
 
 /* **************************************************
- * Main loop
+ *
  ************************************************** */
 void Synthesizer::generate(class Parser& parser) {
 #ifdef OUTPUT_XML
@@ -1260,14 +1168,15 @@ void Synthesizer::generate(class Parser& parser) {
     std::ofstream outfile;
     nodeRoot = Node::create();
     itemSetPtr initState = ItemSet::create(0);
-    std::list<rulePtr>* rules = parser.getRules().findRules(parser.getStartTerm());
+    std::list<rulePtr> *rules = parser.getRules().findRules(parser.getStartTerm());
     itemPtr it;
     for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule) {
         (*rule)->incUsages(this);
-        it = Item::create((*rule)->clone(), (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
+        it = Item::create(*rule, UINT_MAX, 0,
+                          (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRanges(0);
         it->setInheritedFeatures(parser.getStartFeatures());
-        
+        //it->renameVariables(it->getId());
 #ifdef TRACE_OPTION
         if (traceInit) {
            std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;
@@ -1275,7 +1184,7 @@ void Synthesizer::generate(class Parser& parser) {
            std::cout << std::endl;
         }
 #endif
-    if (trace && it->getRuleTrace()) {
+        if (trace && it->getRuleTrace()) {
             std::cout << "*** init \n";
             it->getRule()->print(std::cout, it->getIndex(), false, false);
             std::cout << std::endl << "↑:";
@@ -1284,39 +1193,41 @@ void Synthesizer::generate(class Parser& parser) {
         }
 
         insertItemMap(it);
-        if (!initState->insert(it, this)) {
-            FATAL_ERROR_UNEXPECTED;
-        }
+        initState->insert(it, this);
     }
 
     states.insert(std::make_pair(0, initState));
     close(parser, initState, 0);
 
-    unsigned int length = 0;
-    while (length <= maxLength) {
-        itemSetPtr actualState = ItemSet::create(++length);
-        states.insert(std::make_pair(length, actualState));
+    unsigned int i = 0;
+    while (i <= maxLength) {
 
-        CERR_LINE;
-        if (!shift(parser, initState, length)) {
+        itemSetPtr actualState = ItemSet::create(++i);
+        states.insert(std::make_pair(i, actualState));
+        if (!shift(parser, initState, i))
             break;
+#ifdef TRACE_OPTION
+        if (traceStage) {
+           std::cout << "<H3>####################### STAGE " << initState->getId() << " #######################</H3>" << std::endl;
+           initState->print(std::cout);
+           std::cout << std::endl;
         }
-        CERR_LINE;
-        
+#endif
+
         actualState->resetUsages();
-        CERR_LINE;
-        close(parser, actualState, length);
-        CERR_LINE;
+        close(parser, actualState, i);
         initState = actualState;
-        CERR_LINE;
-        
     }
 
-    if (length > maxLength) {
+    if (i > maxLength) {
         throw fatal_exception("maxLength");
     }
+    if ((i % 121) == 0) {
+        std::cerr << "Length : " << i << std::endl;
+    }
+
     nodeRoot->generate(this->getRandom(), this->getOne());
- #ifdef OUTPUT_XML
+#ifdef OUTPUT_XML
     if (outXML) {
         nodeRoot->toXML(xmlNodeRoot, xmlNodeRoot);
     }

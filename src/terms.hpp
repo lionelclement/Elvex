@@ -22,8 +22,6 @@
 
 #include <iostream>
 #include <vector>
-#include "uniq_id.hpp"
-#include "serializable.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -32,7 +30,7 @@
 #include "shared_ptr.hpp"
 
 class Terms :
-    public std::enable_shared_from_this<class Terms> {
+        public std::enable_shared_from_this<class Terms> {
 
 private:
     std::vector<unsigned int> terms;
@@ -61,9 +59,9 @@ public:
 
     size_t size(void) const;
 
-    std::vector<unsigned int>::const_iterator cbegin(void) const;
+    std::vector<unsigned int>::const_iterator begin(void) const;
 
-    std::vector<unsigned int>::const_iterator cend(void) const;
+    std::vector<unsigned int>::const_iterator end(void) const;
 
     void erase(std::vector<unsigned int>::iterator begin, std::vector<unsigned int>::iterator end);
 
@@ -83,9 +81,6 @@ public:
     };
 
     unsigned int operator[](unsigned int);
-
-    void makeSerialString(void);
-
 };
 
 #endif // ELVEX_TERMS_H

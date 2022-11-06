@@ -20,7 +20,7 @@
 #ifndef ELVEX_ENTRY_H
 #define ELVEX_ENTRY_H
 
-#include "uniq_id.hpp"
+#include "uniq-id.hpp"
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
@@ -29,9 +29,7 @@
 #endif
 
 class Entry :
-        public UniqId, 
-        public Serializable, 
-        public std::enable_shared_from_this<class Entry> {
+        public UniqId, public Serializable, public std::enable_shared_from_this<class Entry> {
 
 private:
     unsigned int pos;

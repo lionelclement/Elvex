@@ -27,7 +27,7 @@
 #endif
 
 #include "flags.hpp"
-#include "uniq_id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 
 class Node :

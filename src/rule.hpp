@@ -20,18 +20,15 @@
 #ifndef ELVEX_RULE_H
 #define ELVEX_RULE_H
 
-#include <bitset>
+//#include <climits>
 #include <string>
 #include <vector>
-#include <climits>
-#include "flags.hpp"
-#include "serializable.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 
-#include "uniq_id.hpp"
+#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 
 class Rule :
@@ -56,8 +53,6 @@ private:
 
     Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
-
-    void makeSerialString(void);
 
 public:
     static rulePtr create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs,
@@ -100,7 +95,7 @@ public:
 
     void setTrace(bool trace);
 
-    rulePtr clone(void) const;
+    rulePtr clone() const;
 
     void print(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
 

@@ -1,21 +1,21 @@
-/* *************************************************
-* 
-*  ELVEX
-* 
-*  Copyright 2014-2022 LABRI, 
-*  CNRS (UMR 5800), the University of Bordeaux,
-*  and the Bordeaux INP
-* 
-*  Author: 
-*  Lionel Clément
-*  LaBRI -- Université Bordeaux 
-*  351, cours de la Libération
-*  33405 Talence Cedex - France
-*  lionel.clement@labri.fr
-*  
-*  This file is part of ELVEX.
-* 
-* ************************************************* */
+/* **************************************************
+ *
+ * ELVEX
+ *
+ * Copyright 2014-2022 LABRI, 
+ * CNRS (UMR 5800), the University of Bordeaux,
+ * and the Bordeaux INP
+ *
+ * Author: 
+ * Lionel Clément
+ * LaBRI -- Université Bordeaux 
+ * 351, cours de la Libération
+ * 33405 Talence Cedex - France
+ * lionel.clement@labri.fr
+ * 
+ * This file is part of ELVEX.
+ *
+ ************************************************** */
 
 #ifndef ELVEX_STATEMENT_H
 #define ELVEX_STATEMENT_H
@@ -32,9 +32,7 @@
 #define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "*** warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
 
 class Statement :
-        public Flags, 
-        public Serializable, 
-        public std::enable_shared_from_this<class Statement> {
+        public Flags, public Serializable, public std::enable_shared_from_this<class Statement> {
 
 public:
     enum type {
@@ -217,47 +215,47 @@ public:
 
     unsigned int getLineno() const;
 
-    void print(std::ostream& , unsigned int tabulation = 0, int yetColored = 0) const;
+    void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
-    featuresPtr evalFeatures(const itemPtr&, class Parser& parser, class Synthesizer* synthesizer, bool);
+    featuresPtr evalFeatures(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer, bool);
 
     listPtr evalList(const itemPtr&, bool);
 
-    valuePtr evalValue(const itemPtr& item, Parser& parser, Synthesizer* synthesizer, bool replaceVariables);
+    valuePtr evalValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
 
     featuresPtr unif(const featuresPtr&, const featuresPtr&, const itemPtr&);
 
-    statementPtr clone(const std::bitset<FLAGS>& savedFlags = std::bitset<FLAGS>());
+    statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
-    void buildInheritedSonFeatures(const itemPtr& item, Parser& parser, Synthesizer* synthesizer);
+    void buildInheritedSonFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildSynthesizedFeatures(const itemPtr& item, Parser& parser, Synthesizer* synthesizer);
+    void buildSynthesizedFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithInherited(const itemPtr& item, Parser& parser, Synthesizer* synthesizer);
+    void buildEnvironmentWithInherited(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithSynthesize(const itemPtr& item, Parser& parser, Synthesizer* synthesizer);
+    void buildEnvironmentWithSynthesize(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithValue(const itemPtr& item, Parser& parser, Synthesizer* synthesizer);
+    void buildEnvironmentWithValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
 
-    void stmAttest(const itemPtr&, class Parser& parser, class Synthesizer* synthesizer);
+    void stmAttest(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
 
-    void stmGuard(const itemPtr&);
+    void stmGuard(const itemPtr&/*, class Synthesizer *synthesizer*/);
 
-    void stmForeach(const itemPtr& item, class Parser& parser, class Synthesizer* synthesizer, bool& effect);
+    void stmForeach(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void stmIf(const itemPtr& item, class Parser& parser, class Synthesizer* synthesizer, bool& effect);
+    void stmIf(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void stmPrint(const itemPtr&, class Parser& parser, class Synthesizer* synthesizer);
+    void stmPrint(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
 
-    void stmPrintln(const itemPtr&, class Parser& parser, class Synthesizer* synthesizer);
+    void stmPrintln(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
 
     void renameVariables(size_t);
 
-    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer* synthesizer, bool& effect, bool on);
+    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer *synthesizer, bool &effect, bool on);
 
-    void apply(const itemPtr& item, class Parser& parser, class Synthesizer* synthesizer, bool& effect);
+    void apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void lookingForAssignedInheritedSonFeatures(std::vector<bool>& );
+    void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 
     bool findVariable(const bitsetPtr&);
 

@@ -114,7 +114,7 @@ unsigned long int CompactedLexicon::search(unsigned long int index, const std::s
         str++;
 
     }
-    free (str2);
+    delete str2;
     return (unsigned long int) (~0UL);
 }
 
@@ -310,7 +310,7 @@ try{
     } else
         features2 = featuresPtr();
 
-    statementPtr statement = Statement::create();
+    statementPtr statement;
     featuresPtr unif;
     if (features1 && features2) {
         unif = statement->unif(features1, features2, itemPtr());
