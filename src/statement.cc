@@ -1052,7 +1052,6 @@ Statement::evalFeatures(const itemPtr &item, Parser &parser, Synthesizer *synthe
             if (!fs) {
                 resultFeatures = featuresPtr();
             }
-            CERR_LINE;
             entriesPtr entries = synthesizer->findCompactedLexicon(parser, 0, getBits()->toString(), fs->assignPred());
             if (entries) {
                 //if (entries->size() > 1) {

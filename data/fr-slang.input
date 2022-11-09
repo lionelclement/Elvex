@@ -90,7 +90,7 @@
  ************************************************** */
 
 //text [PRED:RONFLER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes]]
-text [PRED:RÉPARER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], tense:past]
+//text [PRED:RÉPARER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], tense:past]
 //text [PRED:RÉPARER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]]
 //text [PRED:LIVRER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, genr:ms], tense:past]
 //text [PRED:LIVRER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], iii:[PRED:CLIENT, number:sg, gender:ms, def:yes], tense:past]
@@ -115,7 +115,7 @@ text [PRED:RÉPARER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:
 //text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past]
 //text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, mod:<[PRED:CASSÉ]>, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past]
 //text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms], tense:past, language_register:slang]
-//text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, mod:<[PRED:CASSÉ]>, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past, language_register:slang]
+text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, mod:<[PRED:CASSÉ]>, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past, language_register:slang]
 
 // ############################################################
 // ############################################################

@@ -1375,35 +1375,35 @@ src/terms.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/terms.cc.s
 .PHONY : src/terms.cc.s
 
-src/uniq_id.o: src/uniq_id.cc.o
-.PHONY : src/uniq_id.o
+src/uniq-id.o: src/uniq-id.cc.o
+.PHONY : src/uniq-id.o
 
 # target to build an object file
-src/uniq_id.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/uniq_id.cc.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/uniq_id.cc.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/uniq_id.cc.o
-.PHONY : src/uniq_id.cc.o
+src/uniq-id.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/uniq-id.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/uniq-id.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/uniq-id.cc.o
+.PHONY : src/uniq-id.cc.o
 
-src/uniq_id.i: src/uniq_id.cc.i
-.PHONY : src/uniq_id.i
+src/uniq-id.i: src/uniq-id.cc.i
+.PHONY : src/uniq-id.i
 
 # target to preprocess a source file
-src/uniq_id.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/uniq_id.cc.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/uniq_id.cc.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/uniq_id.cc.i
-.PHONY : src/uniq_id.cc.i
+src/uniq-id.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/uniq-id.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/uniq-id.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/uniq-id.cc.i
+.PHONY : src/uniq-id.cc.i
 
-src/uniq_id.s: src/uniq_id.cc.s
-.PHONY : src/uniq_id.s
+src/uniq-id.s: src/uniq-id.cc.s
+.PHONY : src/uniq-id.s
 
 # target to generate assembly for a file
-src/uniq_id.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/uniq_id.cc.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/uniq_id.cc.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/uniq_id.cc.s
-.PHONY : src/uniq_id.cc.s
+src/uniq-id.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/uniq-id.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/uniq-id.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/uniq-id.cc.s
+.PHONY : src/uniq-id.cc.s
 
 src/usage_exception.o: src/usage_exception.cc.o
 .PHONY : src/usage_exception.o
@@ -1659,9 +1659,9 @@ help:
 	@echo "... src/terms.o"
 	@echo "... src/terms.i"
 	@echo "... src/terms.s"
-	@echo "... src/uniq_id.o"
-	@echo "... src/uniq_id.i"
-	@echo "... src/uniq_id.s"
+	@echo "... src/uniq-id.o"
+	@echo "... src/uniq-id.i"
+	@echo "... src/uniq-id.s"
 	@echo "... src/usage_exception.o"
 	@echo "... src/usage_exception.i"
 	@echo "... src/usage_exception.s"
