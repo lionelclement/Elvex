@@ -235,7 +235,7 @@ int main(int argn, char** argv) {
                         else {
                             throw usage_exception("bad maxLength argument");
                         }
-                    } else if (!strcmp(argv[arg] + 1, "maxitems")) {
+                    } else if (!strcmp(argv[arg] + 1, "maxItems")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setMaxItems(atoi(argv[++arg]));
                         else {
