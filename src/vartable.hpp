@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -27,7 +27,8 @@
 #include "bitset.hpp"
 #include "shared_ptr.hpp"
 
-class Vartable {
+class Vartable
+{
 
 public:
     static const unsigned int _END_ = 0;
@@ -49,9 +50,8 @@ public:
     typedef std::unordered_map<std::string, unsigned int> string_to_unsigned_int;
     typedef string_to_unsigned_int::iterator string_to_unsigned_int_iterator;
     typedef string_to_unsigned_int::const_iterator string_to_unsigned_int_const_iterator;
-    
-private:
 
+private:
     static std::bitset<MAXBITS> variableMapIndex;
     static unsigned int codeMapIndex;
     static string_to_bitset variableMap;
@@ -63,9 +63,9 @@ public:
     Vartable();
 
     static bitsetPtr createVariable(std::string); // variable -> bitset
-    
-    static unsigned int stringToCode(const std::string&); // identifier -> code
-    
+
+    static unsigned int stringToCode(const std::string &); // identifier -> code
+
     static std::string codeToString(unsigned int);
 
     static std::string bitToVariable(unsigned int);

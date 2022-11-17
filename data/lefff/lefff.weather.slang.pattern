@@ -79,7 +79,6 @@ PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[P
 ### a_lot
 ###################################################
 PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"comme vache qui pisse"]>, degree:a_lot, language_register:slang
-PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"des trolls femelles"]>, degree:a_lot, language_register:slang
 PLEUVOIR	v	dracher	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:a_lot, language_register:slang
 PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:COURGE, @p], degree:a_lot, language_register:slang
 COURGE	n	courge	language_register:slang

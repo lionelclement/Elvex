@@ -2,22 +2,22 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
 
-#include <iostream>     // std::cout, std::endl
+#include <iostream> // std::cout, std::endl
 #include <iomanip>
 
 #include "statements.hpp"
@@ -31,8 +31,9 @@
 /* **************************************************
  *
  ************************************************** */
-Statements::Statements(const statementPtr& statement) {
-    NEW
+Statements::Statements(const statementPtr &statement)
+{
+    NEW;
     if (statement)
         statements.push_front(statement);
 }
@@ -40,44 +41,50 @@ Statements::Statements(const statementPtr& statement) {
 /* **************************************************
  *
  ************************************************** */
-Statements::~Statements() {
-    DELETE
-    for (auto & statement : statements)
+Statements::~Statements()
+{
+    DELETE;
+    for (auto &statement : statements)
         statement.reset();
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Statements::create(const statementPtr& statement) {
+statementsPtr Statements::create(const statementPtr &statement)
+{
     return statementsPtr(new Statements(statement));
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Statements::size() {
+size_t Statements::size()
+{
     return this->statements.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::begin() const {
+Statements::list::const_iterator Statements::begin() const
+{
     return this->statements.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::end() const {
+Statements::list::const_iterator Statements::end() const
+{
     return this->statements.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Statements::addStatement(const statementPtr& statement) {
+void Statements::addStatement(const statementPtr &statement)
+{
     if (statement->isGuard())
         this->guard = statement;
     else
@@ -87,15 +94,19 @@ void Statements::addStatement(const statementPtr& statement) {
 /* **************************************************
  *
  ************************************************** */
-void Statements::print(std::ostream &outStream, unsigned int tabulation, unsigned int yetColored) const {
+void Statements::print(std::ostream &outStream, unsigned int tabulation, unsigned int yetColored) const
+{
     unsigned int color = yetColored;
-    if (isSetFlags(Flags::SEEN)) {
+    if (isSetFlags(Flags::SEEN))
+    {
         color |= 0x0000FFu;
     }
-    if (isSetFlags(Flags::DISABLED)) {
+    if (isSetFlags(Flags::DISABLED))
+    {
         color |= 0xC0C0C0u;
     }
-    if (isSetFlags(Flags::BOTTOM)) {
+    if (isSetFlags(Flags::BOTTOM))
+    {
         color |= 0xFF0000u;
     }
     if (color != 0)
@@ -119,7 +130,8 @@ void Statements::print(std::ostream &outStream, unsigned int tabulation, unsigne
 /* **************************************************
  *
  ************************************************** */
-void Statements::makeSerialString() {
+void Statements::makeSerialString()
+{
     serialString = '{';
     if (guard)
         serialString += guard->peekSerialString() + ';';
@@ -131,7 +143,8 @@ void Statements::makeSerialString() {
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags) {
+statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags)
+{
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
     for (list::const_iterator i = this->statements.begin(); i != this->statements.end(); ++i)
@@ -143,7 +156,8 @@ statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags) {
 /* **************************************************
  *
  ************************************************** */
-void Statements::renameVariables(size_t i) {
+void Statements::renameVariables(size_t i)
+{
     if (guard)
         guard->renameVariables(i);
     for (list::const_iterator j = this->statements.begin(); j != this->statements.end(); ++j)
@@ -153,66 +167,77 @@ void Statements::renameVariables(size_t i) {
 /* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
-void Statements::apply(itemPtr item, Parser &parser, Synthesizer *synthesizer, bool &effect) {
+void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
+{
     if (item->isSetFlags(Flags::BOTTOM))
         return;
-    if (item->isSetFlags(Flags::SEEN)) {
+    if (item->isSetFlags(Flags::SEEN))
+    {
         FATAL_ERROR_UNEXPECTED
     }
 
-    if (guard) {
-        if (guard->isUnsetFlags(Flags::SEEN)) {
+    if (guard)
+    {
+        if (guard->isUnsetFlags(Flags::SEEN))
+        {
             guard->apply(item, parser, synthesizer, effect);
             guard->addFlags(Flags::SEEN);
-            if (guard->isSetFlags(Flags::BOTTOM)) {
+            if (guard->isSetFlags(Flags::BOTTOM))
+            {
                 item->addFlags(Flags::BOTTOM);
                 return;
             }
         }
     }
 
-    loopStatements:
+loopStatements:
     bool allDone = true;
-    for (list::iterator statement = statements.begin(); statement != statements.end(); ++statement) {
-        if ((*statement)->isUnsetFlags(Flags::SEEN)) {
+    for (list::iterator statement = statements.begin(); statement != statements.end(); ++statement)
+    {
+        if ((*statement)->isUnsetFlags(Flags::SEEN))
+        {
             bool enable_effect = false;
             (*statement)->enable(*statement, item, synthesizer, enable_effect, false);
             if (enable_effect)
                 (*statement)->enable(*statement, item, synthesizer, enable_effect, true);
             if (enable_effect)
                 allDone = false;
-            if ((*statement)->isSetFlags(Flags::DISABLED)) {
+            if ((*statement)->isSetFlags(Flags::DISABLED))
+            {
                 allDone = false;
                 continue;
             }
-            if (!item->getEnvironment() || item->getEnvironment()->size() == 0) {
+            if (!item->getEnvironment() || item->getEnvironment()->size() == 0)
+            {
                 item->setEnvironment(environmentPtr());
             }
             effect = false;
             (*statement)->apply(item, parser, synthesizer, effect);
-            if ((*statement)->isSetFlags(Flags::BOTTOM)) {
+            if ((*statement)->isSetFlags(Flags::BOTTOM))
+            {
                 item->addFlags(Flags::BOTTOM);
                 break;
             }
-            if (effect) {
+            if (effect)
+            {
                 goto loopStatements;
-                //break;
+                // break;
             }
         }
     }
     if (allDone)
         this->addFlags(Flags::SEEN);
-
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Statements::enable(itemPtr item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Statements::enable(class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+{
     if (guard)
         guard->enable(guard, item, synthesizer, effect, on);
-    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
+    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i)
+    {
         (*i)->enable(*i, item, synthesizer, effect, on);
     }
 }
-

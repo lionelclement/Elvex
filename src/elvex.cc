@@ -70,7 +70,7 @@ options\n\
     std::cerr << "\
 \t-maxLength <number>                         max number of length\n\
 \t-maxUsages <number>                         max number of rule usage\n\
-\t-maxCardinal <number>                       max number of items per set\n\
+\t-maxItems <number>                          max number of items per set\n\
 \t-maxTime <seconds>                          max time in seconds\n\
 \t-rulesFile <file>                           the rules\n\
 \t-lexiconFile <file>                         the lexicon\n\
@@ -235,11 +235,11 @@ int main(int argn, char** argv) {
                         else {
                             throw usage_exception("bad maxLength argument");
                         }
-                    } else if (!strcmp(argv[arg] + 1, "maxCardinal")) {
+                    } else if (!strcmp(argv[arg] + 1, "maxitems")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setMaxCardinal(atoi(argv[++arg]));
+                            synthesizer.setMaxItems(atoi(argv[++arg]));
                         else {
-                            throw usage_exception("bad maxCardinal argument");
+                            throw usage_exception("bad maxItems argument");
                         }
                     } else if (!strcmp(argv[arg] + 1, "maxTime")) {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-')) {

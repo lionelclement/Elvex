@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -20,8 +20,7 @@
 #ifndef ELVEX_VALUE_H
 #define ELVEX_VALUE_H
 
-#include "flags.hpp"
-#include "uniq-id.hpp"
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 #include "variableflag.hpp"
@@ -30,11 +29,14 @@
 #include <libxml/tree.h>
 #endif
 
-class Value :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Value> {
+class Value : public Facade,
+              public Serializable,
+              public std::enable_shared_from_this<class Value>
+{
 
 public:
-    enum Type {
+    enum Type
+    {
         _NIL,
         _TRUE,
         _CONSTANT,
@@ -48,7 +50,7 @@ public:
     };
 
 private:
-    bitsetPtr bits; // pour encoder les constantes et les variables
+    bitsetPtr bits;    // pour encoder les constantes et les variables
     unsigned int code; // pour encoder les identifiers
     listPtr list;
     std::string str;
@@ -64,7 +66,7 @@ public:
     featuresPtr features; // pour encoder les SF
 
 private:
-    Value(const enum Type, const std::string&);
+    Value(const enum Type, const std::string &);
 
     Value(const enum Type, unsigned int = 0, double = 0.0, bitsetPtr bitset = bitsetPtr(), featuresPtr = featuresPtr(),
           listPtr lst = listPtr());
@@ -80,7 +82,7 @@ public:
 
     static valuePtr create(const enum Type, unsigned int);
 
-    static valuePtr create(const enum Type, const std::string&);
+    static valuePtr create(const enum Type, const std::string &);
 
     static valuePtr create(const enum Type, bitsetPtr);
 
@@ -112,9 +114,9 @@ public:
     void toXML(xmlNodePtr) const;
 #endif
 
-    bool buildEnvironment(const environmentPtr&, const valuePtr&, bool, bool);
+    bool buildEnvironment(const environmentPtr &, const valuePtr &, bool, bool);
 
-    bool subsumes(const valuePtr&, const environmentPtr&);
+    bool subsumes(const valuePtr &, const environmentPtr &);
 
     valuePtr clone(void);
 
@@ -144,16 +146,16 @@ public:
 
     bool _isList(void) const;
 
-    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(const statementPtr &root, class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
 
     bool eq(valuePtr) const;
 
-    bool lt(const valuePtr&) const;
+    bool lt(const valuePtr &) const;
 
-    bool findVariable(const bitsetPtr&) const;
+    bool findVariable(const bitsetPtr &) const;
 
     void
-    apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr& variable, const statementPtr& body,
+    apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, const statementPtr &body,
           bool &effect);
 
     bool containsVariable(void);

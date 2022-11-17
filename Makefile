@@ -547,6 +547,36 @@ src/environment.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/environment.cc.s
 .PHONY : src/environment.cc.s
 
+src/facade.o: src/facade.cc.o
+.PHONY : src/facade.o
+
+# target to build an object file
+src/facade.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/facade.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/facade.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/facade.cc.o
+.PHONY : src/facade.cc.o
+
+src/facade.i: src/facade.cc.i
+.PHONY : src/facade.i
+
+# target to preprocess a source file
+src/facade.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/facade.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/facade.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/facade.cc.i
+.PHONY : src/facade.cc.i
+
+src/facade.s: src/facade.cc.s
+.PHONY : src/facade.s
+
+# target to generate assembly for a file
+src/facade.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/facade.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/facade.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/facade.cc.s
+.PHONY : src/facade.cc.s
+
 src/fatal_exception.o: src/fatal_exception.cc.o
 .PHONY : src/fatal_exception.o
 
@@ -1575,6 +1605,9 @@ help:
 	@echo "... src/environment.o"
 	@echo "... src/environment.i"
 	@echo "... src/environment.s"
+	@echo "... src/facade.o"
+	@echo "... src/facade.i"
+	@echo "... src/facade.s"
 	@echo "... src/fatal_exception.o"
 	@echo "... src/fatal_exception.i"
 	@echo "... src/fatal_exception.s"

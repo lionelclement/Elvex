@@ -313,7 +313,7 @@ try{
     statementPtr statement;
     featuresPtr unif;
     if (features1 && features2) {
-        unif = statement->unif(features1, features2, itemPtr());
+        unif = statement->unif(features1, features2, nullptr);
     } else if (features1) {
         unif = features1;
     } else {
