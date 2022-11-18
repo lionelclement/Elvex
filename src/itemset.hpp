@@ -11,7 +11,7 @@
  * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
+ * lionel.clement@u-bordeaux.fr
  *
  * This file is part of ELVEX.
  *
@@ -33,7 +33,11 @@ class ItemSet
 {
 
 public:
-    typedef std::unordered_set<class Item *, Item::hash, Item::equal_to> set_of_item;
+    typedef std::unordered_set<class Item *,
+                               Item::hash,
+                               Item::equal_to,
+                               std::allocator<class Item *>>
+        set_of_item;
     typedef set_of_item::const_iterator set_of_item_const_iterator;
     typedef set_of_item::iterator set_of_item_iterator;
 

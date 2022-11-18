@@ -11,7 +11,7 @@
  * LaBRI -- Université Bordeaux 
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
+ * lionel.clement@u-bordeaux.fr
  * 
  * This file is part of ELVEX.
  *
@@ -33,11 +33,13 @@ public:
                                 std::equal_to<std::string>,
                                 std::allocator<std::pair<const std::string, std::vector<std::string> > > > 
                     unordered_map;
-    // typedef std::unordered_map< const std::string, 
-    //                             std::vector<std::string>* > unordered_map;
+    
+private:
     unordered_map the_map;
 
     static std::vector<std::string> emptyList;
+
+public:
 
     Lexicon(void);
 
