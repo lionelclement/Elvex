@@ -1,5 +1,3 @@
-**error recovery on sources - please wait**
-
 Elvex
 =====
 
