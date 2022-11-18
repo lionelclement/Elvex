@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -20,8 +20,7 @@
 #ifndef ELVEX_FEATURE_H
 #define ELVEX_FEATURE_H
 
-#include "flags.hpp"
-#include "uniq-id.hpp"
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 #include "variableflag.hpp"
@@ -30,14 +29,14 @@
 #include <libxml/tree.h>
 #endif
 
-class Feature :
-        public UniqId, 
-        public Flags, 
-        public Serializable, 
-        public std::enable_shared_from_this<class Feature> {
+class Feature : public Facade,
+                public Serializable,
+                public std::enable_shared_from_this<class Feature>
+{
 
 public:
-    enum Type {
+    enum Type
+    {
         PRED = 0,
         LEMMA,
         CONSTANT,
@@ -92,14 +91,13 @@ public:
 
     bool renameVariables(size_t);
 
-    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr &, class Item *, class Synthesizer *synthesizer, bool &, bool);
 
     bool findVariable(const bitsetPtr) const;
 
     bool containsVariable(void);
 
-    bool findVariable(const bitsetPtr&);
-
+    bool findVariable(const bitsetPtr &);
 };
 
 #endif // ELVEX_FEATURE_H

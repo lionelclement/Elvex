@@ -101,7 +101,7 @@ rhetoricalStructureCont → premise_conclusion {
     [ii:[i:[id:_], $Rest_II]] ⊂ ↑;
     $IIbis = [i:[PRED:$P_I_II, sem:syn|hyper, def:yes], $Rest_II];
     [i:[ii:$I_II, $Rest_I]] ⊂ ↑;
-    $Ibis = [ii:[$I_II], $Rest_I];
+    $Ibis = [ii:$I_II, $Rest_I];
 
     [ii:[i:[LEMMA:$lemma]]] ⊂ ⇓1;
     //attest ($lemma != $P_I_II);
@@ -164,7 +164,7 @@ rhetoricalStructureCont → premise_conclusion {
     $IIbis = [i:[PRED:_pro], $Rest_II];
     [i:[ii:$I_II, $Rest_I]] ⊂ ↑;
     //$Ibis = [ii:[sem:default, $I_II], $Rest_I];
-    $Ibis = [ii:[$I_II], $Rest_I];
+    $Ibis = [ii:$I_II, $Rest_I];
 
     [i:[ii:[number:$NSynth_I_II, gender:$GSynth_I_II, person:$PSynth_I_II]],
         ii:[i:[number:$NSynth_II_I, gender:$GSynth_II_I, person:$PSynth_II_I]]] ⊂ ⇓1;

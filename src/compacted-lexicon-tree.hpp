@@ -20,6 +20,8 @@
 #ifndef COMPACTEDLEXICONTREE_H
 #define COMPACTEDLEXICONTREE_H
 
+#include <cstdio>
+
 class CompactedLexiconTree {
 
 private:

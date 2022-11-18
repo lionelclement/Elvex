@@ -28,15 +28,15 @@
 #include "parser.hpp"
 
 #ifndef MAXLENGTH
-#define MAXLENGTH 1000
+#define MAXLENGTH 3000
 #endif
 
 #ifndef MAXUSAGES
-#define MAXUSAGES 1000
+#define MAXUSAGES 3000
 #endif
 
-#ifndef MAXCARDINAL
-#define MAXCARDINAL 1000
+#ifndef MAXITEMS
+#define MAXITEMS 3000
 #endif
 
 #ifndef MAXATTEMPTS
@@ -53,8 +53,8 @@ public:
         PRED_FEATURES
     };
 
-    typedef std::unordered_map<unsigned int, itemPtr> item_map;
-    typedef std::unordered_map<unsigned int, itemSetPtr> itemSet_map;
+    typedef std::unordered_map<unsigned int, class Item*> item_map;
+    typedef std::unordered_map<unsigned int, class ItemSet*> itemSet_map;
     typedef itemSet_map::const_iterator itemSet_map_const_iterator;
 
 private:
@@ -69,7 +69,7 @@ private:
 
     unsigned int maxLength;
     unsigned int maxUsages;
-    unsigned int maxCardinal;
+    unsigned int maxItems;
     std::string lexiconFileName;
     std::string rulesFileName;
     std::string inputFileName;
@@ -140,9 +140,9 @@ public:
 
     unsigned int getMaxUsages() const;
 
-    void setMaxCardinal(unsigned int);
+    void setMaxItems(unsigned int);
 
-    unsigned int getMaxCardinal() const;
+    unsigned int getMaxItems() const;
 
     void setCompactedLexicon(class CompactedLexicon*);
 
@@ -170,11 +170,11 @@ public:
 
     nodePtr getNodeRoot();
 
-    bool insertItemMap(const itemPtr&);
+    bool insertItemMap(class Item*);
 
     void eraseItemMap(unsigned int);
 
-    itemPtr getItemMap(unsigned int);
+    class Item* getItemMap(unsigned int);
 
     bool getTrace() const;
 
@@ -190,21 +190,21 @@ public:
 
     bool getOne(void) const;
 
-    void printState(std::ostream&, const itemSetPtr&);
+    void printState(std::ostream&, class ItemSet*);
 
-    void close(class Parser&, const itemSetPtr&, unsigned int);
+    void close(class Parser&, class ItemSet*, unsigned int);
 
-    bool shift(class Parser&, const itemSetPtr&, unsigned int);
+    bool shift(class Parser&, class ItemSet*, unsigned int);
 
     void clear();
 
-    static itemPtr createItem(const itemPtr&, unsigned int);
+    static class Item* createItem(class Item*, unsigned int);
 
     void generate(class Parser&);
 
     entriesPtr findCompactedLexicon(class Parser&, unsigned int code, const std::string& str, unsigned int pred);
 
-    std::string keyMemoization(const itemPtr&, const itemPtr&);
+    std::string keyMemoization(class Item*, class Item*);
 
     void setVerbose(bool _verbose);
 

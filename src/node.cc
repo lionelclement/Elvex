@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -24,109 +24,122 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::Node() {
-    this->nbrCS = 0;
-    NEW
+Node::Node()
+{
+   NEW;
+   this->nbrCS = 0;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::~Node() {
-    DELETE
+Node::~Node()
+{
+   DELETE;
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-nodePtr Node::create() {
-    return nodePtr(new Node());
+nodePtr Node::create()
+{
+   return nodePtr(new Node());
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool Node::empty() const{
+bool Node::empty() const
+{
    return forests.empty();
 }
 
-    /* ************************************************************
+/* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::vectorForests_iterator Node::begin(){
+Node::vectorForests_iterator Node::begin()
+{
    return forests.begin();
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-    Node::vectorForests_iterator Node::end() {
-      return forests.end();
-    }
+Node::vectorForests_iterator Node::end()
+{
+   return forests.end();
+}
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-    Node::vectorForests_const_iterator Node::cbegin() const{
-      return forests.cbegin();
-    }
+Node::vectorForests_const_iterator Node::cbegin() const
+{
+   return forests.cbegin();
+}
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-    Node::vectorForests_const_iterator Node::cend() const{
-      return forests.cend();
-    }
+Node::vectorForests_const_iterator Node::cend() const
+{
+   return forests.cend();
+}
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-    size_t Node::size() const{
-      return forests.size();
-    }
+size_t Node::size() const
+{
+   return forests.size();
+}
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-    forestPtr Node::at(size_t index){
-      return forests.at(index);
-    }
-    
+forestPtr Node::at(size_t index)
+{
+   return forests.at(index);
+}
+
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-    void Node::push_back(const forestPtr& forestPtr){
-      forests.push_back(forestPtr);
-    }
-    
+void Node::push_back(const forestPtr &forestPtr)
+{
+   forests.push_back(forestPtr);
+}
+
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string>& Node::getOutput() const {
-    return this->output;
+const std::vector<std::string> &Node::getOutput() const
+{
+   return this->output;
 }
 
 #ifdef OUTPUT_XML
 /* **************************************************
  *
  ************************************************** */
-void
-Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
+void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 {
-   xmlNodePtr node=xmlNewChild(nodeFather, nullptr, (const xmlChar*)"NODE", nullptr);
-   xmlSetProp(node, (xmlChar*)"id", (xmlChar*)(std::to_string(this->getId())).c_str());
-   for (const auto & s : forests) {
+   xmlNodePtr node = xmlNewChild(nodeFather, nullptr, (const xmlChar *)"NODE", nullptr);
+   xmlSetProp(node, (xmlChar *)"id", (xmlChar *)(std::to_string(this->getId())).c_str());
+   for (const auto &s : forests)
+   {
       if (s->isUnsetFlags(Flags::XML))
-      s->toXML(nodeRoot, false);
-      xmlNodePtr forest=xmlNewChild(node, nullptr, (const xmlChar*)"SON", nullptr);
-      xmlSetProp(forest, (xmlChar*)"from", (xmlChar*)std::to_string(s->getFrom()).c_str());
-      xmlSetProp(forest, (xmlChar*)"to", (xmlChar*)std::to_string(s->getTo()).c_str());
-      xmlSetProp(forest, (xmlChar*)"idref", (xmlChar*)(std::to_string(s->getId())).c_str());
+         s->toXML(nodeRoot, false);
+      xmlNodePtr forest = xmlNewChild(node, nullptr, (const xmlChar *)"SON", nullptr);
+      xmlSetProp(forest, (xmlChar *)"from", (xmlChar *)std::to_string(s->getFrom()).c_str());
+      xmlSetProp(forest, (xmlChar *)"to", (xmlChar *)std::to_string(s->getTo()).c_str());
+      xmlSetProp(forest, (xmlChar *)"idref", (xmlChar *)(std::to_string(s->getId())).c_str());
    }
-   if (!output.empty()) {
-      xmlNodePtr o=xmlNewChild(node, nullptr, (const xmlChar*)"OUTPUT", nullptr);
-      for(const auto & s : output)
-      xmlNewChild(o, nullptr, (const xmlChar*)"S", (xmlChar*)s.c_str());
+   if (!output.empty())
+   {
+      xmlNodePtr o = xmlNewChild(node, nullptr, (const xmlChar *)"OUTPUT", nullptr);
+      for (const auto &s : output)
+         xmlNewChild(o, nullptr, (const xmlChar *)"S", (xmlChar *)s.c_str());
    }
 }
 
@@ -135,18 +148,26 @@ Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 /* **************************************************
  *
  ************************************************** */
-void Node::generate(vectorForests::const_iterator forest) {
-   if ((*forest)->getOutput_size() > 0) {
-      for (auto s = (*forest)->getOutput_cbegin(); s != (*forest)->getOutput_cend(); ++s) {
-         if (output.size() == 0) {
+void Node::generate(vectorForests::const_iterator forest)
+{
+   if ((*forest)->getOutput_size() > 0)
+   {
+      for (auto s = (*forest)->getOutput_cbegin(); s != (*forest)->getOutput_cend(); ++s)
+      {
+         if (output.size() == 0)
+         {
             output.push_back(*s);
          }
-         else {
-            for (auto o = output.begin(); o != output.end(); ++o) {
-               if (o->size() != 0 && s->size() != 0) {
+         else
+         {
+            for (auto o = output.begin(); o != output.end(); ++o)
+            {
+               if (o->size() != 0 && s->size() != 0)
+               {
                   *o += ' ' + *s;
                }
-               else if (s->size() != 0) {
+               else if (s->size() != 0)
+               {
                   *o = *s;
                }
             }
@@ -155,20 +176,23 @@ void Node::generate(vectorForests::const_iterator forest) {
    }
    forest++;
    if (forest != forests.end())
-     generate(forest);
+      generate(forest);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Node::generate(bool random, bool one) {
-   if (isUnsetFlags(Flags::GENERATED)) {
+void Node::generate(bool random, bool one)
+{
+   if (isUnsetFlags(Flags::GENERATED))
+   {
       addFlags(Flags::GENERATED);
-      for (vectorForests::const_iterator forestIterator = forests.cbegin(); forestIterator != forests.cend(); ++forestIterator) {
+      for (vectorForests::const_iterator forestIterator = forests.cbegin(); forestIterator != forests.cend(); ++forestIterator)
+      {
          if ((*forestIterator)->isUnsetFlags(Flags::GENERATED))
-	   (*forestIterator)->generate(random, one);
+            (*forestIterator)->generate(random, one);
       }
       if (!forests.empty())
-	generate(forests.begin());
+         generate(forests.begin());
    }
 }

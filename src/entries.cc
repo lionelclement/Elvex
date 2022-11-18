@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -25,105 +25,120 @@
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries() {
-    NEW
+Entries::Entries()
+{
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(const entryPtr& entry) {
+Entries::Entries(const entryPtr &entry)
+{
     this->entries.insert(this->entries.begin(), entry);
-    NEW
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(const std::vector<entryPtr>& entries) {
+Entries::Entries(const std::vector<entryPtr> &entries)
+{
     this->entries = entries;
-    NEW
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(unsigned int codePos, unsigned int codeLemma, std::string& form) {
+Entries::Entries(unsigned int codePos, unsigned int codeLemma, std::string &form)
+{
     this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
-    NEW
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entries::~Entries() {
-    for (auto tmp : entries) {
+Entries::~Entries()
+{
+    for (auto tmp : entries)
+    {
         if (tmp)
             tmp.reset();
     }
-    DELETE
+    DELETE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create() {
+entriesPtr Entries::create()
+{
     return entriesPtr(new Entries());
 }
 
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(const entryPtr& entry) {
+entriesPtr Entries::create(const entryPtr &entry)
+{
     return entriesPtr(new Entries(entry));
 }
 
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(const std::vector<entryPtr>& entries) {
+entriesPtr Entries::create(const std::vector<entryPtr> &entries)
+{
     return entriesPtr(new Entries(entries));
 }
 
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string& form) {
+entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string &form)
+{
     return entriesPtr(new Entries(codePos, codeLemma, form));
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Entries::size() const {
+size_t Entries::size() const
+{
     return this->entries.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<entryPtr>::iterator Entries::begin() {
+std::vector<entryPtr>::iterator Entries::begin()
+{
     return entries.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::vector<entryPtr>::iterator  Entries::end() {
+std::vector<entryPtr>::iterator Entries::end()
+{
     return entries.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Entries::add(const entryPtr& entry) {
+void Entries::add(const entryPtr &entry)
+{
     this->entries.push_back(entry);
 }
 
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entries::get(unsigned int i) const {
+entryPtr Entries::get(unsigned int i) const
+{
     return this->entries.at(i);
 }
 
@@ -131,19 +146,19 @@ entryPtr Entries::get(unsigned int i) const {
 /* **************************************************
  *
  ************************************************** */
-void
-Entries::toXML(xmlNodePtr nodeRoot) const
+void Entries::toXML(xmlNodePtr nodeRoot) const
 {
-   xmlNodePtr node=xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"ENTRIES", nullptr);
-   for (const auto & entrie : entries)
-   entrie->toXML(node);
+    xmlNodePtr node = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"ENTRIES", nullptr);
+    for (const auto &entrie : entries)
+        entrie->toXML(node);
 }
 #endif
 
 /* **************************************************
  *
  ************************************************** */
-void Entries::print(std::ostream& out) const {
-  for (const auto& i : entries)
+void Entries::print(std::ostream &out) const
+{
+    for (const auto &i : entries)
         i->print(out);
 }

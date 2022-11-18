@@ -2,7 +2,6 @@
 //text [PRED:PLEUVOIR, degree:few]
 //text [PRED:PLEUVOIR, degree:a_lot]
 
-//text [PRED:LEUVOIR, degree:regular, language_register:slang]
 //text [PRED:PLEUVOIR, degree:few, language_register:slang]
 //text [PRED:PLEUVOIR, degree:a_lot, language_register:slang]
 
@@ -16,7 +15,6 @@
 //text [PRED:FAIRE_FROID]
 //text [PRED:FAIRE_FROID, language_register:slang]
 
-//text [PRED:FAIRE_FROID, language_register:slang, int:true]
 //text [PRED:FAIRE_CHAUD]
 //text [PRED:FAIRE_CHAUD, language_register:slang]
 //text [PRED:FAIRE_BEAU]
@@ -28,7 +26,7 @@
 //text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_LÉON], tense:near_future, language_register:slang]
 //text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_LÉON], tense:past, language_register:slang]
 //text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_LÉON], tense:future, language_register:slang]
-//text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], language_register:slang]
+//text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:$p, number:$n], tense:$i, language_register:slang]
 
 //text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future]
 //text[PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:two, number:sg], tense:near_future, language_register:slang]
@@ -89,6 +87,9 @@
  * Verbal Arguments
  ************************************************** */
 
+text [PRED:RÉPARER, i:[PRED:HORLOGER, mod:<[PRED:ÂGÉ],[PRED:PETIT]>, def:$d], ii:[PRED:MONTRE, mod:<[PRED:MÉTALLIQUE], [PRED:CASSÉ, mod:<[PRED:TRÈS]>]>, def:$d2], tense:$t, neg:$n]
+
+
 //text [PRED:RONFLER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes]]
 //text [PRED:RÉPARER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], tense:past]
 //text [PRED:RÉPARER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]]
@@ -116,6 +117,7 @@
 //text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, mod:<[PRED:CASSÉ]>, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past]
 //text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms], tense:past, language_register:slang]
 text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, mod:<[PRED:CASSÉ]>, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past, language_register:slang]
+text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg], iii:[PRED:IMPORTUN, number:sg, gender:ms, lexical_function:magn], tense:past, language_register:slang]
 
 // ############################################################
 // ############################################################

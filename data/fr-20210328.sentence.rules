@@ -24,7 +24,7 @@ sentence → S {
   if (¬ $voice)
     $voice = active;
 
-  ↓1 = $rest U [voice:$voice, $lf, $lr];
+  ↓1 = [voice:$voice] U $rest U $lf U $lr;
   ⇑ = ⇓1;
 }
 

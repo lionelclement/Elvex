@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -21,7 +21,7 @@
 #define ELVEX_FOREST_H
 
 #include <vector>
-#include "uniq-id.hpp"
+#include "facade.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -30,10 +30,9 @@
 #include "flags.hpp"
 #include "shared_ptr.hpp"
 
-class Forest :
-        public UniqId, 
-        public Flags, 
-        public std::enable_shared_from_this<class Forest> {
+class Forest : public Facade,
+               public std::enable_shared_from_this<class Forest>
+{
 
 public:
     typedef std::vector<nodePtr> vectorNodes;
@@ -64,14 +63,13 @@ public:
 
     const std::vector<std::string>::const_iterator getOutput_cend(void) const;
 
-    void push_back_node(const nodePtr&);
+    void push_back_node(const nodePtr &);
 
 #ifdef OUTPUT_XML
     void toXML(const xmlNodePtr, bool);
 #endif
 
     void generate(bool random, bool one);
-
 };
 
 #endif // ELVEX_FOREST_H

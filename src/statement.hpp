@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -22,24 +22,43 @@
 
 #include <climits>
 #include <vector>
-#include "flags.hpp"
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 #include "synthesizer.hpp"
 
-#define FATAL_ERROR_STM {std::ostringstream oss; oss << "statement line " << getLineno(); throw fatal_exception(oss);}
-#define FATAL_ERROR_MSG_STM(msg) {std::ostringstream oss; oss << msg << " with statement line " << getLineno(); throw fatal_exception(oss);}
-#define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "*** warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
+#define FATAL_ERROR_STM                          \
+    {                                            \
+        std::ostringstream oss;                  \
+        oss << "statement line " << getLineno(); \
+        throw fatal_exception(oss);              \
+    }
+#define FATAL_ERROR_MSG_STM(msg)                              \
+    {                                                         \
+        std::ostringstream oss;                               \
+        oss << msg << " with statement line " << getLineno(); \
+        throw fatal_exception(oss);                           \
+    }
+#define WARNING_STM                                               \
+    {                                                             \
+        CERR_LINE;                                                \
+        std::ostringstream oss;                                   \
+        oss << "*** warning with statement line " << getLineno(); \
+        std::cerr << oss.str() << std::endl;                      \
+    }
 
-class Statement :
-        public Flags, public Serializable, public std::enable_shared_from_this<class Statement> {
+class Statement : public Facade,
+                  public Serializable,
+                  public std::enable_shared_from_this<class Statement>
+{
 
 public:
-    enum type {
+    enum type
+    {
         DASH,
         AFF,
         SUBSUME,
-        //INSET,
+        // INSET,
         UP,
         UP2,
         DOWN,
@@ -67,7 +86,8 @@ public:
         FINISHED
     };
 
-    enum arithmetic_op {
+    enum arithmetic_op
+    {
         NOP,
         NOT,
         AND,
@@ -93,7 +113,8 @@ private:
     statementPtr lhs;
     statementPtr rhs;
 
-    struct pair {
+    struct pair
+    {
         unsigned int first;
         unsigned int second;
     } pair{};
@@ -130,7 +151,7 @@ public:
 
     static statementPtr create(unsigned int lineno, type op, featuresPtr features);
 
-    static statementPtr create(unsigned int lineno, type op, valuePtr& value);
+    static statementPtr create(unsigned int lineno, type op, valuePtr &value);
 
     static statementPtr create(unsigned int lineno, type op, bitsetPtr bits, statementPtr lhs = statementPtr());
 
@@ -153,23 +174,23 @@ public:
 
     bool isUp() const;
 
-     bool isUp2() const;
+    bool isUp2() const;
 
-     bool isDown() const;
+    bool isDown() const;
 
-     bool isDown2() const;
+    bool isDown2() const;
 
-     bool isFeatures() const;
+    bool isFeatures() const;
 
-     bool isVariable() const;
+    bool isVariable() const;
 
-     bool isConstant() const;
+    bool isConstant() const;
 
-     bool isUnif() const;
+    bool isUnif() const;
 
-     bool isGuard() const;
+    bool isGuard() const;
 
-     bool isPrint() const;
+    bool isPrint() const;
 
     bool isPrintln() const;
 
@@ -217,48 +238,47 @@ public:
 
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
-    featuresPtr evalFeatures(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer, bool);
+    featuresPtr evalFeatures(class Item *, class Parser &parser, class Synthesizer *synthesizer, bool);
 
-    listPtr evalList(const itemPtr&, bool);
+    listPtr evalList(class Item *, bool);
 
-    valuePtr evalValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
+    valuePtr evalValue(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
 
-    featuresPtr unif(const featuresPtr&, const featuresPtr&, const itemPtr&);
+    featuresPtr unif(const featuresPtr &, const featuresPtr &, class Item *);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
-    void buildInheritedSonFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildInheritedSonFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildSynthesizedFeatures(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildSynthesizedFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithInherited(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithInherited(class Item *item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithSynthesize(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithSynthesize(class Item *item, Parser &parser, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithValue(const itemPtr& item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithValue(class Item *item, Parser &parser, Synthesizer *synthesizer);
 
-    void stmAttest(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
+    void stmAttest(class Item *, class Parser &parser, class Synthesizer *synthesizer);
 
-    void stmGuard(const itemPtr&/*, class Synthesizer *synthesizer*/);
+    void stmGuard(class Item * /*, class Synthesizer *synthesizer*/);
 
-    void stmForeach(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmForeach(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void stmIf(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmIf(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void stmPrint(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrint(class Item *, class Parser &parser, class Synthesizer *synthesizer);
 
-    void stmPrintln(const itemPtr&, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrintln(class Item *, class Parser &parser, class Synthesizer *synthesizer);
 
     void renameVariables(size_t);
 
-    void enable(const statementPtr& root, const itemPtr& item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(const statementPtr &root, class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
 
-    void apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 
-    bool findVariable(const bitsetPtr&);
-
+    bool findVariable(const bitsetPtr &);
 };
 
 #endif // ELVEX_STATEMENT_H

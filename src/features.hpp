@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -26,17 +26,15 @@
 #include <libxml/tree.h>
 #endif
 
-#include "flags.hpp"
+#include "facade.hpp"
 #include "serializable.hpp"
-#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 #include "variableflag.hpp"
 
-class Features:
-        public UniqId, 
-        public Flags, 
-        public Serializable, 
-        public std::enable_shared_from_this<class Features> {
+class Features : public Facade,
+                 public Serializable,
+                 public std::enable_shared_from_this<class Features>
+{
 
 public:
     static featuresPtr NIL;
@@ -51,7 +49,7 @@ private:
     std::string form;
     VariableFlag variableFlag;
 
-    Features(const featurePtr&);
+    Features(const featurePtr &);
 
     static featuresPtr createBottom();
 
@@ -62,13 +60,13 @@ private:
 public:
     ~Features();
 
-    static featuresPtr create(const featurePtr& = featurePtr());
+    static featuresPtr create(const featurePtr & = featurePtr());
 
     void putId(unsigned int id);
 
-    void add(const featurePtr&);
+    void add(const featurePtr &);
 
-    void add(const featuresPtr&);
+    void add(const featuresPtr &);
 
     size_t size() const;
 
@@ -94,9 +92,9 @@ public:
 
     featuresPtr clone() const;
 
-    valuePtr find(const bitsetPtr&) const;
+    valuePtr find(const bitsetPtr &) const;
 
-    bool buildEnvironment(const environmentPtr&, const featuresPtr&, bool/*, bool*/);
+    bool buildEnvironment(const environmentPtr &, const featuresPtr &, bool /*, bool*/);
 
     void subFlags(const std::bitset<FLAGS> &);
 
@@ -110,18 +108,17 @@ public:
 
     bool isBottom() const;
 
-    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr &, class Item *, class Synthesizer *synthesizer, bool &, bool);
 
-    bool subsumes(const featuresPtr&, const environmentPtr&);
+    bool subsumes(const featuresPtr &, const environmentPtr &);
 
     void deleteAnonymousVariables();
 
     bool containsVariable();
 
-    bool findVariable(const bitsetPtr&);
+    bool findVariable(const bitsetPtr &);
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 };
 
 #endif // ELVEX_FEATURES_H
-
