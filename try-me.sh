@@ -22,8 +22,8 @@ cd data
 
 ##################################################
 # en-1.1.0.fsa
-#make en-1.1.0.fsa
-#../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
+make en-1.1.0.fsa
+../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
 
 ##################################################
 # slang
@@ -49,9 +49,9 @@ cd data
 
 ##################################################
 # fr-20210328
-(cd lefff ; make -s)
+#(cd lefff ; make -s)
 #../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-20210328.rules -lexiconFile fr-20210328.lexicon -inputFile fr-20210328.input
-../bin/elvexdebug --traceShift -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-20210328.rules -lexiconFile fr-20210328.lexicon -inputFile fr-20210328.input
+#../bin/elvexdebug --traceShift -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-20210328.rules -lexiconFile fr-20210328.lexicon -inputFile fr-20210328.input
 
 ##################################################
 # essai-20221012
