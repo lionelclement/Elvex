@@ -141,7 +141,7 @@ if (LibXml2_FOUND)
     target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
         MEMOIZATION
         TRACE_OPTION
-        TRACE_MEMOIZATION
+        #TRACE_MEMOIZATION
         #TRACE_PASS
         #TRACE_UNFOLD
 )

@@ -31,7 +31,7 @@ NP → NP2 {
   if (¬ $lexical_function)
     $lexical_function = default;
 
-  ↓1 = [lexical_function:$lexical_function, $sm, $lr, $rest];
+  ↓1 = [lexical_function:$lexical_function] U $sm U $lr U $rest;
   ⇑ = ⇓1;
 }
 
@@ -126,7 +126,7 @@ N → N PP {
   [de_obj:[PRED:$P], language_register:$language_register] ⊂ ↑;
   attest $P ≠ _pro; 
   ↓1 = $rest;
-  ↓2 = [$deObj, pcas:de, language_register:$language_register];
+  ↓2 = [pcas:de, language_register:$language_register, $deObj];
   ⇑ = ⇓1;
 }
 
@@ -138,7 +138,7 @@ N → N PP {
   [à_obj:[PRED:$P], language_register:$language_register] ⊂ ↑;
   attest $P ≠ _pro; 
   ↓1 = $rest;
-  ↓2 = [$àObj, pcas:à, language_register:$language_register];
+  ↓2 = [pcas:à, language_register:$language_register, $àObj];
   ⇑ = ⇓1;
 }
  
@@ -255,7 +255,7 @@ AP → adv AP {
   //println ↑;
    [mod:<$head::$tail>, $rest];
    ↓1 = $head;
-   ↓2 = [$rest, mod:$tail];
+   ↓2 = [mod:$tail, $rest];
    ⇑ = ⇓2;
 }
 

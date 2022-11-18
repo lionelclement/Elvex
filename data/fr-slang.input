@@ -87,7 +87,7 @@
  * Verbal Arguments
  ************************************************** */
 
-text [PRED:RÉPARER, i:[PRED:HORLOGER, mod:<[PRED:ÂGÉ],[PRED:PETIT]>, def:$d], ii:[PRED:MONTRE, mod:<[PRED:CASSÉ, mod:<[PRED:TRÈS]>]>, def:$d2], tense:$t, neg:$n]
+text [PRED:RÉPARER, i:[PRED:HORLOGER, mod:<[PRED:ÂGÉ],[PRED:PETIT]>, def:$d], ii:[PRED:MONTRE, mod:<[PRED:MÉTALLIQUE], [PRED:CASSÉ, mod:<[PRED:TRÈS]>]>, def:$d2], tense:$t, neg:$n]
 
 
 //text [PRED:RONFLER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes]]

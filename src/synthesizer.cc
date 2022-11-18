@@ -693,7 +693,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                 }
 #endif
 
-                                if (trace && (it)->getRuleTrace())
+                                if (trace && it->getRuleTrace())
                                 {
                                     std::cout << "*** Close" << std::endl;
                                     (*actualItem)->getRule()->print(std::cout, (*actualItem)->getIndex(), false, false);
@@ -807,7 +807,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                 }
 
                                 forestPtr forestFound = forestPtr();
-                                class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
+                                class ForestIdentifier* fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
                                                                                       (*actualItem)->getRanges()[0],
                                                                                       row,
                                                                                       ((*actualItem)->getSynthesizedFeatures()
@@ -869,7 +869,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                              ++i)
                                         {
                                             // New item build
-                                            class Item *it = createItem(previousItem, row);
+                                            class Item* it = createItem(previousItem, row);
                                             it->setEnvironment(
                                                 previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
                                                                                : environmentPtr());
@@ -917,10 +917,11 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                             (*actualItem)->addFlags(Flags::SEEN);
                                         }
                                     }
+
                                     // This reduce action is new
                                     else
                                     {
-                                        class Item *it = createItem(previousItem, row);
+                                        class Item* it = createItem(previousItem, row);
                                         it->setEnvironment(
                                             previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
                                                                            : environmentPtr());
@@ -1036,6 +1037,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                 {
                     // shift
                 }
+
                 else
                 {
                     (*actualItem)->step(modification);
@@ -1198,7 +1200,7 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                     {
 
                                         // New item build
-                                        class Item *it = createItem(*actualItem, row);
+                                        class Item* it = createItem(*actualItem, row);
 
                                         it->setEnvironment(env);
 

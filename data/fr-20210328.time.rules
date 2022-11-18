@@ -123,7 +123,7 @@ timeClauseCont → tensedClause time|adv {
   [modSType:time, vform:tensed];
   [modSType:time, modS:<$Head::$Tail>, $rest];
   ↓2 = [type:time, $Head];
-  ↓1 = [$rest, modS:$Tail];
+  ↓1 = [modS:$Tail, $rest];
   ⇑ = ⇓1;
 }
 
