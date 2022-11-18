@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -28,16 +28,19 @@
 /* **************************************************
  *
  ************************************************** */
-ForestMap::ForestMap() {
-    NEW
+ForestMap::ForestMap()
+{
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-ForestMap::~ForestMap() {
-    DELETE
-    for (auto & i : data) {
+ForestMap::~ForestMap()
+{
+    DELETE;
+    for (auto &i : data)
+    {
         forestPtr tmp = i.second;
         if (tmp)
             tmp.reset();
@@ -47,38 +50,42 @@ ForestMap::~ForestMap() {
 /* **************************************************
  *
  ************************************************** */
-ForestMap::map::const_iterator ForestMap::find(const forestIdentifierPtr& forestIdentifier) const {
+ForestMap::map::const_iterator ForestMap::find(class ForestIdentifier *forestIdentifier) const
+{
     return data.find(forestIdentifier);
 }
 
 /* **************************************************
  *
  ************************************************** */
-ForestMap::map::const_iterator ForestMap::cbegin() const {
+ForestMap::map::const_iterator ForestMap::cbegin() const
+{
     return data.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-ForestMap::map::const_iterator ForestMap::cend() const {
+ForestMap::map::const_iterator ForestMap::cend() const
+{
     return data.cend();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void ForestMap::clear() {
+void ForestMap::clear()
+{
     return data.clear();
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool ForestMap::insert(forestIdentifierPtr key, forestPtr value) {
+bool ForestMap::insert(class ForestIdentifier *key, forestPtr value)
+{
     auto result = data.insert(std::make_pair(key, value)).second;
-    //CERR_LINE
-    //std::cerr << "insert " << key->peekSerialString() << std::endl;
+    // CERR_LINE
+    // std::cerr << "insert " << key->peekSerialString() << std::endl;
     return result;
 }
-

@@ -51,18 +51,18 @@ MemoizationMap::map::const_iterator MemoizationMap::cend() const {
 /* ************************************************************
  * 
  ************************************************************ */
-void MemoizationMap::insert(std::string const& key, featuresPtr features, forestIdentifierPtr forestIdentifier) {
+void MemoizationMap::insert(std::string const& key, featuresPtr features, class ForestIdentifier* forestIdentifier) {
 #ifdef TRACE_MEMOIZATION
     std::cout << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
     std::cout << "<BR>";
     std::cout << std::endl;
 #endif
-    memoizationValuePtr value = MemoizationValue::create(std::move(features), std::move(forestIdentifier));
+    class MemoizationValue* value = MemoizationValue::create(std::move(features), std::move(forestIdentifier));
     auto memItem = memoizationMap.find(key);
     if (memItem != memoizationMap.end()) {
         memItem->second.push_back(value);
     } else {
-        std::vector<memoizationValuePtr> values;
+        std::vector<class MemoizationValue*> values;
         values.push_back(value);
         memoizationMap[key] = values;
     }

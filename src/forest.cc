@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -29,7 +29,9 @@
 /* **************************************************
  *
  ************************************************** */
-Forest::Forest(entryPtr entry, unsigned int from, unsigned int to) {
+Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
+{
+    NEW;
     this->entry = std::move(entry);
     this->from = from;
     this->to = to;
@@ -37,22 +39,24 @@ Forest::Forest(entryPtr entry, unsigned int from, unsigned int to) {
         this->empty = true;
     else
         this->empty = false;
-    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
-forestPtr Forest::create(entryPtr entry, unsigned int from, unsigned int to) {
+forestPtr Forest::create(entryPtr entry, unsigned int from, unsigned int to)
+{
     return forestPtr(new Forest(std::move(entry), from, to));
 }
 
 /* **************************************************
  *
  ************************************************** */
-Forest::~Forest() {
-    DELETE
-    for (auto tmp : nodes) {
+Forest::~Forest()
+{
+    DELETE;
+    for (auto tmp : nodes)
+    {
         if (tmp)
             tmp.reset();
     }
@@ -63,49 +67,56 @@ Forest::~Forest() {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Forest::getFrom() const {
+unsigned int Forest::getFrom() const
+{
     return from;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Forest::getTo() const {
+unsigned int Forest::getTo() const
+{
     return to;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Forest::isEmpty() const {
+bool Forest::isEmpty() const
+{
     return from == to;
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Forest::getOutput_size() const {
+size_t Forest::getOutput_size() const
+{
     return this->output.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string>::const_iterator Forest::getOutput_cbegin() const {
+const std::vector<std::string>::const_iterator Forest::getOutput_cbegin() const
+{
     return this->output.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string>::const_iterator Forest::getOutput_cend() const {
-     return this->output.cend();
- }
+const std::vector<std::string>::const_iterator Forest::getOutput_cend() const
+{
+    return this->output.cend();
+}
 
 /* **************************************************
  *
  ************************************************** */
-void Forest::push_back_node(const nodePtr& node) {
+void Forest::push_back_node(const nodePtr &node)
+{
     empty = false;
     nodes.push_back(node);
 }
@@ -114,64 +125,74 @@ void Forest::push_back_node(const nodePtr& node) {
 /* **************************************************
  *
  ************************************************** */
-void
-Forest::toXML(xmlNodePtr nodeRoot, bool root)
+void Forest::toXML(xmlNodePtr nodeRoot, bool root)
 {
-   xmlNodePtr f=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"FOREST", NULL);
-   if (root)
-   xmlSetProp(f, (xmlChar*)"root", (xmlChar*)"yes");
-   if (isSetFlags(Flags::XML)) {
-      xmlSetProp(f, (xmlChar*)"idref", (xmlChar*)(std::to_string(this->getId())).c_str());
-   }
-   else {
-      xmlSetProp(f, (xmlChar*)"id", (xmlChar*)(std::to_string(this->getId())).c_str());
-      addFlags(Flags::XML);
-      xmlSetProp(f, (xmlChar*)"from", (xmlChar*)std::to_string(this->from).c_str());
-      xmlSetProp(f, (xmlChar*)"to", (xmlChar*)std::to_string(this->to).c_str());
-      xmlSetProp(f, (xmlChar*)"size", (xmlChar*)(std::to_string(nodes.size())).c_str());
+    xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"FOREST", NULL);
+    if (root)
+        xmlSetProp(f, (xmlChar *)"root", (xmlChar *)"yes");
+    if (isSetFlags(Flags::XML))
+    {
+        xmlSetProp(f, (xmlChar *)"idref", (xmlChar *)(std::to_string(this->getId())).c_str());
+    }
+    else
+    {
+        xmlSetProp(f, (xmlChar *)"id", (xmlChar *)(std::to_string(this->getId())).c_str());
+        addFlags(Flags::XML);
+        xmlSetProp(f, (xmlChar *)"from", (xmlChar *)std::to_string(this->from).c_str());
+        xmlSetProp(f, (xmlChar *)"to", (xmlChar *)std::to_string(this->to).c_str());
+        xmlSetProp(f, (xmlChar *)"size", (xmlChar *)(std::to_string(nodes.size())).c_str());
 
-      if (empty)
-      xmlSetProp(f, (xmlChar*)"empty", (xmlChar*)"yes");
-      else
-      xmlSetProp(f, (xmlChar*)"empty", (xmlChar*)"no");
+        if (empty)
+            xmlSetProp(f, (xmlChar *)"empty", (xmlChar *)"yes");
+        else
+            xmlSetProp(f, (xmlChar *)"empty", (xmlChar *)"no");
 
-      if (entry)
-      entry->toXML(f);
+        if (entry)
+            entry->toXML(f);
 
-      if (output.size()>0) {
-         xmlNodePtr o=xmlNewChild(f, NULL, (const xmlChar*)"OUTPUT", NULL);
-         for(std::vector<std::string>::const_iterator s=output.begin(); s!=output.end(); ++s)
-         xmlNewChild(o, NULL, (const xmlChar*)"S", (xmlChar*)(*s).c_str());
-      }
-      for(Forest::vectorNodes::const_iterator n=nodes.begin(); n!=nodes.end(); ++n) {
-         (*n)->toXML(nodeRoot, f);
-      }
-   }
+        if (output.size() > 0)
+        {
+            xmlNodePtr o = xmlNewChild(f, NULL, (const xmlChar *)"OUTPUT", NULL);
+            for (std::vector<std::string>::const_iterator s = output.begin(); s != output.end(); ++s)
+                xmlNewChild(o, NULL, (const xmlChar *)"S", (xmlChar *)(*s).c_str());
+        }
+        for (Forest::vectorNodes::const_iterator n = nodes.begin(); n != nodes.end(); ++n)
+        {
+            (*n)->toXML(nodeRoot, f);
+        }
+    }
 }
 #endif
 
 /* **************************************************
  *
  ************************************************** */
-void Forest::generate(bool random, bool one) {
-    if (isUnsetFlags(Flags::GENERATED)) {
+void Forest::generate(bool random, bool one)
+{
+    if (isUnsetFlags(Flags::GENERATED))
+    {
         addFlags(Flags::GENERATED);
-        if (entry && !entry->getForm().empty()) {
+        if (entry && !entry->getForm().empty())
+        {
             output.push_back(entry->getForm());
-        } else if (!nodes.empty()) {
+        }
+        else if (!nodes.empty())
+        {
             auto nodeIt = nodes.begin();
             nodePtr node;
-            if (random) {
+            if (random)
+            {
                 size_t rv = std::rand() / ((RAND_MAX + 1u) / nodes.size());
                 node = nodes.at(rv);
             }
-            while (nodeIt != nodes.end()) {
+            while (nodeIt != nodes.end())
+            {
                 if (!random)
                     node = *nodeIt;
                 if (node->isUnsetFlags(Flags::GENERATED))
                     node->generate(random, one);
-		for (std::vector<std::string>::const_iterator s = node->getOutput().cbegin(); s != node->getOutput().cend(); ++s)
-		  output.push_back(*s);
+                for (std::vector<std::string>::const_iterator s = node->getOutput().cbegin(); s != node->getOutput().cend(); ++s)
+                    output.push_back(*s);
                 if (random || one)
                     break;
                 ++nodeIt;

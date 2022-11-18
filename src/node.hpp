@@ -26,13 +26,11 @@
 #include <libxml/tree.h>
 #endif
 
-#include "flags.hpp"
-#include "uniq-id.hpp"
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 
 class Node :
-        public Flags, 
-        public UniqId, 
+        public Facade, 
         public std::enable_shared_from_this<class Node> {
 
 public:

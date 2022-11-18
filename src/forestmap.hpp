@@ -27,7 +27,7 @@
 class ForestMap {
 
 public:
-    typedef std::unordered_map<const forestIdentifierPtr, forestPtr, ForestIdentifier::hash, ForestIdentifier::equal_to> map;
+    typedef std::unordered_map<class ForestIdentifier*, forestPtr, ForestIdentifier::hash, ForestIdentifier::equal_to> map;
 
 private:
     map data;
@@ -37,7 +37,7 @@ public:
 
     ~ForestMap();
 
-    map::const_iterator find(const forestIdentifierPtr &) const;
+    map::const_iterator find(class ForestIdentifier*) const;
 
     map::const_iterator cbegin() const;
 
@@ -45,7 +45,7 @@ public:
 
     void clear();
 
-    bool insert(forestIdentifierPtr, forestPtr);
+    bool insert(class ForestIdentifier*, forestPtr);
 
 };
 

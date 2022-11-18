@@ -496,10 +496,10 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] Verb [CN] {
   // avoir
   else if (#3.2){
     if ($resObjEx ≠ yes){
-      ↓7 = [$rest, vform:participle, vtense:past, number:sg, gender:ms];
+      ↓7 = [vform:participle, vtense:past, number:sg, gender:ms, $rest];
     } else {
       [resObjExNumber:$resObjExNumber, resObjExGender:$resObjExGender] ⊂ ↑;
-      ↓7 = [$rest, vform:participle, vtense:past, number:$resObjExNumber, gender:$resObjExGender];
+      ↓7 = [vform:participle, vtense:past, number:$resObjExNumber, gender:$resObjExGender, $rest];
 
     }
     if (⇓7) {
@@ -561,7 +561,7 @@ V → [clneg] CLITICS aux_être [clint] [advneg] [ADVM] Verb [CN] {
     attest ($inv != yes);
   }
 
-  ↓7 = [$rest, vform:participle, vtense:past];
+  ↓7 = [vform:participle, vtense:past, $rest];
   // On récupère les informations du verbe
   if (⇓7){
     [subjC:$subjC, objC:$objC, modC:$modC, pobjC:$pOC, number:$npart, gender:$gpart] ⊂ ⇓7;
@@ -618,7 +618,7 @@ V → [clneg] CLITICS aux_avoir [clint] [advneg] aux_être [ADVM] Verb [CN] {
     attest ($inv != yes);
   }
 
-  ↓8 = [$rest, vform:participle, vtense:past];
+  ↓8 = [vform:participle, vtense:past, $rest];
   // On récupère les informations du verbe
   if (⇓8){
     [subjC:$subjC, objC:$objC, modC:$modC, pobjC:$pOC, number:$npart, gender:$gpart] ⊂ ⇓8;

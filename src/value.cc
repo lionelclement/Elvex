@@ -825,7 +825,7 @@ bool Value::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
-void Value::enable(const statementPtr &root, const itemPtr &item, Synthesizer *synthesizer, bool &effect, bool on) {
+void Value::enable(const statementPtr &root, class Item* item, Synthesizer* synthesizer, bool& effect, bool on) {
     switch (type) {
         case _NIL:
         case _TRUE:
@@ -887,7 +887,7 @@ bool Value::findVariable(const bitsetPtr &variable) const {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(const itemPtr &item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Value::apply(class Item* item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                   const statementPtr& body,
                   bool &effect) {
     switch (type) {

@@ -22,23 +22,22 @@
 
 #include "shared_ptr.hpp"
 
-class MemoizationValue :
-        public std::enable_shared_from_this<class MemoizationValue> {
+class MemoizationValue {
 
 private:
     featuresPtr features;
-    forestIdentifierPtr forestIdentifier;
+    class ForestIdentifier* forestIdentifier;
 
-    MemoizationValue(featuresPtr, forestIdentifierPtr);
+    MemoizationValue(featuresPtr, class ForestIdentifier*);
 
 public:
     ~MemoizationValue();
 
-    static memoizationValuePtr create(featuresPtr, forestIdentifierPtr);
+    static class MemoizationValue* create(featuresPtr, class ForestIdentifier*);
 
     featuresPtr getFeatures(void) const;
 
-    forestIdentifierPtr getForestIdentifier(void) const;
+    class ForestIdentifier* getForestIdentifier(void) const;
 
 };
 

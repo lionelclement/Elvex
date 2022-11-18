@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.18.0)
+project(elvex VERSION 2.19.0)
 
 set(CMAKE_CXX_STANDARD 11)
 include_directories(src)
@@ -48,6 +48,8 @@ set(ELVEX_COMMON_SOURCES
         src/entry.hpp
         src/environment.cc
         src/environment.hpp
+        src/facade.cc
+        src/facade.hpp
         src/fatal_exception.cc
         src/fatal_exception.hpp
         src/feature.cc
@@ -125,20 +127,23 @@ if (LibXml2_FOUND)
             OUTPUT_XML
             MEMOIZATION
             RESTORE_MEMORY
-            MAXLENGTH=1000
-            MAXUSAGES=10000
-            MAXCARDINAL=1000000
+            MAXLENGTH=3000
+            MAXUSAGES=3000
+            MAXITEMS=3000
             MAXATTEMPTS=100
             MAXBITS=512
             #TRACE_LEXICON
-            )
+            #TRACE_PASS
+            #TRACE_UNFOLD
+    )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
     target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
         MEMOIZATION
         TRACE_OPTION
-        TRACE_MEMOIZATION
-        #TRACE_EVAL
+        #TRACE_MEMOIZATION
+        #TRACE_PASS
+        #TRACE_UNFOLD
 )
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})

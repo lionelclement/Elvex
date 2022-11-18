@@ -21,9 +21,9 @@
 #define CONFIG_H
 
 #define ELVEX_VERSION_MAJOR "2"
-#define ELVEX_VERSION_MINOR "18"
+#define ELVEX_VERSION_MINOR "19"
 #define ELVEX_VERSION_PATCH "0"
-#define ELVEX_VERSION "2.18.0"
+#define ELVEX_VERSION "2.19.0"
 #define PROJECT_NAME "elvex"
 
 #endif // CONFIG_H
