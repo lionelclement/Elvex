@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -43,18 +43,19 @@
 #define MAXATTEMPTS 3000
 #endif
 
-class Synthesizer {
+class Synthesizer
+{
 
 public:
-
-    enum Stage {
+    enum Stage
+    {
         MORPHO_FEATURES,
         FORM_FEATURES,
         PRED_FEATURES
     };
 
-    typedef std::unordered_map<unsigned int, class Item*> item_map;
-    typedef std::unordered_map<unsigned int, class ItemSet*> itemSet_map;
+    typedef std::unordered_map<unsigned int, class Item *> item_map;
+    typedef std::unordered_map<unsigned int, class ItemSet *> itemSet_map;
     typedef itemSet_map::const_iterator itemSet_map_const_iterator;
 
 private:
@@ -65,7 +66,7 @@ private:
 
     std::string compactedLexiconFileName;
     std::string compactedDirectoryName;
-    class CompactedLexicon* compactedLexicon;
+    class CompactedLexicon *compactedLexicon;
 
     unsigned int maxLength;
     unsigned int maxUsages;
@@ -86,7 +87,7 @@ private:
 
     MemoizationMap memoizedMap;
 
-    #ifdef TRACE_OPTION
+#ifdef TRACE_OPTION
     bool traceInit;
     bool traceStage;
     bool traceClose;
@@ -96,12 +97,10 @@ private:
 #endif
 
 #ifdef OUTPUT_XML
-    char* outXML;
+    char *outXML;
 #endif
 
-
 public:
-
     Synthesizer();
 
     ~Synthesizer();
@@ -112,17 +111,17 @@ public:
 
     size_t size() const;
 
-    std::list<std::string>& getInputs();
+    std::list<std::string> &getInputs();
 
-    void setInputFileName(char*);
+    void setInputFileName(char *);
 
-    void setLexiconFileName(char*);
+    void setLexiconFileName(char *);
 
-    void setRulesFileName(char*);
+    void setRulesFileName(char *);
 
     void setCompactedLexiconFileName(char *);
 
-    void setCompactedDirectoryName(char*);
+    void setCompactedDirectoryName(char *);
 
     std::string getInputFileName() const;
 
@@ -144,12 +143,12 @@ public:
 
     unsigned int getMaxItems() const;
 
-    void setCompactedLexicon(class CompactedLexicon*);
+    void setCompactedLexicon(class CompactedLexicon *);
 
-    void addInput(const std::string&);
+    void addInput(const std::string &);
 
 #ifdef OUTPUT_XML
-    void setOutXML(char*);
+    void setOutXML(char *);
     char *getOutXML() const;
 #endif
 
@@ -170,11 +169,11 @@ public:
 
     nodePtr getNodeRoot();
 
-    bool insertItemMap(class Item*);
+    bool insertItemMap(class Item *);
 
     void eraseItemMap(unsigned int);
 
-    class Item* getItemMap(unsigned int);
+    class Item *getItemMap(unsigned int);
 
     bool getTrace() const;
 
@@ -190,29 +189,29 @@ public:
 
     bool getOne(void) const;
 
-    void printState(std::ostream&, class ItemSet*);
+    void printState(std::ostream &, class ItemSet *);
 
-    void close(class Parser&, class ItemSet*, unsigned int);
+    void close(class Parser &, class ItemSet *, unsigned int);
 
-    bool shift(class Parser&, class ItemSet*, unsigned int);
+    bool shift(class Parser &, class ItemSet *, unsigned int);
 
     void clear();
 
-    static class Item* createItem(class Item*, unsigned int);
+    static class Item *createItem(class Item *, unsigned int);
 
-    void generate(class Parser&);
+    void generate(class Parser &);
 
-    entriesPtr findCompactedLexicon(class Parser&, unsigned int code, const std::string& str, unsigned int pred);
+    entriesPtr findCompactedLexicon(class Parser &, unsigned int code, const std::string &str, unsigned int pred);
 
-    std::string keyMemoization(class Item*, class Item*);
+    std::string keyMemoization(class Item *, class Item *);
 
     void setVerbose(bool _verbose);
 
-    entriesPtr findByPos(Parser& parser, Parser::entries_map* pMap, unsigned int term);
+    entriesPtr findByPos(Parser &parser, Parser::entries_map *pMap, unsigned int term);
 
-    entriesPtr findByForm(Parser::entries_map* pMap);
+    entriesPtr findByForm(Parser::entries_map *pMap);
 
-    entriesPtr findByPred(Parser& parser, Parser::entries_map* listPred, unsigned int term, unsigned int pred);
+    entriesPtr findByPred(Parser &parser, Parser::entries_map *listPred, unsigned int term, unsigned int pred);
 };
 
 #endif // ELVEX_SYNTHESIZER_H

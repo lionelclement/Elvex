@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -25,11 +25,11 @@
 #include <vector>
 #include "memoization-value.hpp"
 
-class MemoizationMap :
-        public std::enable_shared_from_this<class MemoizationMap> {
+class MemoizationMap : public std::enable_shared_from_this<class MemoizationMap>
+{
 
 public:
-    typedef std::unordered_map<std::string, std::vector<class MemoizationValue*> > map;
+    typedef std::unordered_map<std::string, std::vector<class MemoizationValue *>> map;
 
 private:
     map memoizationMap;
@@ -39,10 +39,9 @@ public:
 
     map::const_iterator cend(void) const;
 
-    map::const_iterator find(const std::string&) const;
+    map::const_iterator find(const std::string &) const;
 
-    void insert(const std::string&, featuresPtr, class ForestIdentifier*);
-
+    void insert(const std::string &, featuresPtr, class ForestIdentifier *);
 };
 
 #endif // ELVEX_MEMOIZATIONMAP_H

@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -29,10 +29,11 @@
 #include "item.hpp"
 #include "shared_ptr.hpp"
 
-class ItemSet {
+class ItemSet
+{
 
 public:
-    typedef std::unordered_set<class Item*, Item::hash, Item::equal_to> set_of_item;
+    typedef std::unordered_set<class Item *, Item::hash, Item::equal_to> set_of_item;
     typedef set_of_item::const_iterator set_of_item_const_iterator;
     typedef set_of_item::iterator set_of_item_iterator;
 
@@ -45,11 +46,11 @@ private:
 public:
     ~ItemSet();
 
-    static class ItemSet* create(unsigned int);
+    static class ItemSet *create(unsigned int);
 
     unsigned int getId(void);
 
-    set_of_item& getItems(void);
+    set_of_item &getItems(void);
 
     set_of_item_const_iterator cbegin(void) const;
 
@@ -59,22 +60,21 @@ public:
 
     set_of_item_iterator end(void) const;
 
-    set_of_item_const_iterator find(class Item*) const;
+    set_of_item_const_iterator find(class Item *) const;
 
-    bool insert(class Item*, class Synthesizer *);
+    bool insert(class Item *, class Synthesizer *);
 
-    void erase(class Item*);
+    void erase(class Item *);
 
     size_t size(void) const;
 
     void resetUsages(void);
 
-    void print(std::ostream&);
+    void print(std::ostream &);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
 #endif
-
 };
 
 #endif // ITEM_H

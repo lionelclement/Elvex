@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -30,16 +30,16 @@
 #include <libxml/tree.h>
 #endif
 
-class Facade {
+class Facade
+{
 
 private:
-
     UniqId uniqId;
     Flags flags;
 
 public:
-    Facade(std::size_t id = 0, const std::bitset<FLAGS>& flags = 0);
-    
+    Facade(std::size_t id = 0, const std::bitset<FLAGS> &flags = 0);
+
     ~Facade();
 
     std::bitset<FLAGS> &getFlags();
@@ -55,7 +55,6 @@ public:
     void printFlags(std::ostream &) const;
 
     std::size_t getId(void) const;
-
 };
 
 #endif // ELVEX_FACADE_H

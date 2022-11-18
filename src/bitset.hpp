@@ -34,18 +34,17 @@
 #define MAXBITS 512
 #endif
 
-class Bitset :
-        public std::bitset<MAXBITS>, 
-        public Serializable, 
-        public std::enable_shared_from_this<Bitset> {
+class Bitset : public std::bitset<MAXBITS>,
+               public Serializable,
+               public std::enable_shared_from_this<Bitset>
+{
 
 private:
-
     explicit Bitset(unsigned int = 0);
 
     explicit Bitset(std::bitset<MAXBITS> &);
 
-    explicit Bitset(const bitsetPtr&);
+    explicit Bitset(const bitsetPtr &);
 
     void makeSerialString() override;
 
@@ -56,14 +55,13 @@ public:
 
     static bitsetPtr create(std::bitset<MAXBITS>);
 
-    static bitsetPtr create(const bitsetPtr&);
+    static bitsetPtr create(const bitsetPtr &);
 
     std::string toString() const;
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
 #endif
-
 };
 
 #endif // BITSET_H
