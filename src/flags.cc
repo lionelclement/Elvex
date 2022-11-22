@@ -54,49 +54,49 @@ std::bitset<FLAGS> &Flags::getFlags() {
 /* **************************************************
  *
  ************************************************** */
-bool Flags::isSetFlags(const std::bitset<FLAGS> &cmp) const {
+bool Flags::isSet(const std::bitset<FLAGS> &cmp) const {
     return (this->flags & cmp).any();
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Flags::isUnsetFlags(const std::bitset<FLAGS> &cmp) const {
+bool Flags::isUnset(const std::bitset<FLAGS> &cmp) const {
     return (this->flags & cmp).none();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Flags::addFlags(const std::bitset<FLAGS>& _flags) {
+void Flags::add(const std::bitset<FLAGS>& _flags) {
     this->flags |= _flags;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Flags::subFlags(const std::bitset<FLAGS>& _flags) {
+void Flags::sub(const std::bitset<FLAGS>& _flags) {
     this->flags &= ~_flags;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Flags::printFlags(std::ostream &outStream) const {
-    if (isSetFlags(Flags::SEEN))
+void Flags::print(std::ostream &outStream) const {
+    if (isSet(Flags::SEEN))
         outStream << "SEEN ";
-    if (isSetFlags(XML))
+    if (isSet(XML))
         outStream << "XML ";
-    if (isSetFlags(GENERATED))
+    if (isSet(GENERATED))
         outStream << "GENERATED ";
-    if (isSetFlags(DISABLED))
+    if (isSet(DISABLED))
         outStream << "DISABLED ";
-    if (isSetFlags(NIL))
+    if (isSet(NIL))
         outStream << "NIL ";
-    if (isSetFlags(BOTTOM))
+    if (isSet(BOTTOM))
         outStream << "BOTTOM ";
-    if (isSetFlags(CHOOSEN))
+    if (isSet(CHOOSEN))
         outStream << "CHOOSEN ";
-    if (isSetFlags(REJECTED))
+    if (isSet(REJECTED))
         outStream << "REJECTED ";
 }

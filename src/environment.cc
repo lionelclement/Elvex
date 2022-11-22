@@ -25,7 +25,7 @@
 #include <utility>
 #include "environment.hpp"
 #include "messages.hpp"
-#include "list.hpp"
+#include "pairp.hpp"
 #include "feature.hpp"
 #include "features.hpp"
 #include "value.hpp"
@@ -322,8 +322,11 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
         case Value::_FEATURES:
             replaceVariables(value->getFeatures(), effect);
             break;
-        case Value::_LIST:
-            replaceVariables(value->getList(), effect);
+        case Value::_LISTFEATURES:
+            replaceVariables(value->getListFeatures(), effect);
+            break;
+        case Value::_PAIRP:
+            replaceVariables(value->getPairp(), effect);
             break;
         case Value::_VARIABLE:
             valuePtr val = find(value->getBits());
@@ -350,7 +353,7 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
 /* **************************************************
  *
  ************************************************** */
-void Environment::replaceVariables(const listPtr &list, bool &effect)
+void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
 {
     /***
      std::cerr << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
@@ -361,43 +364,43 @@ void Environment::replaceVariables(const listPtr &list, bool &effect)
      this->print(std::cerr);
      std::cerr << "</	td></tr></table>";
      ***/
-    if (!list->containsVariable())
+    if (!pairp->containsVariable())
         return;
-    switch (list->getType())
+    switch (pairp->getType())
     {
-    case List::ATOM:
-        if (list->isVariable())
+    case Pairp::_ATOM_:
+        if (pairp->isVariable())
         {
-            valuePtr value = this->find(list->getValue()->getBits());
-            if (value->_isList())
+            valuePtr value = this->find(pairp->getValue()->getBits());
+            if (value->_isPairp())
             {
-                *list = *(value->getList());
+                *pairp = *(value->getPairp());
             }
             else if (value->_isNil())
             {
-                *list = *List::NIL_LIST;
+                *pairp = *Pairp::NIL;
             }
             else
             {
-                list->setValue(value);
+                pairp->setValue(value);
             }
         }
         else
             // if (list->containsVariable())
-            replaceVariables(list->getValue(), effect);
+            replaceVariables(pairp->getValue(), effect);
         break;
 
-    case List::PAIRP:
+    case Pairp::_PAIRP_:
         // if (list->getCar()->containsVariable())
-        replaceVariables(list->getCar(), effect);
+        replaceVariables(pairp->getCar(), effect);
         // if (list->getCdr()->containsVariable())
-        replaceVariables(list->getCdr(), effect);
+        replaceVariables(pairp->getCdr(), effect);
         break;
 
-    case List::NIL:
+    case Pairp::_NIL_:
         break;
     }
-    list->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
+    pairp->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
     /***
      std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
      std::cerr << "<table border=\"1\"><tr><th>List</th></tr>";
@@ -406,7 +409,7 @@ void Environment::replaceVariables(const listPtr &list, bool &effect)
      std::cerr << "</td></tr></table>";
      ***/
     if (effect)
-        list->resetSerial();
+        pairp->resetSerial();
 }
 
 /* **************************************************

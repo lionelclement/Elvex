@@ -29,7 +29,7 @@ typedef std::shared_ptr<class Environment> environmentPtr;
 typedef std::shared_ptr<class Feature> featurePtr;
 typedef std::shared_ptr<class Features> featuresPtr;
 typedef std::shared_ptr<class Forest> forestPtr;
-typedef std::shared_ptr<class List> listPtr;
+typedef std::shared_ptr<class Pairp> pairpPtr;
 typedef std::shared_ptr<class ListFeatures> listFeaturesPtr;
 typedef std::shared_ptr<class Node> nodePtr;
 typedef std::shared_ptr<class Rule> rulePtr;

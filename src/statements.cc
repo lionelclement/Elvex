@@ -17,9 +17,8 @@
  *
  ************************************************** */
 
-#include <iostream> // std::cout, std::endl
+#include <iostream>
 #include <iomanip>
-
 #include "statements.hpp"
 #include "environment.hpp"
 #include "messages.hpp"
@@ -119,7 +118,7 @@ void Statements::print(std::ostream &outStream, unsigned int tabulation, unsigne
     outStream << "{<BR>";
     if (guard)
         guard->print(outStream, tabulation, yetColored | color);
-    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i)
+    for (list::const_iterator i = statements.cbegin(); i != statements.cend(); ++i)
         (*i)->print(outStream, tabulation, yetColored | color);
     for (unsigned int j = 1; j <= tabulation; ++j)
         outStream << "&nbsp;";
@@ -147,7 +146,7 @@ statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags)
 {
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
-    for (list::const_iterator i = this->statements.begin(); i != this->statements.end(); ++i)
+    for (list::const_iterator i = this->statements.cbegin(); i != this->statements.cend(); ++i)
         _statements->addStatement((*i)->clone(protectedFlags));
     _statements->addFlags(protectedFlags & this->getFlags());
     return _statements;
@@ -160,7 +159,7 @@ void Statements::renameVariables(size_t i)
 {
     if (guard)
         guard->renameVariables(i);
-    for (list::const_iterator j = this->statements.begin(); j != this->statements.end(); ++j)
+    for (list::const_iterator j = this->statements.cbegin(); j != this->statements.cend(); ++j)
         (*j)->renameVariables(i);
 }
 
@@ -192,7 +191,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
 
 loopStatements:
     bool allDone = true;
-    for (list::iterator statement = statements.begin(); statement != statements.end(); ++statement)
+    for (list::const_iterator statement = statements.cbegin(); statement != statements.cend(); ++statement)
     {
         if ((*statement)->isUnsetFlags(Flags::SEEN))
         {
@@ -236,7 +235,7 @@ void Statements::enable(class Item *item, Synthesizer *synthesizer, bool &effect
 {
     if (guard)
         guard->enable(guard, item, synthesizer, effect, on);
-    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i)
+    for (list::const_iterator i = statements.cbegin(); i != statements.cend(); ++i)
     {
         (*i)->enable(*i, item, synthesizer, effect, on);
     }

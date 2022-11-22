@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 
 project(elvex VERSION 2.19.0)
 
+set(CMAKE_VERBOSE_MAKEFILE OFF)
+#set(CMAKE_CXX_COMPILER gcc)
 set(CMAKE_CXX_STANDARD 11)
 include_directories(src)
 
@@ -72,8 +74,6 @@ set(ELVEX_COMMON_SOURCES
         src/itemset.hpp
         src/lexicon.cc
         src/lexicon.hpp
-        src/list.cc
-        src/list.hpp
         src/listfeatures.cc
         src/listfeatures.hpp
         src/memoization-map.cc
@@ -83,6 +83,8 @@ set(ELVEX_COMMON_SOURCES
         src/messages.hpp
         src/node.cc
         src/node.hpp
+        src/pairp.cc
+        src/pairp.hpp
         src/parser.cc
         src/parser.hpp
         src/parser_exception.cc
@@ -117,9 +119,12 @@ configure_file(
         @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
-target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
+target_compile_options(elvex PUBLIC -std=c++11 -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
 add_executable(elvexdebug ${ELVEX_COMMON_SOURCES} src/elvex.cc)
-target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexdebug PUBLIC -std=c++11 -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers
+#-DDEBUGYACC\(x\)=x 
+#-DDEBUGLEX\(x\)=x 
+)
 
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
@@ -127,24 +132,30 @@ if (LibXml2_FOUND)
             OUTPUT_XML
             MEMOIZATION
             RESTORE_MEMORY
-            MAXLENGTH=3000
-            MAXUSAGES=3000
-            MAXITEMS=3000
-            MAXATTEMPTS=100
             MAXBITS=512
-            #TRACE_LEXICON
-            #TRACE_PASS
-            #TRACE_UNFOLD
+            MAXLENGTH=1000
+            MAXUSAGES=1000
+            MAXITEMS=1000
+            MAXATTEMPTS=1000
     )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
     target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
         MEMOIZATION
+        RESTORE_MEMORY
+        MAXBITS=512
+        MAXLENGTH=1000
+        MAXUSAGES=1000
+        MAXITEMS=1000
+        MAXATTEMPTS=1000
         TRACE_OPTION
         #TRACE_MEMOIZATION
         #TRACE_PASS
         #TRACE_UNFOLD
-)
+        #TRACE_LEXICON
+        TRACE_EVAL
+        TRACE_APPLY
+        )
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})
 else()

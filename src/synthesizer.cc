@@ -1129,12 +1129,12 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                      std::cerr << std::endl;
                      std::cerr << "pred:" << pred << std::endl;
                      std::cerr << "form:" << form << std::endl;
-                     //std::cerr << "POS : " << Vartable::codeToString((*actualItem)->getFirstCurrentTerm()->getCode()) << std::endl;
+                     //std::cerr << "POS : " << Vartable::codeToString((*actualItem)->getFirstCurrentTerm()->getpos()) << std::endl;
                      */
-                    auto foundCode = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
-                    if (foundCode != parser.cendCacheLexicon() && (!foundCode->second->empty()))
+                    auto foundpos = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
+                    if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
                     {
-                        Parser::entries_map *listPred = foundCode->second;
+                        Parser::entries_map *listPred = foundpos->second;
                         if (listPred)
                         {
                             Parser::entries_map::const_iterator found;
@@ -1416,39 +1416,39 @@ void Synthesizer::generate(class Parser &parser)
 
 /* **************************************************
  * search
- * |str(code)#str(pred)
- * |codeStr#str(pred)
- * |str(code)#_
- * |codeStr#_
+ * |str(pos)#str(pred)
+ // * |posStr#str(pred)
+ * |str(pos)#_
+ // * |posStr#_
  *
  * returns entries= (entry1, entry2, ...)
  * where entryi= (unsigned int pos, unsigned int pred, std::string form, featuresPtr features)
  ************************************************** */
-entriesPtr Synthesizer::findCompactedLexicon(
+entriesPtr Synthesizer::_findCompactedLexicon(
     Parser &parser,
-    const unsigned int code,
-    const std::string &codeStr,
+    const unsigned int pos,
+    //const std::string & posStr,
     const unsigned int pred)
 {
     unsigned long int info = ~0UL;
     std::string str;
     if (pred)
     {
-        if (code)
-            str = Vartable::codeToString(code) + '#' + Vartable::codeToString(pred);
-        else if (!codeStr.empty())
-            str = codeStr + "#" + Vartable::codeToString(pred);
+        if (pos)
+            str = Vartable::codeToString(pos) + '#' + Vartable::codeToString(pred);
+        //else if (posStr != std::string())
+        //    str = posStr + "#" + Vartable::codeToString(pred);
         else
-            throw fatal_exception("code null");
+            throw fatal_exception("pos null");
     }
     else
     {
-        if (code)
-            str = Vartable::codeToString(code) + "#_";
-        else if (!codeStr.empty())
-            str = codeStr + "#_";
+        if (pos)
+            str = Vartable::codeToString(pos) + "#_";
+        //else if (!posStr.empty())
+        //    str = posStr + "#_";
         else
-            throw fatal_exception("pred and code null");
+            throw fatal_exception("pred and pos null");
     }
     if (!compactedLexicon)
         throw fatal_exception("search operator error: No compact lexicon defined.");
@@ -1483,7 +1483,7 @@ entriesPtr Synthesizer::findCompactedLexicon(
                     unsigned int _pred = parser.getLocalFeatures()->assignPred();
                     entryPtr _localEntry = Entry::create(0, _pred, std::string(), parser.getLocalFeatures());
 
-                    _localEntry->setPos(code);
+                    _localEntry->setPos(pos);
                     _localEntry->setForm(form);
                     std::string localEntrySerialString = _localEntry->peekSerialString();
                     auto found = parser.findMapLocalEntry(localEntrySerialString);
@@ -1501,7 +1501,7 @@ entriesPtr Synthesizer::findCompactedLexicon(
             catch (parser_exception &e)
             {
                 std::ostringstream oss;
-                oss << "illegal lexical entry: " << form << " " << Vartable::codeToString(code) << " "
+                oss << "illegal lexical entry format: " << form << " " << Vartable::codeToString(pos) << " "
                     << result.substr(result.find('#') + 1, -1);
                 throw fatal_exception(oss);
             }
@@ -1530,7 +1530,7 @@ void Synthesizer::setVerbose(bool _verbose)
  *
  ************************************************** */
 entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
-                                  unsigned int term)
+                                  unsigned int pos)
 {
     entriesPtr entries = entriesPtr();
     // Without pred : UINT_MAX => ...
@@ -1541,9 +1541,9 @@ entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
     }
     else if (compactedLexicon)
     {
-        entries = findCompactedLexicon(parser,
-                                       term,
-                                       std::string(),
+        entries = _findCompactedLexicon(parser,
+                                       pos,
+                                       //std::string(),
                                        UINT_MAX);
         listPred->insert(std::make_pair(UINT_MAX, entries));
     }
@@ -1567,7 +1567,7 @@ entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred)
  *
  ************************************************** */
 entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred,
-                                   unsigned int term, unsigned int pred)
+                                   unsigned int pos, unsigned int pred)
 {
     entriesPtr entries = entriesPtr();
     // pred => ...
@@ -1579,9 +1579,8 @@ entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred
     else if (compactedLexicon)
     {
         // Compact lexicon
-        entries = findCompactedLexicon(parser,
-                                       term,
-                                       std::string(),
+        entries = _findCompactedLexicon(parser,
+                                       pos,
                                        pred);
         listPred->insert(std::make_pair(pred, entries));
     }

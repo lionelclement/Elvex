@@ -201,17 +201,19 @@ public:
 
     void generate(class Parser &);
 
-    entriesPtr findCompactedLexicon(class Parser &, unsigned int code, const std::string &str, unsigned int pred);
+    // entriesPtr findCompactedLexicon(class Parser &, unsigned int code, const std::string &str, unsigned int pred);
+    // entriesPtr _findCompactedLexicon(class Parser &, unsigned int code, const std::string &str, unsigned int pred);
+    entriesPtr _findCompactedLexicon(class Parser &parser, unsigned int pos, unsigned int pred);
 
     std::string keyMemoization(class Item *, class Item *);
 
     void setVerbose(bool _verbose);
 
-    entriesPtr findByPos(Parser &parser, Parser::entries_map *pMap, unsigned int term);
+    entriesPtr findByPos(Parser &parser, Parser::entries_map *, unsigned int pos);
 
-    entriesPtr findByForm(Parser::entries_map *pMap);
+    entriesPtr findByForm(Parser::entries_map *);
 
-    entriesPtr findByPred(Parser &parser, Parser::entries_map *listPred, unsigned int term, unsigned int pred);
+    entriesPtr findByPred(Parser &parser, Parser::entries_map *, unsigned int pos, unsigned int pred);
 };
 
 #endif // ELVEX_SYNTHESIZER_H

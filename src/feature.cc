@@ -219,25 +219,25 @@ void Feature::makeSerialString()
     switch (type)
     {
     case Feature::PRED:
-        serialString = 'P';
+        serialString = '\0';
         break;
     case Feature::LEMMA:
-        serialString = 'L';
+        serialString = '\1';
         break;
     case Feature::FORM:
-        serialString = 'F';
+        serialString = '\2';
         break;
     case Feature::CONSTANT:
         serialString = attribute->peekSerialString();
         break;
     case Feature::VARIABLE:
-        serialString = '$' + attribute->peekSerialString();
+        serialString = '\3' + attribute->peekSerialString();
         break;
     }
     if (value)
-        serialString += ':' + value->peekSerialString();
+        serialString += '\4' + value->peekSerialString();
     else
-        serialString += 'N';
+        serialString += '\5';
 }
 
 #ifdef OUTPUT_XML

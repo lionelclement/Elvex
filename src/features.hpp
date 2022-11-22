@@ -119,6 +119,11 @@ public:
     bool findVariable(const bitsetPtr &);
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
+
+    void apply(class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+                  const statementPtr& body,
+                  bool &effect);
+
 };
 
 #endif // ELVEX_FEATURES_H

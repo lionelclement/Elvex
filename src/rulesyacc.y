@@ -29,7 +29,7 @@
 #include "value.hpp"
 #include "feature.hpp"
 #include "features.hpp"
-#include "list.hpp"
+#include "pairp.hpp"
 #include "statements.hpp"
 #include "statement.hpp"
 #include "terms.hpp"
@@ -38,14 +38,15 @@
 #include "shared_ptr.hpp"
 #include "parser_exception.hpp"
 
-#if false
-#define DBUG(x)x
+#ifndef DEBUGYACC
+#define DEBUGYACC(x)
 #else
-#define DBUG(x)
+#define DEBUGYACC(x) x
 #endif
-#define DBUGPRT(x) DBUG(std::cerr << "*** " << x << std::endl)
-#define DBUGPRTARG(x,s) DBUG(std::cerr << "*** " << x << " " << s << std::endl)
 
+#define DBUGPRT(x) DEBUGYACC({std::cerr << "*** " << x << std::endl;})
+#define DBUGPRTARG(x, s) DEBUGYACC({std::cerr << "*** " << x << ' ' << s << std::endl});
+  
  extern unsigned int ruleslineno;
  extern unsigned int ruleslex();
  extern Parser parser;
@@ -78,9 +79,10 @@
   valuePtr* value_slot;
   featurePtr* feature_slot;
   featuresPtr* features_slot;
-  listPtr* list_slot;
+  pairpPtr* pairp_slot;
   statementPtr* statement_slot;
   statementsPtr* statements_slot;
+
   std::list<  bitsetPtr >* list_args;
  }
 
@@ -103,7 +105,7 @@
 %token TOKEN_IF TOKEN_ELSE
 %token TOKEN_NIL TOKEN_TRUE TOKEN_FALSE
 %token TOKEN_FOREACH TOKEN_IN
-%token TOKEN_SEARCH
+%token TOKEN_SEARCH TOKEN_ON
 %token TOKEN_RAND
 %token TOKEN_TRACE
 
@@ -136,11 +138,10 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<feature_slot> feature features_components_tail
 %type<bits_slot> variable identifier constant
 %type<value_slot> feature_value
-%type<list_slot> list list_elements list_element
+%type<pairp_slot> pairp pairp_elements pairp_element
 
 %type<statements_slot> structure_statement list_statement
 %type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_aff_statement right_hand_side_aff_statement up down updouble downdouble dash_statement
-// left_hand_side_inset_statement right_hand_side_inset_statement 
 %type<statement_slot> expression_statement
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
@@ -551,8 +552,8 @@ statement:
 	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::AFF, *$1, *$3));
 	  // <X, …> = <…>
 	  // <X, …> = $X
-	  if (((*$1)->isList()) 
-	  		&& (((*$3)->isList())
+	  if (((*$1)->isPairp()) 
+	  		&& (((*$3)->isPairp())
 					||((*$3)->isVariable()))) {
 	    }
 	  // ↓i = $X
@@ -591,7 +592,7 @@ statement:
 	  else if (((*$1)->isVariable())
 		   &&(((*$3)->isVariable())
 		      ||((*$3)->isConstant())
-		      ||((*$3)->isList())
+		      ||((*$3)->isPairp())
 		      ||((*$3)->isFeatures())
 		      ||((*$3)->isUp())
 		      ||((*$3)->isUnif())
@@ -719,23 +720,34 @@ right_hand_side_subset_statement:
 	  free($1);
 	}
 
-	|TOKEN_SEARCH TOKEN_LPAR identifier TOKEN_COMMA expression_statement TOKEN_RPAR  {
-	  DBUGPRT("right_hand_side_subset_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno,
-						  Statement::SEARCH,
-						  *$3,
-						  *$5));
-	  free($3);
-	  free($5);
-	 }
+	// |TOKEN_SEARCH TOKEN_LPAR TOKEN_IDENTIFIER TOKEN_COMMA expression_statement TOKEN_RPAR  {
+	//   	DBUGPRT("right_hand_side_subset_statement");
+	//   	$$ = new statementPtr(Statement::create(ruleslineno,
+	// 					  Statement::SEARCH,
+	// 					  Vartable::stringToCode(*$3),
+	// 					  *$5));
+	// 	free($3);
+	//   	free($5);
+	//  }
 
-   |TOKEN_SEARCH TOKEN_LPAR expression_statement TOKEN_RPAR  {
- 	  DBUGPRT("expression_statement");
- 	  $$ = new statementPtr(Statement::create(ruleslineno,
- 						  Statement::SEARCH,
- 						  *$3));
- 	  free($3);
- 	 };
+	// |TOKEN_SEARCH expression_statement TOKEN_ON TOKEN_IDENTIFIER {
+	//   	DBUGPRT("right_hand_side_subset_statement");
+	//   	$$ = new statementPtr(Statement::create(ruleslineno,
+	// 					  Statement::SEARCH,
+	// 					  Vartable::stringToCode(*$4),
+	// 					  *$2));
+	// 	free($2);
+	//   	free($4);
+	//  }
+
+//	|TOKEN_SEARCH TOKEN_LPAR expression_statement TOKEN_RPAR  {
+ //	  DBUGPRT("expression_statement");
+ //	  $$ = new statementPtr(Statement::create(ruleslineno,
+ //						  Statement::SEARCH,
+ //						  *$3));
+ //	  free($3);
+ //	}
+	 ;
 
 left_hand_side_aff_statement:
 	updouble {
@@ -757,9 +769,9 @@ left_hand_side_aff_statement:
 	|TOKEN_LT variable TOKEN_DOUBLECOLON variable TOKEN_GT
 	{
 	  DBUGPRT("left_hand_side_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::LIST,
-						List::create(List::create(Value::create(Value::_VARIABLE, *$2)),
-							     List::create(Value::create(Value::_VARIABLE, *$4)))));
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::PAIRP,
+						Pairp::create(Pairp::create(Value::create(Value::_VARIABLE, *$2)),
+							     Pairp::create(Value::create(Value::_VARIABLE, *$4)))));
 	  free($2);
 	  free($4);
 	};
@@ -966,6 +978,9 @@ expression_statement:
 	  free($1);
 	}
 
+	//////////////////////////////////////////////////
+	// constants
+	//////////////////////////////////////////////////
 	|TOKEN_NIL
 	{
 	  DBUGPRT("expression_statement");
@@ -978,6 +993,9 @@ expression_statement:
 	  free($1);
 	}
 
+	//////////////////////////////////////////////////
+	// variables
+	//////////////////////////////////////////////////
 	|TOKEN_ANONYMOUS
 	{
 	  DBUGPRT("expression_statement");
@@ -995,24 +1013,44 @@ expression_statement:
 	  $$=$2;
 	}
 
-	|list {
-	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::LIST, *$1));
-	  free($1);
-	}
-
+	//////////////////////////////////////////////////
+	// position
+	//////////////////////////////////////////////////
 	|dash_statement {
 	  DBUGPRT("expression_statement");
 	  $$=$1;
 	}
 
-	|TOKEN_SEARCH TOKEN_LPAR expression_statement TOKEN_RPAR  {
+	//////////////////////////////////////////////////
+	// pairp
+	//////////////////////////////////////////////////
+	|pairp {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno,
+	  $$ = new statementPtr(Statement::create(ruleslineno, Statement::PAIRP, *$1));
+	  free($1);
+	}
+
+	//////////////////////////////////////////////////
+	// lists
+	//////////////////////////////////////////////////
+	|TOKEN_SEARCH expression_statement TOKEN_ON TOKEN_IDENTIFIER {
+	  	DBUGPRT("list");
+	  	$$ = new statementPtr(Statement::create(ruleslineno,
 						  Statement::SEARCH,
-						  *$3));
-	  free($3);
-	 };
+						  Vartable::stringToCode(*$4),
+						  *$2));
+		free($2);
+	  	free($4);
+	 }
+	
+	// |TOKEN_SEARCH TOKEN_LPAR expression_statement TOKEN_RPAR  {
+	//   DBUGPRT("expression_statement");
+	//   $$ = new statementPtr(Statement::create(ruleslineno,
+	// 					  Statement::SEARCH,
+	// 					  *$3));
+	//   free($3);
+	//  }
+	 ;
 
 up:
 	TOKEN_UPARROW {
@@ -1231,17 +1269,17 @@ feature_value:
 	  $$ = new valuePtr(Value::create(Value::_NUMBER, (double)$1));
 	}
 
-	|list
+	|pairp
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::_LIST, *$1));
+	  $$ = new valuePtr(Value::create(*$1));
 	  free($1);
 	}
 
 	|features
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::_FEATURES, *$1));
+	  $$ = new valuePtr(Value::create(*$1));
 	  free($1);
 	}
 
@@ -1290,8 +1328,8 @@ variable:
 	  free($1);
 	};
 
-list:
-	TOKEN_LT list_elements TOKEN_GT
+pairp:
+	TOKEN_LT pairp_elements TOKEN_GT
 	{
 	  DBUGPRT("list");
 	  $$ = $2;
@@ -1300,83 +1338,85 @@ list:
 	|TOKEN_LT TOKEN_GT
 	{
 	  DBUGPRT("list");
-	  $$ = new listPtr(List::NIL_LIST);
+	  $$ = new pairpPtr(Pairp::NIL);
 	}
 
-	|TOKEN_LT list_elements TOKEN_DOUBLECOLON list_element TOKEN_GT
+	|TOKEN_LT pairp_elements TOKEN_DOUBLECOLON pairp_element TOKEN_GT
 	{
 	  DBUGPRT("list");
 	  if ((*$2)->isPairp() && (*$2)->getCdr()->isNil())
-	    $$ = new listPtr(List::create((*$2)->getCar(), *$4));
+	    $$ = new pairpPtr(Pairp::create((*$2)->getCar(), *$4));
 	  else
-	    $$ = new listPtr(List::create(*$2, *$4));
+	    $$ = new pairpPtr(Pairp::create(*$2, *$4));
 	  free($2);
 	  free($4);
 	}
 
-	|TOKEN_LT list_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
+	|TOKEN_LT pairp_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
 	{
 	  DBUGPRT("list");
 	  if ((*$2)->isPairp() && (*$2)->getCdr()->isNil())
-	    $$ = new listPtr(List::create((*$2)->getCar(), List::NIL_LIST));
+	    $$ = new pairpPtr(Pairp::create((*$2)->getCar(), Pairp::NIL));
 	  else
-	    $$ = new listPtr(List::create(*$2, List::NIL_LIST));
+	    $$ = new pairpPtr(Pairp::create(*$2, Pairp::NIL));
 	  free($2);
-	};
+	}
+	
+	 ;
 
-list_elements:
-	list_element TOKEN_COMMA list_elements
+pairp_elements:
+	pairp_element TOKEN_COMMA pairp_elements
 	{
-	  DBUGPRT("list_elements");
-	  $$ = new listPtr(List::create(*$1, *$3));
+	  DBUGPRT("pairp_elements");
+	  $$ = new pairpPtr(Pairp::create(*$1, *$3));
 	  free($1);
 	  free($3);
 	}
 
-	|list_element
+	|pairp_element
 	{
-	  DBUGPRT("list_elements");
-	  $$ = new listPtr(List::create(*$1, List::NIL_LIST));
+	  DBUGPRT("pairp_elements");
+	  $$ = new pairpPtr(Pairp::create(*$1, Pairp::NIL));
 	  free($1);
 	};
 
-list_element:
+pairp_element:
 	variable
 	{
-	  DBUGPRT("list_element");
-	  $$ = new listPtr(List::create(Value::create(Value::_VARIABLE, *$1)));
+	  DBUGPRT("pairp_element");
+	  $$ = new pairpPtr(Pairp::create(Value::create(Value::_VARIABLE, *$1)));
 	  free($1);
 	}
 
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new listPtr(List::create(Value::create(Value::_NUMBER, $1)));
+	  $$ = new pairpPtr(Pairp::create(Value::create(Value::_NUMBER, $1)));
 	}
 
  	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new listPtr(List::create(Value::create(Value::_NUMBER, (double)$1)));
+	  $$ = new pairpPtr(Pairp::create(Value::create(Value::_NUMBER, (double)$1)));
 	}
 
 	|constant
 	{
-	  DBUGPRT("list_element");
-	  $$ = new listPtr(List::create(Value::create(Value::_CONSTANT, *$1)));
+	  DBUGPRT("pairp_element");
+	  $$ = new pairpPtr(Pairp::create(Value::create(Value::_CONSTANT, *$1)));
 	  free($1);
 	}
 
 	|features
 	{
-	  DBUGPRT("list_element");
-	  $$ = new listPtr(List::create(Value::create(Value::_FEATURES, *$1)));
+	  DBUGPRT("pairp_element");
+	  $$ = new pairpPtr(Pairp::create(Value::create(*$1)));
 	  free($1);
 	}
 
-	|list
+	|pairp
 	{
-	  DBUGPRT("list_element");
+	  DBUGPRT("pairp_element");
 	  $$=$1;
 	};
 

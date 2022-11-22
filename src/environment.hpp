@@ -65,15 +65,15 @@ public:
 
     valuePtr find(const bitsetPtr &) const;
 
-    void replaceVariables(const valuePtr &value, bool &);
+    void replaceVariables(const valuePtr &, bool &);
 
-    void replaceVariables(const featuresPtr &features, bool &);
+    void replaceVariables(const featuresPtr &, bool &);
 
-    void replaceVariables(const listFeaturesPtr &listFeatures, bool &);
+    void replaceVariables(const listFeaturesPtr &, bool &);
 
-    void replaceVariables(const listPtr &list, bool &);
+    void replaceVariables(const pairpPtr &, bool &);
 
-    void replaceVariables(std::string &string, bool &);
+    void replaceVariables(std::string &, bool &);
 };
 
 #endif // ELVEX_ENVIRONMENT_H

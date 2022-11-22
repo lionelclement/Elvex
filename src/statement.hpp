@@ -29,6 +29,7 @@
 
 #define FATAL_ERROR_STM                          \
     {                                            \
+        CERR_LINE;                               \
         std::ostringstream oss;                  \
         oss << "statement line " << getLineno(); \
         throw fatal_exception(oss);              \
@@ -58,7 +59,6 @@ public:
         DASH,
         AFF,
         SUBSUME,
-        // INSET,
         UP,
         UP2,
         DOWN,
@@ -79,7 +79,7 @@ public:
         IN,
         STMS,
         STR,
-        LIST,
+        PAIRP,
         NUMBER,
         FCT,
         SEARCH,
@@ -123,7 +123,7 @@ private:
     bitsetPtr bitset;
     std::string str;
     arithmetic_op fct;
-    listPtr list;
+    pairpPtr pairp;
     statementsPtr statements;
     double number;
 
@@ -135,7 +135,7 @@ public:
     Statement(unsigned int, type op = FINISHED, statementPtr lhs = statementPtr(), statementPtr rhs = statementPtr(),
               unsigned int first = UINT_MAX, unsigned int second = UINT_MAX,
               featuresPtr features = featuresPtr(), bitsetPtr bits = bitsetPtr(), arithmetic_op fct = NOP,
-              listPtr list = listPtr(), statementsPtr stms = statementsPtr(), double = 0.0);
+              pairpPtr pairp = pairpPtr(), statementsPtr stms = statementsPtr(), double = 0.0);
 
     Statement(unsigned int, type op, valuePtr value);
 
@@ -144,10 +144,14 @@ public:
 public:
     ~Statement();
 
-    static statementPtr
-    create(unsigned int lineno, type op, statementPtr lhs = statementPtr(), statementPtr rhs = statementPtr());
+    static statementPtr create(unsigned int lineno, type op, statementPtr lhs = statementPtr(), 
+    statementPtr rhs = statementPtr());
 
-    static statementPtr create(unsigned int lineno, type op, unsigned int first, unsigned int second = UINT_MAX);
+    static statementPtr create(unsigned int lineno, type op, unsigned int first, 
+        unsigned int second = UINT_MAX);
+
+    static statementPtr create(unsigned int lineno, type op, unsigned int first, 
+        statementPtr lhs);
 
     static statementPtr create(unsigned int lineno, type op, featuresPtr features);
 
@@ -157,10 +161,11 @@ public:
 
     static statementPtr create(unsigned int lineno, type op, std::string str);
 
-    static statementPtr create(unsigned int lineno, type op, arithmetic_op fct, statementPtr lhs = statementPtr(),
-                               statementPtr rhs = statementPtr());
+    static statementPtr create(unsigned int lineno, type op, arithmetic_op fct, 
+                                statementPtr lhs = statementPtr(),
+                                statementPtr rhs = statementPtr());
 
-    static statementPtr create(unsigned int lineno, type op, listPtr);
+    static statementPtr create(unsigned int lineno, type op, pairpPtr);
 
     static statementPtr create(unsigned int lineno, type op, statementsPtr);
 
@@ -204,7 +209,7 @@ public:
 
     bool isStr() const;
 
-    bool isList() const;
+    bool isPairp() const;
 
     bool isNumber() const;
 
@@ -228,7 +233,7 @@ public:
 
     std::string getStr() const;
 
-    listPtr getList() const;
+    pairpPtr getPairp() const;
 
     statementsPtr getStatements() const;
 
@@ -238,43 +243,45 @@ public:
 
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
-    featuresPtr evalFeatures(class Item *, class Parser &parser, class Synthesizer *synthesizer, bool);
+    featuresPtr evalFeatures(class Item *, class Parser &, class Synthesizer *, bool);
 
-    listPtr evalList(class Item *, bool);
+    pairpPtr evalPairp(class Item *, bool);
 
-    valuePtr evalValue(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables);
+    valuePtr evalValue(class Item *, Parser &, Synthesizer *, bool);
+
+    listFeaturesPtr evalListFeatures(class Item *, Parser &, Synthesizer *, bool);
 
     featuresPtr unif(const featuresPtr &, const featuresPtr &, class Item *);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
-    void buildInheritedSonFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer);
+    void buildInheritedSonFeatures(class Item *, Parser &, Synthesizer *synthesizer);
 
-    void buildSynthesizedFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer);
+    void buildSynthesizedFeatures(class Item *, Parser &, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithInherited(class Item *item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithInherited(class Item *, Parser &, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithSynthesize(class Item *item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithSynthesize(class Item *, Parser &, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithValue(class Item *item, Parser &parser, Synthesizer *synthesizer);
+    void buildEnvironmentWithValue(class Item *, Parser &, Synthesizer *);
 
-    void stmAttest(class Item *, class Parser &parser, class Synthesizer *synthesizer);
+    void stmAttest(class Item *, class Parser &, class Synthesizer *);
 
-    void stmGuard(class Item * /*, class Synthesizer *synthesizer*/);
+    void stmGuard(class Item *);
 
-    void stmForeach(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmForeach(class Item *item, class Parser &, class Synthesizer *, bool &);
 
-    void stmIf(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void stmIf(class Item *item, class Parser &, class Synthesizer *, bool &);
 
-    void stmPrint(class Item *, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrint(class Item *, class Parser &, class Synthesizer *);
 
-    void stmPrintln(class Item *, class Parser &parser, class Synthesizer *synthesizer);
+    void stmPrintln(class Item *, class Parser &, class Synthesizer *);
 
     void renameVariables(size_t);
 
-    void enable(const statementPtr &root, class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(const statementPtr &, class Item *, class Synthesizer *, bool &, bool);
 
-    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(class Item *, class Parser &, class Synthesizer *, bool &);
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 

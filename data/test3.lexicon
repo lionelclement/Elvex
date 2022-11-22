@@ -1,0 +1,6 @@
+la det [];
+le det [];
+
+voiture n [PRED:VOITURE, form:"voiture"];
+véhicule n [PRED:VOITURE, form:"véhicule"];
+bagnole n [PRED:VOITURE, form:"bagnole"];

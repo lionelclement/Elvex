@@ -25,6 +25,7 @@
 #include "facade.hpp"
 
 class ListFeatures : public Facade,
+                     public Serializable,
                      public std::enable_shared_from_this<class ListFeatures>
 {
 
@@ -32,6 +33,8 @@ private:
     std::vector<featuresPtr> listFeatures;
 
     ListFeatures(void);
+
+    void makeSerialString();
 
 public:
     ~ListFeatures();
@@ -44,15 +47,31 @@ public:
 
     void clear(void);
 
-    std::vector<featuresPtr>::const_iterator begin() const;
+    std::vector<featuresPtr>::const_iterator cbegin() const;
 
-    std::vector<featuresPtr>::const_iterator end() const;
+    std::vector<featuresPtr>::const_iterator cend() const;
+
+    std::vector<featuresPtr>::iterator begin() ;
+
+    std::vector<featuresPtr>::iterator end() ;
 
     size_t size() const;
 
     listFeaturesPtr clone(void);
 
     featuresPtr operator[](unsigned int);
+
+    void print(std::ostream &) const;
+
+    void flatPrint(std::ostream &) const;
+
+    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, statementPtr body,
+          bool &effect);
+
+#ifdef OUTPUT_XML
+    void toXML(xmlNodePtr);
+#endif
+
 };
 
 #endif // ELVEX_LISTFEATURES_H

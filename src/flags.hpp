@@ -47,15 +47,15 @@ public:
 
     std::bitset<FLAGS> &getFlags();
 
-    bool isSetFlags(const std::bitset<FLAGS> &cmp) const;
+    bool isSet(const std::bitset<FLAGS> &cmp) const;
 
-    bool isUnsetFlags(const std::bitset<FLAGS> &cmp) const;
+    bool isUnset(const std::bitset<FLAGS> &cmp) const;
 
-    void addFlags(const std::bitset<FLAGS> &f);
+    void add(const std::bitset<FLAGS> &f);
 
-    void subFlags(const std::bitset<FLAGS> &f);
+    void sub(const std::bitset<FLAGS> &f);
 
-    void printFlags(std::ostream &) const;
+    void print(std::ostream &) const;
 };
 
 #endif // ELVEX_FLAGS_H

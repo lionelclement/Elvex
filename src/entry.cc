@@ -107,8 +107,7 @@ unsigned int Entry::getPred() const
 /* **************************************************
  *
  ************************************************** */
-std::string &
-Entry::getForm()
+std::string & Entry::getForm()
 {
     return form;
 }

@@ -26,6 +26,9 @@
 #include "messages.hpp"
 #include "bitset.hpp"
 #include "synthesizer.hpp"
+#include "item.hpp"
+#include "statement.hpp"
+#include "value.hpp"
 
 featuresPtr Features::BOTTOM = createBottom();
 featuresPtr Features::NIL = createNil();
@@ -250,25 +253,19 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
 void Features::makeSerialString()
 {
     if (isNil())
-        serialString = '#';
+        serialString = '\0';
     else if (isBottom())
-        serialString = '&';
+        serialString = '\1';
     else
     {
-        serialString = '[';
+        serialString = '\2';
         if (!features.empty())
         {
-            bool first = true;
             for (const auto &f : features)
             {
-                if (first)
-                    first = false;
-                else
-                    serialString += ',';
-                serialString += f->peekSerialString();
+                serialString += f->peekSerialString() + '\3';
             }
         }
-        serialString += ']';
     }
 }
 
@@ -507,7 +504,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         nFeatures->add(i2);
                     }
                 }
-                environment->add(i1->getAttribute(), Value::create(Value::_FEATURES, nFeatures));
+                environment->add(i1->getAttribute(), Value::create(nFeatures));
             }
         }
     }
@@ -699,4 +696,17 @@ bool Features::containsVariable()
 void Features::setVariableFlag(enum VariableFlag::flagValues flag)
 {
     this->variableFlag.setFlag(flag);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Features::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+                     const statementPtr &body,
+                     bool &effect)
+{
+    item->getEnvironment()->add(variable->getBits(), Value::create(shared_from_this()));
+    effect = true;
+    body->apply(item, parser, synthesizer, effect);
+    item->getEnvironment()->remove(variable->getBits());
 }

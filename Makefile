@@ -877,36 +877,6 @@ src/lexicon.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/lexicon.cc.s
 .PHONY : src/lexicon.cc.s
 
-src/list.o: src/list.cc.o
-.PHONY : src/list.o
-
-# target to build an object file
-src/list.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/list.cc.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/list.cc.o
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/list.cc.o
-.PHONY : src/list.cc.o
-
-src/list.i: src/list.cc.i
-.PHONY : src/list.i
-
-# target to preprocess a source file
-src/list.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/list.cc.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/list.cc.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/list.cc.i
-.PHONY : src/list.cc.i
-
-src/list.s: src/list.cc.s
-.PHONY : src/list.s
-
-# target to generate assembly for a file
-src/list.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/list.cc.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/list.cc.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/list.cc.s
-.PHONY : src/list.cc.s
-
 src/listfeatures.o: src/listfeatures.cc.o
 .PHONY : src/listfeatures.o
 
@@ -1026,6 +996,36 @@ src/node.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/node.cc.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/node.cc.s
 .PHONY : src/node.cc.s
+
+src/pairp.o: src/pairp.cc.o
+.PHONY : src/pairp.o
+
+# target to build an object file
+src/pairp.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/pairp.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/pairp.cc.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/pairp.cc.o
+.PHONY : src/pairp.cc.o
+
+src/pairp.i: src/pairp.cc.i
+.PHONY : src/pairp.i
+
+# target to preprocess a source file
+src/pairp.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/pairp.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/pairp.cc.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/pairp.cc.i
+.PHONY : src/pairp.cc.i
+
+src/pairp.s: src/pairp.cc.s
+.PHONY : src/pairp.s
+
+# target to generate assembly for a file
+src/pairp.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvex.dir/build.make CMakeFiles/elvex.dir/src/pairp.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexdebug.dir/build.make CMakeFiles/elvexdebug.dir/src/pairp.cc.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/elvexbuildlexicon.dir/build.make CMakeFiles/elvexbuildlexicon.dir/src/pairp.cc.s
+.PHONY : src/pairp.cc.s
 
 src/parser.o: src/parser.cc.o
 .PHONY : src/parser.o
@@ -1638,9 +1638,6 @@ help:
 	@echo "... src/lexicon.o"
 	@echo "... src/lexicon.i"
 	@echo "... src/lexicon.s"
-	@echo "... src/list.o"
-	@echo "... src/list.i"
-	@echo "... src/list.s"
 	@echo "... src/listfeatures.o"
 	@echo "... src/listfeatures.i"
 	@echo "... src/listfeatures.s"
@@ -1653,6 +1650,9 @@ help:
 	@echo "... src/node.o"
 	@echo "... src/node.i"
 	@echo "... src/node.s"
+	@echo "... src/pairp.o"
+	@echo "... src/pairp.i"
+	@echo "... src/pairp.s"
 	@echo "... src/parser.o"
 	@echo "... src/parser.i"
 	@echo "... src/parser.s"

@@ -54,6 +54,10 @@ public:
 
     size_t size() const;
 
+    std::vector<entryPtr>::const_iterator cbegin() const;
+
+    std::vector<entryPtr>::const_iterator cend() const;
+
     std::vector<entryPtr>::iterator begin();
 
     std::vector<entryPtr>::iterator end();

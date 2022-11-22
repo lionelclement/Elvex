@@ -44,7 +44,8 @@ public:
         _ANONYMOUS,
         _CODE,
         _FEATURES,
-        _LIST,
+        _LISTFEATURES,
+        _PAIRP,
         _NUMBER,
         _FORM
     };
@@ -52,10 +53,12 @@ public:
 private:
     bitsetPtr bits;    // pour encoder les constantes et les variables
     unsigned int code; // pour encoder les identifiers
-    listPtr list;
+    pairpPtr pairp;
     std::string str;
     double number;
     VariableFlag variableFlag;
+    featuresPtr features; // pour encoder les SF
+    listFeaturesPtr listFeatures; // pour encoder les listes de SF
 
 public:
     static valuePtr NIL_VALUE;
@@ -63,13 +66,12 @@ public:
     static valuePtr ANONYMOUS_VALUE;
 
     Type type;
-    featuresPtr features; // pour encoder les SF
 
 private:
     Value(const enum Type, const std::string &);
 
-    Value(const enum Type, unsigned int = 0, double = 0.0, bitsetPtr bitset = bitsetPtr(), featuresPtr = featuresPtr(),
-          listPtr lst = listPtr());
+    Value(const enum Type, unsigned int = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
+          pairpPtr = pairpPtr(), listFeaturesPtr = listFeaturesPtr());
 
     void makeSerialString(void);
 
@@ -86,11 +88,17 @@ public:
 
     static valuePtr create(const enum Type, bitsetPtr);
 
-    static valuePtr create(const enum Type, featuresPtr);
+    //static valuePtr create(const enum Type, featuresPtr);
+    static valuePtr create(featuresPtr);
 
-    static valuePtr create(const enum Type, class Set *);
+    //static valuePtr create(const enum Type, listFeaturesPtr);
+    static valuePtr create(listFeaturesPtr);
 
-    static valuePtr create(const enum Type, listPtr);
+    //static valuePtr create(const enum Type, class Set *);
+    static valuePtr create(class Set *);
+
+    //static valuePtr create(const enum Type, listPtr);
+    static valuePtr create(pairpPtr);
 
     Type getType(void) const;
 
@@ -100,11 +108,13 @@ public:
 
     featuresPtr getFeatures(void) const;
 
+    listFeaturesPtr getListFeatures(void) const;
+
     double getNumber(void) const;
 
     std::string getStr(void) const;
 
-    listPtr getList(void) const;
+    pairpPtr getPairp(void) const;
 
     void print(std::ostream &) const;
 
@@ -144,7 +154,9 @@ public:
 
     bool _isConstant(void) const;
 
-    bool _isList(void) const;
+    bool _isPairp(void) const;
+
+    bool _isListFeatures(void) const;
 
     void enable(const statementPtr &root, class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
 

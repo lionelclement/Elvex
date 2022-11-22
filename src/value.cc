@@ -21,8 +21,9 @@
 #include <utility>
 #include "value.hpp"
 #include "environment.hpp"
-#include "list.hpp"
+#include "pairp.hpp"
 #include "features.hpp"
+#include "listfeatures.hpp"
 #include "statement.hpp"
 #include "statements.hpp"
 #include "messages.hpp"
@@ -39,43 +40,43 @@ valuePtr Value::ANONYMOUS_VALUE = Value::create(Value::_ANONYMOUS);
  *
  ************************************************** */
 Value::Value(Value::Type const type, const std::string &str) {
+    NEW;
     this->type = type;
     this->code = 0;
     this->number = 0;
-    //unsigned int found = 0;
     if (type == _CODE) {
         this->code = Vartable::stringToCode(str);
     } else if (type == _FORM) {
         this->str = str;
     }
-    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
 Value::Value(Value::Type const type, unsigned int code, double number, bitsetPtr _bits, featuresPtr _features,
-             listPtr _list) {
+             pairpPtr _list, listFeaturesPtr _listFeatures) {
+    NEW;
     this->type = type;
     this->code = code;
     this->number = number;
-    this->bits = std::move(_bits);
-    this->features = std::move(_features);
-    this->list = std::move(_list);
-    NEW
+    this->bits = _bits ? std::move(_bits) : bitsetPtr();
+    this->features = _features ? std::move(_features) : featuresPtr();
+    this->pairp = _list ? std::move(_list) : pairpPtr();
+    this->listFeatures = _listFeatures ? std::move(_listFeatures) : listFeaturesPtr();
 }
 
 /* **************************************************
  *
  ************************************************** */
 Value::~Value() {
-    DELETE
+    DELETE;
     if (bits)
         bits.reset();
     if (features)
         features.reset();
-    if (list)
-        list.reset();
+    if (pairp)
+        pairp.reset();
 }
 
 /* **************************************************
@@ -116,15 +117,22 @@ valuePtr Value::create(const enum Type type, bitsetPtr bits) {
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, featuresPtr features) {
-    return valuePtr(new Value(type, 0, 0, bitsetPtr(), std::move(features)));
+valuePtr Value::create(featuresPtr features) {
+    return valuePtr(new Value(Value::_FEATURES, 0, 0, bitsetPtr(), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, listPtr lst) {
-    return valuePtr(new Value(type, 0, 0, bitsetPtr(), featuresPtr(), std::move(lst)));
+valuePtr Value::create(listFeaturesPtr listFeatures) {
+    return valuePtr(new Value(Value::_LISTFEATURES, 0, 0, bitsetPtr(), featuresPtr(), pairpPtr(), std::move(listFeatures)));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+valuePtr Value::create(pairpPtr lst) {
+    return valuePtr(new Value(Value::_PAIRP, 0, 0, bitsetPtr(), featuresPtr(), std::move(lst)));
 }
 
 /* **************************************************
@@ -158,6 +166,13 @@ featuresPtr Value::getFeatures() const {
 /* **************************************************
  *
  ************************************************** */
+listFeaturesPtr Value::getListFeatures() const {
+    return listFeatures;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 double Value::getNumber() const {
     return number;
 }
@@ -172,8 +187,8 @@ std::string Value::getStr() const {
 /* **************************************************
  *
  ************************************************** */
-listPtr Value::getList() const {
-    return list;
+pairpPtr Value::getPairp() const {
+    return pairp;
 }
 
 /* **************************************************
@@ -249,8 +264,15 @@ bool Value::_isIdentifier() const {
 /* **************************************************
  *
  ************************************************** */
-bool Value::_isList() const {
-    return type == _LIST;
+bool Value::_isPairp() const {
+    return type == _PAIRP;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Value::_isListFeatures() const {
+    return type == _LISTFEATURES;
 }
 
 /* **************************************************
@@ -285,8 +307,11 @@ void Value::print(std::ostream &outStream) const {
         case _FEATURES:
             getFeatures()->print(outStream);
             break;
-        case _LIST:
-            getList()->flatPrint(outStream, true);
+        case _LISTFEATURES:
+            getListFeatures()->print(outStream);
+            break;
+        case _PAIRP:
+            getPairp()->flatPrint(outStream, true);
             break;
     }
 }
@@ -321,8 +346,11 @@ void Value::flatPrint(std::ostream &outStream) const {
         case _FEATURES:
             getFeatures()->flatPrint(outStream);
             break;
-        case _LIST:
-            getList()->flatPrint(outStream, true);
+        case _LISTFEATURES:
+            getListFeatures()->flatPrint(outStream);
+            break;
+        case _PAIRP:
+            getPairp()->flatPrint(outStream, true);
             break;
     }
 }
@@ -333,25 +361,25 @@ void Value::flatPrint(std::ostream &outStream) const {
 void Value::makeSerialString() {
     switch (type) {
         case _NIL:
-            serialString = 'N';
+            serialString = '\0';
             break;
         case _TRUE:
-            serialString = 'T';
+            serialString = '\1';
             break;
         case _CONSTANT:
             serialString = bits->peekSerialString();
             break;
         case _VARIABLE:
-            serialString = '$' + bits->peekSerialString();
+            serialString = '\2' + bits->peekSerialString();
             break;
         case _ANONYMOUS:
-            serialString = '_';
+            serialString = '\3';
             break;
         case _CODE:
             serialString = std::to_string(code);
             break;
         case _NUMBER:
-            serialString = number;
+            serialString = std::to_string(number);
             break;
         case _FORM:
             serialString = str;
@@ -359,8 +387,11 @@ void Value::makeSerialString() {
         case _FEATURES:
             serialString = getFeatures()->peekSerialString();
             break;
-        case _LIST:
-            serialString = getList()->peekSerialString();
+        case _LISTFEATURES:
+            serialString = getListFeatures()->peekSerialString();
+            break;
+        case _PAIRP:
+            serialString = getPairp()->peekSerialString();
             break;
     }
 }
@@ -410,9 +441,13 @@ Value::toXML(xmlNodePtr nodeRoot) const
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"fs");
     getFeatures()->toXML(v);
     break;
-  case _LIST:
+  case _LISTFEATURES:
+    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"lfs");
+    getListFeatures()->toXML(v);
+    break;
+  case _PAIRP:
     xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"list");
-    getList()->toXML(v);
+    getPairp()->toXML(v);
     break;
   }
 }
@@ -434,10 +469,13 @@ valuePtr Value::clone() {
             result = shared_from_this();
             break;
         case _FEATURES:
-            result = Value::create(Value::_FEATURES, getFeatures()->clone());
+            result = Value::create(getFeatures()->clone());
             break;
-        case _LIST:
-            result = Value::create(Value::_LIST, getList()->clone());
+        case _LISTFEATURES:
+            result = Value::create(getListFeatures()->clone());
+            break;
+        case _PAIRP:
+            result = Value::create(getPairp()->clone());
             break;
         case _VARIABLE:
             result = Value::create(_VARIABLE, bits);
@@ -470,7 +508,9 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     bool ret = true;
     switch (type) {
 
-        case _TRUE: FATAL_ERROR_UNEXPECTED
+        case _LISTFEATURES:
+        case _TRUE: 
+            FATAL_ERROR_UNEXPECTED
 /*            if (value->type == VARIABLE) {
                 environment->add(value->bits, shared_from_this());
             } else if (value->type == _TRUE) {
@@ -564,9 +604,9 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
             }
             break;
 
-        case _LIST:
-            if (value->type == _LIST) {
-                if (!this->getList()->buildEnvironment(environment, value->getList(),
+        case _PAIRP:
+            if (value->type == _PAIRP) {
+                if (!this->getPairp()->buildEnvironment(environment, value->getPairp(),
                                                        acceptToFilterNULLVariables,
                                                        root))
                     ret = false;
@@ -671,8 +711,8 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment) {
             case _FEATURES:
                 ret = getFeatures()->subsumes(o->getFeatures(), environment);
                 break;
-            case _LIST:
-                ret = getList()->subsumes(o->getList(), environment);
+            case _PAIRP:
+                ret = getPairp()->subsumes(o->getPairp(), environment);
                 break;
 
             default: FATAL_ERROR_UNEXPECTED
@@ -774,12 +814,13 @@ void Value::deleteAnonymousVariables() const {
         case _VARIABLE:
         case _ANONYMOUS:
         case _NUMBER:
+        case _LISTFEATURES:
             break;
         case _FEATURES:
             getFeatures()->deleteAnonymousVariables();
             break;
-        case _LIST:
-            getList()->deleteAnonymousVariables();
+        case _PAIRP:
+            getPairp()->deleteAnonymousVariables();
             break;
     }
 }
@@ -797,6 +838,7 @@ bool Value::renameVariables(size_t i) {
         case _FORM:
         case _NUMBER:
         case _ANONYMOUS:
+        case _LISTFEATURES:
             break;
         case _VARIABLE: {
             std::ostringstream oss;
@@ -813,9 +855,9 @@ bool Value::renameVariables(size_t i) {
                 if (getFeatures()->renameVariables(i))
                     effect = true;
             break;
-        case _LIST:
-            if (getList())
-                if (getList()->renameVariables(i))
+        case _PAIRP:
+            if (getPairp())
+                if (getPairp()->renameVariables(i))
                     effect = true;
             break;
     }
@@ -834,6 +876,7 @@ void Value::enable(const statementPtr &root, class Item* item, Synthesizer* synt
         case _CONSTANT:
         case _NUMBER:
         case _ANONYMOUS:
+        case _LISTFEATURES:
             break;
         case _VARIABLE:
             if (on) {
@@ -849,8 +892,8 @@ void Value::enable(const statementPtr &root, class Item* item, Synthesizer* synt
         case _FEATURES:
             getFeatures()->enable(root, item, synthesizer, effect, on);
             break;
-        case _LIST:
-            getList()->enable(root, item, synthesizer, effect, on);
+        case _PAIRP:
+            getPairp()->enable(root, item, synthesizer, effect, on);
             break;
     }
 }
@@ -867,6 +910,7 @@ bool Value::findVariable(const bitsetPtr &variable) const {
         case _CONSTANT:
         case _NUMBER:
         case _ANONYMOUS:
+        case _LISTFEATURES:
             break;
         case _VARIABLE:
             if (*bits == *variable)
@@ -876,8 +920,8 @@ bool Value::findVariable(const bitsetPtr &variable) const {
             if (getFeatures()->findVariable(variable))
                 return true;
             break;
-        case _LIST:
-            if (getList()->findVariable(variable))
+        case _PAIRP:
+            if (getPairp()->findVariable(variable))
                 return true;
             break;
     }
@@ -916,12 +960,13 @@ bool Value::containsVariable() {
         case _CONSTANT:
         case _NUMBER:
         case _ANONYMOUS:
+        case _LISTFEATURES:
             break;
         case _VARIABLE:
             result = true;
             break;
-        case _LIST:
-            if (this->getList()->containsVariable()) {
+        case _PAIRP:
+            if (this->getPairp()->containsVariable()) {
                 result = true;
             }
             break;

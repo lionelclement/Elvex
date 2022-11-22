@@ -19,7 +19,7 @@
 
 #include <iostream>
 #include "value.hpp"
-#include "list.hpp"
+#include "pairp.hpp"
 
 #include <utility>
 #include "environment.hpp"
@@ -27,12 +27,12 @@
 #include "shared_ptr.hpp"
 #include "statement.hpp"
 
-listPtr List::NIL_LIST = List::create();
+pairpPtr Pairp::NIL = Pairp::create();
 
 /* **************************************************
  *
  ************************************************** */
-List::List(enum List::Type type, valuePtr _value, listPtr _car, listPtr _cdr)
+Pairp::Pairp(enum Pairp::Type type, valuePtr _value, pairpPtr _car, pairpPtr _cdr)
 {
     NEW;
     this->type = type;
@@ -44,7 +44,7 @@ List::List(enum List::Type type, valuePtr _value, listPtr _car, listPtr _cdr)
 /* **************************************************
  *
  ************************************************** */
-List::~List()
+Pairp::~Pairp()
 {
     DELETE;
     if (pairp.car)
@@ -56,31 +56,31 @@ List::~List()
 /* **************************************************
  *
  ************************************************** */
-listPtr List::create()
+pairpPtr Pairp::create()
 {
-    return listPtr(new List(List::NIL));
+    return pairpPtr(new Pairp(Pairp::_NIL_));
 }
 
 /* **************************************************
  *
  ************************************************** */
-listPtr List::create(valuePtr value)
+pairpPtr Pairp::create(valuePtr value)
 {
-    return listPtr(new List(List::ATOM, std::move(value)));
+    return pairpPtr(new Pairp(Pairp::_ATOM_, std::move(value)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-listPtr List::create(listPtr car, listPtr cdr)
+pairpPtr Pairp::create(pairpPtr car, pairpPtr cdr)
 {
-    return listPtr(new List(List::PAIRP, valuePtr(), std::move(car), std::move(cdr)));
+    return pairpPtr(new Pairp(Pairp::_PAIRP_, valuePtr(), std::move(car), std::move(cdr)));
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-List::Type List::getType() const
+Pairp::Type Pairp::getType() const
 {
     return type;
 }
@@ -88,7 +88,7 @@ List::Type List::getType() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::setType(Type _type)
+void Pairp::setType(Type _type)
 {
     this->type = _type;
 }
@@ -96,7 +96,7 @@ void List::setType(Type _type)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-valuePtr List::getValue() const
+valuePtr Pairp::getValue() const
 {
     return value;
 }
@@ -104,7 +104,7 @@ valuePtr List::getValue() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::setValue(valuePtr _value)
+void Pairp::setValue(valuePtr _value)
 {
     this->value = _value;
 }
@@ -112,7 +112,7 @@ void List::setValue(valuePtr _value)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCar() const
+pairpPtr Pairp::getCar() const
 {
     return this->pairp.car;
 }
@@ -120,7 +120,7 @@ listPtr List::getCar() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::setCar(listPtr car)
+void Pairp::setCar(pairpPtr car)
 {
     this->pairp.car = std::move(car);
 }
@@ -128,7 +128,7 @@ void List::setCar(listPtr car)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCdr() const
+pairpPtr Pairp::getCdr() const
 {
     return pairp.cdr;
 }
@@ -136,7 +136,7 @@ listPtr List::getCdr() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::setCdr(listPtr cdr)
+void Pairp::setCdr(pairpPtr cdr)
 {
     this->pairp.cdr = std::move(cdr);
 }
@@ -144,7 +144,7 @@ void List::setCdr(listPtr cdr)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCadr() const
+pairpPtr Pairp::getCadr() const
 {
     return pairp.cdr->pairp.car;
 }
@@ -152,7 +152,7 @@ listPtr List::getCadr() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCddr() const
+pairpPtr Pairp::getCddr() const
 {
     return pairp.cdr->pairp.cdr;
 }
@@ -160,7 +160,7 @@ listPtr List::getCddr() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCaar() const
+pairpPtr Pairp::getCaar() const
 {
     return pairp.car->pairp.car;
 }
@@ -168,7 +168,7 @@ listPtr List::getCaar() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-listPtr List::getCdar() const
+pairpPtr Pairp::getCdar() const
 {
     return pairp.car->pairp.cdr;
 }
@@ -176,51 +176,51 @@ listPtr List::getCdar() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isNil() const
+bool Pairp::isNil() const
 {
-    return (this->type == List::NIL);
+    return (this->type == Pairp::_NIL_);
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isAtomic() const
+bool Pairp::isAtom() const
 {
-    return (this->type == List::ATOM);
+    return (this->type == Pairp::_ATOM_);
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isVariable() const
+bool Pairp::isVariable() const
 {
-    return (this->type == List::ATOM) && (this->value->_isVariable());
+    return (this->type == Pairp::_ATOM_) && (this->value->_isVariable());
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::isPairp() const
+bool Pairp::isPairp() const
 {
-    return (this->type == PAIRP);
+    return (this->type == _PAIRP_);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void List::makeSerialString()
+void Pairp::makeSerialString()
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         serialString = 'N';
         break;
-    case ATOM:
+    case _ATOM_:
         serialString = value->peekSerialString();
         break;
-    case PAIRP:
+    case _PAIRP_:
         serialString = '<' + pairp.car->peekSerialString();
-        if (pairp.cdr->isAtomic())
+        if (pairp.cdr->isAtom())
         {
             serialString += ':' + pairp.cdr->peekSerialString();
         }
@@ -239,19 +239,19 @@ void List::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-void List::print(std::ostream &outStream) const
+void Pairp::print(std::ostream &outStream) const
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         outStream << "<>";
         break;
-    case ATOM:
+    case _ATOM_:
         value->print(outStream);
         break;
-    case PAIRP:
+    case _PAIRP_:
         pairp.car->print(outStream);
-        if (pairp.cdr->isAtomic())
+        if (pairp.cdr->isAtom())
         {
             outStream << "::";
             pairp.cdr->print(outStream);
@@ -267,25 +267,25 @@ void List::print(std::ostream &outStream) const
 /* **************************************************
  *
  ************************************************** */
-void List::flatPrint(std::ostream &outStream, bool par) const
+void Pairp::flatPrint(std::ostream &outStream, bool par) const
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         outStream << "<>";
         break;
 
-    case ATOM:
+    case _ATOM_:
         value->flatPrint(outStream);
         break;
 
-    case PAIRP:
-        if (par || pairp.cdr->isAtomic())
+    case _PAIRP_:
+        if (par || pairp.cdr->isAtom())
         {
             outStream << '<';
         }
         pairp.car->flatPrint(outStream, true);
-        if (pairp.cdr->isAtomic())
+        if (pairp.cdr->isAtom())
         {
             outStream << "::";
             pairp.cdr->flatPrint(outStream, true);
@@ -295,7 +295,7 @@ void List::flatPrint(std::ostream &outStream, bool par) const
             outStream << ",";
             pairp.cdr->flatPrint(outStream, false);
         }
-        if (par || pairp.cdr->isAtomic())
+        if (par || pairp.cdr->isAtom())
         {
             outStream << '>';
         }
@@ -306,16 +306,16 @@ void List::flatPrint(std::ostream &outStream, bool par) const
 /* **************************************************
  *
  ************************************************** */
-bool List::buildEnvironment(const environmentPtr &environment, const listPtr &otherList, bool acceptToFilterNULLVariables, bool root)
+bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root)
 {
     bool ret = true;
     /***
-     std::cerr << "<H4>List::buildEnvironment</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>this</th><th>otherList</th><th>Environment</th></tr>";
+     std::cerr << "<H4>Pairp::buildEnvironment</H4>" << std::endl;
+     std::cerr << "<table border = \"1\"><tr><th>this</th><th>otherPairp</th><th>Environment</th></tr>";
      std::cerr << "<tr><td>";
      this->flatPrint(std::cerr, true);
      std::cerr << "</td><td>";
-     otherList->flatPrint(std::cerr, true);
+     otherPairp->flatPrint(std::cerr, true);
      std::cerr << "</td><td>";
      environment->print(std::cerr);
      std::cerr << "</td></tr></table>";
@@ -324,14 +324,14 @@ bool List::buildEnvironment(const environmentPtr &environment, const listPtr &ot
     switch (this->type)
     {
 
-    case NIL:
-        if (otherList->isNil())
+    case _NIL_:
+        if (otherPairp->isNil())
         {
             ret = true;
         }
-        else if ((otherList->isAtomic()) && (otherList->value->_isVariable()))
+        else if ((otherPairp->isAtom()) && (otherPairp->value->_isVariable()))
         {
-            environment->add(otherList->value->getBits(), Value::NIL_VALUE);
+            environment->add(otherPairp->value->getBits(), Value::NIL_VALUE);
         }
         else
         {
@@ -339,38 +339,38 @@ bool List::buildEnvironment(const environmentPtr &environment, const listPtr &ot
         }
         break;
 
-    case ATOM:
+    case _ATOM_:
         if (this->value->_isVariable())
         {
-            if (!otherList)
+            if (!otherPairp)
             {
                 FATAL_ERROR_UNEXPECTED
             }
             else
             {
-                switch (otherList->getType())
+                switch (otherPairp->getType())
                 {
-                case NIL:
+                case _NIL_:
                     environment->add(this->value->getBits(), Value::NIL_VALUE);
                     break;
-                case ATOM:
-                    environment->add(this->value->getBits(), otherList->getValue());
+                case _ATOM_:
+                    environment->add(this->value->getBits(), otherPairp->getValue());
                     break;
-                case PAIRP:
-                    environment->add(this->value->getBits(), Value::create(Value::_LIST, otherList));
+                case _PAIRP_:
+                    environment->add(this->value->getBits(), Value::create(otherPairp));
                     break;
                 }
             }
         }
-        else if (!otherList)
+        else if (!otherPairp)
         {
             ret = false;
         }
-        else if (otherList->isAtomic())
+        else if (otherPairp->isAtom())
         {
-            if (otherList->value->_isVariable())
-                environment->add(otherList->value->getBits(), this->getValue());
-            else if (!this->value->buildEnvironment(environment, otherList->value, acceptToFilterNULLVariables,
+            if (otherPairp->value->_isVariable())
+                environment->add(otherPairp->value->getBits(), this->getValue());
+            else if (!this->value->buildEnvironment(environment, otherPairp->value, acceptToFilterNULLVariables,
                                                     root))
                 ret = false;
         }
@@ -378,29 +378,29 @@ bool List::buildEnvironment(const environmentPtr &environment, const listPtr &ot
             ret = false;
         break;
 
-    case PAIRP:
-        if (otherList->isPairp())
+    case _PAIRP_:
+        if (otherPairp->isPairp())
         {
-            if ((this->pairp.car->isNil()) && (otherList->pairp.car->isNil()))
+            if ((this->pairp.car->isNil()) && (otherPairp->pairp.car->isNil()))
             {
                 ret = true;
             }
-            else if (!this->pairp.car->buildEnvironment(environment, otherList->pairp.car,
+            else if (!this->pairp.car->buildEnvironment(environment, otherPairp->pairp.car,
                                                         acceptToFilterNULLVariables, root))
             {
                 ret = false;
             }
-            else if ((this->pairp.cdr->isNil()) && (otherList->pairp.cdr->isNil()))
+            else if ((this->pairp.cdr->isNil()) && (otherPairp->pairp.cdr->isNil()))
             {
                 ret = true;
             }
-            else if (!this->pairp.cdr->buildEnvironment(environment, otherList->pairp.cdr,
+            else if (!this->pairp.cdr->buildEnvironment(environment, otherPairp->pairp.cdr,
                                                         acceptToFilterNULLVariables, root))
             {
                 ret = false;
             }
         }
-        else if (otherList->isAtomic())
+        else if (otherPairp->isAtom())
         {
         }
         else
@@ -409,7 +409,7 @@ bool List::buildEnvironment(const environmentPtr &environment, const listPtr &ot
     }
 
     /***
-     std::cerr << "<H4>Result List::buildEnvironment</H4>" << std::endl;
+     std::cerr << "<H4>Result Pairp::buildEnvironment</H4>" << std::endl;
      std::cerr << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
      std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
      environment->print(std::cerr);
@@ -421,17 +421,17 @@ bool List::buildEnvironment(const environmentPtr &environment, const listPtr &ot
 /* **************************************************
  *
  ************************************************** */
-void List::deleteAnonymousVariables()
+void Pairp::deleteAnonymousVariables()
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         break;
-    case ATOM:
+    case _ATOM_:
         if (value)
             value->deleteAnonymousVariables();
         break;
-    case PAIRP:
+    case _PAIRP_:
         pairp.car->deleteAnonymousVariables();
         pairp.cdr->deleteAnonymousVariables();
         break;
@@ -441,19 +441,19 @@ void List::deleteAnonymousVariables()
 /* **************************************************
  *
  ************************************************** */
-bool List::renameVariables(size_t i)
+bool Pairp::renameVariables(size_t i)
 {
     bool effect = false;
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         break;
-    case ATOM:
+    case _ATOM_:
         if (value)
             if (value->renameVariables(i))
                 effect = true;
         break;
-    case PAIRP:
+    case _PAIRP_:
         if (pairp.car->renameVariables(i))
             effect = true;
         if (pairp.cdr->renameVariables(i))
@@ -467,17 +467,17 @@ bool List::renameVariables(size_t i)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::toXML(xmlNodePtr nodeRoot)
+void Pairp::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr l = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"LIST", NULL);
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         break;
-    case ATOM:
+    case _ATOM_:
         value->toXML(l);
         break;
-    case PAIRP:
+    case _PAIRP_:
         pairp.car->toXML(l);
         pairp.cdr->toXML(l);
         break;
@@ -488,26 +488,26 @@ void List::toXML(xmlNodePtr nodeRoot)
 /* **************************************************
  *
  ************************************************** */
-listPtr List::clone() const
+pairpPtr Pairp::clone() const
 {
     switch (type)
     {
-    case NIL:
-        return NIL_LIST;
-    case ATOM:
+    case _NIL_:
+        return NIL;
+    case _ATOM_:
         if (value)
             return create(value->clone());
         break;
-    case PAIRP:
+    case _PAIRP_:
         return create(pairp.car->clone(), pairp.cdr->clone());
     }
-    return listPtr();
+    return pairpPtr();
 }
 
 /* ************************************************************
  * this < o
  ************************************************************ */
-bool List::subsumes(const listPtr &o, const environmentPtr &environment)
+bool Pairp::subsumes(const pairpPtr &o, const environmentPtr &environment)
 {
     /***
      BUG;
@@ -519,20 +519,20 @@ bool List::subsumes(const listPtr &o, const environmentPtr &environment)
     switch (type)
     {
     // NIL < L
-    case NIL:
-        if (o->getType() != NIL)
+    case _NIL_:
+        if (o->getType() != _NIL_)
             return false;
         break;
         // atom < L
-    case ATOM:
-        if (o->getType() != ATOM)
+    case _ATOM_:
+        if (o->getType() != _ATOM_)
             return false;
         else if (!value->subsumes(o->getValue(), environment))
             return false;
         break;
         // (a1::a2) < L
-    case PAIRP:
-        if (o->getType() != PAIRP)
+    case _PAIRP_:
+        if (o->getType() != _PAIRP_)
             return false;
         else if (!pairp.car->subsumes(o->pairp.car, environment))
             return false;
@@ -546,64 +546,64 @@ bool List::subsumes(const listPtr &o, const environmentPtr &environment)
 /* **************************************************
  *
  ************************************************** */
-listPtr List::pushFront(valuePtr _value)
+pairpPtr Pairp::pushFront(valuePtr _value)
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         WARNING("pushFront fails")
         break;
-    case ATOM:
+    case _ATOM_:
         WARNING("pushFront fails")
         break;
-    case PAIRP:
+    case _PAIRP_:
     {
-        listPtr n = create(create(_value), shared_from_this());
+        pairpPtr n = create(create(_value), shared_from_this());
         return n;
     }
     }
-    return listPtr();
+    return pairpPtr();
 }
 
 /* **************************************************
  *
  ************************************************** */
-listPtr List::pushBack(valuePtr _value)
+pairpPtr Pairp::pushBack(valuePtr _value)
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         WARNING("pushBack fails")
         break;
-    case ATOM:
+    case _ATOM_:
         WARNING("pushBack fails")
         break;
-    case PAIRP:
+    case _PAIRP_:
     {
-        listPtr m = this->clone();
-        listPtr n = m;
-        while (n->pairp.cdr != List::NIL_LIST)
+        pairpPtr m = this->clone();
+        pairpPtr n = m;
+        while (n->pairp.cdr != Pairp::NIL)
             n = n->pairp.cdr;
-        n->pairp.cdr = create(create(_value), List::NIL_LIST);
+        n->pairp.cdr = create(create(_value), Pairp::NIL);
         return m;
     }
     }
-    return listPtr();
+    return pairpPtr();
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+void Pairp::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         break;
-    case ATOM:
+    case _ATOM_:
         value->enable(root, item, synthesizer, effect, on);
         break;
-    case PAIRP:
+    case _PAIRP_:
         if (pairp.car)
             pairp.car->enable(root, item, synthesizer, effect, on);
         if (pairp.cdr)
@@ -615,17 +615,17 @@ void List::enable(const statementPtr &root, class Item *item, Synthesizer *synth
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool List::findVariable(const bitsetPtr &variable)
+bool Pairp::findVariable(const bitsetPtr &variable)
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         break;
-    case ATOM:
+    case _ATOM_:
         if (value->findVariable(variable))
             return true;
         break;
-    case PAIRP:
+    case _PAIRP_:
         if (pairp.car && pairp.car->findVariable(variable))
             return true;
         if (pairp.cdr && pairp.cdr->findVariable(variable))
@@ -638,17 +638,17 @@ bool List::findVariable(const bitsetPtr &variable)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr body,
+void Pairp::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr body,
                  bool &effect)
 {
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         break;
-    case ATOM:
+    case _ATOM_:
         value->apply(item, parser, synthesizer, variable, body->clone(0), effect);
         break;
-    case PAIRP:
+    case _PAIRP_:
         if (pairp.car)
             pairp.car->apply(item, parser, synthesizer, variable, body, effect);
         if (pairp.cdr)
@@ -660,10 +660,10 @@ void List::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, con
 /* **************************************************
  *
  ************************************************** */
-bool List::containsVariable()
+bool Pairp::containsVariable()
 {
     /***
-     std::cerr << "<H4>List::containsVariable</H4>" << std::endl;
+     std::cerr << "<H4>Pairp::containsVariable</H4>" << std::endl;
      std::cerr << "<table border = \"1\"><tr><th>this</th></tr>";
      std::cerr << "<tr><td>";
      this->flatPrint(std::cerr, true);
@@ -675,10 +675,10 @@ bool List::containsVariable()
     bool result = false;
     switch (type)
     {
-    case NIL:
+    case _NIL_:
         result = false;
         break;
-    case ATOM:
+    case _ATOM_:
         if (isVariable())
         {
             result = true;
@@ -692,7 +692,7 @@ bool List::containsVariable()
             result = false;
         }
         break;
-    case PAIRP:
+    case _PAIRP_:
         if (pairp.car->containsVariable() || pairp.cdr->containsVariable())
         {
             result = true;
@@ -708,7 +708,7 @@ bool List::containsVariable()
     else
         this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     /***
-     std::cerr << "<H4>List::containsVariable done</H4>" << std::endl;
+     std::cerr << "<H4>Pairp::containsVariable done</H4>" << std::endl;
      std::cerr << (result ? "TRUE" : "FALSE");
      ***/
     return result;
@@ -717,7 +717,7 @@ bool List::containsVariable()
 /* **************************************************
  *
  ************************************************** */
-void List::setVariableFlag(enum VariableFlag::flagValues flag)
+void Pairp::setVariableFlag(enum VariableFlag::flagValues flag)
 {
     this->variableFlag.setFlag(flag);
 }

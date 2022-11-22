@@ -25,20 +25,16 @@
 #include "rulesyacc.hpp"
 #include "messages.hpp"
 
-#if __cplusplus > 199711L
-#define register      // Deprecated in C++11.
-#endif  // #if __cplusplus > 199711L
-
 #define YY_NO_INPUT
 
-#if false
-#define DBUG(x)x
+#ifndef DEBUGLEX
+#define DEBUGLEX(x)
 #else
-#define DBUG(x)
+#define DEBUGLEX(x)x
 #endif
 
-#define DBUGPRT(x) DBUG(std::cerr << "*** " << x << "<BR>" << std::endl;);
-#define DBUGPRTARG(x,s) DBUG(std::cerr << "*** " << x << "&nbsp;" << s << "<BR>" << std::endl);
+#define DBUGPRT(x) DEBUGLEX({std::cerr << "*** " << x << std::endl;})
+#define DBUGPRTARG(x,s) DEBUGLEX({std::cerr << "*** " << x << ' ' << s << std::endl;})
   
   extern char *lexString;
   extern bool stringInput;
@@ -110,7 +106,7 @@ downDoubleArrow "⇓"
 <INCLUDE>{
 	[ \t]* {}
 	[^ \t\n]+ {
-	  DBUGPRT("TOKEN_#INCLUDE\n");
+	  DBUGPRT("TOKEN #INCLUDE");
 	  parser.pushBufferName(yytext);
 	  parser.pushLineno(ruleslineno);
 	  ruleslineno = 1;
@@ -143,98 +139,98 @@ downDoubleArrow "⇓"
 
 <INITIAL>{
   {rightArrow} {
-    DBUGPRT("TOKEN_RIGHTARROW\n");
+    DBUGPRT("TOKEN_RIGHTARROW");
     return TOKEN_RIGHTARROW;
   }
   
   {upArrow} {
-    DBUGPRT("TOKEN_UPARROW\n");
+    DBUGPRT("TOKEN_UPARROW");
     return TOKEN_UPARROW;
   }
   
   {upDoubleArrow} {
-    DBUGPRT("TOKEN_UP2ARROW\n");
+    DBUGPRT("TOKEN_UP2ARROW");
     return TOKEN_UP2ARROW;
   }
   
   {downArrow} {
-    DBUGPRT("TOKEN_DOWNARROW\n");
+    DBUGPRT("TOKEN_DOWNARROW");
     ruleslval.integer_slot = 1;
     return TOKEN_DOWNARROW;
   }
   
   {downDoubleArrow} {
-    DBUGPRT("TOKEN_DOWN2ARROW\n");
+    DBUGPRT("TOKEN_DOWN2ARROW");
     return TOKEN_DOWN2ARROW;
   }
   
   "<" {
-    DBUGPRT("TOKEN_LT\n");
+    DBUGPRT("TOKEN_LT");
     return TOKEN_LT;
   }
   
   ">" {
-    DBUGPRT("TOKEN_GT\n");
+    DBUGPRT("TOKEN_GT");
     return TOKEN_GT;
   }
   
   "≤"|"<=" {
-    DBUGPRT("TOKEN_LE\n");
+    DBUGPRT("TOKEN_LE");
     return TOKEN_LT;
   }
   
   "≥"|">=" {
-    DBUGPRT("TOKEN_GE\n");
+    DBUGPRT("TOKEN_GE");
     return TOKEN_GE;
   }
   
   "(" {
-    DBUGPRT("TOKEN_LPAR\n");
+    DBUGPRT("TOKEN_LPAR");
     return TOKEN_LPAR;
   }
   
   ")" {
-    DBUGPRT("TOKEN_RPAR\n");
+    DBUGPRT("TOKEN_RPAR");
     return TOKEN_RPAR;
   }
   
   "[" {
-    DBUGPRT("TOKEN_LBRACKET\n");
+    DBUGPRT("TOKEN_LBRACKET");
     return TOKEN_LBRACKET;
   }
   
   "]" {
-    DBUGPRT("TOKEN_RBRACKET\n");
+    DBUGPRT("TOKEN_RBRACKET");
     return TOKEN_RBRACKET;
   }
   
   "{" {
-    DBUGPRT("TOKEN_LBRACE\n");
+    DBUGPRT("TOKEN_LBRACE");
     return TOKEN_LBRACE;
   }
   
   "}" {
-    DBUGPRT("TOKEN_RBRACE\n");
+    DBUGPRT("TOKEN_RBRACE");
     return TOKEN_RBRACE;
   }
   
   ";" {
-    DBUGPRT("TOKEN_SEMI\n");
+    DBUGPRT("TOKEN_SEMI");
     return TOKEN_SEMI;
   }
   
   "::" {
-    DBUGPRT("TOKEN_DOUBLECOLON\n");
+    DBUGPRT("TOKEN_DOUBLECOLON");
     return TOKEN_DOUBLECOLON;
   }
   
   ":" {
-    DBUGPRT("TOKEN_COLON\n");
+    DBUGPRT("TOKEN_COLON");
     return TOKEN_COLON;
   }
   
   \. {
-    DBUGPRT("TOKEN_DOT\n");
+    DBUGPRT("TOKEN_DOT");
     return TOKEN_DOT;
   }
   
@@ -244,202 +240,207 @@ downDoubleArrow "⇓"
   }
   
   "∪"|[Uu] {
-    DBUGPRT("TOKEN_UNION\n");
+    DBUGPRT("TOKEN_UNION");
     return TOKEN_UNION;
   }
   
   "⊂"|"<<" {
-    DBUGPRT("TOKEN_SUBSUME\n");
+    DBUGPRT("TOKEN_SUBSUME");
     return TOKEN_SUBSUME;
   }
   
   "==" {
-    DBUGPRT("TOKEN_EQUAL\n");
+    DBUGPRT("TOKEN_EQUAL");
     return TOKEN_EQUAL;
   }
   
   "=" {
-    DBUGPRT("TOKEN_AFF\n");
+    DBUGPRT("TOKEN_AFF");
     return TOKEN_AFF;
   }
   
   "≠"|"!=" {
-    DBUGPRT("TOKEN_DIFF\n");
+    DBUGPRT("TOKEN_DIFF");
     return TOKEN_DIFF;
   }
   
   "+" {
-    DBUGPRT("TOKEN_PLUS\n");
+    DBUGPRT("TOKEN_PLUS");
     return TOKEN_PLUS;
   }
   
   "-" {
-    DBUGPRT("TOKEN_MINUS\n");
+    DBUGPRT("TOKEN_MINUS");
     return TOKEN_MINUS;
   }
   
   "*" {
-    DBUGPRT("TOKEN_TIMES\n");
+    DBUGPRT("TOKEN_TIMES");
     return TOKEN_TIMES;
   }
   
   "/" {
-    DBUGPRT("TOKEN_DIVIDE\n");
+    DBUGPRT("TOKEN_DIVIDE");
     return TOKEN_DIVIDE;
   }
   
   "@" {
-    DBUGPRT("TOKEN_AROBASE\n");
+    DBUGPRT("TOKEN_AROBASE");
     return TOKEN_AROBASE;
   }
   
   "@input" {
-    DBUGPRT("TOKEN_INPUT\n");
+    DBUGPRT("TOKEN_INPUT");
     return TOKEN_INPUT;
   }
   
   "@rules" {
-    DBUGPRT("TOKEN_RULES\n");
+    DBUGPRT("TOKEN_RULES");
     return TOKEN_RULES;
   }
   
   "@lexicon" {
-    DBUGPRT("TOKEN_LEXICON\n");
+    DBUGPRT("TOKEN_LEXICON");
     return TOKEN_LEXICON;
   }
   
   "@trace" {
-    DBUGPRT("TOKEN_TRACE\n");
+    DBUGPRT("TOKEN_TRACE");
     return TOKEN_TRACE;
   }
   
   "attest" {
-    DBUGPRT("TOKEN_ATTEST\n");
+    DBUGPRT("TOKEN_ATTEST");
     return TOKEN_ATTEST;
   }
   
   "if" {
-    DBUGPRT("TOKEN_IF\n");
+    DBUGPRT("TOKEN_IF");
     return TOKEN_IF;
   }
   
   "else" {
-    DBUGPRT("TOKEN_ELSE\n");
+    DBUGPRT("TOKEN_ELSE");
     return TOKEN_ELSE;
   }
   
   "print" {
-    DBUGPRT("TOKEN_PRINT\n");
+    DBUGPRT("TOKEN_PRINT");
     return TOKEN_PRINT;
   }
   
   "println" {
-    DBUGPRT("TOKEN_PRINTLN\n");
+    DBUGPRT("TOKEN_PRINTLN");
     return TOKEN_PRINTLN;
   }
   
   "search" {
-    DBUGPRT("TOKEN_SEARCH\n");
+    DBUGPRT("TOKEN_SEARCH");
     return TOKEN_SEARCH;
   }
   
   "rand" {
-    DBUGPRT("TOKEN_RAND\n");
+    DBUGPRT("TOKEN_RAND");
     return TOKEN_RAND;
   }
   
   "foreach" {
-    DBUGPRT("TOKEN_FOREACH\n");
+    DBUGPRT("TOKEN_FOREACH");
     return TOKEN_FOREACH;
   }
   
   "in" {
-    DBUGPRT("TOKEN_IN\n");
+    DBUGPRT("TOKEN_IN");
     return TOKEN_IN;
   }
   
+  "on" {
+    DBUGPRT("TOKEN_ON");
+    return TOKEN_ON;
+  }
+  
   "|" {
-    DBUGPRT("TOKEN_PIPE\n");
+    DBUGPRT("TOKEN_PIPE");
     return TOKEN_PIPE;
   }
   
   "∨"|"||" {
-    DBUGPRT("TOKEN_OR\n");
+    DBUGPRT("TOKEN_OR");
     return TOKEN_OR;
   }
   
   "∧"|"&&" {
-    DBUGPRT("TOKEN_AND\n");
+    DBUGPRT("TOKEN_AND");
     return TOKEN_AND;
   }
   
   "⇒"|"=>" {
-    DBUGPRT("TOKEN_IMPLICATION\n");
+    DBUGPRT("TOKEN_IMPLICATION");
     return TOKEN_IMPLICATION;
   }
   
   "⇔"|"<=>" {
-    DBUGPRT("TOKEN_EQUIV\n");
+    DBUGPRT("TOKEN_EQUIV");
     return TOKEN_EQUIV;
   }
   
   "¬"|"!" {
-    DBUGPRT("TOKEN_NOT\n");
+    DBUGPRT("TOKEN_NOT");
     return TOKEN_NOT;
   }
   
   "," {
-    DBUGPRT("TOKEN_COMMA\n");
+    DBUGPRT("TOKEN_COMMA");
     return TOKEN_COMMA;
   }
   
   "#" {
-    DBUGPRT("TOKEN_DASH\n");
+    DBUGPRT("TOKEN_DASH");
     return TOKEN_DASH;
   }
   
   "+" {
-    DBUGPRT("TOKEN_PLUS\n");
+    DBUGPRT("TOKEN_PLUS");
     return TOKEN_PLUS;
   }
   
   "-" {
-    DBUGPRT("TOKEN_MINUS\n");
+    DBUGPRT("TOKEN_MINUS");
     return TOKEN_MINUS;
   }
   
   "%" {
-    DBUGPRT("TOKEN_MODULO\n");
+    DBUGPRT("TOKEN_MODULO");
     return TOKEN_MODULO;
   }
   
   "PRED" {
-    DBUGPRT("TOKEN_PRED\n");
+    DBUGPRT("TOKEN_PRED");
     return TOKEN_PRED;
   }
   
   "LEMMA" {
-    DBUGPRT("TOKEN_LEMMA\n");
+    DBUGPRT("TOKEN_LEMMA");
     return TOKEN_LEMMA;
   }
 
   "FORM" {
-    DBUGPRT("TOKEN_FORM\n");
+    DBUGPRT("TOKEN_FORM");
     return TOKEN_FORM;
   }
   
   "TRUE" {
-    DBUGPRT("TOKEN_TRUE\n");
+    DBUGPRT("TOKEN_TRUE");
     return TOKEN_TRUE;
   }
   
   "FALSE" {
-    DBUGPRT("TOKEN_FALSE\n");
+    DBUGPRT("TOKEN_FALSE");
     return TOKEN_FALSE;
   }
   
   "NIL" {
-    DBUGPRT("TOKEN_NILL\n");
+    DBUGPRT("TOKEN_NILL");
     return TOKEN_NIL;
   }
   

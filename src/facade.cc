@@ -51,7 +51,7 @@ std::bitset<FLAGS> &Facade::getFlags()
  ************************************************** */
 bool Facade::isSetFlags(const std::bitset<FLAGS> &cmp) const
 {
-    return flags.isSetFlags(cmp);
+    return flags.isSet(cmp);
 }
 
 /* **************************************************
@@ -59,7 +59,7 @@ bool Facade::isSetFlags(const std::bitset<FLAGS> &cmp) const
  ************************************************** */
 bool Facade::isUnsetFlags(const std::bitset<FLAGS> &cmp) const
 {
-    return flags.isUnsetFlags(cmp);
+    return flags.isUnset(cmp);
 }
 
 /* **************************************************
@@ -67,7 +67,7 @@ bool Facade::isUnsetFlags(const std::bitset<FLAGS> &cmp) const
  ************************************************** */
 void Facade::addFlags(const std::bitset<FLAGS> &f)
 {
-    flags.addFlags(f);
+    flags.add(f);
 }
 
 /* **************************************************
@@ -75,7 +75,7 @@ void Facade::addFlags(const std::bitset<FLAGS> &f)
  ************************************************** */
 void Facade::subFlags(const std::bitset<FLAGS> &f)
 {
-    flags.subFlags(f);
+    flags.sub(f);
 }
 
 /* **************************************************
@@ -83,7 +83,7 @@ void Facade::subFlags(const std::bitset<FLAGS> &f)
  ************************************************** */
 void Facade::printFlags(std::ostream &out) const
 {
-    flags.printFlags(out);
+    flags.print(out);
 }
 
 /* **************************************************

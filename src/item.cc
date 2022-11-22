@@ -123,7 +123,6 @@ Item::~Item()
  ************************************************** */
 class Item *Item::create(const rulePtr &rule, unsigned int index, unsigned int indexTerm, statementsPtr statements)
 {
-    // return class Item*(new Item(rule, index, indexTerm, std::move(statements)));
     return new Item(rule, index, indexTerm, std::move(statements));
 }
 
@@ -133,7 +132,6 @@ class Item *Item::create(const rulePtr &rule, unsigned int index, unsigned int i
 class Item *
 Item::create(const rulePtr &rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
 {
-    // return class Item*(new Item(rule, index, indexTerms, std::move(statements)));
     return new Item(rule, index, indexTerms, std::move(statements));
 }
 
@@ -616,6 +614,7 @@ void Item::print(std::ostream &out) const
     {
         out << "<td>";
         out << '#' << std::dec << this->getId();
+        this->printFlags(out);
         out << "</td>";
     }
     if (s_ruleId)
@@ -896,31 +895,31 @@ void Item::makeSerialString()
 
     serialString = std::to_string(getRuleId());
     if (index == UINT_MAX)
-        serialString += '+';
+        serialString += '\1';
     else
         serialString += std::to_string(index);
-    serialString += '|';
+    serialString += '\0';
     std::vector<unsigned int>::const_iterator ind = indexTerms.cbegin();
     while (ind != indexTerms.cend())
-        serialString += std::to_string(*(ind++)) + '-';
+        serialString += std::to_string(*(ind++)) + '\2';
 
-    serialString += '|';
+    serialString += '\0';
     set_of_unsigned_int_const_iterator ref = refs.cbegin();
     while (ref != refs.cend())
-        serialString += std::to_string(*(ref++)) + '-';
+        serialString += std::to_string(*(ref++)) + '\2';
 
-    serialString += '|';
+    serialString += '\0';
     std::vector<class ForestIdentifier *>::const_iterator fi = forestIdentifiers.cbegin();
     while (fi != forestIdentifiers.cend())
     {
         if (*fi)
-            serialString += (*fi)->peekSerialString() + '-';
+            serialString += (*fi)->peekSerialString() + '\2';
         else
-            serialString += '.';
+            serialString += '\1';
         ++fi;
     }
 
-    serialString += '|';
+    serialString += '\0';
     serialString += inheritedFeatures->peekSerialString();
 }
 
