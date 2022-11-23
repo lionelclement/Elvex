@@ -89,7 +89,7 @@ ItemSet::set_of_item_const_iterator ItemSet::cend() const
 /* **************************************************
  *
  ************************************************** */
-ItemSet::set_of_item_iterator ItemSet::begin() const
+ItemSet::set_of_item_iterator ItemSet::begin()
 {
     return items.begin();
 }
@@ -97,7 +97,7 @@ ItemSet::set_of_item_iterator ItemSet::begin() const
 /* **************************************************
  *
  ************************************************** */
-ItemSet::set_of_item_iterator ItemSet::end() const
+ItemSet::set_of_item_iterator ItemSet::end()
 {
     return items.end();
 }

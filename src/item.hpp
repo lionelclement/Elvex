@@ -20,6 +20,7 @@
 #ifndef ELVEX_ITEM_H
 #define ELVEX_ITEM_H
 
+#include <climits>
 #include <unordered_set>
 #include <vector>
 #include <unordered_map>

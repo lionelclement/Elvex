@@ -152,31 +152,33 @@ N → [AP] N [AP] [comma] [AP] [et] [AP]
     [number:$synthesizedNumber, gender:$synthesizedGender] ⊂ ⇓2;
     foreach $i in $list {
       [pos:$posInherited] ⊂ $i;
-      [PRED:$p, pos:$posSynthesized] ⊂ search(adj, $i);
-      if ($posInherited)
-	$pos = $posInherited;
-      else
-	if ($posSynthesized)
-	  $pos = $posSynthesized;
+      foreach $j in search $i on adj {
+      	[pos:$posSynthesized] ⊂ $j;
+      	if ($posInherited)
+	        $pos = $posInherited;
       	else
-	  $pos = none;
-      if ($pos == pre) {
-	attest (#1);
-	↓1 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-      } else {
-	if (↓3) {
-	  if (↓7) {
-	    ↓4 = [];
-	    ↓5 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-	  }
-	  else {
-	    ↓6 = [];
-	    ↓7 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-	  }
-	}
-	else {
-	  ↓3 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-	}
+		      if ($posSynthesized)
+	  	      $pos = $posSynthesized;
+      		else
+	          $pos = none;
+        if ($pos == pre) {
+	        attest (#1);
+	        ↓1 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
+        } else {
+	        if (↓3) {
+	          if (↓7) {
+	            ↓4 = [];
+	            ↓5 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
+	          }
+	          else {
+	            ↓6 = [];
+	            ↓7 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
+	          }
+	        }
+	        else {
+	          ↓3 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
+	        }
+	      }
       }
     }
   }

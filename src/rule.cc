@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <climits>
 #include <sstream>
 #include "rule.hpp"
 #include "terms.hpp"

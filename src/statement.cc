@@ -741,7 +741,7 @@ void Statement::print(std::ostream &outStream, unsigned int tabulation, int yetC
         outStream << "foreach&nbsp;";
         lhs->print(outStream);
         outStream << "&nbsp;";
-        rhs->print(outStream);
+        rhs->print(outStream, tabulation + 3);
         break;
     case IN:
         outStream << "in&nbsp;";
@@ -1260,7 +1260,6 @@ Statement::evalListFeatures(class Item *item, Parser &parser, Synthesizer *synth
     {
     case SEARCH:
     {
-        COUT_LINE;
         featuresPtr fs = lhs->evalFeatures(item, parser, synthesizer, replaceVariables);
         if (!fs)
         {
@@ -1268,7 +1267,6 @@ Statement::evalListFeatures(class Item *item, Parser &parser, Synthesizer *synth
         }
         unsigned int pred = fs->assignPred();
         unsigned int pos = this->getFirst();
-        std::cout << Vartable::codeToString(pos) << std::endl;
         auto foundpos = parser.findCacheLexicon(pos);
         if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
         {
@@ -2682,15 +2680,14 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
  ************************************************************ */
 void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
-    /*** */
+    /*** 
     std::cout << "<DIV>foreach";
     item->print(std::cout);
     print(std::cout);
     std::cout << "</DIV>";
-    /* ***/
+    ***/
 
     statementPtr variable = getLhs();
-    getRhs()->getLhs()->print(std::cout);
     valuePtr _value = getRhs()->getLhs()->evalValue(item, parser, synthesizer, true);
     statementPtr body = getRhs()->getRhs();
     if (_value->_isPairp())
@@ -2704,7 +2701,8 @@ void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthe
         listFeatures->apply(item, parser, synthesizer, variable, body, effect);
     }
 
-    FATAL_ERROR_MSG_STM("foreach does'nt apply a list")
+    else
+        FATAL_ERROR_MSG_STM("foreach does'nt apply a list")
     /***
         std::cerr << "<DIV>foreach done";
         item->print(std::cerr);

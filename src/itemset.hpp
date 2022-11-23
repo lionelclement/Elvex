@@ -60,9 +60,9 @@ public:
 
     set_of_item_const_iterator cend(void) const;
 
-    set_of_item_iterator begin(void) const;
+    set_of_item_iterator begin(void);
 
-    set_of_item_iterator end(void) const;
+    set_of_item_iterator end(void);
 
     set_of_item_const_iterator find(class Item *) const;
 

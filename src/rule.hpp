@@ -20,6 +20,7 @@
 #ifndef ELVEX_RULE_H
 #define ELVEX_RULE_H
 
+#include <climits>
 #include <string>
 #include <vector>
 
