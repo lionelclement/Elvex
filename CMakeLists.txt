@@ -153,8 +153,8 @@ if (LibXml2_FOUND)
         #TRACE_PASS
         #TRACE_UNFOLD
         #TRACE_LEXICON
-        TRACE_EVAL
-        TRACE_APPLY
+        #TRACE_EVAL
+        #TRACE_APPLY
         )
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})
@@ -174,5 +174,4 @@ add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
 target_compile_options(elvexpostedition_fr PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 install(TARGETS elvex elvexdebug elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
-        RUNTIME DESTINATION bin
-        )
+        RUNTIME DESTINATION bin)

@@ -151,8 +151,11 @@ N → [AP] N [AP] [comma] [AP] [et] [AP]
   if (⇓2) {
     [number:$synthesizedNumber, gender:$synthesizedGender] ⊂ ⇓2;
     foreach $i in $list {
+      println "*****";
+      println $i;
       [pos:$posInherited] ⊂ $i;
       foreach $j in search $i on adj {
+        println $j;
       	[pos:$posSynthesized] ⊂ $j;
       	if ($posInherited)
 	        $pos = $posInherited;

@@ -18,11 +18,11 @@ TO_CALL_DOWN_1	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:tru
 #  to call something down to someone: to shout something to a person on a lower level
 TO_CALL_DOWN_2	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:to,particule:down
 #  to call something down on someone: to invoke some sort of divine punishment onto someone
-TO_CALL_DOWN_3	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:on,particule:down
+TO_CALL_DOWN_3	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:_on,particule:down
 
 TO_SNORE	verb	TO_SNORE	PRED:_TO_SNORE,SUBJECT:[animate:true]
 
-TO_SIT	verb	TO_SIT	PRED:_TO_SIT,iiReal:OBJ_THETA,pcase:on
+TO_SIT	verb	TO_SIT	PRED:_TO_SIT,iiReal:OBJ_THETA,pcase:_on
 
 TO_SAY	verb	TO_SAY	PRED:_TO_SAY,iiReal:SCOMP,compl:that
 
