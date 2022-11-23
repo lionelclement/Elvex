@@ -201,9 +201,7 @@ public:
 
     void generate(class Parser &);
 
-    // entriesPtr findCompactedLexicon(class Parser &, unsigned int code, const std::string &str, unsigned int pred);
-    // entriesPtr _findCompactedLexicon(class Parser &, unsigned int code, const std::string &str, unsigned int pred);
-    entriesPtr _findCompactedLexicon(class Parser &parser, unsigned int pos, unsigned int pred);
+    entriesPtr findCompactedLexicon(class Parser &parser, unsigned int pos, unsigned int pred);
 
     std::string keyMemoization(class Item *, class Item *);
 

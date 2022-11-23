@@ -1417,38 +1417,31 @@ void Synthesizer::generate(class Parser &parser)
 /* **************************************************
  * search
  * |str(pos)#str(pred)
- // * |posStr#str(pred)
  * |str(pos)#_
- // * |posStr#_
  *
  * returns entries= (entry1, entry2, ...)
  * where entryi= (unsigned int pos, unsigned int pred, std::string form, featuresPtr features)
  ************************************************** */
-entriesPtr Synthesizer::_findCompactedLexicon(
+entriesPtr Synthesizer::findCompactedLexicon(
     Parser &parser,
     const unsigned int pos,
-    //const std::string & posStr,
     const unsigned int pred)
 {
     unsigned long int info = ~0UL;
     std::string str;
-    if (pred)
+    if (pred && pos)
     {
-        if (pos)
-            str = Vartable::codeToString(pos) + '#' + Vartable::codeToString(pred);
-        //else if (posStr != std::string())
-        //    str = posStr + "#" + Vartable::codeToString(pred);
-        else
-            throw fatal_exception("pos null");
+        str = Vartable::codeToString(pos) + '#' + Vartable::codeToString(pred);
+    }
+    else if (pos) {
+        str = Vartable::codeToString(pos) + "#_";
+    }
+    else if (pred){
+        throw fatal_exception("pos null");
     }
     else
     {
-        if (pos)
-            str = Vartable::codeToString(pos) + "#_";
-        //else if (!posStr.empty())
-        //    str = posStr + "#_";
-        else
-            throw fatal_exception("pred and pos null");
+        throw fatal_exception("pred and pos null");
     }
     if (!compactedLexicon)
         throw fatal_exception("search operator error: No compact lexicon defined.");
@@ -1541,9 +1534,8 @@ entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
     }
     else if (compactedLexicon)
     {
-        entries = _findCompactedLexicon(parser,
+        entries = findCompactedLexicon(parser,
                                        pos,
-                                       //std::string(),
                                        UINT_MAX);
         listPred->insert(std::make_pair(UINT_MAX, entries));
     }
@@ -1579,7 +1571,7 @@ entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred
     else if (compactedLexicon)
     {
         // Compact lexicon
-        entries = _findCompactedLexicon(parser,
+        entries = findCompactedLexicon(parser,
                                        pos,
                                        pred);
         listPred->insert(std::make_pair(pred, entries));

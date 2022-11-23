@@ -1,12 +1,12 @@
 /* **************************************************
  * Start
  ************************************************** */
-S → det n
+S → n
 {
-  $list = search [PRED:VOITURE] on n;
-  ↓1 = ↑;
-  foreach $i in $list {
+  $list = <[PRED:A, b:c],[PRED:B, b:c2]>;
+  $list2 = search [PRED:VOITURE] on n;
+  println $list2;
+  foreach $i in $list2 {
     println $i;
   }
-  //⇑ = ⇓1;
 }

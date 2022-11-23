@@ -1,6 +1,6 @@
-la det [];
-le det [];
+la det [gender:fm];
+le det [gender:ms];
 
-voiture n [PRED:VOITURE, form:"voiture"];
-véhicule n [PRED:VOITURE, form:"véhicule"];
-bagnole n [PRED:VOITURE, form:"bagnole"];
+voiture n [PRED:VOITURE, gender:fm, form:"voiture"];
+véhicule n [PRED:VOITURE, gender:ms, form:"véhicule"];
+bagnole n [PRED:VOITURE, gender:fm, form:"bagnole"];

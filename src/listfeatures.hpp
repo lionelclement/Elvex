@@ -45,6 +45,8 @@ public:
 
     void add(unsigned int, featuresPtr);
 
+    featuresPtr get(unsigned int);
+
     void clear(void);
 
     std::vector<featuresPtr>::const_iterator cbegin() const;

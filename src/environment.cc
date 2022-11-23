@@ -208,21 +208,21 @@ redo:
     for (auto it = features->begin(); it != features->end(); ++it)
     {
         featurePtr feature = *it;
-        switch (feature->getType())
+        switch (feature->_getType())
         {
-        case Feature::PRED:
-        case Feature::LEMMA:
+        case Feature::_PRED_:
+        case Feature::_LEMMA_:
             if (feature->getValue())
                 replaceVariables(feature->getValue(), effect);
             break;
-        case Feature::FORM:
-        case Feature::CONSTANT:
+        case Feature::_FORM_:
+        case Feature::_CONSTANT_:
             if (feature->getValue())
             {
                 replaceVariables(feature->getValue(), effect);
             }
             break;
-        case Feature::VARIABLE:
+        case Feature::_VARIABLE_:
         {
             if (feature->getValue())
             {
@@ -235,11 +235,11 @@ redo:
             {
                 /* do nothing */
             }
-            else if (value->_isNil())
+            else if (value->isNil())
             {
                 /* do nothing */
             }
-            else if (value->_isFeatures())
+            else if (value->isFeatures())
             {
                 features->erase(it);
                 for (const auto &f : *value->getFeatures())
@@ -249,12 +249,12 @@ redo:
                 effect = true;
                 goto redo;
             }
-            else if (value->_isConstant())
+            else if (value->isConstant())
             {
-                feature->setType(Feature::CONSTANT);
+                feature->setType(Feature::_CONSTANT_);
                 feature->setAttribute(value->getBits());
             }
-            else if (value->_isAnonymous())
+            else if (value->isAnonymous())
             {
                 features->erase(it);
                 effect = true;
@@ -307,28 +307,28 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
      ***/
     if (!value->containsVariable())
         return;
-    if (!value->_isNil() && !value->_isAnonymous())
+    if (!value->isNil() && !value->isAnonymous())
     {
-        switch (value->getType())
+        switch (value->_getType())
         {
-        case Value::_NIL:
-        case Value::_TRUE:
-        case Value::_FORM:
-        case Value::_CONSTANT:
-        case Value::_CODE:
-        case Value::_ANONYMOUS:
-        case Value::_NUMBER:
+        case Value::_NIL_:
+        case Value::_TRUE_:
+        case Value::_FORM_:
+        case Value::_CONSTANT_:
+        case Value::_CODE_:
+        case Value::_ANONYMOUS_:
+        case Value::_NUMBER_:
             break;
-        case Value::_FEATURES:
+        case Value::_FEATURES_:
             replaceVariables(value->getFeatures(), effect);
             break;
-        case Value::_LISTFEATURES:
+        case Value::_LISTFEATURES_:
             replaceVariables(value->getListFeatures(), effect);
             break;
-        case Value::_PAIRP:
+        case Value::_PAIRP_:
             replaceVariables(value->getPairp(), effect);
             break;
-        case Value::_VARIABLE:
+        case Value::_VARIABLE_:
             valuePtr val = find(value->getBits());
             if (val && (val != value))
             {
@@ -372,11 +372,11 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
         if (pairp->isVariable())
         {
             valuePtr value = this->find(pairp->getValue()->getBits());
-            if (value->_isPairp())
+            if (value->isPairp())
             {
                 *pairp = *(value->getPairp());
             }
-            else if (value->_isNil())
+            else if (value->isNil())
             {
                 *pairp = *Pairp::NIL;
             }

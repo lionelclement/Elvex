@@ -124,7 +124,7 @@ size_t Features::size() const
 /* **************************************************
  *
  ************************************************** */
-Features::list_of_feature::const_iterator Features::cbegin()
+Features::list_of_feature::const_iterator Features::cbegin() const
 {
     return features.cbegin();
 }
@@ -132,7 +132,7 @@ Features::list_of_feature::const_iterator Features::cbegin()
 /* **************************************************
  *
  ************************************************** */
-Features::list_of_feature::const_iterator Features::cend()
+Features::list_of_feature::const_iterator Features::cend() const
 {
     return features.cend();
 }
@@ -196,7 +196,7 @@ void Features::print(std::ostream &outStream) const
             {
                 for (const auto &feature : features)
                 {
-                    if (feature->getType() == t)
+                    if (feature->_getType() == t)
                     {
                         outStream << "<TR>";
                         feature->print(outStream);
@@ -232,7 +232,7 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
         {
             for (const auto &feature : features)
             {
-                if (feature->getType() == t)
+                if (feature->_getType() == t)
                 {
                     if (first)
                         first = false;
@@ -280,7 +280,7 @@ unsigned int Features::assignPred()
     for (const auto &f : features)
     {
         // […, PRED = …, …]
-        if (f->getType() == Feature::PRED)
+        if (f->isPred())
         {
             ret = f->getValue()->getCode();
             break;
@@ -299,7 +299,7 @@ std::string *Features::assignForm()
         return &form;
     for (const auto &f : features)
     {
-        if (f->getType() == Feature::FORM)
+        if (f->isForm())
         {
             form = f->getValue()->getStr();
             return &form;
@@ -392,21 +392,21 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
     // Traite tous les attributs constants
     for (const auto &i1 : features)
     {
-        if ((i1->getType() == Feature::LEMMA) || (i1->getType() == Feature::PRED) || (i1->getType() == Feature::CONSTANT))
+        if ((i1->isLemma()) || (i1->isPred()) || (i1->isConstant()))
         {
             bool stop = false;
             for (auto &i2 : *_features)
             {
                 // Si deux constantes matchent
                 // ou deux PRED matchent
-                if (((i2->getType() == Feature::CONSTANT) && (i1->getType() == Feature::CONSTANT) &&
+                if (((i2->isConstant()) && (i1->isConstant()) &&
                      ((*i1->getAttribute() & *i2->getAttribute()).any())) ||
-                    ((i1->getType() == Feature::PRED) && (i2->getType() == Feature::PRED)) || ((i1->getType() == Feature::LEMMA) && (i2->getType() == Feature::LEMMA)))
+                    ((i1->isPred()) && (i2->isPred())) || ((i1->isLemma()) && (i2->isLemma())))
                 {
                     i2->addFlags(Flags::SEEN);
 
                     // If both are NIL
-                    if ((i1->getValue()->_isNil()) && (i2->getValue()->_isNil()))
+                    if ((i1->getValue()->isNil()) && (i2->getValue()->isNil()))
                     {
                     }
                     // If both are TRUE
@@ -431,9 +431,9 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
             if (!stop)
             {
                 // i1: a = $X
-                if ((i1->getType() == Feature::CONSTANT) || i1->getType() == Feature::LEMMA || i1->getType() == Feature::PRED)
+                if ((i1->isConstant()) || i1->isLemma() || i1->isPred())
                 {
-                    if (i1->getValue()->getType() == Value::_VARIABLE)
+                    if (i1->getValue()->isVariable())
                     {
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
@@ -445,7 +445,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                             ret = false;
                         }
                     }
-                    else if (i1->getValue()->_isNil())
+                    else if (i1->getValue()->isNil())
                     {
                     }
                     // i1: a = ...
@@ -473,7 +473,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
     for (const auto &i1 : features)
     {
         // i1: X
-        if (i1->getType() == Feature::VARIABLE)
+        if (i1->isVariable())
         {
             if (i1->getValue())
             {
@@ -571,7 +571,9 @@ bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
                 // [LEMMA:X]  < [LEMMA:Y]
                 // [att:X] < [att:Y]
                 // X < Y
-                if (((i1->getType() == Feature::LEMMA) && (i2->getType() == Feature::LEMMA)) || ((i1->getType() == Feature::PRED) && (i2->getType() == Feature::PRED)) || ((i1->getType() == Feature::CONSTANT) && (i2->getType() == Feature::CONSTANT) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
+                if (((i1->isLemma()) && (i2->isLemma())) 
+                        || ((i1->isPred()) && (i2->isPred())) 
+                        || ((i1->isConstant()) && (i2->isConstant()) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
                 {
                     valuePtr v1 = i1->getValue();
                     valuePtr v2 = i2->getValue();
@@ -636,17 +638,17 @@ void Features::deleteAnonymousVariables()
 redo:
     for (auto iterator = cbegin(); iterator != cend(); ++iterator)
     {
-        switch ((*iterator)->getType())
+        switch ((*iterator)->_getType())
         {
-        case Feature::PRED:
-        case Feature::LEMMA:
-        case Feature::FORM:
-        case Feature::VARIABLE:
-        case Feature::CONSTANT:
+        case Feature::_PRED_:
+        case Feature::_LEMMA_:
+        case Feature::_FORM_:
+        case Feature::_VARIABLE_:
+        case Feature::_CONSTANT_:
             if ((*iterator)->getValue())
             {
                 (*iterator)->getValue()->deleteAnonymousVariables();
-                if ((*iterator)->getValue() && ((*iterator)->getValue()->_isAnonymous()))
+                if ((*iterator)->getValue() && ((*iterator)->getValue()->isAnonymous()))
                 {
                     features.erase(iterator);
                     goto redo;
@@ -702,11 +704,12 @@ void Features::setVariableFlag(enum VariableFlag::flagValues flag)
  *
  ************************************************** */
 void Features::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
-                     const statementPtr &body,
+                     const statementPtr &statement,
                      bool &effect)
 {
+    COUT_LINE;
     item->getEnvironment()->add(variable->getBits(), Value::create(shared_from_this()));
     effect = true;
-    body->apply(item, parser, synthesizer, effect);
+    statement->apply(item, parser, synthesizer, effect);
     item->getEnvironment()->remove(variable->getBits());
 }

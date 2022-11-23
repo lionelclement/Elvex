@@ -70,9 +70,9 @@ public:
 
     size_t size() const;
 
-    list_of_feature::const_iterator cbegin();
+    list_of_feature::const_iterator cbegin() const;
 
-    list_of_feature::const_iterator cend();
+    list_of_feature::const_iterator cend() const;
 
     list_of_feature::iterator begin();
 

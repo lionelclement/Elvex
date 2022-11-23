@@ -37,17 +37,17 @@ class Value : public Facade,
 public:
     enum Type
     {
-        _NIL,
-        _TRUE,
-        _CONSTANT,
-        _VARIABLE,
-        _ANONYMOUS,
-        _CODE,
-        _FEATURES,
-        _LISTFEATURES,
-        _PAIRP,
-        _NUMBER,
-        _FORM
+        _NIL_,
+        _TRUE_,
+        _CONSTANT_,
+        _VARIABLE_,
+        _ANONYMOUS_,
+        _CODE_,
+        _FEATURES_,
+        _LISTFEATURES_,
+        _PAIRP_,
+        _NUMBER_,
+        _FORM_
     };
 
 private:
@@ -88,19 +88,15 @@ public:
 
     static valuePtr create(const enum Type, bitsetPtr);
 
-    //static valuePtr create(const enum Type, featuresPtr);
     static valuePtr create(featuresPtr);
 
-    //static valuePtr create(const enum Type, listFeaturesPtr);
     static valuePtr create(listFeaturesPtr);
 
-    //static valuePtr create(const enum Type, class Set *);
     static valuePtr create(class Set *);
 
-    //static valuePtr create(const enum Type, listPtr);
     static valuePtr create(pairpPtr);
 
-    Type getType(void) const;
+    enum Type _getType(void) const;
 
     bitsetPtr getBits(void) const;
 
@@ -134,29 +130,29 @@ public:
 
     bool renameVariables(size_t);
 
-    bool _isNil(void) const;
+    bool isNil(void) const;
 
-    bool _isFalse(void) const;
+    bool isFalse(void) const;
 
-    bool _isTrue(void) const;
+    bool isTrue(void) const;
 
-    bool _isAnonymous(void) const;
+    bool isAnonymous(void) const;
 
-    bool _isNumber(void) const;
+    bool isNumber(void) const;
 
-    bool _isForm(void) const;
+    bool isForm(void) const;
 
-    bool _isVariable(void) const;
+    bool isVariable(void) const;
 
-    bool _isIdentifier(void) const;
+    bool isIdentifier(void) const;
 
-    bool _isFeatures(void) const;
+    bool isFeatures(void) const;
 
-    bool _isConstant(void) const;
+    bool isConstant(void) const;
 
-    bool _isPairp(void) const;
+    bool isPairp(void) const;
 
-    bool _isListFeatures(void) const;
+    bool isListFeatures(void) const;
 
     void enable(const statementPtr &root, class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
 

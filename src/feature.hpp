@@ -37,15 +37,15 @@ class Feature : public Facade,
 public:
     enum Type
     {
-        PRED = 0,
-        LEMMA,
-        CONSTANT,
-        FORM,
-        VARIABLE,
+        _PRED_ = 0,
+        _LEMMA_,
+        _CONSTANT_,
+        _FORM_,
+        _VARIABLE_,
     };
 
-    static const Type first_type = PRED;
-    static const Type last_type = VARIABLE;
+    static const Type first_type = _PRED_;
+    static const Type last_type = _VARIABLE_;
 
 private:
     enum Type type;
@@ -63,7 +63,7 @@ private:
 public:
     ~Feature();
 
-    static featurePtr create(enum Type type = CONSTANT, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
+    static featurePtr create(enum Type type = _CONSTANT_, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
 
     bitsetPtr getAttribute(void) const;
 
@@ -73,10 +73,20 @@ public:
 
     void setValue(const valuePtr);
 
-    enum Type getType(void) const;
+    enum Type _getType(void) const;
 
     void setType(const enum Type);
 
+    bool isForm() const;
+    
+    bool isPred() const;
+    
+    bool isLemma() const;
+    
+    bool isConstant() const;
+    
+    bool isVariable() const;
+    
     std::string attributeToString(void) const;
 
     featurePtr clone(void) const;

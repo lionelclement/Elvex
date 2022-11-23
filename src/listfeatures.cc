@@ -77,6 +77,14 @@ void ListFeatures::add(unsigned int j, featuresPtr fs)
 /* **************************************************
  *
  ************************************************** */
+featuresPtr ListFeatures::get(unsigned int j)
+{
+    return listFeatures[j];
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 void ListFeatures::clear()
 {
     listFeatures.clear();
@@ -152,8 +160,11 @@ void ListFeatures::print(std::ostream &outStream) const
 void ListFeatures::flatPrint(std::ostream &outStream) const
 {
     outStream << '(';
-    for (auto &listFeature : listFeatures)
+    bool first = true;
+    for (auto &listFeature : listFeatures){
+        if (first) first=false; else outStream << ", ";
         listFeature->flatPrint(outStream);
+    }
     outStream << ')';
 }
 
@@ -164,6 +175,7 @@ void ListFeatures::apply(class Item *item, Parser &parser, Synthesizer *synthesi
                          bool &effect)
 {
     for (auto &features : listFeatures) {
+        COUT_LINE;
         statement->subFlags(Flags::SEEN);
         features->apply(item, parser, synthesizer, variable, statement, effect);
     }

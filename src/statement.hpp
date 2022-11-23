@@ -22,6 +22,7 @@
 
 #include <climits>
 #include <vector>
+#include <string>
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
@@ -31,21 +32,26 @@
     {                                            \
         CERR_LINE;                               \
         std::ostringstream oss;                  \
-        oss << "statement line " << getLineno(); \
+        oss << "statement " << ' ' << bufferName << '(' << getLineno() << ')'; \
         throw fatal_exception(oss);              \
     }
-#define FATAL_ERROR_MSG_STM(msg)                              \
-    {                                                         \
-        std::ostringstream oss;                               \
-        oss << msg << " with statement line " << getLineno(); \
-        throw fatal_exception(oss);                           \
+#define FATAL_ERROR_MSG_STM(msg)               \
+    {                                          \
+        std::ostringstream oss;                \
+        oss << msg << ' ' << bufferName << '(' << getLineno() << ')'; \
+        throw fatal_exception(oss);            \
     }
-#define WARNING_STM                                               \
-    {                                                             \
-        CERR_LINE;                                                \
-        std::ostringstream oss;                                   \
-        oss << "*** warning with statement line " << getLineno(); \
-        std::cerr << oss.str() << std::endl;                      \
+#define FATAL_ERROR_OS_MSG_STM(oss)     \
+    {                                   \
+        oss << ' ' << bufferName << '(' << getLineno() << ')'; \
+        throw fatal_exception(oss);     \
+    }
+#define WARNING_STM                                \
+    {                                              \
+        CERR_LINE;                                 \
+        std::ostringstream oss;                    \
+        oss << "*** warning " << ' ' << bufferName << '(' << getLineno() << ')'; \
+        std::cerr << oss.str() << std::endl;       \
     }
 
 class Statement : public Facade,
@@ -109,6 +115,8 @@ public:
 
 private:
     unsigned int lineno;
+    std::string bufferName;
+    static std::string nullBufferName;
     enum type op;
     statementPtr lhs;
     statementPtr rhs;
@@ -128,48 +136,48 @@ private:
     double number;
 
 public:
-    Statement(unsigned int, type, std::string);
+    Statement(unsigned int lineno, std::string , type op, std::string str);
 
-    Statement(unsigned int, type op, bitsetPtr bits, statementPtr lhs = statementPtr());
+    Statement(unsigned int, std::string , type, bitsetPtr, statementPtr = statementPtr());
 
-    Statement(unsigned int, type op = FINISHED, statementPtr lhs = statementPtr(), statementPtr rhs = statementPtr(),
-              unsigned int first = UINT_MAX, unsigned int second = UINT_MAX,
-              featuresPtr features = featuresPtr(), bitsetPtr bits = bitsetPtr(), arithmetic_op fct = NOP,
-              pairpPtr pairp = pairpPtr(), statementsPtr stms = statementsPtr(), double = 0.0);
+    Statement(unsigned int, std::string , type op, statementPtr = statementPtr(), statementPtr = statementPtr(),
+              unsigned int = UINT_MAX, unsigned int = UINT_MAX,
+              featuresPtr = featuresPtr(), bitsetPtr = bitsetPtr(), arithmetic_op = NOP,
+              pairpPtr = pairpPtr(), statementsPtr = statementsPtr(), double = 0.0);
 
-    Statement(unsigned int, type op, valuePtr value);
+    Statement(unsigned int, std::string bufferName, type op, valuePtr value);
 
     void makeSerialString();
 
 public:
     ~Statement();
 
-    static statementPtr create(unsigned int lineno, type op, statementPtr lhs = statementPtr(), 
-    statementPtr rhs = statementPtr());
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, statementPtr lhs = statementPtr(),
+                               statementPtr rhs = statementPtr());
 
-    static statementPtr create(unsigned int lineno, type op, unsigned int first, 
-        unsigned int second = UINT_MAX);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, unsigned int first,
+                               unsigned int second = UINT_MAX);
 
-    static statementPtr create(unsigned int lineno, type op, unsigned int first, 
-        statementPtr lhs);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, unsigned int first,
+                               statementPtr lhs);
 
-    static statementPtr create(unsigned int lineno, type op, featuresPtr features);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, featuresPtr features);
 
-    static statementPtr create(unsigned int lineno, type op, valuePtr &value);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, valuePtr &value);
 
-    static statementPtr create(unsigned int lineno, type op, bitsetPtr bits, statementPtr lhs = statementPtr());
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bitsetPtr bits, statementPtr lhs = statementPtr());
 
-    static statementPtr create(unsigned int lineno, type op, std::string str);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, std::string str);
 
-    static statementPtr create(unsigned int lineno, type op, arithmetic_op fct, 
-                                statementPtr lhs = statementPtr(),
-                                statementPtr rhs = statementPtr());
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, arithmetic_op fct,
+                               statementPtr lhs = statementPtr(),
+                               statementPtr rhs = statementPtr());
 
-    static statementPtr create(unsigned int lineno, type op, pairpPtr);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, pairpPtr);
 
-    static statementPtr create(unsigned int lineno, type op, statementsPtr);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, statementsPtr);
 
-    static statementPtr create(unsigned int lineno, type op, double);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, double);
 
     static statementPtr create();
 

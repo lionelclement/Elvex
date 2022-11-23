@@ -194,7 +194,7 @@ bool Pairp::isAtom() const
  ************************************************************ */
 bool Pairp::isVariable() const
 {
-    return (this->type == Pairp::_ATOM_) && (this->value->_isVariable());
+    return (this->type == Pairp::_ATOM_) && (this->value->isVariable());
 }
 
 /* ************************************************************
@@ -329,7 +329,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         {
             ret = true;
         }
-        else if ((otherPairp->isAtom()) && (otherPairp->value->_isVariable()))
+        else if ((otherPairp->isAtom()) && (otherPairp->value->isVariable()))
         {
             environment->add(otherPairp->value->getBits(), Value::NIL_VALUE);
         }
@@ -340,7 +340,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         break;
 
     case _ATOM_:
-        if (this->value->_isVariable())
+        if (this->value->isVariable())
         {
             if (!otherPairp)
             {
@@ -368,7 +368,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         }
         else if (otherPairp->isAtom())
         {
-            if (otherPairp->value->_isVariable())
+            if (otherPairp->value->isVariable())
                 environment->add(otherPairp->value->getBits(), this->getValue());
             else if (!this->value->buildEnvironment(environment, otherPairp->value, acceptToFilterNULLVariables,
                                                     root))

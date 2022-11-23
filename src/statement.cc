@@ -41,13 +41,16 @@
 #include "bitset.hpp"
 #include "vartable.hpp"
 
+std::string Statement::nullBufferName = std::string("hummm");
+
 /* **************************************************
  *
  ************************************************** */
-Statement::Statement(unsigned int lineno, type op, std::string str)
+Statement::Statement(unsigned int lineno, std::string bufferName, type op, std::string str)
 {
     NEW;
     this->lineno = lineno;
+    this->bufferName = bufferName;
     this->op = op;
     this->lhs = statementPtr();
     this->rhs = statementPtr();
@@ -65,13 +68,14 @@ Statement::Statement(unsigned int lineno, type op, std::string str)
 /* **************************************************
  *
  ************************************************** */
-Statement::Statement(unsigned int lineno, type op, statementPtr lhs,
+Statement::Statement(unsigned int lineno, std::string bufferName, type op, statementPtr lhs,
                      statementPtr rhs, unsigned int first,
                      unsigned int second, featuresPtr features, bitsetPtr bits,
                      arithmetic_op fct, pairpPtr pairp, statementsPtr statements, double number)
 {
     NEW;
     this->lineno = lineno;
+    this->bufferName = bufferName;
     this->op = op;
     this->lhs = std::move(lhs);
     this->rhs = std::move(rhs);
@@ -88,10 +92,11 @@ Statement::Statement(unsigned int lineno, type op, statementPtr lhs,
 /* **************************************************
  *
  ************************************************** */
-Statement::Statement(unsigned int lineno, type op, valuePtr value)
+Statement::Statement(unsigned int lineno, std::string bufferName, type op, valuePtr value)
 {
     NEW;
     this->lineno = lineno;
+    this->bufferName = bufferName;
     this->op = op;
     this->value = std::move(value);
 }
@@ -107,86 +112,86 @@ Statement::~Statement()
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, statementPtr lhs, statementPtr rhs)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, statementPtr lhs, statementPtr rhs)
 {
-    return statementPtr(new Statement(lineno, op, lhs ? std::move(lhs) : lhs, rhs ? std::move(rhs) : rhs));
+    return statementPtr(new Statement(lineno, bufferName, op, lhs ? std::move(lhs) : lhs, rhs ? std::move(rhs) : rhs));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, unsigned int first, unsigned int second)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, unsigned int first, unsigned int second)
 {
-    return statementPtr(new Statement(lineno, op, statementPtr(), statementPtr(), first, second));
+    return statementPtr(new Statement(lineno, bufferName, op, statementPtr(), statementPtr(), first, second));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, unsigned int first, statementPtr lhs)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, unsigned int first, statementPtr lhs)
 {
-    return statementPtr(new Statement(lineno, op, std::move(lhs), statementPtr(), first));
+    return statementPtr(new Statement(lineno, bufferName, op, std::move(lhs), statementPtr(), first));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, featuresPtr features)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, featuresPtr features)
 {
-    return statementPtr(new Statement(lineno, op, statementPtr(), statementPtr(), UINT_MAX,
+    return statementPtr(new Statement(lineno, bufferName, op, statementPtr(), statementPtr(), UINT_MAX,
                                       UINT_MAX, std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, valuePtr &value)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, valuePtr &value)
 {
-    return statementPtr(new Statement(lineno, op, value));
+    return statementPtr(new Statement(lineno, bufferName, op, value));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, bitsetPtr bits, statementPtr lhs)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bitsetPtr bits, statementPtr lhs)
 {
-    return statementPtr(new Statement(lineno, op, std::move(lhs), statementPtr(), UINT_MAX,
+    return statementPtr(new Statement(lineno, bufferName, op, std::move(lhs), statementPtr(), UINT_MAX,
                                       UINT_MAX, featuresPtr(), std::move(bits)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, std::string str)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, std::string str)
 {
-    return statementPtr(new Statement(lineno, op, std::move(str)));
+    return statementPtr(new Statement(lineno, bufferName, op, std::move(str)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, arithmetic_op fct, statementPtr lhs, statementPtr rhs)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, arithmetic_op fct, statementPtr lhs, statementPtr rhs)
 {
     return statementPtr(
-        new Statement(lineno, op, std::move(lhs), std::move(rhs), UINT_MAX, UINT_MAX, featuresPtr(), bitsetPtr(),
+        new Statement(lineno, bufferName, op, std::move(lhs), std::move(rhs), UINT_MAX, UINT_MAX, featuresPtr(), bitsetPtr(),
                       fct));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, pairpPtr pairp)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, pairpPtr pairp)
 {
-    return statementPtr(new Statement(lineno, op, statementPtr(), statementPtr(), UINT_MAX,
+    return statementPtr(new Statement(lineno, bufferName, op, statementPtr(), statementPtr(), UINT_MAX,
                                       UINT_MAX, featuresPtr(), bitsetPtr(), Statement::NOP, std::move(pairp)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, statementsPtr statements)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, statementsPtr statements)
 {
-    return statementPtr(new Statement(lineno, op, statementPtr(), statementPtr(), UINT_MAX,
+    return statementPtr(new Statement(lineno, bufferName, op, statementPtr(), statementPtr(), UINT_MAX,
                                       UINT_MAX, featuresPtr(), bitsetPtr(), Statement::NOP, pairpPtr(),
                                       std::move(statements)));
 }
@@ -194,9 +199,9 @@ statementPtr Statement::create(unsigned int lineno, type op, statementsPtr state
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, type op, double number)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, double number)
 {
-    return statementPtr(new Statement(lineno, op, statementPtr(), statementPtr(), UINT_MAX,
+    return statementPtr(new Statement(lineno, bufferName, op, statementPtr(), statementPtr(), UINT_MAX,
                                       UINT_MAX, featuresPtr(), bitsetPtr(), Statement::NOP, pairpPtr(), statementsPtr(),
                                       number));
 }
@@ -206,7 +211,7 @@ statementPtr Statement::create(unsigned int lineno, type op, double number)
  ************************************************** */
 statementPtr Statement::create()
 {
-    return statementPtr(new Statement(0, DASH, statementPtr(), statementPtr(), UINT_MAX,
+    return statementPtr(new Statement(0, nullBufferName, DASH, statementPtr(), statementPtr(), UINT_MAX,
                                       UINT_MAX, featuresPtr(), bitsetPtr(), Statement::NOP, pairpPtr(),
                                       statementsPtr()));
 }
@@ -969,18 +974,18 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
         break;
     case FEATURES:
     case GUARD:
-        statement = Statement::create(this->lineno, this->op, getFeatures()->clone());
+        statement = Statement::create(this->lineno, this->bufferName, this->op, getFeatures()->clone());
         break;
     case PAIRP:
-        statement = Statement::create(this->lineno, this->op, getPairp()->clone());
+        statement = Statement::create(this->lineno, this->bufferName, this->op, getPairp()->clone());
         break;
     case VARIABLE:
-        statement = Statement::create(this->lineno, this->op, getBits());
+        statement = Statement::create(this->lineno, this->bufferName, this->op, getBits());
         break;
     case ATTEST:
     case PRINT:
     case PRINTLN:
-        statement = Statement::create(this->lineno, this->op, lhs ? lhs->clone(protectedFlags) : statementPtr());
+        statement = Statement::create(this->lineno, this->bufferName, this->op, lhs ? lhs->clone(protectedFlags) : statementPtr());
         break;
     case IF:
     case THENELSE:
@@ -989,20 +994,20 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
     case UNIF:
     case AFF:
     case SUBSUME:
-        statement = Statement::create(this->lineno, this->op, lhs ? lhs->clone(protectedFlags) : statementPtr(),
+        statement = Statement::create(this->lineno, this->bufferName, this->op, lhs ? lhs->clone(protectedFlags) : statementPtr(),
                                       rhs ? rhs->clone(protectedFlags) : statementPtr());
         break;
     case FCT:
-        statement = Statement::create(this->lineno, this->op, this->getFct(),
+        statement = Statement::create(this->lineno, this->bufferName, this->op, this->getFct(),
                                       lhs ? lhs->clone(protectedFlags) : statementPtr(),
                                       rhs ? rhs->clone(protectedFlags) : statementPtr());
         break;
     case STMS:
-        statement = Statement::create(this->lineno, this->op,
+        statement = Statement::create(this->lineno, this->bufferName, this->op,
                                       getStatements()->clone(protectedFlags));
         break;
     case SEARCH:
-        statement = Statement::create(this->lineno, this->op, this->getFirst(),
+        statement = Statement::create(this->lineno, this->bufferName, this->op, this->getFirst(),
                                       lhs ? lhs->clone(protectedFlags) : statementPtr());
         break;
     }
@@ -1084,7 +1089,7 @@ Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesiz
             {
                 FATAL_ERROR_STM;
             }
-            if (_value && _value->getType() == Value::_FEATURES)
+            if (_value && _value->isFeatures())
                 resultFeatures = _value->getFeatures()->clone();
         }
     }
@@ -1211,9 +1216,9 @@ pairpPtr Statement::evalPairp(class Item *item, bool replaceVariables)
                 FATAL_ERROR_STM;
                 //               resultPairp = pairpPtr();
             }
-            else if (_value->_isNil())
+            else if (_value->isNil())
                 resultPairp = Pairp::NIL;
-            else if (_value->_isPairp())
+            else if (_value->isPairp())
                 resultPairp = _value->getPairp()->clone();
             else
             {
@@ -1392,12 +1397,12 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
     break;
 
     case NUMBER:
-        resultValue = Value::create(Value::_NUMBER, getNumber());
+        resultValue = Value::create(Value::_NUMBER_, getNumber());
         goto valueBuilt;
         break;
 
     case STR:
-        resultValue = Value::create(Value::_FORM, getStr());
+        resultValue = Value::create(Value::_FORM_, getStr());
         goto valueBuilt;
         break;
 
@@ -1426,7 +1431,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         }
         else
         {
-            resultValue = Value::create(Value::_VARIABLE, getBits());
+            resultValue = Value::create(Value::_VARIABLE_, getBits());
         }
         break;
 
@@ -1435,7 +1440,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         break;
 
     case CONSTANT:
-        resultValue = Value::create(Value::_CONSTANT, getBits());
+        resultValue = Value::create(Value::_CONSTANT_, getBits());
         break;
 
     case DOWN2:
@@ -1498,11 +1503,11 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             if (v1)
             {
                 isv1astring = true;
-                if (v1->_isVariable())
+                if (v1->isVariable())
                     v1str = v1->getBits()->toString();
-                else if (v1->_isIdentifier())
+                else if (v1->isIdentifier())
                     v1str = Vartable::codeToString(v1->getCode());
-                else if (v1->_isForm())
+                else if (v1->isForm())
                     v1str = v1->getStr();
                 else
                     isv1astring = false;
@@ -1513,11 +1518,11 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             if (v2)
             {
                 isv2astring = true;
-                if (v2->_isVariable())
+                if (v2->isVariable())
                     v2str = v2->getBits()->toString();
-                else if (v2->_isIdentifier())
+                else if (v2->isIdentifier())
                     v2str = Vartable::codeToString(v2->getCode());
-                else if (v2->_isForm())
+                else if (v2->isForm())
                     v2str = v2->getStr();
                 else
                     isv2astring = false;
@@ -1526,13 +1531,13 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             if ((!v1) || (!v2))
                 resultValue = valuePtr();
 
-            else if ((v1->_isNumber()) && (v2->_isNumber()))
-                resultValue = Value::create(Value::_NUMBER, v1->getNumber() + v2->getNumber());
+            else if ((v1->isNumber()) && (v2->isNumber()))
+                resultValue = Value::create(Value::_NUMBER_, v1->getNumber() + v2->getNumber());
 
             else if (isv1astring && isv2astring)
-                resultValue = Value::create(Value::_FORM, v1str + v2str);
+                resultValue = Value::create(Value::_FORM_, v1str + v2str);
 
-            else if ((v1->_isPairp()) && (v2->_isPairp()))
+            else if ((v1->isPairp()) && (v2->isPairp()))
             {
                 WARNING_STM;
                 resultValue = valuePtr();
@@ -1554,8 +1559,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
             if ((!v1) || (!v2))
                 resultValue = valuePtr();
-            else if ((v1->_isNumber()) && (v2->_isNumber()))
-                resultValue = Value::create(Value::_NUMBER, v1->getNumber() - v2->getNumber());
+            else if ((v1->isNumber()) && (v2->isNumber()))
+                resultValue = Value::create(Value::_NUMBER_, v1->getNumber() - v2->getNumber());
             else
                 resultValue = valuePtr();
             goto valueBuilt;
@@ -1568,8 +1573,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
             if ((!v1) || (!v2))
                 resultValue = valuePtr();
-            else if ((v1->_isNumber()) && (v2->_isNumber()))
-                resultValue = Value::create(Value::_NUMBER, v1->getNumber() * v2->getNumber());
+            else if ((v1->isNumber()) && (v2->isNumber()))
+                resultValue = Value::create(Value::_NUMBER_, v1->getNumber() * v2->getNumber());
             else
                 resultValue = valuePtr();
             goto valueBuilt;
@@ -1582,8 +1587,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
             if ((!v1) || (!v2))
                 resultValue = valuePtr();
-            else if ((v1->_isNumber()) && (v2->_isNumber()))
-                resultValue = Value::create(Value::_NUMBER, v1->getNumber() / v2->getNumber());
+            else if ((v1->isNumber()) && (v2->isNumber()))
+                resultValue = Value::create(Value::_NUMBER_, v1->getNumber() / v2->getNumber());
             else
                 resultValue = valuePtr();
             goto valueBuilt;
@@ -1596,8 +1601,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
             if ((!v1) || (!v2))
                 resultValue = valuePtr();
-            else if ((v1->_isNumber()) && (v2->_isNumber()))
-                resultValue = Value::create(Value::_NUMBER, fmod(v1->getNumber(), v2->getNumber()));
+            else if ((v1->isNumber()) && (v2->isNumber()))
+                resultValue = Value::create(Value::_NUMBER_, fmod(v1->getNumber(), v2->getNumber()));
             else
                 resultValue = valuePtr();
             goto valueBuilt;
@@ -1609,8 +1614,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
             if (!v1)
                 resultValue = valuePtr();
-            else if ((v1->_isNumber()))
-                resultValue = Value::create(Value::_NUMBER, -v1->getNumber());
+            else if ((v1->isNumber()))
+                resultValue = Value::create(Value::_NUMBER_, -v1->getNumber());
             else
                 resultValue = valuePtr();
             goto valueBuilt;
@@ -1626,7 +1631,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
                 FATAL_ERROR_UNEXPECTED
                 resultValue = valuePtr();
             }
-            else if ((v1->_isFalse()) || (v2->_isFalse()))
+            else if ((v1->isFalse()) || (v2->isFalse()))
                 resultValue = Value::NIL_VALUE;
             else
                 resultValue = Value::TRUE_VALUE;
@@ -1640,7 +1645,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
             if ((!v1) || (!v2))
                 resultValue = valuePtr();
-            else if ((v1->_isFalse()) && (v2->_isFalse()))
+            else if ((v1->isFalse()) && (v2->isFalse()))
                 resultValue = Value::NIL_VALUE;
             else
                 resultValue = Value::TRUE_VALUE;
@@ -1658,16 +1663,16 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             else if ((!v1) || (!v2))
                 resultValue = valuePtr();
 
-            else if ((v1->_isNil()) && (v2->_isNil()))
+            else if ((v1->isNil()) && (v2->isNil()))
                 resultValue = Value::TRUE_VALUE;
 
-            else if ((v1->_isNil()) || (v2->_isNil()))
+            else if ((v1->isNil()) || (v2->isNil()))
                 resultValue = Value::NIL_VALUE;
 
-            else if ((v1->_isAnonymous()) && (v2->_isAnonymous()))
+            else if ((v1->isAnonymous()) && (v2->isAnonymous()))
                 resultValue = Value::TRUE_VALUE;
 
-            else if ((v1->_isAnonymous()) || (v2->_isAnonymous()))
+            else if ((v1->isAnonymous()) || (v2->isAnonymous()))
                 resultValue = Value::NIL_VALUE;
 
             else if (v1->eq(v2))
@@ -1690,16 +1695,16 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             else if ((!v1) || (!v2))
                 resultValue = Value::TRUE_VALUE;
 
-            else if ((v1->_isNil()) && (v2->_isNil()))
+            else if ((v1->isNil()) && (v2->isNil()))
                 resultValue = Value::NIL_VALUE;
 
-            else if ((v1->_isNil()) || (v2->_isNil()))
+            else if ((v1->isNil()) || (v2->isNil()))
                 resultValue = Value::TRUE_VALUE;
 
-            else if ((v1->_isAnonymous()) && (v2->_isAnonymous()))
+            else if ((v1->isAnonymous()) && (v2->isAnonymous()))
                 resultValue = Value::NIL_VALUE;
 
-            else if ((v1->_isAnonymous()) || (v2->_isAnonymous()))
+            else if ((v1->isAnonymous()) || (v2->isAnonymous()))
                 resultValue = Value::TRUE_VALUE;
 
             else if (v1->eq(v2))
@@ -1783,7 +1788,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         case NOT:
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
-            if (!v1 || v1->_isNil() || v1->_isAnonymous())
+            if (!v1 || v1->isNil() || v1->isAnonymous())
                 resultValue = Value::TRUE_VALUE;
             else
                 resultValue = Value::NIL_VALUE;
@@ -1793,7 +1798,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
 
         case RAND:
         {
-            resultValue = Value::create(Value::_NUMBER, (double)rand());
+            resultValue = Value::create(Value::_NUMBER_, (double)rand());
             goto valueBuilt;
         }
         break;
@@ -1905,22 +1910,22 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
     for (Features::list_of_feature::const_iterator i1 = fs1->begin(); i1 != fs1->end(); ++i1)
     {
 
-        if (((*i1)->getType() == Feature::PRED) || ((*i1)->getType() == Feature::LEMMA))
+        if ((*i1)->isPred() || (*i1)->isLemma())
         {
             Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end())
             {
-                if ((*i2)->getType() == (*i1)->getType())
+                if ((*i2)->_getType() == (*i1)->_getType())
                 {
                     (*i2)->addFlags(Flags::SEEN);
-                    switch ((*i1)->getValue()->getType())
+                    switch ((*i1)->getValue()->_getType())
                     {
 
-                    case Value::_CODE:
+                    case Value::_CODE_:
                     {
-                        switch ((*i2)->getValue()->getType())
+                        switch ((*i2)->getValue()->_getType())
                         {
-                        case Value::_CODE:
+                        case Value::_CODE_:
                             if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode())
                             {
                                 result = Features::BOTTOM;
@@ -1928,8 +1933,8 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                             }
                             break;
 
-                        case Value::_VARIABLE:
-                            result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i1)->getValue()));
+                        case Value::_VARIABLE_:
+                            result->add(Feature::create(Feature::_PRED_, bitsetPtr(), (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
                             item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
@@ -1942,9 +1947,9 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                     }
                     break;
 
-                    case Value::_VARIABLE:
+                    case Value::_VARIABLE_:
 
-                        if (((*i2)->getValue()->getType() == Value::_VARIABLE) &&
+                        if (((*i2)->getValue()->isVariable()) &&
                             (*(*i1)->getValue()->getBits()) == (*(*i2)->getValue()->getBits()))
                         {
                         } /* empty */
@@ -1957,11 +1962,11 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                                 item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
                             }
                         }
-                        result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i2)->getValue()));
+                        result->add(Feature::create(Feature::_PRED_, bitsetPtr(), (*i2)->getValue()));
                         break;
 
-                    case Value::_ANONYMOUS:
-                        result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i2)->getValue()));
+                    case Value::_ANONYMOUS_:
+                        result->add(Feature::create(Feature::_PRED_, bitsetPtr(), (*i2)->getValue()));
                         break;
 
                     default:
@@ -1975,16 +1980,16 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
             }
             result->add(*i1);
         }
-        else if ((*i1)->getType() == Feature::FORM)
+        else if ((*i1)->isForm())
         {
             Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end())
             {
-                if ((*i2)->getType() == Feature::FORM)
+                if ((*i2)->isForm())
                 {
 
                     (*i2)->addFlags(Flags::SEEN);
-                    if (!(*i1)->getValue()->_isForm() || !(*i2)->getValue()->_isForm())
+                    if (!(*i1)->getValue()->isForm() || !(*i2)->getValue()->isForm())
                         FATAL_ERROR_STM;
 
                     if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr())
@@ -1999,12 +2004,12 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
             }
             result->add(*i1);
         }
-        else if ((*i1)->getType() == Feature::CONSTANT)
+        else if ((*i1)->isConstant())
         {
             Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end())
             {
-                if (((*i2)->getType() == Feature::CONSTANT) &&
+                if (((*i2)->isConstant()) &&
                     (*(*i1)->getAttribute() & *(*i2)->getAttribute()).any())
                 {
                     (*i2)->addFlags(Flags::SEEN);
@@ -2014,29 +2019,29 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                         goto endUnif;
                     }
 
-                    switch ((*i1)->getValue()->getType())
+                    switch ((*i1)->getValue()->_getType())
                     {
 
-                    case Value::_LISTFEATURES:
+                    case Value::_LISTFEATURES_:
                         FATAL_ERROR_UNEXPECTED
 
-                    case Value::_NIL:
+                    case Value::_NIL_:
                         FATAL_ERROR_UNEXPECTED
 
-                    case Value::_FORM:
-                        switch ((*i2)->getValue()->getType())
+                    case Value::_FORM_:
+                        switch ((*i2)->getValue()->_getType())
                         {
-                        case Value::_FORM:
+                        case Value::_FORM_:
                             if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr())
                             {
                                 result = Features::BOTTOM;
                                 goto endUnif;
                             }
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(),
                                                         (*i1)->getValue()));
                             break;
 
-                        case Value::_VARIABLE:
+                        case Value::_VARIABLE_:
                             FATAL_ERROR_STM;
                             /*
                           result->add(new Feature((*i2)->getAttribute(), (*i1)->getValue(), Feature::CONSTANT));
@@ -2053,23 +2058,23 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                         break;
 
                         // case Value::FALSE:
-                    case Value::_TRUE:
+                    case Value::_TRUE_:
                     {
-                        switch ((*i2)->getValue()->getType())
+                        switch ((*i2)->getValue()->_getType())
                         {
                         // case Value::FALSE:
-                        case Value::_TRUE:
-                            if ((*i1)->getValue()->_isNil() != (*i2)->getValue()->_isNil())
+                        case Value::_TRUE_:
+                            if ((*i1)->getValue()->isNil() != (*i2)->getValue()->isNil())
                             {
                                 result = Features::BOTTOM;
                                 goto endUnif;
                             }
 
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(),
                                                         (*i1)->getValue()));
                             break;
-                        case Value::_VARIABLE:
-                            result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
+                        case Value::_VARIABLE_:
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i2)->getAttribute(),
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
@@ -2082,23 +2087,23 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                     }
                     break;
 
-                    case Value::_NUMBER:
+                    case Value::_NUMBER_:
                     {
-                        switch ((*i2)->getValue()->getType())
+                        switch ((*i2)->getValue()->_getType())
                         {
-                        case Value::_NUMBER:
+                        case Value::_NUMBER_:
                             if ((*i1)->getValue()->getNumber() != (*i2)->getValue()->getNumber())
                             {
                                 result = Features::BOTTOM;
                                 goto endUnif;
                             }
 
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                        Value::create(Value::_NUMBER,
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(),
+                                                        Value::create(Value::_NUMBER_,
                                                                       (*i1)->getValue()->getNumber())));
                             break;
-                        case Value::_VARIABLE:
-                            result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
+                        case Value::_VARIABLE_:
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i2)->getAttribute(),
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
@@ -2111,23 +2116,23 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                     }
                     break;
 
-                    case Value::_CODE:
+                    case Value::_CODE_:
                     {
-                        switch ((*i2)->getValue()->getType())
+                        switch ((*i2)->getValue()->_getType())
                         {
-                        case Value::_CODE:
+                        case Value::_CODE_:
                             if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode())
                             {
                                 result = Features::BOTTOM;
                                 goto endUnif;
                             }
 
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                        Value::create(Value::_CODE,
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(),
+                                                        Value::create(Value::_CODE_,
                                                                       (*i1)->getValue()->getCode())));
                             break;
-                        case Value::_VARIABLE:
-                            result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
+                        case Value::_VARIABLE_:
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i2)->getAttribute(),
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
@@ -2140,31 +2145,31 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                     }
                     break;
 
-                    case Value::_CONSTANT:
+                    case Value::_CONSTANT_:
                     {
-                        switch ((*i2)->getValue()->getType())
+                        switch ((*i2)->getValue()->_getType())
                         {
-                        case Value::_CONSTANT:
+                        case Value::_CONSTANT_:
                             if (((*(*i1)->getValue()->getBits()) & (*(*i2)->getValue()->getBits())).none())
                             {
                                 result = Features::BOTTOM;
                                 goto endUnif;
                             }
 
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                        Value::create(Value::_CONSTANT, Bitset::create(
-                                                                                            *(*i1)->getValue()->getBits() &
-                                                                                            *(*i2)->getValue()->getBits()))));
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(),
+                                                        Value::create(Value::_CONSTANT_, Bitset::create(
+                                                                                             *(*i1)->getValue()->getBits() &
+                                                                                             *(*i2)->getValue()->getBits()))));
                             break;
-                        case Value::_VARIABLE:
-                            result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
+                        case Value::_VARIABLE_:
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i2)->getAttribute(),
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
                             item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
-                        case Value::_ANONYMOUS:
-                            result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
+                        case Value::_ANONYMOUS_:
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i2)->getAttribute(),
                                                         (*i1)->getValue()));
                             break;
                         default:
@@ -2174,9 +2179,9 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                     }
                     break;
 
-                    case Value::_VARIABLE:
+                    case Value::_VARIABLE_:
 
-                        if (((*i2)->getValue()->getType() == Value::_VARIABLE) &&
+                        if (((*i2)->getValue()->isVariable()) &&
                             (*(*i1)->getValue()->getBits()) == (*(*i2)->getValue()->getBits()))
                         {
                         } /* empty */
@@ -2189,14 +2194,14 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                                 item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
                             }
                         }
-                        result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), (*i2)->getValue()));
+                        result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(), (*i2)->getValue()));
                         break;
 
-                    case Value::_ANONYMOUS:
-                        result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), (*i2)->getValue()));
+                    case Value::_ANONYMOUS_:
+                        result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(), (*i2)->getValue()));
                         break;
 
-                    case Value::_FEATURES:
+                    case Value::_FEATURES_:
                     {
                         featuresPtr _features = unif((*i1)->getValue()->getFeatures(),
                                                      (*i2)->getValue()->getFeatures(), item);
@@ -2206,13 +2211,13 @@ featuresPtr Statement::unif(const featuresPtr &fs1, const featuresPtr &fs2, clas
                             goto endUnif;
                         }
                         else
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
+                            result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(),
                                                         Value::create(_features)));
                     }
                     break;
 
-                    case Value::_PAIRP:
-                        result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), (*i1)->getValue()));
+                    case Value::_PAIRP_:
+                        result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(), (*i1)->getValue()));
                         break;
                     }
 
@@ -2267,6 +2272,18 @@ void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synt
         print(std::cerr);
         std::cerr << std::endl;
     ***/
+    if (!item->getInheritedSonFeatures()->get(lhs->getFirst())->isNil())
+    {
+        std::ostringstream oss;
+        oss << "↓" << lhs->getFirst() + 1 << " defined twice";
+        FATAL_ERROR_OS_MSG_STM(oss);
+    }
+    if (item->getInheritedSonFeatures()->size() < lhs->getFirst())
+    {
+        std::ostringstream oss;
+        oss << "↓" << lhs->getFirst() + 1 << " not available";
+        FATAL_ERROR_OS_MSG_STM(oss);
+    }
     featuresPtr _features = rhs->evalFeatures(item, parser, synthesizer, true);
     if (_features->isNil())
         addFlags(Flags::BOTTOM);
@@ -2281,8 +2298,10 @@ void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synth
 {
     if (!item->getSynthesizedFeatures()->isNil())
     {
-        this->print(std::cerr);
-        FATAL_ERROR_STM;
+        std::ostringstream oss;
+        oss << "⇑"
+            << " defined twice";
+        FATAL_ERROR_OS_MSG_STM(oss);
     }
     featuresPtr _features = rhs->evalFeatures(item, parser, synthesizer, true);
     if (_features->isNil())
@@ -2613,7 +2632,7 @@ void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthes
     {
         valuePtr res = lhs->evalValue(item, parser, synthesizer, true);
         if ((!res) || (res == Value::NIL_VALUE) || (res == Value::ANONYMOUS_VALUE) ||
-            ((res->getType() == Value::_FEATURES) && (res->getFeatures()->isBottom())))
+            ((res->isFeatures()) && (res->getFeatures()->isBottom())))
         {
             addFlags(Flags::BOTTOM);
         }
@@ -2680,7 +2699,7 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
  ************************************************************ */
 void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
-    /*** 
+    /***
     std::cout << "<DIV>foreach";
     item->print(std::cout);
     print(std::cout);
@@ -2688,21 +2707,23 @@ void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthe
     ***/
 
     statementPtr variable = getLhs();
-    valuePtr _value = getRhs()->getLhs()->evalValue(item, parser, synthesizer, true);
-    statementPtr body = getRhs()->getRhs();
-    if (_value->_isPairp())
+    valuePtr value = getRhs()->getLhs()->evalValue(item, parser, synthesizer, true);
+    statementPtr statement = getRhs()->getRhs();
+    if (value->isPairp())
     {
-        pairpPtr _list = _value->getPairp();
-        _list->apply(item, parser, synthesizer, variable, body, effect);
+        pairpPtr list = value->getPairp();
+        list->apply(item, parser, synthesizer, variable, statement, effect);
     }
-    else if (_value->_isListFeatures())
+    else if (value->isListFeatures())
     {
-        listFeaturesPtr listFeatures = _value->getListFeatures();
-        listFeatures->apply(item, parser, synthesizer, variable, body, effect);
+        listFeaturesPtr listFeatures = value->getListFeatures();
+        listFeatures->apply(item, parser, synthesizer, variable, statement, effect);
     }
 
     else
-        FATAL_ERROR_MSG_STM("foreach does'nt apply a list")
+    {
+        FATAL_ERROR_MSG_STM("foreach does'nt apply a list");
+    }
     /***
         std::cerr << "<DIV>foreach done";
         item->print(std::cerr);
@@ -2728,7 +2749,7 @@ void Statement::stmIf(class Item *item, Parser &parser, Synthesizer *synthesizer
         valuePtr res = getLhs()->evalValue(item, parser, synthesizer, true);
         if (!res)
             resif = 0;
-        else if (res->_isNil() || res->_isAnonymous())
+        else if (res->isNil() || res->isAnonymous())
         {
             resif = 2;
             _lhs->addFlags(Flags::REJECTED);
@@ -2784,11 +2805,11 @@ void Statement::stmPrint(class Item *item, Parser &parser, Synthesizer *synthesi
     }
     else
     {
-        valuePtr _value = lhs->evalValue(item, parser, synthesizer, true);
-        if (_value->_isForm())
-            std::cout << _value->getStr();
+        valuePtr value = lhs->evalValue(item, parser, synthesizer, true);
+        if (value->isForm())
+            std::cout << value->getStr();
         else
-            _value->flatPrint(std::cout);
+            value->flatPrint(std::cout);
     }
 }
 
@@ -2931,6 +2952,13 @@ void Statement::enable(const statementPtr &root, class Item *item, Synthesizer *
         break;
 
     case DASH:
+        if (getFirst() > item->getRuleRhs().size())
+        {
+
+            std::ostringstream oss;
+            oss << "#" << lhs->getFirst() + 1 << " not available";
+            FATAL_ERROR_OS_MSG_STM(oss);
+        }
         // if (#1)   NP -> [det] N { if (#1) ↓1 = ↑ ∪ ⇓2 ∪ [qual:$Qual, part:$Part]; else [detNum:NIL, det:no]; }
         // if (#2)   VP -> VP [NP] {   if (#2) { ↓1 = $Rest; ↓2 = [pcas:$pcas, $PObj];} else { attest ($Pred == _pro); ↓1 = [prep_objCl:$PObj, $Rest];} }
         if (on)
@@ -2981,6 +3009,13 @@ void Statement::enable(const statementPtr &root, class Item *item, Synthesizer *
         break;
 
     case DOWN2:
+        if (getFirst() > item->getRuleRhs().size())
+        {
+
+            std::ostringstream oss;
+            oss << "⇓" << lhs->getFirst() + 1 << " not available";
+            FATAL_ERROR_OS_MSG_STM(oss);
+        }
         if (on)
         {
             if ((*item->getSynthesizedSonFeatures())[getFirst()]->isNil())
@@ -3057,20 +3092,7 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     std::cout << std::endl;
 #endif
 
-    if (isSetFlags(Flags::SEEN))
-    {
-        FATAL_ERROR_UNEXPECTED
-    }
-
-    if (isSetFlags(Flags::DISABLED))
-    {
-        FATAL_ERROR_UNEXPECTED
-    }
-
-    if (isSetFlags(Flags::BOTTOM))
-    {
-        FATAL_ERROR_UNEXPECTED
-    }
+    COUT_LINE;
 
     if (isSetFlags(Flags::SEEN | Flags::DISABLED | Flags::BOTTOM))
     {

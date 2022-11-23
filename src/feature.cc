@@ -70,7 +70,7 @@ valuePtr Feature::getValue() const
 /* **************************************************
  *
  ************************************************** */
-Feature::Type Feature::getType() const
+Feature::Type Feature::_getType() const
 {
     return this->type;
 }
@@ -81,6 +81,46 @@ Feature::Type Feature::getType() const
 void Feature::setType(const Feature::Type _type)
 {
     this->type = _type;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Feature::isPred() const
+{
+    return this->type == _PRED_;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Feature::isForm() const
+{
+    return this->type == _FORM_;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Feature::isLemma() const
+{
+    return this->type == _LEMMA_;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Feature::isConstant() const
+{
+    return this->type == _CONSTANT_;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Feature::isVariable() const
+{
+    return this->type == _VARIABLE_;
 }
 
 /* **************************************************
@@ -122,7 +162,7 @@ void Feature::print(std::ostream &outStream) const
 {
     switch (type)
     {
-    case Feature::PRED:
+    case Feature::_PRED_:
         outStream << R"(<TD ALIGN="LEFT">PRED</TD><TD ALIGN="LEFT">)";
         if (value)
             value->print(outStream);
@@ -130,7 +170,7 @@ void Feature::print(std::ostream &outStream) const
             outStream << "NIL";
         outStream << "</TD>";
         break;
-    case Feature::LEMMA:
+    case Feature::_LEMMA_:
         outStream << R"(<TD ALIGN="LEFT">LEMMA</TD><TD ALIGN="LEFT">)";
         if (value)
             value->print(outStream);
@@ -138,7 +178,7 @@ void Feature::print(std::ostream &outStream) const
             outStream << "NIL";
         outStream << "</TD>";
         break;
-    case Feature::FORM:
+    case Feature::_FORM_:
         outStream << R"(<TD ALIGN="LEFT">FORM</TD><TD ALIGN="LEFT">)";
         if (value)
             value->print(outStream);
@@ -146,7 +186,7 @@ void Feature::print(std::ostream &outStream) const
             outStream << "NIL";
         outStream << "</TD>";
         break;
-    case Feature::CONSTANT:
+    case Feature::_CONSTANT_:
         outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD><TD ALIGN=\"LEFT\">";
         if (value)
             value->print(outStream);
@@ -154,9 +194,9 @@ void Feature::print(std::ostream &outStream) const
             outStream << "NIL";
         outStream << "</TD>";
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
         outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD>";
-        if (value && !value->_isNil())
+        if (value && !value->isNil())
         {
             outStream << "<TD ALIGN=\"LEFT\">";
             value->print(outStream);
@@ -173,37 +213,37 @@ void Feature::flatPrint(std::ostream &outStream) const
 {
     switch (type)
     {
-    case Feature::PRED:
+    case Feature::_PRED_:
         outStream << "PRED:";
         if (value)
             value->flatPrint(outStream);
         else
             outStream << "NIL";
         break;
-    case Feature::LEMMA:
+    case Feature::_LEMMA_:
         outStream << "LEMMA:";
         if (value)
             value->flatPrint(outStream);
         else
             outStream << "NIL";
         break;
-    case Feature::FORM:
+    case Feature::_FORM_:
         outStream << "FORM:";
         if (value)
             value->flatPrint(outStream);
         else
             outStream << "NIL";
         break;
-    case Feature::CONSTANT:
+    case Feature::_CONSTANT_:
         outStream << attributeToString() << ':';
         if (value)
             value->flatPrint(outStream);
         else
             outStream << "NIL";
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
         outStream << attributeToString();
-        if (value && !value->_isNil())
+        if (value && !value->isNil())
         {
             value->flatPrint(outStream);
         }
@@ -218,19 +258,19 @@ void Feature::makeSerialString()
 {
     switch (type)
     {
-    case Feature::PRED:
+    case Feature::_PRED_:
         serialString = '\0';
         break;
-    case Feature::LEMMA:
+    case Feature::_LEMMA_:
         serialString = '\1';
         break;
-    case Feature::FORM:
+    case Feature::_FORM_:
         serialString = '\2';
         break;
-    case Feature::CONSTANT:
+    case Feature::_CONSTANT_:
         serialString = attribute->peekSerialString();
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
         serialString = '\3' + attribute->peekSerialString();
         break;
     }
@@ -250,20 +290,20 @@ void Feature::toXML(xmlNodePtr nodeRoot)
 
     switch (type)
     {
-    case Feature::PRED:
+    case Feature::_PRED_:
         xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"pred");
         break;
-    case Feature::LEMMA:
+    case Feature::_LEMMA_:
         xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"lemma");
         break;
-    case Feature::FORM:
+    case Feature::_FORM_:
         xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"form");
         break;
-    case Feature::CONSTANT:
+    case Feature::_CONSTANT_:
         xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"constant");
         xmlSetProp(f, (xmlChar *)"name", (const xmlChar *)attributeToString().c_str());
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
         xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"variable");
         xmlSetProp(f, (xmlChar *)"name", (const xmlChar *)attributeToString().c_str());
         break;
@@ -289,16 +329,16 @@ bool Feature::renameVariables(size_t i)
     bool effect = false;
     switch (type)
     {
-    case Feature::PRED:
-    case Feature::LEMMA:
-    case Feature::CONSTANT:
+    case Feature::_PRED_:
+    case Feature::_LEMMA_:
+    case Feature::_CONSTANT_:
         if (value)
             if (value->renameVariables(i))
                 effect = true;
         break;
-    case Feature::FORM:
+    case Feature::_FORM_:
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
     {
         std::string str = attributeToString() + '_' + std::to_string(i);
         bitsetPtr variableBits = Vartable::createVariable(str);
@@ -320,14 +360,14 @@ void Feature::enable(const statementPtr &root, class Item *item, Synthesizer *sy
 {
     switch (type)
     {
-    case Feature::PRED:
-    case Feature::LEMMA:
-    case Feature::FORM:
-    case Feature::CONSTANT:
+    case Feature::_PRED_:
+    case Feature::_LEMMA_:
+    case Feature::_FORM_:
+    case Feature::_CONSTANT_:
         if (value)
             value->enable(root, item, synthesizer, effect, on);
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
         if (on)
         {
             if ((!item->getEnvironment()) || (!item->getEnvironment()->find(getAttribute())))
@@ -352,14 +392,14 @@ bool Feature::findVariable(const bitsetPtr &variable)
 {
     switch (type)
     {
-    case Feature::PRED:
-    case Feature::LEMMA:
-    case Feature::FORM:
-    case Feature::CONSTANT:
+    case Feature::_PRED_:
+    case Feature::_LEMMA_:
+    case Feature::_FORM_:
+    case Feature::_CONSTANT_:
         if (value && value->findVariable(variable))
             return true;
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
         if (*getAttribute() == *variable)
             return true;
         break;
@@ -377,16 +417,16 @@ bool Feature::containsVariable()
         return true;
     switch (type)
     {
-    case Feature::PRED:
-    case Feature::LEMMA:
-    case Feature::FORM:
-    case Feature::CONSTANT:
+    case Feature::_PRED_:
+    case Feature::_LEMMA_:
+    case Feature::_FORM_:
+    case Feature::_CONSTANT_:
         if (value && value->containsVariable())
         {
             result = true;
         }
         break;
-    case Feature::VARIABLE:
+    case Feature::_VARIABLE_:
         result = true;
         break;
     }

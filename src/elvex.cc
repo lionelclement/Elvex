@@ -60,6 +60,7 @@ options\n\
 \t--one|-o                                    outputs the first sentence\n";
 #ifdef TRACE_OPTION
     std::cerr << "\
+ \t--traceAll\n\
  \t--traceInit\n\
  \t--traceStage\n\
  \t--traceClose\n\
@@ -179,6 +180,15 @@ int main(int argn, char** argv) {
                     }
 
 #ifdef TRACE_OPTION
+                        else if (!strcmp(argv[arg] + 1, "-traceAll")) {
+                           synthesizer.setTraceInit(true);
+                           synthesizer.setTraceStage(true);
+                           synthesizer.setTraceClose(true);
+                           synthesizer.setTraceShift(true);
+                           synthesizer.setTraceReduce(true);
+                           synthesizer.setTraceAction(true);
+                        }
+
                         else if (!strcmp(argv[arg] + 1, "-traceInit")) {
                            synthesizer.setTraceInit(true);
                         }

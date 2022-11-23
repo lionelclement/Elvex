@@ -137,7 +137,7 @@ if (LibXml2_FOUND)
             MAXUSAGES=1000
             MAXITEMS=1000
             MAXATTEMPTS=1000
-    )
+            )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
     target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
