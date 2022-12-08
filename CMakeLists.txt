@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.19.0)
+project(elvex VERSION 2.20.0)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 #set(CMAKE_CXX_COMPILER gcc)
@@ -119,9 +119,12 @@ configure_file(
         @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
-target_compile_options(elvex PUBLIC -std=c++11 -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
+target_compile_options(elvex PUBLIC -std=c++11 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
+#-DDEBUGYACC\(x\)=x 
+#-DDEBUGLEX\(x\)=x 
+)
 add_executable(elvexdebug ${ELVEX_COMMON_SOURCES} src/elvex.cc)
-target_compile_options(elvexdebug PUBLIC -std=c++11 -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers
+target_compile_options(elvexdebug PUBLIC -std=c++11 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )
@@ -129,6 +132,7 @@ target_compile_options(elvexdebug PUBLIC -std=c++11 -g -Wall -Wextra -Wno-deprec
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
+            TRACE_OPTION
             OUTPUT_XML
             MEMOIZATION
             RESTORE_MEMORY
@@ -137,6 +141,9 @@ if (LibXml2_FOUND)
             MAXUSAGES=1000
             MAXITEMS=1000
             MAXATTEMPTS=1000
+            #TRACE_ENABLE_STATEMENT
+            #TRACE_APPLY_STATEMENT
+            #TRACE_EVAL
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
@@ -154,7 +161,7 @@ if (LibXml2_FOUND)
         #TRACE_UNFOLD
         #TRACE_LEXICON
         #TRACE_EVAL
-        #TRACE_APPLY
+        #TRACE_APPLY_STATEMENT
         )
     target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})

@@ -4,7 +4,7 @@
 /* **************************************************
  * Start with an NP
  ************************************************** */
-@trace
+
 text → NP {
   [PRED:$pred];
   attest $pred ≠ paragraph;
@@ -15,7 +15,7 @@ text → NP {
 /* **************************************************
  * Start with a Narative Sentence
  ************************************************** */
-@trace
+
 text → [int] [exclamativeDot] rhetoricalStructure {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   //println ↑;

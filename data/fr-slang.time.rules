@@ -4,7 +4,7 @@
 /* **************************************************
 * Expressions temporelles
 ************************************************** */
-@trace
+
 timeClause → timeClauseCont {
   // println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -13,7 +13,7 @@ timeClause → timeClauseCont {
   ⇑ = ⇓1;
 }
 
-@trace
+
 timeClause → timeClauseCont {
   // println __FILE__ + " (" + __LINE__ + ")";
   // println ↑;
@@ -24,7 +24,7 @@ timeClause → timeClauseCont {
   ⇑ = ⇓1;
 }
 
-@trace
+
 timeClause → timeClauseCont {
   // println __FILE__ + " (" + __LINE__ + ")";
   // println ↑;
@@ -35,7 +35,7 @@ timeClause → timeClauseCont {
   ⇑ = ⇓1;
 }
 
-@trace
+
 timeClause → timeClauseCont {
   // println __FILE__ + " (" + __LINE__ + ")";
   // println ↑;
@@ -48,7 +48,7 @@ timeClause → timeClauseCont {
   ⇑ = ⇓1;
 }
 
-@trace
+
 timeClause → timeClauseCont {
   // println __FILE__ + " (" + __LINE__ + ")";
   // println ↑;
@@ -62,7 +62,7 @@ timeClause → timeClauseCont {
 /* **************************************************
 * Expressions temporelles
 ************************************************** */
-@trace
+
 timeClauseCont → tensedClause {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;

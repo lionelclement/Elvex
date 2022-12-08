@@ -49,21 +49,28 @@ public:
 
     size_t size(void);
 
-    list::const_iterator begin(void) const;
+    list::const_iterator begin(void);
 
-    list::const_iterator end(void) const;
+    list::const_iterator end(void);
+
+    list::const_iterator cbegin(void) const;
+
+    list::const_iterator cend(void) const;
 
     void addStatement(const statementPtr &);
 
     void renameVariables(size_t);
 
-    void print(std::ostream &, unsigned int tabulation = 0, unsigned int yetColored = 0) const;
+    bool findVariable(const bitsetPtr &variable);
+
+    //void print(std::ostream &, unsigned int tabulation = 0, unsigned int yetColored = 0) const;
+    void print(std::ostream &outStream, unsigned int tabulation, unsigned int color, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
 
     statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 
     void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void enable(class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void toggleEnable(class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
 };
 
 #endif // ELVEX_STATEMENTS_H

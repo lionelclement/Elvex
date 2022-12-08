@@ -277,7 +277,7 @@ void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic,
     {
         statementsPtr stms = getStatements();
         if (stms)
-            stms->print(outStream);
+            stms->print(outStream, 0, 0, true, "{", "}", "");
         outStream << (html ? "<BR>" : "\n");
     }
 }

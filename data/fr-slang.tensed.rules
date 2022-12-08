@@ -4,7 +4,7 @@
 /* **************************************************
 * Temps verbal
 ************************************************** */
-@trace
+
 tensedClause → bindingClause {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   //println ↑;

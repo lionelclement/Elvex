@@ -26,6 +26,7 @@
 #include "messages.hpp"
 #include "shared_ptr.hpp"
 #include "statement.hpp"
+#include "item.hpp"
 
 pairpPtr Pairp::NIL = Pairp::create();
 
@@ -331,7 +332,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         }
         else if ((otherPairp->isAtom()) && (otherPairp->value->isVariable()))
         {
-            environment->add(otherPairp->value->getBits(), Value::NIL_VALUE);
+            environment->add(otherPairp->value->getBits(), Value::STATIC_NIL);
         }
         else
         {
@@ -351,7 +352,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
                 switch (otherPairp->getType())
                 {
                 case _NIL_:
-                    environment->add(this->value->getBits(), Value::NIL_VALUE);
+                    environment->add(this->value->getBits(), Value::STATIC_NIL);
                     break;
                 case _ATOM_:
                     environment->add(this->value->getBits(), otherPairp->getValue());
@@ -638,7 +639,7 @@ bool Pairp::findVariable(const bitsetPtr &variable)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr body,
+void Pairp::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr statement,
                  bool &effect)
 {
     switch (type)
@@ -646,13 +647,19 @@ void Pairp::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
     case _NIL_:
         break;
     case _ATOM_:
-        value->apply(item, parser, synthesizer, variable, body->clone(0), effect);
+        {
+            environmentPtr save = item->getEnvironment();
+            item->setEnvironment(item->getEnvironment() ? item->getEnvironment()->clone() : environmentPtr());
+            value->apply(item, parser, synthesizer, variable, statement->clone(0), effect);
+            item->getEnvironment().reset();
+            item->setEnvironment(save);
+        }
         break;
     case _PAIRP_:
         if (pairp.car)
-            pairp.car->apply(item, parser, synthesizer, variable, body, effect);
+            pairp.car->apply(item, parser, synthesizer, variable, statement, effect);
         if (pairp.cdr)
-            pairp.cdr->apply(item, parser, synthesizer, variable, body, effect);
+            pairp.cdr->apply(item, parser, synthesizer, variable, statement, effect);
         break;
     }
 }

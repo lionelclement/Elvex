@@ -190,7 +190,7 @@ public:
 
     void apply(class Parser& parser, class Synthesizer* synthesizer);
 
-    class Item* _clone(const std::bitset<FLAGS>& savedFlags);
+    class Item* clone(const std::bitset<FLAGS>& savedFlags);
 
     struct hash
     {

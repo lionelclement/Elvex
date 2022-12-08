@@ -41,7 +41,10 @@
 *
 ***/
 
-Text [PRED:TO_FEEL, i:[PRED:_EGO], ii:[PRED:GOOD]]
+Text_with_features[PRED:TO_APPRECIATE, i:[PRED:_pro], ii:[PRED:ELVEX], vtense:$t]
+//Text[PRED:TO_APPRECIATE, i:[PRED:_pro], ii:[PRED:ELVEX], vtense:$t]
+
+//Text [PRED:TO_FEEL, i:[PRED:_EGO], ii:[PRED:GOOD]]
 //Text [PRED:TO_FEEL, i:[PRED:_YOU], ii:[PRED:BAD], lexical_function:magn]
 //Text [PRED:TO_APPRECIATE, i:[PRED:_pro, @_3ms], ii:[PRED:_pro, @_3ms, animate:false]]
 //Text [PRED:TO_ENDURE, i:[PRED:_EGO], ii:[PRED:HOPE]]
@@ -58,7 +61,7 @@ Text [PRED:TO_FEEL, i:[PRED:_EGO], ii:[PRED:GOOD]]
 //Text [PRED:TO_STAY_AWAY, i:[PRED:_pro, @_2s], verbal_constr:excl|no_neg]
 
 //John snores
-//Text_with_features [PRED:TO_SNORE, vtense:present, i:[PRED:JOHN]]
+Text_with_features [PRED:TO_SNORE, vtense:present, i:[PRED:JOHN]]
 //John snored
 //Text_with_features [PRED:TO_SNORE, vtense:preterite, i:[PRED:JOHN]]
 //John is snoring

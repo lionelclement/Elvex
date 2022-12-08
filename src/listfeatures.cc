@@ -175,9 +175,7 @@ void ListFeatures::apply(class Item *item, Parser &parser, Synthesizer *synthesi
                          bool &effect)
 {
     for (auto &features : listFeatures) {
-        COUT_LINE;
-        statement->subFlags(Flags::SEEN);
-        features->apply(item, parser, synthesizer, variable, statement, effect);
+        features->apply(item, parser, synthesizer, variable, statement->clone(0), effect);
     }
 }
 

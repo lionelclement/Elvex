@@ -237,7 +237,7 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
                     if (first)
                         first = false;
                     else
-                        outStream << ',';
+                        outStream << ", ";
                     feature->flatPrint(outStream);
                 }
             }
@@ -438,7 +438,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->add(i1->getValue()->getBits(), Value::ANONYMOUS_VALUE);
+                            environment->add(i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
                         }
                         else
                         {
@@ -457,7 +457,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         }
                         else
                         {
-                            if (!i1->getValue()->buildEnvironment(environment, Value::ANONYMOUS_VALUE,
+                            if (!i1->getValue()->buildEnvironment(environment, Value::STATIC_ANONYMOUS,
                                                                   acceptToFilterNULLVariables, false))
                             {
                                 ret = false;
@@ -707,9 +707,9 @@ void Features::apply(class Item *item, Parser &parser, Synthesizer *synthesizer,
                      const statementPtr &statement,
                      bool &effect)
 {
-    COUT_LINE;
     item->getEnvironment()->add(variable->getBits(), Value::create(shared_from_this()));
     effect = true;
+    statement->toggleEnable(statement, item, synthesizer, effect, false);
     statement->apply(item, parser, synthesizer, effect);
     item->getEnvironment()->remove(variable->getBits());
 }

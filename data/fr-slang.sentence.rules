@@ -2,7 +2,7 @@
 #include fr-slang.verb.rules
 #include fr-slang.clitics.rules
 
-@trace
+
 sentence → form S form {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;

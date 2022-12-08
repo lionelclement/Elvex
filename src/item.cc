@@ -567,7 +567,7 @@ void Item::print(std::ostream &out) const
     out << "<table border=\"1\" style=\"color:black; ";
     if (isSetFlags(Flags::BOTTOM))
     {
-        out << " background-color:Pink;";
+        out << " background-color:DarkViolet;";
     }
     else if (isSetFlags(Flags::SEEN))
         out << " background-color:PaleTurquoise;";
@@ -778,7 +778,7 @@ void Item::print(std::ostream &out) const
     {
         out << "<td bgcolor=\"white\">";
         if (statements)
-            statements->print(out);
+            statements->print(out, 0, 0, true, "{", "}", "");
         else
             out << "&nbsp;";
         out << "</td>";
@@ -799,9 +799,9 @@ void Item::print(std::ostream &out) const
 /* **************************************************
  *
  ************************************************** */
-class Item* Item::_clone(const std::bitset<FLAGS>& protectedFlags)
+class Item *Item::clone(const std::bitset<FLAGS> &protectedFlags)
 {
-    class Item* it = Item::create(this->rule, this->index, this->indexTerms,
+    class Item *it = Item::create(this->rule, this->index, this->indexTerms,
                                   this->statements ? this->statements->clone(protectedFlags) : statementsPtr());
     it->environment = (this->environment) ? this->environment->clone() : environmentPtr();
     it->addRanges(this->ranges);
@@ -820,8 +820,8 @@ class Item* Item::_clone(const std::bitset<FLAGS>& protectedFlags)
  ************************************************** */
 void Item::step(bool &effect)
 {
-#ifdef TRACE_SUCCESSOR
-    std::cout << "<H3>####################### SUCCESSOR #######################</H3>" << std::endl;
+#ifdef TRACE_STEP
+    std::cout << "<H3>####################### STEP #######################</H3>" << std::endl;
     this->print(std::cout);
     std::cout << std::endl;
 #endif
@@ -845,8 +845,8 @@ void Item::step(bool &effect)
     if (this->index != UINT_MAX)
         this->setSeen(this->index, true);
 
-#ifdef TRACE_SUCCESSOR
-    std::cout << "<H3>####################### SUCCESSOR DONE #######################</H3>" << std::endl;
+#ifdef TRACE_STEP
+    std::cout << "<H3>####################### STEP DONE #######################</H3>" << std::endl;
     this->print(std::cout);
     std::cout << std::endl;
 #endif
@@ -859,13 +859,12 @@ void Item::apply(Parser &parser, Synthesizer *synthesizer)
 {
     if (statements)
     {
-        // unsigned int k = 1;
         bool effect = true;
         if (isUnsetFlags(Flags::BOTTOM) && statements->isUnsetFlags(Flags::SEEN))
         {
 
 #ifdef TRACE_OPTION
-            if (synthesizer->getTraceAction())
+            if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && getRuleTrace())))
             {
                 std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
                 print(std::cout);
@@ -873,10 +872,15 @@ void Item::apply(Parser &parser, Synthesizer *synthesizer)
             }
 #endif
             effect = false;
+
             statements->apply(this, parser, synthesizer, effect);
-            //++k;
+            if (statements->isSetFlags(Flags::BOTTOM))
+            {
+                addFlags(Flags::BOTTOM);
+            }
+
 #ifdef TRACE_OPTION
-            if (synthesizer->getTraceAction())
+            if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && getRuleTrace())))
             {
                 std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
                 print(std::cout);
@@ -926,7 +930,7 @@ void Item::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-size_t Item::hash::operator()(class Item* item) const
+size_t Item::hash::operator()(class Item *item) const
 {
     // defined in serialisable.hpp : std::hash<std::string>{}(serialString)
     return item->hashCode();
@@ -935,7 +939,7 @@ size_t Item::hash::operator()(class Item* item) const
 /* **************************************************
  *
  ************************************************** */
-bool Item::equal_to::operator()(class Item* i1, class Item* i2) const
+bool Item::equal_to::operator()(class Item *i1, class Item *i2) const
 {
     return i1->peekSerialString() == i2->peekSerialString();
 }

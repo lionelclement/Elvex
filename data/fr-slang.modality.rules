@@ -8,7 +8,7 @@
 /* **************************************************
  * Default
  ************************************************** */
-@trace
+
 modalClause → timeClause {
   // print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   // println ↑;

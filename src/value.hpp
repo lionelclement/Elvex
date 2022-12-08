@@ -37,17 +37,17 @@ class Value : public Facade,
 public:
     enum Type
     {
-        _NIL_,
-        _TRUE_,
-        _CONSTANT_,
-        _VARIABLE_,
-        _ANONYMOUS_,
-        _CODE_,
-        _FEATURES_,
-        _LISTFEATURES_,
-        _PAIRP_,
-        _NUMBER_,
-        _FORM_
+        NIL_VALUE,
+        TRUE_VALUE,
+        CONSTANT_VALUE,
+        VARIABLE_VALUE,
+        ANONYMOUS_VALUE,
+        IDENTIFIER_VALUE,
+        FEATURES_VALUE,
+        LIST_FEATURES_VALUE,
+        PAIRP_VALUE,
+        NUMBER_VALUE,
+        FORM_VALUE
     };
 
 private:
@@ -61,9 +61,9 @@ private:
     listFeaturesPtr listFeatures; // pour encoder les listes de SF
 
 public:
-    static valuePtr NIL_VALUE;
-    static valuePtr TRUE_VALUE;
-    static valuePtr ANONYMOUS_VALUE;
+    static valuePtr STATIC_NIL;
+    static valuePtr STATIC_TRUE;
+    static valuePtr STATIC_ANONYMOUS;
 
     Type type;
 
@@ -162,8 +162,7 @@ public:
 
     bool findVariable(const bitsetPtr &) const;
 
-    void
-    apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, const statementPtr &body,
+    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, const statementPtr &body,
           bool &effect);
 
     bool containsVariable(void);

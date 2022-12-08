@@ -2,7 +2,7 @@
  * Start with an NP or a Narative Sentence
  ************************************************** */
 // Verbe simple
-
+@trace
 VP → form V [ADVM] [NP] [AP] [PP] [VComp] form {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -273,7 +273,7 @@ VP → VP VComp {
 // ne pas lui en donner souvent
 // ne lui en donne pas souvent
 // ne lui donne pas
-@trace
+
 V → form [clneg] [advneg] CLITICS Verb [clint] [advneg] [ADVM] form {
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;

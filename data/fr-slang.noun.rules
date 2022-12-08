@@ -2,7 +2,7 @@
 /* **************************************************
  * Groupe nominal
  ************************************************** */
-@trace
+
 NP → NP2 {
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
@@ -34,7 +34,7 @@ NP → NP2 {
   ⇑ = ⇓1;
 }
 
-@trace
+
 NP2 → [det | detNum | detForm | detLex] N [form] {
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
@@ -94,14 +94,13 @@ NP2 → [det | detNum | detForm | detLex] N [form] {
   }
 }
 
-@trace
+
 NP2 → pn {
   //print __FILE__+" ("+__LINE__+")";
   ↓1 = ↑;
   ⇑ = ⇓1 ∪ [person:three, det:yes];
 }
 
-@trace
 NP2 → pro {
   //print __FILE__+" ("+__LINE__+")";
   [PRED:__pro];
@@ -109,7 +108,6 @@ NP2 → pro {
   ⇑ = ⇓1;
 }
 
-@trace
 NP2 → form {
   //print __FILE__+" ("+__LINE__+")";
   ↓1 = ↑;
@@ -146,41 +144,45 @@ N → [AP] N [AP] [comma] [AP] [et] [AP]
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
   [mod:<$head::$tail>, $rest];
-  ↓2 = $rest;
+  ↓2 = $rest; 
   [mod:$list, language_register:$language_register] ⊂ ↑;
   if (⇓2) {
     [number:$synthesizedNumber, gender:$synthesizedGender] ⊂ ⇓2;
     foreach $i in $list {
-      println "*****";
-      println $i;
-      [pos:$posInherited] ⊂ $i;
-      foreach $j in search $i on adj {
-        println $j;
-      	[pos:$posSynthesized] ⊂ $j;
-      	if ($posInherited)
-	        $pos = $posInherited;
+      //print "fr-slang.noun.rules(154): ";
+      //println $i;
+      <$lexiconHead::$lexiconTail> = search $i on adj;
+      //print "fr-slang.noun.rules(157): ";
+      //println $lexionHead;
+      [pos:$posSynthesized] ⊂ $lexiconHead;
+      //print "fr-slang.noun.rules(160): ";
+      //println $posSynthesized;
+      if ($posInherited)
+	      $pos = $posInherited;
+      else
+		    if ($posSynthesized)
+	  	    $pos = $posSynthesized;
       	else
-		      if ($posSynthesized)
-	  	      $pos = $posSynthesized;
-      		else
-	          $pos = none;
-        if ($pos == pre) {
-	        attest (#1);
-	        ↓1 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-        } else {
-	        if (↓3) {
-	          if (↓7) {
-	            ↓4 = [];
-	            ↓5 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-	          }
-	          else {
-	            ↓6 = [];
-	            ↓7 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
-	          }
+	        $pos = none;
+      if ($pos == pre) {
+	      println "PRE";
+        attest (#1);
+	      ↓1 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
+      }  
+      else {
+	      println "!PRE";
+        if (↓3) {
+	        if (↓7) {
+	          ↓4 = [];
+	          ↓5 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
 	        }
 	        else {
-	          ↓3 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
+	          ↓6 = [];
+	          ↓7 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
 	        }
+	      }
+	      else {
+	        ↓3 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
 	      }
       }
     }
@@ -195,7 +197,7 @@ N → [AP] N [AP] [comma] [AP] [et] [AP]
 }
 
 // un gros fumeur
-@trace
+
 N → AP N2 {
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
@@ -210,7 +212,7 @@ N → AP N2 {
 }
 
 // un échec cuisant
-@trace
+
 N → N2 AP {
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
@@ -224,7 +226,7 @@ N → N2 AP {
   ⇑ = ⇓1 ∪ [number:$adjSynthesizedNumber, gender:$adjSynthesizedGender, qual:yes];
 }
 
-@trace
+
 N → N2 {
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
@@ -233,7 +235,7 @@ N → N2 {
   ⇑ = ⇓1;
 }
 
-@trace
+
 N2 → n [n] {
   //print __FILE__+" ("+__LINE__+")";
   //println ↑;
@@ -262,7 +264,7 @@ AP → adv AP {
    ⇑ = ⇓2;
 }
 
-@trace
+
 AP → adj {
   // print __FILE__+" ("+__LINE__+")";
   // println ↑;
@@ -275,7 +277,7 @@ AP → adj {
   ⇑ = ⇓1;
 }
 
-@trace
+
 PP → prep NP {
    ↓1 = ↑;
    ↓2 = ↑;

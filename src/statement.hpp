@@ -28,30 +28,34 @@
 #include "serializable.hpp"
 #include "synthesizer.hpp"
 
-#define FATAL_ERROR_STM                          \
-    {                                            \
-        CERR_LINE;                               \
-        std::ostringstream oss;                  \
-        oss << "statement " << ' ' << bufferName << '(' << getLineno() << ')'; \
-        throw fatal_exception(oss);              \
+#define FATAL_ERROR_STM(statement)                                                                       \
+    {                                                                                                    \
+        CERR_LINE;                                                                                       \
+        std::ostringstream oss;                                                                          \
+        if (statement)                                                                                   \
+        {                                                                                                \
+            oss << "statement " << ' ' << statement->bufferName << '(' << statement->getLineno() << ')'; \
+        }                                                                                                \
+        throw fatal_exception(oss);                                                                      \
     }
-#define FATAL_ERROR_MSG_STM(msg)               \
-    {                                          \
-        std::ostringstream oss;                \
+
+#define FATAL_ERROR_MSG_STM(msg)                                      \
+    {                                                                 \
+        std::ostringstream oss;                                       \
         oss << msg << ' ' << bufferName << '(' << getLineno() << ')'; \
-        throw fatal_exception(oss);            \
+        throw fatal_exception(oss);                                   \
     }
-#define FATAL_ERROR_OS_MSG_STM(oss)     \
-    {                                   \
+#define FATAL_ERROR_OS_MSG_STM(oss)                            \
+    {                                                          \
         oss << ' ' << bufferName << '(' << getLineno() << ')'; \
-        throw fatal_exception(oss);     \
+        throw fatal_exception(oss);                            \
     }
-#define WARNING_STM                                \
-    {                                              \
-        CERR_LINE;                                 \
-        std::ostringstream oss;                    \
+#define WARNING_STM                                                              \
+    {                                                                            \
+        CERR_LINE;                                                               \
+        std::ostringstream oss;                                                  \
         oss << "*** warning " << ' ' << bufferName << '(' << getLineno() << ')'; \
-        std::cerr << oss.str() << std::endl;       \
+        std::cerr << oss.str() << std::endl;                                     \
     }
 
 class Statement : public Facade,
@@ -62,34 +66,34 @@ class Statement : public Facade,
 public:
     enum type
     {
-        DASH,
-        AFF,
-        SUBSUME,
-        UP,
-        UP2,
-        DOWN,
-        DOWN2,
-        FEATURES,
-        VARIABLE,
-        ANONYMOUS,
-        CONSTANT,
-        NIL,
-        UNIF,
-        GUARD,
-        PRINT,
-        PRINTLN,
-        ATTEST,
-        IF,
-        THENELSE,
-        FOREACH,
-        IN,
-        STMS,
-        STR,
-        PAIRP,
-        NUMBER,
-        FCT,
-        SEARCH,
-        FINISHED
+        DASH_STATEMENT,
+        AFF_STATEMENT,
+        SUBSUME_STATEMENT,
+        INHERITED_FEATURES_STATEMENT,
+        SYNTHESIZED_FEATURES_STATEMENT,
+        INHERITED_CHILDREN_FEATURES_STATEMENT,
+        SYNTHESIZED_CHILDREN_FEATURES_STATEMENT,
+        FEATURES_STATEMENT,
+        VARIABLE_STATEMENT,
+        ANONYMOUS_STATEMENT,
+        CONSTANT_STATEMENT,
+        NIL_STATEMENT,
+        UNIF_STATEMENT,
+        GUARD_STATEMENT,
+        PRINT_STATEMENT,
+        PRINTLN_STATEMENT,
+        ATTEST_STATEMENT,
+        IF_STATEMENT,
+        IF_CON_T_STATEMENT,
+        FOREACH_STATEMENT,
+        FOREACH_CON_T_STATEMENT,
+        STMS_STATEMENT,
+        STRING_STATEMENT,
+        PAIRP_STATEMENT,
+        NUMBER_STATEMENT,
+        FUNCTION_STATEMENT,
+        SEARCH_STATEMENT,
+        WAIT_STATEMENT
     };
 
     enum arithmetic_op
@@ -113,11 +117,20 @@ public:
         RAND
     };
 
+    enum test_choice
+    {
+        __NONE__,
+        __THEN__,
+        __ELSE__
+    };
+
 private:
     unsigned int lineno;
     std::string bufferName;
     static std::string nullBufferName;
     enum type op;
+    bool rootOp;
+
     statementPtr lhs;
     statementPtr rhs;
 
@@ -126,60 +139,64 @@ private:
         unsigned int first;
         unsigned int second;
     } pair{};
+
     featuresPtr features;
     valuePtr value;
     bitsetPtr bitset;
-    std::string str;
+    std::string string;
     arithmetic_op fct;
     pairpPtr pairp;
     statementsPtr statements;
     double number;
 
 public:
-    Statement(unsigned int lineno, std::string , type op, std::string str);
-
-    Statement(unsigned int, std::string , type, bitsetPtr, statementPtr = statementPtr());
-
-    Statement(unsigned int, std::string , type op, statementPtr = statementPtr(), statementPtr = statementPtr(),
-              unsigned int = UINT_MAX, unsigned int = UINT_MAX,
-              featuresPtr = featuresPtr(), bitsetPtr = bitsetPtr(), arithmetic_op = NOP,
-              pairpPtr = pairpPtr(), statementsPtr = statementsPtr(), double = 0.0);
-
-    Statement(unsigned int, std::string bufferName, type op, valuePtr value);
+    Statement(unsigned int lineno, std::string bufferName, type op, bool rootOp);
 
     void makeSerialString();
 
 public:
     ~Statement();
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, statementPtr lhs = statementPtr(),
-                               statementPtr rhs = statementPtr());
+    // NIL UP UP2
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, unsigned int first,
-                               unsigned int second = UINT_MAX);
+    // DOWN DOWN2 DASH
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, unsigned int first, unsigned int second = UINT_MAX);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, unsigned int first,
-                               statementPtr lhs);
+    // STMS PRINT PRINTLN
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementsPtr);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, featuresPtr features);
+    // GUARD FEATURES
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, featuresPtr features);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, valuePtr &value);
+    // ATTEST THEN
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bitsetPtr bits, statementPtr lhs = statementPtr());
+    // AFF SUBSUME IF IF_CON_T WAIT FOREACH FOREACH_CON_T UNIF
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, std::string str);
+    // VARIABLE CONSTANT
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, bitsetPtr bits);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, arithmetic_op fct,
+    // PAIRP
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, pairpPtr);
+
+    // FCT
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, arithmetic_op fct,
                                statementPtr lhs = statementPtr(),
                                statementPtr rhs = statementPtr());
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, pairpPtr);
+    // NUMBER
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, double);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, statementsPtr);
+    // STRING
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, std::string str);
 
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, double);
+    // ANONYMOUS
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, valuePtr &value);
 
-    static statementPtr create();
+    // SEARCH
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, unsigned int first);
 
     bool isAff() const;
 
@@ -213,9 +230,11 @@ public:
 
     bool isForeach() const;
 
+    bool isWait() const;
+
     bool isStms() const;
 
-    bool isStr() const;
+    bool isString() const;
 
     bool isPairp() const;
 
@@ -239,7 +258,7 @@ public:
 
     unsigned int getSecond() const;
 
-    std::string getStr() const;
+    std::string getString() const;
 
     pairpPtr getPairp() const;
 
@@ -249,17 +268,17 @@ public:
 
     unsigned int getLineno() const;
 
+    void brln(std::ostream &out, int tabulation) const;
+
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
     featuresPtr evalFeatures(class Item *, class Parser &, class Synthesizer *, bool);
 
-    pairpPtr evalPairp(class Item *, bool);
+    pairpPtr evalPairp(class Item *, Parser &, Synthesizer *, bool);
 
     valuePtr evalValue(class Item *, Parser &, Synthesizer *, bool);
 
-    listFeaturesPtr evalListFeatures(class Item *, Parser &, Synthesizer *, bool);
-
-    featuresPtr unif(const featuresPtr &, const featuresPtr &, class Item *);
+    static featuresPtr unif(statementPtr self, const featuresPtr &, const featuresPtr &, class Item *);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
@@ -281,13 +300,15 @@ public:
 
     void stmIf(class Item *item, class Parser &, class Synthesizer *, bool &);
 
+    void stmWait(class Item *item, class Parser &, class Synthesizer *, bool &);
+
     void stmPrint(class Item *, class Parser &, class Synthesizer *);
 
     void stmPrintln(class Item *, class Parser &, class Synthesizer *);
 
     void renameVariables(size_t);
 
-    void enable(const statementPtr &, class Item *, class Synthesizer *, bool &, bool);
+    void toggleEnable(const statementPtr &, class Item *, class Synthesizer *, bool &, bool);
 
     void apply(class Item *, class Parser &, class Synthesizer *, bool &);
 

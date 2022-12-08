@@ -1,1 +1,2 @@
-S []
+//S [PRED:VOITURE, mod:<[PRED:BEAU],[PRED:JAUNE]>]
+S [PRED:VOITURE, mod:<[PRED:BEAU]>]

@@ -311,24 +311,24 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
     {
         switch (value->_getType())
         {
-        case Value::_NIL_:
-        case Value::_TRUE_:
-        case Value::_FORM_:
-        case Value::_CONSTANT_:
-        case Value::_CODE_:
-        case Value::_ANONYMOUS_:
-        case Value::_NUMBER_:
+        case Value::NIL_VALUE:
+        case Value::TRUE_VALUE:
+        case Value::FORM_VALUE:
+        case Value::CONSTANT_VALUE:
+        case Value::IDENTIFIER_VALUE:
+        case Value::ANONYMOUS_VALUE:
+        case Value::NUMBER_VALUE:
             break;
-        case Value::_FEATURES_:
+        case Value::FEATURES_VALUE:
             replaceVariables(value->getFeatures(), effect);
             break;
-        case Value::_LISTFEATURES_:
+        case Value::LIST_FEATURES_VALUE:
             replaceVariables(value->getListFeatures(), effect);
             break;
-        case Value::_PAIRP_:
+        case Value::PAIRP_VALUE:
             replaceVariables(value->getPairp(), effect);
             break;
-        case Value::_VARIABLE_:
+        case Value::VARIABLE_VALUE:
             valuePtr val = find(value->getBits());
             if (val && (val != value))
             {

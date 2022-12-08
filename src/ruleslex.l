@@ -324,6 +324,11 @@ downDoubleArrow "⇓"
     return TOKEN_ELSE;
   }
   
+  "wait" {
+    DBUGPRT("TOKEN_WAIT");
+    return TOKEN_WAIT;
+  }
+  
   "print" {
     DBUGPRT("TOKEN_PRINT");
     return TOKEN_PRINT;

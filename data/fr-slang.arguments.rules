@@ -10,7 +10,7 @@
  * source
  ************************************************** */
 // il pleut
-@trace
+
 argumentClause → sentence  {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   //println ↑;
@@ -23,7 +23,7 @@ argumentClause → sentence  {
 
 // il pleut des grenouilles
 // without subject:
-@trace
+
 argumentClause → sentence {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   //println ↑;
@@ -36,7 +36,7 @@ argumentClause → sentence {
 
 
 // courir: X
-@trace
+
 argumentClause → sentence {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -48,7 +48,7 @@ argumentClause → sentence {
 }
 
 // manger: X Y
-@trace
+
 argumentClause → sentence {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   //println ↑;
@@ -61,7 +61,7 @@ argumentClause → sentence {
 }
 
 // Transitif voix passive
-@trace
+
 argumentClause → sentence {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   //println ↑;
@@ -73,7 +73,7 @@ argumentClause → sentence {
 }
 
 // provenir : X de Y
-@trace
+
 argumentClause → sentence {
   [i:$I, ii:$II, iii:NIL, iv:NIL, $Rest];
   ↓1 = [subj:$I, prep_obj:$II, iiReal:prep_obj, voice:active, iiiReal:none, ivReal:none, $Rest];
@@ -83,7 +83,7 @@ argumentClause → sentence {
 }
 
 // Transitif voix moyenne: la branche casse
-@trace
+
 argumentClause → sentence {
   [i:$I, ii:NIL, iii:NIL, iv:NIL, diathesis:middle, $Rest];
   ↓1 = [subj:$I, voice:middle, resObj:yes, iiReal:none, iiiReal:none, ivReal:none, $Rest];
@@ -92,7 +92,7 @@ argumentClause → sentence {
 }
 
 // s'alimenter: X avec Z
-@trace
+
 argumentClause → sentence {
   [i:$I, ii:NIL, iii:$III, iv:NIL, $Rest];
   [diathesis:active] ⊂ ↑;
@@ -104,7 +104,7 @@ argumentClause → sentence {
 // X livre Y à Z
 // X coupe Y avec Z
 // X alimente Y avec Z
-@trace
+
 argumentClause → sentence {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
   //println ↑;
@@ -116,7 +116,7 @@ argumentClause → sentence {
 }
 
 // X parle de Y à Z
-@trace
+
 argumentClause → sentence {
   [i:$I, ii:$II, iii:$III, iv:NIL, $Rest];
   [diathesis:active] ⊂ ↑;
@@ -127,7 +127,7 @@ argumentClause → sentence {
 
 // Y est livré à Z par X
 // Y est coupé avec Z par X
-@trace
+
 argumentClause → sentence {
   [i:$I, ii:$II, iii:$III, iv:NIL, diathesis:passive, $Rest];
   $I = $I U [pcas:par];
@@ -137,7 +137,7 @@ argumentClause → sentence {
 }
 
 // transporter: X Y de Z à K
-@trace
+
 argumentClause → sentence {
   [i:$I, ii:$II, iii:$III, iv:$IV, $Rest];
   [diathesis:active] ⊂ ↑;
@@ -153,7 +153,7 @@ argumentClause → sentence {
 // Controller subject
 // Jean souhaite partir
 // Jean accepte/refuse de partir
-@trace
+
 argumentClause → sentence {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -166,7 +166,7 @@ argumentClause → sentence {
 
 // Jean souhaite qu'il parte
 // Jean accepte/refuse qu'il parte
-@trace
+
 argumentClause → sentence {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -179,7 +179,7 @@ argumentClause → sentence {
 
 // Jean souhaite qu'il parte
 // Jean accepte/refuse qu'il parte
-@trace
+
 argumentClause → sentence {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -192,7 +192,7 @@ argumentClause → sentence {
 
 // Controller à_obj
 // La police demande à Marie de circuler
-@trace
+
 argumentClause → sentence {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -205,7 +205,7 @@ argumentClause → sentence {
 }
 
 // Jean demande à Marie qu'il parte
-@trace
+
 argumentClause → sentence {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -220,7 +220,7 @@ argumentClause → sentence {
 // Jean demande à la police s'il peut partir
 // Jean demande à Marie qu'elle parte
 // Jean dit à Marie que Luc part
-@trace
+
 argumentClause → sentence {
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;

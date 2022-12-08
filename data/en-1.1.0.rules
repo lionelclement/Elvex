@@ -1,9 +1,9 @@
 /* **************************************************
  * 
  ************************************************** */
+@trace
 Text_with_features → features S1 {
   [vtense:$vtense] ⊂ ⇓2;
-  ↓1 = [vtense:$vtense];
   [lexical_function:$lexical_function, vtense:$vtense, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
@@ -12,6 +12,9 @@ Text_with_features → features S1 {
   // not interrogative, not negative
   if (¬ $verbal_constr)
     $verbal_constr = no_int | no_neg;
+  [vtense:$vtenseSth] ⊂ ⇓2;
+  attest($vtenseSth != infinitive);
+  ↓1 = [vtense:$vtenseSth];
   ↓2 = [lexical_function:$lexical_function, vtense:$vtense, verbal_constr:$verbal_constr, $REST];
 }
 
@@ -344,12 +347,18 @@ AP → [adv] adj {
   ⇑ = ⇓2;
 }
 
+/* **************************************************
+ * Prep phrase
+ ************************************************** */
 PP → prep NP {
   ↓1 = ↑;
   ↓2 = ↑;
   ⇑ = ⇓2;
 }
 
+/* **************************************************
+ * 
+ ************************************************** */
 SCOMP → csu S1 {
   [compl:$compl] ⊂ ↑;
   ↓1 = [];
@@ -365,6 +374,9 @@ SCOMP → csu S1 {
   ⇑ = ⇓2;
 }
 
+/* **************************************************
+ * 
+ ************************************************** */
 VCOMP → to S1 {
   ↓1 = [];
   if (¬ $lexical_function)

@@ -66,7 +66,7 @@ size_t Statements::size()
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::begin() const
+Statements::list::const_iterator Statements::begin()
 {
     return this->statements.begin();
 }
@@ -74,9 +74,25 @@ Statements::list::const_iterator Statements::begin() const
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::end() const
+Statements::list::const_iterator Statements::end() 
 {
     return this->statements.end();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Statements::list::const_iterator Statements::cbegin() const
+{
+    return this->statements.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Statements::list::const_iterator Statements::cend() const
+{
+    return this->statements.cend();
 }
 
 /* **************************************************
@@ -93,37 +109,59 @@ void Statements::addStatement(const statementPtr &statement)
 /* **************************************************
  *
  ************************************************** */
-void Statements::print(std::ostream &outStream, unsigned int tabulation, unsigned int yetColored) const
+void Statements::print(std::ostream &out, unsigned int tabulation, unsigned int color, bool ln,
+                       std::string leftSep, std::string rightSep, std::string sep) const
 {
-    unsigned int color = yetColored;
-    if (isSetFlags(Flags::SEEN))
+    if (ln)
     {
-        color |= 0x0000FFu;
+        out << "<div>";
     }
-    if (isSetFlags(Flags::DISABLED))
+    if (ln)
     {
-        color |= 0xC0C0C0u;
+        for (unsigned int j = 1; j <= tabulation; ++j)
+            out << "&nbsp;";
     }
-    if (isSetFlags(Flags::BOTTOM))
+    out << leftSep;
+    if (ln)
     {
-        color |= 0xFF0000u;
+        out << "<div>";
     }
-    if (color != 0)
-        outStream << "<div style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";
-    else
-        outStream << "<div>";
-    tabulation += 3;
-    for (unsigned int j = 1; j <= tabulation; ++j)
-        outStream << "&nbsp;";
-    outStream << "{<BR>";
+    tabulation += 5;
     if (guard)
-        guard->print(outStream, tabulation, yetColored | color);
+    {
+        if (ln)
+        {
+            for (unsigned int j = 1; j <= tabulation; ++j)
+                out << "&nbsp;";
+        }
+        guard->print(out, tabulation, color);
+    }
+    bool first = true;
     for (list::const_iterator i = statements.cbegin(); i != statements.cend(); ++i)
-        (*i)->print(outStream, tabulation, yetColored | color);
-    for (unsigned int j = 1; j <= tabulation; ++j)
-        outStream << "&nbsp;";
-    outStream << "}";
-    outStream << "</div>";
+    {
+        if (first)
+            first = false;
+        else
+            out << sep;
+        if (ln)
+        {
+            for (unsigned int j = 1; j <= tabulation; ++j)
+                out << "&nbsp;";
+        }
+        (*i)->print(out, tabulation, color);
+    }
+    tabulation -= 5;
+    if (ln)
+    {
+        out << "</div>";
+        for (unsigned int j = 1; j <= tabulation; ++j)
+            out << "&nbsp;";
+    }
+    out << rightSep;
+    if (ln)
+    {
+        out << "</div>";
+    }
 }
 
 /* **************************************************
@@ -164,46 +202,112 @@ void Statements::renameVariables(size_t i)
 }
 
 /* **************************************************
+ *
+ ************************************************** */
+bool Statements::findVariable(const bitsetPtr &variable)
+{
+    if (guard && guard->findVariable(variable))
+        return true;
+    for (list::const_iterator j = this->statements.cbegin(); j != this->statements.cend(); ++j)
+        if ((*j)->findVariable(variable))
+            return true;
+    return false;
+}
+
+/* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
 void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
-    if (item->isSetFlags(Flags::BOTTOM))
-        return;
-    if (item->isSetFlags(Flags::SEEN))
+    if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
     {
+            std::cout << "<H3>##############################################</H3>" << std::endl;
+            item->print(std::cout);
+            std::cout << std::endl;
         FATAL_ERROR_UNEXPECTED
     }
 
-    if (guard)
+    bool allStatementsWereAlreadyDone = true;
+    bool localEffect;
+    if (guard && guard->isUnsetFlags(Flags::SEEN))
     {
-        if (guard->isUnsetFlags(Flags::SEEN))
+#ifdef TRACE_OPTION
+        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
         {
-            guard->apply(item, parser, synthesizer, effect);
-            guard->addFlags(Flags::SEEN);
-            if (guard->isSetFlags(Flags::BOTTOM))
-            {
-                item->addFlags(Flags::BOTTOM);
-                return;
-            }
+            std::cout << "<H3>####################### APPLY (before gard) #######################</H3>" << std::endl;
+            item->print(std::cout);
+            std::cout << std::endl;
+        }
+#endif
+        guard->apply(item, parser, synthesizer, effect);
+        if (effect)
+        {
+            allStatementsWereAlreadyDone = false;
+        }
+        guard->addFlags(Flags::SEEN);
+#ifdef TRACE_OPTION
+        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+        {
+            std::cout << "<H3>####################### APPLY CON'T (after gard) #######################</H3>" << std::endl;
+            item->print(std::cout);
+            std::cout << std::endl;
+        }
+#endif
+        if (guard->isSetFlags(Flags::BOTTOM))
+        {
+            item->addFlags(Flags::BOTTOM);
+            goto exitApply;
         }
     }
 
-loopStatements:
-    bool allDone = true;
-    for (list::const_iterator statement = statements.cbegin(); statement != statements.cend(); ++statement)
+    localEffect = true;
+    while (localEffect)
     {
-        if ((*statement)->isUnsetFlags(Flags::SEEN))
+        localEffect = false;
+
+#ifdef TRACE_OPTION
+        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
         {
-            bool enable_effect = false;
-            (*statement)->enable(*statement, item, synthesizer, enable_effect, false);
-            if (enable_effect)
-                (*statement)->enable(*statement, item, synthesizer, enable_effect, true);
-            if (enable_effect)
-                allDone = false;
+            std::cout << "<H3>####################### APPLY CON'T (before toggle enable) #######################</H3>" << std::endl;
+            item->print(std::cout);
+            std::cout << std::endl;
+        }
+#endif
+        for (list::const_iterator statement = statements.cbegin();
+             statement != statements.cend();
+             ++statement)
+        {
+            if ((*statement)->isUnsetFlags(Flags::SEEN))
+            {
+                bool enableResult = false;
+                (*statement)->toggleEnable(*statement, item, synthesizer, enableResult, false);
+                if (enableResult)
+                {
+                    (*statement)->toggleEnable(*statement, item, synthesizer, enableResult, true);
+                }
+            }
+        }
+
+#ifdef TRACE_OPTION
+        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+        {
+            std::cout << "<H3>####################### APPLY CON'T (after toggle enable and before apply) #######################</H3>" << std::endl;
+            item->print(std::cout);
+            std::cout << std::endl;
+        }
+#endif
+
+        for (list::const_iterator statement = statements.cbegin();
+             statement != statements.cend();
+             ++statement)
+        {
+            if ((*statement)->isSetFlags(Flags::SEEN))
+            {
+                continue;
+            }
             if ((*statement)->isSetFlags(Flags::DISABLED))
             {
-                allDone = false;
+                allStatementsWereAlreadyDone = false;
                 continue;
             }
             if (!item->getEnvironment() || item->getEnvironment()->size() == 0)
@@ -214,29 +318,43 @@ loopStatements:
             (*statement)->apply(item, parser, synthesizer, effect);
             if ((*statement)->isSetFlags(Flags::BOTTOM))
             {
-                item->addFlags(Flags::BOTTOM);
+                addFlags(Flags::BOTTOM);
+                goto exitApply;
                 break;
             }
             if (effect)
             {
-                goto loopStatements;
-                // break;
+                allStatementsWereAlreadyDone = false;
+                localEffect = true;
             }
         }
     }
-    if (allDone)
+    if (allStatementsWereAlreadyDone)
+    {
         this->addFlags(Flags::SEEN);
+    }
+exitApply:
+{
+}
+#ifdef TRACE_OPTION
+    if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+    {
+        std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
+        item->print(std::cout);
+        std::cout << std::endl;
+    }
+#endif
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Statements::enable(class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+void Statements::toggleEnable(class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
 {
     if (guard)
-        guard->enable(guard, item, synthesizer, effect, on);
-    for (list::const_iterator i = statements.cbegin(); i != statements.cend(); ++i)
+        guard->toggleEnable(guard, item, synthesizer, effect, on);
+    for (auto statement = statements.cbegin(); statement != statements.cend(); ++statement)
     {
-        (*i)->enable(*i, item, synthesizer, effect, on);
+        (*statement)->toggleEnable(*statement, item, synthesizer, effect, on);
     }
 }

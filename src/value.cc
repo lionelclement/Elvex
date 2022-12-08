@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2022 LABRI, 
+ * Copyright 2014-2022 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -32,21 +32,25 @@
 #include "synthesizer.hpp"
 #include "vartable.hpp"
 
-valuePtr Value::NIL_VALUE = Value::create(Value::_NIL_);
-valuePtr Value::TRUE_VALUE = Value::create(Value::_TRUE_);
-valuePtr Value::ANONYMOUS_VALUE = Value::create(Value::_ANONYMOUS_);
+valuePtr Value::STATIC_NIL = Value::create(Value::NIL_VALUE);
+valuePtr Value::STATIC_TRUE = Value::create(Value::TRUE_VALUE);
+valuePtr Value::STATIC_ANONYMOUS = Value::create(Value::ANONYMOUS_VALUE);
 
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, const std::string &str) {
+Value::Value(Value::Type const type, const std::string &str)
+{
     NEW;
     this->type = type;
     this->code = 0;
     this->number = 0;
-    if (type == _CODE_) {
+    if (type == IDENTIFIER_VALUE)
+    {
         this->code = Vartable::stringToCode(str);
-    } else if (type == _FORM_) {
+    }
+    else if (type == FORM_VALUE)
+    {
         this->str = str;
     }
 }
@@ -55,7 +59,8 @@ Value::Value(Value::Type const type, const std::string &str) {
  *
  ************************************************** */
 Value::Value(Value::Type const type, unsigned int code, double number, bitsetPtr _bits, featuresPtr _features,
-             pairpPtr _list, listFeaturesPtr _listFeatures) {
+             pairpPtr _list, listFeaturesPtr _listFeatures)
+{
     NEW;
     this->type = type;
     this->code = code;
@@ -69,7 +74,8 @@ Value::Value(Value::Type const type, unsigned int code, double number, bitsetPtr
 /* **************************************************
  *
  ************************************************** */
-Value::~Value() {
+Value::~Value()
+{
     DELETE;
     if (bits)
         bits.reset();
@@ -82,317 +88,351 @@ Value::~Value() {
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type) {
+valuePtr Value::create(const enum Type type)
+{
     return valuePtr(new Value(type));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, double number) {
+valuePtr Value::create(const enum Type type, double number)
+{
     return valuePtr(new Value(type, 0, number));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, unsigned int integer) {
+valuePtr Value::create(const enum Type type, unsigned int integer)
+{
     return valuePtr(new Value(type, integer));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, const std::string &str) {
+valuePtr Value::create(const enum Type type, const std::string &str)
+{
     return valuePtr(new Value(type, str));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, bitsetPtr bits) {
+valuePtr Value::create(const enum Type type, bitsetPtr bits)
+{
     return valuePtr(new Value(type, 0, 0, std::move(bits)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(featuresPtr features) {
-    return valuePtr(new Value(Value::_FEATURES_, 0, 0, bitsetPtr(), std::move(features)));
+valuePtr Value::create(featuresPtr features)
+{
+    return valuePtr(new Value(Value::FEATURES_VALUE, 0, 0, bitsetPtr(), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(listFeaturesPtr listFeatures) {
-    return valuePtr(new Value(Value::_LISTFEATURES_, 0, 0, bitsetPtr(), featuresPtr(), pairpPtr(), std::move(listFeatures)));
+valuePtr Value::create(listFeaturesPtr listFeatures)
+{
+    return valuePtr(new Value(Value::LIST_FEATURES_VALUE, 0, 0, bitsetPtr(), featuresPtr(), pairpPtr(), std::move(listFeatures)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(pairpPtr lst) {
-    return valuePtr(new Value(Value::_PAIRP_, 0, 0, bitsetPtr(), featuresPtr(), std::move(lst)));
+valuePtr Value::create(pairpPtr lst)
+{
+    return valuePtr(new Value(Value::PAIRP_VALUE, 0, 0, bitsetPtr(), featuresPtr(), std::move(lst)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-Value::Type Value::_getType() const {
+Value::Type Value::_getType() const
+{
     return type;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bitsetPtr Value::getBits() const {
+bitsetPtr Value::getBits() const
+{
     return bits;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Value::getCode() const {
+unsigned int Value::getCode() const
+{
     return code;
 }
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Value::getFeatures() const {
+featuresPtr Value::getFeatures() const
+{
     return features;
 }
 
 /* **************************************************
  *
  ************************************************** */
-listFeaturesPtr Value::getListFeatures() const {
+listFeaturesPtr Value::getListFeatures() const
+{
     return listFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-double Value::getNumber() const {
+double Value::getNumber() const
+{
     return number;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string Value::getStr() const {
+std::string Value::getStr() const
+{
     return str;
 }
 
 /* **************************************************
  *
  ************************************************** */
-pairpPtr Value::getPairp() const {
+pairpPtr Value::getPairp() const
+{
     return pairp;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isNil() const {
-    return (type == _NIL_);
+bool Value::isNil() const
+{
+    return (type == NIL_VALUE);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isFalse() const {
-    return ((type == _NIL_) || (type == _ANONYMOUS_));
+bool Value::isFalse() const
+{
+    return ((type == NIL_VALUE) || (type == ANONYMOUS_VALUE));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isTrue() const {
-    return (type == _TRUE_);
+bool Value::isTrue() const
+{
+    return (type == TRUE_VALUE);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isAnonymous() const {
-    return type == _ANONYMOUS_;
+bool Value::isAnonymous() const
+{
+    return type == ANONYMOUS_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isNumber() const {
-    return type == _NUMBER_;
+bool Value::isNumber() const
+{
+    return type == NUMBER_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isForm() const {
-    return type == _FORM_;
+bool Value::isForm() const
+{
+    return type == FORM_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isFeatures() const {
-    return type == _FEATURES_;
+bool Value::isFeatures() const
+{
+    return type == FEATURES_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isConstant() const {
-    return type == _CONSTANT_;
+bool Value::isConstant() const
+{
+    return type == CONSTANT_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isVariable() const {
-    return type == _VARIABLE_;
+bool Value::isVariable() const
+{
+    return type == VARIABLE_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isIdentifier() const {
-    return type == _CODE_;
+bool Value::isIdentifier() const
+{
+    return type == IDENTIFIER_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isPairp() const {
-    return type == _PAIRP_;
+bool Value::isPairp() const
+{
+    return type == PAIRP_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isListFeatures() const {
-    return type == _LISTFEATURES_;
+bool Value::isListFeatures() const
+{
+    return type == LIST_FEATURES_VALUE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Value::print(std::ostream &outStream) const {
-    switch (type) {
-        case _NIL_:
-            outStream << "NIL";
-            break;
-        case _TRUE_:
-            outStream << "TRUE";
-            break;
-        case _CONSTANT_:
-            outStream << bits->toString();
-            break;
-        case _VARIABLE_:
-            outStream << bits->toString();
-            break;
-        case _ANONYMOUS_:
-            outStream << '_';
-            break;
-        case _CODE_:
-            outStream << Vartable::codeToString(code);
-            break;
-        case _NUMBER_:
-            outStream << number;
-            break;
-        case _FORM_:
-            outStream << "&quot;" << getStr() << "&quot;";
-            break;
-        case _FEATURES_:
-            getFeatures()->print(outStream);
-            break;
-        case _LISTFEATURES_:
-            getListFeatures()->print(outStream);
-            break;
-        case _PAIRP_:
-            getPairp()->flatPrint(outStream, true);
-            break;
+void Value::print(std::ostream &outStream) const
+{
+    switch (type)
+    {
+    case NIL_VALUE:
+        outStream << "NIL";
+        break;
+    case TRUE_VALUE:
+        outStream << "TRUE";
+        break;
+    case CONSTANT_VALUE:
+        outStream << bits->toString();
+        break;
+    case VARIABLE_VALUE:
+        outStream << bits->toString();
+        break;
+    case ANONYMOUS_VALUE:
+        outStream << '_';
+        break;
+    case IDENTIFIER_VALUE:
+        outStream << Vartable::codeToString(code);
+        break;
+    case NUMBER_VALUE:
+        outStream << number;
+        break;
+    case FORM_VALUE:
+        outStream << "&quot;" << getStr() << "&quot;";
+        break;
+    case FEATURES_VALUE:
+        getFeatures()->print(outStream);
+        break;
+    case LIST_FEATURES_VALUE:
+        getListFeatures()->print(outStream);
+        break;
+    case PAIRP_VALUE:
+        getPairp()->flatPrint(outStream, true);
+        break;
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Value::flatPrint(std::ostream &outStream) const {
-    switch (type) {
-        case _NIL_:
-            outStream << "NIL";
-            break;
-        case _TRUE_:
-            outStream << "TRUE";
-            break;
-        case _CONSTANT_:
-        case _VARIABLE_:
-            outStream << bits->toString();
-            break;
-        case _ANONYMOUS_:
-            outStream << '_';
-            break;
-        case _CODE_:
-            outStream << Vartable::codeToString(code);
-            break;
-        case _NUMBER_:
-            outStream << number;
-            break;
-        case _FORM_:
-            outStream << '"' << getStr() << '"';
-            break;
-        case _FEATURES_:
-            getFeatures()->flatPrint(outStream);
-            break;
-        case _LISTFEATURES_:
-            getListFeatures()->flatPrint(outStream);
-            break;
-        case _PAIRP_:
-            getPairp()->flatPrint(outStream, true);
-            break;
+void Value::flatPrint(std::ostream &outStream) const
+{
+    switch (type)
+    {
+    case NIL_VALUE:
+        outStream << "NIL";
+        break;
+    case TRUE_VALUE:
+        outStream << "TRUE";
+        break;
+    case CONSTANT_VALUE:
+    case VARIABLE_VALUE:
+        outStream << bits->toString();
+        break;
+    case ANONYMOUS_VALUE:
+        outStream << '_';
+        break;
+    case IDENTIFIER_VALUE:
+        outStream << Vartable::codeToString(code);
+        break;
+    case NUMBER_VALUE:
+        outStream << number;
+        break;
+    case FORM_VALUE:
+        outStream << '"' << getStr() << '"';
+        break;
+    case FEATURES_VALUE:
+        getFeatures()->flatPrint(outStream);
+        break;
+    case LIST_FEATURES_VALUE:
+        getListFeatures()->flatPrint(outStream);
+        break;
+    case PAIRP_VALUE:
+        getPairp()->flatPrint(outStream, true);
+        break;
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Value::makeSerialString() {
-    switch (type) {
-        case _NIL_:
-            serialString = '\0';
-            break;
-        case _TRUE_:
-            serialString = '\1';
-            break;
-        case _CONSTANT_:
-            serialString = bits->peekSerialString();
-            break;
-        case _VARIABLE_:
-            serialString = '\2' + bits->peekSerialString();
-            break;
-        case _ANONYMOUS_:
-            serialString = '\3';
-            break;
-        case _CODE_:
-            serialString = std::to_string(code);
-            break;
-        case _NUMBER_:
-            serialString = std::to_string(number);
-            break;
-        case _FORM_:
-            serialString = str;
-            break;
-        case _FEATURES_:
-            serialString = getFeatures()->peekSerialString();
-            break;
-        case _LISTFEATURES_:
-            serialString = getListFeatures()->peekSerialString();
-            break;
-        case _PAIRP_:
-            serialString = getPairp()->peekSerialString();
-            break;
+void Value::makeSerialString()
+{
+    switch (type)
+    {
+    case NIL_VALUE:
+        serialString = '\0';
+        break;
+    case TRUE_VALUE:
+        serialString = '\1';
+        break;
+    case CONSTANT_VALUE:
+        serialString = bits->peekSerialString();
+        break;
+    case VARIABLE_VALUE:
+        serialString = '\2' + bits->peekSerialString();
+        break;
+    case ANONYMOUS_VALUE:
+        serialString = '\3';
+        break;
+    case IDENTIFIER_VALUE:
+        serialString = std::to_string(code);
+        break;
+    case NUMBER_VALUE:
+        serialString = std::to_string(number);
+        break;
+    case FORM_VALUE:
+        serialString = str;
+        break;
+    case FEATURES_VALUE:
+        serialString = getFeatures()->peekSerialString();
+        break;
+    case LIST_FEATURES_VALUE:
+        serialString = getListFeatures()->peekSerialString();
+        break;
+    case PAIRP_VALUE:
+        serialString = getPairp()->peekSerialString();
+        break;
     }
 }
 
@@ -400,86 +440,88 @@ void Value::makeSerialString() {
 /* **************************************************
  *
  *************************************************!* */
-void
-Value::toXML(xmlNodePtr nodeRoot) const
+void Value::toXML(xmlNodePtr nodeRoot) const
 {
-  xmlNodePtr v = xmlNewChild(nodeRoot, NULL, (const xmlChar*)"VAL", NULL);
-  switch(type) {
-  case _NIL_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"nil");
-    bits->toXML(v);
-    break;
-  case _TRUE_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"true");
-    bits->toXML(v);
-    break;
-  case _CONSTANT_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"constant");
-    bits->toXML(v);
-    break;
-  case _VARIABLE_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"variable");
-    bits->toXML(v);
-    break;
-  case _ANONYMOUS_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"anonymous");
-    bits->toXML(v);
-    break;
-  case _CODE_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"identifier");
-    xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)Vartable::codeToString(getCode()).c_str());
-    break;
-  case _NUMBER_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"double");
-    xmlSetProp(v, (xmlChar*)"value",(const xmlChar*)std::to_string(number).c_str());
-    break;
-  case _FORM_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"form");
-    xmlNewChild(v, NULL, (const xmlChar*)"VAL", (const xmlChar*)getStr().c_str());
-    break;
-  case _FEATURES_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"fs");
-    getFeatures()->toXML(v);
-    break;
-  case _LISTFEATURES_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"lfs");
-    getListFeatures()->toXML(v);
-    break;
-  case _PAIRP_:
-    xmlSetProp(v, (xmlChar*)"type", (const xmlChar*)"list");
-    getPairp()->toXML(v);
-    break;
-  }
+    xmlNodePtr v = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"VAL", NULL);
+    switch (type)
+    {
+    case NIL_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"nil");
+        bits->toXML(v);
+        break;
+    case TRUE_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"true");
+        bits->toXML(v);
+        break;
+    case CONSTANT_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"constant");
+        bits->toXML(v);
+        break;
+    case VARIABLE_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"variable");
+        bits->toXML(v);
+        break;
+    case ANONYMOUS_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"anonymous");
+        bits->toXML(v);
+        break;
+    case IDENTIFIER_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"identifier");
+        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)Vartable::codeToString(getCode()).c_str());
+        break;
+    case NUMBER_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"double");
+        xmlSetProp(v, (xmlChar *)"value", (const xmlChar *)std::to_string(number).c_str());
+        break;
+    case FORM_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"form");
+        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)getStr().c_str());
+        break;
+    case FEATURES_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"fs");
+        getFeatures()->toXML(v);
+        break;
+    case LIST_FEATURES_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"lfs");
+        getListFeatures()->toXML(v);
+        break;
+    case PAIRP_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"list");
+        getPairp()->toXML(v);
+        break;
+    }
 }
 #endif
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::clone() {
+valuePtr Value::clone()
+{
     valuePtr result = valuePtr();
-    switch (type) {
-        case _NIL_:
-        case _TRUE_:
-        case _CONSTANT_:
-        case _CODE_:
-        case _FORM_:
-        case _NUMBER_:
-        case _ANONYMOUS_:
-            result = shared_from_this();
-            break;
-        case _FEATURES_:
-            result = Value::create(getFeatures()->clone());
-            break;
-        case _LISTFEATURES_:
-            result = Value::create(getListFeatures()->clone());
-            break;
-        case _PAIRP_:
-            result = Value::create(getPairp()->clone());
-            break;
-        case _VARIABLE_:
-            result = Value::create(_VARIABLE_, bits);
-            break;
+    switch (type)
+    {
+    case NIL_VALUE:
+    case TRUE_VALUE:
+    case CONSTANT_VALUE:
+    case IDENTIFIER_VALUE:
+    case FORM_VALUE:
+    case NUMBER_VALUE:
+    case ANONYMOUS_VALUE:
+        result = shared_from_this();
+        break;
+    case FEATURES_VALUE:
+        result = Value::create(getFeatures()->clone());
+        break;
+    case LIST_FEATURES_VALUE:
+        result = Value::create(getListFeatures()->clone());
+        break;
+    case PAIRP_VALUE:
+        result = Value::create(getPairp()->clone());
+        break;
+    case VARIABLE_VALUE:
+        result = Value::create(VARIABLE_VALUE, bits);
+        break;
     }
     return result;
 }
@@ -488,7 +530,8 @@ valuePtr Value::clone() {
  *
  ************************************************************ */
 bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables,
-                             bool root) {
+                             bool root)
+{
     /***
     CERR_LINE;
     std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
@@ -506,128 +549,188 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     ***/
 
     bool ret = true;
-    switch (type) {
+    switch (type)
+    {
 
-        case _LISTFEATURES_:
-        case _TRUE_: 
-            FATAL_ERROR_UNEXPECTED
-/*            if (value->type == VARIABLE) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _TRUE) {
-            } else if (value->type == ANONYMOUS) {
-            } else {
+    case LIST_FEATURES_VALUE:
+    case TRUE_VALUE:
+        FATAL_ERROR_UNEXPECTED
+        /*            if (value->type == VARIABLE) {
+                        environment->add(value->bits, shared_from_this());
+                    } else if (value->type == TRUE) {
+                    } else if (value->type == ANONYMOUS) {
+                    } else {
+                        ret = false;
+                    }
+                    break;
+        */
+
+    case NIL_VALUE:
+        if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(value->bits, shared_from_this());
+        }
+        else if (value->type == NIL_VALUE)
+        {
+        }
+        else if (value->type == ANONYMOUS_VALUE)
+        {
+        }
+        else
+        {
+            ret = false;
+        }
+        break;
+
+    case FEATURES_VALUE:
+        if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(value->bits, shared_from_this());
+        }
+        else if (value->type == FEATURES_VALUE)
+        {
+            if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(),
+                                                       acceptToFilterNULLVariables /*, root*/))
+                ret = false;
+        }
+        else if (value->type == ANONYMOUS_VALUE)
+        {
+            if (!this->getFeatures()->buildEnvironment(environment, Features::create(),
+                                                       acceptToFilterNULLVariables /*,
+                                                        root*/
+                                                       ))
+                ret = false;
+        }
+        else
+        {
+            ret = false;
+        }
+        break;
+
+    case CONSTANT_VALUE:
+        if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(value->bits, shared_from_this());
+        }
+        else if (value->type == CONSTANT_VALUE)
+        {
+            if ((*bits & *value->bits).none())
+                ret = false;
+        }
+        else if (value->type == IDENTIFIER_VALUE)
+        {
+            if (bits->toString() != Vartable::codeToString(value->getCode()))
+                ret = false;
+        }
+        else if (value->type == ANONYMOUS_VALUE)
+        {
+        }
+        else
+        {
+            ret = false;
+        }
+        break;
+
+    case IDENTIFIER_VALUE:
+        if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(value->bits, shared_from_this());
+        }
+        else if (value->type == CONSTANT_VALUE)
+        {
+            if (Vartable::codeToString(code) != value->bits->toString())
+                ret = false;
+        }
+        else if (value->type == IDENTIFIER_VALUE)
+        {
+            if (code != value->getCode())
+                ret = false;
+        }
+        else if (value->type == ANONYMOUS_VALUE)
+        {
+        }
+        else
+        {
+            ret = false;
+        }
+        break;
+
+    case NUMBER_VALUE:
+        if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(value->bits, shared_from_this());
+        }
+        else if (value->type == NUMBER_VALUE)
+        {
+            if (number != value->number)
+            {
                 ret = false;
             }
-            break;
-*/
+        }
+        else if (value->type == ANONYMOUS_VALUE)
+        {
+        }
+        else
+        {
+            ret = false;
+        }
+        break;
 
-        case _NIL_:
-            if (value->type == _VARIABLE_) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _NIL_) {
-            } else if (value->type == _ANONYMOUS_) {
-            } else {
+    case FORM_VALUE:
+        if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(value->bits, shared_from_this());
+        }
+        else if (value->type == FORM_VALUE)
+        {
+            if (getStr() != value->getStr())
+            {
                 ret = false;
             }
-            break;
+        }
+        else if (value->type == ANONYMOUS_VALUE)
+        {
+        }
+        else
+        {
+            ret = false;
+        }
+        break;
 
-        case _FEATURES_:
-            if (value->type == _VARIABLE_) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _FEATURES_) {
-                if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(),
-                                                           acceptToFilterNULLVariables/*, root*/))
-                    ret = false;
-            } else if (value->type == _ANONYMOUS_) {
-                if (!this->getFeatures()->buildEnvironment(environment, Features::create(),
-                                                           acceptToFilterNULLVariables/*,
-                                                           root*/))
-                    ret = false;
-            } else {
+    case PAIRP_VALUE:
+        if (value->type == PAIRP_VALUE)
+        {
+            if (!this->getPairp()->buildEnvironment(environment, value->getPairp(),
+                                                    acceptToFilterNULLVariables,
+                                                    root))
                 ret = false;
-            }
-            break;
+        }
+        else if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(value->bits, shared_from_this());
+        }
+        else if (value->type == ANONYMOUS_VALUE)
+        {
+        }
+        else
+        {
+            ret = false;
+        }
+        break;
 
-        case _CONSTANT_:
-            if (value->type == _VARIABLE_) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _CONSTANT_) {
-                if ((*bits & *value->bits).none())
-                    ret = false;
-            } else if (value->type == _CODE_) {
-                if (bits->toString() != Vartable::codeToString(value->getCode()))
-                    ret = false;
-            } else if (value->type == _ANONYMOUS_) {
-            } else {
-                ret = false;
-            }
-            break;
+    case VARIABLE_VALUE:
+        if (!value)
+        {
+            environment->add(this->bits, STATIC_NIL);
+        }
+        else
+        {
+            environment->add(this->bits, value);
+        }
+        break;
 
-        case _CODE_:
-            if (value->type == _VARIABLE_) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _CONSTANT_) {
-                if (Vartable::codeToString(code) != value->bits->toString())
-                    ret = false;
-            } else if (value->type == _CODE_) {
-                if (code != value->getCode())
-                    ret = false;
-            } else if (value->type == _ANONYMOUS_) {
-            } else {
-                ret = false;
-            }
-            break;
-
-        case _NUMBER_:
-            if (value->type == _VARIABLE_) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _NUMBER_) {
-                if (number != value->number) {
-                    ret = false;
-                }
-            } else if (value->type == _ANONYMOUS_) {
-            } else {
-                ret = false;
-            }
-            break;
-
-        case _FORM_:
-            if (value->type == _VARIABLE_) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _FORM_) {
-                if (getStr() != value->getStr()) {
-                    ret = false;
-                }
-            } else if (value->type == _ANONYMOUS_) {
-            } else {
-                ret = false;
-            }
-            break;
-
-        case _PAIRP_:
-            if (value->type == _PAIRP_) {
-                if (!this->getPairp()->buildEnvironment(environment, value->getPairp(),
-                                                       acceptToFilterNULLVariables,
-                                                       root))
-                    ret = false;
-            } else if (value->type == _VARIABLE_) {
-                environment->add(value->bits, shared_from_this());
-            } else if (value->type == _ANONYMOUS_) {
-            } else {
-                ret = false;
-            }
-            break;
-
-        case _VARIABLE_:
-            if (!value) {
-                environment->add(this->bits, NIL_VALUE);
-            } else {
-                environment->add(this->bits, value);
-            }
-            break;
-
-        case _ANONYMOUS_:
-            break;
+    case ANONYMOUS_VALUE:
+        break;
     }
     /***
          std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
@@ -642,7 +745,8 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
 /* ************************************************************
  * this < o
  ************************************************************ */
-bool Value::subsumes(const valuePtr &o, const environmentPtr &environment) {
+bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
+{
     bool ret = true;
     /***
         std::cerr << "<DIV>";
@@ -658,67 +762,74 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment) {
     ***/
 
     // $X < …
-    if (type == _VARIABLE_) {
+    if (type == VARIABLE_VALUE)
+    {
         environment->add(bits, o);
     }
 
-        // … < $X
-    else if (o->type == _VARIABLE_) {
+    // … < $X
+    else if (o->type == VARIABLE_VALUE)
+    {
         environment->add(o->bits, shared_from_this());
     }
 
-        // NIL < NIL
-    else if (isNil() && o->isNil()) {
+    // NIL < NIL
+    else if (isNil() && o->isNil())
+    {
     }
 
-        // NIL < …
-        // … < NIL
-    else if (isNil() || o->isNil()) {
+    // NIL < …
+    // … < NIL
+    else if (isNil() || o->isNil())
+    {
     }
 
-        // TRUE < TRUE
-    else if (isTrue() && o->isTrue()) {
-
+    // TRUE < TRUE
+    else if (isTrue() && o->isTrue())
+    {
     }
 
-        // TRUE < …
-        // … < TRUE
-    else if (isTrue() || o->isTrue()) {
+    // TRUE < …
+    // … < TRUE
+    else if (isTrue() || o->isTrue())
+    {
         ret = false;
-
-    } else if ((type != o->type)) {
+    }
+    else if ((type != o->type))
+    {
         ret = false;
+    }
+    else
+    {
+        switch (o->type)
+        {
+        // a < a
+        case IDENTIFIER_VALUE:
+            if (code != o->getCode())
+                ret = false;
+            break;
+        case NUMBER_VALUE:
+            if (number != o->number)
+                ret = false;
+            break;
+        case CONSTANT_VALUE:
+            if ((*bits & *o->bits).none())
+                ret = false;
+            break;
+        case FORM_VALUE:
+            if (getStr() != o->getStr())
+                ret = false;
+            break;
+        case FEATURES_VALUE:
+            ret = getFeatures()->subsumes(o->getFeatures(), environment);
+            break;
+        case PAIRP_VALUE:
+            ret = getPairp()->subsumes(o->getPairp(), environment);
+            break;
 
-    } else {
-        switch (o->type) {
-            // a < a
-            case _CODE_:
-                if (code != o->getCode())
-                    ret = false;
-                break;
-            case _NUMBER_:
-                if (number != o->number)
-                    ret = false;
-                break;
-            case _CONSTANT_:
-                if ((*bits & *o->bits).none())
-                    ret = false;
-                break;
-            case _FORM_:
-                if (getStr() != o->getStr())
-                    ret = false;
-                break;
-            case _FEATURES_:
-                ret = getFeatures()->subsumes(o->getFeatures(), environment);
-                break;
-            case _PAIRP_:
-                ret = getPairp()->subsumes(o->getPairp(), environment);
-                break;
-
-            default: FATAL_ERROR_UNEXPECTED
-
+        default:
+            FATAL_ERROR_UNEXPECTED
         }
-
     }
     /***
         std::cerr << "<DIV>";
@@ -731,7 +842,8 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment) {
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::eq(valuePtr o) const {
+bool Value::eq(valuePtr o) const
+{
     /* **
         CERR_LINE;
         this->flatPrint(std::cerr);
@@ -748,36 +860,38 @@ bool Value::eq(valuePtr o) const {
     else if (o->isNil() || this->isNil())
         ret = false;
 
-    else if (o->type == _ANONYMOUS_ || this->type == _ANONYMOUS_)
+    else if (o->type == ANONYMOUS_VALUE || this->type == ANONYMOUS_VALUE)
         ret = true;
 
-    else {
-        switch (o->type) {
-            case _CODE_:
-                if ((type == _CODE_) && ((code == o->getCode())))
-                    ret = true;
-                break;
-            case _CONSTANT_:
-                if ((type == _CONSTANT_) && ((*bits & *o->bits).any()))
-                    ret = true;
-                else if ((type == _CODE_) && (o->bits->toString() == Vartable::codeToString(code)))
-                    ret = true;
-                break;
-            case _FORM_:
-                if ((type == _FORM_) && (getStr() == o->getStr()))
-                    ret = true;
-                break;
-            case _NUMBER_:
-                if ((type == _NUMBER_) && (number == o->number))
-                    ret = true;
-                break;
-            case _FEATURES_:
-                if ((type == _FEATURES_) &&
-                    (getFeatures()->peekSerialString() == o->getFeatures()->peekSerialString()))
-                    ret = true;
-                break;
-            default:
-                FATAL_ERROR_UNEXPECTED
+    else
+    {
+        switch (o->type)
+        {
+        case IDENTIFIER_VALUE:
+            if ((type == IDENTIFIER_VALUE) && ((code == o->getCode())))
+                ret = true;
+            break;
+        case CONSTANT_VALUE:
+            if ((type == CONSTANT_VALUE) && ((*bits & *o->bits).any()))
+                ret = true;
+            else if ((type == IDENTIFIER_VALUE) && (o->bits->toString() == Vartable::codeToString(code)))
+                ret = true;
+            break;
+        case FORM_VALUE:
+            if ((type == FORM_VALUE) && (getStr() == o->getStr()))
+                ret = true;
+            break;
+        case NUMBER_VALUE:
+            if ((type == NUMBER_VALUE) && (number == o->number))
+                ret = true;
+            break;
+        case FEATURES_VALUE:
+            if ((type == FEATURES_VALUE) &&
+                (getFeatures()->peekSerialString() == o->getFeatures()->peekSerialString()))
+                ret = true;
+            break;
+        default:
+            FATAL_ERROR_UNEXPECTED
         }
     }
     return ret;
@@ -786,8 +900,9 @@ bool Value::eq(valuePtr o) const {
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::lt(const valuePtr &o) const {
-    //bool ret = false;
+bool Value::lt(const valuePtr &o) const
+{
+    // bool ret = false;
     /***
         STD::CERR_LINE;
         this->print(std::cerr);
@@ -797,69 +912,75 @@ bool Value::lt(const valuePtr &o) const {
     ***/
     if (isNumber() && o->isNumber())
         return (number < o->getNumber());
-    else FATAL_ERROR_UNEXPECTED
-    //return ret;
+    else
+        FATAL_ERROR_UNEXPECTED
+    // return ret;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-void Value::deleteAnonymousVariables() const {
-    switch (type) {
-        case _TRUE_:
-        case _NIL_:
-        case _CODE_:
-        case _CONSTANT_:
-        case _FORM_:
-        case _VARIABLE_:
-        case _ANONYMOUS_:
-        case _NUMBER_:
-        case _LISTFEATURES_:
-            break;
-        case _FEATURES_:
-            getFeatures()->deleteAnonymousVariables();
-            break;
-        case _PAIRP_:
-            getPairp()->deleteAnonymousVariables();
-            break;
+void Value::deleteAnonymousVariables() const
+{
+    switch (type)
+    {
+    case TRUE_VALUE:
+    case NIL_VALUE:
+    case IDENTIFIER_VALUE:
+    case CONSTANT_VALUE:
+    case FORM_VALUE:
+    case VARIABLE_VALUE:
+    case ANONYMOUS_VALUE:
+    case NUMBER_VALUE:
+    case LIST_FEATURES_VALUE:
+        break;
+    case FEATURES_VALUE:
+        getFeatures()->deleteAnonymousVariables();
+        break;
+    case PAIRP_VALUE:
+        getPairp()->deleteAnonymousVariables();
+        break;
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::renameVariables(size_t i) {
+bool Value::renameVariables(size_t i)
+{
     bool effect = false;
-    switch (type) {
-        case _NIL_:
-        case _TRUE_:
-        case _CONSTANT_:
-        case _CODE_:
-        case _FORM_:
-        case _NUMBER_:
-        case _ANONYMOUS_:
-        case _LISTFEATURES_:
-            break;
-        case _VARIABLE_: {
-            std::ostringstream oss;
-            oss << bits->toString() << "_" << i;
-            std::string _str = oss.str();
-            bitsetPtr variableBits = Vartable::createVariable(_str);
-            this->bits = variableBits;
-            resetSerial();
-            effect = true;
-        }
-            break;
-        case _FEATURES_:
-            if (getFeatures())
-                if (getFeatures()->renameVariables(i))
-                    effect = true;
-            break;
-        case _PAIRP_:
-            if (getPairp())
-                if (getPairp()->renameVariables(i))
-                    effect = true;
-            break;
+    switch (type)
+    {
+    case NIL_VALUE:
+    case TRUE_VALUE:
+    case CONSTANT_VALUE:
+    case IDENTIFIER_VALUE:
+    case FORM_VALUE:
+    case NUMBER_VALUE:
+    case ANONYMOUS_VALUE:
+    case LIST_FEATURES_VALUE:
+        break;
+    case VARIABLE_VALUE:
+    {
+        std::ostringstream oss;
+        oss << bits->toString() << "_" << i;
+        std::string _str = oss.str();
+        bitsetPtr variableBits = Vartable::createVariable(_str);
+        this->bits = variableBits;
+        resetSerial();
+        effect = true;
+    }
+    break;
+    case FEATURES_VALUE:
+        if (getFeatures())
+            if (getFeatures()->renameVariables(i))
+                effect = true;
+        break;
+    case PAIRP_VALUE:
+        if (getPairp())
+            if (getPairp()->renameVariables(i))
+                effect = true;
+        break;
     }
     return effect;
 }
@@ -867,63 +988,71 @@ bool Value::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
-void Value::enable(const statementPtr &root, class Item* item, Synthesizer* synthesizer, bool& effect, bool on) {
-    switch (type) {
-        case _NIL_:
-        case _TRUE_:
-        case _CODE_:
-        case _FORM_:
-        case _CONSTANT_:
-        case _NUMBER_:
-        case _ANONYMOUS_:
-        case _LISTFEATURES_:
-            break;
-        case _VARIABLE_:
-            if (on) {
-                if ((!item->getEnvironment()) || (!item->getEnvironment()->find(bits))) {
-                    root->addFlags(Flags::DISABLED);
-                    effect = true;
-                }
-            } else {
-                root->subFlags(Flags::DISABLED);
+void Value::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+{
+    switch (type)
+    {
+    case NIL_VALUE:
+    case TRUE_VALUE:
+    case IDENTIFIER_VALUE:
+    case FORM_VALUE:
+    case CONSTANT_VALUE:
+    case NUMBER_VALUE:
+    case ANONYMOUS_VALUE:
+    case LIST_FEATURES_VALUE:
+        break;
+    case VARIABLE_VALUE:
+        if (on)
+        {
+            if ((!item->getEnvironment()) || (!item->getEnvironment()->find(bits)))
+            {
+                root->addFlags(Flags::DISABLED);
                 effect = true;
             }
-            break;
-        case _FEATURES_:
-            getFeatures()->enable(root, item, synthesizer, effect, on);
-            break;
-        case _PAIRP_:
-            getPairp()->enable(root, item, synthesizer, effect, on);
-            break;
+        }
+        else
+        {
+            root->subFlags(Flags::DISABLED);
+            effect = true;
+        }
+        break;
+    case FEATURES_VALUE:
+        getFeatures()->enable(root, item, synthesizer, effect, on);
+        break;
+    case PAIRP_VALUE:
+        getPairp()->enable(root, item, synthesizer, effect, on);
+        break;
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::findVariable(const bitsetPtr &variable) const {
-    switch (type) {
-        case _NIL_:
-        case _TRUE_:
-        case _CODE_:
-        case _FORM_:
-        case _CONSTANT_:
-        case _NUMBER_:
-        case _ANONYMOUS_:
-        case _LISTFEATURES_:
-            break;
-        case _VARIABLE_:
-            if (*bits == *variable)
-                return true;
-            break;
-        case _FEATURES_:
-            if (getFeatures()->findVariable(variable))
-                return true;
-            break;
-        case _PAIRP_:
-            if (getPairp()->findVariable(variable))
-                return true;
-            break;
+bool Value::findVariable(const bitsetPtr &variable) const
+{
+    switch (type)
+    {
+    case NIL_VALUE:
+    case TRUE_VALUE:
+    case IDENTIFIER_VALUE:
+    case FORM_VALUE:
+    case CONSTANT_VALUE:
+    case NUMBER_VALUE:
+    case ANONYMOUS_VALUE:
+    case LIST_FEATURES_VALUE:
+        break;
+    case VARIABLE_VALUE:
+        if (*bits == *variable)
+            return true;
+        break;
+    case FEATURES_VALUE:
+        if (getFeatures()->findVariable(variable))
+            return true;
+        break;
+    case PAIRP_VALUE:
+        if (getPairp()->findVariable(variable))
+            return true;
+        break;
     }
     return false;
 }
@@ -931,50 +1060,63 @@ bool Value::findVariable(const bitsetPtr &variable) const {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(class Item* item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
-                  const statementPtr& body,
-                  bool &effect) {
-    switch (type) {
-        case _FEATURES_:
-            item->getEnvironment()->add(variable->getBits(), shared_from_this());
-            effect = true;
-            body->apply(item, parser, synthesizer, effect);
-            item->getEnvironment()->remove(variable->getBits());
-            break;
-        default: FATAL_ERROR_UNEXPECTED
+void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+                  const statementPtr &statement,
+                  bool &effect)
+{
+    switch (type)
+    {
+    case FEATURES_VALUE:
+    {
+        if (!item->getEnvironment()){
+            item->setEnvironment(Environment::create());
+        }
+        item->getEnvironment()->add(variable->getBits(), shared_from_this());
+        bool b = false;
+        statement->toggleEnable(statement, item, synthesizer, b, false);
+        statement->apply(item, parser, synthesizer, effect);
+        item->getEnvironment()->remove(variable->getBits());
+    }
+    break;
+    default:
+        FATAL_ERROR_UNEXPECTED
     }
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool Value::containsVariable() {
+bool Value::containsVariable()
+{
     bool result = false;
     if (variableFlag.containsVariable())
         return true;
-    switch (type) {
-        case _TRUE_:
-        case _NIL_:
-        case _CODE_:
-        case _FORM_:
-        case _CONSTANT_:
-        case _NUMBER_:
-        case _ANONYMOUS_:
-        case _LISTFEATURES_:
-            break;
-        case _VARIABLE_:
+    switch (type)
+    {
+    case TRUE_VALUE:
+    case NIL_VALUE:
+    case IDENTIFIER_VALUE:
+    case FORM_VALUE:
+    case CONSTANT_VALUE:
+    case NUMBER_VALUE:
+    case ANONYMOUS_VALUE:
+    case LIST_FEATURES_VALUE:
+        break;
+    case VARIABLE_VALUE:
+        result = true;
+        break;
+    case PAIRP_VALUE:
+        if (this->getPairp()->containsVariable())
+        {
             result = true;
-            break;
-        case _PAIRP_:
-            if (this->getPairp()->containsVariable()) {
-                result = true;
-            }
-            break;
-        case _FEATURES_:
-            if (this->getFeatures()->containsVariable()) {
-                result = true;
-            }
-            break;
+        }
+        break;
+    case FEATURES_VALUE:
+        if (this->getFeatures()->containsVariable())
+        {
+            result = true;
+        }
+        break;
     }
     if (result)
         this->variableFlag.setFlag(VariableFlag::CONTAINS);
@@ -986,6 +1128,7 @@ bool Value::containsVariable() {
 /* **************************************************
  *
  ************************************************** */
-void Value::setVariableFlag(enum VariableFlag::flagValues flag) {
+void Value::setVariableFlag(enum VariableFlag::flagValues flag)
+{
     this->variableFlag.setFlag(flag);
 }

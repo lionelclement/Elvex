@@ -8,7 +8,7 @@
 ////[i:[gen:$ID], iii:[id:$ID], $rest];
 ////[i:[id:$ID], ii:[gen:$ID], $rest];
 ////[iii:[id:$ID], ii:[gen:$ID], $rest];
-@trace
+
 bindingClause → argumentClause {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;

@@ -109,8 +109,7 @@ public:
 
     bool renameVariables(size_t);
 
-    void
-    apply(class Item *, class Parser &, class Synthesizer *, const statementPtr &, statementPtr,
+    void apply(class Item *, class Parser &, class Synthesizer *, const statementPtr &, statementPtr,
           bool &);
 
 #ifdef OUTPUT_XML

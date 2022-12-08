@@ -46,7 +46,7 @@
 /* **************************************************
  * Default
  ************************************************** */
-@trace
+
 rhetoricalStructure → illocutionaryAct {
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -62,7 +62,7 @@ rhetoricalStructure → illocutionaryAct {
  * Je prends mon parapluie parce qu'il pleut.
  ************************************************** */
 /*
-@trace
+
 rhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise dot form {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -107,7 +107,7 @@ rhetoricalStructure → form conclusion parce_que | du_fait_que | comma premise 
  * Je prends mon parapluie parce qu'il pleut.
  ************************************************** */
 /*
-@trace
+
 rhetoricalStructure → premise comma conclusion dot {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -167,7 +167,7 @@ rhetoricalStructure → premise comma conclusion dot {
 /* **************************************************
  * Coreference with synonym or hyperonym
  ************************************************** */
-@trace
+
 rhetoricalStructure → premise_conclusion {
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -226,7 +226,7 @@ rhetoricalStructure → premise_conclusion {
 /* **************************************************
  * Coreference with pro
  ************************************************** */
-@trace
+
 rhetoricalStructure → premise_conclusion {
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -278,7 +278,7 @@ rhetoricalStructure → premise_conclusion {
   ↓1 = [i:$Ibis, ii:$IIbis, $rest];
 }
 
-@trace
+
 premise_conclusion → premise conclusion dot {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -306,7 +306,7 @@ premise_conclusion → premise conclusion dot {
   ⇑ = [i:$ISynth, ii:$IISynth];
 }
 
-@trace
+
 zzzrhetoricalStructure → form premise conclusion dot form {
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -375,7 +375,7 @@ if ($II_I) {
 /* **************************************************
  * Cause
  ************************************************** */
-@trace
+
 zzzrhetoricalStructure → form premise [parce_que] conclusion form {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -428,7 +428,7 @@ zzzrhetoricalStructure → form premise [parce_que] conclusion form {
  * Si aujourd'hui tu gagnais...
  * Si demain tu gagnais...
  ************************************************** */
-@trace
+
 premise → form si modalClause comma form {
   //print __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -492,7 +492,7 @@ premise → form si modalClause comma form {
 /* **************************************************
  * je gagnerais
  ************************************************** */
-@trace
+
 zzzpremise → form modalClause form {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -538,7 +538,7 @@ zzzpremise → form modalClause form {
  * Si aujourd'hui le garagiste répare ta voiture... elle pourra démarer.
  * Si demain tu gagnais... tu remporterais le pactole
  ************************************************** */
-@trace
+
 conclusion → form modalClause form {
   //println __FILE__ + " (" + __LINE__ + ")";
   //println ↑;
@@ -582,7 +582,7 @@ conclusion → form modalClause form {
 /* **************************************************
  * Je gagnerais le pactole
  ************************************************** */
-@trace
+
 conclusion → form modalClause form {
   print __FILE__ + " (" + __LINE__ + ")";
   println ↑;
@@ -633,7 +633,7 @@ conclusion → form modalClause form {
 /* **************************************************
  * succession
  ************************************************** */
-@trace
+
 rhetoricalStructure → modalClause et illocutionaryAct {
   [PRED:et, i:$I, ii:$II];
   [vform:$vform, mode:$mode, illocutionary:$illocutionary, modality:$modality] ⊂ ↑;
@@ -651,7 +651,7 @@ rhetoricalStructure → modalClause et illocutionaryAct {
 //  * Si j'avais brûlé la voiture, elle marcherait forcément moins bien.
 //  * J'ai brûlé une voiture. Le véhicule marche forcément moins bien.
 //  ************************************************** */
-// @trace
+// 
 // rhetoricalStructure → form premise conclusion form {
 //   ↓1 = [FORM:"<VP line="+__LINE__+">"];
 //   ↓4 = [FORM:"</VP>"];
@@ -694,7 +694,7 @@ rhetoricalStructure → modalClause et illocutionaryAct {
 //  * Si j'avais brûlé la voiture, elle marcherait forcément moins bien.
 //  * J'ai brûlé une voiture. Le véhicule marche forcément moins bien.
 //  ************************************************** */
-// @trace
+// 
 // rhetoricalStructure → illocutionaryAct illocutionaryAct {
 //   [PRED:cause, i:[i:[id:$ID]], ii:[i:[idref:$ID]]];
 //   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
@@ -718,7 +718,7 @@ rhetoricalStructure → modalClause et illocutionaryAct {
 // /* **************************************************
 //  * Succession
 //  ************************************************** */
-// @trace
+// 
 // rhetoricalStructure → timeClause comma form illocutionaryAct {
 //   [PRED:succ, i:[ii:[id:$ID]], ii:[i:[idref:$ID]]];
 //   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
@@ -741,7 +741,7 @@ rhetoricalStructure → modalClause et illocutionaryAct {
 //     ↓4 = [i:[PRED:celui_ci, gender:$iiG, number:$iiN, person:$iiP, dem:yes], vform:tensed, $iiRest];
 // }
 
-// @trace
+// 
 // rhetoricalStructure → timeClause comma form illocutionaryAct {
 //   [PRED:succ, i:[i:[id:$ID]], ii:[i:[idref:$ID]]];
 //   [i:$I, ii:[i:_, $iiRest]] ⊂ ↑;
