@@ -1,7 +1,6 @@
 /* **************************************************
  * 
  ************************************************** */
-@trace
 Text_with_features → features S1 {
   [vtense:$vtense] ⊂ ⇓2;
   [lexical_function:$lexical_function, vtense:$vtense, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
@@ -91,7 +90,7 @@ S → [NP|cln] VP {
   [SUBJECT:$SUBJECT, vtense:$vtense, $REST];
   [verbal_constr:$verbal_constr] ⊂ ↑;
   if (#1){
-    ↓1 = $SUBJECT ∪ [_case:nominative];
+    ↓1 = $SUBJECT ∪ [case:nominative];
     $Synth_Subject = ⇓1;
     ↓2 = [SUBJECT:$Synth_Subject, vtense:$vtense, tensed:true, $REST];
     [SUBJECT:$expected_subject] ⊂ ⇓2;
@@ -123,7 +122,7 @@ S → VP {
 S → aux NP|cln VP strongPunct {
   [SUBJECT:$SUBJECT, vtense:$vtense, $REST];
   [verbal_constr:$verbal_constr] ⊂ ↑;
-  ↓2 = $SUBJECT ∪ [_case:nominative];
+  ↓2 = $SUBJECT ∪ [case:nominative];
   $Synth_Subject = ⇓2;
   // Interrogative form
   attest (($verbal_constr == int));
@@ -175,7 +174,7 @@ VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
   if (#2) {
     if ($Synth_OBJECT)
       $OBJECT = $OBJECT ∪ $Synth_OBJECT; 
-    ↓2 = [_case:accusative, lexical_function:$lexical_function, $OBJECT];
+    ↓2 = [case:accusative, lexical_function:$lexical_function, $OBJECT];
   }
   else {
     attest (¬$OBJECT ∧ ¬$Synth_OBJECT);

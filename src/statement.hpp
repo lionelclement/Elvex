@@ -133,13 +133,8 @@ private:
 
     statementPtr lhs;
     statementPtr rhs;
-
-    struct pair
-    {
-        unsigned int first;
-        unsigned int second;
-    } pair{};
-
+    unsigned int first;
+    unsigned int second;
     featuresPtr features;
     valuePtr value;
     bitsetPtr bitset;
@@ -243,6 +238,8 @@ public:
     bool isFct() const;
 
     bool isSearch() const;
+
+    bool containsDash() const;
 
     arithmetic_op getFct() const;
 

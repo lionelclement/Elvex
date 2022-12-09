@@ -32,6 +32,7 @@
 #include "statements.hpp"
 #include "synthesizer.hpp"
 #include "terms.hpp"
+#include "serializable.hpp"
 
 /* **************************************************
  *
@@ -59,7 +60,7 @@ Item::Item(const rulePtr &rule, unsigned int index, unsigned int indexTerm, stat
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
-        this->indexTerms.push_back(0);
+        this->indexTerms.push_back(UINT_MAX);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedSonFeatures->push_back(Features::NIL);
@@ -80,7 +81,7 @@ Item::Item(const rulePtr &rule, unsigned int index, std::vector<unsigned int> &i
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
-        this->indexTerms.push_back(0);
+        //this->indexTerms.push_back(UINT_MAX);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedSonFeatures->push_back(Features::NIL);
@@ -613,8 +614,7 @@ void Item::print(std::ostream &out) const
     if (s_id)
     {
         out << "<td>";
-        out << '#' << std::dec << this->getId();
-        this->printFlags(out);
+        out << '#' << std::dec << getId();
         out << "</td>";
     }
     if (s_ruleId)
@@ -679,8 +679,7 @@ void Item::print(std::ostream &out) const
         out << "<td>";
         for (unsigned int indexTerm : indexTerms)
             if (indexTerm == UINT_MAX)
-                out << "UINT_MAX"
-                    << "&nbsp;";
+                out << "UINT_MAX" << "&nbsp;";
             else
                 out << indexTerm << "&nbsp;";
         out << "</td>";
@@ -833,6 +832,7 @@ void Item::step(bool &effect)
         if (!this->forestIdentifiers[i])
         {
             this->index = i;
+            this->getIndexTerms()[i] = 0;
             effect = true;
             break;
         }
@@ -902,6 +902,7 @@ void Item::makeSerialString()
         serialString += '\1';
     else
         serialString += std::to_string(index);
+    
     serialString += '\0';
     std::vector<unsigned int>::const_iterator ind = indexTerms.cbegin();
     while (ind != indexTerms.cend())

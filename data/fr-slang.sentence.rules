@@ -2,10 +2,9 @@
 #include fr-slang.verb.rules
 #include fr-slang.clitics.rules
 
-
 sentence → form S form {
   //println __FILE__ + " (" + __LINE__ + ")";
-  //println ↑;
+  //println ("↑:", ↑);
   //↓1 = [FORM:"<sentence line="+__LINE__+">"];
   //↓3 = [FORM:"</sentence>"];
   ↓1 = [FORM:""];
@@ -49,7 +48,7 @@ S → S et S {
  ************************************************** */
 S → [ NP | cln ] VP {
   //println __FILE__ + " (" + __LINE__ + ")";
-  //println ↑;
+  //println ("↑:", ↑);
   [subj:$subj, $rest];
   [aggrSubjSCompSubj:$aggrSubjSCompSubj, inv:$inv, mode:$mode, language_register:$language_register] ⊂ ↑;
   [PRED:$predSubj] ⊂ $subj;
@@ -80,7 +79,7 @@ S → [ NP | cln ] VP {
 
 S → NP VP {
 //  println __FILE__ + " (" + __LINE__ + ")";
-//  println ↑;
+//  println ("↑:", ↑);
   [subj:NIL];
   [language_register:$language_register] ⊂ ↑;
   ↓2 = ↑;

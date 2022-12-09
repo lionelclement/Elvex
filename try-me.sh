@@ -26,20 +26,20 @@ make en-1.1.0.fsa
 #../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
 #../bin/elvex --trace -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
 #../bin/elvexdebug --traceAll -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
-../bin/elvex -r -maxItems 10000 -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input | ../bin/elvexpostedition_en
-#../bin/elvex --trace -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input | ../bin/elvexpostedition_en
+#../bin/elvex -r -maxItems 10000 -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input | ../bin/elvexpostedition_en
+#../bin/elvex -maxItems 10000 -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input | ../bin/elvexpostedition_en
+#../bin/elvex --trace -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input
 
 ##################################################
 # slang
-#(cd lefff ; make -s)
+(cd lefff ; make -s)
 #../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr
 #echo "##################################################"
-#/Users/clement/tmp/Elvex/bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
-#../bin/elvex --trace -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
-
-#../bin/elvex -t -V -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+../bin/elvex --trace -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug -t -V --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
-#../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#../bin/elvexdebug --traceAll -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#lldb ../bin/elvex -- -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 
 ##################################################
 # fr-1.0.4
@@ -77,5 +77,8 @@ make en-1.1.0.fsa
 #../bin/elvex -rulesFile test3.rules -lexiconFile test3.lexicon -inputFile test3.input
 #lldb ../bin/elvex -- -rulesFile test3.rules -lexiconFile test3.lexicon -inputFile test3.input
 
+##################################################
+# test4
+#../bin/elvex -t -rulesFile test4.rules -lexiconFile test4.lexicon -inputFile test4.input
 
 cd ..

@@ -74,7 +74,7 @@ Statements::list::const_iterator Statements::begin()
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::end() 
+Statements::list::const_iterator Statements::end()
 {
     return this->statements.end();
 }
@@ -221,13 +221,10 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
 {
     if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
     {
-            std::cout << "<H3>##############################################</H3>" << std::endl;
-            item->print(std::cout);
-            std::cout << std::endl;
         FATAL_ERROR_UNEXPECTED
     }
 
-    bool allStatementsWereAlreadyDone = true;
+    //bool allStatementsWereAlreadyDone = true;
     bool localEffect;
     if (guard && guard->isUnsetFlags(Flags::SEEN))
     {
@@ -240,10 +237,10 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
         }
 #endif
         guard->apply(item, parser, synthesizer, effect);
-        if (effect)
-        {
-            allStatementsWereAlreadyDone = false;
-        }
+        //if (effect)
+        //{
+        //    allStatementsWereAlreadyDone = false;
+        //}
         guard->addFlags(Flags::SEEN);
 #ifdef TRACE_OPTION
         if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
@@ -255,13 +252,13 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
 #endif
         if (guard->isSetFlags(Flags::BOTTOM))
         {
-            item->addFlags(Flags::BOTTOM);
+            addFlags(Flags::BOTTOM);
             goto exitApply;
         }
     }
 
     localEffect = true;
-    while (localEffect)
+    while (localEffect && item->isUnsetFlags(Flags::BOTTOM))
     {
         localEffect = false;
 
@@ -307,7 +304,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
             }
             if ((*statement)->isSetFlags(Flags::DISABLED))
             {
-                allStatementsWereAlreadyDone = false;
+                //allStatementsWereAlreadyDone = false;
                 continue;
             }
             if (!item->getEnvironment() || item->getEnvironment()->size() == 0)
@@ -324,15 +321,16 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
             }
             if (effect)
             {
-                allStatementsWereAlreadyDone = false;
+                //allStatementsWereAlreadyDone = false;
                 localEffect = true;
             }
         }
     }
-    if (allStatementsWereAlreadyDone)
-    {
-        this->addFlags(Flags::SEEN);
-    }
+    //if (allStatementsWereAlreadyDone)
+    //{
+    //    COUT_LINE;
+        //this->addFlags(Flags::SEEN);
+    //}
 exitApply:
 {
 }

@@ -119,12 +119,12 @@ configure_file(
         @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
-target_compile_options(elvex PUBLIC -std=c++11 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
+target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )
 add_executable(elvexdebug ${ELVEX_COMMON_SOURCES} src/elvex.cc)
-target_compile_options(elvexdebug PUBLIC -std=c++11 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers
+target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )
@@ -144,10 +144,14 @@ if (LibXml2_FOUND)
             #TRACE_ENABLE_STATEMENT
             #TRACE_APPLY_STATEMENT
             #TRACE_EVAL
+            #TRACE_STEP
+            #TRACE_PASS
+            #TRACE_UNFOLD
             )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
     target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
+        TRACE_OPTION
         MEMOIZATION
         RESTORE_MEMORY
         MAXBITS=512
@@ -155,7 +159,6 @@ if (LibXml2_FOUND)
         MAXUSAGES=1000
         MAXITEMS=1000
         MAXATTEMPTS=1000
-        TRACE_OPTION
         #TRACE_MEMOIZATION
         #TRACE_PASS
         #TRACE_UNFOLD

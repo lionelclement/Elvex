@@ -1,3 +1,5 @@
+"[vtense: $vtense, mode: $mode]"	info	[vtense:$vtense, vform:$vform, mode:$mode];
+
 /* **************************************************
  * Punctuation
  ************************************************** */

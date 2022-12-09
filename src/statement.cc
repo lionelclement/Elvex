@@ -76,8 +76,8 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, unsigned int first, unsigned int second)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
-    statement->pair.first = first;
-    statement->pair.second = second;
+    statement->first = first;
+    statement->second = second;
     return statementPtr(statement);
 }
 
@@ -192,7 +192,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->lhs = std::move(lhs);
-    statement->pair.first = first;
+    statement->first = first;
     return statementPtr(statement);
 }
 
@@ -383,6 +383,19 @@ bool Statement::isFct() const
 /* **************************************************
  *
  ************************************************** */
+bool Statement::containsDash() const
+{
+    bool result = (op == DASH_STATEMENT);
+    if (lhs)
+        result = result || lhs->containsDash();
+    if (rhs)
+        result = result || rhs->containsDash();
+    return result;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 Statement::arithmetic_op Statement::getFct() const
 {
     return fct;
@@ -425,7 +438,7 @@ bitsetPtr Statement::getBits() const
  ************************************************** */
 unsigned int Statement::getFirst() const
 {
-    return pair.first;
+    return first;
 }
 
 /* **************************************************
@@ -433,7 +446,7 @@ unsigned int Statement::getFirst() const
  ************************************************** */
 unsigned int Statement::getSecond() const
 {
-    return pair.second;
+    return second;
 }
 
 /* **************************************************
@@ -509,14 +522,6 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
     {
         color |= RED;
     }
-    if (isSetFlags(Flags::REJECTED))
-    {
-        out << "<S>";
-    }
-    if (isSetFlags(Flags::CHOOSEN))
-    {
-        out << "<B>";
-    }
 
     switch (this->op)
     {
@@ -555,10 +560,22 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
         out << "if&nbsp;(";
         lhs->print(out);
         out << ')';
+        if (color)
+        {
+            out << "</SPAN>";
+        }
         rhs->print(out, tabulation, color);
         break;
 
     case IF_CON_T_STATEMENT:
+        if (lhs->isSetFlags(Flags::REJECTED))
+        {
+            out << "<S>";
+        }
+        if (lhs->isSetFlags(Flags::CHOOSEN))
+        {
+            out << "<U>";
+        }
         if (lhs->isStms())
         {
             lhs->print(out, tabulation, color);
@@ -568,6 +585,14 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
             brln(out, tabulation + 3);
             lhs->print(out, tabulation + 3, color);
         }
+        if (lhs->isSetFlags(Flags::CHOOSEN))
+        {
+            out << "</U>";
+        }
+        if (lhs->isSetFlags(Flags::REJECTED))
+        {
+            out << "</S>";
+        }
 
         if (rhs)
         {
@@ -575,6 +600,14 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
                 out << "&nbsp;";
             out << "else ";
 
+            if (rhs->isSetFlags(Flags::REJECTED))
+            {
+                out << "<S>";
+            }
+            if (rhs->isSetFlags(Flags::CHOOSEN))
+            {
+                out << "<U>";
+            }
             if (rhs->isStms())
             {
                 rhs->print(out, tabulation, color);
@@ -583,6 +616,14 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
             {
                 brln(out, tabulation + 3);
                 rhs->print(out, tabulation + 3, color);
+            }
+            if (rhs->isSetFlags(Flags::CHOOSEN))
+            {
+                out << "</U>";
+            }
+            if (rhs->isSetFlags(Flags::REJECTED))
+            {
+                out << "</S>";
             }
         }
         break;
@@ -702,10 +743,10 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
         out << "⇑";
         break;
     case DASH_STATEMENT:
-        out << '#' << getFirst() + 1;
+        out << '#' << std::to_string(getFirst() + 1);
         if (getSecond() != UINT_MAX)
         {
-            out << "." << getSecond() + 1;
+            out << "." << std::to_string(getSecond() + 1);
         }
         break;
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
@@ -729,7 +770,7 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
         out << "search&nbsp;";
         lhs->print(out);
         out << "&nbsp;on&nbsp;";
-        out << Vartable::codeToString(pair.first);
+        out << Vartable::codeToString(first);
         break;
     case FUNCTION_STATEMENT:
         switch (this->getFct())
@@ -868,14 +909,6 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
         break;
     default:
         break;
-    }
-    if (isSetFlags(Flags::CHOOSEN))
-    {
-        out << "</B>";
-    }
-    if (isSetFlags(Flags::REJECTED))
-    {
-        out << "</S>";
     }
 }
 
@@ -1363,7 +1396,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             {
                 resultValue = Value::STATIC_TRUE;
             }
-            // if (#i:j)
+            // if (#i.j)
             else
             {
                 if (getSecond() == item->getIndexTerms()[getFirst()])
@@ -1610,9 +1643,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
-            if ((!v1) || (!v2))
+            if (!v1 || !v2)
             {
-                FATAL_ERROR_UNEXPECTED
                 resultValue = valuePtr();
             }
             else if ((v1->isFalse()) || (v2->isFalse()))
@@ -2348,7 +2380,7 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
             if (sonSynth)
             {
 
-                if (!left->buildEnvironment(environment, sonSynth, true /*, true*/))
+                if (!left->buildEnvironment(environment, sonSynth, true))
                 {
 
                     addFlags(Flags::BOTTOM);
@@ -2672,7 +2704,7 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
  ************************************************************ */
 void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
-    /*** 
+    /***
     COUT_LINE;
     std::cout << "<DIV>foreach";
     item->print(std::cout);
@@ -2699,7 +2731,7 @@ void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthe
     {
         FATAL_ERROR_MSG_STM("foreach does'nt apply a list");
     }
-    /*** 
+    /***
     COUT_LINE;
     std::cout << "<DIV>foreach done, effect:" << effect;
     item->print(std::cout);
@@ -2756,7 +2788,8 @@ void Statement::stmIf(class Item *item, Parser &parser, Synthesizer *synthesizer
         if (rightHandSide)
         {
             rightHandSide->apply(item, parser, synthesizer, effect);
-            if (rightHandSide->isSetFlags(Flags::BOTTOM)){
+            if (rightHandSide->isSetFlags(Flags::BOTTOM))
+            {
                 this->addFlags(Flags::BOTTOM);
             }
             if (rightHandSide->isSetFlags(Flags::SEEN))
@@ -2783,7 +2816,6 @@ void Statement::stmWait(class Item *item, Parser &parser, Synthesizer *synthesiz
         addFlags(Flags::BOTTOM);
     if (rhs->isSetFlags(Flags::SEEN))
         addFlags(Flags::SEEN);
-
 }
 
 /* ************************************************************
@@ -2799,7 +2831,7 @@ void Statement::stmPrint(class Item *item, Parser &parser, Synthesizer *synthesi
             std::cout << (*statement)->getString();
         }
         else
-        {   
+        {
             valuePtr value = (*statement)->evalValue(item, parser, synthesizer, true);
             if (value->isForm())
                 std::cout << value->getStr();
@@ -2904,17 +2936,16 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
         break;
 
     case DASH_STATEMENT:
-        // if (#1)   NP -> [det] N { if (#1) ↓1 = ↑ ∪ ⇓2 ∪ [qual:$Qual, part:$Part]; else [detNum:NIL, det:no]; }
-        // if (#2)   VP -> VP [NP] {   if (#2) { ↓1 = $Rest; ↓2 = [pcas:$pcas, $PObj];} else { attest ($Pred == _pro); ↓1 = [prep_objCl:$PObj, $Rest];} }
-        if (getFirst() > item->getRuleRhs().size())
-        {
-            std::ostringstream oss;
-            oss << "#" << lhs->getFirst() + 1 << " not available";
-            FATAL_ERROR_OS_MSG_STM(oss);
-        }
+        // if (getFirst() > item->getRuleRhs().size())
+        // {
+        //     std::ostringstream oss;
+        //     oss << "#" << lhs->getFirst() + 1 << " not available";
+        //     FATAL_ERROR_OS_MSG_STM(oss);
+        // }
         if (on)
         {
-            if (!item->getTerms(getFirst() || item->getTerms(getFirst())->isOptional() || item->getTerms(getFirst())->size() != 1))
+            if (item->getIndexTerms()[getFirst()] == UINT_MAX)
+            //|| ((getSecond() != UINT_MAX) && (item->getIndexTerms()[getFirst()] != getSecond())))
             {
                 root->addFlags(Flags::DISABLED);
                 result = true;
@@ -3029,7 +3060,14 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
         break;
 
     case IF_STATEMENT:
-        rhs->toggleEnable(rhs, item, synthesizer, result, on);
+        if (lhs->containsDash())
+        {
+            lhs->toggleEnable(root, item, synthesizer, result, on);
+        }
+        if (root->isUnsetFlags(Flags::DISABLED))
+        {
+            rhs->toggleEnable(rhs, item, synthesizer, result, on);
+        }
         break;
 
     case IF_CON_T_STATEMENT:
@@ -3075,7 +3113,7 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
 
     case FEATURES_STATEMENT:
         getFeatures()->enable(root, item, synthesizer, result, on);
-        break;    
+        break;
 
     case SEARCH_STATEMENT:
         if (lhs)
@@ -3108,7 +3146,7 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     if (isSetFlags(Flags::SEEN | Flags::DISABLED | Flags::BOTTOM))
     {
         return;
-        //FATAL_ERROR_UNEXPECTED
+        // FATAL_ERROR_UNEXPECTED
     }
 
     // […]
@@ -3179,17 +3217,7 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     //
     // [ … $X … ] ⊂ $Y;
     // [ … $X … ] ⊂ [ … ];
-    else if (((isAff()) 
-                && (getLhs()->isVariable()) 
-                && ((getRhs()->isConstant()) 
-                    || (getRhs()->isVariable()) 
-                    || (getRhs()->isUnif()) 
-                    || (getRhs()->isFeatures()) 
-                    || (getRhs()->isNumber()) 
-                    || (getRhs()->isString()) 
-                    || (getRhs()->isFct()) 
-                    || (getRhs()->isPairp()) 
-                    || (getRhs()->isSearch())))
+    else if (((isAff()) && (getLhs()->isVariable()) && ((getRhs()->isConstant()) || (getRhs()->isVariable()) || (getRhs()->isUnif()) || (getRhs()->isFeatures()) || (getRhs()->isNumber()) || (getRhs()->isString()) || (getRhs()->isFct()) || (getRhs()->isPairp()) || (getRhs()->isSearch())))
 
              || ((isAff()) && (getLhs()->isPairp()) && ((getRhs()->isVariable()) || (getRhs()->isPairp()) || (getRhs()->isSearch())))
 

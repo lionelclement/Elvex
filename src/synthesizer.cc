@@ -548,7 +548,9 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                     it->addForestIdentifiers(it->getIndex(), fi);
                 }
                 it->setIndex((*actualItem)->getIndex() + 1);
+                it->getIndexTerms()[(*actualItem)->getIndex()] = 0;
                 it->addRanges(row);
+                it->resetSerial();
 #ifdef TRACE_PASS
                 std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
                 it->print(std::cout);
@@ -565,7 +567,14 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                 it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
                 it->setRule((*actualItem)->getRule()->clone());
                 it->setIndex((*actualItem)->getIndex());
+                if (it->getCurrentTerms()->size() == 1){
+                    it->getIndexTerms()[(*actualItem)->getIndex()] = 0;
+                }
+                else {
+                    it->getIndexTerms()[(*actualItem)->getIndex()] = UINT_MAX-1;
+                }
                 it->getCurrentTerms()->unsetOptional();
+                it->resetSerial();
 #ifdef TRACE_PASS
                 std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
                 it->print(std::cout);
@@ -605,7 +614,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                     it->setCurrentTerms(Terms::create((*terms)[indexTerm1]));
                     it->getIndexTerms()[(*actualItem)->getIndex()] = indexTerm1;
 
-#ifdef TRACE_PASS
+#ifdef TRACE_UNFOLD
                     std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
                     it->print(std::cout);
                     std::cout << std::endl;
@@ -1150,7 +1159,6 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         it->setEnvironment(env);
 
                                         featuresPtr resultFeatures = featuresPtr();
-                                        //statementPtr s = Statement::create();
                                         featuresPtr inheritedSonFeaturesCopy = inheritedSonFeatures->clone();
                                         featuresPtr entryFeaturesCopy = entryFeatures->clone();
                                         if (entryFeatures)
@@ -1160,7 +1168,6 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         }
                                         else
                                             resultFeatures = inheritedSonFeaturesCopy;
-                                        //s.reset();
                                         if (resultFeatures)
                                         {
                                             if (it->getEnvironment() && (it->getEnvironment()->size() > 0))

@@ -2,10 +2,9 @@
  * Start with an NP or a Narative Sentence
  ************************************************** */
 // Verbe simple
-@trace
 VP → form V [ADVM] [NP] [AP] [PP] [VComp] form {
   //println __FILE__ + " (" + __LINE__ + ")";
-  //println ↑;
+  //println ("↑:", ↑);
   //println ⇓2;
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
   //↓8 = [FORM:"</VP>"];
@@ -151,8 +150,8 @@ VP → form VP PP form {
 
 // Avec complétive en position canonique
 VP → VP SComp {
-  //print __FILE__ + " (" + __LINE__ + ")";
-  //println ↑;
+  //println (__FILE__ + " (" + __LINE__ + ")");
+  //println ("↑:", ↑);
   [scomp:$scomp, $rest];
   [conc:$conc, language_register:$language_register] ⊂ ↑;
   if ((¬ $conc))
@@ -253,8 +252,8 @@ VP → VP SComp {
 
 // Avec infinitive en position canonique
 VP → VP VComp {
-  print __FILE__ + " (" + __LINE__ + ")";
-  println ↑;
+  print (__FILE__, " (", __LINE__, ")");
+  println ("↑:",  ↑);
   [vcomp:$vComp, $rest];
   [language_register:$language_register] ⊂ ↑;
   ↓1 = $rest;
@@ -275,8 +274,8 @@ VP → VP VComp {
 // ne lui donne pas
 
 V → form [clneg] [advneg] CLITICS Verb [clint] [advneg] [ADVM] form {
-  //print __FILE__ + " (" + __LINE__ + ")";
-  //println ↑;
+  //println (__FILE__ + " (" + __LINE__ + ")");
+  //println ("↑:", ↑);
   //↓1 = [FORM:"<VP line="+__LINE__+">"];
   //↓9 = [FORM:"</VP>"];
   ↓1 = [FORM:""];
@@ -426,6 +425,7 @@ V → [clneg] [advneg] Verb CLITICS [clint] [advneg] [ADVM] {
 // a arrêté X
 // X - a arrêté(es)
 // ne lui en a pas souvent donné
+@trace
 V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] Verb {
   [vtense:past|passe_compose|pluperfect|past_anterieur|future_anterieur];
   attest #1 ⇔ #5;
@@ -669,7 +669,7 @@ V → [clneg] aux_être [clint] [advneg] en_train_de [ADVM] CLITICS Verb {
 // ne va pas souvent lui en donner
 V → [clneg] aux_aller [clint] [advneg] [ADVM] CLITICS Verb {
   [vtense:near_future];
-  [subj:$subj, inv:$inv, vform:_, mode:$mode, finite:_, voice:active|middle, $rest] ⊂ ↑;
+  [subj:$subj, inv:$inv, mode:$mode, voice:active|middle, $rest] ⊂ ↑;
   attest #1 ⇔ #4;
 
   if (#4) {
@@ -711,7 +711,7 @@ V → [clneg] aux_aller [clint] [advneg] [ADVM] CLITICS Verb {
   }
 
   [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, number:$auxNumber, person:$auxPerson] ⊂ ⇓2;
-  [PRED:$p, vtense:_, mode:_, vform:_, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt] ⊂ ⇓7;
+  [subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt] ⊂ ⇓7;
   ⇑ = [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt];
 }
 
@@ -914,8 +914,8 @@ V → [clneg] aux_avoir [clint] [advneg] aux_être [ADVM] NP|ADJ {
 }
 
 SComp → csu modalClause {
-  //print __FILE__ + " (" + __LINE__ + ")";
-  //println ↑;
+  //println (__FILE__ + " (" + __LINE__ + ")");
+  //println ("↑:", ↑);
   [real:scomp];
   [PRED:$pred, illocutionary:$illocutionary, modality:$modality, compl:$compl] ⊂ ↑;
   ↓1 = [compl:$compl];

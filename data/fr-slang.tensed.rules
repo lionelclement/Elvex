@@ -7,7 +7,7 @@
 
 tensedClause → bindingClause {
   //print __FILE__ ; print " (" ; print __LINE__ ; println ")";
-  //println ↑;
+  //println ("↑:", ↑);
   [vform:_, mode:_];
   [tense:$tense, aspect:$aspect, mode:$mode] ⊂ ↑;
   attest $pred ≠ paragraph;

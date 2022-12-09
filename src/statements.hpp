@@ -63,14 +63,14 @@ public:
 
     bool findVariable(const bitsetPtr &variable);
 
-    //void print(std::ostream &, unsigned int tabulation = 0, unsigned int yetColored = 0) const;
     void print(std::ostream &outStream, unsigned int tabulation, unsigned int color, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
 
     statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 
+    void toggleEnable(class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
+
     void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
 
-    void toggleEnable(class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
 };
 
 #endif // ELVEX_STATEMENTS_H

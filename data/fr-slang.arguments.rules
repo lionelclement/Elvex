@@ -155,8 +155,8 @@ argumentClause → sentence {
 // Jean accepte/refuse de partir
 
 argumentClause → sentence {
-  print __FILE__ + " (" + __LINE__ + ")";
-  println ↑;
+  print (__FILE__, " (", __LINE__, ")");
+  println ("↑:",  ↑);
   [i:[id:$ID], ii:[i:[idref:$ID]], iii:NIL];
   [i:$I, ii:[i:_, $RestComp], $Rest] ⊂ ↑;
   ↓1 = [subj:$I, vcomp:[real:vcomp, $RestComp], ctr:subj, iiReal:vcomp, ivReal:none, $Rest];
@@ -168,8 +168,8 @@ argumentClause → sentence {
 // Jean accepte/refuse qu'il parte
 
 argumentClause → sentence {
-  print __FILE__ + " (" + __LINE__ + ")";
-  println ↑;
+  print (__FILE__, " (", __LINE__, ")");
+  println ("↑:",  ↑);
   [i:[id:$ID], ii:[i:[idref:NIL]], iii:NIL];
   [i:$I, ii:[i:$II_I, $RestComp], $Rest] ⊂ ↑;
   ↓1 = [subj:$I, scomp:[i:$II_I, real:scomp, $RestComp], iiReal:scomp, iiiReal:none, ivReal:none, $Rest];
@@ -181,8 +181,8 @@ argumentClause → sentence {
 // Jean accepte/refuse qu'il parte
 
 argumentClause → sentence {
-  print __FILE__ + " (" + __LINE__ + ")";
-  println ↑;
+  print (__FILE__, " (", __LINE__, ")");
+  println ("↑:",  ↑);
   [i:[id:NIL], ii:[i:[idref:NIL]], iii:NIL];
   [i:$I, ii:[i:$II_I, $RestComp], $Rest] ⊂ ↑;
   ↓1 = [subj:$I, scomp:[i:$II_I, real:scomp, $RestComp], iiReal:scomp, iiiReal:none, ivReal:none, $Rest];
@@ -194,8 +194,8 @@ argumentClause → sentence {
 // La police demande à Marie de circuler
 
 argumentClause → sentence {
-  print __FILE__ + " (" + __LINE__ + ")";
-  println ↑;
+  print (__FILE__, " (", __LINE__, ")");
+  println ("↑:",  ↑);
   [ii:[i:[idref:$ID1]], iii:[id:$ID1]];
   //attest $ID1 != $ID2;
   [i:$I, ii:[i:_, $RestComp], iii:[id:_, $III], $Rest] ⊂ ↑;
@@ -207,8 +207,8 @@ argumentClause → sentence {
 // Jean demande à Marie qu'il parte
 
 argumentClause → sentence {
-  print __FILE__ + " (" + __LINE__ + ")";
-  println ↑;
+  print (__FILE__, " (", __LINE__, ")");
+  println ("↑:",  ↑);
   [i:[id:$ID], ii:[i:[idref:$ID]], iii:[idref:NIL]];
   [i:$I, ii:[i:_, $RestComp], iii:[id:_, $III], $Rest] ⊂ ↑;
   [subj:[number:$N, gender:$G, person:$P], scomp:[i:[number:$N, gender:$G, person:$P]]] ⊂ ⇓1;
@@ -222,7 +222,7 @@ argumentClause → sentence {
 // Jean dit à Marie que Luc part
 
 argumentClause → sentence {
-  //print __FILE__ + " (" + __LINE__ + ")";
+  //println (__FILE__ + " (" + __LINE__ + ")");
   //println ↑;
   [ii:[i:[idref:NIL]], iii:[idref:NIL]];
   [i:$I, ii:$II, iii:$III, $Rest] ⊂ ↑;

@@ -2,10 +2,9 @@
 /* **************************************************
  * Groupe nominal
  ************************************************** */
-
 NP → NP2 {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  // println ("↑:", ↑);
   [sem:$sem, language_register:$language_register, lexical_function:$lexical_function, $rest] ⊂ ↑;
 
   if (¬ $sem)
@@ -34,10 +33,10 @@ NP → NP2 {
   ⇑ = ⇓1;
 }
 
-
+//@trace
 NP2 → [det | detNum | detForm | detLex] N [form] {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  // println ("↑:", ↑);
   [sem:$sem, lexical_function:$lexical_function, $rest] ⊂ ↑;
   [number:$number, def:$def, poss:$poss, dem:$dem, part:$part, personPoss:$personPoss, numberPoss:$numberPoss] ⊂ ↑;
   ↓2 = ↑;
@@ -117,7 +116,7 @@ NP2 → form {
 // Le livre de Marc
 N → N PP {
   //print __FILE__+" ("+__LINE__+")";
-  //println ↑;
+  //println ("↑:", ↑);
   [de_obj:$deObj, mod:NIL, $rest];
   [de_obj:[PRED:$P], language_register:$language_register] ⊂ ↑;
   attest $P ≠ _pro; 
@@ -129,7 +128,7 @@ N → N PP {
 // Un livre à Marc
 N → N PP {
   //print __FILE__+" ("+__LINE__+")";
-  //println ↑;
+  //println ("↑:", ↑);
   [à_obj:$àObj, mod:NIL, $rest];
   [à_obj:[PRED:$P], language_register:$language_register] ⊂ ↑;
   attest $P ≠ _pro; 
@@ -138,11 +137,10 @@ N → N PP {
   ⇑ = ⇓1;
 }
  
-@trace
 N → [AP] N [AP] [comma] [AP] [et] [AP]
 {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  // println ("↑:", ↑);
   [mod:<$head::$tail>, $rest];
   ↓2 = $rest; 
   [mod:$list, language_register:$language_register] ⊂ ↑;
@@ -165,12 +163,12 @@ N → [AP] N [AP] [comma] [AP] [et] [AP]
       	else
 	        $pos = none;
       if ($pos == pre) {
-	      println "PRE";
+	      println ("PRE");
         attest (#1);
 	      ↓1 = [number:$synthesizedNumber, gender:$synthesizedGender, language_register:$language_register, $i];
       }  
       else {
-	      println "!PRE";
+	      println ("!PRE");
         if (↓3) {
 	        if (↓7) {
 	          ↓4 = [];
@@ -200,7 +198,7 @@ N → [AP] N [AP] [comma] [AP] [et] [AP]
 
 N → AP N2 {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  // println ("↑:", ↑);
   [lexical_function:_, mod:NIL, $rest];
   ↓2 = $rest;
   [mod:<$head>, number:$synthesizedNumber, gender:$synthesizedGender] ⊂ ⇓2;
@@ -215,7 +213,7 @@ N → AP N2 {
 
 N → N2 AP {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  // println ("↑:", ↑);
   [lexical_function:_, mod:NIL, $rest];
   ↓1 = $rest;
   [mod:<$head>, number:$synthesizedNumber, gender:$synthesizedGender] ⊂ ⇓1;
@@ -229,7 +227,7 @@ N → N2 AP {
 
 N → N2 {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  // println ("↑:", ↑);
   [lexical_function:default, mod:NIL, obj:NIL, de_obj:NIL, à_obj:NIL, i:NIL, $rest];
   ↓1 = $rest;
   ⇑ = ⇓1;
@@ -238,7 +236,7 @@ N → N2 {
 
 N2 → n [n] {
   //print __FILE__+" ("+__LINE__+")";
-  //println ↑;
+  //println ("↑:", ↑);
   //println ⇓1;
   [mod:NIL, obj:NIL, de_obj:NIL, à_obj:NIL, i:NIL];
   [obj:$obj, $rest] ⊂ ↑;
@@ -257,7 +255,7 @@ N2 → n [n] {
 
 AP → adv AP {
   //print __FILE__+" ("+__LINE__+")";
-  //println ↑;
+  //println ("↑:", ↑);
    [mod:<$head::$tail>, $rest];
    ↓1 = $head;
    ↓2 = [mod:$tail, $rest];
@@ -267,7 +265,7 @@ AP → adv AP {
 
 AP → adj {
   // print __FILE__+" ("+__LINE__+")";
-  // println ↑;
+  // println ("↑:", ↑);
   [subj:NIL, mod:NIL, $rest];
   [sem:$sem, language_register:$language_register] ⊂ $rest;
   [sem:$Synth_sem, language_register:$Synth_language_register] ⊂ ⇓1;
