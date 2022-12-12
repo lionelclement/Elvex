@@ -282,7 +282,7 @@ std::string CompactedLexicon::unif(const std::string& fs1, const std::string& fs
         stringStream << '[' << fs1 << ']';
         std::string fsString = stringStream.str();
 try {
-            parser.parseBuffer("#", fsString, "morphology");
+            parser.parseBuffer("#(", ")", fsString, "morphology");
 	}
     	catch (parser_exception& e) {
 		  std::ostringstream oss;
@@ -299,7 +299,7 @@ try {
         stringStream << '[' << fs2 << ']';
         std::string fsString = stringStream.str();
 try{
-            parser.parseBuffer("#", fsString, "morphology");
+            parser.parseBuffer("#(", ")", fsString, "morphology");
     }
     	catch (parser_exception& e) {
 		  std::ostringstream oss;

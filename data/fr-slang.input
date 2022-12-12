@@ -5,7 +5,6 @@
 //text [PRED:PLEUVOIR, degree:few, language_register:slang]
 //text [PRED:PLEUVOIR, degree:a_lot, language_register:slang]
 
-
 //text [PRED:FAIRE_CHAUD]
 //text [PRED:FAIRE_CHAUD, language_register:slang, tense:future, modSType:time, modS:<[FORM:"demain"]>]
 //text [PRED:FAIRE_CHAUD, language_register:slang, tense:near_future, modSType:time, modS:<[FORM:"demain"]>]
@@ -23,7 +22,7 @@
 //text [PRED:FAIRE_FROID]
 //text [PRED:FAIRE_FROID, tense:near_future, modSType:time, modS:<[FORM:"demain"]>]
 //text [PRED:FAIRE_FROID, tense:near_future, modSType:time, modS:<[FORM:"demain"]>, language_register:slang]
-//text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_LÉON], tense:near_future, language_register:slang]
+text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_LÉON], tense:near_future, language_register:slang]
 //text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_LÉON], tense:past, language_register:slang]
 //text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_LÉON], tense:future, language_register:slang]
 //text [PRED:ÊTRE_MÉCONTENT, i:[PRED:_pro, person:$p, number:$n], tense:$i, language_register:slang]
@@ -33,7 +32,6 @@
 //text [PRED:PLEUVOIR, tense:near_future]
 
 //text [PRED:neiger]
-
 
 /* **************************************************
  * noun
@@ -47,7 +45,9 @@
  * verbal tense & inflexion
  ************************************************** */
 
-text [PRED:MARCHER, i:[PRED:HORLOGER, gender:ms, number:sg], tense:$tense]
+//text [PRED:MARCHER, i:[PRED:HORLOGER, gender:ms, number:sg], tense:$tense]
+//text [PRED:MARCHER, i:[PRED:HORLOGER, gender:ms, number:sg], tense:past]
+
 //text [PRED:MARCHER, i:[PRED:_LÉON], tense:present]
 //text [PRED:MARCHER, i:[PRED:_LÉON], tense:past]
 //text [PRED:MARCHER, i:[PRED:_LÉON], tense:future]
@@ -88,12 +88,11 @@ text [PRED:MARCHER, i:[PRED:HORLOGER, gender:ms, number:sg], tense:$tense]
  * Verbal Arguments
  ************************************************** */
 
-//text [PRED:RÉPARER, i:[PRED:HORLOGER, mod:<[PRED:ÂGÉ],[PRED:PETIT]>, def:$d], ii:[PRED:MONTRE, mod:<[PRED:CASSÉ, mod:<[PRED:TRÈS]>]>, def:$d2], tense:$t, neg:$n]
-
+//text [PRED:RÉPARER, i:[PRED:HORLOGER, number:sg, gender:ms], ii:[PRED:MONTRE, number:sg], tense:$t, neg:$n]
 
 //text [PRED:RONFLER, i:[PRED:HORLOGER, number:$sg, gender:$ms, def:$yes]]
-///text [PRED:RÉPARER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], tense:past]
-///text [PRED:RÉPARER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]]
+//text [PRED:RÉPARER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], tense:past]
+//text [PRED:RÉPARER, i:[PRED:HORLOGER, number:sg, gender:ms, def:yes], ii:[PRED:_pro, number:sg, gender:fm, person:three]]
 //text [PRED:LIVRER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], iii:[PRED:_pro, person:three, number:sg, genr:ms], tense:past]
 //text [PRED:LIVRER, i:[PRED:HORLOGER, def:yes, gender:ms, number:sg], ii:[PRED:MONTRE, number:sg, def:yes], iii:[PRED:CLIENT, number:sg, gender:ms, def:yes], tense:past]
 //text [PRED:LIVRER, i:[PRED:_pro, person:one, number:sg], ii:[PRED:_pro, person:three, gender:fm, number:sg], iii:[PRED:_pro, person:three, number:sg]]
@@ -134,13 +133,11 @@ text [PRED:VENDRE, i:[PRED:DÉLINQUANT, number:sg], ii:[PRED:VOITURE, number:sg]
 text[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes, id:45]]
 text [PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]]
 
-/*
 text [PRED:cause,
  	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes], ii:[PRED:VOITURE, number:sg, def:yes]],
 	ii:[PRED:ROULER, i:[PRED:VOITURE, number:sg, def:yes]],
     time:yesterday
 ]
-*/
 
 text [PRED:cause,
  	i:[PRED:RÉPARER, i:[PRED:GARAGISTE, number:sg, gender:ms, def:yes, id:11], ii:[PRED:VOITURE, number:sg, def:yes, id:12],

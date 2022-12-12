@@ -161,16 +161,16 @@ void Entry::toXML(xmlNodePtr nodeRoot) const
  ************************************************** */
 void Entry::print(std::ostream &os) const
 {
-    os << "(id:" << this->getId() << ", pos:" << Vartable::codeToString(this->pos);
+    os << "[pos:" << Vartable::codeToString(this->pos);
     if ((this->pred != UINT_MAX))
         os << ", pred:" << Vartable::codeToString(this->pred);
     else
         os << ", pred:UINT_MAX";
     if (!this->form.empty())
-        os << ", form:" << this->form;
+        os << ", form:\"" << this->form << '"';
     else
         os << ", form:\"\"";
-    os << ")";
+    os << ']';
 }
 
 /* **************************************************

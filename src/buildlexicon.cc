@@ -180,7 +180,7 @@ int main(int argn, char** argv) {
 		stream << '[' << f << ']';
 		std::string fsString = stream.str();
 		try {
-		  parser.parseBuffer("#", fsString, "morphology");
+		  parser.parseBuffer("#(", ")", fsString, "morphology");
 		}
 		catch (parser_exception& e) {
 		  std::ostringstream oss;

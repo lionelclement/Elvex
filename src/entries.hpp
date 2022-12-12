@@ -66,6 +66,8 @@ public:
 
     void add(const entryPtr &);
 
+    void add(entriesPtr);
+
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr) const;
 #endif

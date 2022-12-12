@@ -219,7 +219,6 @@ void Parser::printCacheLexicon(std::ostream &out) const {
                 out << "UINT_MAX = &gt; ";
             else
                 out << Vartable::codeToString((*j).first) << " = &gt; ";
-
             (*j).second->print(out);
             out << "</li>";
 
@@ -255,16 +254,16 @@ featuresPtr Parser::findMacros(const std::string& str) {
 /* **************************************************
  *
  ************************************************** */
-void Parser::parseFile(std::string prefix, std::string fileName) {
-    parseString(prefix + "\n#include " + fileName);
+void Parser::parseFile(std::string prefix, std::string suffix, std::string fileName) {
+    parseString(prefix + "\n#include " + fileName + "\n" + suffix);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
+void Parser::parseBuffer(std::string prefix, std::string suffix, std::string buffer, std::string bufferName) {
     pushBufferName(bufferName);
-    parseString(prefix + "\n" + buffer);
+    parseString(prefix + "\n" + buffer + "\n" + suffix);
 }
 
 /* **************************************************
@@ -292,23 +291,3 @@ void Parser::listMacros() {
 void Parser::insertCacheLexicon(std::pair<unsigned int, entries_map*> pair){
   cacheLexicon.insert(pair);
 }
-
-/* **************************************************
- *
- ************************************************** */
-/*
-void Parser::printCacheLexicon(){
-  for (auto i = cacheLexicon.begin(); i != cacheLexicon.end(); ++i){
-    std::cerr << Vartable::codeToIdentifier((*i).first) << "=>\n";
-    entries_map* v = (*i).second;
-      for (auto j = v->begin(); j != v->end(); ++j){
-        std::cerr << "\t" << Vartable::codeToIdentifier((*j).first) << "=>";
-        entriesPtr cddr = (*j).second;
-        cddr->print(std::cerr);
-        std::cerr << std::endl;
-    }
-    std::cerr << std::endl;
-  }
-  CERR_LINE;
-}
-*/

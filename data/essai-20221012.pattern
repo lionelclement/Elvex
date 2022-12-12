@@ -1,4 +1,10 @@
-# lexeme	pos	lemma	features
-BOAT	noun	BOAT	PRED:_BOAT
+# lexical-unit	pos	lemma	features
+# lexie > partie du discours > lemme > traits
+MAN	noun	MAN	hum:yes
+MAN	noun	GUY	hum:yes
+
+TO_SNORE	verb	TO_SNORE	
+
 
 #  end
+

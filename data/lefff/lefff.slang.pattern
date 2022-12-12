@@ -1,4 +1,4 @@
-# lexeme	pos	lemma	features
+# lexical-unit	pos	lemma	features
 #		
 #Faut que X, que ça Y
 #Faut qu’il en soit malade, le gnace, que ça lui grimpe dans la citrouille. (Beurre, 97)
@@ -201,7 +201,7 @@ MOQUER	v	moquer	PRED:MOQUER, refl:yes, genCl:[PRED:_PRO], aux:être, iiReal:none
 
 # être mécontent
 ÊTRE_MÉCONTENT	v	faire	PRED:ÊTRE_MÉCONTENT, objC:[PRED:TÊTE, def:yes, number:sg, language_register:slang], language_register:slang
-ÊTRE_MÉCONTENT	v	tirer	PRED:ÊTRE_MÉCONTENT, objC:[FORM:"la tronche"], language_register:slang
+#ÊTRE_MÉCONTENT	v	tirer	PRED:ÊTRE_MÉCONTENT, objC:[FORM:"la tronche"], language_register:slang
 ÊTRE_MÉCONTENT	v	rouspéter	PRED:ÊTRE_MÉCONTENT, language_register:in_house
 ÊTRE_MÉCONTENT	v	ronchonner	PRED:ÊTRE_MÉCONTENT, language_register:in_house
 
@@ -232,8 +232,8 @@ PINSON	n	pinson	PRED:_PINSON, language_register:slang
 CONTENT	adj	jouasse	PRED:CONTENT, language_register:slang
 
 TÊTE	n	gueule	PRED:TÊTE, language_register:slang
-TÊTE	n	tronche	PRED:TÊTE, language_register:slang
-TÊTE	n	trogne	PRED:TÊTE, language_register:slang
+#TÊTE	n	tronche	PRED:TÊTE, language_register:slang
+#TÊTE	n	trogne	PRED:TÊTE, language_register:slang
 
 # escargot
 

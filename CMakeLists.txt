@@ -123,11 +123,6 @@ target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )
-add_executable(elvexdebug ${ELVEX_COMMON_SOURCES} src/elvex.cc)
-target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers
-#-DDEBUGYACC\(x\)=x 
-#-DDEBUGLEX\(x\)=x 
-)
 
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
@@ -147,18 +142,6 @@ if (LibXml2_FOUND)
             #TRACE_STEP
             #TRACE_PASS
             #TRACE_UNFOLD
-            )
-    target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
-    target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
-    target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
-        TRACE_OPTION
-        MEMOIZATION
-        RESTORE_MEMORY
-        MAXBITS=512
-        MAXLENGTH=1000
-        MAXUSAGES=1000
-        MAXITEMS=1000
-        MAXATTEMPTS=1000
         #TRACE_MEMOIZATION
         #TRACE_PASS
         #TRACE_UNFOLD
@@ -166,8 +149,8 @@ if (LibXml2_FOUND)
         #TRACE_EVAL
         #TRACE_APPLY_STATEMENT
         )
-    target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
-    target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})
+    target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
+    target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
 else()
     message("libxml2 not found")
 endif()
@@ -183,5 +166,5 @@ FLEX_TARGET(postedition_fr src/postedition_fr.l ${CMAKE_CURRENT_BINARY_DIR}/src/
 add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
 target_compile_options(elvexpostedition_fr PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
-install(TARGETS elvex elvexdebug elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
+install(TARGETS elvex elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
         RUNTIME DESTINATION bin)

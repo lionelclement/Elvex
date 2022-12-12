@@ -22,21 +22,21 @@ cd data
 
 ##################################################
 # en-1.1.0.fsa
-make en-1.1.0.fsa
-#../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
+#make en-1.1.0.fsa
+#../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:_TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:_ELVEX], vtense:future]" | ../bin/elvexpostedition_en
 #../bin/elvex --trace -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
 #../bin/elvexdebug --traceAll -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
 #../bin/elvex -r -maxItems 10000 -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input | ../bin/elvexpostedition_en
-#../bin/elvex -maxItems 10000 -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input | ../bin/elvexpostedition_en
+#../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input | ../bin/elvexpostedition_en
 #../bin/elvex --trace -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon -inputFile en-1.1.0.input
 
 ##################################################
 # slang
-(cd lefff ; make -s)
+#(cd lefff ; make -s)
 #../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input| ../bin/elvexpostedition_fr
 #echo "##################################################"
 #../bin/elvex -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
-../bin/elvex --trace -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
+#../bin/elvex --trace -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug -t -V --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #../bin/elvexdebug --traceAll -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
 #lldb ../bin/elvex -- -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-slang.rules -lexiconFile fr-slang.lexicon -inputFile fr-slang.input
@@ -57,7 +57,8 @@ make en-1.1.0.fsa
 ##################################################
 # essai-20221012
 #make essai-20221012.fsa
-#../bin/elvex -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
+#../bin/elvex -t -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
+#../bin/elvex -t -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
 #../bin/elvexdebug --traceInit --traceStage --traceClose --traceShift --traceReduce --traceAction -cld . -clf essai-20221012 -rulesFile essai-20221012.rules -lexiconFile essai-20221012.lexicon -inputFile essai-20221012.input
 
 ##################################################
@@ -80,5 +81,10 @@ make en-1.1.0.fsa
 ##################################################
 # test4
 #../bin/elvex -t -rulesFile test4.rules -lexiconFile test4.lexicon -inputFile test4.input
+
+##################################################
+# Antonio
+#../bin/elvex -maxItems 100000 -maxUsages 100000 -rulesFile antonio-1.rules -lexiconFile antonio-1.lexicon -inputFile antonio-1.input
+../bin/elvex -r -rulesFile antonio-1.rules -lexiconFile antonio-1.lexicon -inputFile antonio-1.input
 
 cd ..

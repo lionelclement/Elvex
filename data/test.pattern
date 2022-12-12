@@ -1,5 +1,5 @@
-# lexeme	pos	lemma	features
-# lexeme#pos	lemma	PRED:_lexeme,...
+# lexical-unit	pos	lemma	features
+# lexical-unit#pos	lemma	PRED:_lexeme,...
 TO_FEEL	verb	TO_FEEL	PRED:_TO_FEEL,SUBJECT:[human:true],iiReal:PRED_ADJ|SCOMP|OBJ_THETA,ii_pcase:_at,ii_csu:_if|_that
 TO_FEEL_THE_PAIN	verb	TO_FEEL	PRED:_TO_FEEL_THE_PAIN,iiReal:OBJECT,OBJECT:[PRED:_PAIN,def:true,@s]
 

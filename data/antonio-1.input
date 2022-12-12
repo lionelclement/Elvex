@@ -4,19 +4,10 @@
 
 //S [PRED:predicate, i:[PRED:SUBST], mode:indicative]
 //S [PRED:predicate, i:[PRED:SUBST], ii:[PRED:SUBST], mode:indicative]
-S [PRED:predicate, i:[PRED:SUBST], ii:[PRED:SUBST], iii:[PRED:SUBST], mode:indicative]
+//S [PRED:predicate, i:[PRED:SUBST], ii:[PRED:SUBST], iii:[PRED:SUBST], mode:indicative]
 
 //S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:ADJ]>]]
-///S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:predicate], [PRED:ADJ]>]]
 //S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:ADJ]>], ii:[PRED:SUBST, mod:<[PRED:ADJ]>]]
 //S [PRED:predicate, i:[PRED:SUBST], ii:[PRED:SUBST], iii:[PRED:SUBST]]
 //S [PRED:predicate, i:[PRED:SUBST], ii:[PRED:SUBST, mod:<[PRED:ADJ]>], iii:[PRED:SUBST, mod:<[PRED:ADJ]>]]
 //S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:ADJ]>], ii:[PRED:SUBST, mod:<[PRED:ADJ]>], iii:[PRED:SUBST, mod:<[PRED:ADJ]>]]
-///S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:SUBST]>]]
-///S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:predicate, i:[PRED:SUBST]]>]]
-///S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:predicate, ii:[PRED:SUBST]]>]]
-///S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:predicate, ii:[PRED:SUBST], iii:[PRED:SUBST]], [PRED:ADJ]>]]
-///S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:ADJ], [PRED:predicate, ii:[PRED:SUBST], iii:[PRED:SUBST]]>]]
-///S [PRED:predicate, i:[PRED:SUBST, mod:<[PRED:predicate, ii:[PRED:SUBST]], [PRED:ADJ]>], ii:[PRED:SUBST, mod:<[PRED:ADJ]>], iii:[PRED:SUBST, mod:<[PRED:ADJ]>]]
-
-

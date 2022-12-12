@@ -1077,14 +1077,14 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                         _stage = PRED_FEATURES;
                     }
 
-                    /*
-                     std::cerr << "inheritedSonFeatures : ";
-                     inheritedSonFeatures->print(std::cerr);
-                     std::cerr << std::endl;
-                     std::cerr << "pred:" << pred << std::endl;
-                     std::cerr << "form:" << form << std::endl;
-                     //std::cerr << "POS : " << Vartable::codeToString((*actualItem)->getFirstCurrentTerm()->getpos()) << std::endl;
-                     */
+                    /* 
+                     std::cout << "inheritedSonFeatures : ";
+                     inheritedSonFeatures->print(std::cout);
+                     std::cout << std::endl;
+                     std::cout << "pred:" << pred << std::endl;
+                     std::cout << "form:" << form << std::endl;
+                     std::cout << "pos : " << Vartable::codeToString((*actualItem)->getCurrentTerm()) << std::endl;
+                    */
                     auto foundpos = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
                     if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
                     {
@@ -1096,9 +1096,9 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
 
                             /* *****
                             CERR_LINE;
-                            std::cerr << "stage : " << _stage << std::endl;
-                            std::cerr << "pred : " << Vartable::codeToString(pred) << std::endl;
-                            std::cerr << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
+                            std::cout << "stage : " << _stage << std::endl;
+                            std::cout << "pred : " << Vartable::codeToString(pred) << std::endl;
+                            std::cout << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
                             ***** */
                             switch (_stage)
                             {
@@ -1396,7 +1396,7 @@ entriesPtr Synthesizer::findCompactedLexicon(
 
             try
             {
-                parser.parseBuffer("#", features, "features");
+                parser.parseBuffer("#(", ")", features, "features");
                 if (parser.getLocalFeatures())
                 {
                     unsigned int _pred = parser.getLocalFeatures()->assignPred();
@@ -1494,13 +1494,18 @@ entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred
     {
         entries = found->second;
     }
-    else if (compactedLexicon)
+    if (compactedLexicon)
     {
-        // Compact lexicon
-        entries = findCompactedLexicon(parser,
+        entriesPtr localEntries = findCompactedLexicon(parser,
                                        pos,
                                        pred);
-        listPred->insert(std::make_pair(pred, entries));
+        //listPred->insert(std::make_pair(pred, localEntries));
+        if (localEntries){
+            if (entries){
+               localEntries->add(entries);
+            }
+            entries = localEntries;
+        }
     }
     return entries;
 }

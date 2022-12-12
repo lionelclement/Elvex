@@ -119,9 +119,9 @@ public:
 
   featuresPtr findMacros(const std::string &);
 
-  void parseFile(std::string prefix, std::string fileName);
+  void parseFile(std::string prefix, std::string suffix, std::string fileName);
 
-  void parseBuffer(std::string prefix, std::string buffer, std::string bufferName);
+  void parseBuffer(std::string prefix, std::string suffix, std::string buffer, std::string bufferName);
 
   void listMacros();
 

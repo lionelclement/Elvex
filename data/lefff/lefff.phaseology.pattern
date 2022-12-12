@@ -1,3 +1,5 @@
+# lexical-unit	pos	lemma	features
+
 ÊTRE_RANCUNIER	v	avoir	PRED:ÊTRE_RANCUNIER,objC:[PRED:dent, number:sg, def:no],iiiReal:prep_obj,prep_obj:[pcas:contre]
 
 // tomber locution

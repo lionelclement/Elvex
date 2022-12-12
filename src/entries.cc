@@ -137,6 +137,16 @@ void Entries::add(const entryPtr &entry)
 /* **************************************************
  *
  ************************************************** */
+void Entries::add(entriesPtr entries)
+{
+    for(auto entry : *entries){
+        this->entries.push_back(entry);
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 entryPtr Entries::get(unsigned int i) const
 {
     return this->entries.at(i);

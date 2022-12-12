@@ -8,68 +8,68 @@ ce det[gender:ms, number:sg, def:yes, dem:yes];
 cette det[gender:fm, number:sg, def:yes, dem:yes];
 ces det[number:pl, def:yes, dem:yes];
 
-je cln[PRED:SUBST, number:sg, person:one, anim:yes, hum:yes];
-tu cln[PRED:SUBST, number:sg, person:two, anim:yes, hum:yes];
-il cln[PRED:SUBST, gender:ms, number:sg, person:three, anim:yes, hum:yes];
-elle cln[PRED:SUBST, gender:fm, number:sg, person:three, anim:yes, hum:yes];
-on cln[PRED:SUBST, number:sg, person:three, anim:yes, hum:yes];
-nous cln[PRED:SUBST, number:pl, person:one, anim:yes, hum:yes];
-vous cln[PRED:SUBST, number:pl, person:two, anim:yes, hum:yes];
-ils cln[PRED:SUBST, gender:ms, number:pl, person:three, anim:yes, hum:yes];
-elles cln[PRED:SUBST, gender:fm, number:pl, person:three, anim:yes, hum:yes];
+je cln[PRED:_SUBST, number:sg, person:one, anim:yes, hum:yes];
+tu cln[PRED:_SUBST, number:sg, person:two, anim:yes, hum:yes];
+il cln[PRED:_SUBST, gender:ms, number:sg, person:three, anim:yes, hum:yes];
+elle cln[PRED:_SUBST, gender:fm, number:sg, person:three, anim:yes, hum:yes];
+"on" cln[PRED:_SUBST, number:sg, person:three, anim:yes, hum:yes];
+nous cln[PRED:_SUBST, number:pl, person:one, anim:yes, hum:yes];
+vous cln[PRED:_SUBST, number:pl, person:two, anim:yes, hum:yes];
+ils cln[PRED:_SUBST, gender:ms, number:pl, person:three, anim:yes, hum:yes];
+elles cln[PRED:_SUBST, gender:fm, number:pl, person:three, anim:yes, hum:yes];
 
-Macron lastName[PRED:SUBST, gender:ms, number:sg, hum:yes];
-Scholz lastName[PRED:SUBST, gender:fm, number:sg, hum:yes];
-Biden lastName[PRED:SUBST, gender:ms, number:sg, hum:yes];
+//Macron lastName[PRED:SUBST, gender:ms, number:sg, hum:yes];
+//Scholz lastName[PRED:SUBST, gender:fm, number:sg, hum:yes];
+//Biden lastName[PRED:SUBST, gender:ms, number:sg, hum:yes];
 
-Émmanuel firstName[PRED:SUBST, gender:ms, number:sg, hum:yes];
-Olaf firstName[PRED:SUBST, gender:fm, number:sg, hum:yes];
-Joe firstName[PRED:SUBST, gender:fm, number:sg, hum:yes];
+//Émmanuel firstName[PRED:SUBST, gender:ms, number:sg, hum:yes];
+//Olaf firstName[PRED:SUBST, gender:fm, number:sg, hum:yes];
+//Joe firstName[PRED:SUBST, gender:fm, number:sg, hum:yes];
 
-"Émmanuel Macron" name[PRED:SUBST, gender:ms, number:sg, hum:yes];
-"Olaf Scholz" name[PRED:SUBST, gender:fm, number:sg, hum:yes];
-"Joe Biden" name[PRED:SUBST, gender:ms, number:sg, hum:yes];
+//"Émmanuel Macron" name[PRED:SUBST, gender:ms, number:sg, hum:yes];
+//"Olaf Scholz" name[PRED:SUBST, gender:fm, number:sg, hum:yes];
+//"Joe Biden" name[PRED:SUBST, gender:ms, number:sg, hum:yes];
 
-"passeport diplomatique" n[PRED:SUBST, gender:ms, number:sg, anim:no];
-"passeports diplomatiques" n[PRED:SUBST, gender:ms, number:pl, anim:no];
+"passeport diplomatique"    noun[PRED:SUBST, gender:ms, number:sg, anim:no];
+"passeports diplomatiques"  noun[PRED:SUBST, gender:ms, number:pl, anim:no];
 
-opposant	n[PRED:SUBST, gender:ms,number:sg, hum:yes];
-opposante	n[PRED:SUBST, gender:fm,number:sg, hum:yes];
-opposantes	n[PRED:SUBST, gender:fm,number:pl, hum:yes];
-opposants	n[PRED:SUBST, gender:ms,number:pl, hum:yes];
+opposant	noun[PRED:SUBST, gender:ms,number:sg, hum:yes];
+opposante	noun[PRED:SUBST, gender:fm,number:sg, hum:yes];
+opposantes	noun[PRED:SUBST, gender:fm,number:pl, hum:yes];
+opposants	noun[PRED:SUBST, gender:ms,number:pl, hum:yes];
 
-président	n[PRED:SUBST, gender:ms,number:sg, hum:yes];
-présidente	n[PRED:SUBST, gender:fm,number:sg, hum:yes];
-présidentes	n[PRED:SUBST, gender:fm,number:pl, hum:yes];
-présidents	n[PRED:SUBST, gender:ms,number:pl, hum:yes];
+président	noun[PRED:SUBST, gender:ms,number:sg, hum:yes];
+présidente	noun[PRED:SUBST, gender:fm,number:sg, hum:yes];
+présidentes	noun[PRED:SUBST, gender:fm,number:pl, hum:yes];
+présidents	noun[PRED:SUBST, gender:ms,number:pl, hum:yes];
 
-manifestant n[PRED:SUBST, gender:ms, number:sg, hum:yes];
-manifestante n[PRED:SUBST, gender:fm, number:sg, hum:yes];
-manifestants n[PRED:SUBST, gender:ms, number:pl, hum:yes];
-manifestantes n[PRED:SUBST, gender:fm, number:pl, hum:yes];
+manifestant	noun[PRED:SUBST, gender:ms, number:sg, hum:yes];
+manifestante	noun[PRED:SUBST, gender:fm, number:sg, hum:yes];
+manifestants	noun[PRED:SUBST, gender:ms, number:pl, hum:yes];
+manifestantes	noun[PRED:SUBST, gender:fm, number:pl, hum:yes];
 
-élu n[PRED:SUBST, gender:ms, number:sg, hum:yes];
-élue n[PRED:SUBST, gender:fm, number:sg, hum:yes];
-élus n[PRED:SUBST, gender:ms, number:pl, hum:yes];
-élues n[PRED:SUBST, gender:fm, number:pl, hum:yes];
+élu	noun[PRED:SUBST, gender:ms, number:sg, hum:yes];
+élue	noun[PRED:SUBST, gender:fm, number:sg, hum:yes];
+élus	noun[PRED:SUBST, gender:ms, number:pl, hum:yes];
+élues	noun[PRED:SUBST, gender:fm, number:pl, hum:yes];
 
-accord n[PRED:SUBST, gender:ms, number:sg];
-accords n[PRED:SUBST, gender:ms, number:pl];
+accord	noun[PRED:SUBST, gender:ms, number:sg];
+accords	noun[PRED:SUBST, gender:ms, number:pl];
 
-cortège n[PRED:SUBST, gender:ms, number:sg];
-cortèges n[PRED:SUBST, gender:ms, number:pl];
+cortège	noun[PRED:SUBST, gender:ms, number:sg];
+cortèges	noun[PRED:SUBST, gender:ms, number:pl];
 
-solution n[PRED:SUBST, gender:fm, number:sg];
-solutions n[PRED:SUBST, gender:fm, number:pl];
+solution	noun[PRED:SUBST, gender:fm, number:sg];
+solutions	noun[PRED:SUBST, gender:fm, number:pl];
 
-rue n[PRED:SUBST, gender:fm, number:sg, loc:yes];
-rues n[PRED:SUBST, gender:fm, number:pl, loc:yes];
+rue	noun[PRED:SUBST, gender:fm, number:sg, loc:yes];
+rues	noun[PRED:SUBST, gender:fm, number:pl, loc:yes];
 
-rassemblement n[PRED:SUBST, gender:ms, number:sg, evt:yes];
-rassemblements n[PRED:SUBST, gender:ms, number:pl, evt:yes];
+rassemblement	noun[PRED:SUBST, gender:ms, number:sg, evt:yes];
+rassemblements	noun[PRED:SUBST, gender:ms, number:pl, evt:yes];
 
-réunion n[PRED:SUBST, gender:fm, number:sg, evt:yes];
-réunions n[PRED:SUBST, gender:fm, number:pl, evt:yes];
+réunion		noun[PRED:_SUBST, gender:fm, number:sg, evt:yes];
+réunions	noun[PRED:SUBST, gender:fm, number:pl, evt:yes];
 
 virulent adj[PRED:ADJ, gender:ms, number:sg, pos:post];
 virulente adj[PRED:ADJ, gender:fm, number:sg, pos:post];
@@ -88,47 +88,47 @@ intéressantes adj[PRED:ADJ, gender:fm, number:pl, pos:post];
 célèbre adj[PRED:ADJ, number:sg, pos:post];
 célèbres adj[PRED:ADJ, number:pl, pos:post];
 
-pourris v[PRED:VERB_N0, subj:[number:sg, person:one], vform:tensed];
-pourris v[PRED:VERB_N0, subj:[number:sg, person:two], vform:tensed];
-pourrit v[PRED:VERB_N0, subj:[number:sg, person:three], vform:tensed];
-pourrissons v[PRED:VERB_N0, subj:[number:pl, person:one], vform:tensed];
-pourrissez v[PRED:VERB_N0, subj:[number:pl, person:two], vform:tensed];
-pourrissent v[PRED:VERB_N0, subj:[number:pl, person:three], vform:tensed];
+pourris verb[PRED:VERB_N0, subj:[number:sg, person:one], vform:tensed];
+pourris verb[PRED:VERB_N0, subj:[number:sg, person:two], vform:tensed];
+pourrit verb[PRED:VERB_N0, subj:[number:sg, person:three], vform:tensed];
+pourrissons verb[PRED:VERB_N0, subj:[number:pl, person:one], vform:tensed];
+pourrissez verb[PRED:VERB_N0, subj:[number:pl, person:two], vform:tensed];
+pourrissent verb[PRED:VERB_N0, subj:[number:pl, person:three], vform:tensed];
 
-marche v[PRED:VERB_N0, subj:[number:sg, person:one, anim:yes], vform:tensed];
-marches v[PRED:VERB_N0, subj:[number:sg, person:two, anim:yes], vform:tensed];
-marche v[PRED:VERB_N0, subj:[number:sg, person:three, anim:yes], vform:tensed];
-marchons v[PRED:VERB_N0, subj:[number:pl, person:one, anim:yes], vform:tensed];
-marchez v[PRED:VERB_N0, subj:[number:pl, person:two, anim:yes], vform:tensed];
-marchent v[PRED:VERB_N0, subj:[number:pl, person:three, anim:yes], vform:tensed];
+marche verb[PRED:VERB_N0, subj:[number:sg, person:one, anim:yes], vform:tensed];
+marches verb[PRED:VERB_N0, subj:[number:sg, person:two, anim:yes], vform:tensed];
+marche verb[PRED:VERB_N0, subj:[number:sg, person:three, anim:yes], vform:tensed];
+marchons verb[PRED:VERB_N0, subj:[number:pl, person:one, anim:yes], vform:tensed];
+marchez verb[PRED:VERB_N0, subj:[number:pl, person:two, anim:yes], vform:tensed];
+marchent verb[PRED:VERB_N0, subj:[number:pl, person:three, anim:yes], vform:tensed];
 
-interpelle v[PRED:VERB_N0_N1, subj:[number:sg, person:one, hum:yes], obj:[hum:yes], vform:tensed];
-interpelles v[PRED:VERB_N0_N1, subj:[number:sg, person:two, hum:yes], obj:[hum:yes], vform:tensed];
-interpelle v[PRED:VERB_N0_N1, subj:[number:sg, person:three, hum:yes], obj:[hum:yes], vform:tensed];
-interpellons v[PRED:VERB_N0_N1, subj:[number:pl, person:one, hum:yes], obj:[hum:yes], vform:tensed];
-interpellez v[PRED:VERB_N0_N1, subj:[number:pl, person:two, hum:yes], obj:[hum:yes], vform:tensed];
-interpellent v[PRED:VERB_N0_N1, subj:[number:pl, person:three, hum:yes], obj:[hum:yes], vform:tensed];
+interpelle verb[PRED:VERB_N0_N1, subj:[number:sg, person:one, hum:yes], obj:[hum:yes], vform:tensed];
+interpelles verb[PRED:VERB_N0_N1, subj:[number:sg, person:two, hum:yes], obj:[hum:yes], vform:tensed];
+interpelle verb[PRED:VERB_N0_N1, subj:[number:sg, person:three, hum:yes], obj:[hum:yes], vform:tensed];
+interpellons verb[PRED:VERB_N0_N1, subj:[number:pl, person:one, hum:yes], obj:[hum:yes], vform:tensed];
+interpellez verb[PRED:VERB_N0_N1, subj:[number:pl, person:two, hum:yes], obj:[hum:yes], vform:tensed];
+interpellent verb[PRED:VERB_N0_N1, subj:[number:pl, person:three, hum:yes], obj:[hum:yes], vform:tensed];
 
-parle v[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:sg, person:one, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
-parles v[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:sg, person:two, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
-parle v[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:sg, person:three, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
-parlons v[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:pl, person:one, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
-parlez v[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:pl, person:two, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
-parlent v[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:pl, person:three, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
+parle verb[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:sg, person:one, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
+parles verb[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:sg, person:two, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
+parle verb[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:sg, person:three, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
+parlons verb[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:pl, person:one, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
+parlez verb[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:pl, person:two, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
+parlent verb[PRED:VERB_N0_PREPN1_PREPN2, subj:[number:pl, person:three, hum:yes], obl:[pcas:de], obl2:[pcas:à, hum:yes], vform:tensed];
 
-accorde v[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:one, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
-accordes v[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:two, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
-accorde v[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:three, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
-accordeons v[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:one, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
-accordez v[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:two, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
-accordent v[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:three, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
+accorde verb[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:one, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
+accordes verb[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:two, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
+accorde verb[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:three, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
+accordeons verb[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:one, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
+accordez verb[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:two, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
+accordent verb[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:three, anim:yes], obj:[anim:no], obl:[pcas:à, anim:yes], vform:tensed];
 	  
-propose v[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:one, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
-proposes v[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:two, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
-propose v[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:three, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
-proposons v[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:one, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
-proposez v[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:two, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
-proposent v[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:three, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
+propose verb[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:one, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
+proposes verb[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:two, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
+propose verb[PRED:VERB_N0_N1_PREPN2, subj:[number:sg, person:three, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
+proposons verb[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:one, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
+proposez verb[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:two, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
+proposent verb[PRED:VERB_N0_N1_PREPN2, subj:[number:pl, person:three, hum:yes], obj:[anim:no], obl2:[pcas:à, hum:yes], vform:tensed];
 
 à prep[pcas:à];
 de prep[pcas:de];

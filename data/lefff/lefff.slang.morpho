@@ -1,3 +1,5 @@
+# lexical-form pos	lemma	features
+
 chieur	n	chieur	gender:ms,number:sg
 chieurs	n	chieur	gender:ms,number:pl
 chieuse	n	chieur	gender:fm,number:sg

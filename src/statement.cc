@@ -1326,7 +1326,7 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
                     {
                         std::stringstream stringStream;
                         entryFeatures->flatPrint(stringStream);
-                        parser.parseBuffer("#", stringStream.str(), stringStream.str());
+                        parser.parseBuffer("#(", ")", stringStream.str(), stringStream.str());
                         if (resultPairp->isNil())
                             resultPairp = Pairp::create(Value::create(parser.getLocalFeatures()));
                         else

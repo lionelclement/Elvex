@@ -167,35 +167,35 @@ axiom:
 	};
 
 begin:
-	TOKEN_RULES rules {
+	TOKEN_RULES TOKEN_LPAR rules TOKEN_RPAR{
 	  DBUGPRT("begin grammar");
 	}
 
-	|TOKEN_INPUT term features {
+	|TOKEN_INPUT TOKEN_LPAR term features TOKEN_RPAR {
 	  DBUGPRT("begin input");
-	  parser.setStartTerm($2);
-	  (*$3)->renameVariables((*$3)->getId());
-	  parser.setStartFeatures(*$3);
-	  free($3);
+	  parser.setStartTerm($3);
+	  (*$4)->renameVariables((*$4)->getId());
+	  parser.setStartFeatures(*$4);
+	  free($4);
 	}
 
-	|TOKEN_INPUT term {
+	|TOKEN_INPUT TOKEN_LPAR term TOKEN_RPAR {
 	  DBUGPRT("begin input");
-	  parser.setStartTerm($2);
+	  parser.setStartTerm($3);
 	  parser.setStartFeatures(Features::create());
 	 }
 
-	|TOKEN_LEXICON dictionary {
+	|TOKEN_LEXICON TOKEN_LPAR dictionary TOKEN_RPAR{
 	  DBUGPRT("begin lexicon");
 	  //CERR_LINE;
-	  //parser.printCacheLexicon(std::cerr);
+	  //parser.printCacheLexicon(std::cout);
 	}
 
-	|TOKEN_DASH features
+	|TOKEN_DASH TOKEN_LPAR features TOKEN_RPAR
 	{
 	  DBUGPRT("begin features");
-	  parser.setLocalFeatures(*$2);
-	  free($2);
+	  parser.setLocalFeatures(*$3);
+	  free($3);
 	};
 
 dictionary:
@@ -268,8 +268,7 @@ dictionary_line:
 	    (*entry)->setForm(*$1);
 	    entriesPtr lp;
 	    Parser::entries_map* predToEntries;
-	    //std::cerr << entry->getCode() << std::endl;
-	    auto foundCode = parser.findCacheLexicon((*entry)->getPos());
+		auto foundCode = parser.findCacheLexicon((*entry)->getPos());
 	    if (foundCode != parser.cendCacheLexicon()){
 	      predToEntries = foundCode->second;
 	    } else {

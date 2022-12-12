@@ -70,7 +70,7 @@ options\n\
  \t--traceAction\n";
 #endif
     std::cerr << "\
-\t-maxLength <number>                         max number of length\n\
+\t-maxLength <number>                         max sentence length\n\
 \t-maxUsages <number>                         max number of rule usage\n\
 \t-maxItems <number>                          max number of items per set\n\
 \t-maxTime <seconds>                          max time in seconds\n\
@@ -296,13 +296,13 @@ int main(int argn, char **argv)
                             throw usage_exception("bad maxLength argument");
                         }
                     }
-                    else if (!strcmp(argv[arg] + 1, "maxLength"))
+                    else if (!strcmp(argv[arg] + 1, "maxUsages"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                             synthesizer.setMaxUsages(atoi(argv[++arg]));
                         else
                         {
-                            throw usage_exception("bad maxLength argument");
+                            throw usage_exception("bad maxUsages argument");
                         }
                     }
                     else if (!strcmp(argv[arg] + 1, "maxItems"))
@@ -393,12 +393,12 @@ int main(int argn, char **argv)
 
             if (synthesizer.getLexiconFileName().length() > 0)
             {
-                parser.parseFile("@lexicon", synthesizer.getLexiconFileName());
+                parser.parseFile("@lexicon (", ")", synthesizer.getLexiconFileName());
             }
 
             if (synthesizer.getRulesFileName().length() > 0)
             {
-                parser.parseFile("@rules", synthesizer.getRulesFileName());
+                parser.parseFile("@rules (", ")", synthesizer.getRulesFileName());
                 parser.getRules().analyseTerms(parser);
             }
 
@@ -426,6 +426,10 @@ int main(int argn, char **argv)
 #endif
         }
 
+    //COUT_LINE;
+    //parser.printCacheLexicon(std::cout);
+
+
 #ifdef TRACE_OPTION
         if (trace){
             std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
@@ -435,14 +439,14 @@ int main(int argn, char **argv)
         srand(time(nullptr));
         if (synthesizer.getInputFileName().length() > 0)
         {
-            parser.parseFile("@input", synthesizer.getInputFileName());
+            parser.parseFile("@input (", ")", synthesizer.getInputFileName());
             generate(trace);
         }
 
         for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin();
              i != synthesizer.getInputs().end(); ++i)
         {
-            parser.parseBuffer("@input", *i, "input");
+            parser.parseBuffer("@input (", ")", *i, "input");
             generate(trace);
         }
 

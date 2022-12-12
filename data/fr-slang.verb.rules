@@ -488,7 +488,7 @@ V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] Verb {
       [resObjExNumber:$resObjExNumber, resObjExGender:$resObjExGender] ⊂ ↑;
       ↓7 = [vform:participle, vtense:past, number:$resObjExNumber, gender:$resObjExGender, $rest];
     }
-    if (⇓7){
+    wait (⇓7){
       [number:$npart, gender:$gpart, aux:$aux, refl:$refl, $rest] ⊂ ⇓7;
       attest ($aux == avoir);
       attest ($refl ⇒ $resObj);
@@ -813,15 +813,6 @@ V → [clneg] aux_commencer [clint] [advneg] [ADVM] à CLITICS Verb {
   ⇑ = [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt];
 }
 
-Verb → v {
-  [language_register:$language_register, lexical_function:$lexical_function] ⊂ ↑;
-  ↓1 = ↑;
-  [language_register:$Synth_language_register, lexical_function:$Synth_lexical_function] ⊂ ⇓1;
-  attest ($language_register <=> $Synth_language_register);
-  attest ($lexical_function <=> $Synth_lexical_function);
-  ⇑ = ⇓1;
-}
-
 // verbe copule
 // X est facteur
 // X n'est pas souvent malade
@@ -911,6 +902,15 @@ V → [clneg] aux_avoir [clint] [advneg] aux_être [ADVM] NP|ADJ {
   //[PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC] ⊂ ⇓8;
   //⇑ = [PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, vtense:$auxVtense, mode:$auxMode, vform:$auxVform];
   ⇑ = ⇓7;
+}
+
+Verb → v {
+  [language_register:$language_register, lexical_function:$lexical_function] ⊂ ↑;
+  ↓1 = ↑;
+  [language_register:$Synth_language_register, lexical_function:$Synth_lexical_function] ⊂ ⇓1;
+  attest ($language_register <=> $Synth_language_register);
+  attest ($lexical_function <=> $Synth_lexical_function);
+  ⇑ = ⇓1;
 }
 
 SComp → csu modalClause {

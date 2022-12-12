@@ -41,7 +41,7 @@
 *
 ***/
 
-Text_with_features[PRED:_TO_APPRECIATE, i:[PRED:_pro], ii:[PRED:_ELVEX], vtense:$t]
+//Text_with_features[PRED:_TO_APPRECIATE, i:[PRED:_pro], ii:[PRED:_ELVEX], vtense:$t]
 
 //Text [PRED:_TO_FEEL, i:[PRED:_EGO]]
 //Text [PRED:_TO_FEEL, i:[PRED:_EGO], ii:[PRED:_GOOD]]
@@ -88,7 +88,7 @@ Text_with_features[PRED:_TO_APPRECIATE, i:[PRED:_pro], ii:[PRED:_ELVEX], vtense:
 //Text [PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_1, i:[PRED:_JOHN], ii:[PRED:_MARY]]
 //Text [PRED:_TO_CALL_DOWN_2, i:[PRED:_JOHN], ii:[PRED:_WARNING, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
-///Text [PRED:_TO_CALL_DOWN_3, i:[PRED:_JOHN], ii:[PRED:_DIVINE_BLESSINGS, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
+Text [PRED:_TO_CALL_DOWN_3, i:[PRED:_JOHN], ii:[PRED:_DIVINE_BLESSINGS, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
 
 
 ///Text [PRED:_TO_WANT, i:[PRED:_JOHN, id:1], ii:[PRED:_TO_SIT, i:[idref:1], ii:[PRED:_CHAIR, def:false, poss:false, number:sg]]]

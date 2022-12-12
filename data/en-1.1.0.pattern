@@ -30,6 +30,15 @@ _TO_WANT	verb	TO_WANT	PRED:_TO_WANT,SUBJECT:[],iiReal:VCOMP,VCOMP:[]
 
 _TO_TELL	verb	TO_TELL	PRED:_TO_TELL,SUBJECT:[human:true],iiReal:OBJECT,iiiReal:SCOMP,ii_csu:_that
 
+
+/***
+*   To put on the brakes: to describe the act of slowing down or stopping something, especially a vehicle, in a sudden or emergency situation.
+*   To hit the brakes: to suddenly stop or slow down, especially in a vehicle
+*   To pump the brakes: to apply and release the brakes repeatedly, as a way of slowing down a vehicle without skidding or losing control
+*   To step on the brakes: to press down on the brake pedal in a vehicle, as a way of slowing down or stopping
+***/
+
+
   // Nouns
 _PAIN	common_noun	PAIN	PRED:_PAIN,countable:false
 _SADNESS	common_noun	SADNESS	PRED:_SADNESS,countable:false
@@ -49,5 +58,8 @@ _HAPPY	adj	HAPPY	PRED:_HAPPY
 
 #  Adverbs
 _VERY	adv	VERY	PRED:_VERY
+
+
+
 
 #  end

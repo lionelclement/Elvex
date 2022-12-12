@@ -1,3 +1,5 @@
+# lexical-unit	pos	lemma	features
+
 ### ############################################################
 ## Température
 ## Pluie
@@ -52,8 +54,8 @@ FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, refl:yes, objRefl:[person:two, @s], subj
 ###################################################
 ### slang language
 ###################################################
-FAIRE_CHAUD	v	crever	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], language_register:slang
 FAIRE_CHAUD	v	crever	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"de chaud"]>, language_register:slang
+# Oh !
 #FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"la raie en sauce"]>, language_register:slang
 #FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les olives qui baignent dans l'huile"]>, language_register:slang
 #FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les rillettes sous les bras"]>, language_register:slang
@@ -70,11 +72,12 @@ FAIRE_CHAUD	v	crever	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"de 
 PLEUVOIR	v	vaser	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
 PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
 PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"ça", @_3s], iiReal:none, degree:regular, language_register:slang
+
 ##################################################
 ### few
 ###################################################
 PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:TROP]>, negC:yes, degree:few, language_register:slang
-PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:BÉZEF]>, negC:yes, degree:few, language_register:slang
+
 ##################################################
 ### a_lot
 ###################################################
