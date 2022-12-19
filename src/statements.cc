@@ -229,7 +229,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
     if (guard && guard->isUnsetFlags(Flags::SEEN))
     {
 #ifdef TRACE_OPTION
-        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+        if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
             std::cout << "<H3>####################### APPLY (before gard) #######################</H3>" << std::endl;
             item->print(std::cout);
@@ -243,7 +243,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
         //}
         guard->addFlags(Flags::SEEN);
 #ifdef TRACE_OPTION
-        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+        if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
             std::cout << "<H3>####################### APPLY CON'T (after gard) #######################</H3>" << std::endl;
             item->print(std::cout);
@@ -335,7 +335,7 @@ exitApply:
 {
 }
 #ifdef TRACE_OPTION
-    if (synthesizer->getTraceAction() || (synthesizer->getTrace() && item->getRuleTrace()))
+    if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
     {
         std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
         item->print(std::cout);
