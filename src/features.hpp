@@ -114,6 +114,8 @@ public:
 
     void deleteAnonymousVariables();
 
+    void deleteVariables();
+
     bool containsVariable();
 
     bool findVariable(const bitsetPtr &);

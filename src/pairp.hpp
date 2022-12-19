@@ -105,6 +105,8 @@ public:
 
     bool buildEnvironment(const environmentPtr &, const pairpPtr &, bool, bool);
 
+    void deleteVariables(void);
+
     void deleteAnonymousVariables(void);
 
     bool renameVariables(size_t);

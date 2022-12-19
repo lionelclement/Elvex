@@ -1,0 +1,114 @@
+@_1	person:one		
+@_12	person:one|two		
+@_12s	person:one|two,number:sg		
+@_1p	person:one,number:pl		
+@_1s	person:one,number:sg		
+@_2	person:two		
+@_2p	person:two,number:pl		
+@_2s	person:two,number:sg		
+@_3	person:three		
+@_3fs	person:three,number:sg,number:sg,gender:fm		
+@_3ms	person:three,number:sg,gender:ms		
+@_3p	person:three,number:pl		
+@_3s	person:three,number:sg		
+@f	gender:fm		
+@m	gender:ms		
+@p	number:pl		
+@s	number:sg		
+appreciate	verb	TO_APPRECIATE	vtense:infinitive
+appreciate	verb	TO_APPRECIATE	vtense:present,SUBJECT:[@_12s]
+appreciate	verb	TO_APPRECIATE	vtense:present,SUBJECT:[@p]
+appreciated	verb	TO_APPRECIATE	vtense:past_participle,tensed:false
+appreciated	verb	TO_APPRECIATE	vtense:preterite
+appreciates	verb	TO_APPRECIATE	vtense:present,SUBJECT:[@_3s]
+appreciating	verb	TO_APPRECIATE	vtense:present_participle,tensed:false
+bad	adj	BAD	
+call	verb	TO_CALL	vtense:infinitive,tensed:false,tensed:false
+call	verb	TO_CALL	vtense:present,SUBJECT:[@_12s]
+call	verb	TO_CALL	vtense:present,SUBJECT:[@p]
+called	verb	TO_CALL	vtense:past_participle,tensed:false
+called	verb	TO_CALL	vtense:preterite
+calling	verb	TO_CALL	vtense:present_participle,tensed:false
+calls	verb	TO_CALL	vtense:present,SUBJECT:[@_3s]
+chair	common_noun	CHAIR	
+chair man	common_noun	CHAIR_MAN	@s
+divine blessings	common_noun	DIVINE_BLESSINGS	
+endure	verb	TO_ENDURE	vtense:infinitive,tensed:false
+endure	verb	TO_ENDURE	vtense:present,SUBJECT:[@_12s]
+endure	verb	TO_ENDURE	vtense:present,SUBJECT:[@p]
+endured	verb	TO_ENDURE	vtense:past_participle,tensed:false
+endured	verb	TO_ENDURE	vtense:preterite
+endures	verb	TO_ENDURE	vtense:present,SUBJECT:[@_3s]
+enduring	verb	TO_ENDURE	vtense:present_participle,tensed:false
+enjoy	verb	TO_ENJOY	vtense:infinitive,tensed:false
+enjoy	verb	TO_ENJOY	vtense:present,SUBJECT:[@_12s]
+enjoy	verb	TO_ENJOY	vtense:present,SUBJECT:[@p]
+enjoyed	verb	TO_ENJOY	vtense:past_participle,tensed:false
+enjoyed	verb	TO_ENJOY	vtense:preterite
+enjoying	verb	TO_ENJOY	vtense:present_participle,tensed:false
+enjoys	verb	TO_ENJOY	vtense:present,SUBJECT:[@_3s]
+feel	verb	TO_FEEL	vtense:infinitive,tensed:false
+feel	verb	TO_FEEL	vtense:present,tensed:true,SUBJECT:[@_12s]
+feel	verb	TO_FEEL	vtense:present,tensed:true,SUBJECT:[@p]
+feeling	verb	TO_FEEL	vtense:present_participle,tensed:false
+feels	verb	TO_FEEL	vtense:present,tensed:true,SUBJECT:[@_3s]
+felt	verb	TO_FEEL	vtense:past_participle,tensed:false
+felt	verb	TO_FEEL	vtense:preterite,tensed:true
+good	adj	GOOD	
+happy	adj	HAPPY	
+hope	common_noun	HOPE	
+nice	adj	NICE	
+pain	common_noun	PAIN	
+sadness	common_noun	SADNESS	
+said	verb	TO_SAY	vtense:past_participle,tensed:false
+said	verb	TO_SAY	vtense:preterite
+sat	verb	TO_SIT	vtense:past_participle,tensed:false
+sat	verb	TO_SIT	vtense:preterite
+say	verb	TO_SAY	vtense:infinitive,tensed:false
+say	verb	TO_SAY	vtense:present,SUBJECT:[@_12s]
+say	verb	TO_SAY	vtense:present,SUBJECT:[@p]
+saying	verb	TO_SAY	vtense:present_participle,tensed:false
+says	verb	TO_SAY	vtense:present,SUBJECT:[@_3s]
+sit	verb	TO_SIT	vtense:infinitive,tensed:false
+sit	verb	TO_SIT	vtense:present,SUBJECT:[@_12s]
+sit	verb	TO_SIT	vtense:present,SUBJECT:[@p]
+sits	verb	TO_SIT	vtense:present,SUBJECT:[@_3s]
+sitting	verb	TO_SIT	vtense:present_participle,tensed:false
+snore	verb	TO_SNORE	vtense:infinitive,tensed:false
+snore	verb	TO_SNORE	vtense:present,SUBJECT:[@_12s]
+snore	verb	TO_SNORE	vtense:present,SUBJECT:[@p]
+snored	verb	TO_SNORE	vtense:past_participle,tensed:false
+snored	verb	TO_SNORE	vtense:preterite
+snores	verb	TO_SNORE	vtense:present,SUBJECT:[@_3s]
+snoring	verb	TO_SNORE	vtense:present_participle,tensed:false
+stay away	verb	TO_STAY_AWAY	vtense:infinitive,tensed:false
+stay away	verb	TO_STAY_AWAY	vtense:present,SUBJECT:[@_12s]
+stay away	verb	TO_STAY_AWAY	vtense:present,SUBJECT:[@p]
+stayed away	verb	TO_STAY_AWAY	vtense:past_participle,tensed:false
+stayed away	verb	TO_STAY_AWAY	vtense:preterite
+staying away	verb	TO_STAY_AWAY	vtense:present_participle,tensed:false
+stays away	verb	TO_STAY_AWAY	vtense:present,SUBJECT:[@_3s]
+suffer	verb	TO_SUFFER	vtense:infinitive,tensed:false
+suffer	verb	TO_SUFFER	vtense:present,SUBJECT:[@_12s]
+suffer	verb	TO_SUFFER	vtense:present,SUBJECT:[@p]
+suffered	verb	TO_SUFFER	vtense:past_participle,tensed:false
+suffered	verb	TO_SUFFER	vtense:preterite
+suffering	verb	TO_SUFFER	vtense:present_participle,tensed:false
+suffers	verb	TO_SUFFER	vtense:present,SUBJECT:[@_3s]
+tell	verb	TO_TELL	vtense:infinitive,tensed:false
+tell	verb	TO_TELL	vtense:present,SUBJECT:[@_12s]
+tell	verb	TO_TELL	vtense:present,SUBJECT:[@p]
+telling	verb	TO_TELL	vtense:present_participle,tensed:false
+tells	verb	TO_TELL	vtense:present,SUBJECT:[@_3s]
+tenderness	common_noun	TENDERNESS	
+told	verb	TO_TELL	vtense:past_participle,tensed:false
+told	verb	TO_TELL	vtense:preterite
+very	adv	VERY	
+want	verb	TO_WANT	vtense:infinitive,tensed:false
+want	verb	TO_WANT	vtense:present,SUBJECT:[@_12s]
+want	verb	TO_WANT	vtense:present,SUBJECT:[@p]
+wanted	verb	TO_WANT	vtense:past_participle,tensed:false
+wanted	verb	TO_WANT	vtense:preterite
+wanting	verb	TO_WANT	vtense:present_participle,tensed:false
+wants	verb	TO_WANT	vtense:present,SUBJECT:[@_3s]
+warning	common_noun	WARNING	

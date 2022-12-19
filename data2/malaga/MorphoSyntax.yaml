@@ -1,0 +1,53 @@
+VER:
+    FormesBase: [INF,PRS,PRS,PST,PST,PST,PST]
+    FormesPers: ["","TroisSg","TroisPl","TroisSg","TroisPl","TroisSg","TroisPl"]
+Attributs:
+    NOM: [Genre,Nombre,Cas]
+    VER: [Trans,Temps,Pers,Genre]
+    ADJ: [Genre,Nombre]
+    DET: [Nombre,Genre,Cas]
+Defauts:
+    Cas: Abs
+    Genre: A
+    Nombre: Sg
+    NbPers: Sg
+Cas: 
+    SUJ: Erg
+    OBJ: Abs
+    IND: Dat
+    PREP: +Obl
+    POUR: +DAT
+    À: +DAT
+Dimensions:
+    maxChunk: 21
+#    maxChunk: 48
+    NOM:
+#        cols: 2
+        long: 20
+    ADJ:
+        cols: 2
+        long: 4
+    VER:
+        cols: 2
+        long: 18
+    DET:
+        cols: 3
+        long: 4
+    PREP: 
+        cols: 3
+
+########################
+## SYNTAGMES
+########################
+Syntagmes:
+    Phrase: [AJOUT,SUJ,OBJ,IND,COMP,VER]
+    GN: [GP,NOM,GADJ,DET]
+    GP: [GN,PREP]
+    GADJ: [GP,ADJ,ADV]
+########################
+Contractions:
+    au: [à,le]
+    aux: [à,les]
+    du: [de,le]
+    des: [de, les]
+    d: [de]

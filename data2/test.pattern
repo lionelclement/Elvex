@@ -1,0 +1,54 @@
+# lexical-unit	pos	lemma	features
+# lexical-unit#pos	lemma	PRED:_lexeme,...
+TO_FEEL	verb	TO_FEEL	PRED:_TO_FEEL,SUBJECT:[human:true],iiReal:PRED_ADJ|SCOMP|OBJ_THETA,ii_pcase:_at,ii_csu:_if|_that
+TO_FEEL_THE_PAIN	verb	TO_FEEL	PRED:_TO_FEEL_THE_PAIN,iiReal:OBJECT,OBJECT:[PRED:_PAIN,def:true,@s]
+
+TO_APPRECIATE	verb	TO_APPRECIATE	SUBJECT:[human:true],iiReal:OBJECT
+
+TO_ENJOY	verb	TO_ENJOY	SUBJECT:[human:true],iiReal:OBJECT
+TO_SUFFER	verb	TO_SUFFER	SUBJECT:[human:true],iiReal:OBJECT
+TO_ENDURE	verb	TO_ENDURE	SUBJECT:[human:true],iiReal:OBJECT
+
+TO_STAY_AWAY	verb	TO_STAY_AWAY	SUBJECT:[human:true]
+
+#  To CALL
+#  to call someone/something
+TO_CALL	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT
+#  to call someone down : to reprimand a person
+TO_CALL_DOWN_1	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:true],particule:down
+#  to call something down to someone: to shout something to a person on a lower level
+TO_CALL_DOWN_2	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:to,particule:down
+#  to call something down on someone: to invoke some sort of divine punishment onto someone
+TO_CALL_DOWN_3	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:on,particule:down
+
+TO_SNORE	verb	TO_SNORE	PRED:_TO_SNORE,SUBJECT:[animate:true]
+
+TO_SIT	verb	TO_SIT	PRED:_TO_SIT,iiReal:OBJ_THETA,pcase:on
+
+TO_SAY	verb	TO_SAY	PRED:_TO_SAY,iiReal:SCOMP,compl:that
+
+TO_WANT	verb	TO_WANT	PRED:_TO_WANT,SUBJECT:[],iiReal:VCOMP,VCOMP:[]
+
+TO_TELL	verb	TO_TELL	PRED:_TO_TELL,SUBJECT:[human:true],iiReal:OBJECT,iiiReal:SCOMP,ii_csu:_that
+
+# Nouns
+PAIN	common_noun	PAIN	PRED:_PAIN,countable:false
+SADNESS	common_noun	SADNESS	PRED:_SADNESS,countable:false
+HOPE	common_noun	HOPE	PRED:_HOPE,countable:false
+TENDERNESS	common_noun	TENDERNESS	PRED:_TENDERNESS,countable:false
+WARNING	common_noun	WARNING	PRED:_WARNING
+DIVINE_BLESSINGS	common_noun	DIVINE_BLESSINGS	PRED:_DIVINE_BLESSINGS
+CHAIR	common_noun	CHAIR	PRED:_CHAIR
+CHAIR_MAN	common_noun	CHAIR_MAN	PRED:_CHAIR_MAN
+
+#  Adjectives
+NICE	adj	NICE	PRED:_NICE
+BAD	adj	BAD	PRED:_BAD,lexical_function:none
+BAD	adj	BAD	PRED:_BAD,lexical_function:magn,MOD:[PRED:_VERY]
+GOOD	adj	GOOD	PRED:_GOOD
+HAPPY	adj	HAPPY	PRED:_HAPPY
+
+#  Adverbs
+VERY	adv	VERY	PRED:_VERY
+
+#  end

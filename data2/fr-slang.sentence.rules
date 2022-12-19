@@ -1,0 +1,93 @@
+// from fr-slang.arguments.rules
+#include fr-slang.verb.rules
+#include fr-slang.clitics.rules
+
+sentence → S {
+  //[subj:$subj, modS:NIL];
+  [voice:$voice, lexical_function:$lexical_function, language_register:$language_register, $rest] ⊂ ↑;
+
+  if (¬ $language_register) {
+    $language_register = default;
+  }
+  
+  if (¬ $lexical_function) {
+    $lexical_function = default;
+  }
+
+  /*
+  if ((¬ $language_register) || ($language_register == default)) {
+    $lr = [];
+  }
+  else {
+    $lr = [language_register:$language_register];
+    }
+  */
+
+  /*
+  if ((¬ $lexical_function) || ($lexical_function == default))
+    $lf = [];
+  else
+    $lf = [$lexical_function:lexical_function];
+  */
+
+  if (¬ $voice)
+    $voice = active;
+
+  ↓1 = [voice:$voice, lexical_function:$lexical_function, language_register:$language_register, $rest];
+  //↓1 = $rest U [voice:$voice] U $lf U $lr;
+  ⇑ = ⇓1;
+}
+
+S → S et S {
+  [PRED:et, i:$i, ii:$ii];
+  ↓1 = $i;
+  ↓2 = [];
+  ↓3 = $ii;
+}
+
+/* **************************************************
+ * Phrase
+ * problème de dépendance entre 
+ * ↓2 = [subj:[number:$N, gender:$G, person:$P], $rest] ∪ [subj:$subjSynt];       
+ * et
+ * [number:$N, gender:$G, person:$P] ⊂ ⇓1;
+ * revoir if!
+ ************************************************** */
+S → [ NP | cln ] VP {
+  [subj:$subj, $rest];
+  [aggrSubjSCompSubj:$aggrSubjSCompSubj, inv:$inv, mode:$mode, language_register:$language_register] ⊂ ↑;
+  [PRED:$predSubj] ⊂ $subj;
+  if (#1){
+    attest (#1.1 ⇒ ($predSubj ≠ __pro));
+    ↓1 = $subj ∪ [det:yes, language_register:$language_register];
+    attest ($mode != imperative) ∧ (($inv != yes) ∨ ($predSubj != __pro));
+    $subjSynt = ⇓1;
+    [number:$N, gender:$G, person:$P] ⊂ ⇓1;
+    if ($aggrSubjSCompSubj == yes){
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], scomp:[subj:[number:$N, gender:$G, person:$P]], $rest] ∪ [subj:$subjSynt];
+    } else {
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], $rest] ∪ [subj:$subjSynt];
+    }
+  }
+  else {
+    attest ($mode == imperative) ∨ (($inv == yes) ∧ ($predSubj == __pro));
+    [number:$N, gender:$G, person:$P] ⊂ $subj;
+    $subjSynt = [];
+    if ($aggrSubjSCompSubj == yes){
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], scomp:[subj:[number:$N, gender:$G, person:$P]], mode:$mode, $rest];
+    } else {
+      ↓2 = [subj:[number:$N, gender:$G, person:$P], mode:$mode, $rest];
+    }
+  }
+  ⇑ = ⇓2 ∪ [subj:$subjSynt];
+}
+
+S → NP VP {
+  [subj:NIL];
+  [language_register:$language_register] ⊂ ↑;
+  ↓2 = ↑;
+  [subjC:$subjC, objRefl:$x] ⊂ ⇓2;
+  ↓1 = [language_register:$language_register, $subjC];
+  $subjSynt = ⇓1;
+  ⇑ = ⇓2 ∪ [subj:$subjSynt] ∪ [subj:$subjC];
+}

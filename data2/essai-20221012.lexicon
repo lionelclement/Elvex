@@ -1,0 +1,31 @@
+// @macro: features;
+// form	pos	features;
+/************************************************************
+* Patterns
+************************************************************/
+@s: [number:sg];
+@p: [number:pl];
+@_1: [person:_1];
+@_2: [person:_2];
+@_3: [person:_3];
+@_12: [person:_1|_2];
+
+"[number:$number, person:$person, hum:$hum, defined:$defined]"	features	[number:$number, person:$person, hum:$hum, defined:$defined];
+
+/************************************************************
+* Pronouns
+************************************************************/
+I	pro	[PRED:_pro, @s, @_1, hum:true]; 
+you	pro	[PRED:_pro, @_2, hum:true]; 
+he	pro	[PRED:_pro, @s, @_3, hum:true]; 
+it	pro	[PRED:_pro, @s, @_3, hum:false]; 
+she	pro	[PRED:_pro, @s, @_3, hum:true]; 
+we	pro	[PRED:_pro, @p, @_1, hum:true]; 
+they	pro	[PRED:_pro, @p, @_3, hum:true]; 
+
+/************************************************************
+* Determiners
+************************************************************/
+a	det	[@s, defined:false];
+the	det	[@s, defined:true];
+""	det	[@p, defined:false];

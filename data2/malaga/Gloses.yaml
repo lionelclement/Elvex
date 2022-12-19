@@ -1,0 +1,18 @@
+NOM:
+    Genre:  [A,B,C,D]
+    Nombre: [Sg,Du,Pl]
+    Cas:    [Erg,Abs,Dat,Obl]
+VER:
+    Trans:   [VI,VT,VD]
+    Temps: [PRS,PST]
+    Pers:  [3Sg,3Du,3Pl]
+    Genre:  [A,B,C,D]
+#    Nombre: [Sg,Du,Pl]
+DET:
+    Nombre: [Sg,Du,Pl]
+    Genre:  [A,B,C,D]
+    Cas:    [Erg,Abs,Dat,Obl]
+ADJ:
+    Genre:  [A,B,C,D]
+    Nombre: [Sg,Du,Pl]
+PREP:

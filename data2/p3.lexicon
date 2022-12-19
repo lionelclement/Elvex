@@ -1,0 +1,134 @@
+"." dot;
+"..." dots;
+"<BR>"	br ;
+","	comma;
+"par conséquent"	parConséquent ;
+"si"	_si;
+"alors"	_alors ;
+"merci de"	merciDe ;
+"_verb" v[PRED:_verb];
+"_adj" adj[PRED:_adj];
+"à"	_à;
+"en"	_en;
+
+FORM constantNoun [number:sg, person:three];
+FORM time;
+FORM locality;
+FORM form;
+
+je	cln [PRED:_pro, number:sg, person:one];
+tu	cln [PRED:_pro, number:sg, person:two];
+il	cln [PRED:_pro, number:sg, person:three, gender:ms];
+elle	cln [PRED:_pro, number:sg, person:three, gender:fm];
+nous	cln [PRED:_pro, number:pl, person:one];
+vous	cln [PRED:_pro, number:pl, person:two];
+ils	cln [PRED:_pro, number:pl, person:three, gender:ms];
+elles	cln [PRED:_pro, number:pl, person:three, gender:fm];
+
+le	cla [PRED:_pro, gender:ms, number:sg, person:three];
+la	cla [PRED:_pro, gender:fm, number:sg, person:three];
+les	cla [PRED:_pro, number:pl, person:three];
+
+me	cld [PRED:_pro, number:sg, person:one];
+te	cld [PRED:_pro, number:sg, person:two];
+lui	cld [PRED:_pro, number:sg, person:three];
+nous	cld [PRED:_pro, number:pl, person:one];
+vous	cld [PRED:_pro, number:pl, person:two];
+leur	cld [PRED:_pro, number:pl, person:three];
+
+le	det [number:sg, gender:ms, def:yes, dem:no, poss:no];
+la	det [number:sg, gender:fm, def:yes, dem:no, poss:no];
+les	det [number:pl, def:yes, dem:no, poss:no];
+
+un	det [number:sg, gender:ms, def:no, dem:no, poss:no];
+une	det [number:sg, gender:fm, def:no, dem:no, poss:no];
+des	det [number:pl, def:no, dem:no, poss:no];
+
+mon	det [number:sg, gender:ms, def:yes, poss:yes, dem:no, persPoss:one, numberPoss:sg];
+ma	det [number:sg, gender:fm, def:yes, poss:yes, dem:no, persPoss:one, numberPoss:sg];
+mes	det [number:pl, def:yes, poss:yes, dem:no, persPoss:one, numberPoss:sg];
+ton	det [number:sg, gender:ms, def:yes, poss:yes, dem:no, persPoss:two, numberPoss:sg];
+ta	det [number:sg, gender:fm, def:yes, poss:yes, dem:no, persPoss:two, numberPoss:sg];
+tes	det [number:pl, def:yes, poss:yes, dem:no, persPoss:two, numberPoss:sg];
+son	det [number:sg, gender:ms, def:yes, poss:yes, dem:no, persPoss:three, numberPoss:sg];
+sa	det [number:sg, gender:fm, def:yes, poss:yes, dem:no, persPoss:three, numberPoss:sg];
+ses	det [number:pl, def:yes, poss:yes, dem:no, persPoss:three, numberPoss:sg];
+notre	det [number:sg, def:yes, poss:yes, dem:no, persPoss:one, numberPoss:pl];
+nos	det [number:pl, def:yes, poss:yes, dem:no, persPoss:one, numberPoss:pl];
+votre	det [number:sg, def:yes, poss:yes, dem:no, persPoss:two, numberPoss:pl];
+vos	det [number:pl, def:yes, poss:yes, dem:no, persPoss:two, numberPoss:pl];
+leur	det [number:sg, def:yes, poss:yes, dem:no, persPoss:three, numberPoss:pl];
+leurs	det [number:pl, def:yes, poss:yes, dem:no, persPoss:three, numberPoss:pl];
+
+ce	det [number:sg, gender:ms, def:yes, poss:no, dem:yes];
+ces	det [number:pl, def:yes, poss:no, dem:yes];
+cette	det [number:sg, gender:fm, def:yes, poss:no, dem:yes];
+
+suis	aux [aux:être, diathese:passive, finite:yes, mode:indicative, tense:present, subj:[person:one, number:sg]];
+es	aux [aux:être, diathese:passive, finite:yes, mode:indicative, tense:present, subj:[person:two, number:sg]];
+est	aux [aux:être, diathese:passive, finite:yes, mode:indicative, tense:present, subj:[person:three, number:sg]];
+sommes	aux [aux:être, diathese:passive, finite:yes, mode:indicative, tense:present, subj:[person:one, number:pl]];
+êtes	aux [aux:être, diathese:passive, finite:yes, mode:indicative, tense:present, subj:[person:two, number:pl]];
+sont	aux [aux:être, diathese:passive, finite:yes, mode:indicative, tense:present, subj:[person:three, number:pl]];
+
+suis aux [aux:être, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:one, number:sg]];
+es aux [aux:être, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:two, number:sg]];
+est	aux [aux:être, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:three, number:sg]];
+sommes aux [aux:être, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:one, number:pl]];
+êtes aux [aux:être, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:two, number:pl]];
+sont aux [aux:être, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:three, number:pl]];
+
+ai aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:one, number:sg]];
+as aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:two, number:sg]];
+a	aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:three, number:sg]];
+avons aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:one, number:pl]];
+avez aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:two, number:pl]];
+ont aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:passe_compose, subj:[person:three, number:pl]];
+
+avais aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:pluperfect, subj:[person:one|two, number:sg]];
+avait aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:pluperfect, subj:[person:three, number:sg]];
+avions aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:pluperfect, subj:[person:one, number:pl]];
+aviez aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:pluperfect, subj:[person:two, number:pl]];
+avaient aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:pluperfect, subj:[person:three, number:pl]];
+
+aurais aux [aux:avoir, diathese:active, finite:yes, mode:conditional, tense:past, subj:[person:one|two, number:sg]];
+aurait aux [aux:avoir, diathese:active, finite:yes, mode:conditional, tense:past, subj:[person:three, number:sg]];
+aurions aux [aux:avoir, diathese:active, finite:yes, mode:conditional, tense:past, subj:[person:one, number:pl]];
+auriez aux [aux:avoir, diathese:active, finite:yes, mode:conditional, tense:past, subj:[person:two, number:pl]];
+auraient aux [aux:avoir, diathese:active, finite:yes, mode:conditional, tense:past, subj:[person:three, number:pl]];
+
+aurai aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:future, subj:[person:one, number:sg]];
+auras aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:future, subj:[person:two, number:sg]];
+aura aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:future, subj:[person:three, number:sg]];
+aurons aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:future, subj:[person:one, number:pl]];
+aurez aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:future, subj:[person:two, number:pl]];
+auront aux [aux:avoir, diathese:active, finite:yes, mode:indicative, tense:future, subj:[person:three, number:pl]];
+
+aie aux [aux:avoir, diathese:active, finite:yes, mode:subjonctive, tense:past, subj:[person:one, number:sg]];
+aies aux [aux:avoir, diathese:active, finite:yes, mode:subjonctive, tense:past, subj:[person:two, number:sg]];
+ait aux [aux:avoir, diathese:active, finite:yes, mode:subjonctive, tense:past, subj:[person:three, number:sg]];
+ayons aux [aux:avoir, diathese:active, finite:yes, mode:subjonctive, tense:past, subj:[person:one, number:pl]];
+ayez aux [aux:avoir, diathese:active, finite:yes, mode:subjonctive, tense:past, subj:[person:two, number:pl]];
+aient aux [aux:avoir, diathese:active, finite:yes, mode:subjonctive, tense:past, subj:[person:three, number:pl]];
+
+ne	clneg[];
+pas	advneg[];
+
+que	csu[form:aff];
+si	csu[form:int];
+
+toujours	adv[PRED:pas_encore]
+		|adv[PRED:toujours];
+
+de prep[pcas:de];
+à prep[pcas:à];
+pour prep[pcas:pour];
+sur prep[pcas:sur];
+avant prep[pcas:avant];
+après prep[pcas:après];
+contre prep[pcas:contre];
+
+pleut	v[PRED:pleuvoir,subj:[FORM:"il"],v_form:tense,tense:present,mode:indicative,person:three,number:sg];
+pleuvait	v[PRED:pleuvoir,subj:[FORM:"il"],v_form:tense,tense:imperfect,mode:indicative,person:three,number:sg];
+pleuvra	v[PRED:pleuvoir,subj:[FORM:"il"],v_form:tense,tense:future,mode:indicative,person:three,number:sg];
+»

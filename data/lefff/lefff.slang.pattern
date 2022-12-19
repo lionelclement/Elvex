@@ -201,18 +201,22 @@ MOQUER	v	moquer	PRED:MOQUER, refl:yes, genCl:[PRED:_PRO], aux:être, iiReal:none
 
 # être mécontent
 ÊTRE_MÉCONTENT	v	faire	PRED:ÊTRE_MÉCONTENT, objC:[PRED:TÊTE, def:yes, number:sg, language_register:slang], language_register:slang
-#ÊTRE_MÉCONTENT	v	tirer	PRED:ÊTRE_MÉCONTENT, objC:[FORM:"la tronche"], language_register:slang
+ÊTRE_MÉCONTENT	v	tirer	PRED:ÊTRE_MÉCONTENT, objC:[FORM:"la tronche"], language_register:slang
 ÊTRE_MÉCONTENT	v	rouspéter	PRED:ÊTRE_MÉCONTENT, language_register:in_house
 ÊTRE_MÉCONTENT	v	ronchonner	PRED:ÊTRE_MÉCONTENT, language_register:in_house
+
+TÊTE	n	gueule	PRED:TÊTE, language_register:slang
+TÊTE	n	tronche	PRED:TÊTE, language_register:slang
+TÊTE	n	trogne	PRED:TÊTE, language_register:slang
 
 # être fâché
 # sentir la moutarde monter au nez
 # son sang n'a fait qu'un tour
-ÊTRE_FÂCHÉ	v	être	PRED:ÊTRE_FÂCHÉ, objC:[FORM:"furax"], language_register:slang], language_register:slang
+ÊTRE_FÂCHÉ	v	être	PRED:ÊTRE_FÂCHÉ, objC:[FORM:"furax"], language_register:slang
 ÊTRE_FÂCHÉ	v	être	PRED:ÊTRE_FÂCHÉ, pobjC:[FORM:"pétard", pcas:en], language_register:slang
 ÊTRE_FÂCHÉ	v	être	PRED:ÊTRE_FÂCHÉ, pobjC:[FORM:"rogne", pcas:en], language_register:slang
 ÊTRE_FÂCHÉ	v	être	PRED:ÊTRE_FÂCHÉ, pobjC:[FORM:"boule", pcas:en], language_register:slang
-ÊTRE_FÂCHÉ	v	être	PRED:ÊTRE_FÂCHÉ, objC:[FORM:"vénère"], language_register:slang], language_register:slang
+ÊTRE_FÂCHÉ	v	être	PRED:ÊTRE_FÂCHÉ, objC:[FORM:"vénère"], language_register:slang
 ÊTRE_FÂCHÉ	v	trouver	PRED:ÊTRE_FÂCHÉ, objCl:[PRED:_PRO, number:sg, gender:fm, person:three], objC:[FORM:"mauvaise"], language_register:slang
 
 # être content
@@ -231,10 +235,6 @@ PINSON	n	pinson	PRED:_PINSON, language_register:slang
 
 CONTENT	adj	jouasse	PRED:CONTENT, language_register:slang
 
-TÊTE	n	gueule	PRED:TÊTE, language_register:slang
-#TÊTE	n	tronche	PRED:TÊTE, language_register:slang
-#TÊTE	n	trogne	PRED:TÊTE, language_register:slang
-
 # escargot
 
 ESCARGOT	n	escargue	PRED:ESCARGOT, language_register:slang
@@ -246,7 +246,3 @@ PLEURER	v	chialer	PRED:PLEURER, language_register:slang
 #PLEUVOIR	v	avoir	PRED:PLEUVOIR,subjC:[FORM:"il", person:three, number:sg],iiReal:none,objC:[PRED:FLOTTE,part:yes,number:sg],locCl:[PRED:_pro,number:sg,person:three]
 
 HORLOGER	n	con	PRED:HORLOGER, language_register:slang, sem:hyper
-
-FRAIS	n	frais	language_register:slang
-LUISANT	n	luisant	language_register:slang
-

@@ -1,0 +1,132 @@
+/* **************************************************
+ * Phrase
+ * La réalisation du premier argument (i) est le sujet
+ ************************************************** */
+@trace
+S → S {
+  [i:$i, ii:NIL, $REST];
+  ↓1 = [SUBJECT:$i, $REST];
+}
+
+@trace
+S → S {
+  [i:$i, ii:$ii, $REST];
+  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, $REST];
+}
+
+@trace
+S → S {
+  [i:$i, ii:$ii, $REST];
+  ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $REST];
+}
+
+@trace
+S → NP|cln VP {
+  [SUBJECT:$SUBJECT, $REST];
+  ↓1 = [_case:nominative, $SUBJECT];
+  // On récupère la personne et le nombre du sujet produit
+  $SynthSubject = ⇓1;
+  ↓2 = [SUBJECT:$SynthSubject, $REST];
+}
+
+/* **************************************************
+ * Je fais remonter l'information lexicale du nom
+ * le nom peut être modifié (complément de nom, relative, adjectif)
+ ************************************************** */
+@trace
+NP → det N {
+  ↓1 = ↑ ∪ ⇓2;
+  ↓2 = ↑;
+  ⇑ = ⇓2;
+}
+
+@trace
+NP → proper_noun {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+NP → pro {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+N → common_noun {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+N → noun {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Object
+ ************************************************** */
+@trace
+VP → VN [NP] [NP] [ADJ] [PP] [SCOMP|VCOMP] {
+  [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJTHETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $REST] ⊂ ↑;
+  ↓1 = $REST;
+  if (#2) 
+    ↓2 = [_case:accusative, lexical_function:$lexical_function, $OBJECT];
+  else 
+    attest (¬ $OBJECT);
+  if (#3)
+    ↓3 = [lexical_function:$lexical_function, $OBLIQUE];
+  else
+    attest (¬ $OBLIQUE);
+  if (#4)
+    ↓4 = [lexical_function:$lexical_function, $PRED_ADJ];
+  else
+    attest (¬ $PRED_ADJ);
+  if (#5)
+    ↓5 = [lexical_function:$lexical_function, $OBJTHETA];
+  else
+    attest (¬ $OBJTHETA);
+  if (#6.1)
+    ↓6 = [lexical_function:$lexical_function, $SCOMP];
+  else if (#6.2)
+    ↓6 = [lexical_function:$lexical_function, $VCOMP];
+  else
+    attest ((¬ $SCOMP) ∧ (¬ $VCOMP));
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Le verbe pourra être complété par la suite
+ * Cette règle est finale: elle correspon au verbe sans ses compléments
+ * VP -> VP NP // un complément objet
+ * VP -> Verb  // plus de complément
+ ************************************************** */
+@trace
+VN → verb [ADJ] {
+  [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, PRED_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $REST];
+  [lexical_function:$lexical_function] ⊂ ↑;
+  [PRED_ADJ:$Synth_PRED_ADJ] ⊂ ⇓1;
+  if (#2) {
+    attest $objSynt;
+    ↓2 = [lexical_function:$lexical_function, $Synth_PRED_ADJ];
+  }  else {
+    attest (¬ $Synth_PRED_ADJ);
+  }
+
+  ↓1 = $REST;
+  ⇑ = ⇓1;
+}
+
+@trace
+ADJ → [adv] adj {
+  ↓2 = ↑;
+  [MOD:$Synth_MOD] ⊂ ⇓2;
+  if (#1) {
+    attest $Synth_MOD;
+    ↓1 = $Synth_MOD;
+  }  else {
+    attest (¬ $Synth_MOD);
+  }
+  ⇑ = ⇓2;
+}

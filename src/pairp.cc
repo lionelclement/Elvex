@@ -18,10 +18,9 @@
  ************************************************** */
 
 #include <iostream>
-#include "value.hpp"
-#include "pairp.hpp"
-
 #include <utility>
+#include "pairp.hpp"
+#include "value.hpp"
 #include "environment.hpp"
 #include "messages.hpp"
 #include "shared_ptr.hpp"
@@ -435,6 +434,26 @@ void Pairp::deleteAnonymousVariables()
     case _PAIRP_:
         pairp.car->deleteAnonymousVariables();
         pairp.cdr->deleteAnonymousVariables();
+        break;
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Pairp::deleteVariables()
+{
+    switch (type)
+    {
+    case _NIL_:
+        break;
+    case _ATOM_:
+        if (value)
+            value->deleteVariables();
+        break;
+    case _PAIRP_:
+        pairp.car->deleteVariables();
+        pairp.cdr->deleteVariables();
         break;
     }
 }

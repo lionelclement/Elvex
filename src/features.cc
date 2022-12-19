@@ -571,9 +571,7 @@ bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
                 // [LEMMA:X]  < [LEMMA:Y]
                 // [att:X] < [att:Y]
                 // X < Y
-                if (((i1->isLemma()) && (i2->isLemma())) 
-                        || ((i1->isPred()) && (i2->isPred())) 
-                        || ((i1->isConstant()) && (i2->isConstant()) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
+                if (((i1->isLemma()) && (i2->isLemma())) || ((i1->isPred()) && (i2->isPred())) || ((i1->isConstant()) && (i2->isConstant()) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
                 {
                     valuePtr v1 = i1->getValue();
                     valuePtr v2 = i2->getValue();
@@ -635,26 +633,64 @@ void Features::enable(const statementPtr &root, class Item *item, Synthesizer *s
  ************************************************** */
 void Features::deleteAnonymousVariables()
 {
-redo:
-    for (auto iterator = cbegin(); iterator != cend(); ++iterator)
+    bool redo = true;
+    while (redo)
     {
-        switch ((*iterator)->_getType())
+        redo = false;
+
+        for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
         {
-        case Feature::_PRED_:
-        case Feature::_LEMMA_:
-        case Feature::_FORM_:
-        case Feature::_VARIABLE_:
-        case Feature::_CONSTANT_:
-            if ((*iterator)->getValue())
+            switch ((*feature)->_getType())
             {
-                (*iterator)->getValue()->deleteAnonymousVariables();
-                if ((*iterator)->getValue() && ((*iterator)->getValue()->isAnonymous()))
+            case Feature::_PRED_:
+            case Feature::_LEMMA_:
+            case Feature::_FORM_:
+            case Feature::_VARIABLE_:
+            case Feature::_CONSTANT_:
+                if ((*feature)->getValue())
                 {
-                    features.erase(iterator);
-                    goto redo;
+                    (*feature)->getValue()->deleteAnonymousVariables();
+                    if ((*feature)->getValue() && ((*feature)->getValue()->isAnonymous()))
+                    {
+                        features.erase(feature);
+                        redo = true;
+                    }
                 }
+                break;
             }
-            break;
+        }
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Features::deleteVariables()
+{
+    bool redo = true;
+    while (redo)
+    {
+        redo = false;
+        for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
+        {
+            switch ((*feature)->_getType())
+            {
+            case Feature::_PRED_:
+            case Feature::_LEMMA_:
+            case Feature::_FORM_:
+            case Feature::_VARIABLE_:
+            case Feature::_CONSTANT_:
+                if ((*feature)->getValue())
+                {
+                    (*feature)->getValue()->deleteVariables();
+                    if ((*feature)->isVariable() || (*feature)->getValue()->isVariable())
+                    {
+                        features.erase(feature);
+                        redo = true;
+                    }
+                }
+                break;
+            }
         }
     }
 }

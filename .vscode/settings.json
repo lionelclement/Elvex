@@ -62,6 +62,13 @@
         "unordered_map": "cpp",
         "unordered_set": "cpp",
         "variant": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "filesystem": "cpp",
+        "complex": "cpp",
+        "array": "cpp",
+        "iomanip": "cpp",
+        "fstream": "cpp",
+        "stack": "cpp",
+        "algorithm": "cpp"
     }
 }

@@ -1,9 +1,0 @@
-a1 a[PRED:a1, weight:1];
-a2 a[PRED:a2, weight:2];
-a3 a[PRED:a3, weight:3];
-a4 a[PRED:a4, weight:4];
-a5 a[PRED:a5, weight:5];
-a6 a[PRED:a6, weight:6];
-a7 a[PRED:a7, weight:7];
-a8 a[PRED:a8, weight:8];
-b  b[];

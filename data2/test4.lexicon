@@ -1,0 +1,3 @@
+"a($att)"	a [att:$att];
+"b($att)"	b [att:$att];
+"c($att)"	c [att:$att];

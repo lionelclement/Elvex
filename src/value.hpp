@@ -126,7 +126,9 @@ public:
 
     valuePtr clone(void);
 
-    void deleteAnonymousVariables(void) const;
+    void deleteAnonymousVariables(void);
+
+    void deleteVariables(void);
 
     bool renameVariables(size_t);
 

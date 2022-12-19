@@ -920,7 +920,7 @@ bool Value::lt(const valuePtr &o) const
 /* ************************************************************
  *
  ************************************************************ */
-void Value::deleteAnonymousVariables() const
+void Value::deleteAnonymousVariables()
 {
     switch (type)
     {
@@ -939,6 +939,32 @@ void Value::deleteAnonymousVariables() const
         break;
     case PAIRP_VALUE:
         getPairp()->deleteAnonymousVariables();
+        break;
+    }
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+void Value::deleteVariables()
+{
+    switch (type)
+    {
+    case TRUE_VALUE:
+    case NIL_VALUE:
+    case IDENTIFIER_VALUE:
+    case CONSTANT_VALUE:
+    case FORM_VALUE:
+    case VARIABLE_VALUE:
+    case ANONYMOUS_VALUE:
+    case NUMBER_VALUE:
+    case LIST_FEATURES_VALUE:
+        break;
+    case FEATURES_VALUE:
+        getFeatures()->deleteVariables();
+        break;
+    case PAIRP_VALUE:
+        getPairp()->deleteVariables();
         break;
     }
 }
