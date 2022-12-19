@@ -1,6 +1,0 @@
-###################################################
-### in_house language
-###################################################
-PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"un tantinet"]>, degree:few, language_register:in_house
-PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:CORDE, def:no, @p], degree:a_lot, language_register:in_house
-CORDE	n	corde	language_register:in_house
