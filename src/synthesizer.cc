@@ -1512,7 +1512,6 @@ entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred
         entriesPtr localEntries = findCompactedLexicon(parser,
                                        pos,
                                        pred);
-        //listPred->insert(std::make_pair(pred, localEntries));
         if (localEntries){
             if (entries){
                localEntries->add(entries);
