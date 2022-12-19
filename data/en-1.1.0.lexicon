@@ -129,11 +129,11 @@ not	not;
 
 down	part [particle:down];
 
-to	prep [pcase:to];
-at	prep [pcase:at];
-on	prep [pcase:on];
+to	prep [pcase:_to];
+at	prep [pcase:_at];
+"on"	prep [pcase:_on];
 
 to	to [];
 
-that	csu [compl:that];
-if	csu [compl:if];
+that	csu [compl:_that];
+"if"	csu [compl:_if];
