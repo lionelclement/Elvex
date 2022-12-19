@@ -1,6 +1,0 @@
-@input
-
-//S [PRED:TO_EAT, agent:[PRED:PAUL], patient:[PRED:FLOWER]]
-S [PRED:TO_EAT, agent:[PRED:BOY], patient:[PRED:FLOWER]]
-//S [PRED:TO_EAT, tense:imperfect, agent:[PRED:BOY, number:sg, def:yes], patient:[PRED:FLOWER, number:pl]]
-//S [PRED:TO_EAT, agent:[PRED:BOY, number:sg, def:yes], patient:[PRED:FLOWER, def:no, number:sg]]
