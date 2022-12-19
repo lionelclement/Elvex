@@ -1,0 +1,18 @@
+ÊTRE_RANCUNIER	v	avoir	PRED:ÊTRE_RANCUNIER,objC:[PRED:dent, number:sg, def:no],iiiReal:prep_obj,prep_obj:[pcas:contre]
+
+// tomber locution
+ÉVANOUIR	v	tomber	PRED:ÉVANOUIR,pobjC:[PRED:POMME,number:pl,def:yes,pcas:dans],language_register:slang
+TOMBER_À_TERRE	v	tomber	PRED:TOMBER_À_TERRE,modC:<[FORM:"à terre"]>,language_register:slang
+ÊTRE_AMOUREUX	v	tomber	PRED:ÊTRE_AMOUREUX,iiReal:prep_obj,prep_obj:[pcas:pour],modC:<[FORM:"en amour"]>,language_register:dialect
+
+// vaser
+// neiger
+NEIGER	v	avoir	PRED:NEIGER,subjC:[FORM:"il"],iiReal:none,objC:[PRED:NEIGE,part:yes,number:sg],locCl:[PRED:_pro,number:sg,person:three]
+
+// être locution
+ÊTRE_AMOUREUX	v	être_adj	PRED:ÊTRE_AMOUREUX,iiReal:prep_obj,prep_obj:[pcas:de],adjC:[PRED:AMOUREUX]
+
+// pincer locution
+ÊTRE_AMOUREUX	v	en_pincer_pour_locution	PRED:ÊTRE_AMOUREUX,iiReal:prep_obj,prep_obj:[pcas:pour],genCl:[PRED:_pro,number:sg,person:three],language_register:familiar
+
+

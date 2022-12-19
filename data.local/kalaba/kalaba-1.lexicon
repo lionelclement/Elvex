@@ -1,0 +1,320 @@
+"\n"	newline;
+"#KALABA" KALABA;
+"#GLOSS"  GLOSS;
+"#FRENCH" FRENCH;
+
+"N[FC:$FC, CFC:$CFC, gender:$gender, case:$case, number:$number]" noun_features[FC:$FC, CFC:$CFC, gender:$gender, case:$case, number:$number];
+"V[FC:$FC, tense:$tense, gender:$gender, person:$person]" verb_features[FC:$FC, tense:$tense, gender:$gender, person:$person];
+"A[FC:$FC, gender:$gender, number:$number]" adj_features[FC:$FC, gender:$gender, number:$number];
+"D[def:$def, dem:$dem, case:$case, gender:$gender, number:$number]" det_features[def:$def, dem:$dem, case:$case, gender:$gender, number:$number];
+
+"(case:$case)" case_fs[case:$case];
+"(number:$number)" number_fs[number:$number];
+"(gender:$gender)" gender_fs[gender:$gender];
+"(person:$person)" person_fs[person:$person];
+"(tense:$tense)" tense_fs[tense:$tense];
+"(def:$def, dem:$dem)" det_fs[def:$def, dem:$dem];
+"($pred fc:$fc, cfc:$cfc)" noun_fs[pred:$pred, fc:$fc, cfc:$cfc];
+"($pred valency:$valency)" verb_fs[pred:$pred, valency:$valency];
+
+/* ************************************************************
+* Noun
+************************************************************ */
+"renaka"	noun [PRED:forêt, FC:N11, CFC:N1, gender:A];
+"zokas"	noun [PRED:coup, FC:N11, CFC:N1, gender:A];
+"kulor"	noun [PRED:blessure, FC:N11, CFC:N1, gender:A];
+"ʃizeʒ"	noun [PRED:infirmière, FC:N11, CFC:N1, gender:A];
+
+"vabuso"	noun [PRED:loup, FC:N11, CFC:N1, gender:B];
+"gutev"	noun [PRED:croc, FC:N11, CFC:N1, gender:B];
+"koziθe"	noun [PRED:chasseur, FC:N11, CFC:N1, gender:B];
+"votur"	noun [PRED:mort, FC:N11, CFC:N1, gender:B];
+
+"maira"	noun [PRED:Mahira, FC:N11, CFC:N1, gender:C];
+"mutul"	noun [PRED:maison, FC:N11, CFC:N1, gender:C];
+"lurid"	noun [PRED:souffrance, FC:N11, CFC:N1, gender:C];
+"dopiʃu"	noun [PRED:poisson, FC:N11, CFC:N1, gender:C];
+
+"tejuno"	noun [PRED:démon, FC:N11, CFC:N1, gender:ð];
+"mepot"	noun [PRED:soeur, FC:N11, CFC:N1, gender:ð];
+"kigaʃ"	noun [PRED:fruit, FC:N11, CFC:N1, gender:ð];
+"nikol"	noun [PRED:Nicole, FC:N11, CFC:N1, gender:ð];
+
+"mebuze"	noun [PRED:_sort, FC:N12, CFC:N1, gender:A ];
+"ʒenis"	noun [PRED:viande, FC:N12, CFC:N1, gender:A];
+"katiʃa"	noun [PRED:Katisha, FC:N12, CFC:N1, gender:A];
+"nabil"	noun [PRED:Nabil, FC:N12, CFC:N1, gender:A];
+"peθoli"	noun [PRED:chat, FC:N12, CFC:N1, gender:A];
+
+"ʃemun"	noun [PRED:arbre, FC:N12, CFC:N1, gender:B];
+"musag"	noun [PRED:milieu, FC:N12, CFC:N1, gender:B];
+"ʃonuf"	noun [PRED:enfant, FC:N12, CFC:N1, gender:B];
+"moðaŋ"	noun [PRED:autruche, FC:N12, CFC:N1, gender:B];
+
+"matuvu"	noun [PRED:corps, FC:N12, CFC:N1, gender:C];
+"ʃikore"	noun [PRED:lueur, FC:N12, CFC:N1, gender:C];
+"gemof"	noun [PRED:coyote, FC:N12, CFC:N1, gender:C];
+"rugað"	noun [PRED:coussin, FC:N12, CFC:N1, gender:C];
+
+"tejum"	noun [PRED:fille, FC:N12, CFC:N1, gender:ð];
+"fille"	N_fr [PRED:fille, gender:fm, number:sg];
+"filles"	N_fr [PRED:fille, gender:fm, number:pl];
+"delit"	noun [PRED:ombre, FC:N12, CFC:N1, gender:ð];
+"sakoʃ"	noun [PRED:chambre, FC:N12, CFC:N1, gender:ð];
+
+"kaleb"	noun [PRED:Kaleb, FC:N21, CFC:N2, gender:A];
+"ʒutaʃ"	noun [PRED:café, FC:N21, CFC:N2, gender:A];
+"pebime"	noun [PRED:balai, FC:N21, CFC:N2, gender:A];
+
+"salogi"	noun [PRED:table, FC:N21, CFC:N2, gender:B];
+"gitar"	noun [PRED:main, FC:N21, CFC:N2, gender:B];
+"saduθ"	noun [PRED:combat, FC:N21, CFC:N2, gender:B];
+"muŋov"	noun [PRED:oeuf, FC:N21, CFC:N2, gender:B];
+
+"peðun"	noun [PRED:villageois, FC:N21, CFC:N2, gender:C];
+"ketufe"	noun [PRED:cri, FC:N21, CFC:N2, gender:C];
+"finot"	noun [PRED:gorge, FC:N21, CFC:N2, gender:C];
+"neθor"	noun [PRED:chatte, FC:N21, CFC:N2, gender:C];
+
+"neθumi"	noun [PRED:villageoise, FC:N21, CFC:N2, gender:ð];
+"ʃalop"	noun [PRED:homme, FC:N21, CFC:N2, gender:ð];
+"ðokap"	noun [PRED:lit, FC:N21, CFC:N2, gender:ð];
+"vjolet"	noun [PRED:Violette, FC:N21, CFC:N2, gender:ð];
+
+"ʒigolo"	noun [PRED:lune, FC:N22, CFC:N2, gender:A];
+"ropak"	noun [PRED:nuit, FC:N22, CFC:N2, gender:A];
+"padeka"	noun [PRED:thé, FC:N22, CFC:N2, gender:A];
+"θonifa"	noun [PRED:enfant, FC:N22, CFC:N2, gender:A];
+
+"kinaʒ"	noun [PRED:souris, FC:N22, CFC:N2, gender:B];
+"power"	noun [PRED:combattant, FC:N22, CFC:N2, gender:B];
+"gavok"	noun [PRED:colère, FC:N22, CFC:N2, gender:B];
+"malot"	noun [PRED:plaine, FC:N22, CFC:N2, gender:B];
+
+"liʒat"	noun [PRED:lance, FC:N22, CFC:N2, gender:C];
+"katod"	noun [PRED:serpent, FC:N22, CFC:N2, gender:C];
+"lovofu"	noun [PRED:village, FC:N22, CFC:N2, gender:C];
+"moðem"	noun [PRED:visage, FC:N22, CFC:N2, gender:C];
+
+"vubuŋu"	noun [PRED:louve, FC:N22, CFC:N2, gender:ð];
+"figeʒ"	noun [PRED:chef, FC:N22, CFC:N2, gender:ð];
+"zudek"	noun [PRED:couteau, FC:N22, CFC:N2, gender:ð];
+"tifare"	noun [PRED:cuisine, FC:N22, CFC:N2, gender:ð];
+
+"+is"	noun_suff_number[CFC:N1, number:sg];
+"+eθ"	noun_suff_number[CFC:N1, number:du];
+"##1a12V3"	noun_suff_number[CFC:N1, number:pl];
+"+az"	noun_suff_number[CFC:N2, number:sg];
+"##1o23A3"	noun_suff_number[CFC:N2, number:du];
+"+an"	noun_suff_number[CFC:N2, number:pl];
+
+"se+"	noun_pref_case[CFC:N1, case:erg, number:pl];
+".+"	noun_pref_case[CFC:N1, case:erg, number:du|sg];
+
+"+e"	noun_suff_case[CFC:N1, case:erg, number:du|sg];
+"+."	noun_suff_case[CFC:N1, case:erg, number:pl];
+
+"ke+"	noun_pref_case[CFC:N1, case:abs];
+"+."	noun_suff_case[CFC:N1, case:abs];
+
+"fa+"	noun_pref_case[CFC:N1, case:dat];
+"+."	noun_suff_case[CFC:N1, case:dat];
+
+".+"	noun_pref_case[CFC:N1, case:obl];
+"+o"	noun_suff_case[CFC:N1, case:obl];
+
+"si+"	noun_pref_case[FC:N21, case:erg, number:sg];
+"+e"	noun_suff_case[FC:N21, case:erg, number:du|pl];
+
+".+"	noun_pref_case[FC:N21, case:abs];
+"+ke"	noun_suff_case[FC:N21, case:abs];
+
+".+"	noun_pref_case[FC:N21, case:dat];
+"+a"	noun_suff_case[FC:N21, case:dat];
+
+".+"	noun_pref_case[FC:N21, case:obl, number:sg];
+"mu+"	noun_pref_case[FC:N21, case:obl, number:du|pl];
+"+o"	noun_suff_case[FC:N21, case:obl, number:du|sg];
+"+."	noun_suff_case[FC:N21, case:obl, number:pl];
+
+"s+"	noun_pref_case[FC:N22, case:erg];
+"+e"	noun_suff_case[FC:N22, case:erg];
+
+"fa+"	noun_pref_case[FC:N22, case:abs, number:du|sg];
+"re+"	noun_pref_case[FC:N22, case:abs, number:pl];
+"+."	noun_suff_case[FC:N22, case:abs];
+
+"mu+"	noun_pref_case[FC:N22, case:obl];
+"+."	noun_suff_case[FC:N22, case:obl];
+
+".+"	noun_pref_case[FC:N22, case:dat];
+"+e"	noun_suff_case[FC:N22, case:dat];
+
+/* ************************************************************
+* Verb
+************************************************************ */
+"neθaf"	verb[PRED:fuir, valency:VI, FC:V1];
+"nutep"	verb[PRED:courir, valency:VI, FC:V1];
+"faʒem"	verb[PRED:tomber, valency:VI, FC:V1];
+"tombe"	V_fr[PRED:tomber, person:three, number:sg, tense:present];
+"tombait"	V_fr[PRED:tomber, person:three, number:sg, tense:past];
+"tombent"	V_fr[PRED:tomber, person:three, number:pl, tense:present];
+"tombaient"	V_fr[PRED:tomber, person:three, number:pl, tense:past];
+"detip"	verb[PRED:sortir, valency:VI, FC:V1];
+"ʃiros"	verb[PRED:approcher, valency:VI, FC:V1];
+"fiðed"	verb[PRED:passer, valency:VI, FC:V1];
+"ðuluf"	verb[PRED:disparaître, valency:VI, FC:V1];
+
+"ʃuzun"	verb[PRED:parler, valency:VI, FC:V2];
+"zeres"	verb[PRED:aller, valency:VI, FC:V2];
+"wupam"	verb[PRED:arriver, valency:VI, FC:V2];
+"lumok"	verb[PRED:dormir, valency:VI, FC:V2];
+"ðuteʒ"	verb[PRED:sauter, valency:VI, FC:V2];
+"seʒod"	verb[PRED:rêvasser, valency:VI, FC:V2];
+"ðodaf"	verb[PRED:entrer, valency:VI, FC:V2];
+
+"kiʒoj"	verb[PRED:être, valency:VT, FC:V1];
+"logup"	verb[PRED:protéger, valency:VT, FC:V1];
+"ʒopal"	verb[PRED:envahir, valency:VT, FC:V1];
+"gafen"	verb[PRED:chercher, valency:VT, FC:V1];
+"neθad"	verb[PRED:planter, valency:VT, FC:V1];
+"ʃabir"	verb[PRED:prendre, valency:VT, FC:V1];
+"levin"	verb[PRED:boire, valency:VT, FC:V1];
+"tiraf"	verb[PRED:lancer, valency:VT, FC:V1];
+"fiker"	verb[PRED:transformer, valency:VT, FC:V1];
+"boθak"	verb[PRED:rejoindre, valency:VT, FC:V1];
+
+"malak"	verb[PRED:dévorer, valency:VT, FC:V2];
+"ʒuŋep"	verb[PRED:recouvrir, valency:VT, FC:V2];
+"θebad"	verb[PRED:supporter, valency:VT, FC:V2];
+"sabiʃ"	verb[PRED:pousser, valency:VT, FC:V2];
+"maʃiv"	verb[PRED:manger, valency:VT, FC:V2];
+"ʒitef"	verb[PRED:chasser, valency:VT, FC:V2];
+"keθor"	verb[PRED:jeter, valency:VT, FC:V2];
+"ðipod"	verb[PRED:transpercer, valency:VT, FC:V2];
+"gunuŋ"	verb[PRED:voir, valency:VT, FC:V2];
+
+"neθoŋ"	verb[PRED:apporter, valency:Vð, FC:V1];
+"tupej"	verb[PRED:acheter, valency:Vð, FC:V1];
+"ʒebum"	verb[PRED:offrir, valency:Vð, FC:V1];
+
+"ʒezit"	verb[PRED:donner, valency:Vð, FC:V2];
+"kimat"	verb[PRED:montrer, valency:Vð, FC:V2];
+
+"ge+"	verb_pref_tense[tense:past];
+"vi+"	verb_pref_tense[tense:present];
+
+"+o"	verb_suff_gender[FC:V1, gender:A];
+"+e"	verb_suff_gender[FC:V1, gender:B];
+"+a"	verb_suff_gender[FC:V1, gender:C];
+"+i"	verb_suff_gender[FC:V1, gender:ð];
+"+e"	verb_suff_gender[FC:V2, gender:A];
+"+o"	verb_suff_gender[FC:V2, gender:B];
+"+a"	verb_suff_gender[FC:V2, gender:C];
+"+e"	verb_suff_gender[FC:V2, gender:ð];
+
+"+."	verb_suff_person[FC:V1, person:three, number:sg];
+"+t"	verb_suff_person[FC:V1, person:three, number:du];
+"+ʃ"	verb_suff_person[FC:V1, person:three, number:pl];
+"+p"	verb_suff_person[FC:V2, person:three, number:sg];
+"+."	verb_suff_person[FC:V2, person:three, number:du];
+"+ʒ"	verb_suff_person[FC:V2, person:three, number:pl];
+
+/* ************************************************************
+* Adj
+************************************************************ */
+"jiseθ"	adj[PRED:grand, FC:A1];
+"ʃogos"	adj[PRED:noir, FC:A1];
+"tozan"	adj[PRED:rouge, FC:A1];
+"diwos"	adj[PRED:bas, FC:A1];
+"fiʒop"	adj[PRED:trois, FC:A1];
+"gojoθ"	adj[PRED:gros, FC:A1];
+"feðet"	adj[PRED:furieux, FC:A1];
+"feles"	adj[PRED:terrible, FC:A1];
+"tovuŋ"	adj[PRED:blessé, FC:A1];
+"ʃezak"	adj[PRED:profond, FC:A1];
+
+"fanot"	adj[PRED:petit, FC:A2];
+"kedam"	adj[PRED:blanc, FC:A2];
+"luðet"	adj[PRED:maigre, FC:A2];
+"tonup"	adj[PRED:quatre, FC:A2];
+"dubak"	adj[PRED:jaune, FC:A2];
+"θodaf"	adj[PRED:effrayé, FC:A2];
+"fuʃop"	adj[PRED:courageux, FC:A2];
+"pabaf"	adj[PRED:suivant, FC:A2];
+"taðep"	adj[PRED:différent, FC:A2];
+
+"+ŋ"	adj_suff_gender[FC:A1, gender:A];
+"+ʒ"	adj_suff_gender[FC:A1, gender:B];
+"+r"	adj_suff_gender[FC:A1, gender:C];
+"+m"	adj_suff_gender[FC:A1, gender:ð];
+"+f"	adj_suff_gender[FC:A2, gender:A];
+"+s"	adj_suff_gender[FC:A2, gender:B];
+"+ŋ"	adj_suff_gender[FC:A2, gender:C];
+"+m"	adj_suff_gender[FC:A2, gender:ð];
+
+"1a22A3a##"	adj_pref_number[FC:A1, number:du];
+"+."	adj_suff_number[FC:A1, number:du];
+
+".+"	adj_pref_number[FC:A1, number:sg|pl];
+"+o"	adj_suff_number[FC:A1, number:sg];
+"+e"	adj_suff_number[FC:A1, number:pl];
+
+"be1o12V3e##"	adj_pref_number[FC:A2, number:pl];
+"+."	adj_suff_number[FC:A2, number:pl];
+
+"re+"	adj_pref_number[FC:A2, number:sg];
+"+o"	adj_suff_number[FC:A2, number:sg];
+
+".+"	adj_pref_number[FC:A2, gender:du];
+"+e"	adj_suff_number[FC:A2, gender:du];
+
+/* ************************************************************
+* ðet
+************************************************************ */
+"k"	det[def:yes, dem:no];
+"l"	det[def:no, dem:no];
+"b"	det[def:yes, dem:yes];
+"le"	DET_fr[def:yes, dem:no, number:sg, gender:ms];
+"la"	DET_fr[def:yes, dem:no, number:sg, gender:fm];
+"les"	DET_fr[def:yes, dem:no, number:pl];
+"un"	DET_fr[def:no, dem:no, number:sg, gender:ms];
+"une"	DET_fr[def:no, dem:no, number:sg, gender:fm];
+"des"	DET_fr[def:no, dem:no, number:pl];
+"ce"	DET_fr[def:yes, dem:yes, number:sg, gender:ms];
+"cette"	DET_fr[def:yes, dem:yes, number:sg, gender:fm];
+"ces"	DET_fr[def:yes, dem:yes, number:pl, gender:ms];
+"cettes"	DET_fr[def:yes, dem:yes, number:pl, gender:fm];
+
+"+a"	det_suff_gender[gender:A];
+"+i"	det_suff_gender[gender:B];
+"+o"	det_suff_gender[gender:C|ð];
+
+"o+"	det_pref_number[number:sg];
+"e+"	det_pref_number[number:du];
+"a+"	det_pref_number[number:pl];
+
+"t+"	det_pref_case[case:abs];
+"+."	det_suff_case[case:abs];
+".+"	det_pref_case[case:dat];
+"+n"	det_suff_case[case:dat];
+".+"	det_pref_case[case:obl];
+"+r"	det_suff_case[case:obl];
+".+"	det_pref_case[case:erg];
+"+t"	det_suff_case[case:erg];
+
+/* ************************************************************
+* Prep
+************************************************************ */
+"puw"	prep[PRED:de];
+"sir"	prep[PRED:à]; 
+"ʃol"	prep[PRED:avec];
+"ful"	prep[PRED:vers];
+"we"	prep[PRED:devant];
+"bo"	prep[PRED:derrière];
+"val"	prep[PRED:dans];
+"so"	prep[PRED:sur];
+"ŋov"	prep[PRED:entre];
+"suz"	prep[PRED:après];
+"na"	prep[PRED:sous];
+"ðop"	prep[PRED:pour];

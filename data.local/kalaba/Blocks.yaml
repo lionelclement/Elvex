@@ -1,0 +1,83 @@
+NOM:
+ 1: #accord du nombre:
+    CF=N1, Nombre=Sg :  X+is
+    CF=N1, Nombre=Du :  X+eT
+    CF=N1, Nombre=Pl :  1a12V3
+    CF=N2, Nombre=Sg :  X+az
+    CF=N2, Nombre=Du :  1o23A3
+    CF=N2, Nombre=Pl :  X+an
+ 2: #accord du cas:
+    CF=N1, Cas=Erg : X+e
+    CF=N1, Cas=Erg, Nombre=Pl : se+X
+    CF=N1, Cas=Abs : ke+X
+    CF=N1, Cas=Dat : fa+X
+    CF=N1, Cas=Obl : X+o
+    CF=N21, Cas=Erg, Nombre=Sg : si+X
+    CF=N21, Cas=Erg : X+e
+    CF=N21, Cas=Abs : X+ke
+    CF=N21, Cas=Dat : X+a
+    CF=N21, Cas=Obl, Nombre=Sg : X+o
+    CF=N21, Cas=Obl : mu+X+o
+    CF=N22, Cas=Erg : s+X+e
+    CF=N22, Cas=Abs : fa+X
+    CF=N22, Cas=Abs, Nombre=Pl : re+X
+    CF=N22, Cas=Dat : X+e
+    CF=N22, Cas=Obl : mu+X
+VER:
+ 1: #Temps
+    Temps=PST: ge+X
+    Temps=PRS: vi+X
+ 2: #Genre
+    CF=V1, Genre=A : X+o
+    CF=V1, Genre=B : X+e
+    CF=V1, Genre=C : X+a
+    CF=V1, Genre=D : X+i
+    CF=V2, Genre=A : X+e
+    CF=V2, Genre=B : X+o
+    CF=V2, Genre=C : X+a
+    CF=V2, Genre=D : X+e
+ 3: #Personne
+    CF=V1, Pers=3Sg : X
+    CF=V1, Pers=3Du : X+t
+    CF=V1, Pers=3Pl : X+S
+    CF=V2, Pers=3Sg : X+p
+    CF=V2, Pers=3Du : X
+    CF=V2, Pers=3Pl : X+Z
+#
+#
+#
+#
+#
+ADJ:
+ 1:
+    CF=A1, Nombre=Du :  1a22A3a
+    CF=A2, Nombre=Pl :  be1o12V3e
+ 2: #accord du genre:
+    CF=A1, Genre=A :  X+N
+    CF=A1, Genre=B :  X+Z
+    CF=A1, Genre=C :  X+r
+    CF=A1, Genre=D :  X+m
+    CF=A2, Genre=A :  X+f
+    CF=A2, Genre=B :  X+s
+    CF=A2, Genre=C :  X+N
+    CF=A2, Genre=D :  X+m
+ 3: #accord du nombre:
+    Nombre=Sg, CF=A1 :  X+o
+    Nombre=Sg, CF=A2 :  re+X+o
+    Nombre=Pl, CF=A1 :  X+e
+    Nombre=Du, CF=A2 :  X+e
+DET:
+ 1: #accord du genre:
+    Genre=A : X+a
+    Genre=B : X+i
+    Genre=C : X+o
+    Genre=D : X+o
+ 2: #accord du nombre:
+    Nombre=Sg : o+X
+    Nombre=Du : e+X
+    Nombre=Pl : a+X
+ 3: #accord du cas:
+    Cas=Abs : t+X
+    Cas=Dat : X+n
+    Cas=Obl : X+r
+    Cas=Erg : X+t

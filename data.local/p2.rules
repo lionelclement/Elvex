@@ -1,0 +1,18 @@
+S → form [a] form b form [c] form {
+  ↓1 = [FORM:"<VP line="+__LINE__+"/>"];
+  ↓3 = [FORM:"<VP line="+__LINE__+"/>"];
+  ↓5 = [FORM:"<VP line="+__LINE__+"/>"];
+  ↓7 = [FORM:"<VP line="+__LINE__+"/>"];
+  ↓2 = [];
+  ↓4 = [];
+  ↓6 = [];
+  //attest !(#2 && #6);
+  //attest ¬(#2 ∧ #6);
+  //attest (#2 ∨ #6);
+  //attest (#2 || #6);
+  //attest (¬#2 ∨ #6);
+  //attest (¬#2 || #6);
+  //attest (#2 ⇒ #6);
+  attest (#2 => #6);
+}
+

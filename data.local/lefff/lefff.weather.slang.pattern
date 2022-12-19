@@ -1,0 +1,100 @@
+### ############################################################
+## Température
+## Pluie
+## Brouillard
+## Neige
+## Vent
+## Humidité
+## Froid ressenti
+## Couverture nuageuse
+##
+##
+## humidité %
+## risque d'averses %
+## précipitation mm
+## refroidissement éolien indice
+## vitesse vent km#h
+## point de rosé indice
+## pression mbar
+## direction vent ones
+## couverture nuageuse %
+## ozone du
+##
+############################################################# ##
+
+###################################################
+### Temperature
+###################################################
+###################################################
+### cold
+###################################################
+###################################################
+### slang language
+###################################################
+FAIRE_FROID	v	faire	PRED:FAIRE_FROID, subjC:[FORM:"il", @_3s], objC:[FORM:"un froid de canard"], language_register:slang
+FAIRE_FROID	v	faire	PRED:FAIRE_FROID, subjC:[FORM:"il", @_3s], objC:[FORM:"un froid de gueux"], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[FORM:"les miches"], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[FORM:"les meules"], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:FESSES, def:yes, @s], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	peler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[FORM:"les miches"], refl:yes, objRefl:[@_3s], language_register:slang
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, refl:yes, objRefl:[person:two, @s], subjC:[FORM:"tu", person:two, @s], objC:[PRED:FESSES, def:yes], language_register:slang
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], refl:yes, objRefl:[@_3s], language_register:slang, crude:true
+FAIRE_FROID	v	geler	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:FESSES, def:yes, @s], refl:yes, objRefl:[@_3s], language_register:slang, crude:true
+FAIRE_FROID	v	avoir	PRED:FAIRE_FROID, subjC:[FORM:"on", @_3s], objC:[PRED:TESTICULE, def:yes, @p], pobjC:[PRED:FRAIS, def:yes, @s, pcas:à], language_register:slang, crude:true
+FAIRE_FROID	v	cailler	PRED:FAIRE_FROID, refl:yes, objRefl:[person:two, @s], subjC:[FORM:"tu", person:two, @s], objC:[PRED:FESSES, def:yes], language_register:slang, crude:true
+
+###################################################
+### hot
+###################################################
+###################################################
+### slang language
+###################################################
+FAIRE_CHAUD	v	crever	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], language_register:slang
+FAIRE_CHAUD	v	crever	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"de chaud"]>, language_register:slang
+#FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"la raie en sauce"]>, language_register:slang
+#FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les olives qui baignent dans l'huile"]>, language_register:slang
+#FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les rillettes sous les bras"]>, language_register:slang
+#FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"la chipolata au bain-marie"]>, language_register:slang
+#FAIRE_CHAUD	v	avoir	PRED:FAIRE_CHAUD, subjC:[FORM:"on", @_3s], modC:<[FORM:"les bigorneaux qui collent aux rochers"]>, language_register:slang
+#FAIRE_CHAUD	v	faire	PRED:FAIRE_CHAUD, subjC:[FORM:"il", @_3s], modC:<[FORM:"plus chaud que sous l'aiselle d'un tondeur"]>, language_register:slang
+
+###################################################
+### slang language
+###################################################
+###################################################
+### regular
+###################################################
+PLEUVOIR	v	vaser	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular, language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"ça", @_3s], iiReal:none, degree:regular, language_register:slang
+##################################################
+### few
+###################################################
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:TROP]>, negC:yes, degree:few, language_register:slang
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:BÉZEF]>, negC:yes, degree:few, language_register:slang
+##################################################
+### a_lot
+###################################################
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"comme vache qui pisse"]>, degree:a_lot, language_register:slang
+PLEUVOIR	v	dracher	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:a_lot, language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:COURGE, @p], degree:a_lot, language_register:slang
+COURGE	n	courge	language_register:slang
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"comme à la Gravelotte"]>, degree:a_lot, language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:HALLEBARDE, def:no, @p], degree:a_lot, language_register:slang
+HALLEBARDE	n	hallebarde	language_register:slang
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:LITHARGE, part:yes, @s], degree:a_lot, language_register:slang
+LITHARGE	n	litharge	language_register:slang
+PLEUVOIR	v	prendre	PRED:PLEUVOIR, subjC:[FORM:"on", @_3s], objC:[FORM:"une chavanne"], refl:yes, objRefl:[@_3s], degree:a_lot, language_register:slang
+PLEUVOIR	v	flotter	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:GRAVE]>, degree:a_lot, language_register:slang
+
+### ############################################################
+## Beau
+############################################################# ##
+FAIRE_BEAU	v	cramer	PRED:FAIRE_BEAU, subjC:[FORM:"ça", @_3s], language_register:slang
+FAIRE_BEAU	v	flamber	PRED:FAIRE_BEAU, subjC:[FORM:"ça", @_3s], language_register:slang
+FAIRE_BEAU	v	griller	PRED:FAIRE_BEAU, subjC:[FORM:"on", @_3s], modC:<[FORM:"comme un merlu sur un barbecue"]>, language_register:slang
+
+

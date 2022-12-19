@@ -1,0 +1,948 @@
+/* **************************************************
+ * Start with an NP or a Narative Sentence
+ ************************************************** */
+// Verbe simple
+
+VP → form V [ADVM] [NP] [PP] [ADJ] [VComp] form {
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓8 = [FORM:"</VP>"];
+  ↓1 = [FORM:" "];
+  ↓8 = [FORM:" "];
+  [obj:NIL, prep_obj:NIL, prep_obj2:NIL, scomp:NIL, vcomp:NIL];
+  [subj:$subj, neg:$neg, lexical_function:$lexical_functionH, language_register:$language_register] ⊂ ↑;
+  if (¬ $lexical_functionH)
+    $lexical_functionH = none;
+  ↓2 = ↑ ∪ [lexical_function:$lexical_functionH, language_register:$language_register];
+  [objC:$objSynt, pobjC:$pObjSynt, adjC:$adjSynt, modC:$modSynt, vcompC:$vcompSynt] ⊂ ⇓2;
+  if (#4) {
+    attest $objSynt;
+    [objC:$objInherited] ⊂ ↑;
+    [lexical_function:$lexical_functionInherited] ⊂ $objInherited;
+    if (¬ $lexical_functionInherited)
+      ↓4 = [neg:$neg, language_register:$language_register, $objSynt];
+    else
+      ↓4 = [neg:$neg, lexical_function:$lexical_functionInherited, language_register:$language_register, $objSynt];
+  }
+  else {
+    attest (¬$objSynt);
+  }
+  if (#7) {
+    attest $vcompSynt;
+    [vcompC:$vcompInherited] ⊂ ↑;
+    [lexical_function:$lexical_functionInherited] ⊂ $vcompInherited;
+    if (¬ $lexical_functionInherited)
+      ↓7 = [neg:$neg, language_register:$language_register, $vcompSynt];
+    else
+      ↓7 = [neg:$neg, lexical_function:$lexical_functionInherited, language_register:$language_register, $vcompSynt];
+  }
+  else {
+    attest (¬$vcompSynt);
+  }
+  if (#5) {
+    attest $pObjSynt;
+    ↓5 = $pObjSynt ∪ [language_register:$language_register];
+  }
+  else {
+    attest (¬ $pObjSynt);
+  }
+  if (#6) {
+    attest $adjSynt;
+    [number:$nh, gender:$gh] ⊂ $subj;
+    //[number:$ns, gender:$gs] ⊂ ⇓1;
+    //↓6 = [number:$nh, gender:$gh] ∪ [number:$ns, gender:$gs] ∪ $adjSynt;
+    ↓6 = [number:$nh, gender:$gh, language_register:$language_register] ∪ $adjSynt;
+  }
+  else {
+    attest (¬$adjSynt);
+  }
+  if (#3) {
+    attest $modSynt;
+    ↓3 = [modV:$modSynt, language_register:$language_register];
+  }
+  else {
+    attest (¬$modSynt);
+  }
+  ⇑ = ⇓2 ∪ [lexical_function:$lexical_functionH];
+}
+
+// Avec objet en position canonique ou en position extraite
+VP → form VP [NP] form {
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓4 = [FORM:"</VP>"];
+  ↓1 = [FORM:" "];
+  ↓4 = [FORM:" "];
+  [obj:$obj, prep_obj:NIL, prep_obj2:NIL, $rest];
+  [obj:[PRED:$predObj, number:$n, gender:$g, part:$part], neg:$neg, language_register:$language_register] ⊂ ↑;
+  if (#3){
+    attest ($predObj != __pro);
+    ↓2 = [resObj:yes, resObjEx:no, $rest];
+    ↓3 = [det:yes, neg:$neg, language_register:$language_register, $obj];
+    $objSynt = ⇓3;
+    ⇑ = ⇓2 ∪ [obj:$objSynt];
+  }
+  else {
+    attest ($predObj == __pro);
+    if ($part && $part == yes)
+      ↓2 = [genCl:$obj, resObjEx:yes, resObjExNumber:$n, resObjExGender:$g, resObj:yes, $rest];
+    else
+      ↓2 = [objCl:$obj, resObjEx:yes, resObjExNumber:$n, resObjExGender:$g, resObj:yes, $rest];
+    	⇑ = ⇓2;
+  }
+}
+
+// Avec prepObjet en position canonique ou en position extraite
+VP → form VP [PP] form {
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓4 = [FORM:"</VP>"];
+  ↓1 = [FORM:" "];
+  ↓4 = [FORM:" "];
+  [prep_obj:$pObj, prep_obj2:NIL, vcomp:NIL, scomp:NIL, $rest];
+  [pcas:$pcas] ⊂ $pObj;
+  [prep_obj:[PRED:$pred], language_register:$language_register] ⊂ ↑;
+  [prep_obj:$prep_objSynt] ⊂ ⇓2;
+  [pcas:$pcasSynt] ⊂ $prep_objSynt;
+  if (#3) {
+    attest $pred ≠ __pro; 
+    ↓2 = $rest;
+    if ($prep_objSynt && $pcasSynt)
+      ↓3 = [pcas:$pcas, language_register:$language_register, $pObj] ∪ [pcas:$pcasSynt];
+    else
+      ↓3 = [pcas:$pcas, language_register:$language_register, $pObj];
+    $prepObjSynt = ⇓3;
+    ⇑ = ⇓2 ∪ [prep_obj:$prepObjSynt];
+  }
+  else {
+    attest ($pred == __pro);
+    //[person:$person, gender:$gender, number:$number] ⊂ $pObj ;
+    //if ((¬ $person))
+    //$person = three;
+    //↓2 = [prep_objCl:$pObj, $rest] ∪ [prep_objCl:[person:$person]];
+    ↓2 = [prep_objCl:$pObj, $rest];
+    ⇑ = ⇓2;
+  }
+}
+
+// Avec prepObjet oblique en position canonique ou en position extraite
+VP → form VP PP form {
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓4 = [FORM:"</VP>"];
+  ↓1 = [FORM:" "];
+  ↓4 = [FORM:" "];
+  [prep_obj2:$pObj, $rest];
+  [prep_obj2:$prep_objSynt] ⊂ ⇓2;
+  [pcas:$pcasSynt] ⊂ $prep_objSynt;
+  [pcas:$pcas] ⊂ $pObj;
+  [prep_obj2:[PRED:$pred], language_register:$language_register] ⊂ ↑;
+  attest $pred ≠ __pro; 
+  ↓2 = $rest;
+  if ($prep_objSynt && $pcasSynt)
+    ↓3 = [pcas:$pcas, language_register:$language_register, $pObj] ∪ [pcas:$pcasSynt];
+  else
+    ↓3 = [pcas:$pcas, language_register:$language_register, $pObj];
+  ⇑ = ⇓2;
+}
+
+// Avec complétive en position canonique
+VP → VP SComp {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
+  [scomp:$scomp, $rest];
+  [conc:$conc, language_register:$language_register] ⊂ ↑;
+  if ((¬ $conc))
+    $conc = simul;
+  ↓1 = $rest;
+
+  [scomp:$scompSynt, vtense:$mainClauseVtense, mode:$mainClauseMode, auxVtense:$mainClauseAuxVtense] ⊂ ⇓1;
+  
+  if ($mainClauseAuxVtense)
+    $mainClauseVtense = $mainClauseAuxVtense;
+
+  [mode:$objectClauseMode] ⊂ $scompSynt;
+
+  if ($mainClauseVtense==present){
+    if ($conc==simul|post && $objectClauseMode==subjonctive)
+      $objectClauseTense = present;
+    else if ($conc==ant && $objectClauseMode==subjonctive)
+      $objectClauseTense = past;
+  }
+  else if ($mainClauseVtense==passe_compose){
+    if ($conc==simul|post && $objectClauseMode==subjonctive)
+      $objectClauseTense = present;
+    else if ($conc==ant && $objectClauseMode==subjonctive)
+      $objectClauseTense = past;
+    }
+  else if ($mainClauseVtense==pluperfect){
+    if ($conc==simul|post && $objectClauseMode==subjonctive)
+      $objectClauseTense = past;
+    else if ($conc==ant && $objectClauseMode==subjonctive)
+      $objectClauseTense = pluperfect;
+    }
+ else
+   $objectClauseTense = present;  
+
+  ↓2 = $scomp ∪ $scompSynt ∪ [vform:tensed, mode:$objectClauseMode, tense:$objectClauseTense, language_register:$language_register];
+
+  // attest ($mainClauseVtense==passe_compose) =>
+  //   ((($conc==simul) && ($objectClauseMode==indicative) && ($objectClauseVtense==passe_compose))
+  //    || (($conc==ant) && ($objectClauseMode==indicative) && ($objectClauseVtense==pluperfect|past_anterieur))
+  //    || (($conc==post) && (($objectClauseMode==conditional) && ($objectClauseVtense==present|past)))
+  //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
+  //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect))
+  //    );
+  
+  
+
+  // [vtense:$objectClauseVtense, auxVtense:$objectClauseAuxVtense, mode:$objectClauseMode] ⊂ ⇓2;
+  // if ($objectClauseAuxVtense)
+  //   $objectClauseVtense = $objectClauseAuxVtense;
+
+  // attest ($mainClauseVtense==present) =>
+  //   ((($objectClauseMode==indicative) && ($objectClauseVtense==present|passe_compose|imperfect|pluperfect|future|future_anterieur))
+  //    || (($objectClauseMode==subjonctive) && ($objectClauseVtense==present|past)));
+
+  // attest ($mainClauseVtense==future) =>
+  //   ((($objectClauseMode==indicative) && ($objectClauseVtense==present|passe_compose|imperfect|pluperfect|future|future_anterieur))
+  //    || (($objectClauseMode==subjonctive) && ($objectClauseVtense==present|past)));
+
+  // attest ($mainClauseVtense==future_anterieur) =>
+  //   ((($objectClauseMode==indicative) && ($objectClauseVtense==present|passe_compose|imperfect|pluperfect|future|future_anterieur))
+  //    || (($objectClauseMode==subjonctive) && ($objectClauseVtense==present|past)));
+
+  // attest ($mainClauseVtense==imperfect) =>
+  //   ((($conc==simul) && ($objectClauseMode==indicative) && ($objectClauseVtense==imperfect))
+  //    || (($conc==ant) && ($objectClauseMode==indicative) && ($objectClauseVtense==pluperfect|past_anterieur))
+  //    || (($conc==post) && (($objectClauseMode==conditional) && ($objectClauseVtense==present|past)))
+  //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
+  //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect)));
+
+  // attest ($mainClauseVtense==passe_compose) =>
+  //   ((($conc==simul) && ($objectClauseMode==indicative) && ($objectClauseVtense==passe_compose))
+  //    || (($conc==ant) && ($objectClauseMode==indicative) && ($objectClauseVtense==pluperfect|past_anterieur))
+  //    || (($conc==post) && (($objectClauseMode==conditional) && ($objectClauseVtense==present|past)))
+  //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
+  //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect))
+  //    );
+  
+  // attest ($mainClauseVtense==past_historic) =>
+  //   ((($conc==simul) && ($objectClauseMode==indicative) && ($objectClauseVtense==imperfect|past_historic|passe_compose))
+  //    || (($conc==ant) && ($objectClauseMode==indicative) && ($objectClauseVtense==pluperfect|past_anterieur))
+  //    || (($conc==post) && (($objectClauseMode==conditional) && ($objectClauseVtense==present|past)))
+  //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
+  //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect)));
+
+  // attest ($mainClauseVtense==pluperfect) =>
+  //   ((($conc==simul) && ($objectClauseMode==indicative) && ($objectClauseVtense==imperfect|past_historic|passe_compose))
+  //    || (($conc==ant) && ($objectClauseMode==indicative) && ($objectClauseVtense==pluperfect|past_anterieur))
+  //    || (($conc==post) && (($objectsClauseMode==conditional) && ($objectClauseVtense==present|past)))
+  //    || (($conc==simul|post) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==imperfect))
+  //    || (($conc==ant) && ($objectClauseMode==subjonctive) && ($objectClauseVtense==pluperfect)));
+
+  // 
+  //   $scompSynt2 = ⇓2;
+  // ⇑ = ⇓1 ∪ [scomp:$scompSynt2];
+  ⇑ = ⇓1;
+}
+
+// Avec infinitive en position canonique
+VP → VP VComp {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
+  [vcomp:$vComp, $rest];
+  [language_register:$language_register] ⊂ ↑;
+  ↓1 = $rest;
+  [vcomp:$vCompSynt] ⊂ ⇓1;
+  if ($vCompSynt){
+    ↓2 = $vComp ∪ $vCompSynt ∪ [language_register:$language_register];
+  }
+  else {
+    ↓2 = $vComp ∪ [language_register:$language_register];
+  }
+  $vCompSynt2 = ⇓2;
+  ⇑ = ⇓1 ∪ [vcomp:$vCompSynt2];
+}
+
+// Verbe sans auxiliaire
+// ne pas lui en donner souvent
+// ne lui en donne pas souvent
+// ne lui donne pas
+@trace
+V → form [clneg] [advneg] CLITICS v [clint] [advneg] [ADVM] form {
+  //↓1 = [FORM:"<VP line="+__LINE__+">"];
+  //↓9 = [FORM:"</VP>"];
+  ↓1 = [FORM:" "];
+  ↓9 = [FORM:" "];
+  //print __FILE__ + " (" + __LINE__ + ")";
+  //println ↑;
+  [vtense:present|imperfect|future, mode:conditional|indicative|subjonctive];
+  [voice:active|middle, language_register:$language_register] ⊂ ↑;
+  attest (#3 ∨ #7) ⇔ #2;
+  attest ¬(#3 ∧ #7);
+  [i:$obj, scomp:$scomp, neg:$neg, $rest] ⊂ ↑;
+  if ($negC && (¬ $neg))
+    $neg = $negC;
+
+  if (#8) {
+    [modV:$modV];
+    ↓8 = [modV:$modV];
+  }
+  else {
+    [modV:NIL];
+  }
+
+  [language_register:$language_register] ⊂ $rest;
+  ↓5 = $rest;
+  [language_register:$Synth_language_register] ⊂ ⇓5;
+  attest ($language_register <=> $Synth_language_register);
+
+  if (#3) {
+    ↓2 = [language_register:$language_register];
+    ↓3 = [language_register:$language_register];
+    attest ($neg == yes || $negC == yes);
+    [vform:infinitive] ⊂ ↑;
+  }
+  else if (#7) {
+    ↓2 = [language_register:$language_register];
+    ↓7 = [language_register:$language_register];
+    attest ($neg == yes || $negC == yes);
+    [vform:tensed] ⊂ ↑;
+  } 
+  else {
+    attest ($neg!=yes && $negC!=yes);
+  }
+  [subj:$subj, inv:$inv, resObj:$resObj] ⊂ ↑;
+  if (#6){
+    attest ($inv == yes);
+    ↓6 = $subj ∪ [language_register:$language_register];
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  [refl:$refl, negC:$negC] ⊂ ⇓5;
+  if (($refl == yes) ∧ ($resObj ≠ yes)){
+    [subj:[number:$n, gender:$g, person:$p]] ⊂ ↑;
+    [vform:$vF] ⊂ ⇓5;
+    if ($vF == infinitive)
+      ↓4 = ↑ ∪ ⇓5 ∪ [objRefl:[PRED:__pro, number:sg, gender:ms, person:three], language_register:$language_register];
+    else
+      ↓4 = ↑ ∪ ⇓5 ∪ [objRefl:[PRED:__pro, number:$n, gender:$g, person:$p], language_register:$language_register];
+  }
+  else {
+    ↓4 = ↑ ∪ ⇓5 ∪ [language_register:$language_register];
+  }
+
+  if (#8) {
+    [modV:$modV];
+    ↓8 = [modV:$modV, language_register:$language_register];
+  } else {
+    [modV:NIL];
+  }
+  
+  ⇑ = ⇓5;
+}
+
+// Verbe sans auxiliaire à l'impératif
+// donne m'en
+// !!! ne lui en donne pas
+V → [clneg] [advneg] v CLITICS [clint] [advneg] [ADVM] {
+  [mode:imperative, vtense:present|imperfect|future];
+  [voice:active|middle, language_register:$language_register] ⊂ ↑;
+  attest (#2 ∨ #6) ⇔ #1;
+  attest ¬(#2 ∧ #6);
+  [i:$obj, scomp:$scomp, $rest] ⊂ ↑;
+  if (#7) {
+    [modV:$modV];
+    ↓7 = [modV:$modV];
+  }
+  else {
+    [modV:NIL];
+  }
+  ↓3 = $rest;
+  if (#2) {
+    ↓1 = [];
+    ↓2 = [];
+    [neg:yes];
+    [vform:infinitive] ⊂ ↑;
+  }
+  else if (#6) {
+    ↓1 = [];
+    ↓6 = [];
+    [neg:yes];
+    [vform:tensed] ⊂ ↑;
+  } 
+  else {
+    [neg:no] ⊂ ↑;
+  }
+  [subj:$subj, inv:$inv, resObj:$resObj] ⊂ ↑;
+  if (#5){
+    attest ($inv == yes);
+    ↓5 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  [refl:$refl] ⊂ ⇓3;
+  if (($refl == yes) ∧ ($resObj ≠ yes)){
+    [subj:[number:$n, gender:$g, person:$p]] ⊂ ↑;
+    [vform:$vF] ⊂ ⇓3;
+    if ($vF == infinitive)
+      ↓4 = ↑ ∪ ⇓3 ∪ [objRefl:[PRED:__pro, number:sg, gender:ms, person:three]];
+    else
+      ↓4 = ↑ ∪ ⇓3 ∪ [objRefl:[PRED:__pro, number:$n, gender:$g, person:$p]];
+  }
+  else {
+    ↓4 = ↑ ∪ ⇓3;
+  }
+
+  if (#7) {
+    [modV:$modV];
+    ↓7 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  ⇑ = ⇓3;
+}
+
+// compound verbe active
+// X est parti(es)
+// X a dormi
+// X s'est arrêté(es)
+// a arrêté X
+// X - a arrêté(es)
+// ne lui en a pas souvent donné
+V → [clneg] CLITICS aux_être|aux_avoir [clint] [advneg] [ADVM] v {
+  [vtense:past|passe_compose|pluperfect|past_anterieur|future_anterieur];
+  attest #1 ⇔ #5;
+  if (#1) {
+    ↓1 = [];
+  } 
+  if (#5) {
+    [neg:yes];
+    ↓5 = [];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  [vtense:$t, vform:$vF, subj:$subj, inv:$inv, mode:$m, finite:$f, voice:active|middle, number:_, gender:_, resObj:$resObj, resObjEx:$resObjEx, $rest] ⊂ ↑;
+
+  // Objet réalisé ?
+  //[resObj:$resObj] ⊂ ↑;
+
+  // Objet réalisé dans une position extraite ?
+  //[resObjEx:$resObjEx] ⊂ ↑;
+
+  if (#4){
+    attest ($inv == yes);
+    ↓4 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  // être
+  if (#3.1){
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓7 = [vform:participle, vtense:past, number:$nsubj, gender:$gsubj, $rest];
+    // On récupère les informations du verbe
+    // Verbe pronominal et pas d'objet réalisé (ie "la montre s'est arrêtée")
+    if (⇓7) {
+      [number:$npart, gender:$gpart, aux:$aux, refl:$refl, $rest] ⊂ ⇓7;
+      // Pronom réflexif s'accorde avec sujet
+      if (($refl == yes) ∧ ($resObj ≠ yes)){
+	↓2 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], mode:$m, refl:yes, $rest];
+      }
+      // Verbe intransitif ("la montre est partie")
+      else {
+	attest ($aux == être);
+	attest ($resObj ≠ yes);
+	[subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+	↓2 = $rest;
+      }
+      [subj:[number:$npart, gender:$gpart]] ⊂ ↑;
+      ↓3 = ↑ ∪ [voice:active];
+    }
+  }
+  else if (#3.2){
+    if ($resObjEx ≠ yes){
+      ↓7 = [vform:participle, vtense:past, number:sg, gender:ms, $rest];
+    } else {
+      [resObjExNumber:$resObjExNumber, resObjExGender:$resObjExGender] ⊂ ↑;
+      ↓7 = [vform:participle, vtense:past, number:$resObjExNumber, gender:$resObjExGender, $rest];
+    }
+    if (⇓7){
+      [number:$npart, gender:$gpart, aux:$aux, refl:$refl, $rest] ⊂ ⇓7;
+      attest ($aux == avoir);
+      attest ($refl ⇒ $resObj);
+      ↓2 = $rest;
+      ↓3 = ↑;
+    }
+  }
+
+	[modmC:$modmSynt] ⊂ ⇓7;
+	[modV:$modvInh] ⊂ ↑;
+    if (#6) {
+    attest ($modmSynt || $modvInh);
+    $modV = $modSynt;
+    ↓6 = [modV:$modmSynt] U [modV:$modvInh] ;
+  } else {
+    attest (!$modmSynt && !$modvInh);
+  }
+
+  [vform:$auxVform, vtense:$auxVtense, mode:$auxMode, number:$auxNumber, person:$auxPerson] ⊂ ⇓3;
+  [PRED:$p, vtense:_, mode:_, vform:_, number:$n, gender:$g, person:$p, $restSynt] ⊂ ⇓7;
+  ⇑ = [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, auxNumber:$auxNumber, auxPerson:$auxPerson, number:$n, gender:$g, person:$p, $restSynt];
+}
+
+// passive
+// X est mangé(es)
+// X est ordonné(es) par Y
+// n'en est pas souvent troublé 
+V → [clneg] CLITICS aux_être [clint] [advneg] [ADVM] v {
+  [vtense:present|imperfect|future, voice:passive];
+  attest #1 ⇔ #5;
+  if (#5) {
+    ↓1 = [];
+    ↓5 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  [vtense:$t, vform:$vF, subj:$subj, inv:$inv, mode:$m, finite:$f, voice:passive, number:_, gender:_, $rest] ⊂ ↑;
+
+  if (#4){
+    attest ($inv == yes);
+    ↓4 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓7 = [vform:participle, vtense:past, $rest];
+  // On récupère les informations du verbe
+  if (⇓7){
+    [subjC:$subjC, objC:$objC, modC:$modC, pobjC:$pOC, number:$npart, gender:$gpart] ⊂ ⇓7;
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓2 = ↑;
+    attest (($nsubj == $npart) ∧ ($gsubj == $gpart));
+    ↓3 = ↑ ∪ [voice:passive];
+  }
+
+  if (#6) {
+    [modV:$modV];
+    ↓6 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  //[vtense:$auxVtense, mode:$auxMode, vform:$auxVform] ⊂ ⇓3;
+  //[PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC] ⊂ ⇓7;
+  // ⇑ = [PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, vtense:$auxVtense, mode:$auxMode, vform:$auxVform];
+  ⇑ = ⇓7;
+}
+
+// passive compound
+// X a été mangé(es)
+// X a été ordonné(es) par Y
+// ne lui a pas été souvent fourni
+V → [clneg] CLITICS aux_avoir [clint] [advneg] aux_être [ADVM] v {
+  [vtense:passe_compose|pluperfect|past_anterieur|future_anterieur, voice:passive];
+  attest #1 ⇔ #5;
+  if (#5) {
+    ↓1 = [];
+    ↓5 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  [vtense:$t, vform:$vF, subj:$subj, inv:$inv, mode:$m, finite:$f, voice:passive, number:_, gender:_, $rest] ⊂ ↑;
+
+  if (#4){
+    attest ($inv == yes);
+    ↓4 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓8 = [vform:participle, vtense:past, $rest];
+  // On récupère les informations du verbe
+  if (⇓8){
+    [subjC:$subjC, objC:$objC, modC:$modC, pobjC:$pOC, number:$npart, gender:$gpart] ⊂ ⇓8;
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓2 = ↑;
+    attest (($nsubj == $npart) ∧ ($gsubj == $gpart));
+    ↓3 = ↑ ∪ [voice:passive];
+  }
+
+  ↓6 = [aux:être, vform:participle, vtense:past];
+
+  if (#7) {
+    [modV:$modV];
+    ↓7 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  //  [vtense:$auxVtense, mode:$auxMode, vform:$auxVform] ⊂ ⇓3;
+  //[PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC] ⊂ ⇓8;
+  //⇑ = [PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, vtense:$auxVtense, mode:$auxMode, vform:$auxVform];
+  ⇑ = ⇓8;
+}
+
+// périphrase être en train de
+// n'est pas en train de souvent lui en donner
+V → [clneg] aux_être [clint] [advneg] en_train_de [ADVM] CLITICS v {
+  //trace;
+  [vtense:past_progressive|present_progressive|future_progressive];
+  [subj:$subj, inv:$inv, vform:_, mode:_, finite:_, voice:active|middle, $rest] ⊂ ↑;
+  attest #1 ⇔ #4;
+  if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  if (#3){
+    attest ($inv == yes);
+    ↓3 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓2 = ↑;
+  ↓5 = [];
+  
+  [genCl:$genCl, refl:$refl] ⊂ ⇓8;
+  [resObj:$resObj] ⊂ ↑;
+  if (($refl == yes) ∧ ($resObj ≠ yes)){
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓7 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
+  }
+  else 
+    ↓7 = ⇓8;
+
+  ↓8 = [vform:infinitive, $rest];
+
+  if (#6) {
+    [modV:$modV];
+    ↓6 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, number:$auxN, person:$auxP] ⊂ ⇓2;
+  [PRED:$pRED, vtense:_, mode:_, vform:_, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, $restSynt] ⊂ ⇓8;
+  ⇑ = [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxN, auxPerson:$auxP, $restSynt];
+}
+
+// périphrase aller <inf>
+// ne va pas souvent lui en donner
+V → [clneg] aux_aller [clint] [advneg] [ADVM] CLITICS v {
+  [vtense:near_future];
+  [subj:$subj, inv:$inv, vform:_, mode:_, finite:_, voice:active|middle, $rest] ⊂ ↑;
+  attest #1 ⇔ #4;
+  if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  if (#3){
+    attest ($inv == yes);
+    ↓3 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓2 = ↑;
+  [genCl:$genCl, refl:$refl] ⊂ ⇓7;
+  [resObj:$resObj] ⊂ ↑;
+  if (($refl == yes) ∧ ($resObj ≠ yes)){
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓6 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
+  }
+  else 
+    ↓6 = ⇓7;
+  ↓7 = [vform:infinitive, $rest];
+
+  if (#5) {
+    [modV:$modV];
+    ↓5 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, number:$auxNumber, person:$auxPerson] ⊂ ⇓2;
+  [PRED:$p, vtense:_, mode:_, vform:_, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt] ⊂ ⇓7;
+  ⇑ = [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt];
+}
+
+// périphrase venir de <inf>
+// ne vient pas de lui en donner
+V → [clneg] aux_venir [clint] [advneg] [ADVM] de CLITICS v {
+  [vtense:recent_past];
+  [subj:$subj, inv:$inv, vform:_, mode:_, finite:_, voice:active|middle, $rest] ⊂ ↑;
+  attest #1 ⇔ #4;
+  if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  ↓2 = ↑;
+
+  if (#3){
+    attest ($inv == yes);
+    ↓3 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓6 = [];
+  [refl:$refl] ⊂ ⇓8;
+  [resObj:$resObj] ⊂ ↑;
+  if (($refl == yes) ∧ ($resObj ≠ yes)){
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓7 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
+  }
+  else 
+    ↓7 = ⇓8;
+  ↓8 = [vform:infinitive, $rest];
+
+  if (#5) {
+    [modV:$modV];
+    ↓5 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, number:$auxNumber, person:$auxPerson] ⊂ ⇓2;
+  [PRED:$p, vtense:_, mode:_, vform:_, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt] ⊂ ⇓8;
+  ⇑ = [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt];
+}
+
+// périphrase commencer à <inf>
+// ne commence pas à lui en donner
+V → [clneg] aux_commencer [clint] [advneg] [ADVM] à CLITICS v {
+  //[vtense:recent_present];
+  [subj:$subj, inv:$inv, vform:_, mode:_, finite:_, voice:active|middle, $rest] ⊂ ↑;
+  attest #1 ⇔ #4;
+  if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  ↓2 = ↑;
+
+  if (#3){
+    attest ($inv == yes);
+    ↓3 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓6 = [];
+  [refl:$refl] ⊂ ⇓8;
+  [resObj:$resObj] ⊂ ↑;
+  if (($refl == yes) ∧ ($resObj ≠ yes)){
+    [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+    ↓7 = [objRefl:[PRED:__pro, number:$nsubj, gender:$gsubj, person:$psubj], genCl:$genCl, refl:yes];
+  }
+  else 
+    ↓7 = ⇓8;
+  ↓8 = [vform:infinitive, $rest];
+
+  if (#5) {
+    [modV:$modV];
+    ↓5 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, number:$auxNumber, person:$auxPerson] ⊂ ⇓2;
+  [PRED:$p, vtense:_, mode:_, vform:_, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt] ⊂ ⇓8;
+  ⇑ = [vtense:$auxVtense, mode:$auxMode, vform:$auxVform, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, genCl:$genCl, refl:$refl, auxNumber:$auxNumber, auxPerson:$auxPerson, $restSynt];
+}
+
+// verbe copule
+// X est facteur
+// X n'est pas souvent malade
+V → [clneg] aux_être [clint] [advneg] [ADVM] NP|ADJ {
+  [vtense:present|imperfect|future, iiReal:none];
+  [subj:$subj, neg:$neg, vtense:$vtense, mode:$mode] ⊂ ↑;
+  attest #1 ⇔ #4;
+  if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+  
+  [mode:$mode, vtense:$vtense, vform:$vform, subj:$subj, inv:$inv, finite:$finite, $rest] ⊂ ↑;
+  [number:$number, gender:$gender] ⊂ $subj;
+  
+  if (#3){
+    attest ($inv == yes);
+    ↓3 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓2 = [subj:$subj, mode:$mode, vtense:$vtense, vform:$vform, finite:$finite, voice:passive];
+  ↓6 = ↑ ∪ [number:$number, gender:$gender, det:no];
+  if (#6.1){
+    [state:$state] ⊂ ⇓6;
+    attest ($state == yes);
+  }
+  ⇑ = ⇓6;
+}
+
+// verbe copule composé
+// X a été facteur
+V → [clneg] aux_avoir [clint] [advneg] aux_être [ADVM] NP|ADJ {
+  [vtense:passe_compose|pluperfect|past_anterieur|future_anterieur, iiReal:none];
+  [subj:$subj, neg:$neg, vtense:$vtense, mode:$mode] ⊂ ↑;
+  attest #1 ⇔ #4;
+  if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    [neg:yes];
+    $neg = yes;
+  } else {
+    [neg:no] ⊂ ↑;
+    $neg = no;
+  }
+
+  [mode:$mode, vtense:$vtense, vform:$vform, subj:$subj, inv:$inv, finite:$finite, $rest] ⊂ ↑;
+  [number:$number, gender:$gender] ⊂ $subj;
+
+  if (#3){
+    attest ($inv == yes);
+    ↓3 = $subj;
+  }
+  else {
+    attest ($inv != yes);
+  }
+  
+  ↓2 = [subj:$subj, mode:$mode, vtense:$vtense, vform:$vform, finite:$finite, voice:passive];
+  ↓7 = ↑ ∪ [number:$number, gender:$gender, det:no];
+  // ↓5 = [$rest, vform:participle, vtense:past];
+  // On récupère les informations du verbe
+  // if (⇓8){
+  //   [subjC:$subjC, objC:$objC, modC:$modC, pobjC:$pOC, number:$npart, gender:$gpart] ⊂ ⇓8;
+  //   [subj:[number:$nsubj, gender:$gsubj, person:$psubj]] ⊂ ↑;
+  //   ↓2 = ↑;
+  //   attest (($nsubj == $npart) ∧ ($gsubj == $gpart));
+  //   ↓3 = ↑ ∪ [voice:passive];
+  // }
+
+  ↓5 = [aux:être, vform:participle, vtense:past];
+
+  if (#6) {
+    [modV:$modV];
+    ↓6 = [modV:$modV];
+  } else {
+    [modV:NIL];
+  }
+
+  //  [vtense:$auxVtense, mode:$auxMode, vform:$auxVform] ⊂ ⇓3;
+  //[PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC] ⊂ ⇓8;
+  //⇑ = [PRED:$p, subjC:$subjC, objC:$objC, pobjC:$pobjC, modC:$modC, vtense:$auxVtense, mode:$auxMode, vform:$auxVform];
+  ⇑ = ⇓7;
+}
+
+SComp → csu modalClause {
+  print __FILE__ + " (" + __LINE__ + ")";
+  println ↑;
+  [real:scomp];
+  [PRED:$pred, illocutionary:$illocutionary, modality:$modality, compl:$compl] ⊂ ↑;
+  ↓1 = [compl:$compl];
+  if (($pred != cause) && ($pred != succ))
+    $rhet = neutral;
+  if (($illocutionary != ask) && ($illocutionary != it_seems_to_me) && ($illocutionary != assert) && ($illocutionary != order))
+    $illocutionary = neutral;
+  if (($modality != pouvoir) && ($modality != vouloir) && ($modality != devoir) && ($modality != savoir))
+    $modality = neutral;
+  ↓2 = ↑ ∪ [vform:tensed, rhet:$rhet, illocutionary:$illocutionary, modality:$modality];
+  
+  ⇑ = ⇓1 ∪ ⇓2;
+}
+
+VComp → [de] timeClause {
+  [real:vcomp];
+  [compl:$compl] ⊂ ↑;
+  //↓2 = ↑ ∪ [i:[PRED:_Jean], vform:infinitive, vtense:present, mode:indicative];
+  //↓2 = ↑ ∪ [i:[PRED:_Jean], vform:infinitive];
+  ↓2 = ↑ ∪ [vform:infinitive];
+  if (#1){
+    attest ($compl == de);
+    ↓1 = [];
+  }
+  else 
+    attest ($compl != de);
+  ⇑ = ⇓2;
+}
+
+//
+ADVM → adv|advp|advm|form {
+  [modV:<$Head>];
+  ↓1 = $Head;
+  ⇑ = [];
+}
+
+ADVM → adv|advp|advm|form ADVM {
+  [modV:<$Head::$Tail>];
+  ↓1 = $Head;
+  ↓2 = [modV:$Tail];
+  ⇑ = [];
+}
+
+//
+ADVV → adv|advp|advm|form {
+  [modV:<$Head>];
+  ↓1 = $Head;
+  ⇑ = [];
+}
+
+ADVV → adv|advp|advm|form ADVV {
+  [modV:<$Head::$Tail>];
+  ↓1 = $Head;
+  ↓2 = [modV:$Tail];
+  ⇑ = [];
+}
+

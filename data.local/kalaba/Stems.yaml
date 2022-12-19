@@ -1,0 +1,173 @@
+NOM:
+  N1:
+    N11:
+        A:
+            renaka: [forêt, forêts]
+            zokas: [coup, coups] 
+            kulor: [blessure, blessures]
+            SizeZ: [infirmière,infirmières]
+        B:
+            vabuso: [loup, loups]
+            gutev: [croc,crocs]
+            koziTe: [chasseur,chasseurs]
+            votur: [mort, morts]
+        C:
+            maira: [Mahira,Mahiras]
+            mutul: [maison, maisons]
+            lurid: [souffrance, souffrances]
+            dopiSu: [poisson, poissons]
+        D:
+            tejuno: [démon, démons]
+            mepot: [soeur, soeurs,sœur, sœurs]
+            kigaS: [fruit,fruits]
+            nikol: [Nicole,Nicoles]
+    N12:
+        A:
+            mebuze: [sort, sorts]
+            Zenis: [viande,viandes]
+            katiSa: [Katisha,Katishas]
+            nabil: [Nabil,Nabils]
+            peToli: [chat,chats]
+        B:
+            Semun: [arbre, arbres]
+            musag: [milieu, milieux]
+            Sonuf: [enfant.hyper,enfANT, enfANTs]
+            moDaN: [autruche,autruches]
+        C:
+            matuvu: [corps, corpS]
+            Sikore: [lueur, lueurs]
+            gemof: [coyote,coyotes]
+            rugaD: [coussin,coussins]
+        D:
+            tejum: [fille, filles]
+            delit: [ombre, ombres]
+            sakoS: [chambre,chambres]
+  N2:
+    N21:
+        A:
+            kaleb: [Kaleb,Kalebs]
+            ZutaS: [café,cafés]
+            pebime: [balai,balais]
+        B:
+            salogi: [table,tables]
+            gitar: [main, mains]
+            saduT: [combat, combats]
+            muNov: [œuf,oeuf,œufs,oeufs]
+        C:
+            peDun: [villageois, villageoiS]
+            ketufe: [cri, cris]
+            finot: [gorge, gorges]
+            neTor: [chatte,chattes]
+        D:
+            neTumi: [villageoise, villageoises, villagEOIS, villagEOIs]
+            Salop: [homme, hommes]
+            Dokap: [lit,lits]
+            vjolet: [Violette,Violettes]
+    N22:
+        A:
+            Zigolo: [lune, lunes]
+            ropak: [nuit, nuits]
+            padeka: [thé,thés]
+            Tonifa: [enfant, enfants, garçon, garçons]
+        B:
+            kinaZ: [souris,souriS]
+            power: [combattant, combattants]
+            gavok: [colère, colères]
+            malot: [plaine,plaines]
+        C:
+            liZat: [lance, lances]
+            katod: [serpent, serpents] 
+            lovofu: [village, villages]
+            moDem: [visage, visages]
+        D:
+            vubuNu: [louve, louves, lOUP, lOUPs]
+            figeZ: [chef, chefs, cheffe, cheffes]
+            zudek: [couteau, couteaux]
+            tifare: [cuisine,cuisines]
+VER: 
+  VI:
+    V1:
+        neTaf: [fuir, fuit, fuient, fuyait, fuyaient]
+        nutep: [courir, court, courent, courait, couraient]
+        faZem: [tomber, tombe, tombent, tombait, tombaient]
+        detip: [sortir, sorT, sortent, sortait, sortaient, sortit, sortirent]
+        Siros: [approcher, approche, approchent, approchait, approchaient]
+        fiDed: [passer, passe, passent, passait, passaient,passa,passèrent]
+        Duluf: [disparaître, disparaît, disparaissent, disparaissait, disparaissaient]
+    V2:
+        Suzun: [parler, parle, parlent, parlait, parlaient, parla, parlèrent]
+        zeres: [aller, va, vont, allait, allaient]
+        wupam: [arriver,arrive,arrivent,arrivait,arrivaient]
+        lumok: [dormir, dort, dorment, dormait, dormaient, dormit, dormirent]
+        DuteZ: [sauter, saute, sautent, sautait, sautaient]
+        seZod: [rêvasser,rêvasse,rêvassent,rêvassait,rêvassaient]
+        Dodaf: [entrer,entre,entrent,entrait,entraient]
+  VT:
+    V1:
+        kiZoj: [être, est, sont, était, étaient]
+        logup: [protéger, protège, protègent, protégeait, protégeaient]
+        Zopal: [envahir, envahit, envahissent, envahissait, envahissaient]
+        gafen: [chercher, cherche, cherchent, cherchait, cherchaient]
+        neTad: [planter, plante, plantent, plantait, plantaient] 
+        Sabir: [prendre, prend, prennent, prenait, prenaient]
+        levin: [boire,boit,boivent,buvait,buvaient]
+        tiraf: [lancer, lancE, lancent, lançait, lançaient]   
+        fiker: [transformer, transforme, transforment, transformait, transformaient]
+        boTak: [rejoindre, rejoint, rejoignent, rejoignait, rejoignaient]
+    V2:
+        malak: [dévorer, dévore, dévorent, dévorait, dévoraient]
+        ZuNep: [recouvrir, recouvre, recouvrent, recouvrait, recouvraient]
+        Tebad: [supporter,supporte,supportent,supportait,supportaient]
+        sabiS: [pousser, pousse, poussent, poussait, poussaient]      
+        maSiv: [manger,mange,mangent,mangeait,mangeaient]
+        Zitef: [chasser, chasse, chassent, chassait, chassaient]
+        keTor: [jeter, jette, jettent, jetait, jetaient]
+        Dipod: [transpercer, transperce, transpercent, transperçait, transperçaient]
+        gunuN: [voir, voit, voient, voyait, voyaient, vit, virent]
+  VD:
+    V1:
+        neToN: [apporter, apporte, apportent, apportait, apportaient, apporta, apportèrent]
+        tupej: [acheter,achète,achètent,achetait,achetaient]
+        Zebum: [offrir,offre,offrent,offrait,offraient]
+    V2:
+        Zezit: [donner, donne, donnent, donnait, donnaient]
+        kimat: [montrer,montre,montrent,montrait,montraient]
+ADJ:
+    A1:
+        jiseT: [grand,grande,grands,grandes]
+        Sogos: [noir,noire,noirs,noires]
+        tozan: [rouge,rouges]
+        diwos: [bas,basse,basses]
+        fiZop: [trois]
+        gojoT: [gros,grosse,grosses]
+        feDet: [furieux,furieuse,furieuses]
+        feles: [terrible, terribles]
+        tovuN: [blessé, blessés, blessée, blessées]
+        Sezak: [profond, profonds, profonde, profondes]
+    A2:
+        fanot: [petit,petite,petits,petites]
+        kedam: [blanc,blanche,blancs,blanches]
+        luDet: [maigre,maigres] 
+        tonup: [quatre]     
+        dubak: [jaune,jaunes]
+        Todaf: [effrayé, effrayés, effrayée, effrayées]
+        fuSop: [courageux, courageuse, courageuses]
+        pabaf: [suivant, suivants, suivante, suivantes]
+        taDep: [différent, différents, différente, différentes]
+DET: 
+        k: [DEF,le,la,les,l]
+        l: [IND,un,une,des,dE]
+        b: [DEM,ce,cet,cette,ces]
+PREP: 
+        puw: [de, d]
+        sir: [à] 
+        Sol: [avec]
+        ful: [vers]
+        we: [devant]
+        bo: [derrière]
+        val: [dans]
+        so: [sur]
+        Nov: [ENTRE,entrE]
+        suz: [après]
+        na: [sous]
+        Dop: [pour]

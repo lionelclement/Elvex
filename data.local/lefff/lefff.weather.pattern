@@ -1,0 +1,106 @@
+### ############################################################
+## Température
+## Pluie
+## Brouillard
+## Neige
+## Vent
+## Humidité
+## Froid ressenti
+## Couverture nuageuse
+##
+##
+## humidité %
+## risque d'averses %
+## précipitation mm
+## refroidissement éolien indice
+## vitesse vent km#h
+## point de rosé indice
+## pression mbar
+## direction vent ones
+## couverture nuageuse %
+## ozone du
+##
+############################################################# ##
+
+###################################################
+### Temperature
+###################################################
+###################################################
+### cold
+###################################################
+FAIRE_FROID	v	faire	PRED:FAIRE_FROID, subjC:[FORM:"il", @_3s], objC:[PRED:FROID, @s, gender:ms, det:no]
+
+###################################################
+### hot
+###################################################
+FAIRE_CHAUD	v	faire	PRED:FAIRE_CHAUD, subjC:[FORM:"il", @_3s], objC:[PRED:CHAUD, @s, gender:ms, det:no]
+
+###################################################
+### rain
+###################################################
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, degree:regular
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, part:yes, @s], locCl:[PRED:_pro, @s, @_3], degree:regular
+
+##################################################
+### few
+###################################################
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:LÉGÈREMENT]>, degree:few
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:FEW]>, degree:few
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, detForm:[FORM:"un peu de"]], locCl:[PRED:_pro, @s, @_3], neg:no, degree:few
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, qual:yes, def:no, mod:<[PRED:LÉGER, pos:pre]>], locCl:[PRED:_pro, @s, @_3], neg:no, degree:few
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:GOUTTE, det:yes, @p, detForm:[FORM:"quelques"]], neg:no, degree:few
+##################################################
+### a_lot
+###################################################
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[PRED:ÉNORMÉMENT]>, degree:a_lot
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, detForm:[FORM:"énormément de"]], locCl:[PRED:_pro, @s, @_3], degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à flots"]>, degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à seaux"]>, degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à torrents"]>, degree:a_lot
+PLEUVOIR	v	pleuvoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"à verse"]>, degree:a_lot
+##PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, qual:yes, def:no, mod:<[PRED:ABONDANT, pos:post]>], locCl:[PRED:_pro, @s, @_3], neg:no, degree:a_lot
+##PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PLUIE, det:yes, @s, detForm:[FORM:"énormément de"]], locCl:[PRED:_pro, @s, @_3], degree:a_lot
+
+###################################################
+### poetic language
+###################################################
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"le petit Jésus", @s, @_3], iiReal:none, objC:[FORM:"la prostate"], language_register:poetic
+PLEUVOIR	v	dégringoler	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, modC:<[FORM:"des chiens et des chats"]>, degree:a_lot, language_register:poetic
+PLEUVOIR	v	tomber	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[FORM:"un déluge de larmes célestes"], degree:a_lot, language_register:poetic
+
+###################################################
+### technical language
+###################################################
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:ÉPISODE_PLUVIEUX, det:yes, @p, detForm:[FORM:"quelques"]], locCl:[PRED:_pro, @s, @_3], neg:no, language_register:technical
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:ÉPISODE_PLUVIEUX, det:yes, @p, detForm:[FORM:"quelques rares"]], locCl:[PRED:_pro, @s, @_3], neg:no, degree:few, language_register:technical
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PRÉCIPITATION, det:yes, @p, qual:yes, def:no, mod:<[PRED:FORT, pos:pre]>], locCl:[PRED:_pro, @s, @_3], degree:a_lot, language_register:technical
+PLEUVOIR	v	avoir	PRED:PLEUVOIR, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:PRÉCIPITATION, det:yes, @p, qual:yes, def:no, detForm:[FORM:"quelques"]], locCl:[PRED:_pro, @s, @_3], degree:many, language_register:technical
+
+### ############################################################
+## Neige
+############################################################# ##
+NEIGER	v	neiger	PRED:NEIGER, subjC:[FORM:"il", @_3s], iiReal:none
+NEIGER	v	avoir	PRED:NEIGER, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:NEIGE, part:yes, @s], locCl:[PRED:_pro, @s, @_3]
+NEIGER	v	avoir	PRED:NEIGER, subjC:[FORM:"il"], iiReal:none, objC:[PRED:NEIGE, part:yes, @s], locCl:[PRED:_pro, @s, @_3]
+
+### ############################################################
+## Vent
+############################################################# ##
+
+### ############################################################
+## Couverture nuageuse
+############################################################# ##
+### ############################################################
+## Beau
+############################################################# ##
+FAIRE_BEAU	v	faire	PRED:FAIRE_BEAU, subjC:[FORM:"il", @_3s], objC:[PRED:BEAU, @s, gender:ms, det:no]
+FAIRE_BEAU	v	avoir	PRED:FAIRE_BEAU, subjC:[FORM:"il", @_3s], iiReal:none, objC:[PRED:SOLEIL, part:yes, @s], locCl:[PRED:_pro, @s, @_3]
+
+### ############################################################
+## Nuageux
+############################################################# ##
+
+### ############################################################
+## Précipitations
+############################################################# ##
+

@@ -1,0 +1,4 @@
+//S [PRED:renard, mod:<[PRED:beau]>]
+//S [PRED:renard, mod:<[]>]
+//S [mod:<[]>]
+S [PRED:renard]

@@ -1,0 +1,64 @@
+/* **************************************************
+* Elvex.rules
+************************************************** */
+
+N → [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] N
+{
+  [adjunct:$List, $Rest];
+  // $List = <[PRED:A], [PRED:B], ..., [PRED:C]>
+  // $i = [PRED:A], [PRED:B], ... ,[PRED:C]
+  foreach $i in $List {
+    $entries = search $i on adj;
+    foreach $j in $entries {
+  
+      // [PRED:$p] < $i
+      // search [PRED:A] in adj
+      // => form1 adj [PRED:A]
+      // => form2 adj [PRED:A]
+      // => ...
+      // => formk adj [PRED:A]
+      //[type:$type] ⊂ search $i in adj;
+      [type:$type] ⊂ $j;
+      if ($type == number) {
+        ↓1 = $i;
+      } else if ($type == quality) {
+        ↓2 = $i;
+      } else if ($type == size) {
+        ↓3 = $i;
+      } else if ($type == age) {
+        ↓4 = $i;
+      } else if ($type == shape) {
+        ↓5 = $i;
+      } else if ($type == color) {
+        ↓6 = $i;
+      } else if ($type == proper) {
+        ↓7 = $i;
+      } else if ($type == purpose) {
+        ↓8 = $i;
+      }
+    }
+  }
+  attest (↓1 => #1);
+  attest (↓2 => #2);
+  attest (↓3 => #3);
+  attest (↓4 => #4);
+  attest (↓5 => #5);
+  attest (↓6 => #6);
+  attest (↓7 => #7);
+  attest (↓8 => #8);
+  ↓9 = $Rest;
+  ⇑ = ⇓9;
+}
+
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N → noun
+{
+  [adjunct:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

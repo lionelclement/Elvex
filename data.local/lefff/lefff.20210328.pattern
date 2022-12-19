@@ -1,0 +1,47 @@
+ÊTRE_RANCUNIER	v	avoir	PRED:ÊTRE_RANCUNIER,objC:[PRED:DENT, number:sg, def:no],iiiReal:prep_obj,prep_obj:[pcas:contre]
+
+// tomber locution
+ÉVANOUIR	v	tomber	PRED:ÉVANOUIR,pobjC:[PRED:POMME,number:pl,def:yes,pcas:dans],language_register:slang
+POMME	n	pomme	language_register:slang
+TOMBER_À_TERRE	v	tomber	PRED:TOMBER_À_TERRE,modC:<[FORM:"à terre"]>,language_register:slang
+ÊTRE_AMOUREUX	v	tomber	PRED:ÊTRE_AMOUREUX,iiReal:prep_obj,prep_obj:[pcas:pour],modC:<[FORM:"en amour"]>,language_register:dialect
+
+// vaser
+// neiger
+NEIGER	v	avoir	PRED:NEIGER,subjC:[FORM:"il"],iiReal:none,objC:[PRED:NEIGE,part:yes,number:sg],locCl:[PRED:_pro,number:sg,person:three]
+
+// être locution
+ÊTRE_AMOUREUX	v	être_adj	PRED:ÊTRE_AMOUREUX,iiReal:prep_obj,prep_obj:[pcas:de],adjC:[PRED:AMOUREUX]
+
+// pincer locution
+ÊTRE_AMOUREUX	v	en_pincer_pour_locution	PRED:ÊTRE_AMOUREUX,iiReal:prep_obj,prep_obj:[pcas:pour],genCl:[PRED:_pro,number:sg,person:three],language_register:familiar
+
+// avoir locution
+AVOIR_MAL	v	avoir	PRED:AVOIR_MAL,iiReal:prep_obj,prep_obj:[pcas:à, def:yes],nounC:[PRED:MAL, number:sg],@avoir
+AVOIR_MAL	v	avoir	PRED:AVOIR_MAL,iiReal:none,nounC:[PRED:MAL, number:sg],@avoir
+AVOIR_FROID	v	avoir	PRED:AVOIR_FROID,iiReal:none,nounC:[PRED:FROID, number:sg],@avoir
+AVOIR_FROID	v	avoir	PRED:AVOIR_FROID,iiReal:prep_obj,prep_obj:[pcas:à, def:yes],nounC:[PRED:FROID, number:sg],@avoir
+AVOIR_CHAUD	v	avoir	PRED:AVOIR_CHAUD,iiReal:none,nounC:[PRED:CHAUD, number:sg],@avoir
+AVOIR_CHAUD	v	avoir	PRED:AVOIR_CHAUD,iiReal:prep_obj,prep_obj:[pcas:à, def:yes],nounC:[PRED:CHAUD, number:sg],@avoir
+AVOIR_FAIM	v	avoir	PRED:AVOIR_FAIM,iiReal:none,nounC:[PRED:FAIM, number:sg],@avoir
+AVOIR_SOIF	v	avoir	PRED:AVOIR_SOIF,iiReal:none,nounC:[PRED:SOIF, number:sg],@avoir
+AVOIR_LA_NAUSÉE	v	avoir	PRED:AVOIR_LA_NAUSÉE,iiReal:none,objC:[PRED:NAUSÉE, number:sg, def:yes],@avoir
+AVOIR_LA_NAUSÉE	v	avoir	PRED:AVOIR_LA_NAUSÉE,iiReal:none,nounC:[FORM:"envie de vomir"],@avoir
+AVOIR_LA_NAUSÉE	v	avoir	PRED:AVOIR_LA_NAUSÉE,pobjC:[PRED:COEUR,number:sg,def:yes,pcas:à],nounC:[PRED:MAL, number:sg], @avoir
+AVOIR_DE_LA_VISITE	v	avoir	PRED:AVOIR_DE_LA_VISITE,pobjC:[PRED:VISITE,number:sg,def:yes,pcas:de],@avoir
+SE_LAVER	v	laver	PRED:SE_LAVER,refl:yes,iiReal:obj,obj:[def:yes]
+SE_LAVER	v	laver	PRED:SE_LAVER,refl:yes,iiReal:none
+SE_DOUCHER	v	doucher	PRED:SE_DOUCHER,refl:yes,iiReal:none
+ALLER_AUX_TOILETTES	v	aller	PRED:ALLER_AUX_TOILETTES,pobjC:[PRED:TOILETTE,number:pl,def:yes,pcas:à]
+CHANGER_DE_CHAINE	v	changer	PRED:CHANGER_DE_CHAINE,objC:[FORM:"de chaine"]
+SE_SENTIR_BIEN	v	sentir	PRED:SE_SENTIR_BIEN,refl:yes,modC:<[FORM:"bien"]>
+SE_SENTIR_MAL	v	sentir	PRED:SE_SENTIR_MAL,refl:yes,modC:<[FORM:"mal"]>
+SE_SENTIR	v	sentir	PRED:SE_SENTIR,refl:yes,iiReal:adj
+
+CETTE_NUIT	n	nuit	PRED:CETTE_NUIT
+
+ÊTRE_FATIGUÉ	v	être_adj	PRED:ÊTRE_FATIGUÉ,adjC:[PRED:FATIGUÉ]
+
+AVOIR_BESOIN_AIDE	v	avoir	PRED:AVOIR_BESOIN_AIDE,iiReal:none,nounC:[PRED:BESOIN, number:sg],objC:[FORM:"d'aide"],@avoir
+AVOIR_BESOIN	v	avoir	PRED:AVOIR_BESOIN,iiReal:prep_obj,prep_obj:[pcas:de],nounC:[PRED:BESOIN, number:sg],@avoir
+AVOIR_BESOIN	v	avoir	PRED:AVOIR_BESOIN,iiReal:vcomp,compl:de,nounC:[PRED:BESOIN, number:sg],@avoir

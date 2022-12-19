@@ -1,0 +1,315 @@
+/* **************************************************
+ * Start
+ ************************************************** */
+S → S
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:$i, ii:NIL, iii:NIL, $rest];
+  ↓1 = [PRED:VERB_N0, subj:$i, $rest];
+  ⇑ = [];
+}
+
+S → S
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:$i, ii:$ii, iii:NIL, $rest];
+  ↓1 = [PRED:VERB_N0_N1, subj:$i, obj:$ii, $rest];
+  ⇑ = [];
+}
+
+S → S
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:$i, ii:$ii, iii:$iii, $rest];
+  ↓1 = [PRED:VERB_N0_PREPN1_PREPN2, subj:$i, obl:[pcas:de, $ii], obl2:[pcas:à, $ii], $rest];
+  ⇑ = [];
+}
+
+S → S
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:$i, ii:$ii, iii:$iii, $rest];
+  ↓1 = [PRED:VERB_N0_N1_PREPN2, subj:$i, obj:$ii, obl2:[pcas:à, $ii], $rest];
+  ⇑ = [];
+}
+
+S → VP
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:NIL, ii:NIL, iii:NIL, $rest];
+  ↓1 = [PRED:VERB_N0, subj:[PRED:PRO], $rest];
+  ⇑ = [];
+}
+
+S → VP
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:NIL, ii:$ii, iii:NIL, $rest];
+  ↓1 = [PRED:VERB_N0_N1, subj:[PRED:PRO], obj:$ii, $rest];
+  ⇑ = [];
+}
+
+S → VP
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:NIL, ii:$ii, iii:$iii, $rest];
+  ↓1 = [PRED:VERB_N0_PREPN1_PREPN2, subj:[PRED:PRO], obl:[pcas:de, $ii], obl2:[pcas:à, $ii], $rest];
+  ⇑ = [];
+}
+
+S → VP
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:predicate, i:NIL, ii:$ii, iii:$iii, $rest];
+  ↓1 = [PRED:VERB_N0_N1_PREPN2, subj:[PRED:PRO], obj:$ii, obl2:[pcas:à, $ii], $rest];
+  ⇑ = [];
+}
+
+S → NP|CLN VP
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  //println $subj;
+  [subj:$subj, $rest];
+  ↓1 = $subj;
+  [number:$numberSynth, gender:$genderSynth, person:$personSynth, hum:$humSynth, anim:$animSynth] ⊂ ⇓1;
+  ↓2 = [subj:[number:$numberSynth, gender:$genderSynth, person:$personSynth, hum:$humSynth, anim:$animSynth], vform:tensed, $rest];         
+  ⇑ = [];
+}
+
+CLN → cln
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+NP → name
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1 ∪ [person:three, anim:yes, hum:yes];
+}
+
+//NP → lastName
+//{
+//  //print __FILE__; print " ("; print __LINE__; println ")";
+//  [mod:NIL];
+//  ↓1 = ↑;
+//  ⇑ = ⇓1 ∪ [person:three, anim:yes, hum:yes];
+//}
+
+//NP → firstName lastName
+//{
+//  //print __FILE__; print " ("; print __LINE__; println ")";
+//  [mod:NIL];
+//  ↓1 = ↑;
+//  ↓2 = ↑;
+//  ⇑ = ⇓2 ∪ [person:three, anim:yes, hum:yes];
+//}
+
+NP → det N2
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  ↓2 = ↑;
+  [number:$numberSynth, gender:$genderSynth, anim:$animSynth, hum:$humSynth] ⊂ ⇓2;
+  ↓1 = ↑ ∪ [number:$numberSynth, gender:$genderSynth];
+  if (!$animSynth) {
+    $animSynth = no;
+  }
+  if (!$humSynth)
+    $humSynth = no;
+  else if ($humSynth == yes) 
+    $animSynth = yes;
+  ⇑ = ⇓2 ∪ [anim:$animSynth, hum:$humSynth];
+}
+
+NP → pro
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+// Place les relatives après les adjectifs
+N2 → N {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<[PRED:ADJ]::<[PRED:predicate]::$ooo>>];
+  [mod:<$car::<$cadr::$cddr>>, $rest] ⊂ ↑;
+  ↓1 = [mod:<$cadr::<$car::$cddr>>, $rest];
+  ⇑ = ⇓1;
+}
+
+N2 → N {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<[PRED:ADJ]::$Tail>];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N2 → N {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<[PRED:predicate]::$Tail>];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N2 → N {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N → n
+{
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1 ∪ [person:three];
+}
+
+N → AP N {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<$Head::$Tail>, $Rest];
+  [number:$number, gender:$gender] ⊂ ↑;
+  ↓1 = [number:$number, gender:$gender, $Head];
+  [number:$numberSynth, gender:$genderSynth, anim:$animSynth, hum:$humSynth, pos:$Pos] ⊂ ⇓1;
+  attest ($Pos) ∧ ($Pos == pre);
+  ↓2 = [mod:$Tail, number:$numberSynth, gender:$genderSynth, anim:$animSynth, hum:$humSynth, $Rest];
+  ⇑ = ⇓2 ∪ [qual:yes];
+}
+
+N → N AP {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<$Head::$Tail>, $Rest];
+  [number:$number, gender:$gender] ⊂ ↑;
+  ↓2 = [number:$number, gender:$gender, $Head];
+  [number:$numberSynth, gender:$genderSynth, anim:$animSynth, hum:$humSynth, pos:$Pos] ⊂ ⇓2;
+  attest ¬$Pos ∨ ($Pos == post);
+  ↓1 = [mod:$Tail,number:$numberSynth, gender:$genderSynth, anim:$animSynth, hum:$humSynth, $Rest];
+  ⇑ = ⇓1;
+}
+
+N → N PP {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<$Head::$Tail>, $Rest];
+  ↓2 = $Head ∪ [pcas:de];
+  ↓1 = [mod:$Tail, $Rest];
+  ⇑ = ⇓1;
+}
+
+N → N REL {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<$Head :: $Tail>, $Rest];
+  [PRED:$pred] ⊂ $Head;
+  attest ($pred == NIL);
+  ↓1 = [mod:$Tail, $Rest];
+  [number:$numberSynth, gender:$genderSynth, person:$personSynth] ⊂ ⇓1;
+  ↓2 = $Head ∪ [number:$numberSynth, gender:$genderSynth, person:$personSynth];
+  ⇑ = ⇓1;
+}
+
+REL → prel S {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [i:$i];
+  ↓1 = ↑ ∪ [fct:obj];
+  ↓2 = ↑ ∪ [ii:[PRED:PRO]];
+  ⇑ = ⇓2;
+}
+
+REL → prel S {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [number:$number, gender:$gender, person:$person, $rest];
+  ↓1 = ↑ ∪ [fct:subj];
+  ↓2 = [i:[PRED:PRO, number:$number, gender:$gender, person:$person], $rest];
+  ⇑ = ⇓2;
+}
+
+AP → adv AP {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:<$Head::$Tail>, $Rest];
+  ↓1 = $Head;
+  ↓2 = [mod:$Tail, $Rest];
+  ⇑ = ⇓2;
+}
+
+AP → adj {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+// Verbe simple
+VP → V {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [obj:NIL, obl:NIL, obl2:NIL, scomp:NIL, vcomp:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+// Objet
+VP → VP NP {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [obj:$obj, $rest];
+  ↓1 = $rest;
+  [obj:$objSynth] ⊂ ⇓1;
+  ↓2 = $obj ∪ $objSynth;
+  ⇑ = ⇓1;
+}
+
+// Oblique
+VP → VP PP {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [obl:$obl, $rest];
+  ↓1 = $rest;
+  [obl:$oblSynth] ⊂ ⇓1;
+  ↓2 = $obl ∪ $oblSynth;
+  ⇑ = ⇓1;
+}
+
+// Oblique 2
+VP → VP PP {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [obl2:$obl2, $rest];
+  ↓1 = $rest;
+  [obl2:$obl2Synth] ⊂ ⇓1;
+  ↓2 = $obl2 ∪ $obl2Synth;
+  ⇑ = ⇓1;
+}
+
+// Verbe sans auxiliaire
+V → [clneg] [advneg] v [advneg] {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  attest (#2 ∨ #4) ⇔ #1;
+  attest ¬(#2 ∧ #4);
+  [neg:$neg, $rest] ⊂ ↑;
+  ↓3 = ↑;
+  if (#2) {
+    ↓1 = [];
+    ↓2 = [];
+    attest ($neg == yes);
+    [vform:infinitive] ⊂ ↑;
+  }
+  else if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    attest ($neg == yes);
+    [vform:tensed] ⊂ ↑;
+  } 
+  else {
+    attest ($neg != yes);
+  }
+  ⇑ = ⇓3;
+}
+
+PP → prep NP {
+  //print __FILE__; print " ("; print __LINE__; println ")";
+  [PRED:$PRED, $REST];
+  ↓1 = $REST;
+  ↓2 = ↑;
+  ⇑ = ⇓2;
+}

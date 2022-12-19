@@ -1,0 +1,9 @@
+@lexicon
+
+Paul pn [PRED:PAUL];
+
+ate verb [PRED:TO_EAT];
+
+a det;
+
+flower noun [PRED:FLOWER];
