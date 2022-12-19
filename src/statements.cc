@@ -263,7 +263,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
         localEffect = false;
 
 #ifdef TRACE_OPTION
-        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+        if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
         {
             std::cout << "<H3>####################### APPLY CON'T (before toggle enable) #######################</H3>" << std::endl;
             item->print(std::cout);
@@ -286,7 +286,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
         }
 
 #ifdef TRACE_OPTION
-        if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+        if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
         {
             std::cout << "<H3>####################### APPLY CON'T (after toggle enable and before apply) #######################</H3>" << std::endl;
             item->print(std::cout);
@@ -335,7 +335,7 @@ exitApply:
 {
 }
 #ifdef TRACE_OPTION
-    if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && item->getRuleTrace())))
+    if (synthesizer->getTraceAction() || (synthesizer->getTrace() && item->getRuleTrace()))
     {
         std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
         item->print(std::cout);

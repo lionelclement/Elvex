@@ -1453,6 +1453,14 @@ void Synthesizer::setVerbose(bool _verbose)
 /* **************************************************
  *
  ************************************************** */
+bool Synthesizer::getVerbose()
+{
+    return this->verbose;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
                                   unsigned int pos)
 {

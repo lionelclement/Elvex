@@ -207,6 +207,8 @@ public:
 
     void setVerbose(bool _verbose);
 
+    bool getVerbose();
+
     entriesPtr findByPos(Parser &parser, Parser::entries_map *, unsigned int pos);
 
     entriesPtr findByForm(Parser::entries_map *);
