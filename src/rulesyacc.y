@@ -100,7 +100,7 @@
 
 // KEYWORDS
 %token TOKEN_RULES TOKEN_INPUT TOKEN_LEXICON
-%token TOKEN_LEMMA TOKEN_PRED TOKEN_FORM
+%token TOKEN_LEMMA TOKEN_HEAD TOKEN_FORM
 %token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN
 %token TOKEN_IF TOKEN_ELSE
 %token TOKEN_WAIT
@@ -223,10 +223,10 @@ dictionary_line:
 	    zeroToEntries = new Parser::entries_map();
 	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
 	  }
-	  auto foundPred = zeroToEntries->find(0);
+	  auto foundHead = zeroToEntries->find(0);
 	  entriesPtr entries;
-	  if (foundPred != zeroToEntries->cend()){
-	    entries = foundPred->second;
+	  if (foundHead != zeroToEntries->cend()){
+	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
 	    zeroToEntries->insert(std::make_pair(0, entries));
@@ -248,10 +248,10 @@ dictionary_line:
 	    zeroToEntries = new Parser::entries_map;
 	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
 	  }
-	  auto foundPred = zeroToEntries->find(0);
+	  auto foundHead = zeroToEntries->find(0);
 	  entriesPtr entries;
-	  if (foundPred != zeroToEntries->cend()){
-	    entries = foundPred->second;
+	  if (foundHead != zeroToEntries->cend()){
+	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
 	    zeroToEntries->insert(std::make_pair(0, entries));
@@ -267,20 +267,20 @@ dictionary_line:
 	  for (auto entry = (*$2)->begin() ; entry != (*$2)->end() ; ++entry) {
 	    (*entry)->setForm(*$1);
 	    entriesPtr lp;
-	    Parser::entries_map* predToEntries;
+	    Parser::entries_map* headToEntries;
 		auto foundCode = parser.findCacheLexicon((*entry)->getPos());
 	    if (foundCode != parser.cendCacheLexicon()){
-	      predToEntries = foundCode->second;
+	      headToEntries = foundCode->second;
 	    } else {
-	      predToEntries = new Parser::entries_map;
-	      parser.insertCacheLexicon(std::make_pair((*entry)->getPos(), predToEntries));
+	      headToEntries = new Parser::entries_map;
+	      parser.insertCacheLexicon(std::make_pair((*entry)->getPos(), headToEntries));
 	    }
-	    Parser::entries_map_iterator foundPred = predToEntries->find((*entry)->getPred());
-	    if (foundPred != predToEntries->cend()){
-	      lp = foundPred->second;
+	    Parser::entries_map_iterator foundHead = headToEntries->find((*entry)->getHead());
+	    if (foundHead != headToEntries->cend()){
+	      lp = foundHead->second;
 	    } else {
 	      lp = Entries::create();
-	      predToEntries->insert(std::make_pair((*entry)->getPred(), lp));
+	      headToEntries->insert(std::make_pair((*entry)->getHead(), lp));
 	    }
 	    lp->add(*entry);
 	  }
@@ -339,8 +339,8 @@ lexical_entry:
 	TOKEN_IDENTIFIER features
 	{
 	  DBUGPRT("lexical_entry");
-	  unsigned int pred = (*$2)->assignPred();
-	  $$ = new entryPtr(Entry::create(Vartable::stringToCode(*$1), pred, std::string(), *$2));
+	  unsigned int head = (*$2)->assignHead();
+	  $$ = new entryPtr(Entry::create(Vartable::stringToCode(*$1), head, std::string(), *$2));
 	  free($1);
 	  free($2);
 	}
@@ -1165,18 +1165,18 @@ feature:
 	  $$ = new featurePtr(Feature::create(Feature::_LEMMA_, bitsetPtr(), Value::create(Value::VARIABLE_VALUE, *$3)));
 	}
 
-	// PRED: predicate
-	|TOKEN_PRED TOKEN_COLON stringOrIdentifier
+	// HEAD: headicate
+	|TOKEN_HEAD TOKEN_COLON stringOrIdentifier
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_PRED_, bitsetPtr(), Value::create(Value::IDENTIFIER_VALUE, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::IDENTIFIER_VALUE, *$3)));
 	}
 
-	// PRED: $X
-	|TOKEN_PRED TOKEN_COLON variable
+	// HEAD: $X
+	|TOKEN_HEAD TOKEN_COLON variable
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_PRED_, bitsetPtr(), Value::create(Value::VARIABLE_VALUE, *$3)));
+	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::VARIABLE_VALUE, *$3)));
 	  free($3);
 	}
 

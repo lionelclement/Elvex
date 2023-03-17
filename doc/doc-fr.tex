@@ -208,7 +208,7 @@ Le lexique compacté est un ensemble d'entrées lexicales de type
 \begin{itemize}
 \item \verb#cat# est une catégorie lexicale
 \item \verb#lexème# est le lexème que l'on trouve comme valeur du
-  trait \verb#PRED#
+  trait \verb#HEAD#
 \item \verb#forme# est la forme produite (une chaine de caractères
   UTF8 dans la version 2.10)
 \item \verb#FS# est la structure de traits de l'entrée lexicale
@@ -529,7 +529,7 @@ Les structures de traits sont notées $[ trait_1, trait_2, \dots , trait_k ]$ o�
 \item soit \verb#FORM:"<form>"# un trait pour une forme littérale
 \item soit $attr_i:val_i$
   \begin{itemize}
-  \item avec $attr_i$ le nom d'un attribut ou \texttt{PRED} ou \texttt{FORM}
+  \item avec $attr_i$ le nom d'un attribut ou \texttt{HEAD} ou \texttt{FORM}
   \item et avec $val_i$ la valeur d'un attribut qui peut être: 
     
     \begin{itemize}
@@ -566,7 +566,7 @@ Chaque règle s'écrit:
 
 \item \verb#[attr, attr, ..., attr];# Garde où la structure de traits
   doit subsumer $\uparrow$. La garde peut contenir le trait
-  \verb#PRED# qui représente le concept à générer. Ainsi, un concept
+  \verb#HEAD# qui représente le concept à générer. Ainsi, un concept
   n'est pas nécessairement lié à une entrée lexicale avec
   \texttt{Elvex}, contrairement aux systèmes de génération de texte
   habituels; il peut produire une contrainte syntaxique.
@@ -801,10 +801,10 @@ transmises au trait \verb#subject# de l'attribut hérité $\downarrow1$.
 \item Liage d'une variable au sein d'une entrée lexicale
 
 \begin{lstlisting}[numbers=none]
-a	v[PRED:fog, subjC:[FORM:"il"], 
-		objC:[PRED:brouillard, det:yes, 
+a	v[HEAD:fog, subjC:[FORM:"il"], 
+		objC:[HEAD:brouillard, det:yes, 
 		def:no, part:yes, neg:$Neg], 
-		locCl:[PRED:_pro, number:sg, 
+		locCl:[HEAD:_pro, number:sg, 
 			person:three], 
 		vform:tensed, vtense:present, 
 		mode:indicative, 
@@ -884,22 +884,22 @@ subj:[person:one, number:sg]];
 \item \begin{verbatim}
 // Entrée lexicale "temperature" produisant 
 "la température est de xxx degrés" avec [cel:xxx]
-est v[PRED:temperature, 
-	subjC:[PRED:température, number:sg, det:yes, def:yes], 
-	pobjC:[PRED:degré, number:pl, pcas:de, det:yes,
-		detNum:[PRED:num, value:$Deg]], 
+est v[HEAD:temperature, 
+	subjC:[HEAD:température, number:sg, det:yes, def:yes], 
+	pobjC:[HEAD:degré, number:pl, pcas:de, det:yes,
+		detNum:[HEAD:num, value:$Deg]], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], fct:none, value:$Deg]
 
 "la température est douce"
-|v[PRED:temperature, subjC:[PRED:température, number:sg, 
-	det:yes, def:yes], modC:[PRED:doux, number:sg, gender:fm],
+|v[HEAD:temperature, subjC:[HEAD:température, number:sg, 
+	det:yes, def:yes], modC:[HEAD:doux, number:sg, gender:fm],
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], fct:few]
 
 "la température est élevée"
-|v[PRED:temperature, subjC:[PRED:température, number:sg, 
-	det:yes, def:yes], modC:[PRED:élevé, number:sg, gender:fm],
+|v[HEAD:temperature, subjC:[HEAD:température, number:sg, 
+	det:yes, def:yes], modC:[HEAD:élevé, number:sg, gender:fm],
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], fct:much];
 \end{verbatim}
@@ -908,25 +908,25 @@ est v[PRED:temperature,
 \item \begin{verbatim}
 // Entrée lexicale de "temperature"
 // produisant "Il fait chaud"
-fait	v[PRED:temperature, subjC:[FORM:"il"], 
-	modC:[PRED:chaud, number:sg, gender:ms], vform:tensed,
+fait	v[HEAD:temperature, subjC:[FORM:"il"], 
+	modC:[HEAD:chaud, number:sg, gender:ms], vform:tensed,
 	vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:high]
 
 //"Il fait très chaud"
-|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:chaud, 
-	number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed, 
+|v[HEAD:temperature, subjC:[FORM:"il"], modC:[HEAD:chaud, 
+	number:sg, gender:ms, mod:<[HEAD:très]>], vform:tensed, 
 	vtense:present, mode:indicative, subj:[person:three, 
 	number:sg], neg:$Neg, fct:very_high]
 
 //"Il fait très froid"
-|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:froid, 
-	number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed,
+|v[HEAD:temperature, subjC:[FORM:"il"], modC:[HEAD:froid, 
+	number:sg, gender:ms, mod:<[HEAD:très]>], vform:tensed,
 	vtense:present, mode:indicative, subj:[person:three, 
 	number:sg], neg:$Neg, fct:very_low]
 
 //"Il fait froid"
-|v[PRED:temperature, subjC:[FORM:"il"], modC:[PRED:froid, 
+|v[HEAD:temperature, subjC:[FORM:"il"], modC:[HEAD:froid, 
 	number:sg, gender:ms], vform:tensed, vtense:present, 
 	mode:indicative, subj:[person:three, number:sg], 
 	neg:$Neg, fct:low]; 
@@ -936,34 +936,34 @@ fait	v[PRED:temperature, subjC:[FORM:"il"],
 \item \begin{verbatim}
 // entrée lexicale de "pleuvoir" produisant
 // "il y a une pluie fine"
-a	v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:pluie, det:yes, number:sg, qual:yes,
-		def:no, mod:<[PRED:fin, pos:post]>], 
-	locCl:[PRED:_pro, number:sg, person:three], 
+a	v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:pluie, det:yes, number:sg, qual:yes,
+		def:no, mod:<[HEAD:fin, pos:post]>], 
+	locCl:[HEAD:_pro, number:sg, person:three], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:few]
 	
 // "il y a un peu de pluie"
-|v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:pluie, det:yes, number:sg, 
+|v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:pluie, det:yes, number:sg, 
 	detForm:[FORM:"un peu de"]], 
-	locCl:[PRED:_pro, number:sg, person:three], 
+	locCl:[HEAD:_pro, number:sg, person:three], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:not_much]
 
 // "il y a beaucoup de pluie"
-|v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:pluie, det:yes, number:sg, 
+|v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:pluie, det:yes, number:sg, 
 	detForm:[FORM:"beaucoup de"]], 
-	locCl:[PRED:_pro, number:sg, person:three], 
+	locCl:[HEAD:_pro, number:sg, person:three], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:much]
 
 // "il y a de fortes précipitations"
-|v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:précipitation,
-        det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort,
-        pos:pre]>], locCl:[PRED:_pro, number:sg, person:three],
+|v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:précipitation,
+        det:yes, number:pl, qual:yes, def:no, mod:<[HEAD:fort,
+        pos:pre]>], locCl:[HEAD:_pro, number:sg, person:three],
         vform:tensed, vtense:present, mode:indicative,
         subj:[person:three, number:sg], neg:$Neg, fct:a_lot]; 
 \end{verbatim}
@@ -975,7 +975,7 @@ a	v[PRED:pleuvoir, subjC:[FORM:"il"],
 L'input se résume au nom du syntagme que l'on souhaite générer, suivi d'une
 structure de traits.
 
-\texttt{PRED} permet de définir le concept à générer. Concept
+\texttt{HEAD} permet de définir le concept à générer. Concept
 correspondant à un lexème ou à une construction syntaxique particulière.
 
 exemples
@@ -983,7 +983,7 @@ exemples
 \begin{itemize}
 \item 
 \begin{verbatim}
-sentence [PRED:pleuvoir, neg:yes]
+sentence [HEAD:pleuvoir, neg:yes]
 \end{verbatim}
 
 Simple entrée pour le concept de \textit{pleuvoir} produisant 
@@ -997,12 +997,12 @@ Simple entrée pour le concept de \textit{pleuvoir} produisant
 
 \item 
 \begin{verbatim}
-sentence [PRED:demander,
-    i:[PRED:menuisier, id:3, number:sg, gender:ms, def:yes],
-    iii:[PRED:apprenti, id:6, def:yes, gender:ms, number:sg],
-    ii:[PRED:scier,
+sentence [HEAD:demander,
+    i:[HEAD:menuisier, id:3, number:sg, gender:ms, def:yes],
+    iii:[HEAD:apprenti, id:6, def:yes, gender:ms, number:sg],
+    ii:[HEAD:scier,
 	 i:[idref:6],
-	 ii:[PRED:poutre, number:sg, def:yes]
+	 ii:[HEAD:poutre, number:sg, def:yes]
 	 ]
     ]
 \end{verbatim}
@@ -1018,7 +1018,7 @@ poutre}
 
 \item 
 \begin{verbatim}
-sentence [PRED:pleuvoir, tense:future, modSType:time, 
+sentence [HEAD:pleuvoir, tense:future, modSType:time, 
 modS:<[FORM:"lundi 18 mars 2019", type:time]>]
 \end{verbatim}
 
@@ -1031,9 +1031,9 @@ constante "lundi 18 mars 2019". Cette entrée produit
 
 \item 
 \begin{verbatim}
-sentence [PRED:cause, 
-    i: [PRED:pleuvoir]]
-    ii: [PRED:se_couvrir, i:[PRED:you], modality:devoir]
+sentence [HEAD:cause, 
+    i: [HEAD:pleuvoir]]
+    ii: [HEAD:se_couvrir, i:[HEAD:you], modality:devoir]
 ]
 \end{verbatim}
 
@@ -1052,8 +1052,8 @@ Entrée pour
 
 \item 
 \begin{verbatim}
-sentence [PRED:initiative, i:[PRED:Jean], 
-objC:[lexFct:Magn, mod:<[PRED:audacieux]>], lexFct:Oper1]
+sentence [HEAD:initiative, i:[HEAD:Jean], 
+objC:[lexFct:Magn, mod:<[HEAD:audacieux]>], lexFct:Oper1]
 \end{verbatim}
 
 Input contenant des traits pour fixer des fonctions lexicales. La
@@ -1064,7 +1064,7 @@ production est
 
 \item 
 \begin{verbatim}
-sentence [PRED:initiative, i:[PRED:Jean], 
+sentence [HEAD:initiative, i:[HEAD:Jean], 
 objC:[lexFct:Magn], lexFct:Oper1]
 \end{verbatim}
 
@@ -1076,11 +1076,11 @@ Input pour
 
 \item 
 \begin{verbatim}
-sentence [PRED:casser, i:[PRED:Jean], 
-ii:[PRED:carafe, number:sg, def:yes, 
-mod:<[PRED:petit],[PRED:blanc]>], 
+sentence [HEAD:casser, i:[HEAD:Jean], 
+ii:[HEAD:carafe, number:sg, def:yes, 
+mod:<[HEAD:petit],[HEAD:blanc]>], 
 diathesis:passive, tense:past, neg:yes, 
-modV:<[PRED:brutalement]>]
+modV:<[HEAD:brutalement]>]
 \end{verbatim}
 
 Input contenant un trait passif négatif. La
@@ -1164,9 +1164,9 @@ VN → V [NP] [PP] {
   }
 }
 
-casser verb[PRED:casser_du_sucre, 
-	constI:[PRED:sucre, part:yes],
-	constII:[PRED:sur, i:[PRED:dos, 
+casser verb[HEAD:casser_du_sucre, 
+	constI:[HEAD:sucre, part:yes],
+	constII:[HEAD:sur, i:[HEAD:dos, 
 		number:sg, def:yes, 
 		genitive:$patient]],
 	patient:$patient];
@@ -1248,8 +1248,8 @@ La règle générale s'écrit
 \begin{lstlisting}
 X → Y {
   [A:K];
-  [PRED:$PRED, A:k, $Rest] ⊂ ↑;
-  ↓1 = [PRED:L, arg:[PRED:$PRED, $Rest]];
+  [HEAD:$HEAD, A:k, $Rest] ⊂ ↑;
+  ↓1 = [HEAD:L, arg:[HEAD:$HEAD, $Rest]];
 }
 
 \end{lstlisting}
@@ -1262,9 +1262,9 @@ participe présent\fg{}, etc.). La catégorie grammaticale \texttt{aspect}
 \begin{lstlisting}
 sentence → sentence {
   [aspect:progressive];
-  [PRED:$PRED, aspect:progressive, i:$I, $Rest] ⊂ ↑;
-  ↓1 = [PRED:être_en_train_de, 
-	i:[PRED:$PRED, i:$I, $Rest]];
+  [HEAD:$HEAD, aspect:progressive, i:$I, $Rest] ⊂ ↑;
+  ↓1 = [HEAD:être_en_train_de, 
+	i:[HEAD:$HEAD, i:$I, $Rest]];
   ⇑ = ⇓1;
 }
 

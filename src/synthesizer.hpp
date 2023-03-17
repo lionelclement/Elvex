@@ -51,7 +51,7 @@ public:
     {
         MORPHO_FEATURES,
         FORM_FEATURES,
-        PRED_FEATURES
+        HEAD_FEATURES
     };
 
     typedef std::unordered_map<unsigned int, class Item *> item_map;
@@ -201,7 +201,7 @@ public:
 
     void generate(class Parser &);
 
-    entriesPtr findCompactedLexicon(class Parser &parser, unsigned int pos, unsigned int pred);
+    entriesPtr findCompactedLexicon(class Parser &parser, unsigned int pos, unsigned int head);
 
     std::string keyMemoization(class Item *, class Item *);
 
@@ -213,7 +213,7 @@ public:
 
     entriesPtr findByForm(Parser::entries_map *);
 
-    entriesPtr findByPred(Parser &parser, Parser::entries_map *, unsigned int pos, unsigned int pred);
+    entriesPtr findByHead(Parser &parser, Parser::entries_map *, unsigned int pos, unsigned int head);
 };
 
 #endif // ELVEX_SYNTHESIZER_H

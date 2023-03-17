@@ -366,7 +366,7 @@ where $ f_i$ is a feature as
 \begin{itemize}
 \item a linked variable feature
 \item an anonymous variable feature
-\item \verb#PRED:<identifier of a lexeme># a feature for a predicate
+\item \verb#HEAD:<identifier of a lexeme># a feature for a predicate
 \item \verb#FORM:"<form>"# a feature for a literal form
 \item a pair $attr_i:val_i$
   \begin{itemize}
@@ -410,7 +410,7 @@ Each rule is written:
 
 \item \verb#[f_1, feat_2, \dots, f_k];# Guard where the feature
   structure must subsume $\uparrow$. The guard may contain the feature
-  \verb#PRED# which represents the concept to be generated. Thus, a
+  \verb#HEAD# which represents the concept to be generated. Thus, a
   concept is not necessarily linked to a lexical entry with
   \texttt{Elvex}, unlike usual text generation systems; it can produce
   a syntactic constraint. And a syntactic constraints may be not
@@ -644,10 +644,10 @@ transmitted to the \verb#subject# feature of the inherited attribute $\downarrow
 \item Linking a variable within a lexical entry
 
 \begin{lstlisting}[numbers=none]
-a	v[PRED:brouillard, subjC:[FORM:"il"], 
-		objC:[PRED:brouillard, det:yes, 
+a	v[HEAD:brouillard, subjC:[FORM:"il"], 
+		objC:[HEAD:brouillard, det:yes, 
 		def:no, part:yes, neg:$Neg], 
-		locCl:[PRED:_pro, number:sg, 
+		locCl:[HEAD:_pro, number:sg, 
 			person:three], 
 		vform:tensed, vtense:present, 
 		mode:indicative, 
@@ -723,22 +723,22 @@ subj:[person:one, number:sg]];
 \item \begin{verbatim}
 // Lexical input "temperature" producing 
 //"La température est de xxx degrés" (the temperature is xxx degrees Celsius"
-est v[PRED:température, 
-	subjC:[PRED:température, number:sg, det:yes, def:yes], 
-	pobjC:[PRED:degré, number:pl, pcas:de, det:yes,
-		detNum:[PRED:num, value:$Deg]], 
+est v[HEAD:température, 
+	subjC:[HEAD:température, number:sg, det:yes, def:yes], 
+	pobjC:[HEAD:degré, number:pl, pcas:de, det:yes,
+		detNum:[HEAD:num, value:$Deg]], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], fct:none, value:$Deg]
 
 //"la température est douce" (the temperature is mild)
-|v[PRED:température, subjC:[PRED:température, number:sg, 
-	det:yes, def:yes], modC:[PRED:doux, number:sg, gender:fm],
+|v[HEAD:température, subjC:[HEAD:température, number:sg, 
+	det:yes, def:yes], modC:[HEAD:doux, number:sg, gender:fm],
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], fct:few]
 
 //"la température est élevée" (the temperature is high)
-|v[PRED:température, subjC:[PRED:température, number:sg, 
-	det:yes, def:yes], modC:[PRED:élevé, number:sg, gender:fm],
+|v[HEAD:température, subjC:[HEAD:température, number:sg, 
+	det:yes, def:yes], modC:[HEAD:élevé, number:sg, gender:fm],
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], fct:much];
 \end{verbatim}
@@ -747,25 +747,25 @@ est v[PRED:température,
 \item \begin{verbatim}
 // Lexical entry of "temperature".
 // producing "Il fait chaud" (It's hot)
-fait	v[PRED:température, subjC:[FORM:"il"], 
-	modC:[PRED:chaud, number:sg, gender:ms], vform:tensed,
+fait	v[HEAD:température, subjC:[FORM:"il"], 
+	modC:[HEAD:chaud, number:sg, gender:ms], vform:tensed,
 	vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:high]
 
 //"Il fait très chaud" (It's very hot)
-|v[PRED:température, subjC:[FORM:"il"], modC:[PRED:chaud, 
-	number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed, 
+|v[HEAD:température, subjC:[FORM:"il"], modC:[HEAD:chaud, 
+	number:sg, gender:ms, mod:<[HEAD:très]>], vform:tensed, 
 	vtense:present, mode:indicative, subj:[person:three, 
 	number:sg], neg:$Neg, fct:very_high]
 
 //"Il fait très froid" (It's very cold)
-|v[PRED:température, subjC:[FORM:"il"], modC:[PRED:froid, 
-	number:sg, gender:ms, mod:<[PRED:très]>], vform:tensed,
+|v[HEAD:température, subjC:[FORM:"il"], modC:[HEAD:froid, 
+	number:sg, gender:ms, mod:<[HEAD:très]>], vform:tensed,
 	vtense:present, mode:indicative, subj:[person:three, 
 	number:sg], neg:$Neg, fct:very_low]
 
 //"Il fait froid" (It's cold)
-|v[PRED:température, subjC:[FORM:"il"], modC:[PRED:froid, 
+|v[HEAD:température, subjC:[FORM:"il"], modC:[HEAD:froid, 
 	number:sg, gender:ms], vform:tensed, vtense:present, 
 	mode:indicative, subj:[person:three, number:sg], 
 	neg:$Neg, fct:low]; 
@@ -775,34 +775,34 @@ fait	v[PRED:température, subjC:[FORM:"il"],
 \item \begin{verbatim}
 // Lexical entry of "rain" producing
 // "Il y a une pluie fine" (A fine rain fell)
-a	v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:pluie, det:yes, number:sg, qual:yes,
-		def:no, mod:<[PRED:fin, pos:post]>], 
-	locCl:[PRED:_pro, number:sg, person:three], 
+a	v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:pluie, det:yes, number:sg, qual:yes,
+		def:no, mod:<[HEAD:fin, pos:post]>], 
+	locCl:[HEAD:_pro, number:sg, person:three], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:few]
 	
 // "il y a un peu de pluie" (It is raining a bit)
-|v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:pluie, det:yes, number:sg, 
+|v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:pluie, det:yes, number:sg, 
 	detForm:[FORM:"un peu de"]], 
-	locCl:[PRED:_pro, number:sg, person:three], 
+	locCl:[HEAD:_pro, number:sg, person:three], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:not_much]
 
 // "il y a beaucoup de pluie" (There is plenty of rainfall)
-|v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:pluie, det:yes, number:sg, 
+|v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:pluie, det:yes, number:sg, 
 	detForm:[FORM:"beaucoup de"]], 
-	locCl:[PRED:_pro, number:sg, person:three], 
+	locCl:[HEAD:_pro, number:sg, person:three], 
 	vform:tensed, vtense:present, mode:indicative, 
 	subj:[person:three, number:sg], neg:$Neg, fct:much]
 
 // "il y a de fortes précipitations" (It is raining so much)
-|v[PRED:pleuvoir, subjC:[FORM:"il"], 
-	objC:[PRED:précipitation,
-        det:yes, number:pl, qual:yes, def:no, mod:<[PRED:fort,
-        pos:pre]>], locCl:[PRED:_pro, number:sg, person:three],
+|v[HEAD:pleuvoir, subjC:[FORM:"il"], 
+	objC:[HEAD:précipitation,
+        det:yes, number:pl, qual:yes, def:no, mod:<[HEAD:fort,
+        pos:pre]>], locCl:[HEAD:_pro, number:sg, person:three],
         vform:tensed, vtense:present, mode:indicative,
         subj:[person:three, number:sg], neg:$Neg, fct:a_lot]; 
 \end{verbatim}
@@ -815,14 +815,14 @@ The input is summarized by the type of phrase or text you want to generate, foll
 feature structure containing the concept and the illocutionary structure to be expressed.
 
 
-\texttt{PRED} allows you to define the named concept to be generated.
+\texttt{HEAD} allows you to define the named concept to be generated.
 
 examples
 
 \begin{itemize}
 \item 
 \begin{verbatim}
-sentence [PRED:raining, neg:yes]
+sentence [HEAD:raining, neg:yes]
 \end{verbatim}
 
 Simple entry for the concept of \textit{raining} producing 
@@ -837,12 +837,12 @@ Simple entry for the concept of \textit{raining} producing
 \item 
 \begin{verbatim}
 sentence 
-   [PRED:to_ask,
-    i:[PRED:menuisier, id:3, number:sg, gender:ms, def:yes],
-    iii:[PRED:apprenti, id:6, def:yes, gender:ms, number:sg],
-    ii:[PRED:scier,
+   [HEAD:to_ask,
+    i:[HEAD:menuisier, id:3, number:sg, gender:ms, def:yes],
+    iii:[HEAD:apprenti, id:6, def:yes, gender:ms, number:sg],
+    ii:[HEAD:scier,
         i:[idref:6],
-        ii:[PRED:poutre, number:sg, def:yes]
+        ii:[HEAD:poutre, number:sg, def:yes]
         ]
     ]
 \end{verbatim}
@@ -864,7 +864,7 @@ beam
 \item 
 \begin{verbatim}
 sentence 
-   [PRED:raining, 
+   [HEAD:raining, 
     tense:future, 
     modSType:time, 
     modS:<[FORM:"lundi 18 mars 2019", type:time]>
@@ -881,9 +881,9 @@ constant "lundi 18 mars 2019" (Monday, the 18th of March 2019). This entry produ
 \item 
 \begin{verbatim}
 sentence 
-   [PRED:cause, 
-    i: [PRED:raining]]
-    ii: [PRED:se_couvrir, i:[PRED:you], modality:devoir]
+   [HEAD:cause, 
+    i: [HEAD:raining]]
+    ii: [HEAD:se_couvrir, i:[HEAD:you], modality:devoir]
    ]
 \end{verbatim}
 
@@ -903,9 +903,9 @@ Input for the following generated sentences:
 \item 
 \begin{verbatim}
 sentence 
-   [PRED:initiative, 
-    i:[PRED:Jean], 
-    objC:[lexFct:Magn, mod:<[PRED:audacieux]>], 
+   [HEAD:initiative, 
+    i:[HEAD:Jean], 
+    objC:[lexFct:Magn, mod:<[HEAD:audacieux]>], 
     lexFct:Oper1
    ]
 \end{verbatim}
@@ -919,8 +919,8 @@ production is
 \item 
 \begin{verbatim}
 sentence 
-   [PRED:initiative, 
-    i:[PRED:Jean], 
+   [HEAD:initiative, 
+    i:[HEAD:Jean], 
     objC:[lexFct:Magn], 
     lexFct:Oper1
    ]
@@ -935,12 +935,12 @@ Input for
 \item 
 \begin{verbatim}
 sentence 
-   [PRED:to_break,
-    i:[PRED:Jean], 
-    ii:[PRED:carafe, number:sg, def:yes, 
-       mod:<[PRED:little],[PRED:white]>], 
+   [HEAD:to_break,
+    i:[HEAD:Jean], 
+    ii:[HEAD:carafe, number:sg, def:yes, 
+       mod:<[HEAD:little],[HEAD:white]>], 
     diathesis:passive, tense:past, neg:yes, 
-    modV:<[PRED:roughly]>
+    modV:<[HEAD:roughly]>
    ]
 \end{verbatim}
 
@@ -1005,8 +1005,8 @@ VN → V [PP] PP {
   }
 }
 
-taken verb[PRED:take_one_to_the_cleaners, 
-	constI:[PRED:cleaner, number:pl, def:yes]];
+taken verb[HEAD:take_one_to_the_cleaners, 
+	constI:[HEAD:cleaner, number:pl, def:yes]];
 \end{lstlisting}
 
 Example 2:
@@ -1085,8 +1085,8 @@ The general rule is written as follows
 \begin{lstlisting}
 X → Y {
   [A:K];
-  [PRED:$PRED, A:k, $Rest] ⊂ ↑;
-  ↓1 = [PRED:L, arg:[PRED:$PRED, $Rest]];
+  [HEAD:$HEAD, A:k, $Rest] ⊂ ↑;
+  ↓1 = [HEAD:L, arg:[HEAD:$HEAD, $Rest]];
 }
 
 \end{lstlisting}
@@ -1099,9 +1099,9 @@ process of doing sth).
 \begin{lstlisting}
 sentence → sentence {
   [aspect:progressive];
-  [PRED:$PRED, aspect:progressive, i:$I, $Rest] ⊂ ↑;
-  ↓1 = [PRED:être_en_train_de, 
-	i:[PRED:$PRED, i:$I, $Rest]];
+  [HEAD:$HEAD, aspect:progressive, i:$I, $Rest] ⊂ ↑;
+  ↓1 = [HEAD:être_en_train_de, 
+	i:[HEAD:$HEAD, i:$I, $Rest]];
   ⇑ = ⇓1;
 }
 \end{lstlisting}
@@ -1321,7 +1321,7 @@ The compacted lexicon is a set of lexical entries of the type
 
 \begin{itemize}
 \item \verb#pos# is a part of speach
-\item \verb#lexeme# is the lexeme given by the \verb#PRED# feature
+\item \verb#lexeme# is the lexeme given by the \verb#HEAD# feature
 \item \verb#form# is the produced form (a string of UTF8 characters in version 2.10)
 \item \verb#FS# is a feature structure
 \end{itemize}

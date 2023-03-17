@@ -129,7 +129,7 @@ void Synthesizer::setLexiconFileName(char *name)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedLexiconFileName(char* bufferName)
+void Synthesizer::setCompactedLexiconFileName(char *bufferName)
 {
     compactedLexiconFileName = bufferName;
 }
@@ -137,7 +137,7 @@ void Synthesizer::setCompactedLexiconFileName(char* bufferName)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedDirectoryName(char* DirectoryName)
+void Synthesizer::setCompactedDirectoryName(char *DirectoryName)
 {
     compactedDirectoryName = DirectoryName;
 }
@@ -145,7 +145,7 @@ void Synthesizer::setCompactedDirectoryName(char* DirectoryName)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setRulesFileName(char* name)
+void Synthesizer::setRulesFileName(char *name)
 {
     rulesFileName = name;
 }
@@ -233,7 +233,7 @@ unsigned int Synthesizer::getMaxUsages() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedLexicon(class CompactedLexicon* compactedLexicon)
+void Synthesizer::setCompactedLexicon(class CompactedLexicon *compactedLexicon)
 {
     this->compactedLexicon = compactedLexicon;
 }
@@ -283,7 +283,7 @@ bool Synthesizer::getOne() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setOutXML(char* _outXML)
+void Synthesizer::setOutXML(char *_outXML)
 {
     this->outXML = _outXML;
 }
@@ -567,11 +567,13 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                 it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
                 it->setRule((*actualItem)->getRule()->clone());
                 it->setIndex((*actualItem)->getIndex());
-                if (it->getCurrentTerms()->size() == 1){
+                if (it->getCurrentTerms()->size() == 1)
+                {
                     it->getIndexTerms()[(*actualItem)->getIndex()] = 0;
                 }
-                else {
-                    it->getIndexTerms()[(*actualItem)->getIndex()] = UINT_MAX-1;
+                else
+                {
+                    it->getIndexTerms()[(*actualItem)->getIndex()] = UINT_MAX - 1;
                 }
                 it->getCurrentTerms()->unsetOptional();
                 it->resetSerial();
@@ -669,7 +671,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                             bool effect = false;
                             (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
                             inheritedSonFeatures->deleteAnonymousVariables();
-                            //inheritedSonFeatures->deleteVariables();
+                            // inheritedSonFeatures->deleteVariables();
                         }
 
                         for (const auto &iterRules : parser.getRules().getRules())
@@ -787,7 +789,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                 }
 
                                 forestPtr forestFound = forestPtr();
-                                class ForestIdentifier* fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
+                                class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
                                                                                       (*actualItem)->getRanges()[0],
                                                                                       row,
                                                                                       ((*actualItem)->getSynthesizedFeatures()
@@ -849,7 +851,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                              ++i)
                                         {
                                             // New item build
-                                            class Item* it = createItem(previousItem, row);
+                                            class Item *it = createItem(previousItem, row);
                                             it->setEnvironment(
                                                 previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
                                                                                : environmentPtr());
@@ -864,7 +866,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                                     bool effect = false;
                                                     it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
                                                     inheritedFeatures->deleteAnonymousVariables();
-                                                    //inheritedFeatures->deleteVariables();
+                                                    // inheritedFeatures->deleteVariables();
                                                 }
                                             }
 
@@ -902,7 +904,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                     // This reduce action is new
                                     else
                                     {
-                                        class Item* it = createItem(previousItem, row);
+                                        class Item *it = createItem(previousItem, row);
                                         it->setEnvironment(
                                             previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
                                                                            : environmentPtr());
@@ -918,7 +920,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                                 bool effect = false;
                                                 it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
                                                 inheritedFeatures->deleteAnonymousVariables();
-                                                //inheritedFeatures->deleteVariables();
+                                                // inheritedFeatures->deleteVariables();
                                             }
                                         }
 
@@ -1063,13 +1065,13 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                         bool effect = false;
                         (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
                         inheritedSonFeatures->deleteAnonymousVariables();
-                        //inheritedSonFeatures->deleteVariables();
+                        // inheritedSonFeatures->deleteVariables();
                     }
 
                     std::string *form = nullptr;
-                    unsigned int pred = inheritedSonFeatures->assignPred();
+                    unsigned int head = inheritedSonFeatures->assignHead();
                     Stage _stage;
-                    if (pred == UINT_MAX)
+                    if (head == UINT_MAX)
                     {
                         form = inheritedSonFeatures->assignForm();
                         if (form)
@@ -1079,22 +1081,22 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                     }
                     else
                     {
-                        _stage = PRED_FEATURES;
+                        _stage = HEAD_FEATURES;
                     }
 
-                    /* 
+                    /*
                      std::cout << "inheritedSonFeatures : ";
                      inheritedSonFeatures->print(std::cout);
                      std::cout << std::endl;
-                     std::cout << "pred:" << pred << std::endl;
+                     std::cout << "head:" << head << std::endl;
                      std::cout << "form:" << form << std::endl;
                      std::cout << "pos : " << Vartable::codeToString((*actualItem)->getCurrentTerm()) << std::endl;
                     */
                     auto foundpos = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
                     if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
                     {
-                        Parser::entries_map *listPred = foundpos->second;
-                        if (listPred)
+                        Parser::entries_map *listHead = foundpos->second;
+                        if (listHead)
                         {
                             Parser::entries_map::const_iterator found;
                             entriesPtr entries = entriesPtr();
@@ -1102,24 +1104,24 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                             /* *****
                             CERR_LINE;
                             std::cout << "stage : " << _stage << std::endl;
-                            std::cout << "pred : " << Vartable::codeToString(pred) << std::endl;
+                            std::cout << "head : " << Vartable::codeToString(head) << std::endl;
                             std::cout << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
                             ***** */
                             switch (_stage)
                             {
 
                             case MORPHO_FEATURES:
-                                entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+                                entries = findByPos(parser, listHead, (*actualItem)->getCurrentTerm());
                                 break;
 
                             case FORM_FEATURES:
-                                entries = findByForm(listPred);
+                                entries = findByForm(listHead);
                                 break;
 
-                            case PRED_FEATURES:
-                                entries = findByPred(parser, listPred, (*actualItem)->getCurrentTerm(), pred);
+                            case HEAD_FEATURES:
+                                entries = findByHead(parser, listHead, (*actualItem)->getCurrentTerm(), head);
                                 if (!entries)
-                                    entries = findByPos(parser, listPred, (*actualItem)->getCurrentTerm());
+                                    entries = findByPos(parser, listHead, (*actualItem)->getCurrentTerm());
                                 break;
                             }
 
@@ -1159,7 +1161,7 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                     {
 
                                         // New item build
-                                        class Item* it = createItem(*actualItem, row);
+                                        class Item *it = createItem(*actualItem, row);
 
                                         it->setEnvironment(env);
 
@@ -1169,10 +1171,13 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         if (entryFeatures)
                                         {
                                             resultFeatures = Statement::unif(statementPtr(), entryFeaturesCopy, inheritedSonFeaturesCopy,
-                                                                     it);
+                                                                             it);
                                         }
                                         else
+                                        {
+
                                             resultFeatures = inheritedSonFeaturesCopy;
+                                        }
                                         if (resultFeatures)
                                         {
                                             if (it->getEnvironment() && (it->getEnvironment()->size() > 0))
@@ -1189,7 +1194,9 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                             entryStatements->renameVariables(entry->getId());
                                         entryPtr word;
                                         if (_stage == FORM_FEATURES)
+                                        {
                                             word = Entry::create(entry->getPos(), UINT_MAX, *form, resultFeatures);
+                                        }
                                         else
                                         {
                                             size_t _found = entry->getForm().find('$');
@@ -1198,16 +1205,16 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                                 bool effect = false;
                                                 std::string _form = entry->getForm();
                                                 it->getEnvironment()->replaceVariables(_form, effect);
-
-                                                word = Entry::create(entry->getPos(), entry->getPred(), _form,
+                                                word = Entry::create(entry->getPos(), entry->getHead(), _form,
                                                                      resultFeatures);
                                             }
                                             else
                                             {
-                                                word = Entry::create(entry->getPos(), entry->getPred(),
+                                                word = Entry::create(entry->getPos(), entry->getHead(),
                                                                      entry->getForm(), resultFeatures);
                                             }
                                         }
+                                        //word->print(std::cerr);
                                         class ForestIdentifier *fi = ForestIdentifier::create(word->getId(),
                                                                                               row - 1,
                                                                                               row,
@@ -1219,7 +1226,7 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                                                      (*forestMapIt).first);
                                             free(fi);
                                             // std::cerr << "stage : " << stage! << "<BR>" << std::endl;
-                                            // std::cerr << "pred : " << Vartable::codeToString(pred) << "<BR>" << std::endl;
+                                            // std::cerr << "head : " << Vartable::codeToString(head) << "<BR>" << std::endl;
                                             // std::cout << "form : " << form << "<BR>" << std::endl;
                                         }
                                         else
@@ -1263,6 +1270,7 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                 }
             }
         }
+
     } while (modification);
     for (
         const auto &i : *state)
@@ -1317,11 +1325,12 @@ void Synthesizer::generate(class Parser &parser)
     unsigned int i = 0;
     while (i <= maxLength)
     {
-
         class ItemSet *actualState = ItemSet::create(++i);
         states.insert(std::make_pair(i, actualState));
         if (!shift(parser, initState, i))
+        {
             break;
+        }
         actualState->resetUsages();
         close(parser, actualState, i);
         initState = actualState;
@@ -1347,32 +1356,34 @@ void Synthesizer::generate(class Parser &parser)
 
 /* **************************************************
  * search
- * |str(pos)#str(pred)
+ * |str(pos)#str(head)
  * |str(pos)#_
  *
  * returns entries= (entry1, entry2, ...)
- * where entryi= (unsigned int pos, unsigned int pred, std::string form, featuresPtr features)
+ * where entryi= (unsigned int pos, unsigned int head, std::string form, featuresPtr features)
  ************************************************** */
 entriesPtr Synthesizer::findCompactedLexicon(
     Parser &parser,
     const unsigned int pos,
-    const unsigned int pred)
+    const unsigned int head)
 {
     unsigned long int info = ~0UL;
     std::string str;
-    if (pred && pos)
+    if (head && pos)
     {
-        str = Vartable::codeToString(pos) + '#' + Vartable::codeToString(pred);
+        str = Vartable::codeToString(pos) + '#' + Vartable::codeToString(head);
     }
-    else if (pos) {
+    else if (pos)
+    {
         str = Vartable::codeToString(pos) + "#_";
     }
-    else if (pred){
+    else if (head)
+    {
         throw fatal_exception("pos null");
     }
     else
     {
-        throw fatal_exception("pred and pos null");
+        throw fatal_exception("head and pos null");
     }
     if (!compactedLexicon)
         throw fatal_exception("search operator error: No compact lexicon defined.");
@@ -1404,8 +1415,8 @@ entriesPtr Synthesizer::findCompactedLexicon(
                 parser.parseBuffer("#(", ")", features, "features");
                 if (parser.getLocalFeatures())
                 {
-                    unsigned int _pred = parser.getLocalFeatures()->assignPred();
-                    entryPtr _localEntry = Entry::create(0, _pred, std::string(), parser.getLocalFeatures());
+                    unsigned int _head = parser.getLocalFeatures()->assignHead();
+                    entryPtr _localEntry = Entry::create(0, _head, std::string(), parser.getLocalFeatures());
 
                     _localEntry->setPos(pos);
                     _localEntry->setForm(form);
@@ -1461,13 +1472,13 @@ bool Synthesizer::getVerbose()
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
+entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listHead,
                                   unsigned int pos)
 {
     entriesPtr entries = entriesPtr();
-    // Without pred : UINT_MAX => ...
-    auto found = listPred->find(UINT_MAX);
-    if (found != listPred->end())
+    // Without head : UINT_MAX => ...
+    auto found = listHead->find(UINT_MAX);
+    if (found != listHead->end())
     {
         entries = found->second;
     }
@@ -1476,7 +1487,7 @@ entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
         entries = findCompactedLexicon(parser,
                                        pos,
                                        UINT_MAX);
-        listPred->insert(std::make_pair(UINT_MAX, entries));
+        listHead->insert(std::make_pair(UINT_MAX, entries));
     }
     return entries;
 }
@@ -1484,12 +1495,12 @@ entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listPred,
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred)
+entriesPtr Synthesizer::findByForm(Parser::entries_map *listHead)
 {
     entriesPtr entries = entriesPtr();
     // FORM : 0 => ...
-    auto found = listPred->find(0);
-    if (found != listPred->end())
+    auto found = listHead->find(0);
+    if (found != listHead->end())
         entries = found->second;
     return entries;
 }
@@ -1497,24 +1508,26 @@ entriesPtr Synthesizer::findByForm(Parser::entries_map *listPred)
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findByPred(Parser &parser, Parser::entries_map *listPred,
-                                   unsigned int pos, unsigned int pred)
+entriesPtr Synthesizer::findByHead(Parser &parser, Parser::entries_map *listHead,
+                                   unsigned int pos, unsigned int head)
 {
     entriesPtr entries = entriesPtr();
-    // pred => ...
-    auto found = listPred->find(pred);
-    if (found != listPred->end())
+    // head => ...
+    auto found = listHead->find(head);
+    if (found != listHead->end())
     {
         entries = found->second;
     }
     if (compactedLexicon)
     {
         entriesPtr localEntries = findCompactedLexicon(parser,
-                                       pos,
-                                       pred);
-        if (localEntries){
-            if (entries){
-               localEntries->add(entries);
+                                                       pos,
+                                                       head);
+        if (localEntries)
+        {
+            if (entries)
+            {
+                localEntries->add(entries);
             }
             entries = localEntries;
         }

@@ -18,7 +18,7 @@ S → [adj] n [adj]
     //}
   }
   /***
-  [PRED:$P];
+  [HEAD:$P];
   ↓2 = ↑;
   wait (⇓2) {
     [mod:$list, number:$inheritedNumber] ⊂ ↑;

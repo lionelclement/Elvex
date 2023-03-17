@@ -32,7 +32,7 @@ CLEANFILES = $(patsubst %.input, %.output, $(wildcard *.input)) $(patsubst %.inp
 all: $(patsubst %.input, %.output, $(wildcard *.input))
 
 check: lefff/lefff.fsa
-	@$(ELVEX) -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon "noun [PRED:ARBRE, mod:<[PRED:CREUX], [PRED:PETIT]>]" | $(POSTEDITION_FR)
+	@$(ELVEX) -compactedLexiconDirectory lefff -compactedLexiconFile lefff -rulesFile fr-1.0.4.rules -lexiconFile fr-1.0.4.lexicon "noun [HEAD:ARBRE, mod:<[HEAD:CREUX], [HEAD:PETIT]>]" | $(POSTEDITION_FR)
 
 clean:
 	rm $(CLEANFILES)

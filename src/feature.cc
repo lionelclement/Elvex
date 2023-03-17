@@ -86,9 +86,9 @@ void Feature::setType(const Feature::Type _type)
 /* **************************************************
  *
  ************************************************** */
-bool Feature::isPred() const
+bool Feature::isHead() const
 {
-    return this->type == _PRED_;
+    return this->type == _HEAD_;
 }
 
 /* **************************************************
@@ -162,8 +162,8 @@ void Feature::print(std::ostream &outStream) const
 {
     switch (type)
     {
-    case Feature::_PRED_:
-        outStream << R"(<TD ALIGN="LEFT">PRED</TD><TD ALIGN="LEFT">)";
+    case Feature::_HEAD_:
+        outStream << R"(<TD ALIGN="LEFT">HEAD</TD><TD ALIGN="LEFT">)";
         if (value)
             value->print(outStream);
         else
@@ -213,8 +213,8 @@ void Feature::flatPrint(std::ostream &outStream) const
 {
     switch (type)
     {
-    case Feature::_PRED_:
-        outStream << "PRED:";
+    case Feature::_HEAD_:
+        outStream << "HEAD:";
         if (value)
             value->flatPrint(outStream);
         else
@@ -258,7 +258,7 @@ void Feature::makeSerialString()
 {
     switch (type)
     {
-    case Feature::_PRED_:
+    case Feature::_HEAD_:
         serialString = '\0';
         break;
     case Feature::_LEMMA_:
@@ -290,8 +290,8 @@ void Feature::toXML(xmlNodePtr nodeRoot)
 
     switch (type)
     {
-    case Feature::_PRED_:
-        xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"pred");
+    case Feature::_HEAD_:
+        xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"head");
         break;
     case Feature::_LEMMA_:
         xmlSetProp(f, (xmlChar *)"type", (const xmlChar *)"lemma");
@@ -329,7 +329,7 @@ bool Feature::renameVariables(size_t i)
     bool effect = false;
     switch (type)
     {
-    case Feature::_PRED_:
+    case Feature::_HEAD_:
     case Feature::_LEMMA_:
     case Feature::_CONSTANT_:
         if (value)
@@ -360,7 +360,7 @@ void Feature::enable(const statementPtr &root, class Item *item, Synthesizer *sy
 {
     switch (type)
     {
-    case Feature::_PRED_:
+    case Feature::_HEAD_:
     case Feature::_LEMMA_:
     case Feature::_FORM_:
     case Feature::_CONSTANT_:
@@ -392,7 +392,7 @@ bool Feature::findVariable(const bitsetPtr &variable)
 {
     switch (type)
     {
-    case Feature::_PRED_:
+    case Feature::_HEAD_:
     case Feature::_LEMMA_:
     case Feature::_FORM_:
     case Feature::_CONSTANT_:
@@ -417,7 +417,7 @@ bool Feature::containsVariable()
         return true;
     switch (type)
     {
-    case Feature::_PRED_:
+    case Feature::_HEAD_:
     case Feature::_LEMMA_:
     case Feature::_FORM_:
     case Feature::_CONSTANT_:

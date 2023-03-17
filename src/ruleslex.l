@@ -21,6 +21,7 @@
 #include <iostream>
 #include <bitset>
 #include <string>
+#include <sstream>
 #include "parser.hpp"
 #include "rulesyacc.hpp"
 #include "messages.hpp"
@@ -40,8 +41,8 @@
   extern bool stringInput;
   extern Parser parser;
   
-  std::string *str;
   int comments;
+  std::stringstream strbuf;
 
   void init_buffer(){
     ruleslineno = 1;
@@ -61,8 +62,8 @@
 
 %}
 
-alphaMin [a-z]|à|á|â|ã|ä|å|æ|ç|è|é|ë|ê|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ
-alphaCap [A-Z]|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ê|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß
+alphaMin [a-z]|à|á|â|ã|ä|å|æ|ç|è|é|ë|ê|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|ß
+alphaCap [A-Z]|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ê|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ
 alpha {alphaMin}|{alphaCap}
 alphaNum [[:digit:]]|{alpha}|_
 identifier {alpha}{alphaNum}*|[_]{alphaNum}+
@@ -82,7 +83,7 @@ downDoubleArrow "⇓"
 %option yylineno
 %option noyywrap
 
-%x INCLUDE COMMENT
+%x INCLUDE COMMENT STRING
  
 %%
 
@@ -99,7 +100,7 @@ downDoubleArrow "⇓"
   \/\* {comments++;}
   \n {}
   \*\/ {if (!(comments--)) BEGIN INITIAL;} 
-  . ;
+  . {}
 }
 
 ^\#include {BEGIN INCLUDE;}
@@ -118,9 +119,32 @@ downDoubleArrow "⇓"
 	    throw "*** error: can't open " + std::string(yytext);
 	  }
 	  push_buffer();
-	  BEGIN(INITIAL);
+	  BEGIN INITIAL;
 	}
 	\n {}
+}
+
+\" {
+  BEGIN STRING; 
+  strbuf.str( std::string() );
+  strbuf.clear(); 
+  }
+  
+<STRING>{
+  [^\\"\n]*   { strbuf << yytext; }
+  \n         { strbuf << '\n'; }
+  \\n         { strbuf << '\n'; }
+  \\t         { strbuf << '\t'; }
+  \\[0-7]*    { strbuf << strtol(yytext+1, 0, 8); }
+  \\[\\"]     { strbuf << yytext[1]; }
+  \"          { 
+    ruleslval.string_slot = new std::string(strbuf.str());
+    BEGIN INITIAL; 
+    DBUGPRTARG("TOKEN_STRING ", strbuf.str());
+    strbuf.clear(); 
+    return TOKEN_STRING;}
+  \\.         { throw "*** error: bogus escape '" + std::string(yytext) + "' in string"; }
+  \n          { throw "*** error: newline in string"; }
 }
 
 <<EOF>> {
@@ -419,9 +443,9 @@ downDoubleArrow "⇓"
     return TOKEN_MODULO;
   }
   
-  "PRED" {
-    DBUGPRT("TOKEN_PRED");
-    return TOKEN_PRED;
+  "HEAD" {
+    DBUGPRT("TOKEN_HEAD");
+    return TOKEN_HEAD;
   }
   
   "LEMMA" {
@@ -489,13 +513,6 @@ downDoubleArrow "⇓"
     DBUGPRTARG("TOKEN_DOUBLE ", yytext);
     sscanf(yytext+1, "%lf", &ruleslval.double_slot);
     return TOKEN_DOUBLE;
-  }
-  
-  {string} {
-    DBUGPRTARG("TOKEN_STRING ", yytext);
-    std::string s = yytext;
-    ruleslval.string_slot = new std::string(s.substr(1, s.length()-2));
-    return TOKEN_STRING;
   }
   
   {blanks} {}

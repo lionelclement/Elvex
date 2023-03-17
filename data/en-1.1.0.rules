@@ -47,7 +47,7 @@ S1 → S {
 
 S1 → S {
   [i:$i, ii:$ii, iii:NIL, $REST];
-  ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $REST];
+  ↓1 = [SUBJECT:$i, HEAD_ADJ:$ii, iiReal:HEAD_ADJ, $REST];
   ⇑ = ⇓1;
 }
 
@@ -166,9 +166,9 @@ N → noun {
  ************************************************** */
 VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
   // Given Arguments
-  [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $REST] ⊂ ↑;
+  [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, HEAD_ADJ:$HEAD_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $REST] ⊂ ↑;
   // Idiomatic Arguments
-  [OBJECT:$Synth_OBJECT, OBLIQUE:$Synth_OBLIQUE, OBJ_THETA:$Synth_OBJ_THETA, PRED_ADJ:$Synth_PRED_ADJ, SCOMP:$Synth_SCOMP, VCOMP:$Synth_VCOMP, particule:$particle] ⊂ ⇓1;
+  [OBJECT:$Synth_OBJECT, OBLIQUE:$Synth_OBLIQUE, OBJ_THETA:$Synth_OBJ_THETA, HEAD_ADJ:$Synth_HEAD_ADJ, SCOMP:$Synth_SCOMP, VCOMP:$Synth_VCOMP, particule:$particle] ⊂ ⇓1;
   ↓1 = $REST;
   
   if (#2) {
@@ -198,12 +198,12 @@ VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
   }
   
   if (#5) {
-    if ($Synth_PRED_ADJ)
-      $PRED_ADJ = $PRED_ADJ ∪ $Synth_PRED_ADJ; 
-    ↓5 = [lexical_function:$lexical_function, $PRED_ADJ];
+    if ($Synth_HEAD_ADJ)
+      $HEAD_ADJ = $HEAD_ADJ ∪ $Synth_HEAD_ADJ; 
+    ↓5 = [lexical_function:$lexical_function, $HEAD_ADJ];
   }
   else {
-    attest (¬$PRED_ADJ ∧ ¬$Synth_PRED_ADJ);
+    attest (¬$HEAD_ADJ ∧ ¬$Synth_HEAD_ADJ);
   }
 
   if (#6) {
@@ -238,7 +238,7 @@ VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
  * Verb 
  ************************************************** */
 VN → VERB {
-  [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, PRED_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $REST];
+  [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, HEAD_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $REST];
   ↓1 = $REST;
   ⇑ = ⇓1;
 }

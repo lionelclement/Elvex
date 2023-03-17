@@ -43,7 +43,7 @@ Features::Features(const featurePtr &feature)
     {
         features.push_back(feature);
     }
-    this->pred = 0;
+    this->head = 0;
     this->form = "";
 }
 
@@ -272,21 +272,21 @@ void Features::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-unsigned int Features::assignPred()
+unsigned int Features::assignHead()
 {
     unsigned int ret = UINT_MAX;
-    if (this->pred)
-        return this->pred;
+    if (this->head)
+        return this->head;
     for (const auto &f : features)
     {
-        // […, PRED = …, …]
-        if (f->isPred())
+        // […, HEAD = …, …]
+        if (f->isHead())
         {
             ret = f->getValue()->getCode();
             break;
         }
     }
-    this->pred = ret;
+    this->head = ret;
     return ret;
 }
 
@@ -336,7 +336,7 @@ featuresPtr Features::clone() const
     featuresPtr result = Features::create();
     for (const auto &feature : features)
         result->features.push_back(feature->clone());
-    result->pred = pred;
+    result->head = head;
     result->form = form;
     return result;
 }
@@ -392,16 +392,16 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
     // Traite tous les attributs constants
     for (const auto &i1 : features)
     {
-        if ((i1->isLemma()) || (i1->isPred()) || (i1->isConstant()))
+        if ((i1->isLemma()) || (i1->isHead()) || (i1->isConstant()))
         {
             bool stop = false;
             for (auto &i2 : *_features)
             {
                 // Si deux constantes matchent
-                // ou deux PRED matchent
+                // ou deux HEAD matchent
                 if (((i2->isConstant()) && (i1->isConstant()) &&
                      ((*i1->getAttribute() & *i2->getAttribute()).any())) ||
-                    ((i1->isPred()) && (i2->isPred())) || ((i1->isLemma()) && (i2->isLemma())))
+                    ((i1->isHead()) && (i2->isHead())) || ((i1->isLemma()) && (i2->isLemma())))
                 {
                     i2->addFlags(Flags::SEEN);
 
@@ -431,7 +431,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
             if (!stop)
             {
                 // i1: a = $X
-                if ((i1->isConstant()) || i1->isLemma() || i1->isPred())
+                if ((i1->isConstant()) || i1->isLemma() || i1->isHead())
                 {
                     if (i1->getValue()->isVariable())
                     {
@@ -567,11 +567,11 @@ bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
         {
             for (auto &i2 : o->features)
             {
-                // [PRED:X]  < [PRED:Y]
+                // [HEAD:X]  < [HEAD:Y]
                 // [LEMMA:X]  < [LEMMA:Y]
                 // [att:X] < [att:Y]
                 // X < Y
-                if (((i1->isLemma()) && (i2->isLemma())) || ((i1->isPred()) && (i2->isPred())) || ((i1->isConstant()) && (i2->isConstant()) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
+                if (((i1->isLemma()) && (i2->isLemma())) || ((i1->isHead()) && (i2->isHead())) || ((i1->isConstant()) && (i2->isConstant()) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
                 {
                     valuePtr v1 = i1->getValue();
                     valuePtr v2 = i2->getValue();
@@ -642,7 +642,7 @@ void Features::deleteAnonymousVariables()
         {
             switch ((*feature)->_getType())
             {
-            case Feature::_PRED_:
+            case Feature::_HEAD_:
             case Feature::_LEMMA_:
             case Feature::_FORM_:
             case Feature::_VARIABLE_:
@@ -675,7 +675,7 @@ void Features::deleteVariables()
         {
             switch ((*feature)->_getType())
             {
-            case Feature::_PRED_:
+            case Feature::_HEAD_:
             case Feature::_LEMMA_:
             case Feature::_FORM_:
             case Feature::_VARIABLE_:

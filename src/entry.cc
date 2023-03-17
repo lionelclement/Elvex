@@ -33,10 +33,10 @@
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int pos, unsigned int pred, std::string form, featuresPtr features)
+Entry::Entry(unsigned int pos, unsigned int head, std::string form, featuresPtr features)
 {
     this->pos = pos;
-    this->pred = pred;
+    this->head = head;
     this->form = std::move(form);
     this->features = std::move(features);
     NEW;
@@ -45,10 +45,10 @@ Entry::Entry(unsigned int pos, unsigned int pred, std::string form, featuresPtr 
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int pos, std::string pred, std::string form, featuresPtr features)
+Entry::Entry(unsigned int pos, std::string head, std::string form, featuresPtr features)
 {
     this->pos = pos;
-    this->pred = Vartable::stringToCode(std::move(pred));
+    this->head = Vartable::stringToCode(std::move(head));
     this->form = std::move(form);
     this->features = std::move(features);
     NEW;
@@ -67,17 +67,17 @@ Entry::~Entry()
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(unsigned int term, unsigned int codePred, std::string form, featuresPtr features)
+entryPtr Entry::create(unsigned int term, unsigned int codeHead, std::string form, featuresPtr features)
 {
-    return entryPtr(new Entry(term, codePred, std::move(form), std::move(features)));
+    return entryPtr(new Entry(term, codeHead, std::move(form), std::move(features)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(unsigned int term, std::string pred, std::string form, featuresPtr features)
+entryPtr Entry::create(unsigned int term, std::string head, std::string form, featuresPtr features)
 {
-    return entryPtr(new Entry(term, std::move(pred), std::move(form), std::move(features)));
+    return entryPtr(new Entry(term, std::move(head), std::move(form), std::move(features)));
 }
 
 /* **************************************************
@@ -99,9 +99,9 @@ void Entry::setPos(unsigned int pos)
 /* **************************************************
  *
  ************************************************** */
-unsigned int Entry::getPred() const
+unsigned int Entry::getHead() const
 {
-    return pred;
+    return head;
 }
 
 /* **************************************************
@@ -140,10 +140,10 @@ void Entry::toXML(xmlNodePtr nodeRoot) const
         xmlSetProp(entry, (xmlChar *)"pos", (xmlChar *)std::to_string(this->pos).c_str());
         xmlSetProp(entry, (xmlChar *)"posStr", (xmlChar *)Vartable::codeToString(this->pos).c_str());
     }
-    if (this->pred != (unsigned int)-1)
+    if (this->head != (unsigned int)-1)
     {
-        xmlSetProp(entry, (xmlChar *)"codePred", (xmlChar *)std::to_string(this->pred).c_str());
-        xmlSetProp(entry, (xmlChar *)"codePredStr", (xmlChar *)Vartable::codeToString(this->pred).c_str());
+        xmlSetProp(entry, (xmlChar *)"codeHead", (xmlChar *)std::to_string(this->head).c_str());
+        xmlSetProp(entry, (xmlChar *)"codeHeadStr", (xmlChar *)Vartable::codeToString(this->head).c_str());
     }
     if (!this->form.empty())
     {
@@ -162,10 +162,10 @@ void Entry::toXML(xmlNodePtr nodeRoot) const
 void Entry::print(std::ostream &os) const
 {
     os << "[pos:" << Vartable::codeToString(this->pos);
-    if ((this->pred != UINT_MAX))
-        os << ", pred:" << Vartable::codeToString(this->pred);
+    if ((this->head != UINT_MAX))
+        os << ", head:" << Vartable::codeToString(this->head);
     else
-        os << ", pred:UINT_MAX";
+        os << ", head:UINT_MAX";
     if (!this->form.empty())
         os << ", form:\"" << this->form << '"';
     else
@@ -178,7 +178,7 @@ void Entry::print(std::ostream &os) const
  ************************************************** */
 void Entry::makeSerialString()
 {
-    serialString = std::to_string(pos) + std::to_string(pred) + '"' + form + '"';
+    serialString = std::to_string(pos) + std::to_string(head) + '"' + form + '"';
     if (features)
         serialString += features->peekSerialString();
     else

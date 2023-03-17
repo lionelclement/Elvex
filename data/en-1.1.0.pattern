@@ -1,6 +1,6 @@
 # lexeme	pos	lemma	features
-_TO_FEEL	verb	TO_FEEL	PRED:_TO_FEEL,SUBJECT:[human:true],iiReal:PRED_ADJ|SCOMP|OBJ_THETA,ii_pcase:_at,ii_csu:_if|_that
-_TO_FEEL_THE_PAIN	verb	TO_FEEL	PRED:_TO_FEEL_THE_PAIN,iiReal:OBJECT,OBJECT:[PRED:_PAIN,def:true,@s]
+_TO_FEEL	verb	TO_FEEL	HEAD:_TO_FEEL,SUBJECT:[human:true],iiReal:HEAD_ADJ|SCOMP|OBJ_THETA,ii_pcase:_at,ii_csu:_if|_that
+_TO_FEEL_THE_PAIN	verb	TO_FEEL	HEAD:_TO_FEEL_THE_PAIN,iiReal:OBJECT,OBJECT:[HEAD:_PAIN,def:true,@s]
 
 _TO_APPRECIATE	verb	TO_APPRECIATE	SUBJECT:[human:true],iiReal:OBJECT
 
@@ -20,15 +20,15 @@ _TO_CALL_DOWN_2	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:fa
 #  to call something down on someone: to invoke some sort of divine punishment onto someone
 _TO_CALL_DOWN_3	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:_on,particule:down
 
-_TO_SNORE	verb	TO_SNORE	PRED:_TO_SNORE,SUBJECT:[animate:true]
+_TO_SNORE	verb	TO_SNORE	HEAD:_TO_SNORE,SUBJECT:[animate:true]
 
-_TO_SIT	verb	TO_SIT	PRED:_TO_SIT,iiReal:OBJ_THETA,pcase:_on
+_TO_SIT	verb	TO_SIT	HEAD:_TO_SIT,iiReal:OBJ_THETA,pcase:_on
 
-_TO_SAY	verb	TO_SAY	PRED:_TO_SAY,iiReal:SCOMP,compl:that
+_TO_SAY	verb	TO_SAY	HEAD:_TO_SAY,iiReal:SCOMP,compl:that
 
-_TO_WANT	verb	TO_WANT	PRED:_TO_WANT,SUBJECT:[],iiReal:VCOMP,VCOMP:[]
+_TO_WANT	verb	TO_WANT	HEAD:_TO_WANT,SUBJECT:[],iiReal:VCOMP,VCOMP:[]
 
-_TO_TELL	verb	TO_TELL	PRED:_TO_TELL,SUBJECT:[human:true],iiReal:OBJECT,iiiReal:SCOMP,ii_csu:_that
+_TO_TELL	verb	TO_TELL	HEAD:_TO_TELL,SUBJECT:[human:true],iiReal:OBJECT,iiiReal:SCOMP,ii_csu:_that
 
 
 /***
@@ -40,24 +40,24 @@ _TO_TELL	verb	TO_TELL	PRED:_TO_TELL,SUBJECT:[human:true],iiReal:OBJECT,iiiReal:S
 
 
   // Nouns
-_PAIN	common_noun	PAIN	PRED:_PAIN,countable:false
-_SADNESS	common_noun	SADNESS	PRED:_SADNESS,countable:false
-_HOPE	common_noun	HOPE	PRED:_HOPE,countable:false
-_TENDERNESS	common_noun	TENDERNESS	PRED:_TENDERNESS,countable:false
-_WARNING	common_noun	WARNING	PRED:_WARNING
-_DIVINE_BLESSINGS	common_noun	DIVINE_BLESSINGS	PRED:_DIVINE_BLESSINGS
-_CHAIR	common_noun	CHAIR	PRED:_CHAIR
-_CHAIR_MAN	common_noun	CHAIR_MAN	PRED:_CHAIR_MAN
+_PAIN	common_noun	PAIN	HEAD:_PAIN,countable:false
+_SADNESS	common_noun	SADNESS	HEAD:_SADNESS,countable:false
+_HOPE	common_noun	HOPE	HEAD:_HOPE,countable:false
+_TENDERNESS	common_noun	TENDERNESS	HEAD:_TENDERNESS,countable:false
+_WARNING	common_noun	WARNING	HEAD:_WARNING
+_DIVINE_BLESSINGS	common_noun	DIVINE_BLESSINGS	HEAD:_DIVINE_BLESSINGS
+_CHAIR	common_noun	CHAIR	HEAD:_CHAIR
+_CHAIR_MAN	common_noun	CHAIR_MAN	HEAD:_CHAIR_MAN
 
 #  Adjectives
-_NICE	adj	NICE	PRED:_NICE
-_BAD	adj	BAD	PRED:_BAD,lexical_function:none
-_BAD	adj	BAD	PRED:_BAD,lexical_function:magn,MOD:[PRED:_VERY]
-_GOOD	adj	GOOD	PRED:_GOOD
-_HAPPY	adj	HAPPY	PRED:_HAPPY
+_NICE	adj	NICE	HEAD:_NICE
+_BAD	adj	BAD	HEAD:_BAD,lexical_function:none
+_BAD	adj	BAD	HEAD:_BAD,lexical_function:magn,MOD:[HEAD:_VERY]
+_GOOD	adj	GOOD	HEAD:_GOOD
+_HAPPY	adj	HAPPY	HEAD:_HAPPY
 
 #  Adverbs
-_VERY	adv	VERY	PRED:_VERY
+_VERY	adv	VERY	HEAD:_VERY
 
 
 

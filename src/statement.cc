@@ -1309,13 +1309,13 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
         {
             FATAL_ERROR_UNEXPECTED;
         }
-        unsigned int pred = features->assignPred();
+        unsigned int head = features->assignHead();
         unsigned int pos = this->getFirst();
         auto foundpos = parser.findCacheLexicon(pos);
         if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
         {
-            Parser::entries_map *listPred = foundpos->second;
-            entriesPtr entries = synthesizer->findByPred(parser, listPred, pos, pred);
+            Parser::entries_map *listHead = foundpos->second;
+            entriesPtr entries = synthesizer->findByHead(parser, listHead, pos, head);
             if (entries && entries->size() > 0)
             {
                 for (auto &entry : *entries)
@@ -1336,7 +1336,7 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
             }
             else
             {
-                throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(features->assignPred()));
+                throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(features->assignHead()));
             }
         }
     }
@@ -1919,7 +1919,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
     for (Features::list_of_feature::const_iterator i1 = fs1->begin(); i1 != fs1->end(); ++i1)
     {
 
-        if ((*i1)->isPred() || (*i1)->isLemma())
+        if ((*i1)->isHead() || (*i1)->isLemma())
         {
             Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end())
@@ -1943,7 +1943,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                             break;
 
                         case Value::VARIABLE_VALUE:
-                            result->add(Feature::create(Feature::_PRED_, bitsetPtr(), (*i1)->getValue()));
+                            result->add(Feature::create(Feature::_HEAD_, bitsetPtr(), (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
                             item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
@@ -1971,11 +1971,11 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                                 item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
                             }
                         }
-                        result->add(Feature::create(Feature::_PRED_, bitsetPtr(), (*i2)->getValue()));
+                        result->add(Feature::create(Feature::_HEAD_, bitsetPtr(), (*i2)->getValue()));
                         break;
 
                     case Value::ANONYMOUS_VALUE:
-                        result->add(Feature::create(Feature::_PRED_, bitsetPtr(), (*i2)->getValue()));
+                        result->add(Feature::create(Feature::_HEAD_, bitsetPtr(), (*i2)->getValue()));
                         break;
 
                     default:

@@ -192,7 +192,8 @@ void Environment::print(std::ostream &out) const
  ************************************************** */
 void Environment::replaceVariables(const featuresPtr &features, bool &effect)
 {
-    /***
+    /*** 
+     CERR_LINE;
      std::cerr << "<H4>Environment::replaceVariables(features)</H4>" << std::endl;
      std::cerr << "<table border=\"1\"><tr><th>featurePtrs</th><th>Environment</th></tr>";
      std::cerr << "<tr><td>";
@@ -210,7 +211,7 @@ redo:
         featurePtr feature = *it;
         switch (feature->_getType())
         {
-        case Feature::_PRED_:
+        case Feature::_HEAD_:
         case Feature::_LEMMA_:
             if (feature->getValue())
                 replaceVariables(feature->getValue(), effect);

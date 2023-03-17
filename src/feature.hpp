@@ -37,14 +37,14 @@ class Feature : public Facade,
 public:
     enum Type
     {
-        _PRED_ = 0,
+        _HEAD_ = 0,
         _LEMMA_,
         _CONSTANT_,
         _FORM_,
         _VARIABLE_,
     };
 
-    static const Type first_type = _PRED_;
+    static const Type first_type = _HEAD_;
     static const Type last_type = _VARIABLE_;
 
 private:
@@ -79,7 +79,7 @@ public:
 
     bool isForm() const;
     
-    bool isPred() const;
+    bool isHead() const;
     
     bool isLemma() const;
     

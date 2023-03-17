@@ -1,0 +1,4420 @@
+Terminals unused in grammar
+
+    TOKEN_TRUE
+    TOKEN_FALSE
+
+
+Grammar
+
+    0 $accept: axiom $end
+
+    1 axiom: begin
+
+    2 begin: TOKEN_RULES TOKEN_LPAR rules TOKEN_RPAR
+    3      | TOKEN_INPUT TOKEN_LPAR term features TOKEN_RPAR
+    4      | TOKEN_INPUT TOKEN_LPAR term TOKEN_RPAR
+    5      | TOKEN_LEXICON TOKEN_LPAR dictionary TOKEN_RPAR
+    6      | TOKEN_DASH TOKEN_LPAR features TOKEN_RPAR
+
+    7 dictionary: dictionary_line dictionary
+    8           | dictionary_line
+
+    9 dictionary_line: TOKEN_FORM TOKEN_IDENTIFIER TOKEN_SEMI
+   10                | TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
+   11                | stringOrIdentifier lexical_entries TOKEN_SEMI
+   12                | TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_COLON features TOKEN_SEMI
+   13                | TOKEN_SEMI
+
+   14 stringOrIdentifier: TOKEN_IDENTIFIER
+   15                   | TOKEN_STRING
+   16                   | stringOrIdentifier TOKEN_PLUS TOKEN_STRING
+
+   17 lexical_entries: lexical_entry TOKEN_PIPE lexical_entries
+   18                | lexical_entry
+
+   19 lexical_entry: TOKEN_IDENTIFIER features
+   20              | TOKEN_IDENTIFIER
+
+   21 $@1: ε
+
+   22 rules: $@1 rule rules
+
+   23 $@2: ε
+
+   24 rules: $@2
+
+   25 pref_rule: TOKEN_TRACE
+   26          | ε
+
+   27 rule: pref_rule term TOKEN_RIGHTARROW terms_vector structure_statement
+   28     | pref_rule term TOKEN_RIGHTARROW structure_statement
+
+   29 terms_vector: terms_vector terms
+   30             | terms
+
+   31 terms: terms_disj
+   32      | TOKEN_LBRACKET terms_disj TOKEN_RBRACKET
+
+   33 terms_disj: terms_disj TOKEN_PIPE term
+   34           | term
+
+   35 term: TOKEN_IDENTIFIER
+   36     | TOKEN_VARIABLE
+   37     | error
+
+   38 structure_statement: TOKEN_LBRACE list_statement TOKEN_RBRACE
+   39                    | TOKEN_LBRACE TOKEN_RBRACE
+   40                    | TOKEN_SEMI
+
+   41 list_statement: statement
+   42               | list_statement statement
+
+   43 statements: TOKEN_LBRACE list_statement TOKEN_RBRACE
+   44           | TOKEN_LBRACE TOKEN_RBRACE
+
+   45 statement: statements
+   46          | features TOKEN_SEMI
+   47          | TOKEN_ATTEST expression_statement TOKEN_SEMI
+   48          | TOKEN_PRINT TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI
+   49          | TOKEN_PRINTLN TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI
+   50          | left_hand_side_aff_statement TOKEN_AFF right_hand_side_aff_statement TOKEN_SEMI
+   51          | left_hand_side_subset_statement TOKEN_SUBSUME right_hand_side_subset_statement TOKEN_SEMI
+   52          | TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement
+   53          | TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement TOKEN_ELSE statement
+   54          | TOKEN_WAIT TOKEN_LPAR expression_statement TOKEN_RPAR statement
+   55          | TOKEN_FOREACH variable TOKEN_IN expression_statement statement
+
+   56 left_hand_side_subset_statement: features
+
+   57 right_hand_side_subset_statement: variable
+   58                                 | up
+   59                                 | down2
+   60                                 | features
+
+   61 left_hand_side_aff_statement: up2
+   62                             | down
+   63                             | variable
+   64                             | TOKEN_LT variable TOKEN_DOUBLECOLON variable TOKEN_GT
+
+   65 right_hand_side_aff_statement: expression_statement
+
+   66 expression_statement: expression_statement TOKEN_OR expression_statement
+   67                     | expression_statement TOKEN_AND expression_statement
+   68                     | expression_statement TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement TOKEN_EQUIV expression_statement
+   70                     | TOKEN_NOT expression_statement
+   71                     | expression_statement TOKEN_EQUAL expression_statement
+   72                     | expression_statement TOKEN_DIFF expression_statement
+   73                     | expression_statement TOKEN_LT expression_statement
+   74                     | expression_statement TOKEN_LE expression_statement
+   75                     | expression_statement TOKEN_GT expression_statement
+   76                     | expression_statement TOKEN_GE expression_statement
+   77                     | expression_statement TOKEN_PLUS expression_statement
+   78                     | expression_statement TOKEN_MINUS expression_statement
+   79                     | expression_statement TOKEN_TIMES expression_statement
+   80                     | expression_statement TOKEN_DIVIDE expression_statement
+   81                     | expression_statement TOKEN_MODULO expression_statement
+   82                     | TOKEN_MINUS expression_statement
+   83                     | TOKEN_RAND TOKEN_LPAR TOKEN_RPAR
+   84                     | TOKEN_DOUBLE
+   85                     | TOKEN_INTEGER
+   86                     | TOKEN_STRING
+   87                     | expression_statement TOKEN_UNION expression_statement
+   88                     | up
+   89                     | up2
+   90                     | down
+   91                     | down2
+   92                     | features
+   93                     | TOKEN_NIL
+   94                     | constant
+   95                     | TOKEN_ANONYMOUS
+   96                     | variable
+   97                     | TOKEN_LPAR expression_statement TOKEN_RPAR
+   98                     | dash_statement
+   99                     | pairp
+  100                     | TOKEN_SEARCH expression_statement TOKEN_ON TOKEN_IDENTIFIER
+
+  101 expression_statement_composite: expression_statement_composite TOKEN_COMMA expression_statement
+  102                               | expression_statement
+
+  103 up: TOKEN_UPARROW
+
+  104 up2: TOKEN_UP2ARROW
+
+  105 down: TOKEN_DOWNARROW TOKEN_INTEGER
+
+  106 down2: TOKEN_DOWN2ARROW TOKEN_INTEGER
+
+  107 dash_statement: TOKEN_DASH TOKEN_INTEGER TOKEN_DOT TOKEN_INTEGER
+  108               | TOKEN_DASH TOKEN_INTEGER
+
+  109 features: TOKEN_LBRACKET features_composite features_composite_tail TOKEN_RBRACKET
+  110         | TOKEN_LBRACKET TOKEN_RBRACKET
+
+  111 features_composite_tail: ε
+  112                        | TOKEN_COMMA variable
+
+  113 features_composite: features_composite TOKEN_COMMA feature
+  114                   | feature
+  115                   | features_composite TOKEN_COMMA TOKEN_AROBASE TOKEN_IDENTIFIER
+  116                   | TOKEN_AROBASE TOKEN_IDENTIFIER
+
+  117 feature: TOKEN_LEMMA TOKEN_COLON stringOrIdentifier
+  118        | TOKEN_LEMMA TOKEN_COLON variable
+  119        | TOKEN_PRED TOKEN_COLON stringOrIdentifier
+  120        | TOKEN_PRED TOKEN_COLON variable
+  121        | TOKEN_FORM TOKEN_COLON variable
+  122        | TOKEN_FORM TOKEN_COLON stringOrIdentifier
+  123        | identifier TOKEN_COLON feature_value
+  124        | identifier TOKEN_COLON TOKEN_STRING
+  125        | variable TOKEN_COLON feature_value
+
+  126 feature_value: variable
+  127              | constant
+  128              | TOKEN_DOUBLE
+  129              | TOKEN_INTEGER
+  130              | pairp
+  131              | features
+  132              | TOKEN_NIL
+  133              | TOKEN_ANONYMOUS
+
+  134 constant: identifier
+  135         | identifier TOKEN_PIPE constant
+
+  136 identifier: TOKEN_IDENTIFIER
+
+  137 variable: TOKEN_VARIABLE
+
+  138 pairp: TOKEN_LT pairp_elements TOKEN_GT
+  139      | TOKEN_LT TOKEN_GT
+  140      | TOKEN_LT pairp_elements TOKEN_DOUBLECOLON pairp_element TOKEN_GT
+  141      | TOKEN_LT pairp_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
+
+  142 pairp_elements: pairp_element TOKEN_COMMA pairp_elements
+  143               | pairp_element
+
+  144 pairp_element: variable
+  145              | TOKEN_DOUBLE
+  146              | TOKEN_INTEGER
+  147              | constant
+  148              | features
+  149              | pairp
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256) 37
+    TOKEN_RIGHTARROW (258) 27 28
+    TOKEN_UPARROW (259) 103
+    TOKEN_UP2ARROW (260) 104
+    TOKEN_DOWNARROW (261) 105
+    TOKEN_DOWN2ARROW (262) 106
+    TOKEN_LPAR (263) 2 3 4 5 6 48 49 52 53 54 83 97
+    TOKEN_RPAR (264) 2 3 4 5 6 48 49 52 53 54 83 97
+    TOKEN_LBRACE (265) 38 39 43 44
+    TOKEN_RBRACE (266) 38 39 43 44
+    TOKEN_LBRACKET (267) 32 109 110
+    TOKEN_RBRACKET (268) 32 109 110
+    TOKEN_DASH (269) 6 107 108
+    TOKEN_AROBASE (270) 12 115 116
+    TOKEN_SEMI (271) 9 10 11 12 13 40 46 47 48 49 50 51
+    TOKEN_DOT (272) 107
+    TOKEN_COLON (273) 12 117 118 119 120 121 122 123 124 125
+    TOKEN_DOUBLECOLON (274) 64 140 141
+    TOKEN_COMMA (275) 101 112 113 115 142
+    TOKEN_RULES (276) 2
+    TOKEN_INPUT (277) 3 4
+    TOKEN_LEXICON (278) 5
+    TOKEN_LEMMA (279) 117 118
+    TOKEN_PRED (280) 119 120
+    TOKEN_FORM (281) 9 10 121 122
+    TOKEN_ATTEST (282) 47
+    TOKEN_PRINT (283) 48
+    TOKEN_PRINTLN (284) 49
+    TOKEN_IF (285) 52 53
+    TOKEN_ELSE (286) 53
+    TOKEN_WAIT (287) 54
+    TOKEN_NIL (288) 93 132 141
+    TOKEN_TRUE (289)
+    TOKEN_FALSE (290)
+    TOKEN_FOREACH (291) 55
+    TOKEN_IN (292) 55
+    TOKEN_SEARCH (293) 100
+    TOKEN_ON (294) 100
+    TOKEN_RAND (295) 83
+    TOKEN_TRACE (296) 25
+    TOKEN_UNION (297) 87
+    TOKEN_SUBSUME (298) 51
+    TOKEN_AFF (299) 50
+    TOKEN_PIPE (300) 17 33 135
+    TOKEN_NOT (301) 70
+    TOKEN_OR (302) 66
+    TOKEN_AND (303) 67
+    TOKEN_IMPLICATION (304) 68
+    TOKEN_EQUIV (305) 69
+    TOKEN_PLUS (306) 16 77
+    TOKEN_MINUS (307) 78 82
+    TOKEN_TIMES (308) 79
+    TOKEN_DIVIDE (309) 80
+    TOKEN_MODULO (310) 81
+    TOKEN_EQUAL (311) 71
+    TOKEN_DIFF (312) 72
+    TOKEN_LT (313) 64 73 138 139 140 141
+    TOKEN_LE (314) 74
+    TOKEN_GT (315) 64 75 138 139 140 141
+    TOKEN_GE (316) 76
+    TOKEN_IDENTIFIER <string_slot> (317) 9 10 12 14 19 20 35 100 115 116 136
+    TOKEN_STRING <string_slot> (318) 15 16 86 124
+    TOKEN_INTEGER <integer_slot> (319) 85 105 106 107 108 129 146
+    TOKEN_DOUBLE <double_slot> (320) 84 128 145
+    TOKEN_VARIABLE <string_slot> (321) 36 137
+    TOKEN_ANONYMOUS (322) 95 133
+    TOKEN_MINUS_U (323)
+    TOKEN_NOELSE (324)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (70)
+        on left: 0
+    axiom (71)
+        on left: 1
+        on right: 0
+    begin (72)
+        on left: 2 3 4 5 6
+        on right: 1
+    dictionary (73)
+        on left: 7 8
+        on right: 5 7
+    dictionary_line (74)
+        on left: 9 10 11 12 13
+        on right: 7 8
+    stringOrIdentifier <string_slot> (75)
+        on left: 14 15 16
+        on right: 11 16 117 119 122
+    lexical_entries <entries_slot> (76)
+        on left: 17 18
+        on right: 11 17
+    lexical_entry <entry_slot> (77)
+        on left: 19 20
+        on right: 17 18
+    rules (78)
+        on left: 22 24
+        on right: 2 22
+    $@1 (79)
+        on left: 21
+        on right: 22
+    $@2 (80)
+        on left: 23
+        on right: 24
+    pref_rule (81)
+        on left: 25 26
+        on right: 27 28
+    rule (82)
+        on left: 27 28
+        on right: 22
+    terms_vector <vector_terms_slot> (83)
+        on left: 29 30
+        on right: 27 29
+    terms <terms_slot> (84)
+        on left: 31 32
+        on right: 29 30
+    terms_disj <terms_slot> (85)
+        on left: 33 34
+        on right: 31 32 33
+    term <integer_slot> (86)
+        on left: 35 36 37
+        on right: 3 4 27 28 33 34
+    structure_statement <statements_slot> (87)
+        on left: 38 39 40
+        on right: 27 28
+    list_statement <statements_slot> (88)
+        on left: 41 42
+        on right: 38 42 43
+    statements <statement_slot> (89)
+        on left: 43 44
+        on right: 45
+    statement <statement_slot> (90)
+        on left: 45 46 47 48 49 50 51 52 53 54 55
+        on right: 41 42 52 53 54 55
+    left_hand_side_subset_statement <statement_slot> (91)
+        on left: 56
+        on right: 51
+    right_hand_side_subset_statement <statement_slot> (92)
+        on left: 57 58 59 60
+        on right: 51
+    left_hand_side_aff_statement <statement_slot> (93)
+        on left: 61 62 63 64
+        on right: 50
+    right_hand_side_aff_statement <statement_slot> (94)
+        on left: 65
+        on right: 50
+    expression_statement <statement_slot> (95)
+        on left: 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+        on right: 47 52 53 54 55 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 87 97 100 101 102
+    expression_statement_composite <statements_slot> (96)
+        on left: 101 102
+        on right: 48 49 101
+    up <statement_slot> (97)
+        on left: 103
+        on right: 58 88
+    up2 <statement_slot> (98)
+        on left: 104
+        on right: 61 89
+    down <statement_slot> (99)
+        on left: 105
+        on right: 62 90
+    down2 <statement_slot> (100)
+        on left: 106
+        on right: 59 91
+    dash_statement <statement_slot> (101)
+        on left: 107 108
+        on right: 98
+    features <features_slot> (102)
+        on left: 109 110
+        on right: 3 6 10 12 19 46 56 60 92 131 148
+    features_composite_tail <feature_slot> (103)
+        on left: 111 112
+        on right: 109
+    features_composite <features_slot> (104)
+        on left: 113 114 115 116
+        on right: 109 113 115
+    feature <feature_slot> (105)
+        on left: 117 118 119 120 121 122 123 124 125
+        on right: 113 114
+    feature_value <value_slot> (106)
+        on left: 126 127 128 129 130 131 132 133
+        on right: 123 125
+    constant <bits_slot> (107)
+        on left: 134 135
+        on right: 94 127 135 147
+    identifier <bits_slot> (108)
+        on left: 136
+        on right: 123 124 134 135
+    variable <bits_slot> (109)
+        on left: 137
+        on right: 55 57 63 64 96 112 118 120 121 125 126 144
+    pairp <pairp_slot> (110)
+        on left: 138 139 140 141
+        on right: 99 130 149
+    pairp_elements <pairp_slot> (111)
+        on left: 142 143
+        on right: 138 140 141 142
+    pairp_element <pairp_slot> (112)
+        on left: 144 145 146 147 148 149
+        on right: 140 142 143
+
+
+State 0
+
+    0 $accept: • axiom $end
+
+    TOKEN_DASH     shift, and go to state 1
+    TOKEN_RULES    shift, and go to state 2
+    TOKEN_INPUT    shift, and go to state 3
+    TOKEN_LEXICON  shift, and go to state 4
+
+    axiom  go to state 5
+    begin  go to state 6
+
+
+State 1
+
+    6 begin: TOKEN_DASH • TOKEN_LPAR features TOKEN_RPAR
+
+    TOKEN_LPAR  shift, and go to state 7
+
+
+State 2
+
+    2 begin: TOKEN_RULES • TOKEN_LPAR rules TOKEN_RPAR
+
+    TOKEN_LPAR  shift, and go to state 8
+
+
+State 3
+
+    3 begin: TOKEN_INPUT • TOKEN_LPAR term features TOKEN_RPAR
+    4      | TOKEN_INPUT • TOKEN_LPAR term TOKEN_RPAR
+
+    TOKEN_LPAR  shift, and go to state 9
+
+
+State 4
+
+    5 begin: TOKEN_LEXICON • TOKEN_LPAR dictionary TOKEN_RPAR
+
+    TOKEN_LPAR  shift, and go to state 10
+
+
+State 5
+
+    0 $accept: axiom • $end
+
+    $end  shift, and go to state 11
+
+
+State 6
+
+    1 axiom: begin •
+
+    $default  reduce using rule 1 (axiom)
+
+
+State 7
+
+    6 begin: TOKEN_DASH TOKEN_LPAR • features TOKEN_RPAR
+
+    TOKEN_LBRACKET  shift, and go to state 12
+
+    features  go to state 13
+
+
+State 8
+
+    2 begin: TOKEN_RULES TOKEN_LPAR • rules TOKEN_RPAR
+
+    TOKEN_RPAR  reduce using rule 23 ($@2)
+    $default    reduce using rule 21 ($@1)
+
+    rules  go to state 14
+    $@1    go to state 15
+    $@2    go to state 16
+
+
+State 9
+
+    3 begin: TOKEN_INPUT TOKEN_LPAR • term features TOKEN_RPAR
+    4      | TOKEN_INPUT TOKEN_LPAR • term TOKEN_RPAR
+
+    error             shift, and go to state 17
+    TOKEN_IDENTIFIER  shift, and go to state 18
+    TOKEN_VARIABLE    shift, and go to state 19
+
+    term  go to state 20
+
+
+State 10
+
+    5 begin: TOKEN_LEXICON TOKEN_LPAR • dictionary TOKEN_RPAR
+
+    TOKEN_AROBASE     shift, and go to state 21
+    TOKEN_SEMI        shift, and go to state 22
+    TOKEN_FORM        shift, and go to state 23
+    TOKEN_IDENTIFIER  shift, and go to state 24
+    TOKEN_STRING      shift, and go to state 25
+
+    dictionary          go to state 26
+    dictionary_line     go to state 27
+    stringOrIdentifier  go to state 28
+
+
+State 11
+
+    0 $accept: axiom $end •
+
+    $default  accept
+
+
+State 12
+
+  109 features: TOKEN_LBRACKET • features_composite features_composite_tail TOKEN_RBRACKET
+  110         | TOKEN_LBRACKET • TOKEN_RBRACKET
+
+    TOKEN_RBRACKET    shift, and go to state 29
+    TOKEN_AROBASE     shift, and go to state 30
+    TOKEN_LEMMA       shift, and go to state 31
+    TOKEN_PRED        shift, and go to state 32
+    TOKEN_FORM        shift, and go to state 33
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    features_composite  go to state 36
+    feature             go to state 37
+    identifier          go to state 38
+    variable            go to state 39
+
+
+State 13
+
+    6 begin: TOKEN_DASH TOKEN_LPAR features • TOKEN_RPAR
+
+    TOKEN_RPAR  shift, and go to state 40
+
+
+State 14
+
+    2 begin: TOKEN_RULES TOKEN_LPAR rules • TOKEN_RPAR
+
+    TOKEN_RPAR  shift, and go to state 41
+
+
+State 15
+
+   22 rules: $@1 • rule rules
+
+    TOKEN_TRACE  shift, and go to state 42
+
+    $default  reduce using rule 26 (pref_rule)
+
+    pref_rule  go to state 43
+    rule       go to state 44
+
+
+State 16
+
+   24 rules: $@2 •
+
+    $default  reduce using rule 24 (rules)
+
+
+State 17
+
+   37 term: error •
+
+    $default  reduce using rule 37 (term)
+
+
+State 18
+
+   35 term: TOKEN_IDENTIFIER •
+
+    $default  reduce using rule 35 (term)
+
+
+State 19
+
+   36 term: TOKEN_VARIABLE •
+
+    $default  reduce using rule 36 (term)
+
+
+State 20
+
+    3 begin: TOKEN_INPUT TOKEN_LPAR term • features TOKEN_RPAR
+    4      | TOKEN_INPUT TOKEN_LPAR term • TOKEN_RPAR
+
+    TOKEN_RPAR      shift, and go to state 45
+    TOKEN_LBRACKET  shift, and go to state 12
+
+    features  go to state 46
+
+
+State 21
+
+   12 dictionary_line: TOKEN_AROBASE • TOKEN_IDENTIFIER TOKEN_COLON features TOKEN_SEMI
+
+    TOKEN_IDENTIFIER  shift, and go to state 47
+
+
+State 22
+
+   13 dictionary_line: TOKEN_SEMI •
+
+    $default  reduce using rule 13 (dictionary_line)
+
+
+State 23
+
+    9 dictionary_line: TOKEN_FORM • TOKEN_IDENTIFIER TOKEN_SEMI
+   10                | TOKEN_FORM • TOKEN_IDENTIFIER features TOKEN_SEMI
+
+    TOKEN_IDENTIFIER  shift, and go to state 48
+
+
+State 24
+
+   14 stringOrIdentifier: TOKEN_IDENTIFIER •
+
+    $default  reduce using rule 14 (stringOrIdentifier)
+
+
+State 25
+
+   15 stringOrIdentifier: TOKEN_STRING •
+
+    $default  reduce using rule 15 (stringOrIdentifier)
+
+
+State 26
+
+    5 begin: TOKEN_LEXICON TOKEN_LPAR dictionary • TOKEN_RPAR
+
+    TOKEN_RPAR  shift, and go to state 49
+
+
+State 27
+
+    7 dictionary: dictionary_line • dictionary
+    8           | dictionary_line •
+
+    TOKEN_AROBASE     shift, and go to state 21
+    TOKEN_SEMI        shift, and go to state 22
+    TOKEN_FORM        shift, and go to state 23
+    TOKEN_IDENTIFIER  shift, and go to state 24
+    TOKEN_STRING      shift, and go to state 25
+
+    $default  reduce using rule 8 (dictionary)
+
+    dictionary          go to state 50
+    dictionary_line     go to state 27
+    stringOrIdentifier  go to state 28
+
+
+State 28
+
+   11 dictionary_line: stringOrIdentifier • lexical_entries TOKEN_SEMI
+   16 stringOrIdentifier: stringOrIdentifier • TOKEN_PLUS TOKEN_STRING
+
+    TOKEN_PLUS        shift, and go to state 51
+    TOKEN_IDENTIFIER  shift, and go to state 52
+
+    lexical_entries  go to state 53
+    lexical_entry    go to state 54
+
+
+State 29
+
+  110 features: TOKEN_LBRACKET TOKEN_RBRACKET •
+
+    $default  reduce using rule 110 (features)
+
+
+State 30
+
+  116 features_composite: TOKEN_AROBASE • TOKEN_IDENTIFIER
+
+    TOKEN_IDENTIFIER  shift, and go to state 55
+
+
+State 31
+
+  117 feature: TOKEN_LEMMA • TOKEN_COLON stringOrIdentifier
+  118        | TOKEN_LEMMA • TOKEN_COLON variable
+
+    TOKEN_COLON  shift, and go to state 56
+
+
+State 32
+
+  119 feature: TOKEN_PRED • TOKEN_COLON stringOrIdentifier
+  120        | TOKEN_PRED • TOKEN_COLON variable
+
+    TOKEN_COLON  shift, and go to state 57
+
+
+State 33
+
+  121 feature: TOKEN_FORM • TOKEN_COLON variable
+  122        | TOKEN_FORM • TOKEN_COLON stringOrIdentifier
+
+    TOKEN_COLON  shift, and go to state 58
+
+
+State 34
+
+  136 identifier: TOKEN_IDENTIFIER •
+
+    $default  reduce using rule 136 (identifier)
+
+
+State 35
+
+  137 variable: TOKEN_VARIABLE •
+
+    $default  reduce using rule 137 (variable)
+
+
+State 36
+
+  109 features: TOKEN_LBRACKET features_composite • features_composite_tail TOKEN_RBRACKET
+  113 features_composite: features_composite • TOKEN_COMMA feature
+  115                   | features_composite • TOKEN_COMMA TOKEN_AROBASE TOKEN_IDENTIFIER
+
+    TOKEN_COMMA  shift, and go to state 59
+
+    $default  reduce using rule 111 (features_composite_tail)
+
+    features_composite_tail  go to state 60
+
+
+State 37
+
+  114 features_composite: feature •
+
+    $default  reduce using rule 114 (features_composite)
+
+
+State 38
+
+  123 feature: identifier • TOKEN_COLON feature_value
+  124        | identifier • TOKEN_COLON TOKEN_STRING
+
+    TOKEN_COLON  shift, and go to state 61
+
+
+State 39
+
+  125 feature: variable • TOKEN_COLON feature_value
+
+    TOKEN_COLON  shift, and go to state 62
+
+
+State 40
+
+    6 begin: TOKEN_DASH TOKEN_LPAR features TOKEN_RPAR •
+
+    $default  reduce using rule 6 (begin)
+
+
+State 41
+
+    2 begin: TOKEN_RULES TOKEN_LPAR rules TOKEN_RPAR •
+
+    $default  reduce using rule 2 (begin)
+
+
+State 42
+
+   25 pref_rule: TOKEN_TRACE •
+
+    $default  reduce using rule 25 (pref_rule)
+
+
+State 43
+
+   27 rule: pref_rule • term TOKEN_RIGHTARROW terms_vector structure_statement
+   28     | pref_rule • term TOKEN_RIGHTARROW structure_statement
+
+    error             shift, and go to state 17
+    TOKEN_IDENTIFIER  shift, and go to state 18
+    TOKEN_VARIABLE    shift, and go to state 19
+
+    term  go to state 63
+
+
+State 44
+
+   22 rules: $@1 rule • rules
+
+    TOKEN_RPAR  reduce using rule 23 ($@2)
+    $default    reduce using rule 21 ($@1)
+
+    rules  go to state 64
+    $@1    go to state 15
+    $@2    go to state 16
+
+
+State 45
+
+    4 begin: TOKEN_INPUT TOKEN_LPAR term TOKEN_RPAR •
+
+    $default  reduce using rule 4 (begin)
+
+
+State 46
+
+    3 begin: TOKEN_INPUT TOKEN_LPAR term features • TOKEN_RPAR
+
+    TOKEN_RPAR  shift, and go to state 65
+
+
+State 47
+
+   12 dictionary_line: TOKEN_AROBASE TOKEN_IDENTIFIER • TOKEN_COLON features TOKEN_SEMI
+
+    TOKEN_COLON  shift, and go to state 66
+
+
+State 48
+
+    9 dictionary_line: TOKEN_FORM TOKEN_IDENTIFIER • TOKEN_SEMI
+   10                | TOKEN_FORM TOKEN_IDENTIFIER • features TOKEN_SEMI
+
+    TOKEN_LBRACKET  shift, and go to state 12
+    TOKEN_SEMI      shift, and go to state 67
+
+    features  go to state 68
+
+
+State 49
+
+    5 begin: TOKEN_LEXICON TOKEN_LPAR dictionary TOKEN_RPAR •
+
+    $default  reduce using rule 5 (begin)
+
+
+State 50
+
+    7 dictionary: dictionary_line dictionary •
+
+    $default  reduce using rule 7 (dictionary)
+
+
+State 51
+
+   16 stringOrIdentifier: stringOrIdentifier TOKEN_PLUS • TOKEN_STRING
+
+    TOKEN_STRING  shift, and go to state 69
+
+
+State 52
+
+   19 lexical_entry: TOKEN_IDENTIFIER • features
+   20              | TOKEN_IDENTIFIER •
+
+    TOKEN_LBRACKET  shift, and go to state 12
+
+    $default  reduce using rule 20 (lexical_entry)
+
+    features  go to state 70
+
+
+State 53
+
+   11 dictionary_line: stringOrIdentifier lexical_entries • TOKEN_SEMI
+
+    TOKEN_SEMI  shift, and go to state 71
+
+
+State 54
+
+   17 lexical_entries: lexical_entry • TOKEN_PIPE lexical_entries
+   18                | lexical_entry •
+
+    TOKEN_PIPE  shift, and go to state 72
+
+    $default  reduce using rule 18 (lexical_entries)
+
+
+State 55
+
+  116 features_composite: TOKEN_AROBASE TOKEN_IDENTIFIER •
+
+    $default  reduce using rule 116 (features_composite)
+
+
+State 56
+
+  117 feature: TOKEN_LEMMA TOKEN_COLON • stringOrIdentifier
+  118        | TOKEN_LEMMA TOKEN_COLON • variable
+
+    TOKEN_IDENTIFIER  shift, and go to state 24
+    TOKEN_STRING      shift, and go to state 25
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    stringOrIdentifier  go to state 73
+    variable            go to state 74
+
+
+State 57
+
+  119 feature: TOKEN_PRED TOKEN_COLON • stringOrIdentifier
+  120        | TOKEN_PRED TOKEN_COLON • variable
+
+    TOKEN_IDENTIFIER  shift, and go to state 24
+    TOKEN_STRING      shift, and go to state 25
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    stringOrIdentifier  go to state 75
+    variable            go to state 76
+
+
+State 58
+
+  121 feature: TOKEN_FORM TOKEN_COLON • variable
+  122        | TOKEN_FORM TOKEN_COLON • stringOrIdentifier
+
+    TOKEN_IDENTIFIER  shift, and go to state 24
+    TOKEN_STRING      shift, and go to state 25
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    stringOrIdentifier  go to state 77
+    variable            go to state 78
+
+
+State 59
+
+  112 features_composite_tail: TOKEN_COMMA • variable
+  113 features_composite: features_composite TOKEN_COMMA • feature
+  115                   | features_composite TOKEN_COMMA • TOKEN_AROBASE TOKEN_IDENTIFIER
+
+    TOKEN_AROBASE     shift, and go to state 79
+    TOKEN_LEMMA       shift, and go to state 31
+    TOKEN_PRED        shift, and go to state 32
+    TOKEN_FORM        shift, and go to state 33
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    feature     go to state 80
+    identifier  go to state 38
+    variable    go to state 81
+
+
+State 60
+
+  109 features: TOKEN_LBRACKET features_composite features_composite_tail • TOKEN_RBRACKET
+
+    TOKEN_RBRACKET  shift, and go to state 82
+
+
+State 61
+
+  123 feature: identifier TOKEN_COLON • feature_value
+  124        | identifier TOKEN_COLON • TOKEN_STRING
+
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_NIL         shift, and go to state 83
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 85
+    TOKEN_INTEGER     shift, and go to state 86
+    TOKEN_DOUBLE      shift, and go to state 87
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 88
+
+    features       go to state 89
+    feature_value  go to state 90
+    constant       go to state 91
+    identifier     go to state 92
+    variable       go to state 93
+    pairp          go to state 94
+
+
+State 62
+
+  125 feature: variable TOKEN_COLON • feature_value
+
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_NIL         shift, and go to state 83
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_INTEGER     shift, and go to state 86
+    TOKEN_DOUBLE      shift, and go to state 87
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 88
+
+    features       go to state 89
+    feature_value  go to state 95
+    constant       go to state 91
+    identifier     go to state 92
+    variable       go to state 93
+    pairp          go to state 94
+
+
+State 63
+
+   27 rule: pref_rule term • TOKEN_RIGHTARROW terms_vector structure_statement
+   28     | pref_rule term • TOKEN_RIGHTARROW structure_statement
+
+    TOKEN_RIGHTARROW  shift, and go to state 96
+
+
+State 64
+
+   22 rules: $@1 rule rules •
+
+    $default  reduce using rule 22 (rules)
+
+
+State 65
+
+    3 begin: TOKEN_INPUT TOKEN_LPAR term features TOKEN_RPAR •
+
+    $default  reduce using rule 3 (begin)
+
+
+State 66
+
+   12 dictionary_line: TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_COLON • features TOKEN_SEMI
+
+    TOKEN_LBRACKET  shift, and go to state 12
+
+    features  go to state 97
+
+
+State 67
+
+    9 dictionary_line: TOKEN_FORM TOKEN_IDENTIFIER TOKEN_SEMI •
+
+    $default  reduce using rule 9 (dictionary_line)
+
+
+State 68
+
+   10 dictionary_line: TOKEN_FORM TOKEN_IDENTIFIER features • TOKEN_SEMI
+
+    TOKEN_SEMI  shift, and go to state 98
+
+
+State 69
+
+   16 stringOrIdentifier: stringOrIdentifier TOKEN_PLUS TOKEN_STRING •
+
+    $default  reduce using rule 16 (stringOrIdentifier)
+
+
+State 70
+
+   19 lexical_entry: TOKEN_IDENTIFIER features •
+
+    $default  reduce using rule 19 (lexical_entry)
+
+
+State 71
+
+   11 dictionary_line: stringOrIdentifier lexical_entries TOKEN_SEMI •
+
+    $default  reduce using rule 11 (dictionary_line)
+
+
+State 72
+
+   17 lexical_entries: lexical_entry TOKEN_PIPE • lexical_entries
+
+    TOKEN_IDENTIFIER  shift, and go to state 52
+
+    lexical_entries  go to state 99
+    lexical_entry    go to state 54
+
+
+State 73
+
+   16 stringOrIdentifier: stringOrIdentifier • TOKEN_PLUS TOKEN_STRING
+  117 feature: TOKEN_LEMMA TOKEN_COLON stringOrIdentifier •
+
+    TOKEN_PLUS  shift, and go to state 51
+
+    $default  reduce using rule 117 (feature)
+
+
+State 74
+
+  118 feature: TOKEN_LEMMA TOKEN_COLON variable •
+
+    $default  reduce using rule 118 (feature)
+
+
+State 75
+
+   16 stringOrIdentifier: stringOrIdentifier • TOKEN_PLUS TOKEN_STRING
+  119 feature: TOKEN_PRED TOKEN_COLON stringOrIdentifier •
+
+    TOKEN_PLUS  shift, and go to state 51
+
+    $default  reduce using rule 119 (feature)
+
+
+State 76
+
+  120 feature: TOKEN_PRED TOKEN_COLON variable •
+
+    $default  reduce using rule 120 (feature)
+
+
+State 77
+
+   16 stringOrIdentifier: stringOrIdentifier • TOKEN_PLUS TOKEN_STRING
+  122 feature: TOKEN_FORM TOKEN_COLON stringOrIdentifier •
+
+    TOKEN_PLUS  shift, and go to state 51
+
+    $default  reduce using rule 122 (feature)
+
+
+State 78
+
+  121 feature: TOKEN_FORM TOKEN_COLON variable •
+
+    $default  reduce using rule 121 (feature)
+
+
+State 79
+
+  115 features_composite: features_composite TOKEN_COMMA TOKEN_AROBASE • TOKEN_IDENTIFIER
+
+    TOKEN_IDENTIFIER  shift, and go to state 100
+
+
+State 80
+
+  113 features_composite: features_composite TOKEN_COMMA feature •
+
+    $default  reduce using rule 113 (features_composite)
+
+
+State 81
+
+  112 features_composite_tail: TOKEN_COMMA variable •
+  125 feature: variable • TOKEN_COLON feature_value
+
+    TOKEN_COLON  shift, and go to state 62
+
+    $default  reduce using rule 112 (features_composite_tail)
+
+
+State 82
+
+  109 features: TOKEN_LBRACKET features_composite features_composite_tail TOKEN_RBRACKET •
+
+    $default  reduce using rule 109 (features)
+
+
+State 83
+
+  132 feature_value: TOKEN_NIL •
+
+    $default  reduce using rule 132 (feature_value)
+
+
+State 84
+
+  138 pairp: TOKEN_LT • pairp_elements TOKEN_GT
+  139      | TOKEN_LT • TOKEN_GT
+  140      | TOKEN_LT • pairp_elements TOKEN_DOUBLECOLON pairp_element TOKEN_GT
+  141      | TOKEN_LT • pairp_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
+
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_GT          shift, and go to state 101
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_INTEGER     shift, and go to state 102
+    TOKEN_DOUBLE      shift, and go to state 103
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    features        go to state 104
+    constant        go to state 105
+    identifier      go to state 92
+    variable        go to state 106
+    pairp           go to state 107
+    pairp_elements  go to state 108
+    pairp_element   go to state 109
+
+
+State 85
+
+  124 feature: identifier TOKEN_COLON TOKEN_STRING •
+
+    $default  reduce using rule 124 (feature)
+
+
+State 86
+
+  129 feature_value: TOKEN_INTEGER •
+
+    $default  reduce using rule 129 (feature_value)
+
+
+State 87
+
+  128 feature_value: TOKEN_DOUBLE •
+
+    $default  reduce using rule 128 (feature_value)
+
+
+State 88
+
+  133 feature_value: TOKEN_ANONYMOUS •
+
+    $default  reduce using rule 133 (feature_value)
+
+
+State 89
+
+  131 feature_value: features •
+
+    $default  reduce using rule 131 (feature_value)
+
+
+State 90
+
+  123 feature: identifier TOKEN_COLON feature_value •
+
+    $default  reduce using rule 123 (feature)
+
+
+State 91
+
+  127 feature_value: constant •
+
+    $default  reduce using rule 127 (feature_value)
+
+
+State 92
+
+  134 constant: identifier •
+  135         | identifier • TOKEN_PIPE constant
+
+    TOKEN_PIPE  shift, and go to state 110
+
+    $default  reduce using rule 134 (constant)
+
+
+State 93
+
+  126 feature_value: variable •
+
+    $default  reduce using rule 126 (feature_value)
+
+
+State 94
+
+  130 feature_value: pairp •
+
+    $default  reduce using rule 130 (feature_value)
+
+
+State 95
+
+  125 feature: variable TOKEN_COLON feature_value •
+
+    $default  reduce using rule 125 (feature)
+
+
+State 96
+
+   27 rule: pref_rule term TOKEN_RIGHTARROW • terms_vector structure_statement
+   28     | pref_rule term TOKEN_RIGHTARROW • structure_statement
+
+    error             shift, and go to state 17
+    TOKEN_LBRACE      shift, and go to state 111
+    TOKEN_LBRACKET    shift, and go to state 112
+    TOKEN_SEMI        shift, and go to state 113
+    TOKEN_IDENTIFIER  shift, and go to state 18
+    TOKEN_VARIABLE    shift, and go to state 19
+
+    terms_vector         go to state 114
+    terms                go to state 115
+    terms_disj           go to state 116
+    term                 go to state 117
+    structure_statement  go to state 118
+
+
+State 97
+
+   12 dictionary_line: TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_COLON features • TOKEN_SEMI
+
+    TOKEN_SEMI  shift, and go to state 119
+
+
+State 98
+
+   10 dictionary_line: TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI •
+
+    $default  reduce using rule 10 (dictionary_line)
+
+
+State 99
+
+   17 lexical_entries: lexical_entry TOKEN_PIPE lexical_entries •
+
+    $default  reduce using rule 17 (lexical_entries)
+
+
+State 100
+
+  115 features_composite: features_composite TOKEN_COMMA TOKEN_AROBASE TOKEN_IDENTIFIER •
+
+    $default  reduce using rule 115 (features_composite)
+
+
+State 101
+
+  139 pairp: TOKEN_LT TOKEN_GT •
+
+    $default  reduce using rule 139 (pairp)
+
+
+State 102
+
+  146 pairp_element: TOKEN_INTEGER •
+
+    $default  reduce using rule 146 (pairp_element)
+
+
+State 103
+
+  145 pairp_element: TOKEN_DOUBLE •
+
+    $default  reduce using rule 145 (pairp_element)
+
+
+State 104
+
+  148 pairp_element: features •
+
+    $default  reduce using rule 148 (pairp_element)
+
+
+State 105
+
+  147 pairp_element: constant •
+
+    $default  reduce using rule 147 (pairp_element)
+
+
+State 106
+
+  144 pairp_element: variable •
+
+    $default  reduce using rule 144 (pairp_element)
+
+
+State 107
+
+  149 pairp_element: pairp •
+
+    $default  reduce using rule 149 (pairp_element)
+
+
+State 108
+
+  138 pairp: TOKEN_LT pairp_elements • TOKEN_GT
+  140      | TOKEN_LT pairp_elements • TOKEN_DOUBLECOLON pairp_element TOKEN_GT
+  141      | TOKEN_LT pairp_elements • TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
+
+    TOKEN_DOUBLECOLON  shift, and go to state 120
+    TOKEN_GT           shift, and go to state 121
+
+
+State 109
+
+  142 pairp_elements: pairp_element • TOKEN_COMMA pairp_elements
+  143               | pairp_element •
+
+    TOKEN_COMMA  shift, and go to state 122
+
+    $default  reduce using rule 143 (pairp_elements)
+
+
+State 110
+
+  135 constant: identifier TOKEN_PIPE • constant
+
+    TOKEN_IDENTIFIER  shift, and go to state 34
+
+    constant    go to state 123
+    identifier  go to state 92
+
+
+State 111
+
+   38 structure_statement: TOKEN_LBRACE • list_statement TOKEN_RBRACE
+   39                    | TOKEN_LBRACE • TOKEN_RBRACE
+
+    TOKEN_UP2ARROW   shift, and go to state 124
+    TOKEN_DOWNARROW  shift, and go to state 125
+    TOKEN_LBRACE     shift, and go to state 126
+    TOKEN_RBRACE     shift, and go to state 127
+    TOKEN_LBRACKET   shift, and go to state 12
+    TOKEN_ATTEST     shift, and go to state 128
+    TOKEN_PRINT      shift, and go to state 129
+    TOKEN_PRINTLN    shift, and go to state 130
+    TOKEN_IF         shift, and go to state 131
+    TOKEN_WAIT       shift, and go to state 132
+    TOKEN_FOREACH    shift, and go to state 133
+    TOKEN_LT         shift, and go to state 134
+    TOKEN_VARIABLE   shift, and go to state 35
+
+    list_statement                   go to state 135
+    statements                       go to state 136
+    statement                        go to state 137
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 112
+
+   32 terms: TOKEN_LBRACKET • terms_disj TOKEN_RBRACKET
+
+    error             shift, and go to state 17
+    TOKEN_IDENTIFIER  shift, and go to state 18
+    TOKEN_VARIABLE    shift, and go to state 19
+
+    terms_disj  go to state 144
+    term        go to state 117
+
+
+State 113
+
+   40 structure_statement: TOKEN_SEMI •
+
+    $default  reduce using rule 40 (structure_statement)
+
+
+State 114
+
+   27 rule: pref_rule term TOKEN_RIGHTARROW terms_vector • structure_statement
+   29 terms_vector: terms_vector • terms
+
+    error             shift, and go to state 17
+    TOKEN_LBRACE      shift, and go to state 111
+    TOKEN_LBRACKET    shift, and go to state 112
+    TOKEN_SEMI        shift, and go to state 113
+    TOKEN_IDENTIFIER  shift, and go to state 18
+    TOKEN_VARIABLE    shift, and go to state 19
+
+    terms                go to state 145
+    terms_disj           go to state 116
+    term                 go to state 117
+    structure_statement  go to state 146
+
+
+State 115
+
+   30 terms_vector: terms •
+
+    $default  reduce using rule 30 (terms_vector)
+
+
+State 116
+
+   31 terms: terms_disj •
+   33 terms_disj: terms_disj • TOKEN_PIPE term
+
+    TOKEN_PIPE  shift, and go to state 147
+
+    $default  reduce using rule 31 (terms)
+
+
+State 117
+
+   34 terms_disj: term •
+
+    $default  reduce using rule 34 (terms_disj)
+
+
+State 118
+
+   28 rule: pref_rule term TOKEN_RIGHTARROW structure_statement •
+
+    $default  reduce using rule 28 (rule)
+
+
+State 119
+
+   12 dictionary_line: TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_COLON features TOKEN_SEMI •
+
+    $default  reduce using rule 12 (dictionary_line)
+
+
+State 120
+
+  140 pairp: TOKEN_LT pairp_elements TOKEN_DOUBLECOLON • pairp_element TOKEN_GT
+  141      | TOKEN_LT pairp_elements TOKEN_DOUBLECOLON • TOKEN_NIL TOKEN_GT
+
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_NIL         shift, and go to state 148
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_INTEGER     shift, and go to state 102
+    TOKEN_DOUBLE      shift, and go to state 103
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    features       go to state 104
+    constant       go to state 105
+    identifier     go to state 92
+    variable       go to state 106
+    pairp          go to state 107
+    pairp_element  go to state 149
+
+
+State 121
+
+  138 pairp: TOKEN_LT pairp_elements TOKEN_GT •
+
+    $default  reduce using rule 138 (pairp)
+
+
+State 122
+
+  142 pairp_elements: pairp_element TOKEN_COMMA • pairp_elements
+
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_INTEGER     shift, and go to state 102
+    TOKEN_DOUBLE      shift, and go to state 103
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    features        go to state 104
+    constant        go to state 105
+    identifier      go to state 92
+    variable        go to state 106
+    pairp           go to state 107
+    pairp_elements  go to state 150
+    pairp_element   go to state 109
+
+
+State 123
+
+  135 constant: identifier TOKEN_PIPE constant •
+
+    $default  reduce using rule 135 (constant)
+
+
+State 124
+
+  104 up2: TOKEN_UP2ARROW •
+
+    $default  reduce using rule 104 (up2)
+
+
+State 125
+
+  105 down: TOKEN_DOWNARROW • TOKEN_INTEGER
+
+    TOKEN_INTEGER  shift, and go to state 151
+
+
+State 126
+
+   43 statements: TOKEN_LBRACE • list_statement TOKEN_RBRACE
+   44           | TOKEN_LBRACE • TOKEN_RBRACE
+
+    TOKEN_UP2ARROW   shift, and go to state 124
+    TOKEN_DOWNARROW  shift, and go to state 125
+    TOKEN_LBRACE     shift, and go to state 126
+    TOKEN_RBRACE     shift, and go to state 152
+    TOKEN_LBRACKET   shift, and go to state 12
+    TOKEN_ATTEST     shift, and go to state 128
+    TOKEN_PRINT      shift, and go to state 129
+    TOKEN_PRINTLN    shift, and go to state 130
+    TOKEN_IF         shift, and go to state 131
+    TOKEN_WAIT       shift, and go to state 132
+    TOKEN_FOREACH    shift, and go to state 133
+    TOKEN_LT         shift, and go to state 134
+    TOKEN_VARIABLE   shift, and go to state 35
+
+    list_statement                   go to state 153
+    statements                       go to state 136
+    statement                        go to state 137
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 127
+
+   39 structure_statement: TOKEN_LBRACE TOKEN_RBRACE •
+
+    $default  reduce using rule 39 (structure_statement)
+
+
+State 128
+
+   47 statement: TOKEN_ATTEST • expression_statement TOKEN_SEMI
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 167
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 129
+
+   48 statement: TOKEN_PRINT • TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI
+
+    TOKEN_LPAR  shift, and go to state 177
+
+
+State 130
+
+   49 statement: TOKEN_PRINTLN • TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI
+
+    TOKEN_LPAR  shift, and go to state 178
+
+
+State 131
+
+   52 statement: TOKEN_IF • TOKEN_LPAR expression_statement TOKEN_RPAR statement
+   53          | TOKEN_IF • TOKEN_LPAR expression_statement TOKEN_RPAR statement TOKEN_ELSE statement
+
+    TOKEN_LPAR  shift, and go to state 179
+
+
+State 132
+
+   54 statement: TOKEN_WAIT • TOKEN_LPAR expression_statement TOKEN_RPAR statement
+
+    TOKEN_LPAR  shift, and go to state 180
+
+
+State 133
+
+   55 statement: TOKEN_FOREACH • variable TOKEN_IN expression_statement statement
+
+    TOKEN_VARIABLE  shift, and go to state 35
+
+    variable  go to state 181
+
+
+State 134
+
+   64 left_hand_side_aff_statement: TOKEN_LT • variable TOKEN_DOUBLECOLON variable TOKEN_GT
+
+    TOKEN_VARIABLE  shift, and go to state 35
+
+    variable  go to state 182
+
+
+State 135
+
+   38 structure_statement: TOKEN_LBRACE list_statement • TOKEN_RBRACE
+   42 list_statement: list_statement • statement
+
+    TOKEN_UP2ARROW   shift, and go to state 124
+    TOKEN_DOWNARROW  shift, and go to state 125
+    TOKEN_LBRACE     shift, and go to state 126
+    TOKEN_RBRACE     shift, and go to state 183
+    TOKEN_LBRACKET   shift, and go to state 12
+    TOKEN_ATTEST     shift, and go to state 128
+    TOKEN_PRINT      shift, and go to state 129
+    TOKEN_PRINTLN    shift, and go to state 130
+    TOKEN_IF         shift, and go to state 131
+    TOKEN_WAIT       shift, and go to state 132
+    TOKEN_FOREACH    shift, and go to state 133
+    TOKEN_LT         shift, and go to state 134
+    TOKEN_VARIABLE   shift, and go to state 35
+
+    statements                       go to state 136
+    statement                        go to state 184
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 136
+
+   45 statement: statements •
+
+    $default  reduce using rule 45 (statement)
+
+
+State 137
+
+   41 list_statement: statement •
+
+    $default  reduce using rule 41 (list_statement)
+
+
+State 138
+
+   51 statement: left_hand_side_subset_statement • TOKEN_SUBSUME right_hand_side_subset_statement TOKEN_SEMI
+
+    TOKEN_SUBSUME  shift, and go to state 185
+
+
+State 139
+
+   50 statement: left_hand_side_aff_statement • TOKEN_AFF right_hand_side_aff_statement TOKEN_SEMI
+
+    TOKEN_AFF  shift, and go to state 186
+
+
+State 140
+
+   61 left_hand_side_aff_statement: up2 •
+
+    $default  reduce using rule 61 (left_hand_side_aff_statement)
+
+
+State 141
+
+   62 left_hand_side_aff_statement: down •
+
+    $default  reduce using rule 62 (left_hand_side_aff_statement)
+
+
+State 142
+
+   46 statement: features • TOKEN_SEMI
+   56 left_hand_side_subset_statement: features •
+
+    TOKEN_SEMI  shift, and go to state 187
+
+    $default  reduce using rule 56 (left_hand_side_subset_statement)
+
+
+State 143
+
+   63 left_hand_side_aff_statement: variable •
+
+    $default  reduce using rule 63 (left_hand_side_aff_statement)
+
+
+State 144
+
+   32 terms: TOKEN_LBRACKET terms_disj • TOKEN_RBRACKET
+   33 terms_disj: terms_disj • TOKEN_PIPE term
+
+    TOKEN_RBRACKET  shift, and go to state 188
+    TOKEN_PIPE      shift, and go to state 147
+
+
+State 145
+
+   29 terms_vector: terms_vector terms •
+
+    $default  reduce using rule 29 (terms_vector)
+
+
+State 146
+
+   27 rule: pref_rule term TOKEN_RIGHTARROW terms_vector structure_statement •
+
+    $default  reduce using rule 27 (rule)
+
+
+State 147
+
+   33 terms_disj: terms_disj TOKEN_PIPE • term
+
+    error             shift, and go to state 17
+    TOKEN_IDENTIFIER  shift, and go to state 18
+    TOKEN_VARIABLE    shift, and go to state 19
+
+    term  go to state 189
+
+
+State 148
+
+  141 pairp: TOKEN_LT pairp_elements TOKEN_DOUBLECOLON TOKEN_NIL • TOKEN_GT
+
+    TOKEN_GT  shift, and go to state 190
+
+
+State 149
+
+  140 pairp: TOKEN_LT pairp_elements TOKEN_DOUBLECOLON pairp_element • TOKEN_GT
+
+    TOKEN_GT  shift, and go to state 191
+
+
+State 150
+
+  142 pairp_elements: pairp_element TOKEN_COMMA pairp_elements •
+
+    $default  reduce using rule 142 (pairp_elements)
+
+
+State 151
+
+  105 down: TOKEN_DOWNARROW TOKEN_INTEGER •
+
+    $default  reduce using rule 105 (down)
+
+
+State 152
+
+   44 statements: TOKEN_LBRACE TOKEN_RBRACE •
+
+    $default  reduce using rule 44 (statements)
+
+
+State 153
+
+   42 list_statement: list_statement • statement
+   43 statements: TOKEN_LBRACE list_statement • TOKEN_RBRACE
+
+    TOKEN_UP2ARROW   shift, and go to state 124
+    TOKEN_DOWNARROW  shift, and go to state 125
+    TOKEN_LBRACE     shift, and go to state 126
+    TOKEN_RBRACE     shift, and go to state 192
+    TOKEN_LBRACKET   shift, and go to state 12
+    TOKEN_ATTEST     shift, and go to state 128
+    TOKEN_PRINT      shift, and go to state 129
+    TOKEN_PRINTLN    shift, and go to state 130
+    TOKEN_IF         shift, and go to state 131
+    TOKEN_WAIT       shift, and go to state 132
+    TOKEN_FOREACH    shift, and go to state 133
+    TOKEN_LT         shift, and go to state 134
+    TOKEN_VARIABLE   shift, and go to state 35
+
+    statements                       go to state 136
+    statement                        go to state 184
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 154
+
+  103 up: TOKEN_UPARROW •
+
+    $default  reduce using rule 103 (up)
+
+
+State 155
+
+  106 down2: TOKEN_DOWN2ARROW • TOKEN_INTEGER
+
+    TOKEN_INTEGER  shift, and go to state 193
+
+
+State 156
+
+   97 expression_statement: TOKEN_LPAR • expression_statement TOKEN_RPAR
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 194
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 157
+
+  107 dash_statement: TOKEN_DASH • TOKEN_INTEGER TOKEN_DOT TOKEN_INTEGER
+  108               | TOKEN_DASH • TOKEN_INTEGER
+
+    TOKEN_INTEGER  shift, and go to state 195
+
+
+State 158
+
+   93 expression_statement: TOKEN_NIL •
+
+    $default  reduce using rule 93 (expression_statement)
+
+
+State 159
+
+  100 expression_statement: TOKEN_SEARCH • expression_statement TOKEN_ON TOKEN_IDENTIFIER
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 196
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 160
+
+   83 expression_statement: TOKEN_RAND • TOKEN_LPAR TOKEN_RPAR
+
+    TOKEN_LPAR  shift, and go to state 197
+
+
+State 161
+
+   70 expression_statement: TOKEN_NOT • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 198
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 162
+
+   82 expression_statement: TOKEN_MINUS • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 199
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 163
+
+   86 expression_statement: TOKEN_STRING •
+
+    $default  reduce using rule 86 (expression_statement)
+
+
+State 164
+
+   85 expression_statement: TOKEN_INTEGER •
+
+    $default  reduce using rule 85 (expression_statement)
+
+
+State 165
+
+   84 expression_statement: TOKEN_DOUBLE •
+
+    $default  reduce using rule 84 (expression_statement)
+
+
+State 166
+
+   95 expression_statement: TOKEN_ANONYMOUS •
+
+    $default  reduce using rule 95 (expression_statement)
+
+
+State 167
+
+   47 statement: TOKEN_ATTEST expression_statement • TOKEN_SEMI
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_SEMI         shift, and go to state 200
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+
+State 168
+
+   88 expression_statement: up •
+
+    $default  reduce using rule 88 (expression_statement)
+
+
+State 169
+
+   89 expression_statement: up2 •
+
+    $default  reduce using rule 89 (expression_statement)
+
+
+State 170
+
+   90 expression_statement: down •
+
+    $default  reduce using rule 90 (expression_statement)
+
+
+State 171
+
+   91 expression_statement: down2 •
+
+    $default  reduce using rule 91 (expression_statement)
+
+
+State 172
+
+   98 expression_statement: dash_statement •
+
+    $default  reduce using rule 98 (expression_statement)
+
+
+State 173
+
+   92 expression_statement: features •
+
+    $default  reduce using rule 92 (expression_statement)
+
+
+State 174
+
+   94 expression_statement: constant •
+
+    $default  reduce using rule 94 (expression_statement)
+
+
+State 175
+
+   96 expression_statement: variable •
+
+    $default  reduce using rule 96 (expression_statement)
+
+
+State 176
+
+   99 expression_statement: pairp •
+
+    $default  reduce using rule 99 (expression_statement)
+
+
+State 177
+
+   48 statement: TOKEN_PRINT TOKEN_LPAR • expression_statement_composite TOKEN_RPAR TOKEN_SEMI
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement            go to state 217
+    expression_statement_composite  go to state 218
+    up                              go to state 168
+    up2                             go to state 169
+    down                            go to state 170
+    down2                           go to state 171
+    dash_statement                  go to state 172
+    features                        go to state 173
+    constant                        go to state 174
+    identifier                      go to state 92
+    variable                        go to state 175
+    pairp                           go to state 176
+
+
+State 178
+
+   49 statement: TOKEN_PRINTLN TOKEN_LPAR • expression_statement_composite TOKEN_RPAR TOKEN_SEMI
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement            go to state 217
+    expression_statement_composite  go to state 219
+    up                              go to state 168
+    up2                             go to state 169
+    down                            go to state 170
+    down2                           go to state 171
+    dash_statement                  go to state 172
+    features                        go to state 173
+    constant                        go to state 174
+    identifier                      go to state 92
+    variable                        go to state 175
+    pairp                           go to state 176
+
+
+State 179
+
+   52 statement: TOKEN_IF TOKEN_LPAR • expression_statement TOKEN_RPAR statement
+   53          | TOKEN_IF TOKEN_LPAR • expression_statement TOKEN_RPAR statement TOKEN_ELSE statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 220
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 180
+
+   54 statement: TOKEN_WAIT TOKEN_LPAR • expression_statement TOKEN_RPAR statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 221
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 181
+
+   55 statement: TOKEN_FOREACH variable • TOKEN_IN expression_statement statement
+
+    TOKEN_IN  shift, and go to state 222
+
+
+State 182
+
+   64 left_hand_side_aff_statement: TOKEN_LT variable • TOKEN_DOUBLECOLON variable TOKEN_GT
+
+    TOKEN_DOUBLECOLON  shift, and go to state 223
+
+
+State 183
+
+   38 structure_statement: TOKEN_LBRACE list_statement TOKEN_RBRACE •
+
+    $default  reduce using rule 38 (structure_statement)
+
+
+State 184
+
+   42 list_statement: list_statement statement •
+
+    $default  reduce using rule 42 (list_statement)
+
+
+State 185
+
+   51 statement: left_hand_side_subset_statement TOKEN_SUBSUME • right_hand_side_subset_statement TOKEN_SEMI
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_VARIABLE    shift, and go to state 35
+
+    right_hand_side_subset_statement  go to state 224
+    up                                go to state 225
+    down2                             go to state 226
+    features                          go to state 227
+    variable                          go to state 228
+
+
+State 186
+
+   50 statement: left_hand_side_aff_statement TOKEN_AFF • right_hand_side_aff_statement TOKEN_SEMI
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    right_hand_side_aff_statement  go to state 229
+    expression_statement           go to state 230
+    up                             go to state 168
+    up2                            go to state 169
+    down                           go to state 170
+    down2                          go to state 171
+    dash_statement                 go to state 172
+    features                       go to state 173
+    constant                       go to state 174
+    identifier                     go to state 92
+    variable                       go to state 175
+    pairp                          go to state 176
+
+
+State 187
+
+   46 statement: features TOKEN_SEMI •
+
+    $default  reduce using rule 46 (statement)
+
+
+State 188
+
+   32 terms: TOKEN_LBRACKET terms_disj TOKEN_RBRACKET •
+
+    $default  reduce using rule 32 (terms)
+
+
+State 189
+
+   33 terms_disj: terms_disj TOKEN_PIPE term •
+
+    $default  reduce using rule 33 (terms_disj)
+
+
+State 190
+
+  141 pairp: TOKEN_LT pairp_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT •
+
+    $default  reduce using rule 141 (pairp)
+
+
+State 191
+
+  140 pairp: TOKEN_LT pairp_elements TOKEN_DOUBLECOLON pairp_element TOKEN_GT •
+
+    $default  reduce using rule 140 (pairp)
+
+
+State 192
+
+   43 statements: TOKEN_LBRACE list_statement TOKEN_RBRACE •
+
+    $default  reduce using rule 43 (statements)
+
+
+State 193
+
+  106 down2: TOKEN_DOWN2ARROW TOKEN_INTEGER •
+
+    $default  reduce using rule 106 (down2)
+
+
+State 194
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+   97                     | TOKEN_LPAR expression_statement • TOKEN_RPAR
+
+    TOKEN_RPAR         shift, and go to state 231
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+
+State 195
+
+  107 dash_statement: TOKEN_DASH TOKEN_INTEGER • TOKEN_DOT TOKEN_INTEGER
+  108               | TOKEN_DASH TOKEN_INTEGER •
+
+    TOKEN_DOT  shift, and go to state 232
+
+    $default  reduce using rule 108 (dash_statement)
+
+
+State 196
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+  100                     | TOKEN_SEARCH expression_statement • TOKEN_ON TOKEN_IDENTIFIER
+
+    TOKEN_ON           shift, and go to state 233
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+
+State 197
+
+   83 expression_statement: TOKEN_RAND TOKEN_LPAR • TOKEN_RPAR
+
+    TOKEN_RPAR  shift, and go to state 234
+
+
+State 198
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   70                     | TOKEN_NOT expression_statement •
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_UNION   shift, and go to state 201
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+    TOKEN_EQUAL   shift, and go to state 211
+    TOKEN_DIFF    shift, and go to state 212
+    TOKEN_LT      shift, and go to state 213
+    TOKEN_LE      shift, and go to state 214
+    TOKEN_GT      shift, and go to state 215
+    TOKEN_GE      shift, and go to state 216
+
+    $default  reduce using rule 70 (expression_statement)
+
+
+State 199
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   82                     | TOKEN_MINUS expression_statement •
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    $default  reduce using rule 82 (expression_statement)
+
+
+State 200
+
+   47 statement: TOKEN_ATTEST expression_statement TOKEN_SEMI •
+
+    $default  reduce using rule 47 (statement)
+
+
+State 201
+
+   87 expression_statement: expression_statement TOKEN_UNION • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 235
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 202
+
+   66 expression_statement: expression_statement TOKEN_OR • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 236
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 203
+
+   67 expression_statement: expression_statement TOKEN_AND • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 237
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 204
+
+   68 expression_statement: expression_statement TOKEN_IMPLICATION • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 238
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 205
+
+   69 expression_statement: expression_statement TOKEN_EQUIV • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 239
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 206
+
+   77 expression_statement: expression_statement TOKEN_PLUS • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 240
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 207
+
+   78 expression_statement: expression_statement TOKEN_MINUS • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 241
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 208
+
+   79 expression_statement: expression_statement TOKEN_TIMES • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 242
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 209
+
+   80 expression_statement: expression_statement TOKEN_DIVIDE • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 243
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 210
+
+   81 expression_statement: expression_statement TOKEN_MODULO • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 244
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 211
+
+   71 expression_statement: expression_statement TOKEN_EQUAL • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 245
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 212
+
+   72 expression_statement: expression_statement TOKEN_DIFF • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 246
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 213
+
+   73 expression_statement: expression_statement TOKEN_LT • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 247
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 214
+
+   74 expression_statement: expression_statement TOKEN_LE • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 248
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 215
+
+   75 expression_statement: expression_statement TOKEN_GT • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 249
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 216
+
+   76 expression_statement: expression_statement TOKEN_GE • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 250
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 217
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+  102 expression_statement_composite: expression_statement •
+
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+    $default  reduce using rule 102 (expression_statement_composite)
+
+
+State 218
+
+   48 statement: TOKEN_PRINT TOKEN_LPAR expression_statement_composite • TOKEN_RPAR TOKEN_SEMI
+  101 expression_statement_composite: expression_statement_composite • TOKEN_COMMA expression_statement
+
+    TOKEN_RPAR   shift, and go to state 251
+    TOKEN_COMMA  shift, and go to state 252
+
+
+State 219
+
+   49 statement: TOKEN_PRINTLN TOKEN_LPAR expression_statement_composite • TOKEN_RPAR TOKEN_SEMI
+  101 expression_statement_composite: expression_statement_composite • TOKEN_COMMA expression_statement
+
+    TOKEN_RPAR   shift, and go to state 253
+    TOKEN_COMMA  shift, and go to state 252
+
+
+State 220
+
+   52 statement: TOKEN_IF TOKEN_LPAR expression_statement • TOKEN_RPAR statement
+   53          | TOKEN_IF TOKEN_LPAR expression_statement • TOKEN_RPAR statement TOKEN_ELSE statement
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_RPAR         shift, and go to state 254
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+
+State 221
+
+   54 statement: TOKEN_WAIT TOKEN_LPAR expression_statement • TOKEN_RPAR statement
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_RPAR         shift, and go to state 255
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+
+State 222
+
+   55 statement: TOKEN_FOREACH variable TOKEN_IN • expression_statement statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 256
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 223
+
+   64 left_hand_side_aff_statement: TOKEN_LT variable TOKEN_DOUBLECOLON • variable TOKEN_GT
+
+    TOKEN_VARIABLE  shift, and go to state 35
+
+    variable  go to state 257
+
+
+State 224
+
+   51 statement: left_hand_side_subset_statement TOKEN_SUBSUME right_hand_side_subset_statement • TOKEN_SEMI
+
+    TOKEN_SEMI  shift, and go to state 258
+
+
+State 225
+
+   58 right_hand_side_subset_statement: up •
+
+    $default  reduce using rule 58 (right_hand_side_subset_statement)
+
+
+State 226
+
+   59 right_hand_side_subset_statement: down2 •
+
+    $default  reduce using rule 59 (right_hand_side_subset_statement)
+
+
+State 227
+
+   60 right_hand_side_subset_statement: features •
+
+    $default  reduce using rule 60 (right_hand_side_subset_statement)
+
+
+State 228
+
+   57 right_hand_side_subset_statement: variable •
+
+    $default  reduce using rule 57 (right_hand_side_subset_statement)
+
+
+State 229
+
+   50 statement: left_hand_side_aff_statement TOKEN_AFF right_hand_side_aff_statement • TOKEN_SEMI
+
+    TOKEN_SEMI  shift, and go to state 259
+
+
+State 230
+
+   65 right_hand_side_aff_statement: expression_statement •
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+    $default  reduce using rule 65 (right_hand_side_aff_statement)
+
+
+State 231
+
+   97 expression_statement: TOKEN_LPAR expression_statement TOKEN_RPAR •
+
+    $default  reduce using rule 97 (expression_statement)
+
+
+State 232
+
+  107 dash_statement: TOKEN_DASH TOKEN_INTEGER TOKEN_DOT • TOKEN_INTEGER
+
+    TOKEN_INTEGER  shift, and go to state 260
+
+
+State 233
+
+  100 expression_statement: TOKEN_SEARCH expression_statement TOKEN_ON • TOKEN_IDENTIFIER
+
+    TOKEN_IDENTIFIER  shift, and go to state 261
+
+
+State 234
+
+   83 expression_statement: TOKEN_RAND TOKEN_LPAR TOKEN_RPAR •
+
+    $default  reduce using rule 83 (expression_statement)
+
+
+State 235
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+   87                     | expression_statement TOKEN_UNION expression_statement •
+
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+    TOKEN_EQUAL   shift, and go to state 211
+    TOKEN_DIFF    shift, and go to state 212
+    TOKEN_LT      shift, and go to state 213
+    TOKEN_LE      shift, and go to state 214
+    TOKEN_GT      shift, and go to state 215
+    TOKEN_GE      shift, and go to state 216
+
+    $default  reduce using rule 87 (expression_statement)
+
+
+State 236
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   66                     | expression_statement TOKEN_OR expression_statement •
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_UNION   shift, and go to state 201
+    TOKEN_AND     shift, and go to state 203
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+    TOKEN_EQUAL   shift, and go to state 211
+    TOKEN_DIFF    shift, and go to state 212
+    TOKEN_LT      shift, and go to state 213
+    TOKEN_LE      shift, and go to state 214
+    TOKEN_GT      shift, and go to state 215
+    TOKEN_GE      shift, and go to state 216
+
+    $default  reduce using rule 66 (expression_statement)
+
+
+State 237
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   67                     | expression_statement TOKEN_AND expression_statement •
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_UNION   shift, and go to state 201
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+    TOKEN_EQUAL   shift, and go to state 211
+    TOKEN_DIFF    shift, and go to state 212
+    TOKEN_LT      shift, and go to state 213
+    TOKEN_LE      shift, and go to state 214
+    TOKEN_GT      shift, and go to state 215
+    TOKEN_GE      shift, and go to state 216
+
+    $default  reduce using rule 67 (expression_statement)
+
+
+State 238
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   68                     | expression_statement TOKEN_IMPLICATION expression_statement •
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_UNION   shift, and go to state 201
+    TOKEN_OR      shift, and go to state 202
+    TOKEN_AND     shift, and go to state 203
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+    TOKEN_EQUAL   shift, and go to state 211
+    TOKEN_DIFF    shift, and go to state 212
+    TOKEN_LT      shift, and go to state 213
+    TOKEN_LE      shift, and go to state 214
+    TOKEN_GT      shift, and go to state 215
+    TOKEN_GE      shift, and go to state 216
+
+    TOKEN_IMPLICATION  error (nonassociative)
+    TOKEN_EQUIV        error (nonassociative)
+
+    $default  reduce using rule 68 (expression_statement)
+
+
+State 239
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   69                     | expression_statement TOKEN_EQUIV expression_statement •
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_UNION   shift, and go to state 201
+    TOKEN_OR      shift, and go to state 202
+    TOKEN_AND     shift, and go to state 203
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+    TOKEN_EQUAL   shift, and go to state 211
+    TOKEN_DIFF    shift, and go to state 212
+    TOKEN_LT      shift, and go to state 213
+    TOKEN_LE      shift, and go to state 214
+    TOKEN_GT      shift, and go to state 215
+    TOKEN_GE      shift, and go to state 216
+
+    TOKEN_IMPLICATION  error (nonassociative)
+    TOKEN_EQUIV        error (nonassociative)
+
+    $default  reduce using rule 69 (expression_statement)
+
+
+State 240
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   77                     | expression_statement TOKEN_PLUS expression_statement •
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    $default  reduce using rule 77 (expression_statement)
+
+
+State 241
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   78                     | expression_statement TOKEN_MINUS expression_statement •
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    $default  reduce using rule 78 (expression_statement)
+
+
+State 242
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   79                     | expression_statement TOKEN_TIMES expression_statement •
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_MODULO  shift, and go to state 210
+
+    $default  reduce using rule 79 (expression_statement)
+
+
+State 243
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   80                     | expression_statement TOKEN_DIVIDE expression_statement •
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_MODULO  shift, and go to state 210
+
+    $default  reduce using rule 80 (expression_statement)
+
+
+State 244
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   81                     | expression_statement TOKEN_MODULO expression_statement •
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    $default  reduce using rule 81 (expression_statement)
+
+
+State 245
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   71                     | expression_statement TOKEN_EQUAL expression_statement •
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    TOKEN_EQUAL  error (nonassociative)
+    TOKEN_DIFF   error (nonassociative)
+    TOKEN_LT     error (nonassociative)
+    TOKEN_LE     error (nonassociative)
+    TOKEN_GT     error (nonassociative)
+    TOKEN_GE     error (nonassociative)
+
+    $default  reduce using rule 71 (expression_statement)
+
+
+State 246
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   72                     | expression_statement TOKEN_DIFF expression_statement •
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    TOKEN_EQUAL  error (nonassociative)
+    TOKEN_DIFF   error (nonassociative)
+    TOKEN_LT     error (nonassociative)
+    TOKEN_LE     error (nonassociative)
+    TOKEN_GT     error (nonassociative)
+    TOKEN_GE     error (nonassociative)
+
+    $default  reduce using rule 72 (expression_statement)
+
+
+State 247
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   73                     | expression_statement TOKEN_LT expression_statement •
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    TOKEN_EQUAL  error (nonassociative)
+    TOKEN_DIFF   error (nonassociative)
+    TOKEN_LT     error (nonassociative)
+    TOKEN_LE     error (nonassociative)
+    TOKEN_GT     error (nonassociative)
+    TOKEN_GE     error (nonassociative)
+
+    $default  reduce using rule 73 (expression_statement)
+
+
+State 248
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   74                     | expression_statement TOKEN_LE expression_statement •
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    TOKEN_EQUAL  error (nonassociative)
+    TOKEN_DIFF   error (nonassociative)
+    TOKEN_LT     error (nonassociative)
+    TOKEN_LE     error (nonassociative)
+    TOKEN_GT     error (nonassociative)
+    TOKEN_GE     error (nonassociative)
+
+    $default  reduce using rule 74 (expression_statement)
+
+
+State 249
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   75                     | expression_statement TOKEN_GT expression_statement •
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    TOKEN_EQUAL  error (nonassociative)
+    TOKEN_DIFF   error (nonassociative)
+    TOKEN_LT     error (nonassociative)
+    TOKEN_LE     error (nonassociative)
+    TOKEN_GT     error (nonassociative)
+    TOKEN_GE     error (nonassociative)
+
+    $default  reduce using rule 75 (expression_statement)
+
+
+State 250
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   76                     | expression_statement TOKEN_GE expression_statement •
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_PLUS    shift, and go to state 206
+    TOKEN_MINUS   shift, and go to state 207
+    TOKEN_TIMES   shift, and go to state 208
+    TOKEN_DIVIDE  shift, and go to state 209
+    TOKEN_MODULO  shift, and go to state 210
+
+    TOKEN_EQUAL  error (nonassociative)
+    TOKEN_DIFF   error (nonassociative)
+    TOKEN_LT     error (nonassociative)
+    TOKEN_LE     error (nonassociative)
+    TOKEN_GT     error (nonassociative)
+    TOKEN_GE     error (nonassociative)
+
+    $default  reduce using rule 76 (expression_statement)
+
+
+State 251
+
+   48 statement: TOKEN_PRINT TOKEN_LPAR expression_statement_composite TOKEN_RPAR • TOKEN_SEMI
+
+    TOKEN_SEMI  shift, and go to state 262
+
+
+State 252
+
+  101 expression_statement_composite: expression_statement_composite TOKEN_COMMA • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 263
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 175
+    pairp                 go to state 176
+
+
+State 253
+
+   49 statement: TOKEN_PRINTLN TOKEN_LPAR expression_statement_composite TOKEN_RPAR • TOKEN_SEMI
+
+    TOKEN_SEMI  shift, and go to state 264
+
+
+State 254
+
+   52 statement: TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR • statement
+   53          | TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR • statement TOKEN_ELSE statement
+
+    TOKEN_UP2ARROW   shift, and go to state 124
+    TOKEN_DOWNARROW  shift, and go to state 125
+    TOKEN_LBRACE     shift, and go to state 126
+    TOKEN_LBRACKET   shift, and go to state 12
+    TOKEN_ATTEST     shift, and go to state 128
+    TOKEN_PRINT      shift, and go to state 129
+    TOKEN_PRINTLN    shift, and go to state 130
+    TOKEN_IF         shift, and go to state 131
+    TOKEN_WAIT       shift, and go to state 132
+    TOKEN_FOREACH    shift, and go to state 133
+    TOKEN_LT         shift, and go to state 134
+    TOKEN_VARIABLE   shift, and go to state 35
+
+    statements                       go to state 136
+    statement                        go to state 265
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 255
+
+   54 statement: TOKEN_WAIT TOKEN_LPAR expression_statement TOKEN_RPAR • statement
+
+    TOKEN_UP2ARROW   shift, and go to state 124
+    TOKEN_DOWNARROW  shift, and go to state 125
+    TOKEN_LBRACE     shift, and go to state 126
+    TOKEN_LBRACKET   shift, and go to state 12
+    TOKEN_ATTEST     shift, and go to state 128
+    TOKEN_PRINT      shift, and go to state 129
+    TOKEN_PRINTLN    shift, and go to state 130
+    TOKEN_IF         shift, and go to state 131
+    TOKEN_WAIT       shift, and go to state 132
+    TOKEN_FOREACH    shift, and go to state 133
+    TOKEN_LT         shift, and go to state 134
+    TOKEN_VARIABLE   shift, and go to state 35
+
+    statements                       go to state 136
+    statement                        go to state 266
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 256
+
+   55 statement: TOKEN_FOREACH variable TOKEN_IN expression_statement • statement
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+
+    TOKEN_UP2ARROW     shift, and go to state 124
+    TOKEN_DOWNARROW    shift, and go to state 125
+    TOKEN_LBRACE       shift, and go to state 126
+    TOKEN_LBRACKET     shift, and go to state 12
+    TOKEN_ATTEST       shift, and go to state 128
+    TOKEN_PRINT        shift, and go to state 129
+    TOKEN_PRINTLN      shift, and go to state 130
+    TOKEN_IF           shift, and go to state 131
+    TOKEN_WAIT         shift, and go to state 132
+    TOKEN_FOREACH      shift, and go to state 133
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 267
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+    TOKEN_VARIABLE     shift, and go to state 35
+
+    statements                       go to state 136
+    statement                        go to state 268
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 257
+
+   64 left_hand_side_aff_statement: TOKEN_LT variable TOKEN_DOUBLECOLON variable • TOKEN_GT
+
+    TOKEN_GT  shift, and go to state 269
+
+
+State 258
+
+   51 statement: left_hand_side_subset_statement TOKEN_SUBSUME right_hand_side_subset_statement TOKEN_SEMI •
+
+    $default  reduce using rule 51 (statement)
+
+
+State 259
+
+   50 statement: left_hand_side_aff_statement TOKEN_AFF right_hand_side_aff_statement TOKEN_SEMI •
+
+    $default  reduce using rule 50 (statement)
+
+
+State 260
+
+  107 dash_statement: TOKEN_DASH TOKEN_INTEGER TOKEN_DOT TOKEN_INTEGER •
+
+    $default  reduce using rule 107 (dash_statement)
+
+
+State 261
+
+  100 expression_statement: TOKEN_SEARCH expression_statement TOKEN_ON TOKEN_IDENTIFIER •
+
+    $default  reduce using rule 100 (expression_statement)
+
+
+State 262
+
+   48 statement: TOKEN_PRINT TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI •
+
+    $default  reduce using rule 48 (statement)
+
+
+State 263
+
+   66 expression_statement: expression_statement • TOKEN_OR expression_statement
+   67                     | expression_statement • TOKEN_AND expression_statement
+   68                     | expression_statement • TOKEN_IMPLICATION expression_statement
+   69                     | expression_statement • TOKEN_EQUIV expression_statement
+   71                     | expression_statement • TOKEN_EQUAL expression_statement
+   72                     | expression_statement • TOKEN_DIFF expression_statement
+   73                     | expression_statement • TOKEN_LT expression_statement
+   74                     | expression_statement • TOKEN_LE expression_statement
+   75                     | expression_statement • TOKEN_GT expression_statement
+   76                     | expression_statement • TOKEN_GE expression_statement
+   77                     | expression_statement • TOKEN_PLUS expression_statement
+   78                     | expression_statement • TOKEN_MINUS expression_statement
+   79                     | expression_statement • TOKEN_TIMES expression_statement
+   80                     | expression_statement • TOKEN_DIVIDE expression_statement
+   81                     | expression_statement • TOKEN_MODULO expression_statement
+   87                     | expression_statement • TOKEN_UNION expression_statement
+  101 expression_statement_composite: expression_statement_composite TOKEN_COMMA expression_statement •
+
+    TOKEN_UNION        shift, and go to state 201
+    TOKEN_OR           shift, and go to state 202
+    TOKEN_AND          shift, and go to state 203
+    TOKEN_IMPLICATION  shift, and go to state 204
+    TOKEN_EQUIV        shift, and go to state 205
+    TOKEN_PLUS         shift, and go to state 206
+    TOKEN_MINUS        shift, and go to state 207
+    TOKEN_TIMES        shift, and go to state 208
+    TOKEN_DIVIDE       shift, and go to state 209
+    TOKEN_MODULO       shift, and go to state 210
+    TOKEN_EQUAL        shift, and go to state 211
+    TOKEN_DIFF         shift, and go to state 212
+    TOKEN_LT           shift, and go to state 213
+    TOKEN_LE           shift, and go to state 214
+    TOKEN_GT           shift, and go to state 215
+    TOKEN_GE           shift, and go to state 216
+
+    $default  reduce using rule 101 (expression_statement_composite)
+
+
+State 264
+
+   49 statement: TOKEN_PRINTLN TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI •
+
+    $default  reduce using rule 49 (statement)
+
+
+State 265
+
+   52 statement: TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement •
+   53          | TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement • TOKEN_ELSE statement
+
+    TOKEN_ELSE  shift, and go to state 270
+
+    $default  reduce using rule 52 (statement)
+
+
+State 266
+
+   54 statement: TOKEN_WAIT TOKEN_LPAR expression_statement TOKEN_RPAR statement •
+
+    $default  reduce using rule 54 (statement)
+
+
+State 267
+
+   64 left_hand_side_aff_statement: TOKEN_LT • variable TOKEN_DOUBLECOLON variable TOKEN_GT
+   73 expression_statement: expression_statement TOKEN_LT • expression_statement
+
+    TOKEN_UPARROW     shift, and go to state 154
+    TOKEN_UP2ARROW    shift, and go to state 124
+    TOKEN_DOWNARROW   shift, and go to state 125
+    TOKEN_DOWN2ARROW  shift, and go to state 155
+    TOKEN_LPAR        shift, and go to state 156
+    TOKEN_LBRACKET    shift, and go to state 12
+    TOKEN_DASH        shift, and go to state 157
+    TOKEN_NIL         shift, and go to state 158
+    TOKEN_SEARCH      shift, and go to state 159
+    TOKEN_RAND        shift, and go to state 160
+    TOKEN_NOT         shift, and go to state 161
+    TOKEN_MINUS       shift, and go to state 162
+    TOKEN_LT          shift, and go to state 84
+    TOKEN_IDENTIFIER  shift, and go to state 34
+    TOKEN_STRING      shift, and go to state 163
+    TOKEN_INTEGER     shift, and go to state 164
+    TOKEN_DOUBLE      shift, and go to state 165
+    TOKEN_VARIABLE    shift, and go to state 35
+    TOKEN_ANONYMOUS   shift, and go to state 166
+
+    expression_statement  go to state 247
+    up                    go to state 168
+    up2                   go to state 169
+    down                  go to state 170
+    down2                 go to state 171
+    dash_statement        go to state 172
+    features              go to state 173
+    constant              go to state 174
+    identifier            go to state 92
+    variable              go to state 271
+    pairp                 go to state 176
+
+
+State 268
+
+   55 statement: TOKEN_FOREACH variable TOKEN_IN expression_statement statement •
+
+    $default  reduce using rule 55 (statement)
+
+
+State 269
+
+   64 left_hand_side_aff_statement: TOKEN_LT variable TOKEN_DOUBLECOLON variable TOKEN_GT •
+
+    $default  reduce using rule 64 (left_hand_side_aff_statement)
+
+
+State 270
+
+   53 statement: TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement TOKEN_ELSE • statement
+
+    TOKEN_UP2ARROW   shift, and go to state 124
+    TOKEN_DOWNARROW  shift, and go to state 125
+    TOKEN_LBRACE     shift, and go to state 126
+    TOKEN_LBRACKET   shift, and go to state 12
+    TOKEN_ATTEST     shift, and go to state 128
+    TOKEN_PRINT      shift, and go to state 129
+    TOKEN_PRINTLN    shift, and go to state 130
+    TOKEN_IF         shift, and go to state 131
+    TOKEN_WAIT       shift, and go to state 132
+    TOKEN_FOREACH    shift, and go to state 133
+    TOKEN_LT         shift, and go to state 134
+    TOKEN_VARIABLE   shift, and go to state 35
+
+    statements                       go to state 136
+    statement                        go to state 272
+    left_hand_side_subset_statement  go to state 138
+    left_hand_side_aff_statement     go to state 139
+    up2                              go to state 140
+    down                             go to state 141
+    features                         go to state 142
+    variable                         go to state 143
+
+
+State 271
+
+   64 left_hand_side_aff_statement: TOKEN_LT variable • TOKEN_DOUBLECOLON variable TOKEN_GT
+   96 expression_statement: variable •
+
+    TOKEN_DOUBLECOLON  shift, and go to state 223
+
+    $default  reduce using rule 96 (expression_statement)
+
+
+State 272
+
+   53 statement: TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement TOKEN_ELSE statement •
+
+    $default  reduce using rule 53 (statement)

@@ -35,7 +35,7 @@ class Entry : public Facade,
 
 private:
     unsigned int pos;
-    unsigned int pred;
+    unsigned int head;
     std::string form;
     featuresPtr features;
 
@@ -48,17 +48,17 @@ private:
 public:
     ~Entry();
 
-    static entryPtr create(unsigned int term, unsigned int pred, std::string form = std::string(),
+    static entryPtr create(unsigned int term, unsigned int head, std::string form = std::string(),
                            featuresPtr features = featuresPtr());
 
-    static entryPtr create(unsigned int term, std::string pred = std::string(), std::string form = std::string(),
+    static entryPtr create(unsigned int term, std::string head = std::string(), std::string form = std::string(),
                            featuresPtr features = featuresPtr());
 
     unsigned int getPos(void) const;
 
     void setPos(const unsigned int pos);
 
-    unsigned int getPred() const;
+    unsigned int getHead() const;
 
     void setForm(const std::string form);
 

@@ -45,7 +45,7 @@ public:
 
 private:
     list_of_feature features;
-    unsigned int pred;
+    unsigned int head;
     std::string form;
     VariableFlag variableFlag;
 
@@ -98,7 +98,7 @@ public:
 
     void subFlags(const std::bitset<FLAGS> &);
 
-    unsigned int assignPred();
+    unsigned int assignHead();
 
     std::string *assignForm();
 

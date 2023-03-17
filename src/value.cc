@@ -338,7 +338,7 @@ void Value::print(std::ostream &outStream) const
         outStream << number;
         break;
     case FORM_VALUE:
-        outStream << "&quot;" << getStr() << "&quot;";
+        outStream << getStr();
         break;
     case FEATURES_VALUE:
         getFeatures()->print(outStream);

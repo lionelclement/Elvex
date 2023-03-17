@@ -41,64 +41,64 @@
 *
 ***/
 
-//Text_with_features[PRED:_TO_APPRECIATE, i:[PRED:_pro], ii:[PRED:_ELVEX], vtense:$t]
+//Text_with_features[HEAD:_TO_APPRECIATE, i:[HEAD:_pro], ii:[HEAD:_ELVEX], vtense:$t]
 
-//Text [PRED:_TO_FEEL, i:[PRED:_EGO]]
-//Text [PRED:_TO_FEEL, i:[PRED:_EGO], ii:[PRED:_GOOD]]
-//Text [PRED:_TO_FEEL, i:[PRED:_EGO], ii:[PRED:_BAD]]
-///Text [PRED:_TO_FEEL, i:[PRED:_YOU], ii:[PRED:_BAD], lexical_function:magn]
-//Text [PRED:_TO_APPRECIATE, i:[PRED:_pro, @_3ms], ii:[PRED:_pro, @_3ms, animate:false]]
-//Text [PRED:_TO_ENDURE, i:[PRED:_EGO], ii:[PRED:_HOPE]]
-//Text [PRED:_TO_FEEL_THE_PAIN, i:[PRED:_pro, animate:false, @s]]
-//Text [PRED:_TO_ENJOY, i:[PRED:_pro, @_1p], ii:[PRED:_TENDERNESS, poss:true, owner:[@_3ms]]]
-//Text [PRED:_TO_SUFFER, i:[PRED:_pro, @_3fs, @hum]]
-//Text [PRED:_TO_ENDURE, i:[PRED:_pro, @_3p], ii:[PRED:_PAIN, def:none]]
-//Text [PRED:_TO_ENJOY, i:[PRED:_pro, @_1p], ii:[PRED:_pro, @nohum, @s]]
-//Text [PRED:_TO_ENDURE, i:[PRED:_pro, @_3ms], ii:[PRED:_SADNESS, def:true, @s]]
-//Text [PRED:_TO_FEEL, i:[PRED:_EGO], ii:[PRED:_PAIN, def:false, @s]] // rejeté
-//Text [PRED:_TO_ENJOY, i:[PRED:_pro, @_3p], ii:[PRED:_PAIN, poss:true, owner:[@_2s]]]
-//Text [PRED:_TO_APPRECIATE, i:[PRED:_pro, @_1p], ii:[PRED:_PAIN, def:true]]
-//Text [PRED:_TO_APPRECIATE, i:[PRED:_pro, @_2s], ii:[PRED:_TENDERNESS, def:none]]
-//Text [PRED:_TO_STAY_AWAY, i:[PRED:_pro, @_2s], verbal_constr:excl|no_neg]
+//Text [HEAD:_TO_FEEL, i:[HEAD:_EGO]]
+//Text [HEAD:_TO_FEEL, i:[HEAD:_EGO], ii:[HEAD:_GOOD]]
+//Text [HEAD:_TO_FEEL, i:[HEAD:_EGO], ii:[HEAD:_BAD]]
+///Text [HEAD:_TO_FEEL, i:[HEAD:_YOU], ii:[HEAD:_BAD], lexical_function:magn]
+//Text [HEAD:_TO_APPRECIATE, i:[HEAD:_pro, @_3ms], ii:[HEAD:_pro, @_3ms, animate:false]]
+//Text [HEAD:_TO_ENDURE, i:[HEAD:_EGO], ii:[HEAD:_HOPE]]
+//Text [HEAD:_TO_FEEL_THE_PAIN, i:[HEAD:_pro, animate:false, @s]]
+//Text [HEAD:_TO_ENJOY, i:[HEAD:_pro, @_1p], ii:[HEAD:_TENDERNESS, poss:true, owner:[@_3ms]]]
+//Text [HEAD:_TO_SUFFER, i:[HEAD:_pro, @_3fs, @hum]]
+//Text [HEAD:_TO_ENDURE, i:[HEAD:_pro, @_3p], ii:[HEAD:_PAIN, def:none]]
+//Text [HEAD:_TO_ENJOY, i:[HEAD:_pro, @_1p], ii:[HEAD:_pro, @nohum, @s]]
+//Text [HEAD:_TO_ENDURE, i:[HEAD:_pro, @_3ms], ii:[HEAD:_SADNESS, def:true, @s]]
+//Text [HEAD:_TO_FEEL, i:[HEAD:_EGO], ii:[HEAD:_PAIN, def:false, @s]] // rejeté
+//Text [HEAD:_TO_ENJOY, i:[HEAD:_pro, @_3p], ii:[HEAD:_PAIN, poss:true, owner:[@_2s]]]
+//Text [HEAD:_TO_APPRECIATE, i:[HEAD:_pro, @_1p], ii:[HEAD:_PAIN, def:true]]
+//Text [HEAD:_TO_APPRECIATE, i:[HEAD:_pro, @_2s], ii:[HEAD:_TENDERNESS, def:none]]
+//Text [HEAD:_TO_STAY_AWAY, i:[HEAD:_pro, @_2s], verbal_constr:excl|no_neg]
 
 //John snores
-//Text_with_features [PRED:_TO_SNORE, vtense:present, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:present, i:[HEAD:_JOHN]]
 //John snored
-//Text_with_features [PRED:_TO_SNORE, vtense:preterite, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:preterite, i:[HEAD:_JOHN]]
 //John is snoring
-//Text_with_features [PRED:_TO_SNORE, vtense:present_continuous, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:present_continuous, i:[HEAD:_JOHN]]
 //John has snored.
-//Text_with_features [PRED:_TO_SNORE, vtense:present_perfect, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:present_perfect, i:[HEAD:_JOHN]]
 //John will snore.
-//Text_with_features [PRED:_TO_SNORE, vtense:future, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:future, i:[HEAD:_JOHN]]
 //John was snoring.
-//Text_with_features [PRED:_TO_SNORE, vtense:past_continous, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:past_continous, i:[HEAD:_JOHN]]
 //John had snored.
-//Text_with_features [PRED:_TO_SNORE, vtense:past_perfect, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:past_perfect, i:[HEAD:_JOHN]]
 //will have felt
-//Text_with_features [PRED:_TO_SNORE, vtense:future_perfect, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:future_perfect, i:[HEAD:_JOHN]]
 //has been feeling
-//Text_with_features [PRED:_TO_SNORE, vtense:present_perfect_continuous, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:present_perfect_continuous, i:[HEAD:_JOHN]]
 //had been feeling
-//Text_with_features [PRED:_TO_SNORE, vtense:past_perfect_continuous, i:[PRED:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, vtense:past_perfect_continuous, i:[HEAD:_JOHN]]
 //will have been feeling
-//Text_with_features [PRED:_TO_SNORE, vtense:future_perfect_continuous, i:[PRED:_JOHN]]
-//Text_with_features [PRED:_TO_SNORE, i:[PRED:_JOHN], vtense:$t]
+//Text_with_features [HEAD:_TO_SNORE, vtense:future_perfect_continuous, i:[HEAD:_JOHN]]
+//Text_with_features [HEAD:_TO_SNORE, i:[HEAD:_JOHN], vtense:$t]
 
-//Text [PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]
-//Text [PRED:_TO_CALL_DOWN_1, i:[PRED:_JOHN], ii:[PRED:_MARY]]
-//Text [PRED:_TO_CALL_DOWN_2, i:[PRED:_JOHN], ii:[PRED:_WARNING, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
-Text [PRED:_TO_CALL_DOWN_3, i:[PRED:_JOHN], ii:[PRED:_DIVINE_BLESSINGS, number:sg, def:false, poss:false], iii:[PRED:_MARY]]
+//Text [HEAD:_TO_CALL, i:[HEAD:_JOHN], ii:[HEAD:_MARY]]
+//Text [HEAD:_TO_CALL_DOWN_1, i:[HEAD:_JOHN], ii:[HEAD:_MARY]]
+//Text [HEAD:_TO_CALL_DOWN_2, i:[HEAD:_JOHN], ii:[HEAD:_WARNING, number:sg, def:false, poss:false], iii:[HEAD:_MARY]]
+Text [HEAD:_TO_CALL_DOWN_3, i:[HEAD:_JOHN], ii:[HEAD:_DIVINE_BLESSINGS, number:sg, def:false, poss:false], iii:[HEAD:_MARY]]
 
 
-///Text [PRED:_TO_WANT, i:[PRED:_JOHN, id:1], ii:[PRED:_TO_SIT, i:[idref:1], ii:[PRED:_CHAIR, def:false, poss:false, number:sg]]]
+///Text [HEAD:_TO_WANT, i:[HEAD:_JOHN, id:1], ii:[HEAD:_TO_SIT, i:[idref:1], ii:[HEAD:_CHAIR, def:false, poss:false, number:sg]]]
 
-///Text [PRED:_TO_SAY, i:[PRED:_EGO], ii:[PRED:_TO_SIT, i:[PRED:_JOHN], ii:[PRED:_CHAIR, def:false, poss:false, number:sg]], vtense:$vt]
+///Text [HEAD:_TO_SAY, i:[HEAD:_EGO], ii:[HEAD:_TO_SIT, i:[HEAD:_JOHN], ii:[HEAD:_CHAIR, def:false, poss:false, number:sg]], vtense:$vt]
 
-//Text [PRED:_TO_FEEL, i:[PRED:_EGO], ii:[PRED:_GOOD], verbal_constr:neg|no_neg|int|no_int|excl, vtense:$all]
+//Text [HEAD:_TO_FEEL, i:[HEAD:_EGO], ii:[HEAD:_GOOD], verbal_constr:neg|no_neg|int|no_int|excl, vtense:$all]
 
-///Text [PRED:_TO_TELL, i:[PRED:_EGO], ii:[PRED:_JOHN], iii:[PRED:_TO_CALL, i:[PRED:_CHAIR_MAN, def:true, @s], ii:[PRED:_MARY]]]
+///Text [HEAD:_TO_TELL, i:[HEAD:_EGO], ii:[HEAD:_JOHN], iii:[HEAD:_TO_CALL, i:[HEAD:_CHAIR_MAN, def:true, @s], ii:[HEAD:_MARY]]]
 
-///Text [PRED:_TO_FEEL, i:[PRED:_EGO], ii:[PRED:_TO_CALL, i:[PRED:_JOHN], ii:[PRED:_MARY]]]
+///Text [HEAD:_TO_FEEL, i:[HEAD:_EGO], ii:[HEAD:_TO_CALL, i:[HEAD:_JOHN], ii:[HEAD:_MARY]]]
 
-///Text[PRED:_TO_SIT, i:[PRED:_JOHN], ii:[PRED:_CHAIR, def:false, poss:false, number:sg]], vtense:$vt]
+///Text[HEAD:_TO_SIT, i:[HEAD:_JOHN], ii:[HEAD:_CHAIR, def:false, poss:false, number:sg]], vtense:$vt]
