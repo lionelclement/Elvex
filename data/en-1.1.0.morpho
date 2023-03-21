@@ -20,6 +20,7 @@
 @_3p	person:three,number:pl
 @_3ms	person:three,number:sg,gender:ms
 @_3fs	person:three,number:sg,number:sg,gender:fm
+@def	def:true
 
 # ***********************************************************
 #  Verbs
@@ -39,6 +40,14 @@ appreciated	verb	TO_APPRECIATE	vtense:preterite
 appreciated	verb	TO_APPRECIATE	vtense:past_participle,tensed:false
 appreciating	verb	TO_APPRECIATE	vtense:present_participle,tensed:false
 appreciate	verb	TO_APPRECIATE	vtense:infinitive
+
+accept	verb	TO_ACCEPT	vtense:present,SUBJECT:[@_12s]
+accept	verb	TO_ACCEPT	vtense:present,SUBJECT:[@p]
+accepts	verb	TO_ACCEPT	vtense:present,SUBJECT:[@_3s]
+accepted	verb	TO_ACCEPT	vtense:preterite
+accepted	verb	TO_ACCEPT	vtense:past_participle,tensed:false
+accepting	verb	TO_ACCEPT	vtense:present_participle,tensed:false
+accept	verb	TO_ACCEPT	vtense:infinitive
 
 enjoy	verb	TO_ENJOY	vtense:present,SUBJECT:[@_12s]
 enjoy	verb	TO_ENJOY	vtense:present,SUBJECT:[@p]
@@ -88,6 +97,22 @@ snored	verb	TO_SNORE	vtense:past_participle,tensed:false
 snoring	verb	TO_SNORE	vtense:present_participle,tensed:false
 snore	verb	TO_SNORE	vtense:infinitive,tensed:false
 
+chase	verb	TO_CHASE	vtense:present,SUBJECT:[@_12s]
+chase	verb	TO_CHASE	vtense:present,SUBJECT:[@p]
+chases	verb	TO_CHASE	vtense:present,SUBJECT:[@_3s]
+chased	verb	TO_CHASE	vtense:preterite
+chased	verb	TO_CHASE	vtense:past_participle,tensed:false
+chasing	verb	TO_CHASE	vtense:present_participle,tensed:false
+chase	verb	TO_CHASE	vtense:infinitive,tensed:false
+
+study	verb	TO_STUDY	vtense:present,SUBJECT:[@_12s]
+study	verb	TO_STUDY	vtense:present,SUBJECT:[@p]
+studies	verb	TO_STUDY	vtense:present,SUBJECT:[@_3s]
+studied	verb	TO_STUDY	vtense:preterite
+studied	verb	TO_STUDY	vtense:past_participle,tensed:false
+studing	verb	TO_STUDY	vtense:present_participle,tensed:false
+study	verb	TO_STUDY	vtense:infinitive,tensed:false
+
 say	verb	TO_SAY	vtense:present,SUBJECT:[@_12s]
 say	verb	TO_SAY	vtense:present,SUBJECT:[@p]
 says	verb	TO_SAY	vtense:present,SUBJECT:[@_3s]
@@ -120,6 +145,32 @@ told	verb	TO_TELL	vtense:past_participle,tensed:false
 telling	verb	TO_TELL	vtense:present_participle,tensed:false
 tell	verb	TO_TELL	vtense:infinitive,tensed:false
 
+am	verb	TO_BE	vtense:present,SUBJECT:[@_1s]
+are	verb	TO_BE	vtense:present,SUBJECT:[@_2s]
+is	verb	TO_BE	vtense:present,SUBJECT:[@_3s]
+are	verb	TO_BE	vtense:present,SUBJECT:[@p]
+was	verb	TO_BE	vtense:preterite,SUBJECT:[@_1s]
+were	verb	TO_BE	vtense:preterite,SUBJECT:[@_2s]
+was	verb	TO_BE	vtense:preterite,SUBJECT:[@_3s]
+were	verb	TO_BE	vtense:preterite,SUBJECT:[@p]
+been	verb	TO_BE	vtense:past_participle,tensed:false
+being	verb	TO_BE	vtense:present_participle,tensed:false
+be	verb	TO_BE	vtense:infinitive
+
+find	verb	TO_FIND	vtense:present
+found	verb	TO_FIND	vtense:preterite
+found	verb	TO_FIND	vtense:past_participle,tensed:false
+finding	verb	TO_FIND	vtense:present_participle,tensed:false
+find	verb	TO_FIND	vtense:infinitive,tensed:false
+
+meow	verb	TO_MEOW	vtense:present,SUBJECT:[@_12s]
+meow	verb	TO_MEOW	vtense:present,SUBJECT:[@p]
+meows	verb	TO_MEOW	vtense:present,SUBJECT:[@_3s]
+meowed	verb	TO_MEOW	vtense:preterite
+meowed	verb	TO_MEOW	vtense:past_participle,tensed:false
+meowing	verb	TO_MEOW	vtense:present_participle,tensed:false
+meow	verb	TO_MEOW	vtense:infinitive,tensed:false
+
 # ***********************************************************
 #  Nouns
 # ***********************************************************/
@@ -131,6 +182,16 @@ warning	common_noun	WARNING
 divine blessings	common_noun	DIVINE_BLESSINGS	
 chair	common_noun	CHAIR		
 chair man	common_noun	CHAIR_MAN	@s
+moon	common_noun	MOON	@s
+moons	common_noun	MOON	@p
+student	common_noun	STUDENT	@s
+students	common_noun	STUDENT	@p
+professor	common_noun	PROFESSOR	@s
+professors	common_noun	PROFESSOR	@p
+cat	common_noun	CAT	@s
+cats	common_noun	CAT	@p
+mouse	common_noun	MOUSE	@s
+mice	common_noun	MOUSE	@p
 
 # ***********************************************************
 #  Adjectives

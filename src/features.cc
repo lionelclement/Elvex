@@ -359,8 +359,10 @@ valuePtr Features::find(const bitsetPtr &code) const
 /* **************************************************
  *
  ************************************************** */
-bool Features::buildEnvironment(const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables /*,
-                                 bool root*/
+bool Features::buildEnvironment(const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables
+#ifdef TRACE_ENVIRONMENT
+, bool root
+#endif
 )
 {
     bool ret = true;
@@ -371,23 +373,23 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
     //		//environment->replaceVariables(features, effect);
     //	}
 
-    /***
+#ifdef TRACE_ENVIRONMENT
      if (root) {
-     CERR_LINE;
-     std::cerr << "<H4>Features::buildEnvironment</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>this</th><th>features</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     print(std::cerr);
-     std::cerr << "</td><td>";
-     if (features)
-     features->print(std::cerr);
-     else
-     std::cerr << "NULL";
-     std::cerr << "</td><td>";
-     environment->print(std::cerr);
-     std::cerr << "</td></tr></table>";
+        COUT_LINE;
+        std::cout << "<H4>Features::buildEnvironment</H4>" << std::endl;
+        std::cout << "<table border = \"1\"><tr><th>this</th><th>features</th><th>Environment</th></tr>";
+        std::cout << "<tr><td>";
+        print(std::cout);
+        std::cout << "</td><td>";
+        if (_features)
+            _features->print(std::cout);
+        else
+            std::cout << "NULL";
+        std::cout << "</td><td>";
+        environment->print(std::cout);
+        std::cout << "</td></tr></table>";
      }
-     ***/
+#endif
 
     // Traite tous les attributs constants
     for (const auto &i1 : features)
@@ -438,7 +440,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->add(i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
+                            environment->_add(i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
                         }
                         else
                         {
@@ -479,19 +481,6 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
             {
                 throw fatal_exception("A variable attribute is not allowed in this context: " +
                                       i1->getAttribute()->toString());
-                // if (!i1->getValue()->buildEnvironment(environment, i2->getValue(), acceptToFilterNULLVariables, false)){
-                // ret = false;
-                // }
-                /*featuresPtr nFeatures = Features::create();
-                Features::std::list<featurePtr>::const_iterator i2 = _features->begin();
-                while (i2 != _features->end()) {
-                    if (i2->isUnsetFlags(Flags::SEEN)) {
-                        i2->addFlags(Flags::SEEN);
-                        nFeatures->addi2;
-                    }
-                    ++i2;
-                }*/
-                // environment->add(i1->getAttribute(), new Value(nFeatures, Value::FEATURES));
             }
             else
             {
@@ -504,21 +493,21 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         nFeatures->add(i2);
                     }
                 }
-                environment->add(i1->getAttribute(), Value::create(nFeatures));
+                environment->_add(i1->getAttribute(), Value::create(nFeatures));
             }
         }
     }
     _features->subFlags(Flags::SEEN);
 
-    /***
+#ifdef TRACE_ENVIRONMENT
      if (root) {
-     std::cerr << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-     environment->print(std::cerr);
-     std::cerr << "</td></tr></table>";
+        std::cout << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
+        std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+        std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+        environment->print(std::cout);
+        std::cout << "</td></tr></table>";
      }
-     ***/
+#endif
     return ret;
 }
 
@@ -528,19 +517,22 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
  ************************************************** */
 bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
 {
-    /***
-     CERR_LINE;
-     cerr << "<DIV>";
-     cerr << "Subsumes (" << this << ")";
-     cst	err << "<TABLE><TR>";
-     cerr << "<TD>";
-     this->print(cerr);
-     cerr << "</TD><TD>&lt;</TD><TD>";
-     o->print(cerr);
-     cerr << "</TD>";
-     cerr << "</TR></TABLE>";
-     cerr << "</DIV>";
-     ***/
+#ifdef TRACE_FEATURES
+     COUT_LINE;
+     std::cout << "<DIV>";
+     std::cout << "Subsumes (" << this << ")";
+     std::cout << "<TABLE border=\"1\"><TR><TH>this</TH><TH></TH><TH>other</TH><TH>env</TH></TR><TR>";
+     std::cout << "<TD>";
+     this->print(std::cout);
+     std::cout << "</TD><TD>&lt;</TD><TD>";
+     o->print(std::cout);
+     std::cout << "</TD>";
+     std::cout << "<TD>";
+     environment->print(std::cout);
+     std::cout << "</TD>";
+     std::cout << "</TR></TABLE>";
+     std::cout << "</DIV>";
+#endif
 
     bool ret = true;
     // NIL < NIL
@@ -584,13 +576,13 @@ bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
             }
         }
     }
-    /***
-     cerr << "<DIV>";
-     cerr << "result: (" << shared_from_this() << ")";
-     cerr << (ret?"true":"false") << endl;
-     //environment->print(cerr);
-     cerr << "</DIV>";
-     ***/
+#ifdef TRACE_FEATURES
+     std::cout << "<DIV>";
+     std::cout << "result: (" << shared_from_this() << ")";
+     std::cout << (ret?"true":"false") << std::endl;
+     environment->print(std::cout);
+     std::cout << "</DIV>";
+#endif
     return ret;
 }
 
@@ -739,11 +731,11 @@ void Features::setVariableFlag(enum VariableFlag::flagValues flag)
 /* **************************************************
  *
  ************************************************** */
-void Features::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Features::_apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                      const statementPtr &statement,
                      bool &effect)
 {
-    item->getEnvironment()->add(variable->getBits(), Value::create(shared_from_this()));
+    item->getEnvironment()->_add(variable->getBits(), Value::create(shared_from_this()));
     effect = true;
     statement->toggleEnable(statement, item, synthesizer, effect, false);
     statement->apply(item, parser, synthesizer, effect);

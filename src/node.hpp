@@ -74,7 +74,7 @@ public:
     void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
 
-    void generate(bool random, bool one);
+    void generate(bool random, bool first);
 
 };
 

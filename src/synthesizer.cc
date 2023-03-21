@@ -56,7 +56,7 @@ Synthesizer::Synthesizer()
     this->reduceAll = false;
     this->warning = false;
     this->random = false;
-    this->one = false;
+    this->first = false;
     this->attempsRandom = 1000;
     this->trace = false;
     this->verbose = false;
@@ -265,17 +265,17 @@ bool Synthesizer::getRandom() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setOne(const bool _one)
+void Synthesizer::setFirst(const bool _first)
 {
-    this->one = _one;
+    this->first = _first;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getOne() const
+bool Synthesizer::getFirst() const
 {
-    return this->one;
+    return this->first;
 }
 
 #ifdef OUTPUT_XML
@@ -1168,16 +1168,18 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         featuresPtr resultFeatures = featuresPtr();
                                         featuresPtr inheritedSonFeaturesCopy = inheritedSonFeatures->clone();
                                         featuresPtr entryFeaturesCopy = entryFeatures->clone();
+
                                         if (entryFeatures)
                                         {
-                                            resultFeatures = Statement::unif(statementPtr(), entryFeaturesCopy, inheritedSonFeaturesCopy,
-                                                                             it);
+                                            resultFeatures = entryFeaturesCopy;
+                                            //resultFeatures = Statement::unif(statementPtr(), entryFeaturesCopy, inheritedSonFeaturesCopy, it);
                                         }
                                         else
                                         {
 
                                             resultFeatures = inheritedSonFeaturesCopy;
                                         }
+ 
                                         if (resultFeatures)
                                         {
                                             if (it->getEnvironment() && (it->getEnvironment()->size() > 0))
@@ -1306,7 +1308,7 @@ void Synthesizer::generate(class Parser &parser)
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRanges(0);
         it->setInheritedFeatures(parser.getStartFeatures());
-        // it->renameVariables(it->getId());
+        //it->renameVariables(it->getId());
 #ifdef TRACE_OPTION
         if (traceInit || (trace && it->getRuleTrace()))
         {
@@ -1345,7 +1347,7 @@ void Synthesizer::generate(class Parser &parser)
         std::cerr << "Length : " << i << std::endl;
     }
 
-    nodeRoot->generate(this->getRandom(), this->getOne());
+    nodeRoot->generate(this->getRandom(), this->getFirst());
 #ifdef OUTPUT_XML
     if (outXML)
     {

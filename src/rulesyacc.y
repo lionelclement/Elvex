@@ -111,7 +111,7 @@
 %token TOKEN_TRACE
 
 // OPERATORS
-%token TOKEN_UNION TOKEN_SUBSUME TOKEN_AFF TOKEN_PIPE TOKEN_NOT 
+%token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT 
 TOKEN_OR TOKEN_AND TOKEN_IMPLICATION TOKEN_EQUIV
 TOKEN_PLUS TOKEN_MINUS TOKEN_TIMES TOKEN_DIVIDE TOKEN_MODULO
 TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
@@ -142,14 +142,14 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<pairp_slot> pairp pairp_elements pairp_element
 
 %type<statements_slot> structure_statement list_statement expression_statement_composite
-%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_aff_statement right_hand_side_aff_statement up down up2 down2 dash_statement
+%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_assignment_statement right_hand_side_assignment_statement up down up2 down2 dash_statement
 %type<statement_slot> expression_statement
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
 %left TOKEN_OR
 %left TOKEN_AND
 %right TOKEN_NOT
-%left TOKEN_UNION
+%left TOKEN_UNIFY
 %nonassoc TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE TOKEN_EQUAL TOKEN_DIFF
 %left TOKEN_PLUS TOKEN_MINUS
 %left TOKEN_TIMES TOKEN_DIVIDE
@@ -535,31 +535,31 @@ statement:
 	  free($2);
 	}
 
-	|TOKEN_PRINT TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI {
+	|TOKEN_PRINT expression_statement_composite TOKEN_SEMI {
 	  DBUGPRT("statement");
 		$$ = new statementPtr(Statement::create(
 			ruleslineno, 
 			parser.getTopBufferName(), 
 			Statement::PRINT_STATEMENT, 
 			true, 
-			*$3));
-	  free($3);
+			*$2));
+	  free($2);
 	}
 
-	|TOKEN_PRINTLN TOKEN_LPAR expression_statement_composite TOKEN_RPAR TOKEN_SEMI {
+	|TOKEN_PRINTLN expression_statement_composite TOKEN_SEMI {
 	  	DBUGPRT("statement");
 		$$ = new statementPtr(Statement::create(
 			ruleslineno, 
 			parser.getTopBufferName(), 
 			Statement::PRINTLN_STATEMENT, 
 			true, 
-			*$3));
-	  free($3);
+			*$2));
+	  free($2);
 	}
 
-	|left_hand_side_aff_statement TOKEN_AFF right_hand_side_aff_statement TOKEN_SEMI {
+	|left_hand_side_assignment_statement TOKEN_ASSIGNMENT right_hand_side_assignment_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::AFF_STATEMENT, true, *$1, *$3));
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::ASSIGNMENT_STATEMENT, true, *$1, *$3));
 	  // <X, …> = <…>
 	  // <X, …> = $X
 	  // <X, …> = search 
@@ -718,7 +718,7 @@ right_hand_side_subset_statement:
 	}
 	;
 
-left_hand_side_aff_statement:
+left_hand_side_assignment_statement:
 	up2 {
 	  DBUGPRT("left_hand_side_statement");
 	  $$=$1;
@@ -745,7 +745,7 @@ left_hand_side_aff_statement:
 	  free($4);
 	};
 
-right_hand_side_aff_statement:
+right_hand_side_assignment_statement:
 	expression_statement {
 	  DBUGPRT("right_hand_side_statement");
 	  $$=$1;
@@ -914,7 +914,7 @@ expression_statement:
 	//////////////////////////////////////////////////
 	// features
 	//////////////////////////////////////////////////
-	|expression_statement TOKEN_UNION expression_statement {
+	|expression_statement TOKEN_UNIFY expression_statement {
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::UNIF_STATEMENT, false, (*$1), (*$3)));
 	  free($1);
@@ -1178,6 +1178,13 @@ feature:
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::VARIABLE_VALUE, *$3)));
 	  free($3);
+	}
+
+	// HEAD: _
+	|TOKEN_HEAD TOKEN_COLON TOKEN_ANONYMOUS
+	{
+	  DBUGPRT("feature");
+	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::ANONYMOUS_VALUE)));
 	}
 
 	// FORM: $X

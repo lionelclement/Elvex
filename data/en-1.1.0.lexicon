@@ -22,50 +22,53 @@
 @_3fs: [@_3s, @f];
 @hum: [human:true];
 @nohum: [human:false];
+@def: [def:true];
+
+FORM form;
 
 /************************************************************
 * Noms propres
 ************************************************************/
-John	proper_noun [HEAD:_JOHN, @_3s, @hum];
-Mary	proper_noun [HEAD:_MARY, @_3s, @hum];
-Elvex	proper_noun [HEAD:_ELVEX, @_3s];
+John	proper_noun [HEAD:JOHN, @_3s, @hum];
+Mary	proper_noun [HEAD:MARY, @_3s, @hum];
+Elvex	proper_noun [HEAD:ELVEX, @_3s];
 
 /************************************************************
 * Pronoms nominatifs
 ************************************************************/
-I	cln [HEAD:_pro, @_1s, animate:true, @hum, case:nominative]
-	| cln [HEAD:_EGO, @_1s, animate:true, @hum, case:nominative];
-you	cln [HEAD:_pro, @_2s, animate:true, @hum, case:nominative]
-	| cln [HEAD:_YOU, @_2s, animate:true, @hum, case:nominative];
-he	cln [HEAD:_pro, @_3ms, animate:true, @hum, case:nominative];
-she	cln [HEAD:_pro, @_3fs, animate:true, @hum, case:nominative];
-it	cln [HEAD:_pro, @_3fs, @nohum, case:nominative];
-we	cln [HEAD:_pro, @_1p, animate:true, @hum, case:nominative];
-they	cln [HEAD:_pro, @_3p, case:nominative];
+I	cln [HEAD:pro, @_1s, animate:true, @hum, case:nominative]
+	| cln [HEAD:EGO, @_1s, animate:true, @hum, case:nominative];
+you	cln [HEAD:pro, @_2s, animate:true, @hum, case:nominative]
+	| cln [HEAD:pro, @_2p, animate:true, @hum, case:nominative]
+	| cln [HEAD:YOU, @_2s, animate:true, @hum, case:nominative];
+he	cln [HEAD:pro, @_3ms, animate:true, @hum, case:nominative];
+she	cln [HEAD:pro, @_3fs, animate:true, @hum, case:nominative];
+it	cln [HEAD:pro, @_3fs, @nohum, case:nominative];
+we	cln [HEAD:pro, @_1p, animate:true, @hum, case:nominative];
+they	cln [HEAD:pro, @_3p, case:nominative];
 
 /************************************************************
 * Pronoms accusatifs
 ************************************************************/
-me	pro [HEAD:_pro, @_1s, animate:true, @hum, case:accusative];
-you	pro [HEAD:_pro, @_2, animate:true, @hum, case:accusative];
-him	pro [HEAD:_pro, @_3ms, animate:true, @hum, case:accusative];
-her	pro [HEAD:_pro, @_3fs, animate:true, @hum, case:accusative];
-it	pro [HEAD:_pro, @_3s, @nohum, case:accusative];
-us	pro [HEAD:_pro, @_1p, animate:true, @hum, case:accusative];
-them	pro [HEAD:_pro, @_3p, case:accusative];
+me	pro [HEAD:pro, @_1s, animate:true, @hum, case:accusative];
+you	pro [HEAD:pro, @_2, animate:true, @hum, case:accusative];
+him	pro [HEAD:pro, @_3ms, animate:true, @hum, case:accusative];
+her	pro [HEAD:pro, @_3fs, animate:true, @hum, case:accusative];
+it	pro [HEAD:pro, @_3s, @nohum, case:accusative];
+us	pro [HEAD:pro, @_1p, animate:true, @hum, case:accusative];
+them	pro [HEAD:pro, @_3p, case:accusative];
 
 /************************************************************
 * Pronoms réflexifs
 ************************************************************/
-myself	pro [HEAD:_pro, @_1s, case:reflexive];
-yourself pro [HEAD:_pro, @_2s, case:reflexive];
-himself catpro [HEAD:_pro, @_3s, case:reflexive];
+myself	pro [HEAD:pro, @_1s, case:reflexive];
+yourself pro [HEAD:pro, @_2s, case:reflexive];
+himself catpro [HEAD:pro, @_3s, case:reflexive];
 
 // Déterminants
 a	det	[number:sg, def:false, poss:false, part:false, dem:false];
 ""	det	[number:pl, def:false, poss:false, part:false, dem:false];
-the	det	[number:sg, def:true, poss:false, part:false, dem:false];
-""	det	[def:none, poss:false, part:false, dem:false];
+the	det	[def:true, poss:false, part:false, dem:false];
 
 my	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_1s]];
 your	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_2s]];
@@ -121,19 +124,25 @@ been	been [aux_form:been];
 "have been"	have [aux_form:have_been];
 not	not;
 
-"?"	strongPunct [punct:int];
-"."	strongPunct [punct:dot];
-"!"	strongPunct [punct:excl];
+"?"	strongPunct [punct:_int_];
+"."	strongPunct [punct:_dot_];
+"!"	strongPunct [punct:_excl_];
 
 "($vtense)"	features [vtense:$vtense];
 
-down	part [particle:down];
+"down"	part [particle:_down_];
+"out"	part [particle:_out_];
 
-to	prep [pcase:_to];
-at	prep [pcase:_at];
-"on"	prep [pcase:_on];
+"to"	prep [pcase:_to_];
+"at"	prep [pcase:_at_];
+"on"	prep [pcase:_on_];
+"over"	prep [pcase:_over_];
 
-to	to [];
+"to"	to [];
 
-that	csu [compl:_that];
-"if"	csu [compl:_if];
+"that"	csu [compl:_that_];
+"if"	csu [compl:_if_];
+"when"	csu [compl:_when_];
+"whether"	csu [compl:_whether_];
+
+"abroad" advs [HEAD:ABROAD];

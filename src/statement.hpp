@@ -67,7 +67,7 @@ public:
     enum type
     {
         DASH_STATEMENT,
-        AFF_STATEMENT,
+        ASSIGNMENT_STATEMENT,
         SUBSUME_STATEMENT,
         INHERITED_FEATURES_STATEMENT,
         SYNTHESIZED_FEATURES_STATEMENT,
@@ -193,7 +193,7 @@ public:
     // SEARCH
     static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, unsigned int first);
 
-    bool isAff() const;
+    bool isAssignment() const;
 
     bool isSubsume() const;
 

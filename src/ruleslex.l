@@ -264,8 +264,8 @@ downDoubleArrow "⇓"
   }
   
   "∪"|[Uu] {
-    DBUGPRT("TOKEN_UNION");
-    return TOKEN_UNION;
+    DBUGPRT("TOKEN_UNIFY");
+    return TOKEN_UNIFY;
   }
   
   "⊂"|"<<" {
@@ -279,8 +279,8 @@ downDoubleArrow "⇓"
   }
   
   "=" {
-    DBUGPRT("TOKEN_AFF");
-    return TOKEN_AFF;
+    DBUGPRT("TOKEN_ASSIGNMENT");
+    return TOKEN_ASSIGNMENT;
   }
   
   "≠"|"!=" {

@@ -170,9 +170,9 @@ public:
 
     void buildInheritedSonFeatures(class Synthesizer *);
 
-    void addEnvironment(environmentPtr);
+    bool addEnvironment(environmentPtr);
 
-    void addEnvironment(environmentPtr, environmentPtr);
+    bool addEnvironment(environmentPtr, environmentPtr);
 
     void addStatements(const statementsPtr &);
 

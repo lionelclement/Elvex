@@ -66,7 +66,7 @@ environmentPtr Environment::create()
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(const std::string &key, valuePtr value)
+bool Environment::_add(const std::string &key, valuePtr value)
 {
     auto it = env.find(key);
     if (it == env.end())
@@ -75,54 +75,70 @@ void Environment::add(const std::string &key, valuePtr value)
     }
     else
     {
-        it->second = value;
+        if (it->second->isAnonymous()) {
+            it->second = value;
+        }
+        else {
+            COUT_LINE;
+            std::cout << "*** Error: " << key << " already done !!!" << std::endl;
+            it->second->print(std::cout);
+            std::cout << std::endl;
+            FATAL_ERROR_UNEXPECTED;
+            //return false;
+            //it->second = value;
+        }   
     }
+    return true;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::remove(const std::string &key)
+bool Environment::remove(const std::string &key)
 {
-    env.erase(key);
+    return (env.erase(key) > 0);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(const bitsetPtr &attr, valuePtr value)
+bool Environment::_add(const bitsetPtr &attr, valuePtr value)
 {
     const std::string key = attr->toString();
-    add(key, std::move(value));
+    return _add(key, std::move(value));
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(const environmentPtr &e)
+bool Environment::_add(const environmentPtr &e)
 {
+    bool ok = true;
     for (const auto &i : *e)
-        add(i.first, i.second);
+        ok &= _add(i.first, i.second);
+    return ok;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::add(const environmentPtr &e, const environmentPtr &where)
+bool Environment::_add(const environmentPtr &e, const environmentPtr &where)
 {
+    bool ok = true;
     if (where)
         for (const auto &i : *e)
             if (where->env.find(i.first) != where->env.end())
-                add(i.first, i.second);
+                ok &= _add(i.first, i.second);
+    return ok;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Environment::remove(const bitsetPtr &attr)
+bool Environment::remove(const bitsetPtr &attr)
 {
     const std::string key = attr->toString();
-    remove(key);
+    return remove(key);
 }
 
 /* **************************************************
@@ -175,8 +191,7 @@ void Environment::print(std::ostream &out) const
             first = false;
         else
             out << "</TR><TR>";
-        out << "<TD>";
-        out << i.first;
+        out << "<TD>" << i.first;
         if (i.second)
         {
             out << "</TD><TD>";
@@ -192,16 +207,15 @@ void Environment::print(std::ostream &out) const
  ************************************************** */
 void Environment::replaceVariables(const featuresPtr &features, bool &effect)
 {
-    /*** 
-     CERR_LINE;
-     std::cerr << "<H4>Environment::replaceVariables(features)</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>featurePtrs</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     features->print(std::cerr);
-     std::cerr << "</td><td>";
-     this->print(std::cerr);
-     std::cerr << "</td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(features)</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>featurePtrs</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     features->print(std::cout);
+     std::cout << "</td><td>";
+     this->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     if (!features->containsVariable())
         return;
 
@@ -270,15 +284,15 @@ redo:
         }
         features->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
     }
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(features) DONE</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>Features</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     features->print(std::cerr);
-     std::cerr << "</td><td>";
-     this->print(std::cerr);
-     std::cerr << "</td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(features) DONE</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>Features</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     features->print(std::cout);
+     std::cout << "</td><td>";
+     this->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     if (effect)
         features->resetSerial();
 }
@@ -297,15 +311,15 @@ void Environment::replaceVariables(const listFeaturesPtr &listFeatures, bool &ef
  ************************************************** */
 void Environment::replaceVariables(const valuePtr &value, bool &effect)
 {
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(value)</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>Value</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     value->print(std::cerr);
-     std::cerr << "</td><td>";
-     this->print(std::cerr);
-     std::cerr << "</td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(value)</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>Value</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     value->print(std::cout);
+     std::cout << "</td><td>";
+     this->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     if (!value->containsVariable())
         return;
     if (!value->isNil() && !value->isAnonymous())
@@ -341,12 +355,12 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
         }
         value->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
     }
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(value) result</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>Std::List</th></tr>";
-     std::cerr << "<tr><td>";
-     std::cerr << "</td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(value) result</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>Std::List</th></tr>";
+     std::cout << "<tr><td>";
+     std::cout << "</td></tr></table>";
+#endif
     if (effect)
         value->resetSerial();
 }
@@ -356,15 +370,15 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
  ************************************************** */
 void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
 {
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>List</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     list->flatPrint(std::cerr, 0);
-     std::cerr << "</td><td>";
-     this->print(std::cerr);
-     std::cerr << "</	td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>List</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     pairp->flatPrint(std::cout, 0);
+     std::cout << "</td><td>";
+     this->print(std::cout);
+     std::cout << "</	td></tr></table>";
+#endif
     if (!pairp->containsVariable())
         return;
     switch (pairp->getType())
@@ -402,13 +416,13 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
         break;
     }
     pairp->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>List</th></tr>";
-     std::cerr << "<tr><td>";
-     list->flatPrint(std::cerr, 0);
-     std::cerr << "</td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>List</th></tr>";
+     std::cout << "<tr><td>";
+     pairp->flatPrint(std::cout, 0);
+     std::cout << "</td></tr></table>";
+#endif
     if (effect)
         pairp->resetSerial();
 }
@@ -418,15 +432,15 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
  ************************************************** */
 void Environment::replaceVariables(std::string &str, bool &effect)
 {
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>std::string</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     std::cerr << str;
-     std::cerr << "</td><td>";
-     this->print(std::cerr);
-     std::cerr << "</td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(list)</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>std::string</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     std::cout << str;
+     std::cout << "</td><td>";
+     this->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     std::string pattern =
         std::string(
             "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
@@ -460,13 +474,13 @@ void Environment::replaceVariables(std::string &str, bool &effect)
         std::cout << "regex_error caught: " << e.what() << '(' << e.code() << ')' << std::regex_constants::error_brack
                   << '\n';
     }
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>Std::List</th></tr>";
-     std::cerr << "<tr><td>";
-     this->print(std::cerr);
-     std::cerr << "</td></tr></table>";
-     ***/
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>Std::List</th></tr>";
+     std::cout << "<tr><td>";
+     this->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
 }
 
 /* **************************************************
@@ -477,7 +491,8 @@ environmentPtr Environment::clone() const
     environmentPtr environment = Environment::create();
     for (const auto &i : *this)
     {
-        environment->add(i.first, (i.second) ? i.second->clone() : valuePtr());
+        if (!environment->_add(i.first, (i.second) ? i.second->clone() : valuePtr()))
+            throw fatal_exception("environment not clonable");
     }
     return environment;
 }

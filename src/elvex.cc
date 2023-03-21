@@ -56,8 +56,8 @@ options\n\
 \t--version|-v                                print version\n\
 \t--verbose|-V                                verbose mode\n\
 \t--reduceAll|-a                              reduce all rules\n\
-\t--random|-r                                 outputs one sentence randomly selected\n\
-\t--one|-o                                    outputs the first sentence\n";
+\t--random|-r                                 outputs first sentence randomly selected\n\
+\t--first|-f                                  outputs the first sentence\n";
 #ifdef TRACE_OPTION
     std::cerr << "\
  \t--trace|-t                                  trace the @trace rules\n\
@@ -128,18 +128,18 @@ void generate(bool trace)
                 for (auto i = forest->getOutput_cbegin(); i != forest->getOutput_cend(); ++i)
                 {
 #ifdef TRACE_OPTION
-        if (trace){
-                    std::cout << "<li>" << std::endl;
-        }
+                    if (trace){
+                        std::cout << "<li>" << std::endl;
+                    }
 #endif
                     std::cout << (*i) << std::endl;
 #ifdef TRACE_OPTION
-        if (trace){
-                    std::cout << "</li>" << std::endl;
-        }
+                    if (trace){
+                        std::cout << "</li>" << std::endl;
+                    }
 #endif
                 }
-                if (synthesizer.getRandom())
+                if (synthesizer.getRandom() || synthesizer.getFirst())
                     break;
                 ++forestIt;
             }
@@ -199,9 +199,9 @@ int main(int argn, char **argv)
                         std::srand(time(nullptr));
                         synthesizer.setRandom(true);
                     }
-                    else if (!strcmp(argv[arg] + 1, "o") || !strcmp(argv[arg] + 1, "-one"))
+                    else if (!strcmp(argv[arg] + 1, "f") || !strcmp(argv[arg] + 1, "-first"))
                     {
-                        synthesizer.setOne(true);
+                        synthesizer.setFirst(true);
                     }
 
 #ifdef TRACE_OPTION

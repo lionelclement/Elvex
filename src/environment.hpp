@@ -36,22 +36,22 @@ private:
 private:
     unordered_map env;
 
-    void add(const std::string &, valuePtr = valuePtr());
+    bool _add(const std::string &, valuePtr = valuePtr());
 
-    void remove(const std::string &);
+    bool remove(const std::string &);
 
 public:
     ~Environment();
 
     static environmentPtr create(void);
 
-    void add(const bitsetPtr &, valuePtr = valuePtr());
+    bool _add(const bitsetPtr &, valuePtr = valuePtr());
 
-    void add(const environmentPtr &);
+    bool _add(const environmentPtr &);
 
-    void add(const environmentPtr &, const environmentPtr &);
+    bool _add(const environmentPtr &, const environmentPtr &);
 
-    void remove(const bitsetPtr &);
+    bool remove(const bitsetPtr &);
 
     unordered_map::const_iterator begin() const;
 

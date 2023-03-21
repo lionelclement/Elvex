@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.20.0)
+project(elvex VERSION 2.21.0)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 #set(CMAKE_CXX_COMPILER gcc)
@@ -139,15 +139,13 @@ if (LibXml2_FOUND)
             #TRACE_ENABLE_STATEMENT
             #TRACE_APPLY_STATEMENT
             #TRACE_EVAL
+            #TRACE_FEATURES
             #TRACE_STEP
             #TRACE_PASS
             #TRACE_UNFOLD
-        #TRACE_MEMOIZATION
-        #TRACE_PASS
-        #TRACE_UNFOLD
-        #TRACE_LEXICON
-        #TRACE_EVAL
-        #TRACE_APPLY_STATEMENT
+            #TRACE_MEMOIZATION
+            #TRACE_LEXICON
+            #TRACE_ENVIRONMENT
         )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})

@@ -529,24 +529,23 @@ valuePtr Value::clone()
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables,
-                             bool root)
+bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root)
 {
-    /***
-    CERR_LINE;
-    std::cerr << "<H4>Value::buildEnvironment</H4>" << std::endl;
-    std::cerr << "<table border=\"1\"><tr><th>this</th><th>value</th><th>Environment</th></tr>";
-    std::cerr << "<tr><td>";
-    this->print(std::cerr);
-    std::cerr << "</td><td>";
+    /***  
+    COUT_LINE;
+    std::cout << "<H4>Value::buildEnvironment</H4>" << std::endl;
+    std::cout << "<table border=\"1\"><tr><th>this</th><th>value</th><th>Environment</th></tr>";
+    std::cout << "<tr><td>";
+    this->print(std::cout);
+    std::cout << "</td><td>";
     if (value)
-      value->print(std::cerr);
+      value->print(std::cout);
     else
-      std::cerr << "NULL";
-    std::cerr << "</td><td>";
-    environment->print(std::cerr);
-    std::cerr << "</td></tr></table>";
-    ***/
+      std::cout << "NULL";
+    std::cout << "</td><td>";
+    environment->print(std::cout);
+    std::cout << "</td></tr></table>";
+     ***/
 
     bool ret = true;
     switch (type)
@@ -555,20 +554,11 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case LIST_FEATURES_VALUE:
     case TRUE_VALUE:
         FATAL_ERROR_UNEXPECTED
-        /*            if (value->type == VARIABLE) {
-                        environment->add(value->bits, shared_from_this());
-                    } else if (value->type == TRUE) {
-                    } else if (value->type == ANONYMOUS) {
-                    } else {
-                        ret = false;
-                    }
-                    break;
-        */
 
     case NIL_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->_add(value->bits, shared_from_this());
         }
         else if (value->type == NIL_VALUE)
         {
@@ -585,20 +575,26 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case FEATURES_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->_add(value->bits, shared_from_this());
         }
         else if (value->type == FEATURES_VALUE)
         {
             if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(),
-                                                       acceptToFilterNULLVariables /*, root*/))
+                                                       acceptToFilterNULLVariables
+#ifdef TRACE_ENVIRONMENT
+                                                , true
+#endif
+            ))
                 ret = false;
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
             if (!this->getFeatures()->buildEnvironment(environment, Features::create(),
-                                                       acceptToFilterNULLVariables /*,
-                                                        root*/
-                                                       ))
+                                                       acceptToFilterNULLVariables
+#ifdef TRACE_ENVIRONMENT
+                                                , root
+#endif
+))
                 ret = false;
         }
         else
@@ -610,7 +606,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case CONSTANT_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->_add(value->bits, shared_from_this());
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -634,7 +630,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case IDENTIFIER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->_add(value->bits, shared_from_this());
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -658,7 +654,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case NUMBER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->_add(value->bits, shared_from_this());
         }
         else if (value->type == NUMBER_VALUE)
         {
@@ -679,7 +675,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case FORM_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->_add(value->bits, shared_from_this());
         }
         else if (value->type == FORM_VALUE)
         {
@@ -707,7 +703,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
         }
         else if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->_add(value->bits, shared_from_this());
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
@@ -721,24 +717,24 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case VARIABLE_VALUE:
         if (!value)
         {
-            environment->add(this->bits, STATIC_NIL);
+            ret = environment->_add(this->bits, STATIC_NIL);
         }
         else
         {
-            environment->add(this->bits, value);
+            ret = environment->_add(this->bits, value);
         }
         break;
 
     case ANONYMOUS_VALUE:
         break;
     }
-    /***
-         std::cerr << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
-         std::cerr << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-         std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-         environment->print(std::cerr);
-         std::cerr << "</td></tr></table>";
-    ***/
+    /***  
+         std::cout << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
+         std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+         std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+         environment->print(std::cout);
+         std::cout << "</td></tr></table>";
+     ***/
     return ret;
 }
 
@@ -748,29 +744,30 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
 bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
 {
     bool ret = true;
-    /***
-        std::cerr << "<DIV>";
-        std::cerr << "Value::subsumes (" << this << ")";
-        std::cerr << "<TABLE><TR>";
-        std::cerr << "<TD>";
-        this->print(std::cerr);
-        std::cerr << "</TD>&lt;<TD>";
-        o->print(std::cerr);
-        std::cerr << "</TD>";
-        std::cerr << "</TR></TABLE>";
-        std::cerr << "</DIV>";
+    /*** 
+        COUT_LINE;
+        std::cout << "<DIV>";
+        std::cout << "Value::subsumes (" << this << ")";
+        std::cout << "<TABLE><TR>";
+        std::cout << "<TD>";
+        this->print(std::cout);
+        std::cout << "</TD>&lt;<TD>";
+        o->print(std::cout);
+        std::cout << "</TD>";
+        std::cout << "</TR></TABLE>";
+        std::cout << "</DIV>";
     ***/
 
     // $X < …
     if (type == VARIABLE_VALUE)
     {
-        environment->add(bits, o);
+        environment->_add(bits, o);
     }
 
     // … < $X
     else if (o->type == VARIABLE_VALUE)
     {
-        environment->add(o->bits, shared_from_this());
+        environment->_add(o->bits, shared_from_this());
     }
 
     // NIL < NIL
@@ -831,11 +828,11 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
             FATAL_ERROR_UNEXPECTED
         }
     }
-    /***
-        std::cerr << "<DIV>";
-        std::cerr << "result: (" << shared_from_this() << ")";
-        std::cerr << "</DIV>";
-    ***/
+    /*** 
+        std::cout << "<DIV>";
+        std::cout << "result: (" << shared_from_this() << ")";
+        std::cout << "</DIV>";
+     ***/
     return ret;
 }
 
@@ -1097,7 +1094,7 @@ void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
         if (!item->getEnvironment()){
             item->setEnvironment(Environment::create());
         }
-        item->getEnvironment()->add(variable->getBits(), shared_from_this());
+        item->getEnvironment()->_add(variable->getBits(), shared_from_this());
         bool b = false;
         statement->toggleEnable(statement, item, synthesizer, b, false);
         statement->apply(item, parser, synthesizer, effect);

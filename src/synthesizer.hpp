@@ -82,7 +82,7 @@ private:
     bool verbose;
     bool warning;
     bool random;
-    bool one;
+    bool first;
     int attempsRandom;
 
     MemoizationMap memoizedMap;
@@ -185,9 +185,9 @@ public:
 
     bool getRandom(void) const;
 
-    void setOne(bool);
+    void setFirst(bool);
 
-    bool getOne(void) const;
+    bool getFirst(void) const;
 
     void printState(std::ostream &, class ItemSet *);
 

@@ -18,12 +18,12 @@
 #
 ################################################## #
 
-cd data
+for i in 4
+do
+    ./bin/elvex -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
+done
+
 
 ##################################################
-# en-1.1.0.fsa
-make en-1.1.0.fsa
-../bin/elvex -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:_TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:_ELVEX], vtense:future]" | ../bin/elvexpostedition_en
-#../bin/elvex --trace -cld . -clf en-1.1.0 -rulesFile en-1.1.0.rules -lexiconFile en-1.1.0.lexicon "Text[PRED:TO_APPRECIATE, i:[PRED:_YOU], ii:[PRED:ELVEX], vtense:future]" | ../bin/elvexpostedition_en
-
-cd ..
+#make -C datat en-1.1.0.fsa
+./bin/elvex -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; cat data/en-1.1.0.html

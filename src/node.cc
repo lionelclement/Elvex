@@ -182,7 +182,7 @@ void Node::generate(vectorForests::const_iterator forest)
 /* **************************************************
  *
  ************************************************** */
-void Node::generate(bool random, bool one)
+void Node::generate(bool random, bool first)
 {
    if (isUnsetFlags(Flags::GENERATED))
    {
@@ -190,7 +190,7 @@ void Node::generate(bool random, bool one)
       for (vectorForests::const_iterator forestIterator = forests.cbegin(); forestIterator != forests.cend(); ++forestIterator)
       {
          if ((*forestIterator)->isUnsetFlags(Flags::GENERATED))
-            (*forestIterator)->generate(random, one);
+            (*forestIterator)->generate(random, first);
       }
       if (!forests.empty())
          generate(forests.begin());

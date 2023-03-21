@@ -524,21 +524,21 @@ bool Item::isCompleted()
 /* **************************************************
  *
  ************************************************** */
-void Item::addEnvironment(environmentPtr _environment)
+bool Item::addEnvironment(environmentPtr _environment)
 {
     if (!this->environment)
         this->environment = Environment::create();
-    this->environment->add(std::move(_environment));
+    return this->environment->_add(std::move(_environment));
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::addEnvironment(environmentPtr _environment, environmentPtr where)
+bool Item::addEnvironment(environmentPtr _environment, environmentPtr where)
 {
     if (!this->environment)
         this->environment = Environment::create();
-    this->environment->add(std::move(_environment), std::move(where));
+    return this->environment->_add(std::move(_environment), std::move(where));
 }
 
 /* **************************************************
@@ -733,8 +733,6 @@ void Item::print(std::ostream &out) const
     if (s_inheritedFeatures)
     {
         out << "<td bgcolor=\"lightyellow\">"; //<center>↑</center><br>";
-        // out << inheritedFeatures->hashCode() << "<BR>" <<std::endl;
-        // out << inheritedFeatures->peekSerialString() << "<BR>" << std::endl;
         inheritedFeatures->print(out);
         out << "</td>";
     }
@@ -787,8 +785,6 @@ void Item::print(std::ostream &out) const
         out << "<td align=\"center\">";
         if (environment)
             environment->print(out);
-        else
-            out << "&nbsp;";
         out << "</td>";
     }
     out << "</tr></table>";

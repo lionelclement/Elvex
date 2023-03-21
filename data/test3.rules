@@ -8,8 +8,8 @@ S → [adj] n [adj]
   foreach $i in <[a:a], [b:b]> {
         $x = $y;
         $y = $z;
+        println "$i:", $i, ", $x:", $x, ", $y:", $y, ", $z:", $z;
         $z = $i;
-        println ("$i: ", $i, ", $x:", $x);
     //foreach $j in <[c:c], [d:d]> {
     //    $xj = $yj;
     //    $yj = $zj;

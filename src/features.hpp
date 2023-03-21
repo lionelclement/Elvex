@@ -94,7 +94,11 @@ public:
 
     valuePtr find(const bitsetPtr &) const;
 
-    bool buildEnvironment(const environmentPtr &, const featuresPtr &, bool /*, bool*/);
+    bool buildEnvironment(const environmentPtr &, const featuresPtr &, bool
+#ifdef TRACE_ENVIRONMENT
+    ,bool
+#endif
+    );
 
     void subFlags(const std::bitset<FLAGS> &);
 
@@ -122,7 +126,7 @@ public:
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 
-    void apply(class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+    void _apply(class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                   const statementPtr& body,
                   bool &effect);
 

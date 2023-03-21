@@ -309,16 +309,17 @@ void Pairp::flatPrint(std::ostream &outStream, bool par) const
 bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root)
 {
     bool ret = true;
-    /***
-     std::cerr << "<H4>Pairp::buildEnvironment</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>this</th><th>otherPairp</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     this->flatPrint(std::cerr, true);
-     std::cerr << "</td><td>";
-     otherPairp->flatPrint(std::cerr, true);
-     std::cerr << "</td><td>";
-     environment->print(std::cerr);
-     std::cerr << "</td></tr></table>";
+    /*** 
+    COUT_LINE;
+     std::cout << "<H4>Pairp::buildEnvironment</H4>" << std::endl;
+     std::cout << "<table border = \"1\"><tr><th>this</th><th>otherPairp</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     this->flatPrint(std::cout, true);
+     std::cout << "</td><td>";
+     otherPairp->flatPrint(std::cout, true);
+     std::cout << "</td><td>";
+     environment->print(std::cout);
+     std::cout << "</td></tr></table>";
      ***/
 
     switch (this->type)
@@ -331,7 +332,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         }
         else if ((otherPairp->isAtom()) && (otherPairp->value->isVariable()))
         {
-            environment->add(otherPairp->value->getBits(), Value::STATIC_NIL);
+            environment->_add(otherPairp->value->getBits(), Value::STATIC_NIL);
         }
         else
         {
@@ -351,13 +352,13 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
                 switch (otherPairp->getType())
                 {
                 case _NIL_:
-                    environment->add(this->value->getBits(), Value::STATIC_NIL);
+                    environment->_add(this->value->getBits(), Value::STATIC_NIL);
                     break;
                 case _ATOM_:
-                    environment->add(this->value->getBits(), otherPairp->getValue());
+                    environment->_add(this->value->getBits(), otherPairp->getValue());
                     break;
                 case _PAIRP_:
-                    environment->add(this->value->getBits(), Value::create(otherPairp));
+                    environment->_add(this->value->getBits(), Value::create(otherPairp));
                     break;
                 }
             }
@@ -369,7 +370,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         else if (otherPairp->isAtom())
         {
             if (otherPairp->value->isVariable())
-                environment->add(otherPairp->value->getBits(), this->getValue());
+                environment->_add(otherPairp->value->getBits(), this->getValue());
             else if (!this->value->buildEnvironment(environment, otherPairp->value, acceptToFilterNULLVariables,
                                                     root))
                 ret = false;
@@ -408,12 +409,12 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         break;
     }
 
-    /***
-     std::cerr << "<H4>Result Pairp::buildEnvironment</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-     environment->print(std::cerr);
-     std::cerr << "</td></tr></table>";
+    /*** 
+     std::cout << "<H4>Result Pairp::buildEnvironment</H4>" << std::endl;
+     std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+     environment->print(std::cout);
+     std::cout << "</td></tr></table>";
      ***/
     return ret;
 }
@@ -530,11 +531,11 @@ pairpPtr Pairp::clone() const
 bool Pairp::subsumes(const pairpPtr &o, const environmentPtr &environment)
 {
     /***
-     BUG;
-     this->print(std::cerr);
-     std::cerr << " ";
-     o->print(std::cerr);
-     std::cerr << std::endl;
+     COUT_LINE;
+     this->print(std::cout);
+     std::cout << " ";
+     o->print(std::cout);
+     std::cout << std::endl;
      ***/
     switch (type)
     {
@@ -689,12 +690,12 @@ void Pairp::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
 bool Pairp::containsVariable()
 {
     /***
-     std::cerr << "<H4>Pairp::containsVariable</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>this</th></tr>";
-     std::cerr << "<tr><td>";
-     this->flatPrint(std::cerr, true);
-     std::cerr << "</td><td>";
-     std::cerr << "</td></tr></table>";
+     std::cout << "<H4>Pairp::containsVariable</H4>" << std::endl;
+     std::cout << "<table border = \"1\"><tr><th>this</th></tr>";
+     std::cout << "<tr><td>";
+     this->flatPrint(std::cout, true);
+     std::cout << "</td><td>";
+     std::cout << "</td></tr></table>";
      ***/
     if (this->variableFlag.containsVariable())
         return true;
@@ -734,8 +735,8 @@ bool Pairp::containsVariable()
     else
         this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     /***
-     std::cerr << "<H4>Pairp::containsVariable done</H4>" << std::endl;
-     std::cerr << (result ? "TRUE" : "FALSE");
+     std::cout << "<H4>Pairp::containsVariable done</H4>" << std::endl;
+     std::cout << (result ? "TRUE" : "FALSE");
      ***/
     return result;
 }
