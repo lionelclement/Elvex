@@ -30,7 +30,7 @@
 #include "rule.hpp"
 #include "statement.hpp"
 #include "statements.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "terms.hpp"
 #include "serializable.hpp"
 
@@ -526,9 +526,19 @@ bool Item::isCompleted()
  ************************************************** */
 bool Item::addEnvironment(environmentPtr _environment)
 {
+#ifdef TRACE_ENVIRONMENT
+    COUT_LINE;
+     std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
+     std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     this->print(std::cout);
+     std::cout << "</td><td>";
+     environment->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->_add(std::move(_environment));
+    return this->environment->add(std::move(_environment));
 }
 
 /* **************************************************
@@ -536,9 +546,19 @@ bool Item::addEnvironment(environmentPtr _environment)
  ************************************************** */
 bool Item::addEnvironment(environmentPtr _environment, environmentPtr where)
 {
+#ifdef TRACE_ENVIRONMENT
+    COUT_LINE;
+     std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
+     std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     this->print(std::cout);
+     std::cout << "</td><td>";
+     environment->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->_add(std::move(_environment), std::move(where));
+    return this->environment->add(std::move(_environment), std::move(where));
 }
 
 /* **************************************************

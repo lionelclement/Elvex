@@ -66,7 +66,7 @@ environmentPtr Environment::create()
 /* **************************************************
  *
  ************************************************** */
-bool Environment::_add(const std::string &key, valuePtr value)
+bool Environment::add(const std::string &key, valuePtr value)
 {
     auto it = env.find(key);
     if (it == env.end())
@@ -79,13 +79,9 @@ bool Environment::_add(const std::string &key, valuePtr value)
             it->second = value;
         }
         else {
-            COUT_LINE;
-            std::cout << "*** Error: " << key << " already done !!!" << std::endl;
-            it->second->print(std::cout);
-            std::cout << std::endl;
+            //WARNING(__FILE__ << '(' << __LINE__ << ')' << ": *** Error: " << key << " already done !!!" );
             FATAL_ERROR_UNEXPECTED;
             //return false;
-            //it->second = value;
         }   
     }
     return true;
@@ -102,33 +98,33 @@ bool Environment::remove(const std::string &key)
 /* **************************************************
  *
  ************************************************** */
-bool Environment::_add(const bitsetPtr &attr, valuePtr value)
+bool Environment::add(const bitsetPtr &attr, valuePtr value)
 {
     const std::string key = attr->toString();
-    return _add(key, std::move(value));
+    return add(key, std::move(value));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Environment::_add(const environmentPtr &e)
+bool Environment::add(const environmentPtr &e)
 {
     bool ok = true;
     for (const auto &i : *e)
-        ok &= _add(i.first, i.second);
+        ok &= add(i.first, i.second);
     return ok;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Environment::_add(const environmentPtr &e, const environmentPtr &where)
+bool Environment::add(const environmentPtr &e, const environmentPtr &where)
 {
     bool ok = true;
     if (where)
         for (const auto &i : *e)
             if (where->env.find(i.first) != where->env.end())
-                ok &= _add(i.first, i.second);
+                ok &= add(i.first, i.second);
     return ok;
 }
 
@@ -227,15 +223,10 @@ redo:
         {
         case Feature::_HEAD_:
         case Feature::_LEMMA_:
-            if (feature->getValue())
-                replaceVariables(feature->getValue(), effect);
-            break;
         case Feature::_FORM_:
         case Feature::_CONSTANT_:
-            if (feature->getValue())
-            {
+            if (feature->getValue() && feature->getValue()->isVariable())
                 replaceVariables(feature->getValue(), effect);
-            }
             break;
         case Feature::_VARIABLE_:
         {
@@ -302,6 +293,13 @@ redo:
  ************************************************** */
 void Environment::replaceVariables(const listFeaturesPtr &listFeatures, bool &effect)
 {
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::replaceVariables</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     this->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     for (auto &vf : *listFeatures)
         this->replaceVariables(vf, effect);
 }
@@ -488,10 +486,17 @@ void Environment::replaceVariables(std::string &str, bool &effect)
  ************************************************** */
 environmentPtr Environment::clone() const
 {
+#ifdef TRACE_ENVIRONMENT
+     std::cout << "<H4>Environment::clone()</H4>" << std::endl;
+     std::cout << "<table border=\"1\"><tr><th>Environment</th></tr>";
+     std::cout << "<tr><td>";
+     this->print(std::cout);
+     std::cout << "</td></tr></table>";
+#endif
     environmentPtr environment = Environment::create();
     for (const auto &i : *this)
     {
-        if (!environment->_add(i.first, (i.second) ? i.second->clone() : valuePtr()))
+        if (!environment->add(i.first, (i.second) ? i.second->clone() : valuePtr()))
             throw fatal_exception("environment not clonable");
     }
     return environment;

@@ -17,9 +17,11 @@
  *
  ************************************************** */
 
-#include <iterator>
-#include <iostream>
+#include <regex>
 #include <string>
+#include <iostream>
+#include <sstream>
+#include <iterator>
 #include <climits>
 #include <utility>
 
@@ -184,3 +186,38 @@ void Entry::makeSerialString()
     else
         serialString += 'N';
 }
+
+/* **************************************************
+ *
+ ************************************************** */
+void Entry::renameVariables(size_t k){
+
+    std::string pattern =
+        std::string(
+            "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
+    //std::cmatch match;
+
+    try
+    {
+        std::regex regexpression(pattern, std::regex_constants::ECMAScript);
+        std::string replacement_str = "$&_" + std::to_string(k);
+        form = std::regex_replace(form, regexpression, replacement_str);
+    }
+
+    catch (const std::regex_error &e)
+    {
+        std::cout << "regex_error caught: " << e.what() << '(' << e.code() << ')' << std::regex_constants::error_brack
+                  << '\n';
+    }
+    if (features)
+        features->renameVariables(k);
+    resetSerial();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entryPtr Entry::clone() const{
+    return create(pos, head, form, features->clone());
+}
+    

@@ -21,7 +21,7 @@
 #include "itemset.hpp"
 #include "messages.hpp"
 #include "rule.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 
 /* **************************************************
  *

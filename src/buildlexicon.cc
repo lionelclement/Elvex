@@ -26,7 +26,7 @@
 #include "compacted-lexicon-info.hpp"
 #include "lexicon.hpp"
 #include "messages.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "config.hpp"
 #include "parser_exception.hpp"
 #include "fatal_exception.hpp"

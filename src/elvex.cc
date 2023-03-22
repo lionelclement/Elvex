@@ -25,7 +25,7 @@
 
 #include "compacted-lexicon.hpp"
 #include "parser.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "vartable.hpp"
 #include "node.hpp"
 #include "forest.hpp"

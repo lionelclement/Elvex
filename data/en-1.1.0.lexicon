@@ -128,7 +128,7 @@ not	not;
 "."	strongPunct [punct:_dot_];
 "!"	strongPunct [punct:_excl_];
 
-"($vtense)"	features [vtense:$vtense];
+"($vtense)"	VTENSE [vtense:$vtense];
 
 "down"	part [particle:_down_];
 "out"	part [particle:_out_];

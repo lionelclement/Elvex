@@ -24,7 +24,7 @@
 #include "messages.hpp"
 #include "item.hpp"
 #include "statement.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "listfeatures.hpp"
 
 /* **************************************************

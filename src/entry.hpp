@@ -48,10 +48,10 @@ private:
 public:
     ~Entry();
 
-    static entryPtr create(unsigned int term, unsigned int head, std::string form = std::string(),
+    static entryPtr create(unsigned int pos, unsigned int head, std::string form = std::string(),
                            featuresPtr features = featuresPtr());
 
-    static entryPtr create(unsigned int term, std::string head = std::string(), std::string form = std::string(),
+    static entryPtr create(unsigned int pos, std::string head = std::string(), std::string form = std::string(),
                            featuresPtr features = featuresPtr());
 
     unsigned int getPos(void) const;
@@ -71,6 +71,11 @@ public:
 #endif
 
     void print(std::ostream &) const;
+    
+    void renameVariables(size_t);
+
+    entryPtr clone(void) const;
+
 };
 
 #endif // ELVEX_ENTRY_H

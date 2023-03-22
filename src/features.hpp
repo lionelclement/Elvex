@@ -126,7 +126,7 @@ public:
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 
-    void _apply(class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+    void apply(class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                   const statementPtr& body,
                   bool &effect);
 

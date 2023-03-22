@@ -26,7 +26,7 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 
 #define FATAL_ERROR_STM(statement)                                                                       \
     {                                                                                                    \

@@ -309,7 +309,7 @@ void Pairp::flatPrint(std::ostream &outStream, bool par) const
 bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root)
 {
     bool ret = true;
-    /*** 
+#ifdef TRACE_ENVIRONMENT
     COUT_LINE;
      std::cout << "<H4>Pairp::buildEnvironment</H4>" << std::endl;
      std::cout << "<table border = \"1\"><tr><th>this</th><th>otherPairp</th><th>Environment</th></tr>";
@@ -320,7 +320,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
      std::cout << "</td><td>";
      environment->print(std::cout);
      std::cout << "</td></tr></table>";
-     ***/
+#endif
 
     switch (this->type)
     {
@@ -332,7 +332,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         }
         else if ((otherPairp->isAtom()) && (otherPairp->value->isVariable()))
         {
-            environment->_add(otherPairp->value->getBits(), Value::STATIC_NIL);
+            environment->add(otherPairp->value->getBits(), Value::STATIC_NIL);
         }
         else
         {
@@ -352,13 +352,13 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
                 switch (otherPairp->getType())
                 {
                 case _NIL_:
-                    environment->_add(this->value->getBits(), Value::STATIC_NIL);
+                    environment->add(this->value->getBits(), Value::STATIC_NIL);
                     break;
                 case _ATOM_:
-                    environment->_add(this->value->getBits(), otherPairp->getValue());
+                    environment->add(this->value->getBits(), otherPairp->getValue());
                     break;
                 case _PAIRP_:
-                    environment->_add(this->value->getBits(), Value::create(otherPairp));
+                    environment->add(this->value->getBits(), Value::create(otherPairp));
                     break;
                 }
             }
@@ -370,7 +370,7 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         else if (otherPairp->isAtom())
         {
             if (otherPairp->value->isVariable())
-                environment->_add(otherPairp->value->getBits(), this->getValue());
+                environment->add(otherPairp->value->getBits(), this->getValue());
             else if (!this->value->buildEnvironment(environment, otherPairp->value, acceptToFilterNULLVariables,
                                                     root))
                 ret = false;
@@ -409,13 +409,13 @@ bool Pairp::buildEnvironment(const environmentPtr &environment, const pairpPtr &
         break;
     }
 
-    /*** 
+#ifdef TRACE_ENVIRONMENT
      std::cout << "<H4>Result Pairp::buildEnvironment</H4>" << std::endl;
      std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
      std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
      environment->print(std::cout);
      std::cout << "</td></tr></table>";
-     ***/
+#endif
     return ret;
 }
 

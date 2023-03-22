@@ -25,7 +25,7 @@
 #include "value.hpp"
 #include "messages.hpp"
 #include "bitset.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "item.hpp"
 #include "statement.hpp"
 #include "value.hpp"
@@ -440,7 +440,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->_add(i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
+                            environment->add(i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
                         }
                         else
                         {
@@ -493,7 +493,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         nFeatures->add(i2);
                     }
                 }
-                environment->_add(i1->getAttribute(), Value::create(nFeatures));
+                environment->add(i1->getAttribute(), Value::create(nFeatures));
             }
         }
     }
@@ -731,11 +731,11 @@ void Features::setVariableFlag(enum VariableFlag::flagValues flag)
 /* **************************************************
  *
  ************************************************** */
-void Features::_apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Features::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                      const statementPtr &statement,
                      bool &effect)
 {
-    item->getEnvironment()->_add(variable->getBits(), Value::create(shared_from_this()));
+    item->getEnvironment()->add(variable->getBits(), Value::create(shared_from_this()));
     effect = true;
     statement->toggleEnable(statement, item, synthesizer, effect, false);
     statement->apply(item, parser, synthesizer, effect);

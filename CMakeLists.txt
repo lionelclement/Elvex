@@ -66,8 +66,8 @@ set(ELVEX_COMMON_SOURCES
         src/forestidentifier.hpp
         src/forestmap.cc
         src/forestmap.hpp
-        src/uniq-id.cc
-        src/uniq-id.hpp
+        src/generator.cc
+        src/generator.hpp
         src/item.cc
         src/item.hpp
         src/itemset.cc
@@ -100,10 +100,10 @@ set(ELVEX_COMMON_SOURCES
         src/statement.hpp
         src/statements.cc
         src/statements.hpp
-        src/synthesizer.cc
-        src/synthesizer.hpp
         src/terms.cc
         src/terms.hpp
+        src/uniq-id.cc
+        src/uniq-id.hpp
         src/usage_exception.cc
         src/usage_exception.hpp
         src/value.cc
@@ -119,7 +119,7 @@ configure_file(
         @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
-target_compile_options(elvex PUBLIC -std=c++11 -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
+target_compile_options(elvex PUBLIC -std=c++11 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )
@@ -136,6 +136,7 @@ if (LibXml2_FOUND)
             MAXUSAGES=1000
             MAXITEMS=1000
             MAXATTEMPTS=1000
+            #TRACE_ENVIRONMENT
             #TRACE_ENABLE_STATEMENT
             #TRACE_APPLY_STATEMENT
             #TRACE_EVAL
@@ -145,7 +146,6 @@ if (LibXml2_FOUND)
             #TRACE_UNFOLD
             #TRACE_MEMOIZATION
             #TRACE_LEXICON
-            #TRACE_ENVIRONMENT
         )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})

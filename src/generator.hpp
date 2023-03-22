@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_SYNTHESIZER_H
-#define ELVEX_SYNTHESIZER_H
+#ifndef ELVEX_GENERATOR_H
+#define ELVEX_GENERATOR_H
 
 #include <unordered_map>
 
@@ -216,4 +216,4 @@ public:
     entriesPtr findByHead(Parser &parser, Parser::entries_map *, unsigned int pos, unsigned int head);
 };
 
-#endif // ELVEX_SYNTHESIZER_H
+#endif // ELVEX_GENERATOR_H

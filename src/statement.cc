@@ -36,7 +36,7 @@
 #include "shared_ptr.hpp"
 #include "listfeatures.hpp"
 #include "rule.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "parser.hpp"
 #include "bitset.hpp"
 #include "vartable.hpp"
@@ -1144,8 +1144,8 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
 featuresPtr
 Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
 {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL FEATURES #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::evalFeatures #######################" << std::endl;
     std::cout << "<div>evalFeatures: " << std::endl;
     this->print(std::cout);
     std::cout << std::endl;
@@ -1241,8 +1241,8 @@ Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesiz
     default:
         FATAL_ERROR_UNEXPECTED;
     }
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL FEATURES DONE #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::evalFeatures DONE #######################" << std::endl;
     std::cout << "<div>" << std::endl;
     this->print(std::cout);
     std::cout << std::endl;
@@ -1260,8 +1260,8 @@ Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesiz
  ************************************************** */
 pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
 {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL PAIRP #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::evalPairp #######################" << std::endl;
     std::cout << "<div>" << std::endl;
     this->print(std::cout);
     std::cout << "</div>" << std::endl;
@@ -1346,8 +1346,8 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
         FATAL_ERROR_UNEXPECTED;
         break;
     }
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL PAIRP DONE #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::evalPairp DONE #######################" << std::endl;
     std::cout << "<div>" << std::endl;
     this->print(std::cout);
     std::cout << std::endl;
@@ -1365,8 +1365,8 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
  ************************************************** */
 valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
 {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL VALUE #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::evalValue #######################" << std::endl;
     std::cout << "<div>" << std::endl;
     this->print(std::cout, 0);
     item->print(std::cout);
@@ -1858,8 +1858,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
     }
 
 valueBuilt:
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL VALUE DONE #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::evalValue DONE #######################" << std::endl;
     std::cout << "<div>" << std::endl;
     this->print(std::cout);
     std::cout << "<H3>";
@@ -1878,8 +1878,8 @@ valueBuilt:
  ************************************************** */
 featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const featuresPtr &fs2, class Item *item)
 {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL UNIF #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::unif #######################" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>fs1</th><th>fs2</th><th>Environment</th></tr>";
     std::cout << "<tr><td>";
     if (fs1)
@@ -1946,7 +1946,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                             result->add(Feature::create(Feature::_HEAD_, bitsetPtr(), (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
-                            item->getEnvironment()->_add((*i2)->getValue()->getBits(), (*i1)->getValue());
+                            item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
 
                         default:
@@ -1968,7 +1968,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                             {
                                 if (!item->getEnvironment())
                                     item->setEnvironment(Environment::create());
-                                item->getEnvironment()->_add((*i1)->getValue()->getBits(), (*i2)->getValue());
+                                item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
                             }
                         }
                         result->add(Feature::create(Feature::_HEAD_, bitsetPtr(), (*i2)->getValue()));
@@ -2087,7 +2087,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
-                            item->getEnvironment()->_add((*i2)->getValue()->getBits(), (*i1)->getValue());
+                            item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
                         default:
                             FATAL_ERROR_STM(self);
@@ -2116,7 +2116,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
-                            item->getEnvironment()->_add((*i2)->getValue()->getBits(), (*i1)->getValue());
+                            item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
                         default:
                             FATAL_ERROR_STM(self);
@@ -2145,7 +2145,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
-                            item->getEnvironment()->_add((*i2)->getValue()->getBits(), (*i1)->getValue());
+                            item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
                         default:
                             FATAL_ERROR_STM(self);
@@ -2175,7 +2175,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                                                         (*i1)->getValue()));
                             if (!item->getEnvironment())
                                 item->setEnvironment(Environment::create());
-                            item->getEnvironment()->_add((*i2)->getValue()->getBits(), (*i1)->getValue());
+                            item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
                         case Value::ANONYMOUS_VALUE:
                             result->add(Feature::create(Feature::_CONSTANT_, (*i2)->getAttribute(),
@@ -2200,7 +2200,7 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                             {
                                 if (!item->getEnvironment())
                                     item->setEnvironment(Environment::create());
-                                item->getEnvironment()->_add((*i1)->getValue()->getBits(), (*i2)->getValue());
+                                item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
                             }
                         }
                         result->add(Feature::create(Feature::_CONSTANT_, (*i1)->getAttribute(), (*i2)->getValue()));
@@ -2257,8 +2257,8 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
 
 endUnif:
 
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL UNIF DONE #######################" << std::endl;
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::unif DONE #######################" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
     std::cout << "<tr><td>";
     if (result)
@@ -2276,11 +2276,12 @@ endUnif:
  ************************************************************ */
 void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
-    /***
-        std::cerr << "buildInheritedSonFeatures: ";
-        print(std::cerr);
-        std::cerr << std::endl;
-    ***/
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::buildInheritedSonFeatures #######################" << std::endl;
+        std::cout << "buildInheritedSonFeatures: ";
+        print(std::cout);
+        std::cout << std::endl;
+#endif
     if (!item->getInheritedSonFeatures()->get(lhs->getFirst())->isNil())
     {
         std::ostringstream oss;
@@ -2305,6 +2306,12 @@ void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synt
  ************************************************************ */
 void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::buildSynthesizedFeatures #######################" << std::endl;
+        std::cout << "buildSynthesizedFeatures: ";
+        print(std::cout);
+        std::cout << std::endl;
+#endif
     if (!item->getSynthesizedFeatures()->isNil())
     {
         std::ostringstream oss;
@@ -2327,6 +2334,12 @@ void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synth
  ************************************************************ */
 void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::buildEnvironmentWithSynthesize #######################" << std::endl;
+        std::cout << "buildEnvironmentWithSynthesize: ";
+        print(std::cout);
+        std::cout << std::endl;
+#endif
     switch (this->op)
     {
     case ASSIGNMENT_STATEMENT:
@@ -2345,7 +2358,7 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
         featuresPtr sonSynth = rhs->evalFeatures(item, parser, synthesizer, true);
         if (sonSynth)
         {
-            environment->_add(lhs->getBits(), Value::create(sonSynth));
+            environment->add(lhs->getBits(), Value::create(sonSynth));
         }
         else
             FATAL_ERROR_STM(shared_from_this());
@@ -2408,11 +2421,12 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
  ************************************************************ */
 void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
-    /***
-        std::cerr << "<DIV>buildEnvironmentWithInherited ";
-        this->print(std::cerr, "", TRUE_ROOT);
-        std::cerr << "</DIV>";
-    ***/
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::buildEnvironmentWithInherited #######################" << std::endl;
+        std::cout << "buildEnvironmentWithInherited: ";
+        print(std::cout);
+        std::cout << std::endl;
+#endif
     switch (this->op)
     {
     case ASSIGNMENT_STATEMENT:
@@ -2435,7 +2449,7 @@ void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, 
                 environment = Environment::create();
                 item->setEnvironment(environment);
             }
-            environment->_add(lhs->getBits(), Value::create(right));
+            environment->add(lhs->getBits(), Value::create(right));
         }
     }
     break;
@@ -2504,12 +2518,11 @@ void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, 
  ************************************************************ */
 void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
-    /***
-        std::cerr << "<DIV>buildEnvironmentWithValue</DIV>";
-        std::cerr << "<DIV>";
-        this->print(std::cerr, 0);
-        std::cerr << "</DIV>";
-    ***/
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::buildEnvironmentWithValue #######################" << std::endl;
+        print(std::cout);
+        std::cout << std::endl;
+#endif
     switch (this->op)
     {
     case ASSIGNMENT_STATEMENT:
@@ -2542,7 +2555,7 @@ void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synt
                     environment = Environment::create();
                     item->setEnvironment(environment);
                 }
-                environment->_add(lhs->getBits(), right);
+                environment->add(lhs->getBits(), right);
             }
         }
 
@@ -2641,12 +2654,11 @@ void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synt
  ************************************************************ */
 void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
-    /***
-        std::cout << "<DIV>*** attest</DIV>";
-        std::cout << "<DIV>";
-        this->print(std::cout);
-        std::cout << "</DIV>";
-    ***/
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::stmAttest #######################" << std::endl;
+        print(std::cout);
+        std::cout << std::endl;
+#endif
     switch (this->op)
     {
     case ATTEST_STATEMENT:
@@ -2670,13 +2682,12 @@ void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthes
  ************************************************************ */
 void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
 {
-    /***
-        COUT_LINE;
-         std::cout << "<DIV>guard ";
-         item->print(std::cout);
-         print(std::cout);
-         std::cout << "</DIV>";
-    ***/
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::stmGuard #######################" << std::endl;
+        item->print(std::cout);
+        print(std::cout);
+        std::cout << std::endl;
+#endif
     if (isSetFlags(Flags::DISABLED | Flags::SEEN))
     {
         FATAL_ERROR_UNEXPECTED;
@@ -2709,11 +2720,11 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
         item->getEnvironment().reset();
         item->setEnvironment(environmentPtr());
     }
-    /***
-        std::cout << "<DIV>guard done";
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::stmGuard DONE #######################" << std::endl;
         item->print(std::cout);
-        std::cout << "</DIV>";
-    ***/
+        std::cout << std::endl;
+#endif
 }
 
 /* ************************************************************
@@ -2721,14 +2732,11 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
  ************************************************************ */
 void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
-    /*** 
-    COUT_LINE;
-    std::cout << "<DIV>foreach";
-    item->print(std::cout);
-    print(std::cout);
-    std::cout << "</DIV>";
-    ***/
-
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::stmForeach #######################" << std::endl;
+        item->print(std::cout);
+        std::cout << std::endl;
+#endif
     addFlags(Flags::SEEN);
     statementPtr variable = getLhs();
     valuePtr value = getRhs()->getLhs()->evalValue(item, parser, synthesizer, true);
@@ -2741,18 +2749,18 @@ void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthe
     else if (value->isListFeatures())
     {
         FATAL_ERROR_MSG_STM("foreach does'nt apply a list");
-        value->getListFeatures()->_apply(item, parser, synthesizer, variable, statement, effect);
+        value->getListFeatures()->apply(item, parser, synthesizer, variable, statement, effect);
     }
 
     else
     {
         FATAL_ERROR_MSG_STM("foreach does'nt apply a list");
     }
-    /*** 
-    std::cout << "<DIV>foreach done, effect:" << effect;
-    item->print(std::cout);
-    std::cout << "</DIV>";
-    ***/
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::stmForeach DONE #######################" << std::endl;
+        item->print(std::cout);
+        std::cout << std::endl;
+#endif
 }
 
 /* ************************************************************

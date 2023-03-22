@@ -23,7 +23,7 @@
 #include "terms.hpp"
 #include "statements.hpp"
 #include "messages.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "vartable.hpp"
 
 /* ************************************************************

@@ -1,7 +1,7 @@
 /* **************************************************
  * 
  ************************************************** */
-Text_with_features → features S {
+Text_with_features → VTENSE S {
   [vtense:$vtense] ⊂ ⇓2;
   [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
   if (¬ $lexical_function)
@@ -53,7 +53,8 @@ S_tense → S_cor {
   if (¬ $aspect)
     $aspect = default;
 
-  if ($mode == indicative) {
+  if (¬ $vtense){
+    if ($mode == indicative) {
     // $Present
     if ($tense == present){
       if ($aspect == continuous)
@@ -81,7 +82,8 @@ S_tense → S_cor {
     else
       $vtense=$tense;
   }
-
+  }
+  
   ↓1 = [vtense:$vtense, $rest];
   ⇑ = ⇓1;
 }

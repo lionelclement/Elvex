@@ -19,7 +19,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "compacted-lexicon.hpp"
 #include "compacted-lexicon-buffer.hpp"
 #include "statements.hpp"
@@ -1134,6 +1134,7 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                 while (entryIt != entries->end())
                                 {
                                     entryPtr entry = *entryIt;
+                                    
                                     if (this->getRandom())
                                     {
                                         if (tryRandom++ > attempsRandom)
@@ -1146,8 +1147,10 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         entry = *entryIt;
                                         ++entryIt;
                                     }
+                                    entryPtr entry_copy = entry->clone();
+                                    entry_copy->renameVariables(entry->getId());
 
-                                    featuresPtr entryFeatures = entry->getFeatures() ? entry->getFeatures()->clone()
+                                    featuresPtr entryFeatures = entry_copy->getFeatures() ? entry_copy->getFeatures()
                                                                                      : featuresPtr();
                                     statementsPtr entryStatements = statementsPtr();
                                     environmentPtr env = (*actualItem)->getEnvironment()
@@ -1172,7 +1175,6 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         if (entryFeatures)
                                         {
                                             resultFeatures = entryFeaturesCopy;
-                                            //resultFeatures = Statement::unif(statementPtr(), entryFeaturesCopy, inheritedSonFeaturesCopy, it);
                                         }
                                         else
                                         {
@@ -1187,33 +1189,33 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                                 bool effect = false;
                                                 it->getEnvironment()->replaceVariables(resultFeatures, effect);
                                             }
-                                            resultFeatures->renameVariables(entry->getId());
+                                            resultFeatures->renameVariables(entry_copy->getId());
                                         }
 
                                         it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(),
                                                                              entryFeaturesCopy);
                                         if (entryStatements)
-                                            entryStatements->renameVariables(entry->getId());
+                                            entryStatements->renameVariables(entry_copy->getId());
                                         entryPtr word;
                                         if (_stage == FORM_FEATURES)
                                         {
-                                            word = Entry::create(entry->getPos(), UINT_MAX, *form, resultFeatures);
+                                            word = Entry::create(entry_copy->getPos(), UINT_MAX, *form, resultFeatures);
                                         }
                                         else
                                         {
-                                            size_t _found = entry->getForm().find('$');
+                                            size_t _found = entry_copy->getForm().find('$');
                                             if (_found != std::string::npos)
                                             {
                                                 bool effect = false;
-                                                std::string _form = entry->getForm();
+                                                std::string _form = entry_copy->getForm();
                                                 it->getEnvironment()->replaceVariables(_form, effect);
-                                                word = Entry::create(entry->getPos(), entry->getHead(), _form,
+                                                word = Entry::create(entry_copy->getPos(), entry_copy->getHead(), _form,
                                                                      resultFeatures);
                                             }
                                             else
                                             {
-                                                word = Entry::create(entry->getPos(), entry->getHead(),
-                                                                     entry->getForm(), resultFeatures);
+                                                word = Entry::create(entry_copy->getPos(), entry_copy->getHead(),
+                                                                     entry_copy->getForm(), resultFeatures);
                                             }
                                         }
                                         //word->print(std::cerr);

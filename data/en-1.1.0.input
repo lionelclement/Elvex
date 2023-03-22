@@ -45,8 +45,7 @@
 //Text [HEAD:TO_CHASE, i:[HEAD:CAT, @p], ii:[HEAD:MOUSE, @p]]
 
 
-//Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX], vtense:$t]
-//Text[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX], vtense:$t]
+Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX], vtense:$t]
 
 //Text[HEAD:STUDENT, @p]
 
@@ -108,7 +107,7 @@ Text[   HEAD:CAUSE,
 ]
 */
 
-Text[   HEAD:CAUSE,
+/*Text[   HEAD:CAUSE,
         i:[HEAD:TO_FIND_OUT, 
                 i:[HEAD:STUDENT, ID:36, @p], 
                 ii:[HEAD:TO_ACCEPT, 
@@ -117,8 +116,7 @@ Text[   HEAD:CAUSE,
         ii:[HEAD:EUPHORIC, i:[HEAD:STUDENT, ID:36]],
         tense:past
 ]
-
-
+*/
 
 //Text [HEAD:TO_FEEL, i:[HEAD:EGO]]
 //     To feel happy/sad/angry/excited/anxious/bored/tired/energized/refreshed/hungry/thirsty

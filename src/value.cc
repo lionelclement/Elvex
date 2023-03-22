@@ -29,7 +29,7 @@
 #include "messages.hpp"
 #include "item.hpp"
 #include "shared_ptr.hpp"
-#include "synthesizer.hpp"
+#include "generator.hpp"
 #include "vartable.hpp"
 
 valuePtr Value::STATIC_NIL = Value::create(Value::NIL_VALUE);
@@ -531,7 +531,7 @@ valuePtr Value::clone()
  ************************************************************ */
 bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root)
 {
-    /***  
+#ifdef TRACE_ENVIRONMENT
     COUT_LINE;
     std::cout << "<H4>Value::buildEnvironment</H4>" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>this</th><th>value</th><th>Environment</th></tr>";
@@ -545,7 +545,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     std::cout << "</td><td>";
     environment->print(std::cout);
     std::cout << "</td></tr></table>";
-     ***/
+#endif
 
     bool ret = true;
     switch (type)
@@ -558,7 +558,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case NIL_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->_add(value->bits, shared_from_this());
+            environment->add(value->bits, shared_from_this());
         }
         else if (value->type == NIL_VALUE)
         {
@@ -575,7 +575,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case FEATURES_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->_add(value->bits, shared_from_this());
+            environment->add(value->bits, shared_from_this());
         }
         else if (value->type == FEATURES_VALUE)
         {
@@ -606,7 +606,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case CONSTANT_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->_add(value->bits, shared_from_this());
+            environment->add(value->bits, shared_from_this());
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -630,7 +630,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case IDENTIFIER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->_add(value->bits, shared_from_this());
+            environment->add(value->bits, shared_from_this());
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -654,7 +654,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case NUMBER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->_add(value->bits, shared_from_this());
+            environment->add(value->bits, shared_from_this());
         }
         else if (value->type == NUMBER_VALUE)
         {
@@ -675,7 +675,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case FORM_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->_add(value->bits, shared_from_this());
+            environment->add(value->bits, shared_from_this());
         }
         else if (value->type == FORM_VALUE)
         {
@@ -703,7 +703,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
         }
         else if (value->type == VARIABLE_VALUE)
         {
-            environment->_add(value->bits, shared_from_this());
+            environment->add(value->bits, shared_from_this());
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
@@ -717,24 +717,24 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case VARIABLE_VALUE:
         if (!value)
         {
-            ret = environment->_add(this->bits, STATIC_NIL);
+            ret = environment->add(this->bits, STATIC_NIL);
         }
         else
         {
-            ret = environment->_add(this->bits, value);
+            ret = environment->add(this->bits, value);
         }
         break;
 
     case ANONYMOUS_VALUE:
         break;
     }
-    /***  
+#ifdef TRACE_ENVIRONMENT
          std::cout << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
          std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
          std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
          environment->print(std::cout);
          std::cout << "</td></tr></table>";
-     ***/
+#endif
     return ret;
 }
 
@@ -744,7 +744,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
 bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
 {
     bool ret = true;
-    /*** 
+#ifdef TRACE_ENVIRONMENT
         COUT_LINE;
         std::cout << "<DIV>";
         std::cout << "Value::subsumes (" << this << ")";
@@ -756,18 +756,18 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
         std::cout << "</TD>";
         std::cout << "</TR></TABLE>";
         std::cout << "</DIV>";
-    ***/
+#endif
 
     // $X < …
     if (type == VARIABLE_VALUE)
     {
-        environment->_add(bits, o);
+        environment->add(bits, o);
     }
 
     // … < $X
     else if (o->type == VARIABLE_VALUE)
     {
-        environment->_add(o->bits, shared_from_this());
+        environment->add(o->bits, shared_from_this());
     }
 
     // NIL < NIL
@@ -828,11 +828,11 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
             FATAL_ERROR_UNEXPECTED
         }
     }
-    /*** 
+#ifdef TRACE_ENVIRONMENT
         std::cout << "<DIV>";
         std::cout << "result: (" << shared_from_this() << ")";
         std::cout << "</DIV>";
-     ***/
+#endif
     return ret;
 }
 
@@ -1087,6 +1087,18 @@ void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
                   const statementPtr &statement,
                   bool &effect)
 {
+#ifdef TRACE_ENVIRONMENT
+        COUT_LINE;
+        std::cout << "<DIV>";
+        std::cout << "Value::apply ()";
+        std::cout << "<TABLE><TR>";
+        std::cout << "<TD>";
+        this->print(std::cout);
+        std::cout << "</TD>";
+        std::cout << "</TR></TABLE>";
+        std::cout << "</DIV>";
+#endif
+
     switch (type)
     {
     case FEATURES_VALUE:
@@ -1094,7 +1106,7 @@ void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
         if (!item->getEnvironment()){
             item->setEnvironment(Environment::create());
         }
-        item->getEnvironment()->_add(variable->getBits(), shared_from_this());
+        item->getEnvironment()->add(variable->getBits(), shared_from_this());
         bool b = false;
         statement->toggleEnable(statement, item, synthesizer, b, false);
         statement->apply(item, parser, synthesizer, effect);

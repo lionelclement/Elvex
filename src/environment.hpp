@@ -36,7 +36,7 @@ private:
 private:
     unordered_map env;
 
-    bool _add(const std::string &, valuePtr = valuePtr());
+    bool add(const std::string &, valuePtr = valuePtr());
 
     bool remove(const std::string &);
 
@@ -45,11 +45,11 @@ public:
 
     static environmentPtr create(void);
 
-    bool _add(const bitsetPtr &, valuePtr = valuePtr());
+    bool add(const bitsetPtr &, valuePtr = valuePtr());
 
-    bool _add(const environmentPtr &);
+    bool add(const environmentPtr &);
 
-    bool _add(const environmentPtr &, const environmentPtr &);
+    bool add(const environmentPtr &, const environmentPtr &);
 
     bool remove(const bitsetPtr &);
 
