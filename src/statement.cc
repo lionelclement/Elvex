@@ -1336,7 +1336,7 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
             }
             else
             {
-                throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(features->assignHead()));
+                //throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(features->assignHead()));
             }
         }
     }
@@ -2272,15 +2272,15 @@ endUnif:
 }
 
 /* ************************************************************
- * ↓1 = …
+ * ↓i = …
  ************************************************************ */
 void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildInheritedSonFeatures #######################" << std::endl;
-        std::cout << "buildInheritedSonFeatures: ";
-        print(std::cout);
-        std::cout << std::endl;
+    std::cout << "buildInheritedSonFeatures: ";
+    print(std::cout);
+    std::cout << std::endl;
 #endif
     if (!item->getInheritedSonFeatures()->get(lhs->getFirst())->isNil())
     {
@@ -2295,6 +2295,7 @@ void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synt
         FATAL_ERROR_OS_MSG_STM(oss);
     }
     featuresPtr _features = rhs->evalFeatures(item, parser, synthesizer, true);
+
     if (_features->isNil())
         addFlags(Flags::BOTTOM);
     else
@@ -2392,7 +2393,7 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
             if (sonSynth)
             {
                 if (!left->buildEnvironment(environment, sonSynth, true
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
                     , true
 #endif
                     ))
@@ -2483,7 +2484,7 @@ void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, 
                     item->setEnvironment(environment);
                 }
                 if (!left->buildEnvironment(environment, right, true
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
                     , true
 #endif
                     ))
@@ -2631,7 +2632,7 @@ void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synt
                     item->setEnvironment(environment);
                 }
                 if (!left->buildEnvironment(environment, right, true
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
                         , true
 #endif
 ))
@@ -2708,7 +2709,7 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
     featuresPtr localRhs = item->getInheritedFeatures();
 
     if (!localFeatures->buildEnvironment(environment, localRhs, false
-#ifdef TRACE_ENVIRONMENT    
+#ifdef TRACE_BUILD_ENVIRONMENT    
                 , true
 #endif
 ))
@@ -3199,7 +3200,7 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
         stmWait(item, parser, synthesizer, effect);
     }
 
-    // ↓1 = …
+    // ↓i = …
     else if ((isAssignment()) && (getLhs()->isDown()))
     {
         buildInheritedSonFeatures(item, parser, synthesizer);
@@ -3208,7 +3209,7 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     }
 
     // [ … $X … ] ⊂ ⇓1
-    // $X = ⇓1
+    // $X = ⇓i
     else if (((isSubsume()) && (getRhs()->isDown2()) && (getLhs()->isFeatures())) ||
              ((isAssignment()) && (getRhs()->isDown2()) && (getLhs()->isVariable())))
     {

@@ -1,4 +1,4 @@
-/***
+/* **
 * I feel good.
 * You feel very bad.
 * He appreciates it.
@@ -39,15 +39,22 @@
 *
 * I would feel bad if I saw John.
 *
-***/
+** */
 
+//Text[HEAD:CAT]
+//Text [HEAD:TO_MEOW, i:[HEAD:CAT]]
+
+//Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
 //Text [HEAD:TO_CHASE, i:[HEAD:CAT, @p], ii:[HEAD:MOUSE, @p]]
 
+//Text [HEAD:CAT, @p, MOD:<[HEAD:BLACK],[HEAD:BIG]>]
+//Text [HEAD:TABLE, @s, MOD:<[HEAD:BEAUTIFUL], [HEAD:LARGE], [HEAD:ROUND], [HEAD:WOODEN]>]
 
-Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX], vtense:$t]
+//Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX], vtense:$tense]
+//Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX]]
+//Text[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX]]
 
-//Text[HEAD:STUDENT, @p]
 
 //Text[HEAD:EUPHORIC, i:[HEAD:STUDENT, @p], tense:past]
 
@@ -57,13 +64,11 @@ Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX], vten
 
 //S[HEAD:TO_STUDY, i:[HEAD:pro, number:pl, person:three], vtense:present, lexical_function:none, verbal_constr:no_int|no_neg]
 
-/*
 Text[   HEAD:CAUSE,
         i:[HEAD:TO_STUDY, i:[ID:36, HEAD:STUDENT, @p]],
         ii:[HEAD:EUPHORIC, i:[ID:36]],
         tense:present
 ]
-*/
 
 /*
 Text[   HEAD:CAUSE,
@@ -77,9 +82,17 @@ Text[   HEAD:CAUSE,
 //Text [HEAD:TO_ACCEPT, i:[HEAD:STUDENT, ID:36, @p], ii:[HEAD:TO_STUDY, i:[ID:36]]]
 //Text [HEAD:TO_ACCEPT, i:[HEAD:STUDENT, @p], ii:[HEAD:CAT, @s]]
 
+/*
+Text [HEAD:TO_ACCEPT, 
+        i:[ID:36, HEAD:STUDENT, @p], 
+        ii:[HEAD:TO_STUDY, i:[ID:36, HEAD:STUDENT, @p]]]
+*/
 
-
-//Text [HEAD:TO_ACCEPT, ii:[ID:36, HEAD:STUDENT, @p], i:[HEAD:TO_STUDY, i:[ID:36]]]
+/*
+Text [HEAD:TO_ACCEPT, 
+        i:[ID:36, HEAD:STUDENT, @p], 
+        ii:[HEAD:TO_STUDY, i:[ID:36]]]
+*/
 
 //Text [HEAD:TO_FIND_OUT, i:[HEAD:STUDENT, @p]]
 
@@ -91,15 +104,14 @@ Text[   HEAD:CAUSE,
         i:[HEAD:TO_STUDY, i:[HEAD:PROFESSOR, @s]],
         ii:[HEAD:TO_FIND_OUT, 
                 i:[HEAD:STUDENT, @p], 
-                ii:[HEAD:TO_STUDY, i:[HEAD:PROFESSOR, @s]]],
+                ii:[HEAD:TO_RUN, i:[HEAD:MOUSE, @s]]],
         tense:past
 ]
 */
 
-
 /*
 Text[   HEAD:CAUSE,
-        i:[HEAD:TO_MEOW, i:[HEAD:STUDENT, ID:36, @p]],
+        i:[HEAD:TO_STUDY, i:[HEAD:STUDENT, ID:36, @p]],
         ii:[HEAD:TO_FIND_OUT, 
                 i:[HEAD:STUDENT, ID:36, @p], 
                 ii:[HEAD:TO_ACCEPT, i:[HEAD:STUDENT, ID:36, @s]]],
@@ -107,13 +119,14 @@ Text[   HEAD:CAUSE,
 ]
 */
 
-/*Text[   HEAD:CAUSE,
+/*
+Text[   HEAD:CAUSE,
         i:[HEAD:TO_FIND_OUT, 
-                i:[HEAD:STUDENT, ID:36, @p], 
+                i:[HEAD:STUDENT, ID:36, @p, @_3], 
                 ii:[HEAD:TO_ACCEPT, 
                         i:[HEAD:PROFESSOR, @s],
                         ii:[HEAD:TO_STUDY, i:[HEAD:STUDENT, ID:36, @p, @_3], MOD:<[HEAD:ABROAD],[FORM:"next year"]>]]],
-        ii:[HEAD:EUPHORIC, i:[HEAD:STUDENT, ID:36]],
+        ii:[HEAD:EUPHORIC, i:[HEAD:STUDENT, ID:36, @p, @_3]],
         tense:past
 ]
 */

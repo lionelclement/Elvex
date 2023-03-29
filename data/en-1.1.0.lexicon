@@ -63,7 +63,7 @@ them	pro [HEAD:pro, @_3p, case:accusative];
 ************************************************************/
 myself	pro [HEAD:pro, @_1s, case:reflexive];
 yourself pro [HEAD:pro, @_2s, case:reflexive];
-himself catpro [HEAD:pro, @_3s, case:reflexive];
+himself pro [HEAD:pro, @_3s, case:reflexive];
 
 // Déterminants
 a	det	[number:sg, def:false, poss:false, part:false, dem:false];
@@ -124,25 +124,54 @@ been	been [aux_form:been];
 "have been"	have [aux_form:have_been];
 not	not;
 
+/************************************************************
+* 
+************************************************************/
 "?"	strongPunct [punct:_int_];
 "."	strongPunct [punct:_dot_];
 "!"	strongPunct [punct:_excl_];
 
+/************************************************************
+* 
+************************************************************/
 "($vtense)"	VTENSE [vtense:$vtense];
 
+/************************************************************
+* 
+************************************************************/
 "down"	part [particle:_down_];
 "out"	part [particle:_out_];
 
+/************************************************************
+* 
+************************************************************/
 "to"	prep [pcase:_to_];
 "at"	prep [pcase:_at_];
 "on"	prep [pcase:_on_];
 "over"	prep [pcase:_over_];
 
+/************************************************************
+* 
+************************************************************/
 "to"	to [];
 
+/************************************************************
+* 
+************************************************************/
 "that"	csu [compl:_that_];
 "if"	csu [compl:_if_];
 "when"	csu [compl:_when_];
 "whether"	csu [compl:_whether_];
 
+/************************************************************
+* 
+************************************************************/
 "abroad" advs [HEAD:ABROAD];
+
+"black"	adjColor [HEAD:BLACK];
+"big"	adjSize	[HEAD:BIG];
+
+"beautiful"	adjQuality [HEAD:BEAUTIFUL];
+"large"	adjSize [HEAD:LARGE];
+"round" adjShape [HEAD:ROUND];
+"wooden" adjMaterial [HEAD:WOODEN];

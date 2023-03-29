@@ -78,10 +78,14 @@ bool Environment::add(const std::string &key, valuePtr value)
         if (it->second->isAnonymous()) {
             it->second = value;
         }
-        else {
-            //WARNING(__FILE__ << '(' << __LINE__ << ')' << ": *** Error: " << key << " already done !!!" );
+        else if (it->second->isVariable()) {
             FATAL_ERROR_UNEXPECTED;
-            //return false;
+            return false;
+        }
+        else {
+            WARNING(__FILE__ << '(' << __LINE__ << ')' << ": *** Error: " << key << " already done !!!" );
+            FATAL_ERROR_UNEXPECTED;
+            return false;
         }   
     }
     return true;
@@ -225,7 +229,11 @@ redo:
         case Feature::_LEMMA_:
         case Feature::_FORM_:
         case Feature::_CONSTANT_:
-            if (feature->getValue() && feature->getValue()->isVariable())
+            if (feature->getValue() && (
+                (feature->getValue()->isFeatures() 
+                || feature->getValue()->isVariable() 
+                || feature->getValue()->isListFeatures() 
+                || feature->getValue()->isPairp())))
                 replaceVariables(feature->getValue(), effect);
             break;
         case Feature::_VARIABLE_:
@@ -486,13 +494,6 @@ void Environment::replaceVariables(std::string &str, bool &effect)
  ************************************************** */
 environmentPtr Environment::clone() const
 {
-#ifdef TRACE_ENVIRONMENT
-     std::cout << "<H4>Environment::clone()</H4>" << std::endl;
-     std::cout << "<table border=\"1\"><tr><th>Environment</th></tr>";
-     std::cout << "<tr><td>";
-     this->print(std::cout);
-     std::cout << "</td></tr></table>";
-#endif
     environmentPtr environment = Environment::create();
     for (const auto &i : *this)
     {

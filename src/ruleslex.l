@@ -244,8 +244,8 @@ downDoubleArrow "⇓"
   }
   
   "::" {
-    DBUGPRT("TOKEN_DOUBLECOLON");
-    return TOKEN_DOUBLECOLON;
+    DBUGPRT("TOKEN_CONS");
+    return TOKEN_CONS;
   }
   
   ":" {

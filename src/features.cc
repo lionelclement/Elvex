@@ -360,7 +360,7 @@ valuePtr Features::find(const bitsetPtr &code) const
  *
  ************************************************** */
 bool Features::buildEnvironment(const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
 , bool root
 #endif
 )
@@ -373,7 +373,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
     //		//environment->replaceVariables(features, effect);
     //	}
 
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
      if (root) {
         COUT_LINE;
         std::cout << "<H4>Features::buildEnvironment</H4>" << std::endl;
@@ -499,7 +499,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
     }
     _features->subFlags(Flags::SEEN);
 
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
      if (root) {
         std::cout << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
         std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";

@@ -18,13 +18,16 @@
 #
 ################################################## #
 
-for i in 4
+for i in 98
 do
-    ./bin/elvex -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
+    ./bin/elvex --trace -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
 done
 
 
 ##################################################
-make -C data en-1.1.0.fsa
-#./bin/elvex --traceAll -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; cat data/en-1.1.0.html
+#make -C data en-1.1.0.fsa
 ./bin/elvex -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; cat data/en-1.1.0.html
+#./bin/elvex --traceAll -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; cat data/en-1.1.0.html
+#./bin/elvex --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input
+# > data/en-1.1.0.html ; cat data/en-1.1.0.html
+#lldb bin/elvex -- --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input

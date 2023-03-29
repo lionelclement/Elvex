@@ -64,15 +64,19 @@ STUDENT	common_noun	STUDENT
 PROFESSOR	common_noun	PROFESSOR	
 CAT	common_noun	CAT	
 MOUSE	common_noun	MOUSE	
+TABLE	common_noun	TABLE	
 
 #  Adjectives
-NICE	adj	NICE	HEAD:NICE
-BAD	adj	BAD	lexical_function:none
-BAD	adj	BAD	lexical_function:magn,MOD:[HEAD:VERY]
-GOOD	adj	GOOD	
-HAPPY	adj	HAPPY	
-BLUE	adj	BLUE	
+NICE	adj	NICE	type:opinion
+BAD	adj	BAD	lexical_function:none,type:opinion
+BAD	adj	BAD	lexical_function:magn,MOD:[HEAD:VERY],type:opinion
+GOOD	adj	GOOD	type:opinion
+HAPPY	adj	HAPPY	type:opinion
+BLUE	adj	BLUE	type:color
+BLACK	adj	BLACK	type:color
+BIG	adj	BIG	type:size
 
+# type:Opinion, Size, Age, Shape, Color, Origin, Material, Purpose/Qualifier
 #  Adverbs
 VERY	adv	VERY	
 

@@ -96,7 +96,7 @@
 // PONCT
 %token TOKEN_DASH
 %token TOKEN_AROBASE
-%token TOKEN_SEMI TOKEN_DOT TOKEN_COLON TOKEN_DOUBLECOLON TOKEN_COMMA
+%token TOKEN_SEMI TOKEN_DOT TOKEN_COLON TOKEN_CONS TOKEN_COMMA
 
 // KEYWORDS
 %token TOKEN_RULES TOKEN_INPUT TOKEN_LEXICON
@@ -735,7 +735,7 @@ left_hand_side_assignment_statement:
 	  free($1);
 	 }
 
-	|TOKEN_LT variable TOKEN_DOUBLECOLON variable TOKEN_GT
+	|TOKEN_LT variable TOKEN_CONS variable TOKEN_GT
 	{
 	  DBUGPRT("left_hand_side_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::PAIRP_STATEMENT, false, 
@@ -1324,7 +1324,7 @@ pairp:
 	  $$ = new pairpPtr(Pairp::NIL);
 	}
 
-	|TOKEN_LT pairp_elements TOKEN_DOUBLECOLON pairp_element TOKEN_GT
+	|TOKEN_LT pairp_elements TOKEN_CONS pairp_element TOKEN_GT
 	{
 	  DBUGPRT("list");
 	  if ((*$2)->isPairp() && (*$2)->getCdr()->isNil())
@@ -1335,7 +1335,7 @@ pairp:
 	  free($4);
 	}
 
-	|TOKEN_LT pairp_elements TOKEN_DOUBLECOLON TOKEN_NIL TOKEN_GT
+	|TOKEN_LT pairp_elements TOKEN_CONS TOKEN_NIL TOKEN_GT
 	{
 	  DBUGPRT("list");
 	  if ((*$2)->isPairp() && (*$2)->getCdr()->isNil())

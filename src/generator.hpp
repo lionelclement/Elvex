@@ -87,14 +87,12 @@ private:
 
     MemoizationMap memoizedMap;
 
-#ifdef TRACE_OPTION
     bool traceInit;
     bool traceStage;
     bool traceClose;
     bool traceShift;
     bool traceReduce;
     bool traceAction;
-#endif
 
 #ifdef OUTPUT_XML
     char *outXML;
@@ -152,7 +150,6 @@ public:
     char *getOutXML() const;
 #endif
 
-#ifdef TRACE_OPTION
     void setTraceInit(bool);
     void setTraceStage(bool);
     void setTraceClose(bool);
@@ -165,7 +162,6 @@ public:
     bool getTraceShift();
     bool getTraceReduce();
     bool getTraceAction();
-#endif
 
     nodePtr getNodeRoot();
 

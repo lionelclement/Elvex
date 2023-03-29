@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(elvex VERSION 2.21.0)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
-#set(CMAKE_CXX_COMPILER gcc)
+set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 11)
 include_directories(src)
 
@@ -119,7 +119,7 @@ configure_file(
         @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
-target_compile_options(elvex PUBLIC -std=c++11 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
+target_compile_options(elvex PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )
@@ -127,7 +127,6 @@ target_compile_options(elvex PUBLIC -std=c++11 -Wall -Wextra -Wno-deprecated -Wn
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
-            TRACE_OPTION
             OUTPUT_XML
             MEMOIZATION
             RESTORE_MEMORY
@@ -137,6 +136,7 @@ if (LibXml2_FOUND)
             MAXITEMS=1000
             MAXATTEMPTS=1000
             #TRACE_ENVIRONMENT
+            #TRACE_BUILD_ENVIRONMENT
             #TRACE_ENABLE_STATEMENT
             #TRACE_APPLY_STATEMENT
             #TRACE_EVAL
@@ -154,15 +154,15 @@ else()
 endif()
 
 add_executable(elvexbuildlexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
-target_compile_options(elvexbuildlexicon PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexbuildlexicon PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 FLEX_TARGET(postedition_en src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_en.cc)
 add_executable(elvexpostedition_en ${FLEX_postedition_en_OUTPUTS})
-target_compile_options(elvexpostedition_en PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexpostedition_en PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 FLEX_TARGET(postedition_fr src/postedition_fr.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_fr.cc)
 add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
-target_compile_options(elvexpostedition_fr PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexpostedition_fr PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 install(TARGETS elvex elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
         RUNTIME DESTINATION bin)

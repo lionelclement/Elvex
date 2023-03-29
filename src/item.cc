@@ -873,38 +873,10 @@ void Item::step(bool &effect)
  ************************************************** */
 void Item::apply(Parser &parser, Synthesizer *synthesizer)
 {
-    if (statements)
-    {
-        bool effect = true;
-        if (isUnsetFlags(Flags::BOTTOM) && statements->isUnsetFlags(Flags::SEEN))
-        {
-
-#ifdef TRACE_OPTION
-            if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && getRuleTrace())))
-            {
-                std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
-                print(std::cout);
-                std::cout << std::endl;
-            }
-#endif
-            effect = false;
-
-            statements->apply(this, parser, synthesizer, effect);
-            if (statements->isSetFlags(Flags::BOTTOM))
-            {
+    bool effect = false;
+    statements->apply(this, parser, synthesizer, effect);
+    if (statements->isSetFlags(Flags::BOTTOM))
                 addFlags(Flags::BOTTOM);
-            }
-
-#ifdef TRACE_OPTION
-            if (synthesizer->getTraceAction() || ((synthesizer->getTrace() && getRuleTrace())))
-            {
-                std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
-                print(std::cout);
-                std::cout << std::endl;
-            }
-#endif
-        }
-    }
 }
 
 /* **************************************************

@@ -95,7 +95,7 @@ public:
     valuePtr find(const bitsetPtr &) const;
 
     bool buildEnvironment(const environmentPtr &, const featuresPtr &, bool
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
     ,bool
 #endif
     );

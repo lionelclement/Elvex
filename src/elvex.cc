@@ -57,19 +57,15 @@ options\n\
 \t--verbose|-V                                verbose mode\n\
 \t--reduceAll|-a                              reduce all rules\n\
 \t--random|-r                                 outputs first sentence randomly selected\n\
-\t--first|-f                                  outputs the first sentence\n";
-#ifdef TRACE_OPTION
-    std::cerr << "\
- \t--trace|-t                                  trace the @trace rules\n\
- \t--traceAll\n\
- \t--traceInit\n\
- \t--traceStage\n\
- \t--traceClose\n\
- \t--traceShift\n\
- \t--traceReduce\n\
- \t--traceAction\n";
-#endif
-    std::cerr << "\
+\t--first|-f                                  outputs the first sentence\n\
+\t--trace|-t                                  trace the @trace rules\n\
+\t--traceAll\n\
+\t--traceInit\n\
+\t--traceStage\n\
+\t--traceClose\n\
+\t--traceShift\n\
+\t--traceReduce\n\
+\t--traceAction\n\
 \t-maxLength <number>                         max sentence length\n\
 \t-maxUsages <number>                         max number of rule usage\n\
 \t-maxItems <number>                          max number of items per set\n\
@@ -107,11 +103,9 @@ void generate(bool trace)
         {
             synthesizer.generate(parser);
         }
-#ifdef TRACE_OPTION
         if (trace){
             std::cout << "<ul>" << std::endl;
         }
-#endif
         if (synthesizer.getNodeRoot() && !synthesizer.getNodeRoot()->empty())
         {
             std::vector<forestPtr>::const_iterator forestIt = synthesizer.getNodeRoot()->cbegin();
@@ -127,28 +121,22 @@ void generate(bool trace)
                     forest = *forestIt;
                 for (auto i = forest->getOutput_cbegin(); i != forest->getOutput_cend(); ++i)
                 {
-#ifdef TRACE_OPTION
                     if (trace){
                         std::cout << "<li>" << std::endl;
                     }
-#endif
                     std::cout << (*i) << std::endl;
-#ifdef TRACE_OPTION
                     if (trace){
                         std::cout << "</li>" << std::endl;
                     }
-#endif
                 }
                 if (synthesizer.getRandom() || synthesizer.getFirst())
                     break;
                 ++forestIt;
             }
         }
-#ifdef TRACE_OPTION
         if (trace){
             std::cout << "</ul>" << std::endl;
         }
-#endif
     } while (synthesizer.getRandom() && synthesizer.getNodeRoot()->empty() &&
              randomTry++ < MAXATTEMPTS);
 }
@@ -204,7 +192,6 @@ int main(int argn, char **argv)
                         synthesizer.setFirst(true);
                     }
 
-#ifdef TRACE_OPTION
                     else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace"))
                     {
                         trace = true;
@@ -257,8 +244,6 @@ int main(int argn, char **argv)
                         trace = true;
                         synthesizer.setTraceAction(true);
                     }
-
-#endif
 
                     else if (!strcmp(argv[arg] + 1, "lexiconFile"))
                     {
@@ -430,12 +415,9 @@ int main(int argn, char **argv)
     //parser.printCacheLexicon(std::cout);
 
 
-#ifdef TRACE_OPTION
         if (trace){
             std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
         }
-#endif
-
         srand(time(nullptr));
         if (synthesizer.getInputFileName().length() > 0)
         {
@@ -481,10 +463,8 @@ int main(int argn, char **argv)
         std::cerr << "*** error" << s << std::endl;
         return EXIT_FAILURE;
     }
-#ifdef TRACE_OPTION
     if (trace){
         std::cout << "</body></html>" << std::endl;
     }
-#endif
     return EXIT_SUCCESS;
 }

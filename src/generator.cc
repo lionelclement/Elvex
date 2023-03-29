@@ -299,7 +299,6 @@ Synthesizer::getOutXML() const
 
 #endif
 
-#ifdef TRACE_OPTION
 /* **************************************************
  *
  ************************************************** */
@@ -395,8 +394,6 @@ bool Synthesizer::getTraceAction(void)
 {
     return this->traceAction;
 }
-
-#endif
 
 /* **************************************************
  *
@@ -638,7 +635,23 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
             else
             {
 
-                (*actualItem)->apply(parser, this);
+                if ((*actualItem)->getStatements() 
+                    && (*actualItem)->isUnsetFlags(Flags::BOTTOM) 
+                    && (*actualItem)->getStatements()->isUnsetFlags(Flags::SEEN)){
+                    if (getTraceAction() || ((getTrace() && (*actualItem)->getRuleTrace())))
+                     {
+                        std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
+                        (*actualItem)->print(std::cout);
+                        std::cout << std::endl;
+                    }
+                    (*actualItem)->apply(parser, this);
+                    if (getTraceAction() || ((getTrace() && (*actualItem)->getRuleTrace())))
+                    {
+                        std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
+                        (*actualItem)->print(std::cout);
+                        std::cout << std::endl;
+                    }
+                }
 
                 if ((*actualItem)->isSetFlags(Flags::BOTTOM))
                 {
@@ -653,14 +666,13 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                          !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil())
                 {
 
-#ifdef TRACE_OPTION
                     if (traceClose || (trace && (*actualItem)->getRuleTrace()))
                     {
                         std::cout << "<H3>####################### CLOSE (X -> α • Y β) #######################</H3>" << std::endl;
                         (*actualItem)->print(std::cout);
                         std::cout << std::endl;
                     }
-#endif
+
                     (*actualItem)->addFlags(Flags::SEEN);
 
                     featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
@@ -688,14 +700,12 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                 // it->renameVariables(it->getId());
                                 it->setInheritedFeatures(inheritedSonFeatures->clone());
 
-#ifdef TRACE_OPTION
                                 if (traceClose || (trace && it->getRuleTrace()))
                                 {
                                     std::cout << "<H3>####################### CLOSE CON'T (Y -> • γ) #######################</H3>" << std::endl;
                                     it->print(std::cout);
                                     std::cout << std::endl;
                                 }
-#endif
 
                                 // record the item
                                 auto found = state->find(it);
@@ -727,14 +737,13 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                 else if ((*actualItem)->isCompleted())
                 {
 
-#ifdef TRACE_OPTION
                     if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                     {
                         std::cout << "<H3>####################### REDUCE Y -> γ • (actual) #######################</H3>" << std::endl;
                         (*actualItem)->print(std::cout);
                         std::cout << std::endl;
                     }
-#endif
+
                     (*actualItem)->addFlags(Flags::SEEN);
                     if (!(*actualItem)->getSynthesizedFeatures())
                     {
@@ -759,14 +768,12 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                             // If Axiom reduced or debug Transients
                             if (reduceAll || (*actualItem)->getRefs().empty())
                             {
-#ifdef TRACE_OPTION
                                 if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                                 {
                                     std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
                                     (*actualItem)->print(std::cout);
                                     std::cout << std::endl;
                                 }
-#endif
 
                                 if ((*actualItem)->getEnvironment() && (*actualItem)->getEnvironment()->size() > 0)
                                 {
@@ -774,14 +781,12 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                     (*actualItem)->getEnvironment()->replaceVariables((*actualItem)->getSynthesizedFeatures(), effect);
                                     if (effect)
                                     {
-#ifdef TRACE_OPTION
                                         if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                                         {
                                             std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
                                             (*actualItem)->print(std::cout);
                                             std::cout << std::endl;
                                         }
-#endif
                                         FATAL_ERROR_UNEXPECTED
                                     }
                                     (*actualItem)->getSynthesizedFeatures()->deleteAnonymousVariables();
@@ -831,14 +836,12 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                 else
                                 {
 
-#ifdef TRACE_OPTION
                                     if (traceReduce || (trace && previousItem->getRuleTrace()))
                                     {
                                         std::cout << "<H3>####################### REDUCE CON'T (X -> α • Y β) #######################</H3>" << std::endl;
                                         previousItem->print(std::cout);
                                         std::cout << std::endl;
                                     }
-#endif
 
                                     std::string key = keyMemoization(*actualItem, previousItem);
                                     auto memItem = memoizedMap.find(key);
@@ -956,14 +959,12 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                             it->addForestIdentifiers(previousItem->getIndex(), fi);
                                         }
                                         forestFound->push_back_node(node);
-#ifdef TRACE_OPTION
                                         if (traceReduce || (trace && it->getRuleTrace()))
                                         {
                                             std::cout << "<H3>####################### REDUCE CON'T (X -> α Y • β) #######################</H3>" << std::endl;
                                             it->print(std::cout);
                                             std::cout << std::endl;
                                         }
-#endif
                                         auto found = states[row]->find(it);
                                         if (found != states[row]->cend())
                                         {
@@ -1015,14 +1016,12 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
     } while (modification);
     for (const auto &i : *state)
         i->subFlags(Flags::SEEN);
-#ifdef TRACE_OPTION
     if (traceStage)
     {
         std::cout << "<H3>####################### STAGE " << state->getId() << " #######################</H3>" << std::endl;
         state->print(std::cout);
         std::cout << std::endl;
     }
-#endif
 }
 
 /* **************************************************
@@ -1051,14 +1050,12 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                     !(*actualItem)->getCurrentTerms()->isOptional() && (*actualItem)->getCurrentTerm() && !inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom() && parser.getRules().getTerminals().find((*actualItem)->getCurrentTerm()) != parser.getRules().getTerminals().end())
                 {
 
-#ifdef TRACE_OPTION
                     if (traceShift || (trace && (*actualItem)->getRuleTrace()))
                     {
                         std::cout << "<H3>####################### SHIFT (X -> α • ω β) where ω ∈ ℒ #######################</H3>" << std::endl;
                         (*actualItem)->print(std::cout);
                         std::cout << std::endl;
                     }
-#endif
 
                     if ((*actualItem)->getEnvironment() && (*actualItem)->getEnvironment()->size() > 0)
                     {
@@ -1240,14 +1237,12 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         }
                                         it->setRefs((*actualItem)->getRefs());
 
-#ifdef TRACE_OPTION
                                         if (traceShift || (trace && it->getRuleTrace()))
                                         {
                                             std::cout << "<H3>####################### SHIFT CON'T (X -> α ω • β) #######################</H3>" << std::endl;
                                             it->print(std::cout);
                                             std::cout << std::endl;
                                         }
-#endif
 
                                         // record the item
                                         if (!states[row]->insert(it, this))
@@ -1311,14 +1306,12 @@ void Synthesizer::generate(class Parser &parser)
         it->addRanges(0);
         it->setInheritedFeatures(parser.getStartFeatures());
         //it->renameVariables(it->getId());
-#ifdef TRACE_OPTION
         if (traceInit || (trace && it->getRuleTrace()))
         {
             std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;
             it->print(std::cout);
             std::cout << std::endl;
         }
-#endif
         insertItemMap(it);
         initState->insert(it, this);
     }

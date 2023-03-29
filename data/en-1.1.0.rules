@@ -95,7 +95,6 @@ S_tense → S_cor {
 * =>
 * [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R]
  ************************************************** */
-//@trace
 S_cor → S_mod {
   [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
   attest ($ID1 == $ID2);
@@ -115,14 +114,14 @@ S_cor → S_mod {
  * Sentence modifiers
  ************************************************** */
 S_mod → S_mod form {
-  [MOD:<$H::$T>, $REST];
+  [MOD:<$H :: $T>, $REST];
   ↓1 = [MOD:$T, $REST];
   ↓2 = $H;
   ⇑ = ⇓1;
 }
 
 S_mod → S_mod advs {
-  [MOD:<$H::$T>, $REST];
+  [MOD:<$H :: $T>, $REST];
   ↓1 = [MOD:$T, $REST];
   ↓2 = $H;
   ⇑ = ⇓1;
@@ -137,7 +136,6 @@ S_mod → S {
 /* **************************************************
  * Cause : conclusion when premise
  ************************************************** */
-//@trace
 S → S_cor form S_cor {
   [HEAD:CAUSE, i:$premise, ii:$conclusion, $REST];
 
@@ -288,7 +286,7 @@ S → aux NP|cln VP strongPunct {
 /* **************************************************
  * Noun phrase
  ************************************************** */
-NP → det N {
+NP → det N1 {
   [def:$def, number:$number, $REST] ⊂ ⇓2;
   wait(⇓2) {
     if (¬ $def)
@@ -311,13 +309,121 @@ NP → pro {
   ⇑ = ⇓1;
 }
 
-N → common_noun {
-  ↓1 = ↑;
+@trace
+N1 → N {
+  [MOD:NIL, $Rest];
+  ↓1 = ↑; 
   ⇑ = ⇓1;
 }
 
-N → noun {
-  ↓1 = ↑;
+@trace
+N1 → [adjQuality] N2 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjQuality;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N2 → [adjSize] N3 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjSize;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N3 → [adjAge] N4 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjAge;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N4 → [adjShape] N5 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjShape;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N5 → [adjColor] N6 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjColor;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N6 → [adjOrigin] N7 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjOrigin;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N7 → [adjMaterial] N8 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjMaterial;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N8 → [adjPurpose] N {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjPurpose;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = $Rest; 
+  ⇑ = ⇓1;
+}
+
+@trace
+N → common_noun {
+  [MOD:NIL, $REST];
+  ↓1 = $REST;
   ⇑ = ⇓1;
 }
 

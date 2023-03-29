@@ -219,37 +219,29 @@ bool Statements::findVariable(const bitsetPtr &variable)
  ************************************************** */
 void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
+    bool allSeen = true;
     if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
     {
         FATAL_ERROR_UNEXPECTED
     }
 
-    //bool allStatementsWereAlreadyDone = true;
     bool localEffect;
     if (guard && guard->isUnsetFlags(Flags::SEEN))
     {
-#ifdef TRACE_OPTION
         if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
             std::cout << "<H3>####################### APPLY (before gard) #######################</H3>" << std::endl;
             item->print(std::cout);
             std::cout << std::endl;
         }
-#endif
         guard->apply(item, parser, synthesizer, effect);
-        //if (effect)
-        //{
-        //    allStatementsWereAlreadyDone = false;
-        //}
         guard->addFlags(Flags::SEEN);
-#ifdef TRACE_OPTION
         if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
             std::cout << "<H3>####################### APPLY CON'T (after gard) #######################</H3>" << std::endl;
             item->print(std::cout);
             std::cout << std::endl;
         }
-#endif
         if (guard->isSetFlags(Flags::BOTTOM))
         {
             addFlags(Flags::BOTTOM);
@@ -262,14 +254,12 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
     {
         localEffect = false;
 
-#ifdef TRACE_OPTION
         if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
         {
             std::cout << "<H3>####################### APPLY CON'T (before toggle enable) #######################</H3>" << std::endl;
             item->print(std::cout);
             std::cout << std::endl;
         }
-#endif
         for (list::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
@@ -285,14 +275,12 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
             }
         }
 
-#ifdef TRACE_OPTION
         if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
         {
             std::cout << "<H3>####################### APPLY CON'T (after toggle enable and before apply) #######################</H3>" << std::endl;
             item->print(std::cout);
             std::cout << std::endl;
         }
-#endif
 
         for (list::const_iterator statement = statements.cbegin();
              statement != statements.cend();
@@ -304,7 +292,6 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
             }
             if ((*statement)->isSetFlags(Flags::DISABLED))
             {
-                //allStatementsWereAlreadyDone = false;
                 continue;
             }
             if (!item->getEnvironment() || item->getEnvironment()->size() == 0)
@@ -321,27 +308,36 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
             }
             if (effect)
             {
-                //allStatementsWereAlreadyDone = false;
                 localEffect = true;
             }
         }
     }
-    //if (allStatementsWereAlreadyDone)
-    //{
-    //    COUT_LINE;
-        //this->addFlags(Flags::SEEN);
-    //}
-exitApply:
-{
-}
-#ifdef TRACE_OPTION
+    for (list::const_iterator statement = statements.cbegin();
+             statement != statements.cend();
+             ++statement)
+        {
+            if ((*statement)->isSetFlags(Flags::SEEN))
+            {
+                continue;
+            }
+            if ((*statement)->isSetFlags(Flags::DISABLED))
+            {
+                allSeen = false;
+            }
+        }
+
+    if (allSeen)
+        this->addFlags(Flags::SEEN);
+    
+    exitApply:
+    {
+    }
     if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
     {
         std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
         item->print(std::cout);
         std::cout << std::endl;
     }
-#endif
 }
 
 /* **************************************************

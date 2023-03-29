@@ -531,7 +531,7 @@ valuePtr Value::clone()
  ************************************************************ */
 bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root)
 {
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
     COUT_LINE;
     std::cout << "<H4>Value::buildEnvironment</H4>" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>this</th><th>value</th><th>Environment</th></tr>";
@@ -581,7 +581,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
         {
             if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(),
                                                        acceptToFilterNULLVariables
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
                                                 , true
 #endif
             ))
@@ -591,7 +591,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
         {
             if (!this->getFeatures()->buildEnvironment(environment, Features::create(),
                                                        acceptToFilterNULLVariables
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
                                                 , root
 #endif
 ))
@@ -728,7 +728,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case ANONYMOUS_VALUE:
         break;
     }
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
          std::cout << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
          std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
          std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
@@ -744,7 +744,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
 bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
 {
     bool ret = true;
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
         COUT_LINE;
         std::cout << "<DIV>";
         std::cout << "Value::subsumes (" << this << ")";
@@ -828,7 +828,7 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
             FATAL_ERROR_UNEXPECTED
         }
     }
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
         std::cout << "<DIV>";
         std::cout << "result: (" << shared_from_this() << ")";
         std::cout << "</DIV>";
@@ -885,6 +885,11 @@ bool Value::eq(valuePtr o) const
         case FEATURES_VALUE:
             if ((type == FEATURES_VALUE) &&
                 (getFeatures()->peekSerialString() == o->getFeatures()->peekSerialString()))
+                ret = true;
+            break;
+        case PAIRP_VALUE:
+            if ((type == PAIRP_VALUE) &&
+                (getPairp()->peekSerialString() == o->getPairp()->peekSerialString()))
                 ret = true;
             break;
         default:
@@ -1087,7 +1092,7 @@ void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
                   const statementPtr &statement,
                   bool &effect)
 {
-#ifdef TRACE_ENVIRONMENT
+#ifdef TRACE_BUILD_ENVIRONMENT
         COUT_LINE;
         std::cout << "<DIV>";
         std::cout << "Value::apply ()";
