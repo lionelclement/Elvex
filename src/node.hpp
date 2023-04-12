@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -11,7 +11,7 @@
  * LaBRI -- Université Bordeaux 
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
+ * lionel.clement@u-bordeaux.fr
  * 
  * This file is part of ELVEX.
  *
@@ -21,46 +21,60 @@
 #define ELVEX_NODE_H
 
 #include <vector>
-#include <list>
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 
-#include "flags.hpp"
-#include "uniq-id.hpp"
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 
 class Node :
-        public Flags, public UniqId, public std::enable_shared_from_this<class Node> {
+        public Facade, 
+        public std::enable_shared_from_this<class Node> {
+
+public:
+    typedef std::vector<forestPtr> vectorForests;
+    typedef vectorForests::iterator vectorForests_iterator;
+    typedef vectorForests::const_iterator vectorForests_const_iterator;
 
 private:
     unsigned int nbrCS;
-    std::vector<forestPtr> forests;
+    vectorForests forests;
     std::vector<std::string> output;
 
-    Node();
+    Node(void);
 
-    void generate(std::vector<forestPtr>::const_iterator);
+    void generate(vectorForests_const_iterator);
 
 public:
-    ~Node();
+    ~Node(void);
 
-    static nodePtr create();
+    static nodePtr create(void);
 
-    std::vector<forestPtr> &getForests();
+    bool empty() const;
 
-    const std::vector<std::string> &getOutput() const;
+    vectorForests_iterator begin();
 
-    void addForest(const forestPtr&);
+    vectorForests_iterator end();
 
-    forestPtr getForest(unsigned int) const;
+    vectorForests_const_iterator cbegin() const;
+
+    vectorForests_const_iterator cend() const;
+
+    size_t size() const;
+
+    forestPtr at(size_t);
+    
+    void push_back(const forestPtr&);
+    
+    const std::vector<std::string>& getOutput(void) const;
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
 
-    void generate(bool random, bool one);
+    void generate(bool random, bool first);
 
 };
 

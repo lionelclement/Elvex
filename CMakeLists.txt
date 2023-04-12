@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.17.0)
+project(elvex VERSION 2.21.0)
 
+set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 11)
 include_directories(src)
 
@@ -48,7 +50,9 @@ set(ELVEX_COMMON_SOURCES
         src/entry.hpp
         src/environment.cc
         src/environment.hpp
-        src/fatal_exception.cpp
+        src/facade.cc
+        src/facade.hpp
+        src/fatal_exception.cc
         src/fatal_exception.hpp
         src/feature.cc
         src/feature.hpp
@@ -62,18 +66,14 @@ set(ELVEX_COMMON_SOURCES
         src/forestidentifier.hpp
         src/forestmap.cc
         src/forestmap.hpp
-        src/grammar.cc
-        src/grammar.hpp
-        src/uniq-id.cc
-        src/uniq-id.hpp
+        src/generator.cc
+        src/generator.hpp
         src/item.cc
         src/item.hpp
         src/itemset.cc
         src/itemset.hpp
         src/lexicon.cc
         src/lexicon.hpp
-        src/list.cc
-        src/list.hpp
         src/listfeatures.cc
         src/listfeatures.hpp
         src/memoization-map.cc
@@ -83,10 +83,16 @@ set(ELVEX_COMMON_SOURCES
         src/messages.hpp
         src/node.cc
         src/node.hpp
+        src/pairp.cc
+        src/pairp.hpp
         src/parser.cc
         src/parser.hpp
+        src/parser_exception.cc
+        src/parser_exception.hpp
         src/rule.cc
         src/rule.hpp
+        src/rules.cc
+        src/rules.hpp
         src/serializable.cc
         src/serializable.hpp
         src/shared_ptr.hpp
@@ -94,10 +100,12 @@ set(ELVEX_COMMON_SOURCES
         src/statement.hpp
         src/statements.cc
         src/statements.hpp
-        src/synthesizer.cc
-        src/synthesizer.hpp
         src/terms.cc
         src/terms.hpp
+        src/uniq-id.cc
+        src/uniq-id.hpp
+        src/usage_exception.cc
+        src/usage_exception.hpp
         src/value.cc
         src/value.hpp
         src/variableflag.cc
@@ -110,10 +118,11 @@ configure_file(
         src/config.hpp
         @ONLY)
 
-add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cpp src/fatal_exception.hpp)
-target_compile_options(elvex PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers)
-add_executable(elvexdebug ${ELVEX_COMMON_SOURCES} src/elvex.cc)
-target_compile_options(elvexdebug PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
+target_compile_options(elvex PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
+#-DDEBUGYACC\(x\)=x 
+#-DDEBUGLEX\(x\)=x 
+)
 
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
@@ -121,36 +130,39 @@ if (LibXml2_FOUND)
             OUTPUT_XML
             MEMOIZATION
             RESTORE_MEMORY
+            MAXBITS=512
             MAXLENGTH=1000
-            MAXUSAGES=10000
-            MAXCARDINAL=1000000
-            MAXATTEMPTS=100
-            #MAXBITS=512
-            )
+            MAXUSAGES=1000
+            MAXITEMS=1000
+            MAXATTEMPTS=1000
+            #TRACE_ENVIRONMENT
+            #TRACE_BUILD_ENVIRONMENT
+            #TRACE_ENABLE_STATEMENT
+            #TRACE_APPLY_STATEMENT
+            #TRACE_EVAL
+            #TRACE_FEATURES
+            #TRACE_STEP
+            #TRACE_PASS
+            #TRACE_UNFOLD
+            #TRACE_MEMOIZATION
+            #TRACE_LEXICON
+        )
     target_link_libraries(elvex PUBLIC ${LIBXML2_LIBRARIES})
     target_include_directories(elvex PUBLIC ${LIBXML2_INCLUDE_DIR})
-    target_compile_definitions(elvexdebug PUBLIC OUTPUT_XML
-        TRACE_OPTION
-        #TRACE_MEMOIZATION
-        #TRACE_EVAL
-)
-    target_link_libraries(elvexdebug PUBLIC ${LIBXML2_LIBRARIES})
-    target_include_directories(elvexdebug PUBLIC ${LIBXML2_INCLUDE_DIR})
 else()
     message("libxml2 not found")
 endif()
 
 add_executable(elvexbuildlexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
-target_compile_options(elvexbuildlexicon PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexbuildlexicon PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 FLEX_TARGET(postedition_en src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_en.cc)
 add_executable(elvexpostedition_en ${FLEX_postedition_en_OUTPUTS})
-target_compile_options(elvexpostedition_en PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexpostedition_en PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 FLEX_TARGET(postedition_fr src/postedition_fr.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_fr.cc)
 add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
-target_compile_options(elvexpostedition_fr PUBLIC -std=c++11 -O3 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexpostedition_fr PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
-install(TARGETS elvex elvexdebug elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
-        RUNTIME DESTINATION bin
-        )
+install(TARGETS elvex elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
+        RUNTIME DESTINATION bin)

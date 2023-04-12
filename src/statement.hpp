@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -22,52 +22,86 @@
 
 #include <climits>
 #include <vector>
-#include "flags.hpp"
+#include <string>
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
+<<<<<<< HEAD
 #include "application.hpp"
+=======
+#include "generator.hpp"
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
-#define FATAL_ERROR_STM {FATAL_ERROR("*** fatal error with statement line " << getLineno());}
-#define FATAL_ERROR_MSG_STM(msg) {FATAL_ERROR("*** fatal error: " << msg << " with statement line " << getLineno());}
-#define WARNING_STM {CERR_LINE; std::ostringstream oss; oss << "*** warning with statement line " << getLineno(); std::cerr << oss.str() << std::endl;}
+#define FATAL_ERROR_STM(statement)                                                                       \
+    {                                                                                                    \
+        CERR_LINE;                                                                                       \
+        std::ostringstream oss;                                                                          \
+        if (statement)                                                                                   \
+        {                                                                                                \
+            oss << "statement " << ' ' << statement->bufferName << '(' << statement->getLineno() << ')'; \
+        }                                                                                                \
+        throw fatal_exception(oss);                                                                      \
+    }
 
-class Statement :
-        public Flags, public Serializable, public std::enable_shared_from_this<class Statement> {
+#define FATAL_ERROR_MSG_STM(msg)                                      \
+    {                                                                 \
+        std::ostringstream oss;                                       \
+        oss << msg << ' ' << bufferName << '(' << getLineno() << ')'; \
+        throw fatal_exception(oss);                                   \
+    }
+#define FATAL_ERROR_OS_MSG_STM(oss)                            \
+    {                                                          \
+        oss << ' ' << bufferName << '(' << getLineno() << ')'; \
+        throw fatal_exception(oss);                            \
+    }
+#define WARNING_STM                                                              \
+    {                                                                            \
+        CERR_LINE;                                                               \
+        std::ostringstream oss;                                                  \
+        oss << "*** warning " << ' ' << bufferName << '(' << getLineno() << ')'; \
+        std::cerr << oss.str() << std::endl;                                     \
+    }
+
+class Statement : public Facade,
+                  public Serializable,
+                  public std::enable_shared_from_this<class Statement>
+{
 
 public:
-    enum type {
-        DASH,
-        AFF,
-        SUBSUME,
-        INSET,
-        UP,
-        UP2,
-        DOWN,
-        DOWN2,
-        FEATURES,
-        VARIABLE,
-        ANONYMOUS,
-        CONSTANT,
-        NIL,
-        UNIF,
-        GUARD,
-        PRINT,
-        PRINTLN,
-        ATTEST,
-        IF,
-        THENELSE,
-        FOREACH,
-        IN,
-        STMS,
-        STR,
-        LIST,
-        NUMBER,
-        FCT,
-        SEARCH,
-        FINISHED
+    enum type
+    {
+        DASH_STATEMENT,
+        ASSIGNMENT_STATEMENT,
+        SUBSUME_STATEMENT,
+        INHERITED_FEATURES_STATEMENT,
+        SYNTHESIZED_FEATURES_STATEMENT,
+        INHERITED_CHILDREN_FEATURES_STATEMENT,
+        SYNTHESIZED_CHILDREN_FEATURES_STATEMENT,
+        FEATURES_STATEMENT,
+        VARIABLE_STATEMENT,
+        ANONYMOUS_STATEMENT,
+        CONSTANT_STATEMENT,
+        NIL_STATEMENT,
+        UNIF_STATEMENT,
+        GUARD_STATEMENT,
+        PRINT_STATEMENT,
+        PRINTLN_STATEMENT,
+        ATTEST_STATEMENT,
+        IF_STATEMENT,
+        IF_CON_T_STATEMENT,
+        FOREACH_STATEMENT,
+        FOREACH_CON_T_STATEMENT,
+        STMS_STATEMENT,
+        STRING_STATEMENT,
+        PAIRP_STATEMENT,
+        NUMBER_STATEMENT,
+        FUNCTION_STATEMENT,
+        SEARCH_STATEMENT,
+        WAIT_STATEMENT
     };
 
-    enum arithmetic_op {
+    enum arithmetic_op
+    {
         NOP,
         NOT,
         AND,
@@ -87,89 +121,105 @@ public:
         RAND
     };
 
+    enum test_choice
+    {
+        __NONE__,
+        __THEN__,
+        __ELSE__
+    };
+
 private:
     unsigned int lineno;
+    std::string bufferName;
+    static std::string nullBufferName;
     enum type op;
+    bool rootOp;
+
     statementPtr lhs;
     statementPtr rhs;
-
-    struct pair {
-        unsigned int first;
-        unsigned int second;
-    } pair{};
+    unsigned int first;
+    unsigned int second;
     featuresPtr features;
     valuePtr value;
     bitsetPtr bitset;
-    std::string str;
+    std::string string;
     arithmetic_op fct;
-    listPtr list;
+    pairpPtr pairp;
     statementsPtr statements;
     double number;
 
 public:
-    Statement(unsigned int, type, std::string);
-
-    Statement(unsigned int, type op, bitsetPtr bits, statementPtr lhs = statementPtr());
-
-    Statement(unsigned int, type op = FINISHED, statementPtr lhs = statementPtr(), statementPtr rhs = statementPtr(),
-              unsigned int first = UINT_MAX, unsigned int second = UINT_MAX,
-              featuresPtr features = featuresPtr(), bitsetPtr bits = bitsetPtr(), arithmetic_op fct = NOP,
-              listPtr list = listPtr(), statementsPtr stms = statementsPtr(), double = 0.0);
-
-    Statement(unsigned int, type op, valuePtr value);
+    Statement(unsigned int lineno, std::string bufferName, type op, bool rootOp);
 
     void makeSerialString();
 
 public:
     ~Statement();
 
-    static statementPtr
-    create(unsigned int lineno, type op, statementPtr lhs = statementPtr(), statementPtr rhs = statementPtr());
+    // NIL UP UP2
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp);
 
-    static statementPtr create(unsigned int lineno, type op, unsigned int first, unsigned int second = UINT_MAX);
+    // DOWN DOWN2 DASH
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, unsigned int first, unsigned int second = UINT_MAX);
 
-    static statementPtr create(unsigned int lineno, type op, featuresPtr features);
+    // STMS PRINT PRINTLN
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementsPtr);
 
-    static statementPtr create(unsigned int lineno, type op, valuePtr& value);
+    // GUARD FEATURES
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, featuresPtr features);
 
-    static statementPtr create(unsigned int lineno, type op, bitsetPtr bits, statementPtr lhs = statementPtr());
+    // ATTEST THEN
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
 
-    static statementPtr create(unsigned int lineno, type op, std::string str);
+    // AFF SUBSUME IF IF_CON_T WAIT FOREACH FOREACH_CON_T UNIF
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
 
-    static statementPtr create(unsigned int lineno, type op, arithmetic_op fct, statementPtr lhs = statementPtr(),
+    // VARIABLE CONSTANT
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, bitsetPtr bits);
+
+    // PAIRP
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, pairpPtr);
+
+    // FCT
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, arithmetic_op fct,
+                               statementPtr lhs = statementPtr(),
                                statementPtr rhs = statementPtr());
 
-    static statementPtr create(unsigned int lineno, type op, listPtr);
+    // NUMBER
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, double);
 
-    static statementPtr create(unsigned int lineno, type op, statementsPtr);
+    // STRING
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, std::string str);
 
-    static statementPtr create(unsigned int lineno, type op, double);
+    // ANONYMOUS
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, valuePtr &value);
 
-    static statementPtr create();
+    // SEARCH
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, unsigned int first);
 
-    bool isAff() const;
+    bool isAssignment() const;
 
     bool isSubsume() const;
 
     bool isUp() const;
 
-     bool isUp2() const;
+    bool isUp2() const;
 
-     bool isDown() const;
+    bool isDown() const;
 
-     bool isDown2() const;
+    bool isDown2() const;
 
-     bool isFeatures() const;
+    bool isFeatures() const;
 
-     bool isVariable() const;
+    bool isVariable() const;
 
-     bool isConstant() const;
+    bool isConstant() const;
 
-     bool isUnif() const;
+    bool isUnif() const;
 
-     bool isGuard() const;
+    bool isGuard() const;
 
-     bool isPrint() const;
+    bool isPrint() const;
 
     bool isPrintln() const;
 
@@ -179,17 +229,21 @@ public:
 
     bool isForeach() const;
 
+    bool isWait() const;
+
     bool isStms() const;
 
-    bool isStr() const;
+    bool isString() const;
 
-    bool isList() const;
+    bool isPairp() const;
 
     bool isNumber() const;
 
     bool isFct() const;
 
     bool isSearch() const;
+
+    bool containsDash() const;
 
     arithmetic_op getFct() const;
 
@@ -205,9 +259,9 @@ public:
 
     unsigned int getSecond() const;
 
-    std::string getStr() const;
+    std::string getString() const;
 
-    listPtr getList() const;
+    pairpPtr getPairp() const;
 
     statementsPtr getStatements() const;
 
@@ -215,18 +269,31 @@ public:
 
     unsigned int getLineno() const;
 
+<<<<<<< HEAD
     void print(std::ostream& , unsigned int tabulation = 0, int yetColored = 0) const;
 
     featuresPtr evalFeatures(const itemPtr&, class Application* application, bool);
+=======
+    void brln(std::ostream &out, int tabulation) const;
 
-    listPtr evalList(const itemPtr&, bool);
+    void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
+    featuresPtr evalFeatures(class Item *, class Parser &, class Synthesizer *, bool);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
+
+    pairpPtr evalPairp(class Item *, Parser &, Synthesizer *, bool);
+
+<<<<<<< HEAD
     valuePtr evalValue(const itemPtr& item, Application* application, bool replaceVariables);
+=======
+    valuePtr evalValue(class Item *, Parser &, Synthesizer *, bool);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
-    featuresPtr unif(const featuresPtr&, const featuresPtr&, const itemPtr&);
+    static featuresPtr unif(statementPtr self, const featuresPtr &, const featuresPtr &, class Item *);
 
     statementPtr clone(const std::bitset<FLAGS>& savedFlags = std::bitset<FLAGS>());
 
+<<<<<<< HEAD
     void buildInheritedSonFeatures(const itemPtr& item, Application* application);
 
     void buildSynthesizedFeatures(const itemPtr& item, Application* application);
@@ -254,11 +321,41 @@ public:
   void enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on);
 
     void apply(const itemPtr& item, class Application* application, bool& effect);
+=======
+    void buildInheritedSonFeatures(class Item *, Parser &, Synthesizer *synthesizer);
+
+    void buildSynthesizedFeatures(class Item *, Parser &, Synthesizer *synthesizer);
+
+    void buildEnvironmentWithInherited(class Item *, Parser &, Synthesizer *synthesizer);
+
+    void buildEnvironmentWithSynthesize(class Item *, Parser &, Synthesizer *synthesizer);
+
+    void buildEnvironmentWithValue(class Item *, Parser &, Synthesizer *);
+
+    void stmAttest(class Item *, class Parser &, class Synthesizer *);
+
+    void stmGuard(class Item *);
+
+    void stmForeach(class Item *item, class Parser &, class Synthesizer *, bool &);
+
+    void stmIf(class Item *item, class Parser &, class Synthesizer *, bool &);
+
+    void stmWait(class Item *item, class Parser &, class Synthesizer *, bool &);
+
+    void stmPrint(class Item *, class Parser &, class Synthesizer *);
+
+    void stmPrintln(class Item *, class Parser &, class Synthesizer *);
+
+    void renameVariables(size_t);
+
+    void toggleEnable(const statementPtr &, class Item *, class Synthesizer *, bool &, bool);
+
+    void apply(class Item *, class Parser &, class Synthesizer *, bool &);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool>& );
 
-    bool findVariable(const bitsetPtr&);
-
+    bool findVariable(const bitsetPtr &);
 };
 
 #endif // ELVEX_STATEMENT_H

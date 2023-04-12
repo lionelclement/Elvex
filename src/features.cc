@@ -2,31 +2,37 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
 
 #include <climits>
 #include <sstream>
-
 #include "feature.hpp"
 #include "features.hpp"
 #include "environment.hpp"
 #include "value.hpp"
 #include "messages.hpp"
 #include "bitset.hpp"
+<<<<<<< HEAD
 #include "application.hpp"
+=======
+#include "generator.hpp"
+#include "item.hpp"
+#include "statement.hpp"
+#include "value.hpp"
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 featuresPtr Features::BOTTOM = createBottom();
 featuresPtr Features::NIL = createNil();
@@ -34,20 +40,25 @@ featuresPtr Features::NIL = createNil();
 /* **************************************************
  *
  ************************************************** */
-Features::Features(const featurePtr& feature) {
+Features::Features(const featurePtr &feature)
+{
+    NEW;
     if (feature)
-        features.push_front(feature);
-    this->pred = 0;
+    {
+        features.push_back(feature);
+    }
+    this->head = 0;
     this->form = "";
-    NEW
 }
 
 /* **************************************************
  *
  ************************************************** */
-Features::~Features() {
-    DELETE
-    for (auto tmp : features) {
+Features::~Features()
+{
+    DELETE;
+    for (auto tmp : features)
+    {
         if (tmp)
             tmp.reset();
     }
@@ -56,14 +67,16 @@ Features::~Features() {
 /* ************************************************************
  *
  ************************************************************ */
-featuresPtr Features::create(const featurePtr& feature) {
+featuresPtr Features::create(const featurePtr &feature)
+{
     return featuresPtr(new Features(feature));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-featuresPtr Features::createBottom() {
+featuresPtr Features::createBottom()
+{
     featuresPtr fs = create();
     fs->addFlags(Flags::BOTTOM);
     return fs;
@@ -72,7 +85,8 @@ featuresPtr Features::createBottom() {
 /* ************************************************************
  *
  ************************************************************ */
-featuresPtr Features::createNil() {
+featuresPtr Features::createNil()
+{
     featuresPtr fs = create();
     fs->addFlags(Flags::NIL);
     return fs;
@@ -81,95 +95,126 @@ featuresPtr Features::createNil() {
 /* **************************************************
  *
  ************************************************** */
-void Features::add(const featurePtr& feature, bool front) {
-    if (front)
-        this->features.push_front(feature);
-    else
-        this->features.push_back(feature);
+void Features::add(const featurePtr &feature)
+{
+    this->features.push_back(feature);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Features::add(const featuresPtr& _features, bool front) {
-    for (const auto& j : *_features)
-        if (front)
-            this->features.push_front(j);
-        else
-            this->features.push_back(j);
+void Features::add(const featuresPtr &_features)
+{
+    for (auto j = _features->cbegin(); j != _features->cend(); ++j)
+        this->features.push_back(*j);
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::list<featurePtr>::iterator Features::erase(std::list<featurePtr>::iterator i) {
+Features::list_of_feature::iterator Features::erase(Features::list_of_feature::iterator i)
+{
     return features.erase(i);
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Features::size() const {
+size_t Features::size() const
+{
     return features.size();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::list<featurePtr>::iterator Features::begin() {
+Features::list_of_feature::const_iterator Features::cbegin() const
+{
+    return features.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Features::list_of_feature::const_iterator Features::cend() const
+{
+    return features.cend();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Features::list_of_feature::iterator Features::begin()
+{
     return features.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::list<featurePtr>::iterator Features::end() {
+Features::list_of_feature::iterator Features::end()
+{
     return features.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-featurePtr Features::front() const {
+featurePtr Features::front() const
+{
     return *(features.begin());
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Features::isNil() const {
+bool Features::isNil() const
+{
     return isSetFlags(Flags::NIL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Features::isBottom() const {
+bool Features::isBottom() const
+{
     return isSetFlags(Flags::BOTTOM);
 }
 
 /* **************************************************
  *
  ************************************************** */
+<<<<<<< HEAD
 void Features::print(std::ostream& outStream) const {
+=======
+void Features::print(std::ostream &outStream) const
+{
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     if (isNil())
         outStream << "NIL";
     else if (isBottom())
         outStream << "⊥";
-    else {
+    else
+    {
         outStream << R"(<TABLE border = "1">)";
         outStream << R"(<TBODY align = "left"><TR><TD><TABLE border = "0">)";
-        if (!features.empty()) {
-            for (int t = Feature::first_type; t <= Feature::last_type; ++t) {
-                for (const auto & feature : features) {
-                    if (feature->getType() == t) {
+        if (!features.empty())
+        {
+            for (int t = Feature::first_type; t <= Feature::last_type; ++t)
+            {
+                for (const auto &feature : features)
+                {
+                    if (feature->_getType() == t)
+                    {
                         outStream << "<TR>";
                         feature->print(outStream);
                         outStream << "</TR>";
                     }
                 }
             }
-        } else {
+        }
+        else
+        {
             outStream << "<TR><TD></TD></TR>";
         }
         outStream << "</TABLE></TD></TR></TBODY>";
@@ -180,22 +225,31 @@ void Features::print(std::ostream& outStream) const {
 /* **************************************************
  *
  ************************************************** */
+<<<<<<< HEAD
 void Features::flatPrint(std::ostream& outStream, bool par) const {
+=======
+void Features::flatPrint(std::ostream &outStream, bool par) const
+{
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     if (isNil())
         outStream << "NIL";
     else if (isBottom())
         outStream << "⊥";
-    else {
+    else
+    {
         if (par)
             outStream << '[';
         bool first = true;
-        for (int t = Feature::first_type; t <= Feature::last_type; ++t) {
-            for (const auto & feature : features) {
-                if (feature->getType() == t) {
+        for (int t = Feature::first_type; t <= Feature::last_type; ++t)
+        {
+            for (const auto &feature : features)
+            {
+                if (feature->_getType() == t)
+                {
                     if (first)
                         first = false;
                     else
-                        outStream << ',';
+                        outStream << ", ";
                     feature->flatPrint(outStream);
                 }
             }
@@ -208,53 +262,57 @@ void Features::flatPrint(std::ostream& outStream, bool par) const {
 /* **************************************************
  *
  ************************************************** */
-void Features::makeSerialString() {
+void Features::makeSerialString()
+{
     if (isNil())
-        serialString = '#';
+        serialString = '\0';
     else if (isBottom())
-        serialString = '&';
-    else {
-        serialString = '[';
-        if (!features.empty()) {
-            bool first = true;
-            for (const auto& f : features) {
-                if (first)
-                    first = false;
-                else
-                    serialString += ',';
-                serialString += f->peekSerialString();
+        serialString = '\1';
+    else
+    {
+        serialString = '\2';
+        if (!features.empty())
+        {
+            for (const auto &f : features)
+            {
+                serialString += f->peekSerialString() + '\3';
             }
         }
-        serialString += ']';
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Features::assignPred() {
+unsigned int Features::assignHead()
+{
     unsigned int ret = UINT_MAX;
-    if (this->pred)
-        return this->pred;
-    for (const auto& f : features) {
-        // […, PRED = …, …]
-        if (f->getType() == Feature::PRED) {
+    if (this->head)
+        return this->head;
+    for (const auto &f : features)
+    {
+        // […, HEAD = …, …]
+        if (f->isHead())
+        {
             ret = f->getValue()->getCode();
             break;
         }
     }
-    this->pred = ret;
+    this->head = ret;
     return ret;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::string *Features::assignForm() {
+std::string *Features::assignForm()
+{
     if (!form.empty())
         return &form;
-    for (const auto& f : features) {
-        if (f->getType() == Feature::FORM) {
+    for (const auto &f : features)
+    {
+        if (f->isForm())
+        {
             form = f->getValue()->getStr();
             return &form;
         }
@@ -266,31 +324,31 @@ std::string *Features::assignForm() {
 /* **************************************************
  *
  ************************************************** */
-void
-Features::toXML(xmlNodePtr nodeRoot)
+void Features::toXML(xmlNodePtr nodeRoot)
 {
-   xmlNodePtr f = xmlNewChild(nodeRoot, nullptr, (const xmlChar*)"FS", nullptr);
-   xmlSetProp(f, (xmlChar*)"id", (xmlChar*)std::to_string(this->getId()).c_str());
-   if (!features.empty())
-   for (std::list<featurePtr>::const_iterator i = features.begin();
-         i != features.end();
-         ++i)
-   (*i)->toXML(f);
+    xmlNodePtr f = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"FS", nullptr);
+    xmlSetProp(f, (xmlChar *)"id", (xmlChar *)std::to_string(this->getId()).c_str());
+    if (!features.empty())
+        for (list_of_feature::const_iterator i = features.begin();
+             i != features.end();
+             ++i)
+            (*i)->toXML(f);
 }
 #endif
 
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Features::clone() const {
+featuresPtr Features::clone() const
+{
     if (isNil())
         return NIL;
     if (isBottom())
         return BOTTOM;
     featuresPtr result = Features::create();
-    for (const auto & feature : features)
+    for (const auto &feature : features)
         result->features.push_back(feature->clone());
-    result->pred = pred;
+    result->head = head;
     result->form = form;
     return result;
 }
@@ -298,9 +356,12 @@ featuresPtr Features::clone() const {
 /* **************************************************
  *
  ************************************************** */
-valuePtr Features::find(const bitsetPtr& code) const {
-    for (const auto & feature : features) {
-        if (((*feature->getAttribute()) & *code).any()) {
+valuePtr Features::find(const bitsetPtr &code) const
+{
+    for (const auto &feature : features)
+    {
+        if (((*feature->getAttribute()) & *code).any())
+        {
             return feature->getValue();
         }
     }
@@ -310,8 +371,12 @@ valuePtr Features::find(const bitsetPtr& code) const {
 /* **************************************************
  *
  ************************************************** */
-bool Features::buildEnvironment(const environmentPtr& environment, const featuresPtr& _features, bool acceptToFilterNULLVariables/*,
-                                bool root*/) {
+bool Features::buildEnvironment(const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables
+#ifdef TRACE_BUILD_ENVIRONMENT
+, bool root
+#endif
+)
+{
     bool ret = true;
     //	if (environment){
     //		bool effect  =  false;
@@ -320,52 +385,60 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
     //		//environment->replaceVariables(features, effect);
     //	}
 
-    /***
+#ifdef TRACE_BUILD_ENVIRONMENT
      if (root) {
-     CERR_LINE;
-     std::cerr << "<H4>Features::buildEnvironment</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>this</th><th>features</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>";
-     print(std::cerr);
-     std::cerr << "</td><td>";
-     if (features)
-     features->print(std::cerr);
-     else
-     std::cerr << "NULL";
-     std::cerr << "</td><td>";
-     environment->print(std::cerr);
-     std::cerr << "</td></tr></table>";
+        COUT_LINE;
+        std::cout << "<H4>Features::buildEnvironment</H4>" << std::endl;
+        std::cout << "<table border = \"1\"><tr><th>this</th><th>features</th><th>Environment</th></tr>";
+        std::cout << "<tr><td>";
+        print(std::cout);
+        std::cout << "</td><td>";
+        if (_features)
+            _features->print(std::cout);
+        else
+            std::cout << "NULL";
+        std::cout << "</td><td>";
+        environment->print(std::cout);
+        std::cout << "</td></tr></table>";
      }
-     ***/
+#endif
 
     // Traite tous les attributs constants
-    for (const auto & i1 : features) {
-        if ((i1->getType() == Feature::LEMMA) || (i1->getType() == Feature::PRED) || (i1->getType() == Feature::CONSTANT)) {
+    for (const auto &i1 : features)
+    {
+        if ((i1->isLemma()) || (i1->isHead()) || (i1->isConstant()))
+        {
             bool stop = false;
-            for (auto & i2 : *_features) {
+            for (auto &i2 : *_features)
+            {
                 // Si deux constantes matchent
-                // ou deux PRED matchent
-                if (((i2->getType() == Feature::CONSTANT) && (i1->getType() == Feature::CONSTANT) &&
-                     ((*i1->getAttribute() & *i2->getAttribute()).any()))
-                    || ((i1->getType() == Feature::PRED) && (i2->getType() == Feature::PRED))
-                    || ((i1->getType() == Feature::LEMMA) && (i2->getType() == Feature::LEMMA))
-                    ) {
+                // ou deux HEAD matchent
+                if (((i2->isConstant()) && (i1->isConstant()) &&
+                     ((*i1->getAttribute() & *i2->getAttribute()).any())) ||
+                    ((i1->isHead()) && (i2->isHead())) || ((i1->isLemma()) && (i2->isLemma())))
+                {
                     i2->addFlags(Flags::SEEN);
 
                     // If both are NIL
+<<<<<<< HEAD
                     if ((i1->getValue()->isNil()) && (i2->getValue()->isNil())) {
+=======
+                    if ((i1->getValue()->isNil()) && (i2->getValue()->isNil()))
+                    {
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                     }
-                        // If both are TRUE
-                    //else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
+                    // If both are TRUE
+                    // else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
+                    // }
+
+                    // If one is ANONYMOUS
+                    // else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous())) {
                     //}
 
-                        // If one is ANONYMOUS
-                        //else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous())) {
-                        //}
-
-                        // Else build environment with the two values
+                    // Else build environment with the two values
                     else if (!i1->getValue()->buildEnvironment(environment, i2->getValue(),
-                                                                  acceptToFilterNULLVariables, false)) {
+                                                               acceptToFilterNULLVariables, false))
+                    {
                         ret = false;
                     }
                     stop = true;
@@ -373,25 +446,42 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
                 }
             }
             // Trait i1 inexistant
-            if (!stop) {
+            if (!stop)
+            {
                 // i1: a = $X
-                if ((i1->getType() == Feature::CONSTANT) || i1->getType() == Feature::LEMMA || i1->getType() == Feature::PRED) {
-                    if (i1->getValue()->getType() == Value::_VARIABLE) {
+                if ((i1->isConstant()) || i1->isLemma() || i1->isHead())
+                {
+                    if (i1->getValue()->isVariable())
+                    {
                         //  = > $X = NIL
-                        if (acceptToFilterNULLVariables) {
-                            environment->add(i1->getValue()->getBits(), Value::ANONYMOUS_VALUE);
-                        } else {
+                        if (acceptToFilterNULLVariables)
+                        {
+                            environment->add(i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
+                        }
+                        else
+                        {
                             ret = false;
                         }
+<<<<<<< HEAD
                     } else if (i1->getValue()->isNil()) {
+=======
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                     }
-                        // i1: a = ...
-                    else {
-                        if (!acceptToFilterNULLVariables) {
+                    else if (i1->getValue()->isNil())
+                    {
+                    }
+                    // i1: a = ...
+                    else
+                    {
+                        if (!acceptToFilterNULLVariables)
+                        {
                             ret = false;
-                        } else {
-                            if (!i1->getValue()->buildEnvironment(environment, Value::ANONYMOUS_VALUE,
-                                                                     acceptToFilterNULLVariables, false)) {
+                        }
+                        else
+                        {
+                            if (!i1->getValue()->buildEnvironment(environment, Value::STATIC_ANONYMOUS,
+                                                                  acceptToFilterNULLVariables, false))
+                            {
                                 ret = false;
                             }
                         }
@@ -402,48 +492,42 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
     }
 
     // traite les variables de structures
-    for (const auto& i1 : features) {
+    for (const auto &i1 : features)
+    {
         // i1: X
-        if (i1->getType() == Feature::VARIABLE) {
-            if (i1->getValue()) {
-                FATAL_ERROR("A variable attribute is not allowed in this context: " +
-                      i1->getAttribute()->toString());
-                //if (!i1->getValue()->buildEnvironment(environment, i2->getValue(), acceptToFilterNULLVariables, false)){
-                //ret = false;
-                //}
-                /*featuresPtr nFeatures = Features::create();
-                Features::std::list<featurePtr>::const_iterator i2 = _features->begin();
-                while (i2 != _features->end()) {
-                    if (i2->isUnsetFlags(Flags::SEEN)) {
-                        i2->addFlags(Flags::SEEN);
-                        nFeatures->addi2;
-                    }
-                    ++i2;
-                }*/
-                //environment->add(i1->getAttribute(), new Value(nFeatures, Value::FEATURES));
-            } else {
+        if (i1->isVariable())
+        {
+            if (i1->getValue())
+            {
+                throw fatal_exception("A variable attribute is not allowed in this context: " +
+                                      i1->getAttribute()->toString());
+            }
+            else
+            {
                 featuresPtr nFeatures = Features::create();
-                for (auto & i2 : *_features) {
-                    if (i2->isUnsetFlags(Flags::SEEN)) {
+                for (auto &i2 : *_features)
+                {
+                    if (i2->isUnsetFlags(Flags::SEEN))
+                    {
                         i2->addFlags(Flags::SEEN);
                         nFeatures->add(i2);
                     }
                 }
-                environment->add(i1->getAttribute(), Value::create(Value::_FEATURES, nFeatures));
+                environment->add(i1->getAttribute(), Value::create(nFeatures));
             }
         }
     }
     _features->subFlags(Flags::SEEN);
 
-    /***
+#ifdef TRACE_BUILD_ENVIRONMENT
      if (root) {
-     std::cerr << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
-     std::cerr << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-     std::cerr << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-     environment->print(std::cerr);
-     std::cerr << "</td></tr></table>";
+        std::cout << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
+        std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+        std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+        environment->print(std::cout);
+        std::cout << "</td></tr></table>";
      }
-     ***/
+#endif
     return ret;
 }
 
@@ -451,50 +535,60 @@ bool Features::buildEnvironment(const environmentPtr& environment, const feature
  *true if this subsumes o
  *if it does, change variables in this
  ************************************************** */
-bool Features::subsumes(const featuresPtr& o, const environmentPtr& environment) {
-    /***
-     CERR_LINE;
-     cerr << "<DIV>";
-     cerr << "Subsumes (" << this << ")";
-     cst	err << "<TABLE><TR>";
-     cerr << "<TD>";
-     this->print(cerr);
-     cerr << "</TD><TD>&lt;</TD><TD>";
-     o->print(cerr);
-     cerr << "</TD>";
-     cerr << "</TR></TABLE>";
-     cerr << "</DIV>";
-     ***/
+bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
+{
+#ifdef TRACE_FEATURES
+     COUT_LINE;
+     std::cout << "<DIV>";
+     std::cout << "Subsumes (" << this << ")";
+     std::cout << "<TABLE border=\"1\"><TR><TH>this</TH><TH></TH><TH>other</TH><TH>env</TH></TR><TR>";
+     std::cout << "<TD>";
+     this->print(std::cout);
+     std::cout << "</TD><TD>&lt;</TD><TD>";
+     o->print(std::cout);
+     std::cout << "</TD>";
+     std::cout << "<TD>";
+     environment->print(std::cout);
+     std::cout << "</TD>";
+     std::cout << "</TR></TABLE>";
+     std::cout << "</DIV>";
+#endif
 
     bool ret = true;
     // NIL < NIL
-    if (isNil() && o->isNil()) {
+    if (isNil() && o->isNil())
+    {
         // OK
     }
 
-        // NIL < […]
-        // […] < NIL
-    else if (isNil() || o->isNil()) {
+    // NIL < […]
+    // […] < NIL
+    else if (isNil() || o->isNil())
+    {
         ret = false;
     }
-        // ⊥ < […]
-        // […] < ⊥
-    else if (isBottom() || o->isBottom()) {
+    // ⊥ < […]
+    // […] < ⊥
+    else if (isBottom() || o->isBottom())
+    {
         ret = false;
-    } else {
-        for (auto & i1 : features) {
-            for (auto & i2 : o->features) {
-                // [PRED:X]  < [PRED:Y]
+    }
+    else
+    {
+        for (auto &i1 : features)
+        {
+            for (auto &i2 : o->features)
+            {
+                // [HEAD:X]  < [HEAD:Y]
                 // [LEMMA:X]  < [LEMMA:Y]
                 // [att:X] < [att:Y]
                 // X < Y
-                if (((i1->getType() == Feature::LEMMA) && (i2->getType() == Feature::LEMMA))
-                    || ((i1->getType() == Feature::PRED) && (i2->getType() == Feature::PRED))
-                    || ((i1->getType() == Feature::CONSTANT) && (i2->getType() == Feature::CONSTANT) &&
-                        ((*i1->getAttribute() & *i2->getAttribute()).any()))) {
+                if (((i1->isLemma()) && (i2->isLemma())) || ((i1->isHead()) && (i2->isHead())) || ((i1->isConstant()) && (i2->isConstant()) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
+                {
                     valuePtr v1 = i1->getValue();
                     valuePtr v2 = i2->getValue();
-                    if (!v1->subsumes(v2, environment)) {
+                    if (!v1->subsumes(v2, environment))
+                    {
                         ret = false;
                     }
                     break;
@@ -502,30 +596,38 @@ bool Features::subsumes(const featuresPtr& o, const environmentPtr& environment)
             }
         }
     }
-    /***
-     cerr << "<DIV>";
-     cerr << "result: (" << shared_from_this() << ")";
-     cerr << (ret?"true":"false") << endl;
-     //environment->print(cerr);
-     cerr << "</DIV>";
-     ***/
+#ifdef TRACE_FEATURES
+     std::cout << "<DIV>";
+     std::cout << "result: (" << shared_from_this() << ")";
+     std::cout << (ret?"true":"false") << std::endl;
+     environment->print(std::cout);
+     std::cout << "</DIV>";
+#endif
     return ret;
 }
 
 /* **************************************************
  *
  ************************************************** */
+<<<<<<< HEAD
 void Features::subFlags(const std::bitset<FLAGS>& flags) {
     for (auto & i : features)
+=======
+void Features::subFlags(const std::bitset<FLAGS> &flags)
+{
+    for (auto &i : features)
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         i->subFlags(flags);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Features::renameVariables(size_t i) {
+bool Features::renameVariables(size_t i)
+{
     bool effect = false;
-    for (auto & feature : features) {
+    for (auto &feature : features)
+    {
         if (feature->renameVariables(i))
             effect = true;
     }
@@ -537,14 +639,22 @@ bool Features::renameVariables(size_t i) {
 /* **************************************************
  *
  ************************************************** */
+<<<<<<< HEAD
 void Features::enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on) {
     for (auto & feature : features)
         feature->enable(root, item, application, effect, on);
+=======
+void Features::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+{
+    for (auto &feature : features)
+        feature->enable(root, item, synthesizer, effect, on);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
+<<<<<<< HEAD
 void Features::deleteAnonymousVariables() {
     redo:
     for (auto iterator = begin() ; iterator != end() ; ++iterator) {
@@ -559,9 +669,35 @@ void Features::deleteAnonymousVariables() {
                     if ((*iterator)->getValue() && ((*iterator)->getValue()->isAnonymous())) {
                         features.erase(iterator);
                         goto redo;
+=======
+void Features::deleteAnonymousVariables()
+{
+    bool redo = true;
+    while (redo)
+    {
+        redo = false;
+
+        for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
+        {
+            switch ((*feature)->_getType())
+            {
+            case Feature::_HEAD_:
+            case Feature::_LEMMA_:
+            case Feature::_FORM_:
+            case Feature::_VARIABLE_:
+            case Feature::_CONSTANT_:
+                if ((*feature)->getValue())
+                {
+                    (*feature)->getValue()->deleteAnonymousVariables();
+                    if ((*feature)->getValue() && ((*feature)->getValue()->isAnonymous()))
+                    {
+                        features.erase(feature);
+                        redo = true;
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                     }
                 }
                 break;
+            }
         }
     }
 }
@@ -569,8 +705,42 @@ void Features::deleteAnonymousVariables() {
 /* **************************************************
  *
  ************************************************** */
-bool Features::findVariable(const bitsetPtr& variable) {
-    for (auto & iterator : features)
+void Features::deleteVariables()
+{
+    bool redo = true;
+    while (redo)
+    {
+        redo = false;
+        for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
+        {
+            switch ((*feature)->_getType())
+            {
+            case Feature::_HEAD_:
+            case Feature::_LEMMA_:
+            case Feature::_FORM_:
+            case Feature::_VARIABLE_:
+            case Feature::_CONSTANT_:
+                if ((*feature)->getValue())
+                {
+                    (*feature)->getValue()->deleteVariables();
+                    if ((*feature)->isVariable() || (*feature)->getValue()->isVariable())
+                    {
+                        features.erase(feature);
+                        redo = true;
+                    }
+                }
+                break;
+            }
+        }
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Features::findVariable(const bitsetPtr &variable)
+{
+    for (auto &iterator : features)
         if (iterator->findVariable(variable))
             return true;
     return false;
@@ -579,18 +749,25 @@ bool Features::findVariable(const bitsetPtr& variable) {
 /* **************************************************
  *
  ************************************************** */
-bool Features::containsVariable() {
+bool Features::containsVariable()
+{
     bool result = false;
     if (variableFlag.containsVariable())
         return true;
-    for (auto & iterator : features) {
-        if (iterator->containsVariable()) {
+    for (auto &iterator : features)
+    {
+        if (iterator->containsVariable())
+        {
             result = true;
             break;
         }
     }
     if (result)
+<<<<<<< HEAD
         variableFlag.setFlag(VariableFlag::CONTAINS_VARIABLE);
+=======
+        variableFlag.setFlag(VariableFlag::CONTAINS);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     else
         variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
     return result;
@@ -599,6 +776,21 @@ bool Features::containsVariable() {
 /* **************************************************
  *
  ************************************************** */
-void Features::setVariableFlag(enum VariableFlag::flagValues flag) {
+void Features::setVariableFlag(enum VariableFlag::flagValues flag)
+{
     this->variableFlag.setFlag(flag);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Features::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+                     const statementPtr &statement,
+                     bool &effect)
+{
+    item->getEnvironment()->add(variable->getBits(), Value::create(shared_from_this()));
+    effect = true;
+    statement->toggleEnable(statement, item, synthesizer, effect, false);
+    statement->apply(item, parser, synthesizer, effect);
+    item->getEnvironment()->remove(variable->getBits());
 }

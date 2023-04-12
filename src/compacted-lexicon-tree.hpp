@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -20,9 +20,10 @@
 #ifndef COMPACTEDLEXICONTREE_H
 #define COMPACTEDLEXICONTREE_H
 
-#include <iostream>
+#include <cstdio>
 
-class CompactedLexiconTree {
+class CompactedLexiconTree
+{
 
 private:
     CompactedLexiconTree *child;
@@ -34,7 +35,7 @@ private:
 
 public:
     CompactedLexiconTree(CompactedLexiconTree *child, CompactedLexiconTree *sibling, class CompactedLexiconInfo *info,
-                       const char character);
+                         const char character);
 
     ~CompactedLexiconTree();
 

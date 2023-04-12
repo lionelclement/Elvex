@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -22,13 +22,14 @@
 
 #include <list>
 #include <vector>
-#include "flags.hpp"
-#include "uniq-id.hpp"
+#include "facade.hpp"
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
-class Statements :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Statements> {
+class Statements : public Facade,
+                   public Serializable,
+                   public std::enable_shared_from_this<class Statements>
+{
 
 public:
     typedef std::list<statementPtr> list;
@@ -37,32 +38,48 @@ private:
     statementPtr guard;
     list statements;
 
-    Statements(const statementPtr&);
+    Statements(const statementPtr &);
 
     void makeSerialString(void);
 
 public:
     ~Statements();
 
-    static statementsPtr create(const statementPtr& = statementPtr());
+    static statementsPtr create(const statementPtr & = statementPtr());
 
     size_t size(void);
 
-    list::const_iterator begin(void) const;
+    list::const_iterator begin(void);
 
-    list::const_iterator end(void) const;
+    list::const_iterator end(void);
 
-    void addStatement(const statementPtr&);
+    list::const_iterator cbegin(void) const;
+
+    list::const_iterator cend(void) const;
+
+    void addStatement(const statementPtr &);
 
     void renameVariables(size_t);
 
+<<<<<<< HEAD
     void print(std::ostream& , unsigned int tabulation = 0, unsigned int yetColored = 0) const;
+=======
+    bool findVariable(const bitsetPtr &variable);
+
+    void print(std::ostream &outStream, unsigned int tabulation, unsigned int color, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     statementsPtr clone(const std::bitset<FLAGS>& savedFlags);
 
+<<<<<<< HEAD
     void apply(itemPtr item, class Application *application, bool& effect);
 
     void enable(itemPtr item, class Application *application, bool& effect, bool on);
+=======
+    void toggleEnable(class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
+
+    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 };
 

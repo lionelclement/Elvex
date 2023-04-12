@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -11,7 +11,7 @@
  * LaBRI -- Université Bordeaux 
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
+ * lionel.clement@u-bordeaux.fr
  * 
  * This file is part of ELVEX.
  *
@@ -24,22 +24,23 @@
 #include "shared_ptr.hpp"
 
 class ForestIdentifier :
-        public Serializable, public std::enable_shared_from_this<ForestIdentifier> {
+        public Serializable {
 
 private:
 
     unsigned int code;
-    std::string featuresSerialString;
     unsigned int from;
     unsigned int to;
+    std::string featuresSerialString;
 
-    ForestIdentifier(unsigned int, const std::string &, unsigned int, unsigned int);
+    ForestIdentifier(unsigned int code, unsigned int from, unsigned int to, 
+            const std::string& featuresSerialString);
 
 public:
     ~ForestIdentifier() override;
 
-    static forestIdentifierPtr create(unsigned int code, const std::string &featuresSerialString, unsigned int from,
-                                       unsigned int to);
+    static class ForestIdentifier* create(unsigned int code, unsigned int from, unsigned int to, 
+            const std::string& featuresSerialString);
 
     void makeSerialString() override;
 
@@ -55,16 +56,16 @@ public:
         return code;
     };
 
-    bool operator<(ForestIdentifier const &) const;
+    bool operator<(ForestIdentifier const&) const;
 
-    bool operator!=(ForestIdentifier const &) const;
+    bool operator!=(ForestIdentifier const&) const;
 
     struct hash {
-        size_t operator()(const forestIdentifierPtr) const;
+        size_t operator()(class ForestIdentifier*) const;
     };
 
     struct equal_to {
-        bool operator()(const forestIdentifierPtr, const forestIdentifierPtr) const;
+        bool operator()(class ForestIdentifier*, class ForestIdentifier*) const;
     };
 
 };

@@ -2,28 +2,32 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
 
+#include <climits>
 #include <sstream>
 #include "rule.hpp"
-//#include "../trash/term.hpp"
 #include "terms.hpp"
 #include "statements.hpp"
 #include "messages.hpp"
+<<<<<<< HEAD
 #include "application.hpp"
+=======
+#include "generator.hpp"
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #include "vartable.hpp"
 
 /* ************************************************************
@@ -31,7 +35,8 @@
  ************************************************************ */
 Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
            statementsPtr statements)
-        : UniqId(id) {
+    : Facade(id)
+{
     this->lineno = lineno;
     this->filename = filename;
     this->lhs = lhs;
@@ -39,49 +44,54 @@ Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lh
     this->statements = statements;
     this->usages = 0;
     this->trace = false;
-    NEW
+    NEW;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
 Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
-        : UniqId(id) {
+    : Facade(id)
+{
     this->lineno = lineno;
     this->filename = filename;
     this->lhs = lhs;
     this->statements = statements;
     this->usages = 0;
     this->trace = false;
-    NEW
+    NEW;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
 Rule::Rule(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
-        : Rule(0, lineno, filename, lhs, rhs, statements) {
+    : Rule(0, lineno, filename, lhs, rhs, statements)
+{
 }
 
 /* ************************************************************
  *
  ************************************************************ */
 Rule::Rule(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
-        : Rule(0, lineno, filename, lhs, statements) {
+    : Rule(0, lineno, filename, lhs, statements)
+{
 }
 
 /* ************************************************************
  *
  ************************************************************ */
 rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
-                     statementsPtr statements) {
+                     statementsPtr statements)
+{
     return rulePtr(new Rule(id, lineno, filename, lhs, rhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements) {
+rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
+{
     return rulePtr(new Rule(id, lineno, filename, lhs, statements));
 }
 
@@ -89,26 +99,30 @@ rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsig
  *
  ************************************************************ */
 rulePtr Rule::create(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
-                     statementsPtr statements) {
+                     statementsPtr statements)
+{
     return rulePtr(new Rule(lineno, filename, lhs, rhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements) {
+rulePtr Rule::create(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
+{
     return rulePtr(new Rule(lineno, filename, lhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::~Rule() {
-    DELETE
+Rule::~Rule()
+{
+    DELETE;
     for (std::vector<termsPtr>::iterator term = rhs.begin(); term != rhs.end(); term++)
         if (*term)
             term->reset();
-    if (statements) {
+    if (statements)
+    {
         statements.reset();
     }
 }
@@ -116,79 +130,97 @@ Rule::~Rule() {
 /* ************************************************************
  *
  ************************************************************ */
-unsigned int Rule::getLhs(void) const {
+unsigned int Rule::getLhs(void) const
+{
     return lhs;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-std::vector<termsPtr> &Rule::getRhs(void) {
+std::vector<termsPtr> &Rule::getRhs(void)
+{
     return this->rhs;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-termsPtr Rule::getTerms(unsigned int index) const {
+termsPtr Rule::getTerms(unsigned int index) const
+{
     return this->rhs[index];
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-statementsPtr Rule::getStatements(void) const {
+statementsPtr Rule::getStatements(void) const
+{
     return statements;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
+<<<<<<< HEAD
 void Rule::incUsages(class Application *application) {
     if (++usages > application->getMaxUsages()) {
         FATAL_ERROR("*** error: too much usages of the same rule: " + this->toString())
+=======
+void Rule::incUsages(class Synthesizer *synthesizer)
+{
+    if (++usages > synthesizer->getMaxUsages())
+    {
+        throw fatal_exception("too much usages of the same rule: " + this->toString());
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-void Rule::resetUsages(void) {
+void Rule::resetUsages(void)
+{
     usages = 0;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-unsigned int Rule::getLineno(void) {
+unsigned int Rule::getLineno(void)
+{
     return lineno;
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-const std::string &Rule::getFilename(void) const {
+const std::string &Rule::getFilename(void) const
+{
     return filename;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Rule::getTrace(void) const {
+bool Rule::getTrace(void) const
+{
     return trace;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Rule::setTrace(bool _trace) {
+void Rule::setTrace(bool _trace)
+{
     this->trace = _trace;
 }
 
 /***************************
  *
  ***************************/
-rulePtr Rule::clone() const {
+rulePtr Rule::clone() const
+{
     std::vector<termsPtr> rhsCopy;
     for (unsigned int i = 0; i < rhs.size(); ++i)
         rhsCopy.push_back(rhs[i]->clone());
@@ -202,28 +234,30 @@ rulePtr Rule::clone() const {
 /* **************************************************
  *
  ************************************************** */
-void
-Rule::toXML(/*xmlNodePtr nodeRoot*/)
+void Rule::toXML(xmlNodePtr nodeRoot)
 {
-   // xmlNodePtr r=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"RULE", NULL);
-   // xmlSetProp(r, (xmlChar*)"id", (xmlChar*)(toStr(id)).c_str());
-   // xmlNodePtr hs=xmlNewChild(r, NULL, (const xmlChar*)"LHS", NULL);
-   // lhs->toXML(hs);
-   // hs=xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
-   // for(unsigned int i=0; i<rhs.size(); i++){
-   //   for (featuresVector <termsPtr >::const_iterator term=rhs[i]->begin();
-   // 	 term != rhs[i]->end();
-   // 	 term++) {
-   //     (*term)->toXML(hs);
-   //   }
-   // }
+    xmlNodePtr r = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"RULE", NULL);
+    // xmlNodePtr hs =
+    xmlNewChild(r, NULL, (const xmlChar *)"LHS", NULL);
+    /*
+    lhs->toXML(hs);
+    hs = xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
+    for(unsigned int i = 0; i < rhs.size(); ++i){
+     for (featuresVector<termsPtr>::const_iterator term=rhs[i]->begin();
+     term != rhs[i]->end();
+     term++) {
+    (*term)->toXML(hs);
+       }
+    }
+    */
 }
 #endif
 
 /* **************************************************
  *
  ************************************************** */
-void Rule::addDefaults() {
+void Rule::addDefaults()
+{
     std::vector<unsigned int> downs;
     for (unsigned int i = 0; i < rhs.size(); i++)
         downs.push_back(0);
@@ -232,11 +266,13 @@ void Rule::addDefaults() {
 /* ************************************************************
  *
  ************************************************************ */
-void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic, bool html) const {
+void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic, bool html) const
+{
     std::string space = (html ? "&nbsp;" : " ");
     bool first = true;
-    outStream << Vartable::codeToIdentifier(lhs) << space << "→" << space;
-    for (unsigned int i = 0; i < rhs.size(); i++) {
+    outStream << Vartable::codeToString(lhs) << space << "→" << space;
+    for (unsigned int i = 0; i < rhs.size(); i++)
+    {
         if (first)
             first = false;
         else
@@ -247,10 +283,11 @@ void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic,
     }
     if (index == rhs.size())
         outStream << space << "•";
-    if (withSemantic) {
+    if (withSemantic)
+    {
         statementsPtr stms = getStatements();
         if (stms)
-            stms->print(outStream);
+            stms->print(outStream, 0, 0, true, "{", "}", "");
         outStream << (html ? "<BR>" : "\n");
     }
 }
@@ -258,7 +295,8 @@ void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic,
 /* **************************************************
  *
  ************************************************** */
-std::string Rule::toString() const {
+std::string Rule::toString() const
+{
     std::stringstream s;
     print(s, UINT_MAX, false, false);
     return s.str();

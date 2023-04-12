@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -22,9 +22,10 @@
 
 #include <bitset>
 
-#define FLAGS 8
+#define FLAGS 9
 
-class Flags {
+class Flags
+{
 
 public:
     static const std::bitset<FLAGS> SEEN;
@@ -46,18 +47,15 @@ public:
 
     std::bitset<FLAGS> &getFlags();
 
-    bool isSetFlags(const std::bitset<FLAGS> &cmp) const;
+    bool isSet(const std::bitset<FLAGS> &cmp) const;
 
-    bool isUnsetFlags(const std::bitset<FLAGS> &cmp) const;
+    bool isUnset(const std::bitset<FLAGS> &cmp) const;
 
-//    void resetFlags();
+    void add(const std::bitset<FLAGS> &f);
 
-    void addFlags(const std::bitset<FLAGS> &f);
+    void sub(const std::bitset<FLAGS> &f);
 
-    void subFlags(const std::bitset<FLAGS> &f);
-
-    void printFlags(std::ostream &) const;
-
+    void print(std::ostream &) const;
 };
 
 #endif // ELVEX_FLAGS_H

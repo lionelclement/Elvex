@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -11,7 +11,7 @@
  * LaBRI -- Université Bordeaux 
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
+ * lionel.clement@u-bordeaux.fr
  * 
  * This file is part of ELVEX.
  *
@@ -21,8 +21,6 @@
 #define ELVEX_MESSAGES_H
 
 #include <iostream>
-#include <sstream>
-#include <string>
 #include "fatal_exception.hpp"
 
 #ifdef TRACE_MALLOC
@@ -37,7 +35,8 @@
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
 #define FATAL_ERROR_UNEXPECTED {CERR_LINE; throw fatal_exception("*** unexpected");}
-#define FATAL_ERROR(msg) {std::ostringstream _oss; _oss << "*** " << msg; throw fatal_exception(_oss.str());}
 #define WARNING(msg) {std::cerr << "*** " << msg << std::endl;}
+
+#define _BUG_ {CERR_LINE; std::cerr << "*** Will cause a segmentation fault" << std::endl; int *x = NULL; *x = 36;}
 
 #endif // ELVEX_MESSAGES_H

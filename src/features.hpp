@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -20,33 +20,43 @@
 #ifndef ELVEX_FEATURES_H
 #define ELVEX_FEATURES_H
 
-#include <list>
+#include <vector>
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
 #endif
 
-#include "flags.hpp"
+#include "facade.hpp"
 #include "serializable.hpp"
-#include "uniq-id.hpp"
 #include "shared_ptr.hpp"
 #include "variableflag.hpp"
 
-class Features :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Features> {
+class Features : public Facade,
+                 public Serializable,
+                 public std::enable_shared_from_this<class Features>
+{
 
 public:
     static featuresPtr NIL;
+
     static featuresPtr BOTTOM;
 
+<<<<<<< HEAD
 private:
     std::list<featurePtr> features;
 
     unsigned int pred;
+=======
+    typedef std::vector<featurePtr> list_of_feature;
+
+private:
+    list_of_feature features;
+    unsigned int head;
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::string form;
     VariableFlag variableFlag;
 
-    Features(const featurePtr&);
+    Features(const featurePtr &);
 
     static featuresPtr createBottom();
 
@@ -57,21 +67,25 @@ private:
 public:
     ~Features();
 
-    static featuresPtr create(const featurePtr& = featurePtr());
+    static featuresPtr create(const featurePtr & = featurePtr());
 
     void putId(unsigned int id);
 
-    void add(const featurePtr&, bool = false);
+    void add(const featurePtr &);
 
-    void add(const featuresPtr&, bool = false);
+    void add(const featuresPtr &);
 
     size_t size() const;
 
-    std::list<featurePtr>::iterator begin();
+    list_of_feature::const_iterator cbegin() const;
 
-    std::list<featurePtr>::iterator end();
+    list_of_feature::const_iterator cend() const;
 
-    std::list<featurePtr>::iterator erase(std::list<featurePtr>::iterator);
+    list_of_feature::iterator begin();
+
+    list_of_feature::iterator end();
+
+    list_of_feature::iterator erase(list_of_feature::iterator);
 
     featurePtr front() const;
 
@@ -85,13 +99,17 @@ public:
 
     featuresPtr clone() const;
 
-    valuePtr find(const bitsetPtr&) const;
+    valuePtr find(const bitsetPtr &) const;
 
-    bool buildEnvironment(const environmentPtr&, const featuresPtr&, bool/*, bool*/);
+    bool buildEnvironment(const environmentPtr &, const featuresPtr &, bool
+#ifdef TRACE_BUILD_ENVIRONMENT
+    ,bool
+#endif
+    );
 
     void subFlags(const std::bitset<FLAGS> &);
 
-    unsigned int assignPred();
+    unsigned int assignHead();
 
     std::string *assignForm();
 
@@ -101,18 +119,28 @@ public:
 
     bool isBottom() const;
 
+<<<<<<< HEAD
     void enable(const statementPtr&, const itemPtr&, class Application* application, bool &, bool);
+=======
+    void enable(const statementPtr &, class Item *, class Synthesizer *synthesizer, bool &, bool);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
-    bool subsumes(const featuresPtr&, const environmentPtr&);
+    bool subsumes(const featuresPtr &, const environmentPtr &);
 
     void deleteAnonymousVariables();
 
+    void deleteVariables();
+
     bool containsVariable();
 
-    bool findVariable(const bitsetPtr&);
+    bool findVariable(const bitsetPtr &);
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
+
+    void apply(class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+                  const statementPtr& body,
+                  bool &effect);
+
 };
 
 #endif // ELVEX_FEATURES_H
-

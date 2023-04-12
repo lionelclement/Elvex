@@ -1,8 +1,0 @@
-# lexeme	pos	lemma	features
-#		
-# hyperonymes
-VOITURE	n	véhicule	PRED:VOITURE,sem:hyper,LEMMA:VÉHICULE
-VOITURE	n	automobile	PRED:VOITURE,sem:syn,LEMMA:AUTOMOBILE
-BATEAU	n	navire	PRED:BATEAU,sem:hyper,LEMMA:NAVIRE
-
-

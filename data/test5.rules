@@ -1,0 +1,14 @@
+@trace
+S → a
+{
+  [i:[ID:$ID], ii:[ID:$ID]];
+  ↓1 = ↑;
+}
+
+@trace
+S → b
+{
+  [i:[ID:$ID1], ii:[ID:$ID2]];
+  attest (!$ID1 || !$ID2 || $ID1 != $ID2);
+  ↓1 = ↑;
+}

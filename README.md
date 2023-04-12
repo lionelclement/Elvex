@@ -5,7 +5,9 @@ Elvex
 
 It is written by Lionel Clément at Bordeaux University - France and released by LaBRI under GNU GPL License.
 
-The system is using handwritten *lexicon* and *grammar* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the "concept". The "concept" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc. 
+The system is using handwritten *lexicon* and *rules* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the input. The "concept" or "What to say" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc.
+
+Although it is an Artificial Intelligence program, it is not a stochastic system based on neural networks.
 
 programming language used
 -------
@@ -28,31 +30,28 @@ The license shall cover **Elvex** software and the included data except LeFFF wh
 
 The language of **Elvex** is not under licence (it belongs to the public domain), so the data you will write (new grammars, new lexicons) are not part of **Elvex**, it is under another license.
 
-What you can't do with Elvex
------------------------------
-
-**Elvex** can write a text that sounds natural, but does not really understand what it is saying.
-
 What you can do with Elvex
 -----------------------------
 
-Write automatically and quickly texts in a correct form of Natural Language, given a meaning and elements
-of speech. Rest assured that **Elvex** avoids any misunderstanding.
-
-Note that unlike other systems, the concepts that are expressed may not depend on prior lexical choices.
+Write automatically and quickly relevant and adequate texts in natural language,
+given a meaning and elements of speech.
+Rest assured that **Elvex** avoids any misunderstanding.
 
 Theoretical aspects
 -----------------
 
-**Elvex** is freely inspired by some syntactic formalisms such as: 
+**Elvex** is freely inspired by some syntactic formalisms such as:
 
 -Lexique-Grammaire (M. Gross 1960)
+
 -Functional Grammar (M. Kay 1979)
--Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982) 
+
+-Lexical-Functional Grammar (J. Bresnan and D. Kaplan 1982)
+
 -Systemic Functional Grammar (M. Halliday 1994).
 
-It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon but not with learning data.
-I don’t explain the algorithms here. It’s efficient and monotonic (each rule adds something and never removes the effect of another rule).
+It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon.
+I don’t explain the algorithms here. It’s efficient and monotonic (each rule adds something and never removes the effect of other rules).
 
 Practically speaking: to build Text Generator with Elvex for an application (Chatbot, Letter-writer, etc)
 --------------------
@@ -79,7 +78,7 @@ Causal clauses with tense aggrement.
 
 In French, the basis of verbal tense and the conclusion of a causal clause depend on the aspect, the tense and even on the differences in language registers of a sentence
 
-- present: 
+- present:
 if present => future
 - present or future in slang language:
 conditional without "if" => conditional
@@ -91,35 +90,35 @@ past conditional without "if" => past conditional
  Imperfect => conditional
 
 // present
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
+### text [HEAD:cause, i:[HEAD:to_rain], ii:[HEAD:umbrella, i:[HEAD:_you]]
 S'il pleut, tu prendras un parapluie.
 
 // present or future & slang language
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], language_register:slang]
+### text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], language_register:slang]
 Il flotterait, tu prendrais un pépin.
 
 // continuous present
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:present, aspect:continuous]
+### text [HEAD:cause, i:[PRED:rain], ii:[PRED:umbrella, i:[HEAD:_you]], tense:present, aspect:continuous]
 S'il est en train de pleuvoir, tu prendras un parapluie.
 
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, illocutionary:ask, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]]]
+### text [HEAD:cause, i:[PRED:rain], ii:[PRED:umbrella, illocutionary:ask, i:[HEAD:_you]]
 S'il pleut, est-ce que tu prendras un parapluie ?
 
 //past
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:past]
+### text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past]
 S'il avait plu, tu aurais pris un parapluie.
 
 //past & slang language
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:past, language_register:slang]
+### text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, language_register:slang]
 Il aurait plu, tu aurais pris un parapluie.
 
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:past, aspect:continuous]
+### text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, aspect:continuous]
 S'il était en train de pleuvoir, tu aurais pris un parapluie.
 
 //future
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:future]
+### text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:future]
 S'il pleuvait, tu prendrais un parapluie.
 
-### text [PRED:cause, i:[PRED:to_rain], ii:[PRED:to_take, i:[PRED:_you], ii:[PRED:umbrella, def:no, number:sg]], tense:future, aspect:continuous]
+### text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:future, aspect:continuous]
 S'il était en train de pleuvoir, tu prendrais un parapluie.
 

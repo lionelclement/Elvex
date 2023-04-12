@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -28,11 +28,12 @@
 #include <libxml/tree.h>
 #endif
 
-#include "uniq-id.hpp"
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 
-class Rule :
-public UniqId, public std::enable_shared_from_this<class Rule> {
+class Rule : public Facade,
+             public std::enable_shared_from_this<class Rule>
+{
 
 private:
     unsigned int lhs;
@@ -101,11 +102,10 @@ public:
     std::string toString() const;
 
 #ifdef OUTPUT_XML
-    void toXML(/*xmlNodePtr*/);
+    void toXML(xmlNodePtr);
 #endif
 
     void addDefaults(void);
-
 };
 
 #endif // ELVEX_RULE_H

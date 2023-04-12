@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -11,16 +11,21 @@
  * LaBRI -- Université Bordeaux 
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
+ * lionel.clement@u-bordeaux.fr
  * 
  * This file is part of ELVEX.
  *
  ************************************************** */
 
+<<<<<<< HEAD
 #ifndef ELVEX_Rules_H
 #define ELVEX_Rules_H
+=======
+#ifndef ELVEX_RULES_H
+#define ELVEX_RULES_H
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
-#include <set>
+#include <unordered_set>
 #include <list>
 #include "shared_ptr.hpp"
 
@@ -30,12 +35,13 @@
 
 class Rules {
 public:
-    typedef std::list<rulePtr> ruleList;
+    typedef std::list<rulePtr> list_of_rule;
+    typedef std::unordered_set<unsigned int> set_of_unsigned_int;
 
 private:
-    std::set<unsigned int> terminals;
-    std::set<unsigned int> nonTerminals;
-    ruleList rules;
+    set_of_unsigned_int terminals;
+    set_of_unsigned_int nonTerminals;
+    list_of_rule rules;
     unsigned int startTerm;
     rulePtr firstRule;
     unsigned int idMax;
@@ -45,23 +51,23 @@ public:
 
     ~Rules(void);
 
-    std::set<unsigned int> &getTerminals(void);
+    set_of_unsigned_int& getTerminals(void);
 
-    std::set<unsigned int> &getNonTerminals(void);
+    set_of_unsigned_int& getNonTerminals(void);
 
-    const ruleList &getRules(void) const;
+    const list_of_rule& getRules(void) const;
 
     unsigned int getStartTerm(void) const;
 
     rulePtr getFirstRule(void) const;
 
-    const unsigned int *getRefIdMax(void) const;
+    const unsigned int* getRefIdMax(void) const;
 
     void setStartTerm(unsigned int startTerm);
 
-    ruleList::const_iterator rulesBegin(void) const;
+    list_of_rule::const_iterator cbegin(void) const;
 
-    ruleList::const_iterator rulesEnd(void) const;
+    list_of_rule::const_iterator cend(void) const;
 
     void addRule(rulePtr);
 
@@ -71,19 +77,27 @@ public:
 
     void addTerminal(unsigned int);
 
-    void print(std::ostream &) const;
+    void print(std::ostream& ) const;
 
     bool isTerminal(unsigned int) const;
 
     bool isNonTerminal(unsigned int) const;
 
+<<<<<<< HEAD
     void analyseTerms(class Application &);
+=======
+    void analyseTerms(class Parser&);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
 #endif
 
-    std::list<rulePtr> *findRules(unsigned int lhs);
+    list_of_rule* findRules(unsigned int lhs);
 };
 
+<<<<<<< HEAD
 #endif // ELVEX_Rules_H
+=======
+#endif // ELVEX_RULES_H
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723

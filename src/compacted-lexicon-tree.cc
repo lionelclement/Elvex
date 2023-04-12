@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI, 
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -11,7 +11,7 @@
  * LaBRI -- Université Bordeaux 
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
+ * lionel.clement@u-bordeaux.fr
  * 
  * This file is part of ELVEX.
  *
@@ -88,7 +88,7 @@ void CompactedLexiconTree::printStaticFSA(FILE *out, class CompactedLexicon *lex
                 (lexiconSy->info == nullptr) ? (unsigned long int) ~0UL : lexiconSy->info->getAddress(),
                 lexiconSy->character);
         if (!fwrite(elt, sizeof(CompactedLexiconFsa), 1, out)) {
-            FATAL_ERROR_UNEXPECTED
+            FATAL_ERROR_UNEXPECTED;
         }
 #ifdef TRACE_DIFF
         elt->print(std::cout);
@@ -129,7 +129,7 @@ void CompactedLexiconTree::printStaticInfo(FILE *out) const {
                     (infoSy->getNext() != nullptr) ? infoSy->getNext()->getAddress() : (unsigned long int) (~(0UL)),
                     infoSy->getOffset());
             if (!fwrite(elt, sizeof(CompactedLexiconBuffer), 1, out)) {
-                FATAL_ERROR_UNEXPECTED
+                FATAL_ERROR_UNEXPECTED;
             }
 #ifdef TRACE_DIFF
             std::cout << infoSy->getAddress() << ' ';

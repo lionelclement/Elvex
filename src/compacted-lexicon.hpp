@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -28,8 +28,6 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include "compacted-lexicon-tree.hpp"
 #include "lexicon.hpp"
 
@@ -39,10 +37,10 @@ extern char *currentLexString;
 
 extern class Entry *localEntry;
 
-class CompactedLexicon {
+class CompactedLexicon
+{
 
 private:
-
     std::string directoryName;
     std::string fileName;
     FILE *fsaFile;
@@ -64,24 +62,24 @@ public:
 
     void printResults(std::ostream &, unsigned long int index, bool sep) const;
 
-    unsigned long int searchStatic(unsigned long int index, const std::string&) const;
+    unsigned long int search(unsigned long int index, const std::string &) const;
 
     void saveFsa();
 
     void loadFsa();
 
-    void openFiles(const std::string& mode);
+    void openFiles(const std::string &mode);
 
     void closeFiles();
 
-    static std::string unif(const std::string& fs1, const std::string& fs2);
+    static std::string unif(const std::string &fs1, const std::string &fs2);
 
-    void addToData(const std::string& entry, const std::string& form, const std::string& features);
+    void addToData(const std::string &entry, const std::string &form, const std::string &features);
 
-    void addPattern(Lexicon &pattern, Lexicon &morpho, const std::string& input, const std::string& fs, const std::string& lemma,
-                    const std::string& pos);
+    void addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &fs, const std::string &lemma,
+                    const std::string &pos);
 
-    void addForms(const std::string& input, std::string inputSearch, const std::string& features/*, Lexicon &pattern*/, Lexicon &morpho);
+    void addForms(const std::string &input, std::string inputSearch, const std::string &features, Lexicon &morpho);
 
     void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
 
@@ -89,8 +87,10 @@ public:
 
     void consult();
 
-    void list();
-    void list(unsigned int, const std::string&);
+    void print(std::ostream &);
+
+private:
+    void print(unsigned int, const std::string &, std::ostream &);
 };
 
 #endif // COMPACTEDLEXICON_H

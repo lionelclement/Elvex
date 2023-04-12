@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -22,7 +22,8 @@
 
 #include <ostream>
 
-struct CompactedLexiconFsa {
+struct CompactedLexiconFsa
+{
 private:
     unsigned long int child;
     unsigned long int next;
@@ -38,7 +39,7 @@ public:
 
     bool hasChild() const;
 
-    bool hasInfo()const;
+    bool hasInfo() const;
 
     bool hasNext() const;
 
@@ -50,8 +51,7 @@ public:
 
     bool equalsThisChar(char character) const;
 
-    char getCharacter() const {return character;}
-
+    char getCharacter() const { return character; }
 };
 
 #endif // COMPACTEDLEXICONFSA_H

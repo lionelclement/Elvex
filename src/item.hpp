@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -21,96 +21,138 @@
 #define ELVEX_ITEM_H
 
 #include <climits>
-#include <set>
+#include <unordered_set>
 #include <vector>
 #include <unordered_map>
-#include "flags.hpp"
-#include "uniq-id.hpp"
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 
-class Item :
-        public UniqId, public Flags, public Serializable, public std::enable_shared_from_this<class Item> {
+class Item : public Facade,
+             public Serializable
+{
+
+public:
+    typedef std::unordered_set<unsigned int> set_of_unsigned_int;
+    typedef set_of_unsigned_int::const_iterator set_of_unsigned_int_const_iterator;
 
 private:
-    rulePtr rule;
-    unsigned int index; // the \bullet position
-    std::vector<unsigned int> indexTerms; // which term in a disjunction
-    statementsPtr statements;
-    std::set<unsigned int> refs; // item from which this one is derived
-    std::vector<bool> seen;
-    std::vector<unsigned int> ranges;
-    featuresPtr inheritedFeatures; //↑
-    listFeaturesPtr inheritedSonFeatures; //↓
-    featuresPtr synthesizedFeatures; //⇑
-    listFeaturesPtr synthesizedSonFeatures; //⇓
-    std::vector<forestIdentifierPtr> forestIdentifiers;
-    environmentPtr environment;
-    bool trace;
-    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false, s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
-            s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true, s_inheritedSonFeatures = true, s_synthesizedFeatures = true, s_synthesizedSonFeatures = true,
-            s_statements = true, s_environment = true;
+    rulePtr rule;                                            // the grammar rule
+    unsigned int index;                                      // the \bullet position
+    std::vector<unsigned int> indexTerms;                    // term in a disjunction
+    statementsPtr statements;                                // the semantics
+    set_of_unsigned_int refs;                                // set of items from which this one is derived
+    std::vector<bool> seen;                                  // seen flags
+    std::vector<unsigned int> ranges;                        // ranges
+    featuresPtr inheritedFeatures;                           // ↑
+    listFeaturesPtr inheritedSonFeatures;                    // ↓
+    featuresPtr synthesizedFeatures;                         // ⇑
+    listFeaturesPtr synthesizedSonFeatures;                  // ⇓
+    std::vector<class ForestIdentifier *> forestIdentifiers; // forest identifiers
+    environmentPtr environment;                              // variable environment
+
+    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
+         s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
+         s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
+         s_inheritedSonFeatures = true, s_synthesizedFeatures = true,
+         s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
 
     Item(rulePtr rule, unsigned int index, statementsPtr statements);
 
-    Item(const rulePtr& rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
+    Item(const rulePtr &rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
 
-    Item(const rulePtr& rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements);
+    Item(const rulePtr &rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements);
 
     void makeSerialString(void);
 
 public:
     ~Item();
 
-    static itemPtr create(const rulePtr&, unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
+    // static constructors
 
-    static itemPtr create(const rulePtr&, unsigned int, std::vector<unsigned int> &, statementsPtr);
+    static class Item *create(const rulePtr &, unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
 
-    unsigned int getLineno() const;
-
-    const std::string &getFilename() const;
+    static class Item *create(const rulePtr &, unsigned int, std::vector<unsigned int> &, statementsPtr);
 
     unsigned int getCurrentTerm(void) const;
 
+    // getters
+
     termsPtr getCurrentTerms() const;
-
-    termsPtr getTerms(unsigned int) const;
-
-    void setCurrentTerms(termsPtr);
 
     rulePtr getRule(void) const;
 
-    void setRule(rulePtr);
-
     unsigned int getIndex(void) const;
-
-    void setIndex(unsigned int);
 
     std::vector<unsigned int> &getIndexTerms(void);
 
-    unsigned int getLhs(void) const;
+    unsigned int getRuleLhs(void) const;
 
-    std::vector<termsPtr> &getRhs(void) const;
+    std::vector<termsPtr> &getRuleRhs(void) const;
 
     statementsPtr getStatements(void);
 
-    std::set<unsigned int> &getRefs(void);
+    set_of_unsigned_int &getRefs(void);
 
-    void setRefs(std::set<unsigned int> &);
+    listFeaturesPtr getSynthesizedSonFeatures(void);
 
-    void addRef(unsigned int);
+    listFeaturesPtr getInheritedSonFeatures(void);
 
-    void addRefs(std::set<unsigned int> &);
+    featuresPtr getSynthesizedFeatures() const;
+
+    featuresPtr getInheritedFeatures(void) const;
+
+    environmentPtr getEnvironment() const;
+
+    unsigned int getRuleId(void) const;
+
+    unsigned int getRuleLineno() const;
+
+    bool getRuleTrace(void) const;
 
     std::vector<bool> &getSeen(void);
 
-    void setSeen(std::vector<bool> &);
+    // setters
 
-    bool isSeen(unsigned int) const;
+    void setCurrentTerms(termsPtr);
+
+    void setRule(rulePtr);
+
+    void setIndex(unsigned int);
+
+    void setRefs(set_of_unsigned_int &);
+
+    void setSynthesizedSonFeatures(listFeaturesPtr);
+
+    void setInheritedSonFeatures(listFeaturesPtr);
+
+    void setSynthesizedFeatures(featuresPtr);
+
+    void setInheritedFeatures(featuresPtr);
+
+    void setEnvironment(environmentPtr);
+
+    void setSeen(std::vector<bool> &);
 
     void setSeen(unsigned int, bool);
 
-    void addItem(std::unordered_map<unsigned int, itemPtr> &, unsigned int, itemPtr);
+    // rule methods
+
+    void rulePrint(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
+
+    void ruleResetUsages(void);
+
+    const std::string &getRuleFilename() const;
+
+    termsPtr getTerms(unsigned int) const;
+
+    void addRef(unsigned int);
+
+    void addRefs(set_of_unsigned_int &);
+
+    bool isSeen(unsigned int) const;
+
+    void addItem(std::unordered_map<unsigned int, class Item *> &, unsigned int, class Item *);
 
     std::vector<unsigned int> &getRanges(void);
 
@@ -118,49 +160,23 @@ public:
 
     void addRanges(std::vector<unsigned int> &);
 
-    std::vector<forestIdentifierPtr> &getForestIdentifiers(void);
+    std::vector<class ForestIdentifier *> &getForestIdentifiers(void);
 
-    void addForestIdentifiers(unsigned int i, forestIdentifierPtr);
+    void addForestIdentifiers(unsigned int i, class ForestIdentifier *);
 
-    void addForestIdentifiers(std::vector<forestIdentifierPtr> &);
-
-    listFeaturesPtr getSynthesizedSonFeatures(void);
-
-    void setSynthesizedSonFeatures(listFeaturesPtr);
-
-    listFeaturesPtr getInheritedSonFeatures(void);
-
-    void setInheritedSonFeatures(listFeaturesPtr);
-
-    featuresPtr getSynthesizedFeatures() const;
-
-    void setSynthesizedFeatures(featuresPtr);
-
-    featuresPtr getInheritedFeatures(void) const;
-
-    void setInheritedFeatures(featuresPtr);
+    void addForestIdentifiers(std::vector<class ForestIdentifier *> &);
 
     void buildSynthesizedFeatures(class Application *);
 
     void buildInheritedSonFeatures(class Application *);
 
-    environmentPtr getEnvironment() const;
+    bool addEnvironment(environmentPtr);
 
-    void setEnvironment(environmentPtr);
+    bool addEnvironment(environmentPtr, environmentPtr);
 
-    void addEnvironment(environmentPtr);
-
-    void addEnvironment(environmentPtr, environmentPtr);
-
-    bool getTrace() const;
-
-    void setTrace(bool trace);
-
-    void addStatements(const statementsPtr&);
+    void addStatements(const statementsPtr &);
 
     void print(std::ostream &) const;
-
-    itemPtr clone(const std::bitset<FLAGS> &savedFlags);
 
     void renameVariables(size_t);
 
@@ -168,18 +184,26 @@ public:
 
     bool isStarted(void);
 
-    void successor(bool &);
+    void step(bool &);
 
     void defaultInheritedSonFeatures(void);
 
+<<<<<<< HEAD
     void apply(class Application *application);
+=======
+    void apply(class Parser& parser, class Synthesizer* synthesizer);
+>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
-    struct hash {
-        size_t operator()(itemPtr const&) const;
+    class Item* clone(const std::bitset<FLAGS>& savedFlags);
+
+    struct hash
+    {
+        size_t operator()(class Item *) const;
     };
 
-    struct equal_to {
-        bool operator()(itemPtr const&, itemPtr const&) const;
+    struct equal_to
+    {
+        bool operator()(class Item *, class Item *) const;
     };
 };
 

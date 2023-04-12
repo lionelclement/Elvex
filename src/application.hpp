@@ -2,114 +2,130 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux 
+ * LaBRI -- Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
- * lionel.clement@labri.fr
- * 
+ * lionel.clement@u-bordeaux.fr
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
 
+<<<<<<<< HEAD:src/application.hpp
 #ifndef ELVEX_APPLICATION_H
 #define ELVEX_APPLICATION_H
+========
+#ifndef ELVEX_GENERATOR_H
+#define ELVEX_GENERATOR_H
 
-#include <map>
+#include <unordered_map>
+>>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/generator.hpp
+
 #include "shared_ptr.hpp"
 #include "forestmap.hpp"
 #include "memoization-map.hpp"
 #include "generator.hpp"
 
 #ifndef MAXLENGTH
-#define MAXLENGTH 1000
+#define MAXLENGTH 3000
 #endif
 
 #ifndef MAXUSAGES
-#define MAXUSAGES 1000
+#define MAXUSAGES 3000
 #endif
 
-#ifndef MAXCARDINAL
-#define MAXCARDINAL 1000
+#ifndef MAXITEMS
+#define MAXITEMS 3000
 #endif
 
 #ifndef MAXATTEMPTS
 #define MAXATTEMPTS 3000
 #endif
 
+<<<<<<<< HEAD:src/application.hpp
 class Application {
+========
+class Synthesizer
+{
+>>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/generator.hpp
 
 public:
-    typedef std::map<unsigned int, itemPtr> Item_map;
-    typedef std::map<unsigned int, itemSetPtr> ItemSet_map;
-    enum Stage {
+    enum Stage
+    {
         MORPHO_FEATURES,
         FORM_FEATURES,
-        PRED_FEATURES
+        HEAD_FEATURES
     };
 
+<<<<<<<< HEAD:src/application.hpp
 public:
 
     Generator generator;
+========
+    typedef std::unordered_map<unsigned int, class Item *> item_map;
+    typedef std::unordered_map<unsigned int, class ItemSet *> itemSet_map;
+    typedef itemSet_map::const_iterator itemSet_map_const_iterator;
+>>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/generator.hpp
 
 private:
-    ItemSet_map states;
+    itemSet_map states;
     ForestMap forestMap;
-    Item_map itemMap;
+    item_map itemMap;
     nodePtr nodeRoot;
 
+    std::string compactedLexiconFileName;
+    std::string compactedDirectoryName;
     class CompactedLexicon *compactedLexicon;
 
     unsigned int maxLength;
     unsigned int maxUsages;
-    unsigned int maxCardinal;
+    unsigned int maxItems;
     std::string lexiconFileName;
     std::string rulesFileName;
     std::string inputFileName;
 
     std::list<std::string> inputs;
 
-    std::string compactedLexiconFileName;
-    std::string compactedDirectoryName;
-
     bool reduceAll;
     bool trace;
     bool verbose;
     bool warning;
     bool random;
-    bool one;
+    bool first;
     int attempsRandom;
 
     MemoizationMap memoizedMap;
 
-    #ifdef TRACE_OPTION
     bool traceInit;
     bool traceStage;
     bool traceClose;
     bool traceShift;
     bool traceReduce;
     bool traceAction;
-#endif
 
 #ifdef OUTPUT_XML
     char *outXML;
 #endif
 
-
 public:
+<<<<<<<< HEAD:src/application.hpp
 
     Application();
+========
+    Synthesizer();
+>>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/generator.hpp
 
     ~Application();
 
-    ItemSet_map::const_iterator begin() const;
+    itemSet_map_const_iterator cbegin() const;
 
-    ItemSet_map::const_iterator end() const;
+    itemSet_map_const_iterator cend() const;
 
     size_t size() const;
 
@@ -141,22 +157,19 @@ public:
 
     unsigned int getMaxUsages() const;
 
-    void setMaxCardinal(unsigned int);
+    void setMaxItems(unsigned int);
 
-    unsigned int getMaxCardinal() const;
-
-    class CompactedLexicon *getCompactedLexicon() const;
+    unsigned int getMaxItems() const;
 
     void setCompactedLexicon(class CompactedLexicon *);
 
-    void addInput(const std::string&);
+    void addInput(const std::string &);
 
 #ifdef OUTPUT_XML
     void setOutXML(char *);
     char *getOutXML() const;
 #endif
 
-#ifdef TRACE_OPTION
     void setTraceInit(bool);
     void setTraceStage(bool);
     void setTraceClose(bool);
@@ -169,15 +182,14 @@ public:
     bool getTraceShift();
     bool getTraceReduce();
     bool getTraceAction();
-#endif
 
     nodePtr getNodeRoot();
 
-    bool insertItemMap(const itemPtr&);
+    bool insertItemMap(class Item *);
 
     void eraseItemMap(unsigned int);
 
-    itemPtr getItemMap(unsigned int);
+    class Item *getItemMap(unsigned int);
 
     bool getTrace() const;
 
@@ -187,30 +199,41 @@ public:
 
     void setRandom(bool);
 
-    bool getRandom() const;
+    bool getRandom(void) const;
 
-    void setOne(bool);
+    void setFirst(bool);
 
-    bool getOne() const;
+    bool getFirst(void) const;
 
-    void printState(std::ostream &, const itemSetPtr&);
+    void printState(std::ostream &, class ItemSet *);
 
+<<<<<<<< HEAD:src/application.hpp
     void close(class Generator &, const itemSetPtr&, unsigned int);
 
     bool shift(class Generator &, const itemSetPtr&, unsigned int);
+========
+    void close(class Parser &, class ItemSet *, unsigned int);
+
+    bool shift(class Parser &, class ItemSet *, unsigned int);
+>>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/generator.hpp
 
     void clear();
 
-    static itemPtr createItem(const itemPtr&, unsigned int);
+    static class Item *createItem(class Item *, unsigned int);
 
     void generate(class Generator &);
 
+<<<<<<<< HEAD:src/application.hpp
     entriesPtr findCompactedLexicon(class Generator &, unsigned int code, const std::string& str, unsigned int pred);
+========
+    entriesPtr findCompactedLexicon(class Parser &parser, unsigned int pos, unsigned int head);
+>>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/generator.hpp
 
-    std::string keyMemoization(const itemPtr&, const itemPtr&);
+    std::string keyMemoization(class Item *, class Item *);
 
     void setVerbose(bool _verbose);
 
+<<<<<<<< HEAD:src/application.hpp
     entriesPtr findByPos(Generator &, Generator::entries_map *pMap, unsigned int term);
 
     entriesPtr findByForm(Generator::entries_map *pMap);
@@ -219,3 +242,15 @@ public:
 };
 
 #endif // ELVEX_APPLICATION_H
+========
+    bool getVerbose();
+
+    entriesPtr findByPos(Parser &parser, Parser::entries_map *, unsigned int pos);
+
+    entriesPtr findByForm(Parser::entries_map *);
+
+    entriesPtr findByHead(Parser &parser, Parser::entries_map *, unsigned int pos, unsigned int head);
+};
+
+#endif // ELVEX_GENERATOR_H
+>>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/generator.hpp
