@@ -440,11 +440,6 @@ int main(int argn, char **argv)
         }
 #endif
     }
-    catch (fatal_exception &e)
-    {
-        std::cerr << "*** fatal error: " << e.what() << std::endl;
-        std::flush(std::cerr);
-    }
     catch (usage_exception &e)
     {
         std::cerr << "*** usage error: " << e.what() << std::endl;
@@ -454,13 +449,14 @@ int main(int argn, char **argv)
     }
     catch (parser_exception &e)
     {
-        std::cerr << "*** parser error: " << e.what() << std::endl;
+        std::cerr << "*** " << e.what() << std::endl;
         std::flush(std::cerr);
         return EXIT_FAILURE;
     }
-    catch (std::string s)
+    catch (fatal_exception &e)
     {
-        std::cerr << "*** error" << s << std::endl;
+        std::cerr << "*** fatal error: " << e.what() << std::endl;
+        std::flush(std::cerr);
         return EXIT_FAILURE;
     }
     if (trace){

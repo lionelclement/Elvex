@@ -19,26 +19,15 @@
 
 #include "parser_exception.hpp"
 
-#include <iostream>
-#include <sstream>
-
 /* **************************************************
  *
  ************************************************** */
-parser_exception::parser_exception(std::string message) {
-    this->message = message;
+parser_exception::parser_exception(std::string message): fatal_exception(message) {
 }
 
 /* **************************************************
  *
  ************************************************** */
-parser_exception::parser_exception(std::ostringstream& oss) {
-    this->message = oss.str();
+parser_exception::parser_exception(std::ostringstream& oss): fatal_exception(oss) {
 }
 
-/* **************************************************
- *
- ************************************************** */
-std::string parser_exception::getMessage() {
-    return message;
-}

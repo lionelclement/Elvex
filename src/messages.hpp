@@ -35,7 +35,7 @@
 #define COUT_LINE  {std::cout << __FILE__ << "(" << std::dec <<__LINE__ << ")" << std::endl;}
 
 #define FATAL_ERROR_UNEXPECTED {CERR_LINE; throw fatal_exception("*** unexpected");}
-#define WARNING(msg) {std::cerr << "*** " << msg << std::endl;}
+#define WARNING(msg) {std::cerr << "*** warning: " << msg << std::endl;}
 
 #define _BUG_ {CERR_LINE; std::cerr << "*** Will cause a segmentation fault" << std::endl; int *x = NULL; *x = 36;}
 

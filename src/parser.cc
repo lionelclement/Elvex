@@ -255,6 +255,7 @@ featuresPtr Parser::findMacros(const std::string& str) {
  *
  ************************************************** */
 void Parser::parseFile(std::string prefix, std::string suffix, std::string fileName) {
+    pushBufferName(fileName);
     parseString(prefix + "\n#include " + fileName + "\n" + suffix);
 }
 

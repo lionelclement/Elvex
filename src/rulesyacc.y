@@ -614,7 +614,7 @@ statement:
 		      ||((*$3)->isFct())
 		      ||((*$3)->isSearch())));
 	  else {
-	    yyerror((char*)"syntax error");
+	    yyerror((char*)"bad assignment expression");
 	  }
 	  free($1);
 	  free($3);
@@ -632,7 +632,7 @@ statement:
 					||((*$3)->isVariable())))
 	    ;
 	  else
-	    yyerror((char* )"syntax error");
+	    yyerror((char* )"bad subsumption expression");
 	  free($1);
 	  free($3);
 	}

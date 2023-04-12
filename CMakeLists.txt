@@ -119,7 +119,7 @@ configure_file(
         @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
-target_compile_options(elvex PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
+target_compile_options(elvex PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )
@@ -154,15 +154,15 @@ else()
 endif()
 
 add_executable(elvexbuildlexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
-target_compile_options(elvexbuildlexicon PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexbuildlexicon PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 FLEX_TARGET(postedition_en src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_en.cc)
 add_executable(elvexpostedition_en ${FLEX_postedition_en_OUTPUTS})
-target_compile_options(elvexpostedition_en PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexpostedition_en PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 FLEX_TARGET(postedition_fr src/postedition_fr.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_fr.cc)
 add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
-target_compile_options(elvexpostedition_fr PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_options(elvexpostedition_fr PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
 install(TARGETS elvex elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
         RUNTIME DESTINATION bin)

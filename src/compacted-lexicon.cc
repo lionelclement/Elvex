@@ -286,7 +286,7 @@ try {
 	}
     	catch (parser_exception& e) {
 		  std::ostringstream oss;
-		  oss << e.getMessage() << ":\"" << fs1 << "\"";
+		  oss << e.what() << ":\"" << fs1 << "\"";
 		  throw fatal_exception(oss);
 		}
         features1 = parser.getLocalFeatures();
@@ -303,7 +303,7 @@ try{
     }
     	catch (parser_exception& e) {
 		  std::ostringstream oss;
-		  oss << e.getMessage() << ":\"" << fs2 << "\"";
+		  oss << e.what() << ":\"" << fs2 << "\"";
 		  throw fatal_exception(oss);
 		}
         features2 = parser.getLocalFeatures();

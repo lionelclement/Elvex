@@ -21,19 +21,15 @@
 #define ELVEX_PARSER_EXCEPTION_HPP
 
 #include <string>
-#include <exception>
+#include "fatal_exception.hpp"
 
 class parser_exception :
-    public std::exception {
+    public fatal_exception {
 
-private:
-    std::string message;
+    public:
+        parser_exception(std::string message);
+        parser_exception(std::ostringstream& oss);
 
-public:
-    parser_exception(std::string message);
-    parser_exception(std::ostringstream& _oss);
-    std::string getMessage();
 };
-
 
 #endif //ELVEX_PARSER_EXCEPTION_HPP

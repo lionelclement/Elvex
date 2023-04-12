@@ -366,10 +366,6 @@ int main(int argn, char** argv) {
 	}
 	usage();
     }
-    catch (fatal_exception &e) {
-      std::cerr << "*** fatal error: " << e.what() << std::endl;
-      std::flush(std::cerr);
-    }
     catch (usage_exception &e) {
       std::cerr << "*** usage error: " << e.what() << std::endl;
       usage();
@@ -377,7 +373,12 @@ int main(int argn, char** argv) {
       return EXIT_FAILURE;
     }
     catch (parser_exception &e) {
-      std::cerr << "*** parser error: " << e.what() << std::endl;
+      std::cerr << "*** " << e.what() << std::endl;
+      std::flush(std::cerr);
+      return EXIT_FAILURE;
+    }
+    catch (fatal_exception &e) {
+      std::cerr << "*** fatal error: " << e.what() << std::endl;
       std::flush(std::cerr);
       return EXIT_FAILURE;
     }

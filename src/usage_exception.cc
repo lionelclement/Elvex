@@ -19,26 +19,15 @@
 
 #include "usage_exception.hpp"
 
-#include <iostream>
-#include <utility>
-
 /* **************************************************
  *
  ************************************************** */
-usage_exception::usage_exception(std::string message) {
-    this->message = message;
+usage_exception::usage_exception(std::string message): fatal_exception(message) {
 }
 
 /* **************************************************
  *
  ************************************************** */
-usage_exception::usage_exception(std::ostringstream& oss) {
-    usage_exception(oss.str());
+usage_exception::usage_exception(std::ostringstream& oss): fatal_exception(oss) {
 }
 
-/* **************************************************
- *
- ************************************************** */
-std::string usage_exception::getMessage() {
-    return message;
-}

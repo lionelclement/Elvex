@@ -36,7 +36,6 @@ public:
   typedef entry_map::const_iterator entry_map_const_iterator;
   typedef entry_map::iterator entry_map_iterator;
 
-  // typedef std::map<unsigned int, entriesPtr> entries_map;
   typedef std::unordered_map<unsigned int, entriesPtr> entries_map;
   typedef entries_map::const_iterator entries_map_const_iterator;
   typedef entries_map::iterator entries_map_iterator;

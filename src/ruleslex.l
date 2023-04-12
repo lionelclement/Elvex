@@ -25,6 +25,7 @@
 #include "parser.hpp"
 #include "rulesyacc.hpp"
 #include "messages.hpp"
+#include "parser_exception.hpp"
 
 #define YY_NO_INPUT
 
@@ -116,7 +117,7 @@ downDoubleArrow "⇓"
 	  }
 	  yyin = fopen( yytext, "r" );
 	  if ( ! yyin ){
-	    throw "*** error: can't open " + std::string(yytext);
+	    throw fatal_exception("can't open " + std::string(yytext));
 	  }
 	  push_buffer();
 	  BEGIN INITIAL;
@@ -143,13 +144,14 @@ downDoubleArrow "⇓"
     DBUGPRTARG("TOKEN_STRING ", strbuf.str());
     strbuf.clear(); 
     return TOKEN_STRING;}
-  \\.         { throw "*** error: bogus escape '" + std::string(yytext) + "' in string"; }
-  \n          { throw "*** error: newline in string"; }
+  \\.         { throw parser_exception("*** error: bogus escape '" + std::string(yytext) + "' in string"); }
+  \n          { throw parser_exception("*** error: newline in string"); }
 }
 
 <<EOF>> {
   yypop_buffer_state();
   if ( !YY_CURRENT_BUFFER ) {
+    throw parser_exception("can't close current buffer");
     yyterminate();
   }
   else {

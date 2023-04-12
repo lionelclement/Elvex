@@ -21,19 +21,17 @@
 #define ELVEX_USAGE_EXCEPTION_HPP
 
 #include <string>
-#include <exception>
 #include <sstream>
 
+#include "fatal_exception.hpp"
+
 class usage_exception :
-    public std::exception {
+    public fatal_exception {
 
-private:
-    std::string message;
+    public:
+        usage_exception(std::string message);
+        usage_exception(std::ostringstream& oss);
 
-public:
-    usage_exception(std::string);
-    usage_exception(std::ostringstream& oss);
-    std::string getMessage();
 };
 
 

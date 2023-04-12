@@ -41,12 +41,13 @@
 *
 ** */
 
+
 Text[HEAD:CAT]
-//Text [HEAD:TO_MEOW, i:[HEAD:CAT]]
+//Text [HEAD:TO_MEOW, i:[HEAD:CAT], tense: $t]
 
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
-//Text [HEAD:TO_CHASE, i:[HEAD:CAT, @p], ii:[HEAD:MOUSE, @p]]
+//Text [HEAD:TO_CHASE, i:[HEAD:CAT, @p], ii:[HEAD:MOUSE, @p], tense: $tense]
 
 //Text [HEAD:CAT, @p, MOD:<[HEAD:BLACK],[HEAD:BIG]>]
 //Text [HEAD:TABLE, @s, MOD:<[HEAD:BEAUTIFUL], [HEAD:LARGE], [HEAD:ROUND], [HEAD:WOODEN]>]
