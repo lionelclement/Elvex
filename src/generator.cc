@@ -16,29 +16,6 @@
  * This file is part of ELVEX.
  *
  ************************************************** */
-<<<<<<< HEAD
-
-#include <climits>
-#include <stack>
-#include <string>
-<<<<<<<< HEAD:src/generator.cc
-#include <utility>
-#include "generator.hpp"
-========
-#include <iostream>
-#include "parser.hpp"
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-#include "vartable.hpp"
-#include "messages.hpp"
-
-extern unsigned int rulesparse();
-
-extern void init_buffer();
-
-extern void delete_buffer();
-
-extern void scan_string(std::string);
-=======
 #include <fstream>
 #include <sstream>
 
@@ -58,18 +35,10 @@ extern void scan_string(std::string);
 #include "node.hpp"
 #include "vartable.hpp"
 #include "parser_exception.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-Generator::Generator() {
-    this->startFeatures = featuresPtr();
-    this->localFeatures = featuresPtr();
-    this->verbose = false;
-    NEW
-=======
 Synthesizer::Synthesizer()
 {
     NEW;
@@ -91,98 +60,59 @@ Synthesizer::Synthesizer()
     this->attempsRandom = 1000;
     this->trace = false;
     this->verbose = false;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-Generator::~Generator() {
-    DELETE
-=======
 Synthesizer::~Synthesizer()
 {
     DELETE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-class Rules &
-<<<<<<<< HEAD:src/generator.cc
-Generator::getRules() {
-========
-Parser::getRules() {
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-    return this->rules;
-=======
 bool Synthesizer::getTrace() const
 {
     return trace;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Generator::setStartFeatures(featuresPtr f) {
-    this->startFeatures = f;
-=======
 void Synthesizer::setTrace(bool _trace)
 {
     this->trace = _trace;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-featuresPtr Generator::getStartFeatures() const {
-    return this->startFeatures;
-=======
 Synthesizer::itemSet_map_const_iterator Synthesizer::cbegin() const
 {
     return states.cbegin();
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-unsigned int Generator::getStartTerm() const {
-    return startTerm;
-=======
 Synthesizer::itemSet_map_const_iterator Synthesizer::cend() const
 {
     return states.cend();
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Generator::setStartTerm(unsigned int _startTerm) {
-    this->startTerm = _startTerm;
-=======
 size_t Synthesizer::size() const
 {
     return states.size();
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Generator::setVerbose(const bool _verbose) {
-=======
 void Synthesizer::setInputFileName(char *name)
 {
     inputFileName = name;
@@ -1525,35 +1455,20 @@ entriesPtr Synthesizer::findCompactedLexicon(
  ************************************************** */
 void Synthesizer::setVerbose(bool _verbose)
 {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     this->verbose = _verbose;
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Generator::getVerbose() const {
-=======
 bool Synthesizer::getVerbose()
 {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     return this->verbose;
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-<<<<<<<< HEAD:src/generator.cc
-Generator::entries_map_map &
-Generator::getLexicon() {
-    return lexicon;
-========
-Parser::entry_map_const_iterator Parser::findMapLocalEntry(std::string& key) const {
-        return mapLocalEntry.find(key);
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-=======
 entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listHead,
                                   unsigned int pos)
 {
@@ -1572,21 +1487,11 @@ entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listHead,
         listHead->insert(std::make_pair(UINT_MAX, entries));
     }
     return entries;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-<<<<<<<< HEAD:src/generator.cc
-void Generator::setLexicon(entries_map_map &_lexicon) {
-    this->lexicon = _lexicon;
-========
-Parser::entry_map_const_iterator Parser::cendMapLocalEntry() const {
-    return mapLocalEntry.cend();
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-=======
 entriesPtr Synthesizer::findByForm(Parser::entries_map *listHead)
 {
     entriesPtr entries = entriesPtr();
@@ -1595,231 +1500,11 @@ entriesPtr Synthesizer::findByForm(Parser::entries_map *listHead)
     if (found != listHead->end())
         entries = found->second;
     return entries;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-<<<<<<<< HEAD:src/generator.cc
-Generator::entry_map &Generator::getMapLocalEntry() {
-    return mapLocalEntry;
-========
-void Parser::insertMapLocalEntry(std::pair<std::string, entryPtr> pair){
-    mapLocalEntry.insert(pair);
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-}
-
-/* **************************************************
- *
- ************************************************** */
-<<<<<<<< HEAD:src/generator.cc
-Generator::entries_map_map::const_iterator Generator::findLexicon(unsigned int i) const {
-    return lexicon.find(i);
-========
-Parser::entries_map_map_const_iterator Parser::findCacheLexicon(unsigned int i) const {
-    return cacheLexicon.find(i);
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-}
-
-/* **************************************************
- *
- ************************************************** */
-<<<<<<<< HEAD:src/generator.cc
-Generator::entries_map_map::const_iterator Generator::beginLexicon() const {
-    return lexicon.begin();
-========
-Parser::entries_map_map_const_iterator Parser::cbeginCacheLexicon() const {
-    return cacheLexicon.cbegin();
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-}
-
-/* **************************************************
- *
- ************************************************** */
-<<<<<<<< HEAD:src/generator.cc
-Generator::entries_map_map::const_iterator Generator::endLexicon() const {
-    return lexicon.end();
-========
-Parser::entries_map_map_const_iterator Parser::cendCacheLexicon() const {
-    return cacheLexicon.cend();
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-}
-
-/* **************************************************
- *
- ************************************************** */
-featuresPtr Generator::getLocalFeatures() const {
-    return localFeatures;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Generator::setLocalFeatures(featuresPtr _localFeatures) {
-    this->localFeatures = _localFeatures;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Generator::pushBufferName(std::string name) {
-    bufferNames.push_front(name);
-}
-
-/* **************************************************
- *
- ************************************************** */
-std::string Generator::popBufferName() {
-    std::string str = bufferNames.front();
-    this->bufferNames.pop_front();
-    return str;
-}
-
-/* **************************************************
- *
- ************************************************** */
-std::string Generator::getTopBufferName() {
-    return bufferNames.front();
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Generator::pushLineno(unsigned int i) {
-    linenos.push_front(i);
-}
-
-/* **************************************************
- *
- ************************************************** */
-unsigned int Generator::popLineno() {
-    unsigned int i = linenos.front();
-    linenos.pop_front();
-    return i;
-}
-
-/* **************************************************
- *
- ************************************************** */
-unsigned int Generator::getTopLineno() {
-    return linenos.front();
-}
-
-/* **************************************************
- *
- ************************************************** */
-<<<<<<<< HEAD:src/generator.cc
-void Generator::printLexicon(std::ostream &out) const {
-========
-void Parser::printCacheLexicon(std::ostream &out) const {
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-    out << "<ul>";
-    for (entries_map_map_const_iterator i = cbeginCacheLexicon(); i != cendCacheLexicon(); ++i) {
-        out << "<li>";
-        out << Vartable::codeToString((*i).first);
-        out << "<ul>";
-        for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
-            out << "<li>";
-            if ((*j).first == 0)
-                out << "0 = &gt; ";
-            else if ((*j).first == UINT_MAX)
-                out << "UINT_MAX = &gt; ";
-            else
-                out << Vartable::codeToString((*j).first) << " = &gt; ";
-            (*j).second->print(out);
-            out << "</li>";
-
-        }
-        out << "</ul>";
-        out << "</il>";
-
-    }
-    out << "</ul>";
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-void Generator::addMacros(std::string key, featuresPtr features) {
-    macros.insert(std::pair<std::string, featuresPtr>(key, features));
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-featuresPtr Generator::findMacros(const std::string& str) {
-    //std::cerr << "find @" << str << ":";
-    macro_map_const_iterator found;
-    found = macros.find(str);
-    if (found == macros.end()) {
-        return featuresPtr();
-    } else {
-        return found->second;
-    }
-}
-
-/* **************************************************
- *
- ************************************************** */
-<<<<<<<< HEAD:src/generator.cc
-unsigned int Generator::parseFile(std::string prefix, std::string fileName) {
-    unsigned int result;
-    result = parseString(prefix + "\n#include " + fileName);
-    return result;
-========
-void Parser::parseFile(std::string prefix, std::string suffix, std::string fileName) {
-    parseString(prefix + "\n#include " + fileName + "\n" + suffix);
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-}
-
-/* **************************************************
- *
- ************************************************** */
-<<<<<<<< HEAD:src/generator.cc
-unsigned int Generator::parseBuffer(std::string prefix, std::string buffer, std::string bufferName) {
-    unsigned int result;
-========
-void Parser::parseBuffer(std::string prefix, std::string suffix, std::string buffer, std::string bufferName) {
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-    pushBufferName(bufferName);
-    parseString(prefix + "\n" + buffer + "\n" + suffix);
-}
-
-/* **************************************************
- *
- ************************************************** */
-<<<<<<<< HEAD:src/generator.cc
-unsigned int Generator::parseString(std::string buffer) {
-========
-void Parser::parseString(std::string buffer) {
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-    init_buffer();
-    scan_string(buffer);
-    rulesparse();
-    delete_buffer();
-}
-
-<<<<<<<< HEAD:src/generator.cc
-void Generator::listMacros() {
-========
-/* **************************************************
- *
- ************************************************** */
-void Parser::listMacros() {
->>>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723:src/parser.cc
-    for (auto iterator : macros) {
-        std::cerr << "\"" << iterator.first << "\"" << std::endl;
-    }
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Parser::insertCacheLexicon(std::pair<unsigned int, entries_map*> pair){
-  cacheLexicon.insert(pair);
-=======
 entriesPtr Synthesizer::findByHead(Parser &parser, Parser::entries_map *listHead,
                                    unsigned int pos, unsigned int head)
 {
@@ -1845,5 +1530,4 @@ entriesPtr Synthesizer::findByHead(Parser &parser, Parser::entries_map *listHead
         }
     }
     return entries;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }

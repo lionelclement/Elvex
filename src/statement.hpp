@@ -26,11 +26,7 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-=======
 #include "generator.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 #define FATAL_ERROR_STM(statement)                                                                       \
     {                                                                                                    \
@@ -269,59 +265,20 @@ public:
 
     unsigned int getLineno() const;
 
-<<<<<<< HEAD
-    void print(std::ostream& , unsigned int tabulation = 0, int yetColored = 0) const;
-
-    featuresPtr evalFeatures(const itemPtr&, class Application* application, bool);
-=======
     void brln(std::ostream &out, int tabulation) const;
 
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
 
     featuresPtr evalFeatures(class Item *, class Parser &, class Synthesizer *, bool);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     pairpPtr evalPairp(class Item *, Parser &, Synthesizer *, bool);
 
-<<<<<<< HEAD
-    valuePtr evalValue(const itemPtr& item, Application* application, bool replaceVariables);
-=======
     valuePtr evalValue(class Item *, Parser &, Synthesizer *, bool);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     static featuresPtr unif(statementPtr self, const featuresPtr &, const featuresPtr &, class Item *);
 
-    statementPtr clone(const std::bitset<FLAGS>& savedFlags = std::bitset<FLAGS>());
+    statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
-<<<<<<< HEAD
-    void buildInheritedSonFeatures(const itemPtr& item, Application* application);
-
-    void buildSynthesizedFeatures(const itemPtr& item, Application* application);
-
-    void buildEnvironmentWithInherited(const itemPtr& item, Application* application);
-
-    void buildEnvironmentWithSynthesize(const itemPtr& item, Application* application);
-
-    void buildEnvironmentWithValue(const itemPtr& item, Application* application);
-
-    void stmAttest(const itemPtr&, class Application* application);
-
-    void stmGuard(const itemPtr&/**/);
-
-    void stmForeach(const itemPtr& item, class Application* application, bool& effect);
-
-    void stmIf(const itemPtr& item, class Application* application, bool& effect);
-
-    void stmPrint(const itemPtr&, class Application* application);
-
-    void stmPrintln(const itemPtr&, class Application* application);
-
-    void renameVariables(size_t);
-
-  void enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on);
-
-    void apply(const itemPtr& item, class Application* application, bool& effect);
-=======
     void buildInheritedSonFeatures(class Item *, Parser &, Synthesizer *synthesizer);
 
     void buildSynthesizedFeatures(class Item *, Parser &, Synthesizer *synthesizer);
@@ -351,9 +308,8 @@ public:
     void toggleEnable(const statementPtr &, class Item *, class Synthesizer *, bool &, bool);
 
     void apply(class Item *, class Parser &, class Synthesizer *, bool &);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
-    void lookingForAssignedInheritedSonFeatures(std::vector<bool>& );
+    void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 
     bool findVariable(const bitsetPtr &);
 };

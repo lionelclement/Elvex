@@ -26,30 +26,19 @@
 #include "compacted-lexicon-info.hpp"
 #include "lexicon.hpp"
 #include "messages.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-#include "config.hpp"
-=======
 #include "generator.hpp"
 #include "config.hpp"
 #include "parser_exception.hpp"
 #include "fatal_exception.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #include "usage_exception.hpp"
 
-Application application;
-Rules rules;
+Parser parser = Parser();
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void showUsage() {
-    std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global-option] <build|consult|list> <input>\n\
-=======
 void usage() {
     std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global options] <build|consult|list> <input>\n\
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 \tGlobal options:\n\
 \t-h|--help                                     print this\n\
 \t-v|--version                                  print version\n\
@@ -63,13 +52,7 @@ void usage() {
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-int main(int argn, char **argv) {
-    application = Application();
-    rules = application.generator.getRules();
-=======
 int main(int argn, char** argv) {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     try {
         CompactedLexicon* lex;
         Buildlexicon::Choice mode = Buildlexicon::NONE;
@@ -88,38 +71,6 @@ int main(int argn, char** argv) {
 	for (unsigned int arg = 1; argv[arg]; ++arg) {
 	  if (argv[arg][0] == '-') {
 
-<<<<<<< HEAD
-                    if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
-                        std::cout << ELVEX_VERSION << std::endl;
-                        return EXIT_SUCCESS;
-                    } else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help")) {
-                        throw usage_exception();
-                    } else if (!strcmp(argv[arg] + 1, "compactedLexiconFile")) {
-                        prefix = std::string(argv[++arg]);
-                    } else if (!strcmp(argv[arg] + 1, "clf")) {
-                        prefix = std::string(argv[++arg]);
-                    } else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory")) {
-                        directory = std::string(argv[++arg]);
-                    } else if (!strcmp(argv[arg] + 1, "cld")) {
-                        directory = std::string(argv[++arg]);
-                    } else if (!strcmp(argv[arg] + 1, "patternFile")) {
-                        patternFile = std::string(argv[++arg]);
-                    } else if (!strcmp(argv[arg] + 1, "morphoFile")) {
-                        morphoFile = std::string(argv[++arg]);
-                    }
-                } else {
-                    if (!strcmp(argv[arg], "build"))
-                        mode = Buildlexicon::BUILD;
-                    else if (!strcmp(argv[arg], "consult"))
-                        mode = Buildlexicon::CONSULT;
-                    else if (!strcmp(argv[arg], "list"))
-                        mode = Buildlexicon::LIST;
-                    else
-                        inputFileName = argv[arg];
-                }
-            }
-        }
-=======
 	    if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version")) {
 	      std::cout << ELVEX_VERSION << std::endl;
 	      return EXIT_SUCCESS;
@@ -177,7 +128,6 @@ int main(int argn, char** argv) {
 	      }
 	    }
 	  }
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 	  else {
 	    if (!strcmp(argv[arg], "build"))
@@ -226,24 +176,6 @@ int main(int argn, char** argv) {
 		stream << form;
 		std::string input = stream.str();
 
-<<<<<<< HEAD
-                        stream.str("");
-                        stream << '[' << f << ']';
-                        std::string fsString = stream.str();
-                        if (application.generator.parseBuffer("#", fsString, "morphology")) {
-                            stream.str("");
-                            stream << "error in lexicon: " << f << std::endl;
-                            FATAL_ERROR(stream.str())
-                        }
-                        features = application.generator.getLocalFeatures();
-                        //features->flatPrint(std::cerr);
-                        application.generator.addMacros(_input, features);
-                    } else {
-                        char form[MAXSTRING];
-                        strcpy(form, line);
-                        char *rhs = strchr(form, '\t');
-                        *rhs = 0;
-=======
 		stream.str("");
 		stream << '[' << f << ']';
 		std::string fsString = stream.str();
@@ -259,7 +191,6 @@ int main(int argn, char** argv) {
 		features = parser.getLocalFeatures();
 		parser.addMacros(input, features);
 	      }
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 	      // ordinary entry
 	      else {
@@ -321,15 +252,11 @@ int main(int argn, char** argv) {
 		morpho.add(_input, _output);
 	    }
 
-<<<<<<< HEAD
-        //application.listMacros();
-=======
 	    }
 	    lineno++;
 	  }
 	  inputFile.close();
 	}
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 	//parser.listMacros();
 
@@ -402,44 +329,6 @@ int main(int argn, char** argv) {
 	  inputFile.close();
 	}
 
-<<<<<<< HEAD
-            case Buildlexicon::BUILD: {
-                lex = new CompactedLexicon(directory, prefix);
-                lex->openFiles("w");
-                lex->buildEntries(pattern, morpho);
-                lex->saveFsa();
-                lex->closeFiles();
-            }
-
-            case Buildlexicon::CONSULT: {
-                lex = new CompactedLexicon(directory, prefix);
-                lex->openFiles("r");
-                lex->loadFsa();
-                lex->loadData();
-                lex->consult();
-                lex->closeFiles();
-            }
-
-            case Buildlexicon::LIST: {
-                lex = new CompactedLexicon(directory, prefix);
-                lex->openFiles("r");
-                lex->loadFsa();
-                lex->loadData();
-                lex->list();
-                lex->closeFiles();
-            }
-
-            default:
-                throw usage_exception();
-                break;
-        }
-    }
-    catch (usage_exception &e) {
-        showUsage();
-    }
-    catch (fatal_exception &e) {
-        return EXIT_FAILURE;
-=======
 	switch (mode) {
 
 	case Buildlexicon::BUILD: {
@@ -491,7 +380,6 @@ int main(int argn, char** argv) {
       std::cerr << "*** parser error: " << e.getMessage() << std::endl;
       std::flush(std::cerr);
       return EXIT_FAILURE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
     return EXIT_SUCCESS;
 }

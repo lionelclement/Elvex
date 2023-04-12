@@ -31,16 +31,15 @@ VariableFlag::VariableFlag() noexcept {
 /* **************************************************
  *
  ************************************************** */
-void VariableFlag::setFlag(enum flagValues flag) {
-    this->flag = flag;
+void VariableFlag::setFlag(enum flagValues _flag) {
+    this->flag = _flag;
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool VariableFlag::containsVariable() {
-    if (flag == CONTAINS_VARIABLE)
-        return true;
+    if (flag != 0)
+        return (flag == 1);
     return false;
 }
-

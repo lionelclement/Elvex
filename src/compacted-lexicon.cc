@@ -34,7 +34,7 @@
 #include "entries.hpp"
 #include "entry.hpp"
 #include "lexicon.hpp"
-#include "generator.hpp"
+#include "parser.hpp"
 #include "statement.hpp"
 #include "parser_exception.hpp"
 
@@ -273,28 +273,14 @@ void CompactedLexicon::closeFiles() {
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs2) {
-    extern Application application;
-=======
 std::string CompactedLexicon::unif(const std::string& fs1, const std::string& fs2) {
     extern Parser parser;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::stringstream stringStream;
     featuresPtr features1;
     if (!fs1.empty()) {
         stringStream.str("");
         stringStream << '[' << fs1 << ']';
         std::string fsString = stringStream.str();
-<<<<<<< HEAD
-        if (application.generator.parseBuffer("#", fsString, "morphology")) {
-            //stringStream.str("");
-            //stringStream <<  << std::endl;
-            FATAL_ERROR("error in lexicon: " << fs1)
-            //stringStream.str())
-        }
-        features1 = application.generator.getLocalFeatures();
-=======
 try {
             parser.parseBuffer("#(", ")", fsString, "morphology");
 	}
@@ -304,7 +290,6 @@ try {
 		  throw fatal_exception(oss);
 		}
         features1 = parser.getLocalFeatures();
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     } else
         features1 = featuresPtr();
 
@@ -313,14 +298,6 @@ try {
         stringStream.str("");
         stringStream << '[' << fs2 << ']';
         std::string fsString = stringStream.str();
-<<<<<<< HEAD
-        if (application.generator.parseBuffer("#", fsString, "morphology")) {
-            stringStream.str("");
-            stringStream << "error in lexicon: " << fs2 << std::endl;
-            FATAL_ERROR(stringStream.str())
-        }
-        features2 = application.generator.getLocalFeatures();
-=======
 try{
             parser.parseBuffer("#(", ")", fsString, "morphology");
     }
@@ -330,7 +307,6 @@ try{
 		  throw fatal_exception(oss);
 		}
         features2 = parser.getLocalFeatures();
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     } else
         features2 = featuresPtr();
 

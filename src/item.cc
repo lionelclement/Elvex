@@ -30,11 +30,7 @@
 #include "rule.hpp"
 #include "statement.hpp"
 #include "statements.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-=======
 #include "generator.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #include "terms.hpp"
 #include "serializable.hpp"
 
@@ -875,41 +871,12 @@ void Item::step(bool &effect)
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Item::apply(Application *application) {
-    if (statements) {
-        //unsigned int k = 1;
-        bool effect = true;
-        if (isUnsetFlags(Flags::BOTTOM)
-            && statements->isUnsetFlags(Flags::SEEN)) {
-
-#ifdef TRACE_OPTION
-            if (application->getTraceAction()) {
-          std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
-          print(std::cout);
-          std::cout << std::endl;
-            }
-#endif
-            effect = false;
-            statements->apply(shared_from_this(), application, effect);
-            //++k;
-#ifdef TRACE_OPTION
-            if (application->getTraceAction()) {
-          std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
-          print(std::cout);
-          std::cout << std::endl;
-            }
-#endif
-        }
-    }
-=======
 void Item::apply(Parser &parser, Synthesizer *synthesizer)
 {
     bool effect = false;
     statements->apply(this, parser, synthesizer, effect);
     if (statements->isSetFlags(Flags::BOTTOM))
                 addFlags(Flags::BOTTOM);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************

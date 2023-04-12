@@ -25,14 +25,10 @@
 #include "value.hpp"
 #include "messages.hpp"
 #include "bitset.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-=======
 #include "generator.hpp"
 #include "item.hpp"
 #include "statement.hpp"
 #include "value.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 featuresPtr Features::BOTTOM = createBottom();
 featuresPtr Features::NIL = createNil();
@@ -184,12 +180,8 @@ bool Features::isBottom() const
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Features::print(std::ostream& outStream) const {
-=======
 void Features::print(std::ostream &outStream) const
 {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     if (isNil())
         outStream << "NIL";
     else if (isBottom())
@@ -225,12 +217,8 @@ void Features::print(std::ostream &outStream) const
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Features::flatPrint(std::ostream& outStream, bool par) const {
-=======
 void Features::flatPrint(std::ostream &outStream, bool par) const
 {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     if (isNil())
         outStream << "NIL";
     else if (isBottom())
@@ -420,12 +408,8 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                     i2->addFlags(Flags::SEEN);
 
                     // If both are NIL
-<<<<<<< HEAD
-                    if ((i1->getValue()->isNil()) && (i2->getValue()->isNil())) {
-=======
                     if ((i1->getValue()->isNil()) && (i2->getValue()->isNil()))
                     {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                     }
                     // If both are TRUE
                     // else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
@@ -462,10 +446,6 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         {
                             ret = false;
                         }
-<<<<<<< HEAD
-                    } else if (i1->getValue()->isNil()) {
-=======
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                     }
                     else if (i1->getValue()->isNil())
                     {
@@ -609,14 +589,9 @@ bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Features::subFlags(const std::bitset<FLAGS>& flags) {
-    for (auto & i : features)
-=======
 void Features::subFlags(const std::bitset<FLAGS> &flags)
 {
     for (auto &i : features)
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         i->subFlags(flags);
 }
 
@@ -639,37 +614,15 @@ bool Features::renameVariables(size_t i)
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Features::enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on) {
-    for (auto & feature : features)
-        feature->enable(root, item, application, effect, on);
-=======
 void Features::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
 {
     for (auto &feature : features)
         feature->enable(root, item, synthesizer, effect, on);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Features::deleteAnonymousVariables() {
-    redo:
-    for (auto iterator = begin() ; iterator != end() ; ++iterator) {
-        switch ((*iterator)->getType()) {
-            case Feature::PRED:
-            case Feature::LEMMA:
-            case Feature::FORM:
-            case Feature::VARIABLE:
-            case Feature::CONSTANT:
-                if ((*iterator)->getValue()) {
-                    (*iterator)->getValue()->deleteAnonymousVariables();
-                    if ((*iterator)->getValue() && ((*iterator)->getValue()->isAnonymous())) {
-                        features.erase(iterator);
-                        goto redo;
-=======
 void Features::deleteAnonymousVariables()
 {
     bool redo = true;
@@ -693,7 +646,6 @@ void Features::deleteAnonymousVariables()
                     {
                         features.erase(feature);
                         redo = true;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                     }
                 }
                 break;
@@ -759,17 +711,12 @@ bool Features::containsVariable()
         if (iterator->containsVariable())
         {
             result = true;
-            break;
         }
     }
     if (result)
-<<<<<<< HEAD
-        variableFlag.setFlag(VariableFlag::CONTAINS_VARIABLE);
-=======
         variableFlag.setFlag(VariableFlag::CONTAINS);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     else
-        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
+        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     return result;
 }
 

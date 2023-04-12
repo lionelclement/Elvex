@@ -166,9 +166,9 @@ public:
 
     void addForestIdentifiers(std::vector<class ForestIdentifier *> &);
 
-    void buildSynthesizedFeatures(class Application *);
+    void buildSynthesizedFeatures(class Synthesizer *);
 
-    void buildInheritedSonFeatures(class Application *);
+    void buildInheritedSonFeatures(class Synthesizer *);
 
     bool addEnvironment(environmentPtr);
 
@@ -188,11 +188,7 @@ public:
 
     void defaultInheritedSonFeatures(void);
 
-<<<<<<< HEAD
-    void apply(class Application *application);
-=======
     void apply(class Parser& parser, class Synthesizer* synthesizer);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     class Item* clone(const std::bitset<FLAGS>& savedFlags);
 

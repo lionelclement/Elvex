@@ -41,18 +41,11 @@ public:
 
     static featuresPtr BOTTOM;
 
-<<<<<<< HEAD
-private:
-    std::list<featurePtr> features;
-
-    unsigned int pred;
-=======
     typedef std::vector<featurePtr> list_of_feature;
 
 private:
     list_of_feature features;
     unsigned int head;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::string form;
     VariableFlag variableFlag;
 
@@ -119,11 +112,7 @@ public:
 
     bool isBottom() const;
 
-<<<<<<< HEAD
-    void enable(const statementPtr&, const itemPtr&, class Application* application, bool &, bool);
-=======
     void enable(const statementPtr &, class Item *, class Synthesizer *synthesizer, bool &, bool);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     bool subsumes(const featuresPtr &, const environmentPtr &);
 

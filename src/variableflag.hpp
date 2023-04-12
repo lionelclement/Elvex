@@ -24,17 +24,10 @@ class VariableFlag
 {
 
 public:
-<<<<<<< HEAD
-
-    enum flagValues {
-        CONTAINS_VARIABLE,
-        DOES_NOT_CONTAIN_VARIABLE,
-=======
     enum flagValues
     {
         CONTAINS,
         DOES_NOT_CONTAIN,
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         NONE
     };
 

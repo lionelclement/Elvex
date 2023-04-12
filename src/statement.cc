@@ -36,13 +36,8 @@
 #include "shared_ptr.hpp"
 #include "listfeatures.hpp"
 #include "rule.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-#include "application.hpp"
-=======
 #include "generator.hpp"
 #include "parser.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #include "bitset.hpp"
 #include "vartable.hpp"
 
@@ -244,14 +239,9 @@ bool Statement::isDown() const
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-statementPtr Statement::create(unsigned int lineno, type op, valuePtr& value) {
-    return statementPtr(new Statement(lineno, op, value));
-=======
 bool Statement::isSearch() const
 {
     return op == SEARCH_STATEMENT;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
@@ -502,25 +492,6 @@ unsigned int Statement::getLineno() const
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Statement::print(std::ostream& outStream, unsigned int tabulation, int yetColored) const {
-    switch (this->op) {
-        case ATTEST:
-        case AFF:
-        case SUBSUME:
-        case PRINT:
-        case PRINTLN:
-        case GUARD:
-        case IF:
-        case THENELSE:
-        case FOREACH:
-            for (unsigned int j = 1; j <= tabulation; j++)
-                outStream << "&nbsp;";
-            break;
-        default:
-            break;
-    }
-=======
 void Statement::brln(std::ostream &out, int tabulation) const
 {
     out << "<BR>";
@@ -538,7 +509,6 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
 #define GREEN 0x00FF00u
 #define BLUE 0x0000FFu
 #define GRAY 0xC0C0C0u
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     unsigned int color = yetColored;
     if (isSetFlags(Flags::SEEN))
     {
@@ -1106,12 +1076,8 @@ void Statement::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-statementPtr Statement::clone(const std::bitset<FLAGS>& protectedFlags) {
-=======
 statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
 {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     statementPtr statement = shared_from_this();
     switch (this->op)
     {
@@ -1168,7 +1134,7 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
                                       lhs ? lhs->clone(protectedFlags) : statementPtr(), this->getFirst());
         break;
     }
-    statement->addFlags(protectedFlags&  this->getFlags());
+    statement->addFlags(protectedFlags & this->getFlags());
     return statement;
 }
 
@@ -1176,16 +1142,10 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
  *
  ************************************************** */
 featuresPtr
-<<<<<<< HEAD
-Statement::evalFeatures(const itemPtr& item, Application* application, bool replaceVariables) {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL FEATURES #######################" << std::endl;
-=======
 Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalFeatures #######################" << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::cout << "<div>evalFeatures: " << std::endl;
     this->print(std::cout);
     std::cout << std::endl;
@@ -1205,102 +1165,6 @@ Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesiz
             bool effect = false;
             item->getEnvironment()->replaceVariables(resultFeatures, effect);
         }
-<<<<<<< HEAD
-        case FEATURES:
-        case GUARD: {
-            resultFeatures = getFeatures()->clone();
-            if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
-                bool effect = false;
-                item->getEnvironment()->replaceVariables(resultFeatures, effect);
-            }
-        }
-            break;
-
-        case UP: {
-            resultFeatures = item->getInheritedFeatures()->clone();
-            if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
-                bool effect = false;
-                item->getEnvironment()->replaceVariables(resultFeatures, effect);
-            }
-        }
-            break;
-
-        case VARIABLE: {
-            if (item->getEnvironment()) {
-                valuePtr _value = item->getEnvironment()->find(getBits());
-                if (!_value) {
-                    FATAL_ERROR_STM
-                }
-                if (_value && _value->getType() == Value::_FEATURES)
-                    resultFeatures = _value->getFeatures()->clone();
-            }
-        }
-            break;
-
-        case DOWN: {
-            resultFeatures = (*item->getInheritedSonFeatures())[getFirst()]->clone();
-            if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
-                bool effect = false;
-                item->getEnvironment()->replaceVariables(resultFeatures, effect);
-            }
-        }
-            break;
-
-        case DOWN2: {
-            resultFeatures = (*item->getSynthesizedSonFeatures())[getFirst()]->clone();
-            if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
-                bool effect = false;
-                item->getEnvironment()->replaceVariables(resultFeatures, effect);
-            }
-        }
-            break;
-
-        case UNIF: {
-            featuresPtr fs1 = lhs->evalFeatures(item, application, replaceVariables);
-            featuresPtr fs2 = rhs->evalFeatures(item, application, replaceVariables);
-            if ((!fs1) || (!fs2)) {
-                resultFeatures = featuresPtr();
-            } else {
-                fs1->subFlags(Flags::SEEN);
-                fs2->subFlags(Flags::SEEN);
-                resultFeatures = unif(fs1, fs2, item);
-                if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0) {
-                    bool effect = false;
-                    item->getEnvironment()->replaceVariables(resultFeatures, effect);
-                }
-            }
-        }
-            break;
-        case SEARCH: {
-            featuresPtr fs = lhs->evalFeatures(item, application, replaceVariables);
-            if (!fs) {
-                resultFeatures = featuresPtr();
-            }
-
-            if (!application->getCompactedLexicon()) FATAL_ERROR("search operator error: No compact lexicon defined.")
-            entriesPtr entries = application->findCompactedLexicon(application->generator, 0, getBits()->toString(), fs->assignPred());
-            if (entries) {
-                //if (entries->size() > 1) {
-                // ERROR("pred ambiguous")
-                //}
-                // On ne cherche que la première entrée
-                auto it = entries->begin();
-                featuresPtr _fs = (*it)->getFeatures();
-                if (_fs) {
-                    std::stringstream stringStream;
-                    _fs->flatPrint(stringStream);
-                    if (application->generator.parseBuffer("#", stringStream.str(), stringStream.str())) FATAL_ERROR_UNEXPECTED
-                    else {
-                        resultFeatures = application->generator.getLocalFeatures();
-                    }
-                }
-            } else FATAL_ERROR("search operator error: No entry for " + Vartable::codeToIdentifier(fs->assignPred()))
-
-        }
-            break;
-
-=======
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
     break;
 
@@ -1394,16 +1258,10 @@ Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesiz
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-listPtr Statement::evalList(const itemPtr& item, bool replaceVariables) {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL LIST #######################" << std::endl;
-=======
 pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalPairp #######################" << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::cout << "<div>" << std::endl;
     this->print(std::cout);
     std::cout << "</div>" << std::endl;
@@ -1429,25 +1287,6 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
             {
                 FATAL_ERROR_STM(shared_from_this());
             }
-<<<<<<< HEAD
-            break;
-        case VARIABLE:
-            if (item->getEnvironment()) {
-                valuePtr _value = item->getEnvironment()->find(getBits());
-                if (!_value) {
-                    FATAL_ERROR_STM
-                    //               resultList = listPtr();
-                } else if (_value->isNil())
-                    resultList = List::NIL_LIST;
-                else if (_value->isList())
-                    resultList = _value->getList()->clone();
-                else {
-                    std::ostringstream oss1, oss2;
-                    this->print(oss1);
-                    item->getRule()->print(oss2, -1, true);
-                    WARNING_STM
-                    "<P>Variable " + oss1.str() + " not initialized in</P>" + oss2.str();
-=======
             else if (_value->isNil())
                 resultPairp = Pairp::NIL;
             else if (_value->isPairp())
@@ -1493,7 +1332,6 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
                         else
                             resultPairp = Pairp::create(Pairp::create(Value::create(parser.getLocalFeatures())), resultPairp);
                     }
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                 }
             }
             else
@@ -1525,16 +1363,10 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-valuePtr Statement::evalValue(const itemPtr& item, Application* application, bool replaceVariables) {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL VALUE #######################" << std::endl;
-=======
 valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalValue #######################" << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::cout << "<div>" << std::endl;
     this->print(std::cout, 0);
     item->print(std::cout);
@@ -1571,90 +1403,9 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
                 {
                     resultValue = Value::STATIC_TRUE;
                 }
-<<<<<<< HEAD
-                    //if (#i:j)
-                else {
-                    if (getSecond() == item->getIndexTerms()[getFirst()]) {
-                        resultValue = Value::TRUE_VALUE;
-                    } else {
-                        resultValue = Value::NIL_VALUE;
-                    }
-                }
-            }
-            goto valueBuilt;
-        }
-            break;
-
-        case NUMBER:
-            resultValue = Value::create(Value::_NUMBER, getNumber());
-            goto valueBuilt;
-            break;
-
-        case STR:
-            resultValue = Value::create(Value::_FORM, getStr());
-            goto valueBuilt;
-            break;
-
-        case FEATURES:
-            resultFeatures = getFeatures();
-            break;
-
-        case UP:
-            resultFeatures = item->getInheritedFeatures();
-            break;
-
-        case UP2:
-            resultFeatures = item->getSynthesizedFeatures();
-            break;
-
-        case VARIABLE:
-            if (replaceVariables && item->getEnvironment()) {
-                resultValue = item->getEnvironment()->find(getBits());
-                goto valueBuilt;
-            } else if (replaceVariables) {
-                resultValue = valuePtr();
-                goto valueBuilt;
-            } else {
-                resultValue = Value::create(Value::_VARIABLE, getBits());
-            }
-            break;
-
-        case ANONYMOUS:
-            resultValue = Value::ANONYMOUS_VALUE;
-            break;
-
-        case CONSTANT:
-            resultValue = Value::create(Value::_CONSTANT, getBits());
-            break;
-
-        case DOWN2:
-            resultFeatures = (*item->getSynthesizedSonFeatures())[getFirst()];
-            break;
-
-        case DOWN:
-            resultFeatures = (*item->getInheritedSonFeatures())[getFirst()];
-            break;
-
-        case UNIF: {
-            featuresPtr fs1 = lhs->evalFeatures(item, application, replaceVariables);
-            if (!fs1) {
-                resultValue = valuePtr();
-                goto valueBuilt;
-            } else {
-                featuresPtr fs2 = rhs->evalFeatures(item, application, replaceVariables);
-                if (!fs2) {
-                    resultValue = valuePtr();
-                    goto valueBuilt;
-
-                } else {
-                    fs1->subFlags(Flags::SEEN);
-                    fs2->subFlags(Flags::SEEN);
-                    resultFeatures = unif(fs1, fs2, item);
-=======
                 else
                 {
                     resultValue = Value::STATIC_NIL;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                 }
             }
         }
@@ -1709,295 +1460,14 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         resultValue = Value::create(Value::CONSTANT_VALUE, getBits());
         break;
 
-<<<<<<< HEAD
-                case PLUS: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    bool isv1astring = false;
-                    std::string v1str;
-                    if (v1) {
-                        isv1astring = true;
-                        if (v1->isVariable())
-                            v1str = v1->getBits()->toString();
-                        else if (v1->isIdentifier())
-                            v1str = Vartable::codeToIdentifier(v1->getCode());
-                        else if (v1->isForm())
-                            v1str = v1->getStr();
-                        else
-                            isv1astring = false;
-                    }
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    bool isv2astring = false;
-                    std::string v2str;
-                    if (v2) {
-                        isv2astring = true;
-                        if (v2->isVariable())
-                            v2str = v2->getBits()->toString();
-                        else if (v2->isIdentifier())
-                            v2str = Vartable::codeToIdentifier(v2->getCode());
-                        else if (v2->isForm())
-                            v2str = v2->getStr();
-                        else
-                            isv2astring = false;
-                    }
-=======
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
         resultFeatures = (*item->getSynthesizedSonFeatures())[getFirst()];
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
         resultFeatures = (*item->getInheritedSonFeatures())[getFirst()];
         break;
 
-<<<<<<< HEAD
-                    else if ((v1->isNumber()) && (v2->isNumber()))
-                        resultValue = Value::create(Value::_NUMBER, v1->getNumber() + v2->getNumber());
-
-                    else if (isv1astring && isv2astring)
-                        resultValue = Value::create(Value::_FORM, v1str + v2str);
-
-                    else if ((v1->isList()) && (v2->isList())) {
-                        WARNING_STM
-                        resultValue = valuePtr();
-                    }
-
-                    else {
-                        v1->flatPrint(std::cout);
-                        v2->flatPrint(std::cout);
-                        FATAL_ERROR_UNEXPECTED
-                    }
-                    goto valueBuilt;
-                }
-                    break;
-
-                case MINUS: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) || (!v2))
-                        resultValue = valuePtr();
-                    else if ((v1->isNumber()) && (v2->isNumber()))
-                        resultValue = Value::create(Value::_NUMBER, v1->getNumber() - v2->getNumber());
-                    else
-                        resultValue = valuePtr();
-                    goto valueBuilt;
-                }
-                    break;
-
-                case TIMES: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) || (!v2))
-                        resultValue = valuePtr();
-                    else if ((v1->isNumber()) && (v2->isNumber()))
-                        resultValue = Value::create(Value::_NUMBER, v1->getNumber() * v2->getNumber());
-                    else
-                        resultValue = valuePtr();
-                    goto valueBuilt;
-                }
-                    break;
-
-                case DIVIDE: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) || (!v2))
-                        resultValue = valuePtr();
-                    else if ((v1->isNumber()) && (v2->isNumber()))
-                        resultValue = Value::create(Value::_NUMBER, v1->getNumber() / v2->getNumber());
-                    else
-                        resultValue = valuePtr();
-                    goto valueBuilt;
-                }
-                    break;
-
-                case MODULO: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) || (!v2))
-                        resultValue = valuePtr();
-                    else if ((v1->isNumber()) && (v2->isNumber()))
-                        resultValue = Value::create(Value::_NUMBER, fmod(v1->getNumber(), v2->getNumber()));
-                    else
-                        resultValue = valuePtr();
-                    goto valueBuilt;
-                }
-                    break;
-
-                case MINUS_U: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    if (!v1)
-                        resultValue = valuePtr();
-                    else if ((v1->isNumber()))
-                        resultValue = Value::create(Value::_NUMBER, -v1->getNumber());
-                    else
-                        resultValue = valuePtr();
-                    goto valueBuilt;
-                }
-                    break;
-
-                case AND: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) || (!v2)) {
-                        FATAL_ERROR_UNEXPECTED
-                        resultValue = valuePtr();
-                    } else if ((v1->isFalse()) || (v2->isFalse()))
-                        resultValue = Value::NIL_VALUE;
-                    else
-                        resultValue = Value::TRUE_VALUE;
-                    goto valueBuilt;
-                }
-                    break;
-
-                case OR: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) || (!v2))
-                        resultValue = valuePtr();
-                    else if ((v1->isFalse()) && (v2->isFalse()))
-                        resultValue = Value::NIL_VALUE;
-                    else
-                        resultValue = Value::TRUE_VALUE;
-                    goto valueBuilt;
-                }
-                    break;
-
-                case EQ: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) && (!v2))
-                        resultValue = Value::TRUE_VALUE;
-
-                    else if ((!v1) || (!v2))
-                        resultValue = valuePtr();
-
-                    else if ((v1->isNil()) && (v2->isNil()))
-                        resultValue = Value::TRUE_VALUE;
-
-                    else if ((v1->isNil()) || (v2->isNil()))
-                        resultValue = Value::NIL_VALUE;
-
-                    else if ((v1->isAnonymous()) && (v2->isAnonymous()))
-                        resultValue = Value::TRUE_VALUE;
-
-                    else if ((v1->isAnonymous()) || (v2->isAnonymous()))
-                        resultValue = Value::NIL_VALUE;
-
-                    else if (v1->eq(v2))
-                        resultValue = Value::TRUE_VALUE;
-
-                    else
-                        resultValue = Value::NIL_VALUE;
-
-                    goto valueBuilt;
-                }
-                    break;
-
-                case DIFF: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    if ((!v1) && (!v2))
-                        resultValue = Value::NIL_VALUE;
-
-                    else if ((!v1) || (!v2))
-                        resultValue = Value::TRUE_VALUE;
-
-                    else if ((v1->isNil()) && (v2->isNil()))
-                        resultValue = Value::NIL_VALUE;
-
-                    else if ((v1->isNil()) || (v2->isNil()))
-                        resultValue = Value::TRUE_VALUE;
-
-                    else if ((v1->isAnonymous()) && (v2->isAnonymous()))
-                        resultValue = Value::NIL_VALUE;
-
-                    else if ((v1->isAnonymous()) || (v2->isAnonymous()))
-                        resultValue = Value::TRUE_VALUE;
-
-                    else if (v1->eq(v2))
-                        resultValue = Value::NIL_VALUE;
-
-                    else
-                        resultValue = Value::TRUE_VALUE;
-
-                    goto valueBuilt;
-                }
-                    break;
-
-                case LT: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    // si l'une est variable libre
-                    if ((!v1) || (!v2)) {
-                        resultValue = Value::NIL_VALUE;
-                    } else if (v1->lt(v2))
-                        resultValue = Value::TRUE_VALUE;
-                    else
-                        resultValue = Value::NIL_VALUE;
-                    goto valueBuilt;
-                }
-                    break;
-
-                case LE: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    // si l'une est variable libre
-                    if ((!v1) || (!v2)) {
-                        resultValue = Value::NIL_VALUE;
-                    } else if ((v1->lt(v2)) || (v1->eq(v2)))
-                        resultValue = Value::TRUE_VALUE;
-                    else
-                        resultValue = Value::NIL_VALUE;
-                    goto valueBuilt;
-                }
-                    break;
-
-                case GT: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    // si l'une est variable libre
-                    if ((!v1) || (!v2)) {
-                        resultValue = Value::NIL_VALUE;
-                    } else if (!(v1->lt(v2)) && (!(v1->eq(v2))))
-                        resultValue = Value::TRUE_VALUE;
-                    else
-                        resultValue = Value::NIL_VALUE;
-                    goto valueBuilt;
-                }
-                    break;
-
-                case GE: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    valuePtr v2 = rhs->evalValue(item, application, replaceVariables);
-                    // si l'une est variable libre
-                    if ((!v1) || (!v2)) {
-                        resultValue = Value::NIL_VALUE;
-                    } else if (!(v1->lt(v2)))
-                        resultValue = Value::TRUE_VALUE;
-                    else
-                        resultValue = Value::NIL_VALUE;
-                    goto valueBuilt;
-                }
-                    break;
-
-                case NOT: {
-                    valuePtr v1 = lhs->evalValue(item, application, replaceVariables);
-                    if (!v1
-                        || v1->isNil()
-                        || v1->isAnonymous()
-                            )
-                        resultValue = Value::TRUE_VALUE;
-                    else
-                        resultValue = Value::NIL_VALUE;
-                    goto valueBuilt;
-                }
-                    break;
-
-                case RAND: {
-                    resultValue = Value::create(Value::_NUMBER, (double) rand());
-                    goto valueBuilt;
-                }
-                    break;
-=======
     case UNIF_STATEMENT:
     {
         featuresPtr fs1 = lhs->evalFeatures(item, parser, synthesizer, replaceVariables);
@@ -2013,7 +1483,6 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             {
                 resultValue = valuePtr();
                 goto valueBuilt;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
             }
             else
             {
@@ -2407,16 +1876,10 @@ valueBuilt:
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-featuresPtr Statement::unif(const featuresPtr& fs1, const featuresPtr& fs2, const itemPtr& item) {
-#ifdef TRACE_EVAL
-    std::cout << "####################### EVAL UNIF #######################" << std::endl;
-=======
 featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const featuresPtr &fs2, class Item *item)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::unif #######################" << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::cout << "<table border=\"1\"><tr><th>fs1</th><th>fs2</th><th>Environment</th></tr>";
     std::cout << "<tr><td>";
     if (fs1)
@@ -2467,252 +1930,6 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                     switch ((*i1)->getValue()->_getType())
                     {
 
-<<<<<<< HEAD
-                        case Value::_CODE: {
-                            switch ((*i2)->getValue()->getType()) {
-                                case Value::_CODE:
-                                    if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode()) {
-                                        result = Features::BOTTOM;
-                                        goto endUnif;
-                                    }
-                                    break;
-
-                                case Value::_VARIABLE:
-                                    result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i1)->getValue()));
-                                    if (!item->getEnvironment())
-                                        item->setEnvironment(Environment::create());
-                                    item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
-                                    break;
-
-                                default: FATAL_ERROR_STM
-                                    break;
-                            }
-                        }
-                            break;
-
-                        case Value::_VARIABLE:
-
-                            if (((*i2)->getValue()->getType() == Value::_VARIABLE) &&
-                                (*(*i1)->getValue()->getBits()) == (*(*i2)->getValue()->getBits()))
-			      {
-				/* empty */
-			      } 
-                            else {
-                                if (item) {
-                                    if (!item->getEnvironment())
-                                        item->setEnvironment(Environment::create());
-                                    item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
-                                }
-                            }
-                            result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i2)->getValue()));
-                            break;
-
-                        case Value::_ANONYMOUS:
-                            result->add(Feature::create(Feature::PRED, bitsetPtr(), (*i2)->getValue()));
-                            break;
-
-                        default: FATAL_ERROR_STM
-                            break;
-                    }
-
-                    break;
-                }
-                ++i2;
-            }
-            result->add(*i1);
-        }
-        else if ((*i1)->getType() == Feature::FORM) {
-            std::list<featurePtr>::const_iterator i2 = fs2->begin();
-            while (i2 != fs2->end()) {
-                if ((*i2)->getType() == Feature::FORM) {
-
-                    (*i2)->addFlags(Flags::SEEN);
-                    if (!(*i1)->getValue()->isForm() || !(*i2)->getValue()->isForm()) FATAL_ERROR_STM
-
-                    if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr()) {
-                        result = Features::BOTTOM;
-                        goto endUnif;
-                    }
-                    break;
-                }
-
-                ++i2;
-            }
-            result->add(*i1);
-        }
-        else if ((*i1)->getType() == Feature::CONSTANT) {
-            std::list<featurePtr>::const_iterator i2 = fs2->begin();
-            while (i2 != fs2->end()) {
-                if (((*i2)->getType() == Feature::CONSTANT) &&
-                    (*(*i1)->getAttribute()&  *(*i2)->getAttribute()).any()) {
-                    (*i2)->addFlags(Flags::SEEN);
-                    if ((!(*i1)->getValue()) || (!(*i2)->getValue())) {
-                        result = Features::BOTTOM;
-                        goto endUnif;
-                    }
-
-                    switch ((*i1)->getValue()->getType()) {
-
-                        case Value::_NIL: FATAL_ERROR_UNEXPECTED
-
-                        case Value::_FORM:
-                            switch ((*i2)->getValue()->getType()) {
-                                case Value::_FORM:
-                                    if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr()) {
-                                        result = Features::BOTTOM;
-                                        goto endUnif;
-                                    }
-                                    result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                                (*i1)->getValue()));
-                                    break;
-
-                                case Value::_VARIABLE: FATAL_ERROR_STM
-                                    /*
-                                  result->add(new Feature((*i2)->getAttribute(), (*i1)->getValue(), Feature::CONSTANT));
-                                  if (item->getEnvironment()==NULL)
-                                  item->setEnvironment(new Environment());
-                                  item->getEnvironment()->add(*(*i2)->getValue()->getBits(), (*i1)->getValue());
-                                    */
-                                    break;
-
-                                default: FATAL_ERROR_STM
-                                    break;
-
-                            }
-                            break;
-
-                            //case Value::FALSE:
-                        case Value::_TRUE: {
-                            switch ((*i2)->getValue()->getType()) {
-                                //case Value::FALSE:
-                                case Value::_TRUE:
-                                    if ((*i1)->getValue()->isNil() != (*i2)->getValue()->isNil()) {
-                                        result = Features::BOTTOM;
-                                        goto endUnif;
-                                    }
-
-                                    result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                                (*i1)->getValue()));
-                                    break;
-                                case Value::_VARIABLE:
-                                    result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
-                                                                (*i1)->getValue()));
-                                    if (!item->getEnvironment())
-                                        item->setEnvironment(Environment::create());
-                                    item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
-                                    break;
-                                default: FATAL_ERROR_STM
-                                    break;
-                            }
-                        }
-                            break;
-
-                        case Value::_NUMBER: {
-                            switch ((*i2)->getValue()->getType()) {
-                                case Value::_NUMBER:
-                                    if ((*i1)->getValue()->getNumber() != (*i2)->getValue()->getNumber()) {
-                                        result = Features::BOTTOM;
-                                        goto endUnif;
-                                    }
-
-                                    result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                                Value::create(Value::_NUMBER,
-                                                                              (*i1)->getValue()->getNumber())));
-                                    break;
-                                case Value::_VARIABLE:
-                                    result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
-                                                                (*i1)->getValue()));
-                                    if (!item->getEnvironment())
-                                        item->setEnvironment(Environment::create());
-                                    item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
-                                    break;
-                                default: FATAL_ERROR_STM
-                                    break;
-                            }
-                        }
-                            break;
-
-                        case Value::_CODE: {
-                            switch ((*i2)->getValue()->getType()) {
-                                case Value::_CODE:
-                                    if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode()) {
-                                        result = Features::BOTTOM;
-                                        goto endUnif;
-                                    }
-
-                                    result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                                Value::create(Value::_CODE,
-                                                                              (*i1)->getValue()->getCode())));
-                                    break;
-                                case Value::_VARIABLE:
-                                    result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
-                                                                (*i1)->getValue()));
-                                    if (!item->getEnvironment())
-                                        item->setEnvironment(Environment::create());
-                                    item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
-                                    break;
-                                default: FATAL_ERROR_STM
-                                    break;
-                            }
-                        }
-                            break;
-
-                        case Value::_CONSTANT: {
-                            switch ((*i2)->getValue()->getType()) {
-                                case Value::_CONSTANT:
-                                    if (((*(*i1)->getValue()->getBits())&  (*(*i2)->getValue()->getBits())).none()) {
-                                        result = Features::BOTTOM;
-                                        goto endUnif;
-                                    }
-
-                                    result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(),
-                                                                Value::create(Value::_CONSTANT, Bitset::create(
-                                                                        *(*i1)->getValue()->getBits()& 
-                                                                        *(*i2)->getValue()->getBits()))));
-                                    break;
-                                case Value::_VARIABLE:
-                                    result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
-                                                                (*i1)->getValue()));
-                                    if (!item->getEnvironment())
-                                        item->setEnvironment(Environment::create());
-                                    item->getEnvironment()->add((*i2)->getValue()->getBits(), (*i1)->getValue());
-                                    break;
-                                case Value::_ANONYMOUS:
-                                    result->add(Feature::create(Feature::CONSTANT, (*i2)->getAttribute(),
-                                                                (*i1)->getValue()));
-                                    break;
-                                default: FATAL_ERROR_STM
-                                    break;
-                            }
-                        }
-                            break;
-
-                        case Value::_VARIABLE:
-
-                            if (((*i2)->getValue()->getType() == Value::_VARIABLE) &&
-                                (*(*i1)->getValue()->getBits()) == (*(*i2)->getValue()->getBits())) {
-			      /* empty */
-			    } 
-                            else {
-                                if (item) {
-                                    if (!item->getEnvironment())
-                                        item->setEnvironment(Environment::create());
-                                    item->getEnvironment()->add((*i1)->getValue()->getBits(), (*i2)->getValue());
-                                }
-                            }
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), (*i2)->getValue()));
-                            break;
-
-                        case Value::_ANONYMOUS:
-                            result->add(Feature::create(Feature::CONSTANT, (*i1)->getAttribute(), (*i2)->getValue()));
-                            break;
-
-                        case Value::_FEATURES: {
-                            featuresPtr _features = unif((*i1)->getValue()->getFeatures(),
-                                                         (*i2)->getValue()->getFeatures(), item);
-                            if (_features->isBottom()) {
-                                result = _features;
-=======
                     case Value::IDENTIFIER_VALUE:
                     {
                         switch ((*i2)->getValue()->_getType())
@@ -2721,7 +1938,6 @@ featuresPtr Statement::unif(statementPtr self, const featuresPtr &fs1, const fea
                             if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode())
                             {
                                 result = Features::BOTTOM;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                                 goto endUnif;
                             }
                             break;
@@ -3058,15 +2274,6 @@ endUnif:
 /* ************************************************************
  * ↓i = …
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::buildInheritedSonFeatures(const itemPtr& item, Application* application) {
-    /***
-        std::cerr << "buildInheritedSonFeatures: ";
-        print(std::cerr);
-        std::cerr << std::endl;
-    ***/
-    featuresPtr _features = rhs->evalFeatures(item, application, true);
-=======
 void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3089,7 +2296,6 @@ void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synt
     }
     featuresPtr _features = rhs->evalFeatures(item, parser, synthesizer, true);
 
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     if (_features->isNil())
         addFlags(Flags::BOTTOM);
     else
@@ -3099,12 +2305,6 @@ void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synt
 /* ************************************************************
  * ⇑ = …
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::buildSynthesizedFeatures(const itemPtr& item, Application* application) {
-    if (!item->getSynthesizedFeatures()->isNil()) {
-        this->print(std::cerr);
-        FATAL_ERROR_STM
-=======
 void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3119,9 +2319,8 @@ void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synth
         oss << "⇑"
             << " defined twice";
         FATAL_ERROR_OS_MSG_STM(oss);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
-    featuresPtr _features = rhs->evalFeatures(item, application, true);
+    featuresPtr _features = rhs->evalFeatures(item, parser, synthesizer, true);
     if (_features->isNil())
         addFlags(Flags::BOTTOM);
     else
@@ -3134,12 +2333,6 @@ void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synth
  * [ … $X … ] ⊂ ⇓1;
  * $X = ⇓1;
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::buildEnvironmentWithSynthesize(const itemPtr& item, Application* application) {
-    switch (this->op) {
-        case AFF: {
-            // $X = ⇓1;
-=======
 void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3185,7 +2378,6 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
         else
         {
 
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
             environmentPtr environment;
 
             if (item->getEnvironment())
@@ -3195,17 +2387,8 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
                 environment = Environment::create();
                 item->setEnvironment(environment);
             }
-<<<<<<< HEAD
-            featuresPtr sonSynth = rhs->evalFeatures(item, application, true);
-            if (sonSynth) {
-                environment->add(lhs->getBits(), Value::create(Value::_FEATURES, sonSynth));
-            } else FATAL_ERROR_STM
-        }
-            break;
-=======
 
             featuresPtr sonSynth = rhs->evalFeatures(item, parser, synthesizer, true);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
             if (sonSynth)
             {
@@ -3216,35 +2399,7 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
                     ))
                 {
 
-<<<<<<< HEAD
-            featuresPtr left = lhs->evalFeatures(item, application, false);
-            if (!left) {
-
-                WARNING_STM
-            } else {
-
-                environmentPtr environment;
-
-                if (item->getEnvironment())
-                    environment = item->getEnvironment();
-                else {
-                    environment = Environment::create();
-                    item->setEnvironment(environment);
-                }
-
-                featuresPtr sonSynth = rhs->evalFeatures(item, application, true);
-
-                if (sonSynth) {
-
-                    if (!left->buildEnvironment(environment, sonSynth, true/*, true*/)) {
-
-                        addFlags(Flags::BOTTOM);
-                    }
-                } else {
-                    FATAL_ERROR_STM
-=======
                     addFlags(Flags::BOTTOM);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                 }
             }
             else
@@ -3265,21 +2420,6 @@ void Statement::buildEnvironmentWithSynthesize(class Item *item, Parser &parser,
  * [ … $X … ] ⊂ ↑;
  * $X = ↑;
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::buildEnvironmentWithInherited(const itemPtr& item, Application* application) {
-    /***
-        std::cerr << "<DIV>buildEnvironmentWithInherited ";
-        this->print(std::cerr, "", TRUE_ROOT);
-        std::cerr << "</DIV>";
-    ***/
-    switch (this->op) {
-        case AFF: {
-            // $X = ↑;
-            featuresPtr right = rhs->evalFeatures(item, application, true);
-            if (!right) {
-                WARNING_STM
-            } else {
-=======
 void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3333,7 +2473,6 @@ void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, 
             }
             else
             {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                 environmentPtr environment;
                 if (item->getEnvironment())
                 {
@@ -3344,32 +2483,6 @@ void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, 
                     environment = Environment::create();
                     item->setEnvironment(environment);
                 }
-<<<<<<< HEAD
-                environment->add(lhs->getBits(), Value::create(Value::_FEATURES, right));
-            }
-        }
-            break;
-
-        case SUBSUME: {
-            featuresPtr left = lhs->evalFeatures(item, application, false);
-            if (!left) {
-                WARNING_STM
-            } else {
-                featuresPtr right = rhs->evalFeatures(item, application, true);
-                if (!right) {
-                    WARNING_STM
-                } else {
-                    environmentPtr environment;
-                    if (item->getEnvironment()) {
-                        environment = item->getEnvironment();
-                    } else {
-                        environment = Environment::create();
-                        item->setEnvironment(environment);
-                    }
-                    if (!left->buildEnvironment(environment, right, true/*, true*/)) {
-                        addFlags(Flags::BOTTOM);
-                    }
-=======
                 if (!left->buildEnvironment(environment, right, true
 #ifdef TRACE_BUILD_ENVIRONMENT
                     , true
@@ -3377,7 +2490,6 @@ void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, 
                     ))
                 {
                     addFlags(Flags::BOTTOM);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                 }
                 
             }
@@ -3405,41 +2517,6 @@ void Statement::buildEnvironmentWithInherited(class Item *item, Parser &parser, 
  * < … > = reverse $X;
  * < … > = $X;
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::buildEnvironmentWithValue(const itemPtr& item, Application* application) {
-    /***
-        std::cerr << "<DIV>buildEnvironmentWithValue</DIV>";
-        std::cerr << "<DIV>";
-        this->print(std::cerr, 0);
-        std::cerr << "</DIV>";
-    ***/
-    switch (this->op) {
-        case AFF:
-            // 	 $X = a;
-            // 	 $X = $Y;
-            // 	 $X = … ∪ … ;
-            // 	 $X = [ … ];
-            // 	 $X = <expr>;
-            // 	 $X = < … >
-            // 	 $X = sort $X with a;
-            // 	 $X = reverse $X;
-
-            if (lhs->isVariable()) {
-                valuePtr right = rhs->evalValue(item, application, true);
-                if (!right) {
-                    this->print(std::cerr, 0);
-                    WARNING_STM
-                } else {
-                    environmentPtr environment;
-                    if (item->getEnvironment()) {
-                        environment = item->getEnvironment();
-                    } else {
-                        environment = Environment::create();
-                        item->setEnvironment(environment);
-                    }
-                    environment->add(lhs->getBits(), right);
-                }
-=======
 void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3466,7 +2543,6 @@ void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synt
             {
                 this->print(std::cerr, 0);
                 WARNING_STM;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
             }
             else
             {
@@ -3484,16 +2560,6 @@ void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synt
             }
         }
 
-<<<<<<< HEAD
-        case SUBSUME: {
-            featuresPtr right = rhs->evalFeatures(item, application, true);
-            if (!right) {
-                WARNING_STM
-            } else {
-                if (right->isNil()) {} // empty
-                featuresPtr left = lhs->evalFeatures(item, application, false);
-                if (left) {
-=======
         // 	 < … > = $X;
         // 	 < … > = ( … )
         // 	 < … > = sort $X with a;
@@ -3519,7 +2585,6 @@ void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synt
                 }
                 else
                 {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                     environmentPtr environment;
                     if (item->getEnvironment())
                     {
@@ -3588,22 +2653,6 @@ void Statement::buildEnvironmentWithValue(class Item *item, Parser &parser, Synt
 /* ************************************************************
  * attest
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::stmAttest(const itemPtr& item, Application* application) {
-    /***
-        std::cout << "<DIV>*** attest</DIV>";
-        std::cout << "<DIV>";
-        this->print(std::cout);
-        std::cout << "</DIV>";
-    ***/
-    switch (this->op) {
-        case ATTEST: {
-            valuePtr res = lhs->evalValue(item, application, true);
-            if ((!res) || (res == Value::NIL_VALUE) || (res == Value::ANONYMOUS_VALUE) ||
-                ((res->getType() == Value::_FEATURES) && (res->getFeatures()->isBottom()))) {
-                addFlags(Flags::BOTTOM);
-            }
-=======
 void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3620,7 +2669,6 @@ void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthes
             ((res->isFeatures() && (res->getFeatures()->isBottom()))))
         {
             addFlags(Flags::BOTTOM);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         }
     }
     break;
@@ -3633,39 +2681,6 @@ void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthes
 /* ************************************************************
  * guard
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::stmGuard(const itemPtr& item/**/) {
-    /***
-         CERR_LINE;
-         std::cerr << "<DIV>guard ";
-         item->print(std::cerr);
-         print(std::cerr);
-         std::cerr << "</DIV>";
-    ***/
-    if (isSetFlags(Flags::DISABLED | Flags::SEEN)) {
-        FATAL_ERROR_STM
-    } else {
-        featuresPtr localFeatures = getFeatures();
-        if (!localFeatures) {
-            FATAL_ERROR_STM
-        }
-        environmentPtr environment;
-        if (item->getEnvironment())
-            environment = item->getEnvironment();
-        else {
-            environment = Environment::create();
-            item->setEnvironment(environment);
-        }
-        featuresPtr localRhs = item->getInheritedFeatures();
-
-        if (!localFeatures->buildEnvironment(environment, localRhs, false/*, true*/)) {
-            addFlags(Flags::BOTTOM);
-        }
-        if (item->getEnvironment()->size() == 0) {
-            item->getEnvironment().reset();
-            item->setEnvironment(environmentPtr());
-        }
-=======
 void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3677,7 +2692,6 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
     if (isSetFlags(Flags::DISABLED | Flags::SEEN))
     {
         FATAL_ERROR_UNEXPECTED;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
     featuresPtr localFeatures = getFeatures();
     if (!localFeatures)
@@ -3717,27 +2731,6 @@ void Statement::stmGuard(class Item *item /*, Synthesizer *synthesizer*/)
 /* ************************************************************
  * foreach
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::stmForeach(const itemPtr& item, Application* application, bool& effect) {
-    /***
-        std::cerr << "<DIV>foreach";
-        item->print(std::cerr);
-        print(std::cerr);
-        std::cerr << "</DIV>";
-    ***/
-
-    statementPtr variable = getLhs();
-    valuePtr _value = getRhs()->getLhs()->evalValue(item, application, true);
-    statementPtr body = getRhs()->getRhs();
-    if (!_value->isList()) FATAL_ERROR_MSG_STM("foreach does'nt apply a list")
-    listPtr _list = _value->getList();
-    _list->apply(item, application, variable, body, effect);
-    /***
-        std::cerr << "<DIV>foreach done";
-        item->print(std::cerr);
-        std::cerr << "</DIV>";
-    ***/
-=======
 void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -3769,45 +2762,11 @@ void Statement::stmForeach(class Item *item, Parser &parser, Synthesizer *synthe
         item->print(std::cout);
         std::cout << std::endl;
 #endif
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* ************************************************************
  * if
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::stmIf(const itemPtr& item, Application* application, bool& effect) {
-    statementPtr _lhs = getRhs()->getLhs();
-    statementPtr _rhs = getRhs()->getRhs();
-
-    unsigned int resif = 0;    // 0:none 1:then 2:else
-    //if (lhs->isSetFlags(Flags::CHOOSEN))
-    //	resif = 1;
-    //else if (rhs && rhs->isSetFlags(Flags::CHOOSEN))
-    //	resif = 2;
-    //else {
-    {
-        valuePtr res = getLhs()->evalValue(item, application, true);
-        if (!res)
-            resif = 0;
-        else if (res->isNil() || res->isAnonymous()) {
-            resif = 2;
-            _lhs->addFlags(Flags::REJECTED);
-            if (_rhs)
-                _rhs->addFlags(Flags::CHOOSEN);
-        } else {
-            resif = 1;
-            _lhs->addFlags(Flags::CHOOSEN);
-            if (_rhs)
-                _rhs->addFlags(Flags::REJECTED);
-        }
-    }
-    //bool localResult = true;
-    switch (resif) {
-        case 1:
-            _lhs->apply(item, application, effect);
-            if (_lhs->isSetFlags(Flags::BOTTOM)) {
-=======
 void Statement::stmIf(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
     statementPtr leftHandSide = getRhs()->getLhs();
@@ -3856,25 +2815,10 @@ void Statement::stmIf(class Item *item, Parser &parser, Synthesizer *synthesizer
             rightHandSide->apply(item, parser, synthesizer, effect);
             if (rightHandSide->isSetFlags(Flags::BOTTOM))
             {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                 this->addFlags(Flags::BOTTOM);
             }
             if (rightHandSide->isSetFlags(Flags::SEEN))
                 this->addFlags(Flags::SEEN);
-<<<<<<< HEAD
-            break;
-        case 2:
-            if (_rhs) {
-                _rhs->apply(item, application, effect);
-                if (_rhs->isSetFlags(Flags::BOTTOM))
-                    this->addFlags(Flags::BOTTOM);
-                if (_rhs->isSetFlags(Flags::SEEN))
-                    this->addFlags(Flags::SEEN);
-            } else {
-                this->addFlags(Flags::SEEN);
-            }
-            break;
-=======
         }
         else
         {
@@ -3884,7 +2828,6 @@ void Statement::stmIf(class Item *item, Parser &parser, Synthesizer *synthesizer
     case __NONE__:
         FATAL_ERROR_UNEXPECTED;
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 }
 
@@ -3903,16 +2846,6 @@ void Statement::stmWait(class Item *item, Parser &parser, Synthesizer *synthesiz
 /* ************************************************************
  * print
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::stmPrint(const itemPtr& item, Application* application) {
-    addFlags(Flags::SEEN);
-    if (lhs->isStr()) {
-        std::cout << lhs->getStr();
-    } else {
-        valuePtr _value = lhs->evalValue(item, application, true);
-        if (_value->isForm())
-            std::cout << _value->getStr();
-=======
 void Statement::stmPrint(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
     addFlags(Flags::SEEN);
@@ -3922,7 +2855,6 @@ void Statement::stmPrint(class Item *item, Parser &parser, Synthesizer *synthesi
         {
             std::cout << (*statement)->getString();
         }
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         else
         {
             valuePtr value = (*statement)->evalValue(item, parser, synthesizer, true);
@@ -3937,14 +2869,9 @@ void Statement::stmPrint(class Item *item, Parser &parser, Synthesizer *synthesi
 /* ************************************************************
  * println
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::stmPrintln(const itemPtr& item, Application* application) {
-    stmPrint(item, application);
-=======
 void Statement::stmPrintln(class Item *item, Parser &parser, Synthesizer *synthesizer)
 {
     stmPrint(item, parser, synthesizer);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     std::cout << std::endl;
 }
 
@@ -4007,63 +2934,16 @@ void Statement::renameVariables(size_t i)
 /* ************************************************************
  *
  ************************************************************ */
-<<<<<<< HEAD
-void Statement::enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on) {
-#ifdef TRACE_APPLY
-    if (application->getTraceAction()) {
-      std::cout << "<H3>####################### ENABLE #######################</H3>" << std::endl;
-      print(std::cout);
-      std::cout << std::endl;
-    }
-=======
 void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &result, bool on)
 {
 #ifdef TRACE_ENABLE_STATEMENT
     std::cout << "<H3>####################### TRACE_ENABLE_STATEMENT #######################</H3>" << std::endl;
     print(std::cout);
     std::cout << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #endif
     switch (this->op)
     {
 
-<<<<<<< HEAD
-        case STMS:
-            getStatements()->enable(item, application, effect, on);
-            break;
-
-        case IF:
-            //if (lhs->op != VARIABLE)
-            lhs->enable(shared_from_this(), item, application, effect, on);
-            rhs->enable(rhs, item, application, effect, on);
-            break;
-
-        case THENELSE:
-            lhs->enable(lhs, item, application, effect, on);
-            if (rhs)
-                rhs->enable(rhs, item, application, effect, on);
-            break;
-
-        case FOREACH:
-            //lhs->enable(shared_from_this(), item, effect, on);
-            rhs->enable(rhs, item, application, effect, on);
-            break;
-
-        case IN:
-            lhs->enable(lhs, item, application, effect, on);
-            if (rhs)
-                rhs->enable(rhs, item, application, effect, on);
-            break;
-
-        case GUARD:
-            if (on) {
-                if (item->getInheritedFeatures()->isNil()) {
-                    this->addFlags(Flags::DISABLED);
-                    effect = true;
-                }
-            } else {
-                this->subFlags(Flags::DISABLED);
-=======
     case GUARD_STATEMENT:
         if (on)
         {
@@ -4071,7 +2951,6 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
             {
                 this->addFlags(Flags::DISABLED);
                 result = true;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
             }
         }
         else
@@ -4081,27 +2960,6 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
         }
         break;
 
-<<<<<<< HEAD
-        case AFF:
-        case SUBSUME:
-        case INSET:
-            rhs->enable(shared_from_this(), item, application, effect, on);
-            break;
-
-        case FCT:
-        case UNIF:
-            if (lhs)
-                lhs->enable(root, item, application, effect, on);
-            if (rhs)
-                rhs->enable(root, item, application, effect, on);
-            break;
-
-        case PRINT:
-        case PRINTLN:
-        case ATTEST:
-            lhs->enable(root, item, application, effect, on);
-            break;
-=======
     case DASH_STATEMENT:
         // if (getFirst() > item->getRuleRhs().size())
         // {
@@ -4162,7 +3020,6 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
             result = true;
         }
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     case INHERITED_FEATURES_STATEMENT:
         if (on)
@@ -4227,20 +3084,6 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
         }
         break;
 
-<<<<<<< HEAD
-        case LIST:
-            getList()->enable(root, item, application, effect, on);
-            break;
-
-        case FEATURES:
-            getFeatures()->enable(root, item, application, effect, on);
-            break;
-
-        case SEARCH:
-            if (lhs)
-                lhs->enable(root, item, application, effect, on);
-            break;
-=======
     case IF_STATEMENT:
         if (lhs->containsDash())
         {
@@ -4261,7 +3104,6 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
     case FOREACH_STATEMENT:
         rhs->toggleEnable(shared_from_this(), item, synthesizer, result, on);
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     case FOREACH_CON_T_STATEMENT:
         lhs->toggleEnable(root, item, synthesizer, result, on);
@@ -4317,16 +3159,6 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Statement::apply(const itemPtr& item, Application* application, bool& effect) {
-#ifdef TRACE_APPLY
-    if (application->getTraceAction()) {
-      std::cout << "<H3>####################### APPLY #######################</H3>" << std::endl;
-      std::cout << "Apply: " << std::endl;
-      print(std::cout);
-      std::cout << std::endl;
-    }
-=======
 void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -4334,7 +3166,6 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     std::cout << "Apply: " << std::endl;
     print(std::cout);
     std::cout << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #endif
 
     if (isSetFlags(Flags::SEEN | Flags::DISABLED | Flags::BOTTOM))
@@ -4344,34 +3175,13 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     }
 
     // […]
-<<<<<<< HEAD
-    if (isGuard()) {
-        stmGuard(item/*, application*/);
-=======
     if (isGuard())
     {
         stmGuard(item);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         effect = true;
         addFlags(Flags::SEEN);
     }
 
-<<<<<<< HEAD
-        // if
-    else if (isIf()) {
-        stmIf(item, application, effect);
-    }
-
-        // foreach $i in $list
-    else if (isForeach()) {
-        stmForeach(item, application, effect);
-        addFlags(Flags::SEEN);
-    }
-
-        // ↓1 = …
-    else if ((isAff()) && (getLhs()->isDown())) {
-        buildInheritedSonFeatures(item, application);
-=======
     // if
     else if (isIf())
     {
@@ -4394,7 +3204,6 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     else if ((isAssignment()) && (getLhs()->isDown()))
     {
         buildInheritedSonFeatures(item, parser, synthesizer);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         effect = true;
         addFlags(Flags::SEEN);
     }
@@ -4402,14 +3211,9 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     // [ … $X … ] ⊂ ⇓1
     // $X = ⇓i
     else if (((isSubsume()) && (getRhs()->isDown2()) && (getLhs()->isFeatures())) ||
-<<<<<<< HEAD
-             ((isAff()) && (getRhs()->isDown2()) && (getLhs()->isVariable()))) {
-        buildEnvironmentWithSynthesize(item, application);
-=======
              ((isAssignment()) && (getRhs()->isDown2()) && (getLhs()->isVariable())))
     {
         buildEnvironmentWithSynthesize(item, parser, synthesizer);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         effect = true;
         addFlags(Flags::SEEN);
     }
@@ -4417,48 +3221,14 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
     // [ … $X … ] ⊂ ↑
     // $X = ↑
     else if (((isSubsume()) && (getRhs()->isUp()) && (getLhs()->isFeatures())) ||
-<<<<<<< HEAD
-             ((isAff()) && (getRhs()->isUp()) && (getLhs()->isVariable()))) {
-        buildEnvironmentWithInherited(item, application);
-=======
              ((isAssignment()) && (getRhs()->isUp()) && (getLhs()->isVariable())))
     {
         buildEnvironmentWithInherited(item, parser, synthesizer);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         effect = true;
         addFlags(Flags::SEEN);
         
     }
 
-<<<<<<< HEAD
-        // $X = a;
-        // $X = Y;
-        // $X = … ∪ … ;
-        // $X = [ … ];
-        // $X = <expr>;
-        // $X = < … >
-        // $X = sort Y with a;
-        // $X = reverse Y;
-        // $X = combination Y;
-        // $X = search Y;
-        //
-        // < … > = $X;
-        // < … > = < … >
-        // < … > = sort $X with a;
-        // < … > = reverse $X;
-        //
-        // [ … $X … ] ⊂ Y
-        // [ … $X … ] ⊂ [ … ]
-        // [ … $X … ] ⊂ search Y
-    else if (((isAff()) && (getLhs()->isVariable())
-              && ((getRhs()->isConstant()) || (getRhs()->isVariable()) || (getRhs()->isUnif()) ||
-                  (getRhs()->isFeatures()) || (getRhs()->isNumber()) || (getRhs()->isFct())
-                  || (getRhs()->isList()) || (getRhs()->isSearch()))) ||
-             ((isAff()) && (getLhs()->isList()) && ((getRhs()->isVariable()) || (getRhs()->isList())))
-             || ((isSubsume()) && (getLhs()->isFeatures()) &&
-                 ((getRhs()->isVariable()) || (getRhs()->isFeatures()) || (getRhs()->isSearch())))) {
-        buildEnvironmentWithValue(item, application);
-=======
     // $X = a;
     // $X = Y;
     // $X = … ∪ … ;
@@ -4480,52 +3250,18 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
              || ((isSubsume()) && (getLhs()->isFeatures()) && ((getRhs()->isVariable()) || (getRhs()->isFeatures()))))
     {
         buildEnvironmentWithValue(item, parser, synthesizer);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         effect = true;
         addFlags(Flags::SEEN);
     }
 
-<<<<<<< HEAD
-        // ⇑ = …
-    else if ((isAff()) && (getLhs()->isUp2())) {
-        buildSynthesizedFeatures(item, application);
-=======
     // ⇑ = …
     else if ((isAssignment()) && (getLhs()->isUp2()))
     {
         buildSynthesizedFeatures(item, parser, synthesizer);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         effect = true;
         addFlags(Flags::SEEN);
     }
 
-<<<<<<< HEAD
-        // attest …
-    else if (isAttest()) {
-        stmAttest(item, application);
-        addFlags(Flags::SEEN);
-    }
-
-        // print
-    else if (isPrint()) {
-        stmPrint(item, application);
-        addFlags(Flags::SEEN);
-    }
-
-        // println
-    else if (isPrintln()) {
-        stmPrintln(item, application);
-        addFlags(Flags::SEEN);
-    }
-
-        // statements
-    else if (isStms()) {
-        this->statements->apply(item, application, effect);
-        if (this->statements->isSetFlags(Flags::BOTTOM))
-            this->addFlags(Flags::BOTTOM);
-        if (this->statements->isSetFlags(Flags::SEEN))
-            this->addFlags(Flags::SEEN);
-=======
     // attest …
     else if (isAttest())
     {
@@ -4555,7 +3291,6 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
             addFlags(Flags::BOTTOM);
         if (statements->isSetFlags(Flags::SEEN))
             addFlags(Flags::SEEN);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 
     // else error
@@ -4564,34 +3299,16 @@ void Statement::apply(class Item *item, Parser &parser, Synthesizer *synthesizer
         FATAL_ERROR_UNEXPECTED
     }
 
-<<<<<<< HEAD
-#ifdef TRACE_APPLY
-    if (application->getTraceAction()) {
-      std::cout << "<H3>####################### APPLY DONE " << effect << " #######################</H3>" << std::endl;
-      item->print(std::cout);
-      std::cout << std::endl;
-    }
-=======
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "<H3>####################### TRACE_APPLY_STATEMENT CON'T #######################</H3>" << std::endl;
     item->print(std::cout);
     std::cout << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #endif
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Statement::lookingForAssignedInheritedSonFeatures(std::vector<bool>& assignedInheritedSonFeatures) {
-    switch (this->op) {
-        case AFF:
-            // ↓1 = …
-            if ((this->isAff()) && (this->getLhs()->isDown()))
-                assignedInheritedSonFeatures[this->getLhs()->getFirst()] = true;
-            break;
-=======
 void Statement::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assignedInheritedSonFeatures)
 {
     switch (this->op)
@@ -4601,7 +3318,6 @@ void Statement::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assign
         if ((this->isAssignment()) && (this->getLhs()->isDown()))
             assignedInheritedSonFeatures[this->getLhs()->getFirst()] = true;
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     case IF_STATEMENT:
     {
@@ -4627,15 +3343,10 @@ void Statement::lookingForAssignedInheritedSonFeatures(std::vector<bool> &assign
 /* ************************************************************
  *
  ************************************************************ */
-<<<<<<< HEAD
-bool Statement::findVariable(const bitsetPtr& variable) {
-    switch (this->op) {
-=======
 bool Statement::findVariable(const bitsetPtr &variable)
 {
     switch (this->op)
     {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     case STMS_STATEMENT:
     case PRINT_STATEMENT:

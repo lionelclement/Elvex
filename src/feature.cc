@@ -158,50 +158,6 @@ void Feature::setValue(valuePtr _value)
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Feature::print(std::ostream& outStream) const {
-    switch (type) {
-        case Feature::PRED:
-            outStream << R"(<TD ALIGN="LEFT">PRED</TD><TD ALIGN="LEFT">)";
-            if (value)
-                value->print(outStream);
-            else
-                outStream << "NIL";
-            outStream << "</TD>";
-            break;
-        case Feature::LEMMA:
-            outStream << R"(<TD ALIGN="LEFT">LEMMA</TD><TD ALIGN="LEFT">)";
-            if (value)
-                value->print(outStream);
-            else
-                outStream << "NIL";
-            outStream << "</TD>";
-            break;
-        case Feature::FORM:
-            outStream << R"(<TD ALIGN="LEFT">FORM</TD><TD ALIGN="LEFT">)";
-            if (value)
-                value->print(outStream);
-            else
-                outStream << "NIL";
-            outStream << "</TD>";
-            break;
-        case Feature::CONSTANT:
-            outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD><TD ALIGN=\"LEFT\">";
-            if (value)
-                value->print(outStream);
-            else
-                outStream << "NIL";
-            outStream << "</TD>";
-            break;
-        case Feature::VARIABLE:
-            outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD>";
-            if (value && !value->isNil()) {
-                outStream << "<TD ALIGN=\"LEFT\">";
-                value->print(outStream);
-                outStream << "</TD>";
-            }
-            break;
-=======
 void Feature::print(std::ostream &outStream) const
 {
     switch (type)
@@ -247,51 +203,12 @@ void Feature::print(std::ostream &outStream) const
             outStream << "</TD>";
         }
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Feature::flatPrint(std::ostream& outStream) const {
-    switch (type) {
-        case Feature::PRED:
-            outStream << "PRED:";
-            if (value)
-                value->flatPrint(outStream);
-            else
-                outStream << "NIL";
-            break;
-        case Feature::LEMMA:
-            outStream << "LEMMA:";
-            if (value)
-                value->flatPrint(outStream);
-            else
-                outStream << "NIL";
-            break;
-        case Feature::FORM:
-            outStream << "FORM:";
-            if (value)
-                value->flatPrint(outStream);
-            else
-                outStream << "NIL";
-            break;
-        case Feature::CONSTANT:
-            outStream << attributeToString() << ':';
-            if (value)
-                value->flatPrint(outStream);
-            else
-                outStream << "NIL";
-            break;
-        case Feature::VARIABLE:
-            outStream << attributeToString();
-            if (value && !value->isNil()) {
-                value->flatPrint(outStream);
-            }
-            break;
-=======
 void Feature::flatPrint(std::ostream &outStream) const
 {
     switch (type)
@@ -331,7 +248,6 @@ void Feature::flatPrint(std::ostream &outStream) const
             value->flatPrint(outStream);
         }
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 }
 
@@ -440,25 +356,6 @@ bool Feature::renameVariables(size_t i)
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Feature::enable(const statementPtr& root, const itemPtr& item, Application* application, bool& effect, bool on) {
-    switch (type) {
-        case Feature::PRED:
-        case Feature::LEMMA:
-        case Feature::FORM:
-        case Feature::CONSTANT:
-            if (value)
-                value->enable(root, item, application, effect, on);
-            break;
-        case Feature::VARIABLE:
-            if (on) {
-                if ((!item->getEnvironment()) || (!item->getEnvironment()->find(getAttribute()))) {
-                    root->addFlags(Flags::DISABLED);
-                    effect = true;
-                }
-            } else {
-                root->subFlags(Flags::DISABLED);
-=======
 void Feature::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
 {
     switch (type)
@@ -476,7 +373,6 @@ void Feature::enable(const statementPtr &root, class Item *item, Synthesizer *sy
             if ((!item->getEnvironment()) || (!item->getEnvironment()->find(getAttribute())))
             {
                 root->addFlags(Flags::DISABLED);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
                 effect = true;
             }
         }
@@ -535,13 +431,8 @@ bool Feature::containsVariable()
         break;
     }
     if (result)
-<<<<<<< HEAD
-        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
-=======
         variableFlag.setFlag(VariableFlag::CONTAINS);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     else
-        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
+        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     return result;
 }
-

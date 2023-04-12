@@ -152,17 +152,11 @@ public:
 
     bool isConstant(void) const;
 
-<<<<<<< HEAD
-    bool isList(void) const;
-
-    void enable(const statementPtr& root, const itemPtr& item, class Application* application, bool &effect, bool on);
-=======
     bool isPairp(void) const;
 
     bool isListFeatures(void) const;
 
     void enable(const statementPtr &root, class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     bool eq(valuePtr) const;
 
@@ -170,12 +164,7 @@ public:
 
     bool findVariable(const bitsetPtr &) const;
 
-<<<<<<< HEAD
-    void
-    apply(const itemPtr& item, class Application* application, const statementPtr& variable, const statementPtr& body,
-=======
     void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, const statementPtr &body,
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
           bool &effect);
 
     bool containsVariable(void);

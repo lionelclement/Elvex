@@ -61,25 +61,15 @@ public:
 
     void renameVariables(size_t);
 
-<<<<<<< HEAD
-    void print(std::ostream& , unsigned int tabulation = 0, unsigned int yetColored = 0) const;
-=======
     bool findVariable(const bitsetPtr &variable);
 
     void print(std::ostream &outStream, unsigned int tabulation, unsigned int color, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
-    statementsPtr clone(const std::bitset<FLAGS>& savedFlags);
+    statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 
-<<<<<<< HEAD
-    void apply(itemPtr item, class Application *application, bool& effect);
-
-    void enable(itemPtr item, class Application *application, bool& effect, bool on);
-=======
     void toggleEnable(class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
 
     void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 };
 

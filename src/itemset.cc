@@ -21,11 +21,7 @@
 #include "itemset.hpp"
 #include "messages.hpp"
 #include "rule.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-=======
 #include "generator.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
 /* **************************************************
  *
@@ -117,11 +113,6 @@ ItemSet::set_of_item_const_iterator ItemSet::find(class Item *item) const
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool ItemSet::insert(const itemPtr& item, Application *application) {
-    if (items.size() > application->getMaxCardinal()) {
-        FATAL_ERROR ("*** error: too much items build : " << items.size() << " (" << application->getMaxCardinal() << " Max)");
-=======
 bool ItemSet::insert(class Item* item, Synthesizer* synthesizer)
 {
     if (items.size() > synthesizer->getMaxItems())
@@ -129,7 +120,6 @@ bool ItemSet::insert(class Item* item, Synthesizer* synthesizer)
         std::ostringstream oss;
         oss << "too much items build : " << items.size() << " (" << synthesizer->getMaxItems() << " Max)";
         throw fatal_exception(oss);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 #ifdef TRACE_INSERT
     std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;

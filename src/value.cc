@@ -19,7 +19,6 @@
 
 #include <sstream>
 #include <utility>
-
 #include "value.hpp"
 #include "environment.hpp"
 #include "pairp.hpp"
@@ -30,11 +29,7 @@
 #include "messages.hpp"
 #include "item.hpp"
 #include "shared_ptr.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-=======
 #include "generator.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #include "vartable.hpp"
 
 valuePtr Value::STATIC_NIL = Value::create(Value::NIL_VALUE);
@@ -221,144 +216,89 @@ pairpPtr Value::getPairp() const
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isNil() const {
-    return (type == _NIL);
-=======
 bool Value::isNil() const
 {
     return (type == NIL_VALUE);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isFalse() const {
-    return ((type == _NIL) || (type == _ANONYMOUS));
-=======
 bool Value::isFalse() const
 {
     return ((type == NIL_VALUE) || (type == ANONYMOUS_VALUE));
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isTrue() const {
-    return (type == _TRUE);
-=======
 bool Value::isTrue() const
 {
     return (type == TRUE_VALUE);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isAnonymous() const {
-    return type == _ANONYMOUS;
-=======
 bool Value::isAnonymous() const
 {
     return type == ANONYMOUS_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isNumber() const {
-    return type == _NUMBER;
-=======
 bool Value::isNumber() const
 {
     return type == NUMBER_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isForm() const {
-    return type == _FORM;
-=======
 bool Value::isForm() const
 {
     return type == FORM_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isFeatures() const {
-    return type == _FEATURES;
-=======
 bool Value::isFeatures() const
 {
     return type == FEATURES_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isConstant() const {
-    return type == _CONSTANT;
-=======
 bool Value::isConstant() const
 {
     return type == CONSTANT_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isVariable() const {
-    return type == _VARIABLE;
-=======
 bool Value::isVariable() const
 {
     return type == VARIABLE_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isIdentifier() const {
-    return type == _CODE;
-=======
 bool Value::isIdentifier() const
 {
     return type == IDENTIFIER_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-bool Value::isList() const {
-    return type == _LIST;
-=======
 bool Value::isPairp() const
 {
     return type == PAIRP_VALUE;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 }
 
 /* **************************************************
@@ -830,25 +770,6 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
         environment->add(o->bits, shared_from_this());
     }
 
-<<<<<<< HEAD
-        // NIL < NIL
-    else if (isNil() && o->isNil()) {
-    }
-
-        // NIL < …
-        // … < NIL
-    else if (isNil() || o->isNil()) {
-    }
-
-        // TRUE < TRUE
-    else if (isTrue() && o->isTrue()) {
-
-    }
-
-        // TRUE < …
-        // … < TRUE
-    else if (isTrue() || o->isTrue()) {
-=======
     // NIL < NIL
     else if (isNil() && o->isNil())
     {
@@ -869,7 +790,6 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
     // … < TRUE
     else if (isTrue() || o->isTrue())
     {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         ret = false;
     }
     else if ((type != o->type))
@@ -1096,35 +1016,6 @@ bool Value::renameVariables(size_t i)
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Value::enable(const statementPtr &root, const itemPtr &item, Application *application, bool &effect, bool on) {
-    switch (type) {
-        case _NIL:
-        case _TRUE:
-        case _CODE:
-        case _FORM:
-        case _CONSTANT:
-        case _NUMBER:
-        case _ANONYMOUS:
-            break;
-        case _VARIABLE:
-            if (on) {
-                if ((!item->getEnvironment()) || (!item->getEnvironment()->find(bits))) {
-                    root->addFlags(Flags::DISABLED);
-                    effect = true;
-                }
-            } else {
-                root->subFlags(Flags::DISABLED);
-                effect = true;
-            }
-            break;
-        case _FEATURES:
-            getFeatures()->enable(root, item, application, effect, on);
-            break;
-        case _LIST:
-            getList()->enable(root, item, application, effect, on);
-            break;
-=======
 void Value::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
 {
     switch (type)
@@ -1159,7 +1050,6 @@ void Value::enable(const statementPtr &root, class Item *item, Synthesizer *synt
     case PAIRP_VALUE:
         getPairp()->enable(root, item, synthesizer, effect, on);
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 }
 
@@ -1198,19 +1088,6 @@ bool Value::findVariable(const bitsetPtr &variable) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-<<<<<<< HEAD
-void Value::apply(const itemPtr &item, Application *application, const statementPtr &variable,
-                  const statementPtr& body,
-                  bool &effect) {
-    switch (type) {
-        case _FEATURES:
-            item->getEnvironment()->add(variable->getBits(), shared_from_this());
-            effect = true;
-            body->apply(item, application, effect);
-            item->getEnvironment()->remove(variable->getBits());
-            break;
-        default: FATAL_ERROR_UNEXPECTED
-=======
 void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                   const statementPtr &statement,
                   bool &effect)
@@ -1243,7 +1120,6 @@ void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
     break;
     default:
         FATAL_ERROR_UNEXPECTED
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 }
 
@@ -1283,13 +1159,9 @@ bool Value::containsVariable()
         break;
     }
     if (result)
-<<<<<<< HEAD
-        this->variableFlag.setFlag(VariableFlag::CONTAINS_VARIABLE);
-=======
         this->variableFlag.setFlag(VariableFlag::CONTAINS);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     else
-        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
+        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
     return result;
 }
 

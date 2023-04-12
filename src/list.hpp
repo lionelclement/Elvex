@@ -107,7 +107,7 @@ public:
     bool renameVariables(size_t);
 
     void
-    apply(const itemPtr& item, class Application* application, const statementPtr& variable, statementPtr body,
+    apply(const itemPtr& item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
           bool &effect);
 
 #ifdef OUTPUT_XML
@@ -116,7 +116,7 @@ public:
 
     listPtr clone(void) const;
 
-  void enable(const statementPtr&, const itemPtr&, class Application* application, bool&, bool);
+    void enable(const statementPtr&, const itemPtr&, class Synthesizer *synthesizer, bool &, bool);
 
     bool subsumes(const listPtr&, const environmentPtr&);
 

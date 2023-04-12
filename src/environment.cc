@@ -223,48 +223,6 @@ redo:
     for (auto it = features->begin(); it != features->end(); ++it)
     {
         featurePtr feature = *it;
-<<<<<<< HEAD
-        switch (feature->getType()) {
-            case Feature::PRED:
-            case Feature::LEMMA:
-                if (feature->getValue())
-                    replaceVariables(feature->getValue(), effect);
-                break;
-            case Feature::FORM:
-            case Feature::CONSTANT:
-                if (feature->getValue()) {
-                    replaceVariables(feature->getValue(), effect);
-                }
-                break;
-            case Feature::VARIABLE: {
-                if (feature->getValue()) {
-                    effect = true;
-                    replaceVariables(feature->getValue(), effect);
-                }
-
-                valuePtr value = find(feature->getAttribute());
-                if (!value) {
-                    /* do nothing */
-                } else if (value->isNil()) {
-                    /* do nothing */
-                } else if (value->isFeatures()) {
-                    features->erase(it);
-                    for (const auto& f : *value->getFeatures()) {
-                        features->add(f);
-                    }
-                    effect = true;
-                    goto redo;
-                } else if (value->isConstant()) {
-                    feature->setType(Feature::CONSTANT);
-                    feature->setAttribute(value->getBits());
-                } else if (value->isAnonymous()) {
-                    features->erase(it);
-                    effect = true;
-                    goto redo;
-                } else {
-                    FATAL_ERROR("environment: variable substitution failed")
-                }
-=======
         switch (feature->_getType())
         {
         case Feature::_HEAD_:
@@ -284,7 +242,6 @@ redo:
             {
                 effect = true;
                 replaceVariables(feature->getValue(), effect);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
             }
 
             valuePtr value = find(feature->getAttribute());
@@ -324,7 +281,7 @@ redo:
         }
         break;
         }
-        features->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
+        features->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
     }
 #ifdef TRACE_ENVIRONMENT
      std::cout << "<H4>Environment::replaceVariables(features) DONE</H4>" << std::endl;
@@ -371,32 +328,6 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
 #endif
     if (!value->containsVariable())
         return;
-<<<<<<< HEAD
-    if (!value->isNil() && !value->isAnonymous()) {
-        switch (value->getType()) {
-            case Value::_NIL:
-            case Value::_TRUE:
-            case Value::_FORM:
-            case Value::_CONSTANT:
-            case Value::_CODE:
-            case Value::_ANONYMOUS:
-            case Value::_NUMBER:
-                break;
-            case Value::_FEATURES:
-                replaceVariables(value->getFeatures(), effect);
-                break;
-            case Value::_LIST:
-                replaceVariables(value->getList(), effect);
-                break;
-            case Value::_VARIABLE:
-                valuePtr val = find(value->getBits());
-                if (val && (val != value)) {
-                    effect = true;
-                    *value = *val;
-                    replaceVariables(value, effect);
-                }
-                break;
-=======
     if (!value->isNil() && !value->isAnonymous())
     {
         switch (value->_getType())
@@ -427,9 +358,8 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
                 replaceVariables(value, effect);
             }
             break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
         }
-        value->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
+        value->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
     }
 #ifdef TRACE_ENVIRONMENT
      std::cout << "<H4>Environment::replaceVariables(value) result</H4>" << std::endl;
@@ -457,23 +387,6 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
 #endif
     if (!pairp->containsVariable())
         return;
-<<<<<<< HEAD
-    switch (list->getType()) {
-        case List::ATOM:
-            if (list->isVariable()) {
-                valuePtr value = this->find(list->getValue()->getBits());
-                if (value->isList()) {
-                    *list = *(value->getList());
-                } else if (value->isNil()) {
-                    *list = *List::NIL_LIST;
-                } else {
-                    list->setValue(value);
-                }
-            } else
-                //if (list->containsVariable())
-                replaceVariables(list->getValue(), effect);
-            break;
-=======
     switch (pairp->getType())
     {
     case Pairp::_ATOM_:
@@ -497,7 +410,6 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
             // if (list->containsVariable())
             replaceVariables(pairp->getValue(), effect);
         break;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     case Pairp::_PAIRP_:
         // if (list->getCar()->containsVariable())
@@ -509,16 +421,6 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
     case Pairp::_NIL_:
         break;
     }
-<<<<<<< HEAD
-    list->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN_VARIABLE);
-    /***
-     std::cerr << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
-     std::cerr << "<table border=\"1\"><tr><th>List</th></tr>";
-     std::cerr << "<tr><td>";
-     list->flatPrint(std::cerr, 0);
-     std::cerr << "</td></tr></table>";
-     ***/
-=======
     pairp->setVariableFlag(VariableFlag::DOES_NOT_CONTAIN);
 #ifdef TRACE_ENVIRONMENT
      std::cout << "<H4>Environment::replaceVariables(list) result</H4>" << std::endl;
@@ -527,7 +429,6 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
      pairp->flatPrint(std::cout, 0);
      std::cout << "</td></tr></table>";
 #endif
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     if (effect)
         pairp->resetSerial();
 }

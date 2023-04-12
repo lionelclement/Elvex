@@ -24,11 +24,7 @@
 #include "messages.hpp"
 #include "item.hpp"
 #include "statement.hpp"
-<<<<<<< HEAD
-#include "application.hpp"
-=======
 #include "generator.hpp"
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 #include "listfeatures.hpp"
 
 /* **************************************************
@@ -113,19 +109,12 @@ void Statements::addStatement(const statementPtr &statement)
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-void Statements::print(std::ostream& outStream, unsigned int tabulation, unsigned int yetColored) const {
-    unsigned int color = yetColored;
-    if (isSetFlags(Flags::SEEN)) {
-        color |= 0x0000FFu;
-=======
 void Statements::print(std::ostream &out, unsigned int tabulation, unsigned int color, bool ln,
                        std::string leftSep, std::string rightSep, std::string sep) const
 {
     if (ln)
     {
         out << "<div>";
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
     if (ln)
     {
@@ -191,12 +180,8 @@ void Statements::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-<<<<<<< HEAD
-statementsPtr Statements::clone(const std::bitset<FLAGS>& protectedFlags) {
-=======
 statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags)
 {
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
     for (list::const_iterator i = this->statements.cbegin(); i != this->statements.cend(); ++i)
@@ -217,70 +202,6 @@ void Statements::renameVariables(size_t i)
 }
 
 /* **************************************************
-<<<<<<< HEAD
- * Applique l'ensemble des instructions
- ************************************************** */
-void Statements::apply(itemPtr item, Application *application, bool& effect) {
-    if (item->isSetFlags(Flags::BOTTOM))
-        return;
-    if (item->isSetFlags(Flags::SEEN)) {
-        FATAL_ERROR_UNEXPECTED
-    }
-
-    if (guard) {
-        if (guard->isUnsetFlags(Flags::SEEN)) {
-            guard->apply(item, application, effect);
-            guard->addFlags(Flags::SEEN);
-            if (guard->isSetFlags(Flags::BOTTOM)) {
-                item->addFlags(Flags::BOTTOM);
-                return;
-            }
-        }
-    }
-
-    loopStatements:
-    bool allDone = true;
-    for (list::iterator statement = statements.begin(); statement != statements.end(); ++statement) {
-        if ((*statement)->isUnsetFlags(Flags::SEEN)) {
-            bool enable_effect = false;
-            (*statement)->enable(*statement, item, application, enable_effect, false);
-            if (enable_effect)
-                (*statement)->enable(*statement, item, application, enable_effect, true);
-            if (enable_effect)
-                allDone = false;
-            if ((*statement)->isSetFlags(Flags::DISABLED)) {
-                allDone = false;
-                continue;
-            }
-            if (!item->getEnvironment() || item->getEnvironment()->size() == 0) {
-                item->setEnvironment(environmentPtr());
-            }
-            effect = false;
-            (*statement)->apply(item, application, effect);
-            if ((*statement)->isSetFlags(Flags::BOTTOM)) {
-                item->addFlags(Flags::BOTTOM);
-                break;
-            }
-            if (effect) {
-                goto loopStatements;
-                //break;
-            }
-        }
-    }
-    if (allDone)
-        this->addFlags(Flags::SEEN);
-
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Statements::enable(itemPtr item, Application *application, bool& effect, bool on) {
-    if (guard)
-        guard->enable(guard, item, application, effect, on);
-    for (list::const_iterator i = statements.begin(); i != statements.end(); ++i) {
-        (*i)->enable(*i, item, application, effect, on);
-=======
  *
  ************************************************** */
 bool Statements::findVariable(const bitsetPtr &variable)
@@ -416,7 +337,6 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
         std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
         item->print(std::cout);
         std::cout << std::endl;
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
     }
 }
 

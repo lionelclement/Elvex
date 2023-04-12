@@ -62,11 +62,7 @@ public:
 
     set_of_item_iterator begin(void);
 
-<<<<<<< HEAD
-    bool insert(const itemPtr&, class Application *);
-=======
     set_of_item_iterator end(void);
->>>>>>> 71ab82fc49d0d601ec20c4c5edee41e89e638723
 
     set_of_item_const_iterator find(class Item *) const;
 
