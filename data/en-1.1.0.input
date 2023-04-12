@@ -41,7 +41,7 @@
 *
 ** */
 
-//Text[HEAD:CAT]
+Text[HEAD:CAT]
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT]]
 
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]

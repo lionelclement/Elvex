@@ -36,7 +36,7 @@ Bitset::Bitset(unsigned int data)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Bitset::Bitset(std::bitset<MAXBITS> &data)
+Bitset::Bitset(const std::bitset<MAXBITS> &data)
     : std::bitset<MAXBITS>(data)
 {
     NEW;

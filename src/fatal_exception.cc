@@ -19,27 +19,24 @@
 
 #include "fatal_exception.hpp"
 
-#include <iostream>
-#include <sstream>
-#include <utility>
+/* **************************************************
+ *
+ ************************************************** */
+fatal_exception::fatal_exception(std::string message)
+    : message(std::move(message))
+{}
 
 /* **************************************************
  *
  ************************************************** */
-fatal_exception::fatal_exception(std::string message) {
-    this->message = message;
-}
+fatal_exception::fatal_exception(std::ostringstream &oss)
+    : message(oss.str())
+{}
 
 /* **************************************************
  *
  ************************************************** */
-fatal_exception::fatal_exception(std::ostringstream& oss) {
-  this->message = oss.str();
-}
-
-/* **************************************************
- *
- ************************************************** */
-std::string fatal_exception::getMessage() {
-    return message;
+const char* fatal_exception::what() const noexcept
+{
+    return message.c_str();
 }

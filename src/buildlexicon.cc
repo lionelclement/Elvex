@@ -184,7 +184,7 @@ int main(int argn, char** argv) {
 		}
 		catch (parser_exception& e) {
 		  std::ostringstream oss;
-		  oss << e.getMessage() << ":\"" << f << "\"";
+		  oss << e.what() << ":\"" << f << "\"";
 		  oss << " " << morphoFile << " (line " << lineno << ")";
 		  throw fatal_exception(oss);
 		}
@@ -367,17 +367,17 @@ int main(int argn, char** argv) {
 	usage();
     }
     catch (fatal_exception &e) {
-      std::cerr << "*** fatal error: " << e.getMessage() << std::endl;
+      std::cerr << "*** fatal error: " << e.what() << std::endl;
       std::flush(std::cerr);
     }
     catch (usage_exception &e) {
-      std::cerr << "*** usage error: " << e.getMessage() << std::endl;
+      std::cerr << "*** usage error: " << e.what() << std::endl;
       usage();
       std::flush(std::cerr);
       return EXIT_FAILURE;
     }
     catch (parser_exception &e) {
-      std::cerr << "*** parser error: " << e.getMessage() << std::endl;
+      std::cerr << "*** parser error: " << e.what() << std::endl;
       std::flush(std::cerr);
       return EXIT_FAILURE;
     }

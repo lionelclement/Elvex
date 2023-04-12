@@ -42,7 +42,7 @@ class Bitset : public std::bitset<MAXBITS>,
 private:
     explicit Bitset(unsigned int = 0);
 
-    explicit Bitset(std::bitset<MAXBITS> &);
+    explicit Bitset(const std::bitset<MAXBITS> &);
 
     explicit Bitset(const bitsetPtr &);
 
@@ -53,7 +53,7 @@ public:
 
     static bitsetPtr create(unsigned int = 0);
 
-    static bitsetPtr create(std::bitset<MAXBITS>);
+    static bitsetPtr create(const std::bitset<MAXBITS>);
 
     static bitsetPtr create(const bitsetPtr &);
 

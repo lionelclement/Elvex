@@ -22,17 +22,17 @@
 
 #include <string>
 #include <exception>
+#include <sstream>
 
 class fatal_exception : public std::exception
 {
-
 private:
     std::string message;
 
 public:
     fatal_exception(std::string message);
     fatal_exception(std::ostringstream &oss);
-    std::string getMessage();
+    const char* what() const noexcept override;
 };
 
 #endif // ELVEX_FATAL_EXCEPTION_HPP
