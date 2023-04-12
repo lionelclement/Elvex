@@ -64,11 +64,13 @@
 
 //S[HEAD:TO_STUDY, i:[HEAD:pro, number:pl, person:three], vtense:present, lexical_function:none, verbal_constr:no_int|no_neg]
 
+/*
 Text[   HEAD:CAUSE,
         i:[HEAD:TO_STUDY, i:[ID:36, HEAD:STUDENT, @p]],
         ii:[HEAD:EUPHORIC, i:[ID:36]],
         tense:present
 ]
+*/
 
 /*
 Text[   HEAD:CAUSE,
@@ -140,11 +142,11 @@ Text[   HEAD:CAUSE,
 //Text [HEAD:TO_FEEL, i:[HEAD:EGO], ii:[HEAD:GOOD]]
 //Text [HEAD:TO_FEEL, i:[HEAD:EGO], ii:[HEAD:PAIN, pcase:none, def:true]]
 
-//Text [HEAD:TO_FEEL_BLUE, i:[HEAD:EGO]]
-//Text [HEAD:TO_FEEL_UNDER_THE_WEATHER, i:[HEAD:EGO]]
-//Text [HEAD:TO_FEEL_ONE_S_OATS, i:[HEAD:EGO]]
-//Text [HEAD:TO_FEEL_ON_TOP_OF_THE_WORLD, i:[HEAD:EGO]]
-//Text [HEAD:TO_FEEL_THE_PINCH, i:[HEAD:EGO]]
+///Text [HEAD:TO_FEEL_BLUE, i:[HEAD:EGO]]
+///Text [HEAD:TO_FEEL_UNDER_THE_WEATHER, i:[HEAD:EGO]]
+///Text [HEAD:TO_FEEL_ONE_S_OATS, i:[HEAD:EGO]]
+///Text [HEAD:TO_FEEL_ON_TOP_OF_THE_WORLD, i:[HEAD:EGO]]
+///Text [HEAD:TO_FEEL_THE_PINCH, i:[HEAD:EGO]]
 
 
 ///Text [HEAD:TO_FEEL, i:[HEAD:YOU], ii:[HEAD:BAD], lexical_function:magn]
