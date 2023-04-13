@@ -856,7 +856,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                             // New item build
                                             class Item *it = createItem(previousItem, row);
                                             it->setEnvironment(
-                                                previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
+                                                previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr)
                                                                                : environmentPtr());
                                             it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
                                                                                  (*i)->getFeatures());
@@ -909,7 +909,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                     {
                                         class Item *it = createItem(previousItem, row);
                                         it->setEnvironment(
-                                            previousItem->getEnvironment() ? previousItem->getEnvironment()->clone()
+                                            previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr)
                                                                            : environmentPtr());
                                         it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
                                                                              (*actualItem)->getSynthesizedFeatures()->clone());
@@ -1151,13 +1151,13 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                                                                      : featuresPtr();
                                     statementsPtr entryStatements = statementsPtr();
                                     environmentPtr env = (*actualItem)->getEnvironment()
-                                                             ? (*actualItem)->getEnvironment()->clone()
+                                                             ? (*actualItem)->getEnvironment()->clone(nullptr)
                                                              : Environment::create();
 
                                     // Filter !!
                                     // entryFeatures subsumes ↑
                                     if (_stage == FORM_FEATURES ||
-                                        (entryFeatures && entryFeatures->subsumes(inheritedSonFeatures, env)))
+                                        (entryFeatures && entryFeatures->subsumes(nullptr, inheritedSonFeatures, env)))
                                     {
 
                                         // New item build

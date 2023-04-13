@@ -67,7 +67,7 @@ public:
 
     void flatPrint(std::ostream &) const;
 
-    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, statementPtr body,
+    void apply(statementPtr from, class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, statementPtr body,
           bool &effect);
 
 #ifdef OUTPUT_XML

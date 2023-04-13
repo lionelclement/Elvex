@@ -524,7 +524,7 @@ bool Item::isCompleted()
 /* **************************************************
  *
  ************************************************** */
-bool Item::addEnvironment(environmentPtr _environment)
+bool Item::addEnvironment(statementPtr from, environmentPtr _environment)
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
@@ -538,13 +538,13 @@ bool Item::addEnvironment(environmentPtr _environment)
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(std::move(_environment));
+    return this->environment->add(from, std::move(_environment));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::addEnvironment(environmentPtr _environment, environmentPtr where)
+bool Item::addEnvironment(statementPtr from, environmentPtr _environment, environmentPtr where)
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
@@ -558,7 +558,7 @@ bool Item::addEnvironment(environmentPtr _environment, environmentPtr where)
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(std::move(_environment), std::move(where));
+    return this->environment->add(from, std::move(_environment), std::move(where));
 }
 
 /* **************************************************
@@ -818,7 +818,7 @@ class Item *Item::clone(const std::bitset<FLAGS> &protectedFlags)
 {
     class Item *it = Item::create(this->rule, this->index, this->indexTerms,
                                   this->statements ? this->statements->clone(protectedFlags) : statementsPtr());
-    it->environment = (this->environment) ? this->environment->clone() : environmentPtr();
+    it->environment = (this->environment) ? this->environment->clone(nullptr) : environmentPtr();
     it->addRanges(this->ranges);
     it->addForestIdentifiers(this->forestIdentifiers);
     it->refs = this->refs;

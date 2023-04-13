@@ -359,7 +359,7 @@ valuePtr Features::find(const bitsetPtr &code) const
 /* **************************************************
  *
  ************************************************** */
-bool Features::buildEnvironment(const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables
+bool Features::buildEnvironment(statementPtr from, const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
 , bool root
 #endif
@@ -420,7 +420,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                     //}
 
                     // Else build environment with the two values
-                    else if (!i1->getValue()->buildEnvironment(environment, i2->getValue(),
+                    else if (!i1->getValue()->buildEnvironment(from, environment, i2->getValue(),
                                                                acceptToFilterNULLVariables, false))
                     {
                         ret = false;
@@ -440,7 +440,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->add(i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
+                            environment->add(from, i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
                         }
                         else
                         {
@@ -459,7 +459,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         }
                         else
                         {
-                            if (!i1->getValue()->buildEnvironment(environment, Value::STATIC_ANONYMOUS,
+                            if (!i1->getValue()->buildEnvironment(from, environment, Value::STATIC_ANONYMOUS,
                                                                   acceptToFilterNULLVariables, false))
                             {
                                 ret = false;
@@ -493,7 +493,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
                         nFeatures->add(i2);
                     }
                 }
-                environment->add(i1->getAttribute(), Value::create(nFeatures));
+                environment->add(from, i1->getAttribute(), Value::create(nFeatures));
             }
         }
     }
@@ -515,7 +515,7 @@ bool Features::buildEnvironment(const environmentPtr &environment, const feature
  *true if this subsumes o
  *if it does, change variables in this
  ************************************************** */
-bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
+bool Features::subsumes(statementPtr from, const featuresPtr &o, const environmentPtr &environment)
 {
 #ifdef TRACE_FEATURES
      COUT_LINE;
@@ -567,7 +567,7 @@ bool Features::subsumes(const featuresPtr &o, const environmentPtr &environment)
                 {
                     valuePtr v1 = i1->getValue();
                     valuePtr v2 = i2->getValue();
-                    if (!v1->subsumes(v2, environment))
+                    if (!v1->subsumes(from, v2, environment))
                     {
                         ret = false;
                     }
@@ -731,13 +731,13 @@ void Features::setVariableFlag(enum VariableFlag::flagValues flag)
 /* **************************************************
  *
  ************************************************** */
-void Features::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Features::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                      const statementPtr &statement,
                      bool &effect)
 {
-    item->getEnvironment()->add(variable->getBits(), Value::create(shared_from_this()));
+    item->getEnvironment()->add(from, variable->getBits(), Value::create(shared_from_this()));
     effect = true;
     statement->toggleEnable(statement, item, synthesizer, effect, false);
-    statement->apply(item, parser, synthesizer, effect);
+    statement->apply(from, item, parser, synthesizer, effect);
     item->getEnvironment()->remove(variable->getBits());
 }

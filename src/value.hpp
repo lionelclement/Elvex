@@ -120,9 +120,9 @@ public:
     void toXML(xmlNodePtr) const;
 #endif
 
-    bool buildEnvironment(const environmentPtr &, const valuePtr &, bool, bool);
+    bool buildEnvironment(statementPtr from, const environmentPtr &, const valuePtr &, bool, bool);
 
-    bool subsumes(const valuePtr &, const environmentPtr &);
+    bool subsumes(statementPtr from, const valuePtr &, const environmentPtr &);
 
     valuePtr clone(void);
 
@@ -164,7 +164,7 @@ public:
 
     bool findVariable(const bitsetPtr &) const;
 
-    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, const statementPtr &body,
+    void apply(statementPtr from, class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, const statementPtr &body,
           bool &effect);
 
     bool containsVariable(void);

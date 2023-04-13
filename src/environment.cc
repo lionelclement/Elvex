@@ -32,6 +32,7 @@
 #include "shared_ptr.hpp"
 #include "listfeatures.hpp"
 #include "bitset.hpp"
+#include "statement.hpp"
 
 /* **************************************************
  *
@@ -66,7 +67,7 @@ environmentPtr Environment::create()
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(const std::string &key, valuePtr value)
+bool Environment::add(statementPtr from, const std::string &key, valuePtr value)
 {
     auto it = env.find(key);
     if (it == env.end())
@@ -83,8 +84,8 @@ bool Environment::add(const std::string &key, valuePtr value)
             return false;
         }
         else {
-            WARNING(__FILE__ << '(' << __LINE__ << ')' << ": *** Error: " << key << " already done !!!" );
-            FATAL_ERROR_UNEXPECTED;
+            WARNING(key << " already done " << from->getBufferName() << " (line " << from->getLineno() << ")");
+            //FATAL_ERROR_UNEXPECTED;
             return false;
         }   
     }
@@ -102,33 +103,33 @@ bool Environment::remove(const std::string &key)
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(const bitsetPtr &attr, valuePtr value)
+bool Environment::add(statementPtr from, const bitsetPtr &attr, valuePtr value)
 {
     const std::string key = attr->toString();
-    return add(key, std::move(value));
+    return add(from, key, std::move(value));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(const environmentPtr &e)
+bool Environment::add(statementPtr from, const environmentPtr &e)
 {
     bool ok = true;
     for (const auto &i : *e)
-        ok &= add(i.first, i.second);
+        ok &= add(from, i.first, i.second);
     return ok;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(const environmentPtr &e, const environmentPtr &where)
+bool Environment::add(statementPtr from, const environmentPtr &e, const environmentPtr &where)
 {
     bool ok = true;
     if (where)
         for (const auto &i : *e)
             if (where->env.find(i.first) != where->env.end())
-                ok &= add(i.first, i.second);
+                ok &= add(from, i.first, i.second);
     return ok;
 }
 
@@ -492,12 +493,12 @@ void Environment::replaceVariables(std::string &str, bool &effect)
 /* **************************************************
  *
  ************************************************** */
-environmentPtr Environment::clone() const
+environmentPtr Environment::clone(statementPtr from) const
 {
     environmentPtr environment = Environment::create();
     for (const auto &i : *this)
     {
-        if (!environment->add(i.first, (i.second) ? i.second->clone() : valuePtr()))
+        if (!environment->add(from, i.first, (i.second) ? i.second->clone() : valuePtr()))
             throw fatal_exception("environment not clonable");
     }
     return environment;

@@ -529,7 +529,7 @@ valuePtr Value::clone()
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root)
+bool Value::buildEnvironment(statementPtr from, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root)
 {
 #ifdef TRACE_BUILD_ENVIRONMENT
     COUT_LINE;
@@ -558,7 +558,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case NIL_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->add(from, value->bits, shared_from_this());
         }
         else if (value->type == NIL_VALUE)
         {
@@ -575,11 +575,11 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case FEATURES_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->add(from, value->bits, shared_from_this());
         }
         else if (value->type == FEATURES_VALUE)
         {
-            if (!this->getFeatures()->buildEnvironment(environment, value->getFeatures(),
+            if (!this->getFeatures()->buildEnvironment(from, environment, value->getFeatures(),
                                                        acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
                                                 , true
@@ -589,7 +589,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
-            if (!this->getFeatures()->buildEnvironment(environment, Features::create(),
+            if (!this->getFeatures()->buildEnvironment(from, environment, Features::create(),
                                                        acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
                                                 , root
@@ -606,7 +606,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case CONSTANT_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->add(from, value->bits, shared_from_this());
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -630,7 +630,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case IDENTIFIER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->add(from, value->bits, shared_from_this());
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -654,7 +654,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case NUMBER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->add(from, value->bits, shared_from_this());
         }
         else if (value->type == NUMBER_VALUE)
         {
@@ -675,7 +675,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case FORM_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->add(from, value->bits, shared_from_this());
         }
         else if (value->type == FORM_VALUE)
         {
@@ -696,14 +696,14 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case PAIRP_VALUE:
         if (value->type == PAIRP_VALUE)
         {
-            if (!this->getPairp()->buildEnvironment(environment, value->getPairp(),
+            if (!this->getPairp()->buildEnvironment(from, environment, value->getPairp(),
                                                     acceptToFilterNULLVariables,
                                                     root))
                 ret = false;
         }
         else if (value->type == VARIABLE_VALUE)
         {
-            environment->add(value->bits, shared_from_this());
+            environment->add(from, value->bits, shared_from_this());
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
@@ -717,11 +717,11 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
     case VARIABLE_VALUE:
         if (!value)
         {
-            ret = environment->add(this->bits, STATIC_NIL);
+            ret = environment->add(from, this->bits, STATIC_NIL);
         }
         else
         {
-            ret = environment->add(this->bits, value);
+            ret = environment->add(from, this->bits, value);
         }
         break;
 
@@ -741,7 +741,7 @@ bool Value::buildEnvironment(const environmentPtr &environment, const valuePtr &
 /* ************************************************************
  * this < o
  ************************************************************ */
-bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
+bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr &environment)
 {
     bool ret = true;
 #ifdef TRACE_BUILD_ENVIRONMENT
@@ -761,13 +761,13 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
     // $X < …
     if (type == VARIABLE_VALUE)
     {
-        environment->add(bits, o);
+        environment->add(from, bits, o);
     }
 
     // … < $X
     else if (o->type == VARIABLE_VALUE)
     {
-        environment->add(o->bits, shared_from_this());
+        environment->add(from, o->bits, shared_from_this());
     }
 
     // NIL < NIL
@@ -818,10 +818,10 @@ bool Value::subsumes(const valuePtr &o, const environmentPtr &environment)
                 ret = false;
             break;
         case FEATURES_VALUE:
-            ret = getFeatures()->subsumes(o->getFeatures(), environment);
+            ret = getFeatures()->subsumes(from, o->getFeatures(), environment);
             break;
         case PAIRP_VALUE:
-            ret = getPairp()->subsumes(o->getPairp(), environment);
+            ret = getPairp()->subsumes(from, o->getPairp(), environment);
             break;
 
         default:
@@ -1088,7 +1088,7 @@ bool Value::findVariable(const bitsetPtr &variable) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Value::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                   const statementPtr &statement,
                   bool &effect)
 {
@@ -1111,10 +1111,10 @@ void Value::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, co
         if (!item->getEnvironment()){
             item->setEnvironment(Environment::create());
         }
-        item->getEnvironment()->add(variable->getBits(), shared_from_this());
+        item->getEnvironment()->add(from, variable->getBits(), shared_from_this());
         bool b = false;
         statement->toggleEnable(statement, item, synthesizer, b, false);
-        statement->apply(item, parser, synthesizer, effect);
+        statement->apply(from, item, parser, synthesizer, effect);
         item->getEnvironment()->remove(variable->getBits());
     }
     break;

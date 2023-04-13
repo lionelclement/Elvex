@@ -166,13 +166,13 @@ public:
 
     void addForestIdentifiers(std::vector<class ForestIdentifier *> &);
 
-    void buildSynthesizedFeatures(class Synthesizer *);
+    void buildSynthesizedFeatures(statementPtr from, class Synthesizer *);
 
-    void buildInheritedSonFeatures(class Synthesizer *);
+    void buildInheritedSonFeatures(statementPtr from, class Synthesizer *);
 
-    bool addEnvironment(environmentPtr);
+    bool addEnvironment(statementPtr from, environmentPtr);
 
-    bool addEnvironment(environmentPtr, environmentPtr);
+    bool addEnvironment(statementPtr from, environmentPtr, environmentPtr);
 
     void addStatements(const statementsPtr &);
 

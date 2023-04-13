@@ -265,6 +265,8 @@ public:
 
     unsigned int getLineno() const;
 
+    std::string getBufferName() const;
+
     void brln(std::ostream &out, int tabulation) const;
 
     void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
@@ -275,7 +277,7 @@ public:
 
     valuePtr evalValue(class Item *, Parser &, Synthesizer *, bool);
 
-    static featuresPtr unif(statementPtr self, const featuresPtr &, const featuresPtr &, class Item *);
+    static featuresPtr _unif(statementPtr from, const featuresPtr &, const featuresPtr &, class Item *);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
@@ -283,21 +285,21 @@ public:
 
     void buildSynthesizedFeatures(class Item *, Parser &, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithInherited(class Item *, Parser &, Synthesizer *synthesizer);
+    void buildEnvironmentWithInherited(statementPtr from, class Item *, Parser &, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithSynthesize(class Item *, Parser &, Synthesizer *synthesizer);
+    void buildEnvironmentWithSynthesize(statementPtr from, class Item *, Parser &, Synthesizer *synthesizer);
 
-    void buildEnvironmentWithValue(class Item *, Parser &, Synthesizer *);
+    void buildEnvironmentWithValue(statementPtr from, class Item *, Parser &, Synthesizer *);
 
     void stmAttest(class Item *, class Parser &, class Synthesizer *);
 
-    void stmGuard(class Item *);
+    void stmGuard(statementPtr from, class Item *);
 
-    void stmForeach(class Item *item, class Parser &, class Synthesizer *, bool &);
+    void stmForeach(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
 
-    void stmIf(class Item *item, class Parser &, class Synthesizer *, bool &);
+    void stmIf(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
 
-    void stmWait(class Item *item, class Parser &, class Synthesizer *, bool &);
+    void stmWait(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
 
     void stmPrint(class Item *, class Parser &, class Synthesizer *);
 
@@ -307,7 +309,7 @@ public:
 
     void toggleEnable(const statementPtr &, class Item *, class Synthesizer *, bool &, bool);
 
-    void apply(class Item *, class Parser &, class Synthesizer *, bool &);
+    void apply(statementPtr from, class Item *, class Parser &, class Synthesizer *, bool &);
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 

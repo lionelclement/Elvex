@@ -94,7 +94,7 @@ public:
 
     valuePtr find(const bitsetPtr &) const;
 
-    bool buildEnvironment(const environmentPtr &, const featuresPtr &, bool
+    bool buildEnvironment(statementPtr from, const environmentPtr &, const featuresPtr &, bool
 #ifdef TRACE_BUILD_ENVIRONMENT
     ,bool
 #endif
@@ -114,7 +114,7 @@ public:
 
     void enable(const statementPtr &, class Item *, class Synthesizer *synthesizer, bool &, bool);
 
-    bool subsumes(const featuresPtr &, const environmentPtr &);
+    bool subsumes(statementPtr from, const featuresPtr &, const environmentPtr &);
 
     void deleteAnonymousVariables();
 
@@ -126,7 +126,7 @@ public:
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 
-    void apply(class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+    void apply(statementPtr from, class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
                   const statementPtr& body,
                   bool &effect);
 

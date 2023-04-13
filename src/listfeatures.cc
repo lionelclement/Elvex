@@ -171,11 +171,11 @@ void ListFeatures::flatPrint(std::ostream &outStream) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void ListFeatures::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr statement,
+void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr statement,
                          bool &effect)
 {
     for (auto &features : listFeatures) {
-        features->apply(item, parser, synthesizer, variable, statement->clone(0), effect);
+        features->apply(from, item, parser, synthesizer, variable, statement->clone(0), effect);
     }
 }
 

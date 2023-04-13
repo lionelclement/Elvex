@@ -41,7 +41,7 @@ Text → NP {
 /* **************************************************
  * 
  ************************************************** */
-S_tense → S_cor {
+S_tense → S_anaphoric {
   [tense:$tense, $rest];
   [mode:$mode, vtense:$vtense, aspect:$aspect] ⊂ ↑;
 
@@ -89,14 +89,13 @@ S_tense → S_cor {
   ⇑ = ⇓1;
 }
 
-
 /* **************************************************
 * [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R]
 * [i:$I] ⊂ ↑;
 * =>
 * [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R]
  ************************************************** */
-S_cor → S_mod {
+S_anaphoric → S_mod {
   [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
   attest ($ID1 == $ID2);
   [i:$I] ⊂ ↑;
@@ -104,7 +103,7 @@ S_cor → S_mod {
   ⇑ = ⇓1;
 }
 
-S_cor → S_mod {
+S_anaphoric → S_mod {
   [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R] ⊂ ↑;
   attest (¬$ID1 ∨ ¬$ID2 ∨ $ID1 != $ID2);
   ↓1 = ↑;
@@ -137,7 +136,7 @@ S_mod → S {
 /* **************************************************
  * Cause : conclusion when premise
  ************************************************** */
-S → S_cor form S_cor {
+S → S_anaphoric form S_anaphoric {
   [HEAD:CAUSE, i:$premise, ii:$conclusion, $REST];
 
 
@@ -287,6 +286,7 @@ S → aux NP|cln VP strongPunct {
 /* **************************************************
  * Noun phrase
  ************************************************** */
+@trace
 NP → det N1 {
   [def:$def, number:$number, $REST] ⊂ ⇓2;
   wait(⇓2) {
@@ -297,7 +297,7 @@ NP → det N1 {
     ↓1 = [def:$def, number:$number, $REST];
   }
   ↓2 = ↑;
-  ⇑ = ⇓2 ∪ [@_3];
+  ⇑ = ⇓1 ∪ ⇓2 ∪ [def:$def, @_3];
 }
 
 NP → proper_noun {
@@ -327,7 +327,7 @@ N1 → [adjQuality] N2 {
   }
   attest (↓1 => #1);
   ↓2 = ↑; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
@@ -340,7 +340,7 @@ N2 → [adjSize] N3 {
   }
   attest (↓1 => #1);
   ↓2 = ↑; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
@@ -353,7 +353,7 @@ N3 → [adjAge] N4 {
   }
   attest (↓1 => #1);
   ↓2 = ↑; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
@@ -366,7 +366,7 @@ N4 → [adjShape] N5 {
   }
   attest (↓1 => #1);
   ↓2 = ↑; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
@@ -379,7 +379,7 @@ N5 → [adjColor] N6 {
   }
   attest (↓1 => #1);
   ↓2 = ↑; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
@@ -392,7 +392,7 @@ N6 → [adjOrigin] N7 {
   }
   attest (↓1 => #1);
   ↓2 = ↑; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
@@ -405,7 +405,7 @@ N7 → [adjMaterial] N8 {
   }
   attest (↓1 => #1);
   ↓2 = ↑; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
@@ -418,14 +418,14 @@ N8 → [adjPurpose] N {
   }
   attest (↓1 => #1);
   ↓2 = $Rest; 
-  ⇑ = ⇓1;
+  ⇑ = ⇓2;
 }
 
 @trace
 N → common_noun {
   [MOD:NIL, $REST];
   ↓1 = $REST;
-  ⇑ = ⇓1;
+  ⇑ = ⇓1 ∪ ↑;
 }
 
 /* **************************************************

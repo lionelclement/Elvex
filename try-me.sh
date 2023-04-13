@@ -23,13 +23,13 @@
 #    ./bin/elvex --trace -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
 #done
 
+#(cd data ; ../bin/elvex -V -rulesFile fr-slang.rules)
 
 ##################################################
-#make -C data en-1.1.0.fsa
-./bin/elvex -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; cat data/en-1.1.0.html
+make -C data en-1.1.0.fsa
+./bin/elvex --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; cat data/en-1.1.0.html
 #./bin/elvex --traceAll -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; cat data/en-1.1.0.html
 #./bin/elvex --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input
 # > data/en-1.1.0.html ; cat data/en-1.1.0.html
 #lldb bin/elvex -- --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input
 
-(cd data ; ../bin/elvex -V -rulesFile fr-slang.rules)

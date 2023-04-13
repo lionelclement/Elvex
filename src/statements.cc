@@ -234,7 +234,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
             item->print(std::cout);
             std::cout << std::endl;
         }
-        guard->apply(item, parser, synthesizer, effect);
+        guard->apply(guard, item, parser, synthesizer, effect);
         guard->addFlags(Flags::SEEN);
         if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
@@ -299,7 +299,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
                 item->setEnvironment(environmentPtr());
             }
             effect = false;
-            (*statement)->apply(item, parser, synthesizer, effect);
+            (*statement)->apply((*statement), item, parser, synthesizer, effect);
             if ((*statement)->isSetFlags(Flags::BOTTOM))
             {
                 addFlags(Flags::BOTTOM);
