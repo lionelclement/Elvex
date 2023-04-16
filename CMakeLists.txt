@@ -131,10 +131,10 @@ if (LibXml2_FOUND)
             MEMOIZATION
             RESTORE_MEMORY
             MAXBITS=512
-            MAXLENGTH=1000
-            MAXUSAGES=1000
-            MAXITEMS=1000
-            MAXATTEMPTS=1000
+            MAXLENGTH=12000
+            MAXUSAGES=12000
+            MAXITEMS=12000
+            MAXATTEMPTS=12000
             #TRACE_ENVIRONMENT
             #TRACE_BUILD_ENVIRONMENT
             #TRACE_ENABLE_STATEMENT

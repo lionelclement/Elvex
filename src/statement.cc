@@ -112,7 +112,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 }
 
 /* **************************************************
- * AFF SUBSUME IF IF_CON_T WAIT FOREACH FOREACH_CON_T UNIF
+ * AFF SUBSUME IF IF_CON_T DEFERRED FOREACH FOREACH_CON_T UNIF
  ************************************************** */
 statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs)
 {
@@ -335,9 +335,9 @@ bool Statement::isForeach() const
 /* **************************************************
  *
  ************************************************** */
-bool Statement::isWait() const
+bool Statement::isDeferred() const
 {
-    return op == WAIT_STATEMENT;
+    return op == DEFERRED_STATEMENT;
 }
 
 /* **************************************************
@@ -510,233 +510,199 @@ void Statement::brln(std::ostream &out, int tabulation) const
 /* **************************************************
  *
  ************************************************** */
-void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored) const
+void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned int tabulation, unsigned int color, unsigned int bgcolor) const
 {
 #define BLACK 0x000000u
 #define RED 0xFF0000u
-#define GREEN 0x00FF00u
+#define PINK 0xFFC0CBu
+#define GREEN 0x90EE90u
 #define BLUE 0x0000FFu
-#define GRAY 0xC0C0C0u
-    unsigned int color = yetColored;
+#define GRAY 0xB7B7B7u
+#define OPENSPAN if (color) out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";background-color:#" << std::setw(6) << std::hex << bgcolor << ";\">";
+#define CLOSESPAN if (color) out << "</SPAN>";
+#define BR out << "<BR>";
+    
     if (isSetFlags(Flags::SEEN))
-    {
         color |= BLUE;
-    }
     if (isSetFlags(Flags::DISABLED))
-    {
         color |= GRAY;
-    }
     if (isSetFlags(Flags::BOTTOM))
-    {
         color |= RED;
-    }
 
     switch (this->op)
     {
-    case ATTEST_STATEMENT:
-    case ASSIGNMENT_STATEMENT:
-    case SUBSUME_STATEMENT:
-    case PRINT_STATEMENT:
-    case PRINTLN_STATEMENT:
+
     case GUARD_STATEMENT:
-        if (color)
-        {
-            out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";
-        }
+        OPENSPAN;
+        getFeatures()->flatPrint(out);
+        out << ";";
+        BR;
+        CLOSESPAN;
         break;
-    case STMS_STATEMENT:
-        if ((color & GRAY) == GRAY)
-        {
-            out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << (color & GRAY) << ";\">";
-        }
-    default:
+    
+    case ATTEST_STATEMENT:
+        OPENSPAN;
+        out << "<B>attest</B>&nbsp;";
+        lhs->print(out);
+        out << ";";
+        BR;
+        CLOSESPAN;
         break;
-    }
-
-    switch (this->op)
-    {
-
+    
+    case ASSIGNMENT_STATEMENT:
+        OPENSPAN;
+        lhs->print(out);
+        out << "&nbsp;=&nbsp;";
+        rhs->print(out);
+        out << ";";
+        BR;
+        CLOSESPAN;
+        break;
+    
+    case SUBSUME_STATEMENT:
+        OPENSPAN;
+        lhs->print(out);
+        out << "&nbsp;⊂&nbsp;";
+        rhs->print(out);
+        out << ";";
+        BR;
+        CLOSESPAN;
+        break;
+    
+    case PRINT_STATEMENT:
+        OPENSPAN;
+        out << "<B>print</B>&nbsp;";
+        getStatements()->print(out, tabulationLenght, tabulation, color, bgcolor, false, "(", ")", ",&nbsp;");
+        out << ";";
+        BR;
+        CLOSESPAN;
+        break;
+    
+    case PRINTLN_STATEMENT:
+        OPENSPAN;
+        out << "<B>println</B>&nbsp;";
+        getStatements()->print(out, tabulationLenght, tabulation, color, bgcolor, false, "(", ")", ",&nbsp;");
+        out << ";";
+        BR;
+        CLOSESPAN;
+        break;
+    
+    case SEARCH_STATEMENT:
+        out << "<B>search</B>&nbsp;";
+        lhs->print(out);
+        out << "&nbsp;<B>on</B>&nbsp;";
+        out << Vartable::codeToString(first);
+        break;
+    
     case STMS_STATEMENT:
-        getStatements()->print(out, tabulation, yetColored, true, "{", "}", "");
+        getStatements()->print(out, tabulationLenght, tabulation, color, bgcolor, true, "{", "}", "");
         break;
 
     case IF_STATEMENT:
-        if (color)
-        {
-            out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";
-        }
-        out << "if&nbsp;(";
+            OPENSPAN;
+        out << "<B>if</B>&nbsp;(";
         lhs->print(out);
         out << ')';
-        if (color)
-        {
-            out << "</SPAN>";
-        }
-        rhs->print(out, tabulation, color);
+            CLOSESPAN;
+        rhs->print(out, tabulationLenght, tabulation, color, bgcolor);
         break;
 
     case IF_CON_T_STATEMENT:
         if (lhs->isSetFlags(Flags::REJECTED))
-        {
-            out << "<S>";
-        }
+            bgcolor = PINK;
         if (lhs->isSetFlags(Flags::CHOOSEN))
-        {
-            out << "<U>";
-        }
+            bgcolor = GREEN;
         if (lhs->isStms())
-        {
-            lhs->print(out, tabulation, color);
-        }
+            lhs->print(out, tabulationLenght, tabulation, color, bgcolor);
         else
         {
-            brln(out, tabulation + 3);
-            lhs->print(out, tabulation + 3, color);
-        }
-        if (lhs->isSetFlags(Flags::CHOOSEN))
-        {
-            out << "</U>";
-        }
-        if (lhs->isSetFlags(Flags::REJECTED))
-        {
-            out << "</S>";
+            brln(out, tabulation + tabulationLenght);
+            lhs->print(out, tabulationLenght, tabulation + tabulationLenght, color, bgcolor);
         }
 
         if (rhs)
         {
             for (unsigned int j = 1; j <= tabulation; j++)
                 out << "&nbsp;";
-            out << "else ";
+                OPENSPAN;
+            out << "<B>else</B>";
+                CLOSESPAN;
 
             if (rhs->isSetFlags(Flags::REJECTED))
-            {
-                out << "<S>";
-            }
+                bgcolor = PINK;
             if (rhs->isSetFlags(Flags::CHOOSEN))
-            {
-                out << "<U>";
-            }
+                bgcolor = GREEN;
             if (rhs->isStms())
-            {
-                rhs->print(out, tabulation, color);
-            }
+                rhs->print(out, tabulationLenght, tabulation, color, bgcolor);
             else
             {
-                brln(out, tabulation + 3);
-                rhs->print(out, tabulation + 3, color);
-            }
-            if (rhs->isSetFlags(Flags::CHOOSEN))
-            {
-                out << "</U>";
-            }
-            if (rhs->isSetFlags(Flags::REJECTED))
-            {
-                out << "</S>";
+                brln(out, tabulation + tabulationLenght);
+                rhs->print(out, tabulationLenght, tabulation + tabulationLenght, color, bgcolor);
             }
         }
         break;
 
-    case WAIT_STATEMENT:
-        if (color)
-        {
-            out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";
-        }
-        out << "wait&nbsp;(";
+    case DEFERRED_STATEMENT:
+            OPENSPAN;
+        out << "<B>deferred</B>&nbsp;(";
         lhs->print(out);
         out << ')';
-        if (color)
-        {
-            out << "</SPAN>";
-        }
+            CLOSESPAN;
         if (rhs->isStms())
         {
-            rhs->print(out, tabulation, color);
+            rhs->print(out, tabulationLenght, tabulation, color);
         }
         else
         {
-            brln(out, tabulation + 3);
-            rhs->print(out, tabulation + 3, color);
+            brln(out, tabulation + tabulationLenght);
+            rhs->print(out, tabulationLenght, tabulation + tabulationLenght, color);
         }
         break;
 
     case FOREACH_STATEMENT:
-        if (color)
-        {
-            out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";
-        }
-        out << "foreach&nbsp;";
+            OPENSPAN;
+        out << "<B>foreach</B>&nbsp;";
         lhs->print(out);
         out << "&nbsp;";
-        if (color)
-        {
-            out << "</SPAN>";
-        }
-        rhs->print(out, tabulation, color);
+            CLOSESPAN;
+        rhs->print(out, tabulationLenght, tabulation, color);
         break;
 
     case FOREACH_CON_T_STATEMENT:
-        if (color)
-        {
-            out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";\">";
-        }
-        out << "in&nbsp;";
+            OPENSPAN;
+        out << "<B>in</B>&nbsp;";
         lhs->print(out);
-        if (color)
-        {
-            out << "</SPAN>";
-        }
+            CLOSESPAN;
         if (rhs->isStms())
-        {
-            rhs->print(out, tabulation, color);
-        }
+            rhs->print(out, tabulationLenght, tabulation, color);
         else
         {
-            brln(out, tabulation + 3);
-            rhs->print(out, tabulation + 3, color);
+            brln(out, tabulation + tabulationLenght);
+            rhs->print(out, tabulationLenght, tabulation + tabulationLenght, color);
         }
         break;
 
-    case ATTEST_STATEMENT:
-        out << "attest&nbsp;";
-        lhs->print(out);
-        break;
     case NIL_STATEMENT:
-        out << "NIL";
+        out << "<B>NIL</B>";
         break;
-    case ASSIGNMENT_STATEMENT:
-        lhs->print(out);
-        out << "&nbsp;=&nbsp;";
-        rhs->print(out);
-        break;
-    case SUBSUME_STATEMENT:
-        lhs->print(out);
-        out << "&nbsp;⊂&nbsp;";
-        rhs->print(out);
-        break;
+    
     case CONSTANT_STATEMENT:
     case VARIABLE_STATEMENT:
         out << getBits()->toString();
         break;
+    
     case ANONYMOUS_STATEMENT:
         out << '_';
         break;
-    case PRINT_STATEMENT:
-        out << "print&nbsp;";
-        getStatements()->print(out, tabulation, yetColored, false, "(", ")", ",&nbsp;");
-        break;
-    case PRINTLN_STATEMENT:
-        out << "println&nbsp;";
-        getStatements()->print(out, tabulation, yetColored, false, "(", ")", ",&nbsp;");
-        break;
+    
     case FEATURES_STATEMENT:
         getFeatures()->flatPrint(out);
         break;
+    
     case PAIRP_STATEMENT:
         getPairp()->flatPrint(out, true);
         break;
-    case GUARD_STATEMENT:
-        getFeatures()->flatPrint(out);
-        break;
+    
     case UNIF_STATEMENT:
         out << "&nbsp;(";
         lhs->print(out);
@@ -744,47 +710,45 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
         rhs->print(out);
         out << ")&nbsp;";
         break;
+    
     case INHERITED_FEATURES_STATEMENT:
         out << "↑";
         break;
+    
     case SYNTHESIZED_FEATURES_STATEMENT:
         out << "⇑";
         break;
+    
     case DASH_STATEMENT:
         out << '#' << std::to_string(getFirst() + 1);
         if (getSecond() != UINT_MAX)
-        {
             out << "." << std::to_string(getSecond() + 1);
-        }
         break;
+    
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
         out << "↓" << getFirst() + 1;
         if (getSecond() != UINT_MAX)
-        {
             out << "." << getSecond() + 1;
-        }
         break;
+    
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
         out << "⇓";
         out << getFirst() + 1;
         break;
+    
     case STRING_STATEMENT:
         out << "&quot;" << getString() << "&quot;";
         break;
+    
     case NUMBER_STATEMENT:
         out << getNumber();
         break;
-    case SEARCH_STATEMENT:
-        out << "search&nbsp;";
-        lhs->print(out);
-        out << "&nbsp;on&nbsp;";
-        out << Vartable::codeToString(first);
-        break;
+    
     case FUNCTION_STATEMENT:
         switch (this->getFct())
         {
         case NOP:
-            out << "nop&nbsp;";
+            out << "<B>nop</B>&nbsp;";
             break;
         case NOT:
             out << "¬";
@@ -803,20 +767,6 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
             out << "&nbsp;(";
             lhs->print(out);
             out << "&nbsp;∨&nbsp;";
-            rhs->print(out);
-            out << ")&nbsp;";
-            break;
-        case EQ:
-            out << "&nbsp;(";
-            lhs->print(out);
-            out << "&nbsp;==&nbsp;";
-            rhs->print(out);
-            out << ")&nbsp;";
-            break;
-        case DIFF:
-            out << "&nbsp;(";
-            lhs->print(out);
-            out << "&nbsp;≠&nbsp;";
             rhs->print(out);
             out << ")&nbsp;";
             break;
@@ -855,6 +805,20 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
             rhs->print(out);
             out << ")&nbsp;";
             break;
+        case EQ:
+            out << "&nbsp;(";
+            lhs->print(out);
+            out << "&nbsp;==&nbsp;";
+            rhs->print(out);
+            out << ")&nbsp;";
+            break;
+        case DIFF:
+            out << "&nbsp;(";
+            lhs->print(out);
+            out << "&nbsp;≠&nbsp;";
+            rhs->print(out);
+            out << ")&nbsp;";
+            break;
         case LT:
             out << "&nbsp;(";
             lhs->print(out);
@@ -887,7 +851,7 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
             out << "-&nbsp;";
             lhs->print(out);
             break;
-        case RAND:
+        case RANDOM:
             out << "rand()";
             break;
         default:
@@ -895,29 +859,6 @@ void Statement::print(std::ostream &out, unsigned int tabulation, int yetColored
         }
     }
 
-    switch (this->op)
-    {
-    case STMS_STATEMENT:
-        if ((color & GRAY) == GRAY)
-        {
-            out << "</SPAN>";
-        }
-        break;
-    case ATTEST_STATEMENT:
-    case ASSIGNMENT_STATEMENT:
-    case SUBSUME_STATEMENT:
-    case PRINT_STATEMENT:
-    case PRINTLN_STATEMENT:
-    case GUARD_STATEMENT:
-        if (color)
-        {
-            out << "</SPAN>";
-        }
-        out << ";<BR>";
-        break;
-    default:
-        break;
-    }
 }
 
 /* **************************************************
@@ -929,70 +870,70 @@ void Statement::makeSerialString()
     switch (this->op)
     {
     case ATTEST_STATEMENT:
-        serialString = 'A' + lhs->peekSerialString();
+        serialString = '\x0' + lhs->peekSerialString();
         break;
     case NIL_STATEMENT:
-        serialString = 'N';
+        serialString = '\x1';
         break;
     case ASSIGNMENT_STATEMENT:
-        serialString = lhs->peekSerialString() + '=' + rhs->peekSerialString();
+        serialString = '\x2' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case SUBSUME_STATEMENT:
-        serialString = lhs->peekSerialString() + "⊂" + rhs->peekSerialString();
+        serialString = '\x3' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case FUNCTION_STATEMENT:
         switch (this->getFct())
         {
         case NOP:
-            serialString = ';';
+            serialString = '\x4';
             break;
         case NOT:
-            serialString = "¬(" + lhs->peekSerialString() + ')';
+            serialString = '\x5' + lhs->peekSerialString();
             break;
         case AND:
-            serialString = '(' + lhs->peekSerialString() + "∧" + rhs->peekSerialString() + ')';
+            serialString = '\x6' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case OR:
-            serialString = '(' + lhs->peekSerialString() + "∨" + rhs->peekSerialString() + ')';
+            serialString = '\x7' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case DIFF:
-            serialString = '(' + lhs->peekSerialString() + "≠" + rhs->peekSerialString() + ')';
+            serialString = '\x8' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case EQ:
-            serialString = '(' + lhs->peekSerialString() + "==" + rhs->peekSerialString() + ')';
+            serialString = '\x9' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case PLUS:
-            serialString = '(' + lhs->peekSerialString() + '+' + rhs->peekSerialString() + ')';
+            serialString = '\xA' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case MINUS:
-            serialString = '(' + lhs->peekSerialString() + '-' + rhs->peekSerialString() + ')';
+            serialString = '\xB' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case TIMES:
-            serialString = '(' + lhs->peekSerialString() + '*' + rhs->peekSerialString() + ')';
+            serialString = '\xC' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case DIVIDE:
-            serialString = '(' + lhs->peekSerialString() + '/' + rhs->peekSerialString() + ')';
+            serialString = '\xD' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case MODULO:
-            serialString = '(' + lhs->peekSerialString() + '%' + rhs->peekSerialString() + ')';
+            serialString = '\xE' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case LT:
-            serialString = '(' + lhs->peekSerialString() + '<' + rhs->peekSerialString() + ')';
+            serialString = '\xF' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case LE:
-            serialString = '(' + lhs->peekSerialString() + "≤" + rhs->peekSerialString() + ')';
+            serialString = '\x10' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case GT:
-            serialString = '(' + lhs->peekSerialString() + '>' + rhs->peekSerialString() + ')';
+            serialString = '\x11' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case GE:
-            serialString = '(' + lhs->peekSerialString() + "≥" + rhs->peekSerialString() + ')';
+            serialString = '\x12' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case MINUS_U:
-            serialString = '-' + lhs->peekSerialString();
+            serialString = '\x13' + lhs->peekSerialString();
             break;
-        case RAND:
-            serialString = "r()";
+        case RANDOM:
+            serialString = '\x14';
             break;
         }
         break;
@@ -1001,13 +942,13 @@ void Statement::makeSerialString()
         serialString = getBits()->peekSerialString();
         break;
     case ANONYMOUS_STATEMENT:
-        serialString = '_';
+        serialString = '\x15';
         break;
     case PRINT_STATEMENT:
-        serialString = "P " + getStatements()->peekSerialString();
+        serialString = '\x16' + getStatements()->peekSerialString();
         break;
     case PRINTLN_STATEMENT:
-        serialString = "PL " + getStatements()->peekSerialString();
+        serialString = '\x17' + getStatements()->peekSerialString();
         break;
     case FEATURES_STATEMENT:
         serialString = getFeatures()->peekSerialString();
@@ -1016,51 +957,51 @@ void Statement::makeSerialString()
         serialString = getPairp()->peekSerialString();
         break;
     case GUARD_STATEMENT:
-        serialString = "G " + getFeatures()->peekSerialString();
+        serialString = '\x18' + getFeatures()->peekSerialString();
         break;
     case UNIF_STATEMENT:
-        serialString = '(' + lhs->peekSerialString() + "∪" + rhs->peekSerialString() + ')';
+        serialString = '\x19' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case INHERITED_FEATURES_STATEMENT:
-        serialString = "↑";
+        serialString = '\x1A';
         break;
     case SYNTHESIZED_FEATURES_STATEMENT:
-        serialString = "⇑";
+        serialString = '\x1B';
         break;
     case DASH_STATEMENT:
-        serialString = '#' + std::to_string(getFirst() + 1);
+        serialString = '\x1C' + std::to_string(getFirst());
         if (getSecond() != UINT_MAX)
-            serialString += "." + std::to_string(getSecond() + 1);
+            serialString += '\x1D' + std::to_string(getSecond());
         break;
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
-        serialString = "↓" + std::to_string(getFirst() + 1);
+        serialString = '\x1E' + std::to_string(getFirst() + 1);
         if (getSecond() != UINT_MAX)
-            serialString += '.' + std::to_string(getSecond() + 1);
+            serialString += '\x1F' + std::to_string(getSecond() + 1);
         break;
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
-        serialString = "⇓" + std::to_string(getFirst() + 1);
+        serialString = '\x20' + std::to_string(getFirst() + 1);
         break;
     case IF_STATEMENT:
-        serialString = "I(" + lhs->peekSerialString() + ')' + rhs->peekSerialString();
+        serialString = '\x21' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case IF_CON_T_STATEMENT:
-        serialString = "T(" + lhs->peekSerialString() + ')';
+        serialString = '\x22' + lhs->peekSerialString();
         if (rhs)
         {
-            serialString += "E(" + rhs->peekSerialString() + ')';
+            serialString += '\x23' + rhs->peekSerialString();
         }
         break;
-    case WAIT_STATEMENT:
-        serialString = "W(" + lhs->peekSerialString() + ')' + rhs->peekSerialString();
+    case DEFERRED_STATEMENT:
+        serialString = '\x24' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case FOREACH_STATEMENT:
-        serialString = "O(" + lhs->peekSerialString() + ')' + rhs->peekSerialString();
+        serialString = '\x25' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case FOREACH_CON_T_STATEMENT:
-        serialString = "IN(" + lhs->peekSerialString() + ')';
+        serialString = '\x26' + lhs->peekSerialString();
         if (rhs)
         {
-            serialString += "D(" + rhs->peekSerialString() + ')';
+            serialString += '\x27' + rhs->peekSerialString();
         }
         break;
     case STRING_STATEMENT:
@@ -1074,9 +1015,9 @@ void Statement::makeSerialString()
         break;
     case SEARCH_STATEMENT:
         if (getBits())
-            serialString = "S(" + getBits()->peekSerialString() + ',' + lhs->peekSerialString() + ')';
+            serialString = '\x28' + getBits()->peekSerialString() + lhs->peekSerialString();
         else
-            serialString = "S(" + lhs->peekSerialString() + ')';
+            serialString = '\x29' + lhs->peekSerialString();
         break;
     }
 }
@@ -1118,7 +1059,7 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
     case IF_CON_T_STATEMENT:
     case FOREACH_STATEMENT:
     case FOREACH_CON_T_STATEMENT:
-    case WAIT_STATEMENT:
+    case DEFERRED_STATEMENT:
     case UNIF_STATEMENT:
     case ASSIGNMENT_STATEMENT:
     case SUBSUME_STATEMENT:
@@ -1383,7 +1324,6 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
     valuePtr resultValue = valuePtr();
     featuresPtr resultFeatures = featuresPtr();
     pairpPtr resultPairp = pairpPtr();
-    // listFeaturesPtr resultListFeatures = listFeaturesPtr();
     switch (this->op)
     {
 
@@ -1391,12 +1331,16 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         resultValue = Value::STATIC_NIL;
         break;
 
+    case ANONYMOUS_STATEMENT:
+        resultValue = Value::STATIC_ANONYMOUS;
+        break;
+
     case DASH_STATEMENT:
     {
         termsPtr t = item->getTerms(getFirst());
         // if (#i) false
         if (t->isOptional())
-            resultValue = Value::STATIC_NIL;
+            resultValue = Value::STATIC_FALSE;
         else
         {
             // if (#i)
@@ -1413,7 +1357,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
                 }
                 else
                 {
-                    resultValue = Value::STATIC_NIL;
+                    resultValue = Value::STATIC_FALSE;
                 }
             }
         }
@@ -1458,10 +1402,6 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         {
             resultValue = Value::create(Value::VARIABLE_VALUE, getBits());
         }
-        break;
-
-    case ANONYMOUS_STATEMENT:
-        resultValue = Value::STATIC_ANONYMOUS;
         break;
 
     case CONSTANT_STATEMENT:
@@ -1656,7 +1596,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
                 resultValue = valuePtr();
             }
             else if ((v1->isFalse()) || (v2->isFalse()))
-                resultValue = Value::STATIC_NIL;
+                resultValue = Value::STATIC_FALSE;
             else
                 resultValue = Value::STATIC_TRUE;
             goto valueBuilt;
@@ -1670,7 +1610,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             if ((!v1) || (!v2))
                 resultValue = valuePtr();
             else if ((v1->isFalse()) && (v2->isFalse()))
-                resultValue = Value::STATIC_NIL;
+                resultValue = Value::STATIC_FALSE;
             else
                 resultValue = Value::STATIC_TRUE;
             goto valueBuilt;
@@ -1684,26 +1624,15 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             if ((!v1) && (!v2))
                 resultValue = Value::STATIC_TRUE;
 
-            else if ((!v1) || (!v2))
-                resultValue = valuePtr();
-
-            else if ((v1->isNil()) && (v2->isNil()))
-                resultValue = Value::STATIC_TRUE;
-
-            else if ((v1->isNil()) || (v2->isNil()))
-                resultValue = Value::STATIC_NIL;
-
-            else if ((v1->isAnonymous()) && (v2->isAnonymous()))
-                resultValue = Value::STATIC_TRUE;
-
-            else if ((v1->isAnonymous()) || (v2->isAnonymous()))
-                resultValue = Value::STATIC_NIL;
+            else if (!v1 || !v2){
+                FATAL_ERROR_UNEXPECTED;
+            }
 
             else if (v1->eq(v2))
                 resultValue = Value::STATIC_TRUE;
 
             else
-                resultValue = Value::STATIC_NIL;
+                resultValue = Value::STATIC_FALSE;
 
             goto valueBuilt;
         }
@@ -1713,26 +1642,17 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
-            if ((!v1) && (!v2))
-                resultValue = Value::STATIC_NIL;
+            //if ((!v1) && (!v2))
+            //    resultValue = Value::STATIC_FALSE;
 
-            else if ((!v1) || (!v2))
+            //else 
+            if ((!v1) || (!v2)) {
+                FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_TRUE;
-
-            else if ((v1->isNil()) && (v2->isNil()))
-                resultValue = Value::STATIC_NIL;
-
-            else if ((v1->isNil()) || (v2->isNil()))
-                resultValue = Value::STATIC_TRUE;
-
-            else if ((v1->isAnonymous()) && (v2->isAnonymous()))
-                resultValue = Value::STATIC_NIL;
-
-            else if ((v1->isAnonymous()) || (v2->isAnonymous()))
-                resultValue = Value::STATIC_TRUE;
+            }
 
             else if (v1->eq(v2))
-                resultValue = Value::STATIC_NIL;
+                resultValue = Value::STATIC_FALSE;
 
             else
                 resultValue = Value::STATIC_TRUE;
@@ -1745,9 +1665,10 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
-            // si l'une est variable libre
+            // si l'une est nulle
             if ((!v1) || (!v2))
             {
+                FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
             else if (v1->lt(v2))
@@ -1765,6 +1686,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             // si l'une est variable libre
             if ((!v1) || (!v2))
             {
+                FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
             else if ((v1->lt(v2)) || (v1->eq(v2)))
@@ -1782,6 +1704,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             // si l'une est variable libre
             if ((!v1) || (!v2))
             {
+                FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
             else if (!(v1->lt(v2)) && (!(v1->eq(v2))))
@@ -1799,6 +1722,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             // si l'une est variable libre
             if ((!v1) || (!v2))
             {
+                FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
             else if (!(v1->lt(v2)))
@@ -1812,15 +1736,15 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         case NOT:
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
-            if (!v1 || v1->isNil() || v1->isAnonymous())
+            if (!v1 || v1->isFalse())
                 resultValue = Value::STATIC_TRUE;
             else
-                resultValue = Value::STATIC_NIL;
+                resultValue = Value::STATIC_FALSE;
             goto valueBuilt;
         }
         break;
 
-        case RAND:
+        case RANDOM:
         {
             resultValue = Value::create(Value::NUMBER_VALUE, (double)rand());
             goto valueBuilt;
@@ -1932,15 +1856,15 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
             Features::list_of_feature::const_iterator i2 = fs2->begin();
             while (i2 != fs2->end())
             {
-                if ((*i2)->_getType() == (*i1)->_getType())
+                if ((*i2)->getType() == (*i1)->getType())
                 {
                     (*i2)->addFlags(Flags::SEEN);
-                    switch ((*i1)->getValue()->_getType())
+                    switch ((*i1)->getValue()->getType())
                     {
 
                     case Value::IDENTIFIER_VALUE:
                     {
-                        switch ((*i2)->getValue()->_getType())
+                        switch ((*i2)->getValue()->getType())
                         {
                         case Value::IDENTIFIER_VALUE:
                             if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode())
@@ -2036,17 +1960,16 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
                         goto endUnif;
                     }
 
-                    switch ((*i1)->getValue()->_getType())
+                    switch ((*i1)->getValue()->getType())
                     {
 
                     case Value::LIST_FEATURES_VALUE:
-                        FATAL_ERROR_UNEXPECTED
-
                     case Value::NIL_VALUE:
+                    case Value::FALSE_VALUE:
                         FATAL_ERROR_UNEXPECTED
 
                     case Value::FORM_VALUE:
-                        switch ((*i2)->getValue()->_getType())
+                        switch ((*i2)->getValue()->getType())
                         {
                         case Value::FORM_VALUE:
                             if ((*i1)->getValue()->getStr() != (*i2)->getValue()->getStr())
@@ -2077,7 +2000,7 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
                         // case Value::FALSE:
                     case Value::TRUE_VALUE:
                     {
-                        switch ((*i2)->getValue()->_getType())
+                        switch ((*i2)->getValue()->getType())
                         {
                         // case Value::FALSE:
                         case Value::TRUE_VALUE:
@@ -2106,7 +2029,7 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
 
                     case Value::NUMBER_VALUE:
                     {
-                        switch ((*i2)->getValue()->_getType())
+                        switch ((*i2)->getValue()->getType())
                         {
                         case Value::NUMBER_VALUE:
                             if ((*i1)->getValue()->getNumber() != (*i2)->getValue()->getNumber())
@@ -2135,7 +2058,7 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
 
                     case Value::IDENTIFIER_VALUE:
                     {
-                        switch ((*i2)->getValue()->_getType())
+                        switch ((*i2)->getValue()->getType())
                         {
                         case Value::IDENTIFIER_VALUE:
                             if ((*i1)->getValue()->getCode() != (*i2)->getValue()->getCode())
@@ -2164,7 +2087,7 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
 
                     case Value::CONSTANT_VALUE:
                     {
-                        switch ((*i2)->getValue()->_getType())
+                        switch ((*i2)->getValue()->getType())
                         {
                         case Value::CONSTANT_VALUE:
                             if (((*(*i1)->getValue()->getBits()) & (*(*i2)->getValue()->getBits())).none())
@@ -2549,7 +2472,7 @@ void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, P
             valuePtr right = rhs->evalValue(item, parser, synthesizer, true);
             if (!right)
             {
-                this->print(std::cerr, 0);
+                this->print(std::cerr);
                 WARNING_STM;
             }
             else
@@ -2623,9 +2546,9 @@ void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, P
         }
         else
         {
-            if (right->isNil())
-            {
-            } // empty
+            //if (right->isNil())
+            //{
+            //} // empty
             featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
             if (left)
             {
@@ -2673,8 +2596,8 @@ void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthes
     case ATTEST_STATEMENT:
     {
         valuePtr res = lhs->evalValue(item, parser, synthesizer, true);
-        if ((!res) || (res == Value::STATIC_NIL) || (res == Value::STATIC_ANONYMOUS) ||
-            ((res->isFeatures() && (res->getFeatures()->isBottom()))))
+        if (!res || res->isFalse() ||
+            (res->isFeatures() && res->getFeatures()->isBottom()))
         {
             addFlags(Flags::BOTTOM);
         }
@@ -2777,6 +2700,11 @@ void Statement::stmForeach(statementPtr from, class Item *item, Parser &parser, 
  ************************************************************ */
 void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::stmIf #######################" << std::endl;
+        item->print(std::cout);
+        std::cout << std::endl;
+#endif
     statementPtr leftHandSide = getRhs()->getLhs();
     statementPtr rightHandSide = getRhs()->getRhs();
     enum test_choice result = __NONE__;
@@ -2791,7 +2719,7 @@ void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Synth
     else
     {
         valuePtr res = getLhs()->evalValue(item, parser, synthesizer, true);
-        if (!res || res->isNil() || res->isAnonymous())
+        if (!res || res->isFalse())
         {
             result = __ELSE__;
             leftHandSide->addFlags(Flags::REJECTED);
@@ -2837,12 +2765,17 @@ void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Synth
         FATAL_ERROR_UNEXPECTED;
         break;
     }
+#ifdef TRACE_APPLY_STATEMENT
+    std::cout << "####################### Statement::stmIf DONE #######################" << std::endl;
+        item->print(std::cout);
+        std::cout << std::endl;
+#endif
 }
 
 /* ************************************************************
- * wait
+ * DEFERRED
  ************************************************************ */
-void Statement::stmWait(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
+void Statement::stmDeferred(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
 {
     rhs->apply(from, item, parser, synthesizer, effect);
     if (rhs->isSetFlags(Flags::BOTTOM))
@@ -2918,7 +2851,7 @@ void Statement::renameVariables(size_t i)
     case IF_CON_T_STATEMENT:
     case FOREACH_STATEMENT:
     case FOREACH_CON_T_STATEMENT:
-    case WAIT_STATEMENT:
+    case DEFERRED_STATEMENT:
         if (lhs)
             lhs->renameVariables(i);
         if (rhs)
@@ -3118,7 +3051,7 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
         rhs->toggleEnable(rhs, item, synthesizer, result, on);
         break;
 
-    case WAIT_STATEMENT:
+    case DEFERRED_STATEMENT:
         lhs->toggleEnable(shared_from_this(), item, synthesizer, result, on);
         rhs->toggleEnable(shared_from_this(), item, synthesizer, result, on);
         break;
@@ -3202,10 +3135,10 @@ void Statement::apply(statementPtr from, class Item *item, Parser &parser, Synth
         stmForeach(from, item, parser, synthesizer, effect);
     }
 
-    // wait
-    else if (isWait())
+    // DEFERRED
+    else if (isDeferred())
     {
-        stmWait(from, item, parser, synthesizer, effect);
+        stmDeferred(from, item, parser, synthesizer, effect);
     }
 
     // ↓i = …

@@ -34,6 +34,7 @@
 
 valuePtr Value::STATIC_NIL = Value::create(Value::NIL_VALUE);
 valuePtr Value::STATIC_TRUE = Value::create(Value::TRUE_VALUE);
+valuePtr Value::STATIC_FALSE = Value::create(Value::FALSE_VALUE);
 valuePtr Value::STATIC_ANONYMOUS = Value::create(Value::ANONYMOUS_VALUE);
 
 /* **************************************************
@@ -152,7 +153,7 @@ valuePtr Value::create(pairpPtr lst)
 /* **************************************************
  *
  ************************************************** */
-Value::Type Value::_getType() const
+Value::Type Value::getType() const
 {
     return type;
 }
@@ -224,17 +225,17 @@ bool Value::isNil() const
 /* **************************************************
  *
  ************************************************** */
-bool Value::isFalse() const
+bool Value::isTrue() const
 {
-    return ((type == NIL_VALUE) || (type == ANONYMOUS_VALUE));
+    return (type == TRUE_VALUE);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isTrue() const
+bool Value::isFalse() const
 {
-    return (type == TRUE_VALUE);
+    return ((type == FALSE_VALUE) || (type == NIL_VALUE) || (type == ANONYMOUS_VALUE));
 }
 
 /* **************************************************
@@ -322,6 +323,9 @@ void Value::print(std::ostream &outStream) const
     case TRUE_VALUE:
         outStream << "TRUE";
         break;
+    case FALSE_VALUE:
+        outStream << "FALSE";
+        break;
     case CONSTANT_VALUE:
         outStream << bits->toString();
         break;
@@ -365,6 +369,9 @@ void Value::flatPrint(std::ostream &outStream) const
     case TRUE_VALUE:
         outStream << "TRUE";
         break;
+    case FALSE_VALUE:
+        outStream << "FALSE";
+        break;
     case CONSTANT_VALUE:
     case VARIABLE_VALUE:
         outStream << bits->toString();
@@ -406,14 +413,17 @@ void Value::makeSerialString()
     case TRUE_VALUE:
         serialString = '\1';
         break;
+    case FALSE_VALUE:
+        serialString = '\2';
+        break;
     case CONSTANT_VALUE:
         serialString = bits->peekSerialString();
         break;
     case VARIABLE_VALUE:
-        serialString = '\2' + bits->peekSerialString();
+        serialString = '\3' + bits->peekSerialString();
         break;
     case ANONYMOUS_VALUE:
-        serialString = '\3';
+        serialString = '\4';
         break;
     case IDENTIFIER_VALUE:
         serialString = std::to_string(code);
@@ -451,6 +461,10 @@ void Value::toXML(xmlNodePtr nodeRoot) const
         break;
     case TRUE_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"true");
+        bits->toXML(v);
+        break;
+    case FALSE_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"false");
         bits->toXML(v);
         break;
     case CONSTANT_VALUE:
@@ -503,6 +517,7 @@ valuePtr Value::clone()
     {
     case NIL_VALUE:
     case TRUE_VALUE:
+    case FALSE_VALUE:
     case CONSTANT_VALUE:
     case IDENTIFIER_VALUE:
     case FORM_VALUE:
@@ -553,6 +568,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
 
     case LIST_FEATURES_VALUE:
     case TRUE_VALUE:
+    case FALSE_VALUE:
         FATAL_ERROR_UNEXPECTED
 
     case NIL_VALUE:
@@ -739,7 +755,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
 }
 
 /* ************************************************************
- * this < o
+ * this ⊂ o
  ************************************************************ */
 bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr &environment)
 {
@@ -758,49 +774,63 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
         std::cout << "</DIV>";
 #endif
 
-    // $X < …
-    if (type == VARIABLE_VALUE)
+    // $X ⊂ …
+    if (this->isVariable())
     {
         environment->add(from, bits, o);
     }
 
-    // … < $X
-    else if (o->type == VARIABLE_VALUE)
+    // … ⊂ $X
+    else if (o->isVariable())
     {
         environment->add(from, o->bits, shared_from_this());
     }
 
-    // NIL < NIL
-    else if (isNil() && o->isNil())
+    // _ ⊂ …
+    else if (this->isAnonymous())
     {
     }
 
-    // NIL < …
-    // … < NIL
-    else if (isNil() || o->isNil())
+    // … ⊂ _
+    else if (o->isAnonymous())
     {
     }
 
-    // TRUE < TRUE
-    else if (isTrue() && o->isTrue())
-    {
-    }
+    // NIL ⊂ NIL
+    //else if (isNil() && o->isNil())
+    //{
+    //}
 
-    // TRUE < …
-    // … < TRUE
-    else if (isTrue() || o->isTrue())
-    {
-        ret = false;
-    }
+    // NIL ⊂ …
+    // … ⊂ NIL
+    //else if (isNil() || o->isNil())
+    //{
+    //}
+
+    // TRUE ⊂ TRUE
+    //else if (isTrue() && o->isTrue())
+    //{
+    //}
+
+    // TRUE ⊂ …
+    // … ⊂ TRUE
+    //else if (isTrue() || o->isTrue())
+    //{
+    //    ret = false;
+    //}
+
     else if ((type != o->type))
     {
+        std::cerr << type << " " << o->type << std::endl;
+        FATAL_ERROR_UNEXPECTED;
         ret = false;
     }
+
     else
     {
         switch (o->type)
         {
-        // a < a
+        // a ⊂ a
         case IDENTIFIER_VALUE:
             if (code != o->getCode())
                 ret = false;
@@ -844,7 +874,7 @@ bool Value::eq(valuePtr o) const
     /* **
         CERR_LINE;
         this->flatPrint(std::cerr);
-        std::cerr << " = ";
+        std::cerr << " == ";
         o->flatPrint(std::cerr);
         std::cerr << std::endl;
      ** */
@@ -857,8 +887,11 @@ bool Value::eq(valuePtr o) const
     else if (o->isNil() || this->isNil())
         ret = false;
 
-    else if (o->type == ANONYMOUS_VALUE || this->type == ANONYMOUS_VALUE)
+    if (o->isAnonymous() && this->isAnonymous())
         ret = true;
+
+    else if (o->isAnonymous() || this->isAnonymous())
+        ret = false;
 
     else
     {
@@ -896,6 +929,10 @@ bool Value::eq(valuePtr o) const
             FATAL_ERROR_UNEXPECTED
         }
     }
+    /*
+        CERR_LINE;
+        std::cerr << ret << std::endl;
+    */
     return ret;
 }
 
@@ -926,8 +963,9 @@ void Value::deleteAnonymousVariables()
 {
     switch (type)
     {
-    case TRUE_VALUE:
     case NIL_VALUE:
+    case TRUE_VALUE:
+    case FALSE_VALUE:
     case IDENTIFIER_VALUE:
     case CONSTANT_VALUE:
     case FORM_VALUE:
@@ -952,8 +990,9 @@ void Value::deleteVariables()
 {
     switch (type)
     {
-    case TRUE_VALUE:
     case NIL_VALUE:
+    case TRUE_VALUE:
+    case FALSE_VALUE:
     case IDENTIFIER_VALUE:
     case CONSTANT_VALUE:
     case FORM_VALUE:
@@ -981,6 +1020,7 @@ bool Value::renameVariables(size_t i)
     {
     case NIL_VALUE:
     case TRUE_VALUE:
+    case FALSE_VALUE:
     case CONSTANT_VALUE:
     case IDENTIFIER_VALUE:
     case FORM_VALUE:
@@ -1022,6 +1062,7 @@ void Value::enable(const statementPtr &root, class Item *item, Synthesizer *synt
     {
     case NIL_VALUE:
     case TRUE_VALUE:
+    case FALSE_VALUE:
     case IDENTIFIER_VALUE:
     case FORM_VALUE:
     case CONSTANT_VALUE:
@@ -1062,6 +1103,7 @@ bool Value::findVariable(const bitsetPtr &variable) const
     {
     case NIL_VALUE:
     case TRUE_VALUE:
+    case FALSE_VALUE:
     case IDENTIFIER_VALUE:
     case FORM_VALUE:
     case CONSTANT_VALUE:
@@ -1133,8 +1175,9 @@ bool Value::containsVariable()
         return true;
     switch (type)
     {
-    case TRUE_VALUE:
     case NIL_VALUE:
+    case TRUE_VALUE:
+    case FALSE_VALUE:
     case IDENTIFIER_VALUE:
     case FORM_VALUE:
     case CONSTANT_VALUE:

@@ -103,7 +103,7 @@
 %token TOKEN_LEMMA TOKEN_HEAD TOKEN_FORM
 %token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN
 %token TOKEN_IF TOKEN_ELSE
-%token TOKEN_WAIT
+%token TOKEN_DEFERRED
 %token TOKEN_NIL TOKEN_TRUE TOKEN_FALSE
 %token TOKEN_FOREACH TOKEN_IN
 %token TOKEN_SEARCH TOKEN_ON
@@ -662,11 +662,11 @@ statement:
 	  free($7);
 	}
 
-	|TOKEN_WAIT TOKEN_LPAR expression_statement TOKEN_RPAR statement {
+	|TOKEN_DEFERRED TOKEN_LPAR expression_statement TOKEN_RPAR statement {
 	  DBUGPRT("statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno,
 						parser.getTopBufferName(), 
-						Statement::WAIT_STATEMENT,
+						Statement::DEFERRED_STATEMENT,
 						true, 
 						*$3,
 						*$5));
@@ -890,7 +890,7 @@ expression_statement:
 	|TOKEN_RAND TOKEN_LPAR TOKEN_RPAR
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::RAND));
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::RANDOM));
 	}
 
 	|TOKEN_DOUBLE

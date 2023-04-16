@@ -22,10 +22,8 @@
 
 #include <utility>
 #include "environment.hpp"
-//#include "features.hpp"
 #include "messages.hpp"
 #include "shared_ptr.hpp"
-//#include "grammar.hpp"
 #include "statement.hpp"
 
 listPtr List::NIL_LIST = List::create();

@@ -39,6 +39,7 @@ public:
     {
         NIL_VALUE,
         TRUE_VALUE,
+        FALSE_VALUE,
         CONSTANT_VALUE,
         VARIABLE_VALUE,
         ANONYMOUS_VALUE,
@@ -63,6 +64,7 @@ private:
 public:
     static valuePtr STATIC_NIL;
     static valuePtr STATIC_TRUE;
+    static valuePtr STATIC_FALSE;
     static valuePtr STATIC_ANONYMOUS;
 
     Type type;
@@ -96,7 +98,7 @@ public:
 
     static valuePtr create(pairpPtr);
 
-    enum Type _getType(void) const;
+    enum Type getType(void) const;
 
     bitsetPtr getBits(void) const;
 

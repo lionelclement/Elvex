@@ -93,7 +93,7 @@ public:
         NUMBER_STATEMENT,
         FUNCTION_STATEMENT,
         SEARCH_STATEMENT,
-        WAIT_STATEMENT
+        DEFERRED_STATEMENT
     };
 
     enum arithmetic_op
@@ -114,7 +114,7 @@ public:
         DIVIDE,
         MODULO,
         MINUS_U,
-        RAND
+        RANDOM
     };
 
     enum test_choice
@@ -167,7 +167,7 @@ public:
     // ATTEST THEN
     static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
 
-    // AFF SUBSUME IF IF_CON_T WAIT FOREACH FOREACH_CON_T UNIF
+    // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH FOREACH_CON_T UNIF
     static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
 
     // VARIABLE CONSTANT
@@ -225,7 +225,7 @@ public:
 
     bool isForeach() const;
 
-    bool isWait() const;
+    bool isDeferred() const;
 
     bool isStms() const;
 
@@ -269,7 +269,7 @@ public:
 
     void brln(std::ostream &out, int tabulation) const;
 
-    void print(std::ostream &, unsigned int tabulation = 0, int yetColored = 0) const;
+    void print(std::ostream &, unsigned int tabulationLenght = 5, unsigned int tabulation = 0, unsigned int color = 0x000000, unsigned int bgcolor = 0xFFFFFF) const;
 
     featuresPtr evalFeatures(class Item *, class Parser &, class Synthesizer *, bool);
 
@@ -299,7 +299,7 @@ public:
 
     void stmIf(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
 
-    void stmWait(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
+    void stmDeferred(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
 
     void stmPrint(class Item *, class Parser &, class Synthesizer *);
 

@@ -184,13 +184,11 @@ void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Sy
  ************************************************** */
 void ListFeatures::makeSerialString()
 {
-    serialString = '\3';
+    serialString = '\x10';
     for (auto &features : listFeatures)
     {
-        serialString += features->peekSerialString();
-        serialString = '\4';
+        serialString += '\x11' + features->peekSerialString();
     }
-    serialString = '\3';
 }
 
 #ifdef OUTPUT_XML

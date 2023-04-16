@@ -683,7 +683,6 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                             bool effect = false;
                             (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
                             inheritedSonFeatures->deleteAnonymousVariables();
-                            // inheritedSonFeatures->deleteVariables();
                         }
 
                         for (const auto &iterRules : parser.getRules().getRules())
@@ -790,7 +789,6 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                         FATAL_ERROR_UNEXPECTED
                                     }
                                     (*actualItem)->getSynthesizedFeatures()->deleteAnonymousVariables();
-                                    //(*actualItem)->getSynthesizedFeatures()->deleteVariables();
                                 }
 
                                 forestPtr forestFound = forestPtr();
@@ -869,7 +867,6 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                                     bool effect = false;
                                                     it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
                                                     inheritedFeatures->deleteAnonymousVariables();
-                                                    // inheritedFeatures->deleteVariables();
                                                 }
                                             }
 
@@ -923,7 +920,6 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                                 bool effect = false;
                                                 it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
                                                 inheritedFeatures->deleteAnonymousVariables();
-                                                // inheritedFeatures->deleteVariables();
                                             }
                                         }
 
@@ -1062,7 +1058,6 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                         bool effect = false;
                         (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
                         inheritedSonFeatures->deleteAnonymousVariables();
-                        // inheritedSonFeatures->deleteVariables();
                     }
 
                     std::string *form = nullptr;

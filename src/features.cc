@@ -196,7 +196,7 @@ void Features::print(std::ostream &outStream) const
             {
                 for (const auto &feature : features)
                 {
-                    if (feature->_getType() == t)
+                    if (feature->getType() == t)
                     {
                         outStream << "<TR>";
                         feature->print(outStream);
@@ -232,7 +232,7 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
         {
             for (const auto &feature : features)
             {
-                if (feature->_getType() == t)
+                if (feature->getType() == t)
                 {
                     if (first)
                         first = false;
@@ -253,17 +253,17 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
 void Features::makeSerialString()
 {
     if (isNil())
-        serialString = '\0';
+        serialString = '\x6';
     else if (isBottom())
-        serialString = '\1';
+        serialString = '\x7';
     else
     {
-        serialString = '\2';
+        serialString = '\x8';
         if (!features.empty())
         {
             for (const auto &f : features)
             {
-                serialString += f->peekSerialString() + '\3';
+                serialString += '\x9' + f->peekSerialString() ;
             }
         }
     }
@@ -412,12 +412,12 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
                     {
                     }
                     // If both are TRUE
-                    // else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
-                    // }
+                    //else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
+                    //}
 
                     // If one is ANONYMOUS
-                    // else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous())) {
-                    //}
+                    else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous())) {
+                    }
 
                     // Else build environment with the two values
                     else if (!i1->getValue()->buildEnvironment(from, environment, i2->getValue(),
@@ -632,7 +632,7 @@ void Features::deleteAnonymousVariables()
 
         for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
         {
-            switch ((*feature)->_getType())
+            switch ((*feature)->getType())
             {
             case Feature::_HEAD_:
             case Feature::_LEMMA_:
@@ -665,7 +665,7 @@ void Features::deleteVariables()
         redo = false;
         for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
         {
-            switch ((*feature)->_getType())
+            switch ((*feature)->getType())
             {
             case Feature::_HEAD_:
             case Feature::_LEMMA_:

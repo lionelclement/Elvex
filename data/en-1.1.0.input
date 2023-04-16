@@ -41,10 +41,12 @@
 *
 ** */
 
+//Text_with_features [HEAD:TO_MEOW, i:[HEAD:CAT], vtense:present | past_perfect | future | present_perfect]
+//Text_with_features [HEAD:TO_MEOW, i:[HEAD:CAT], vtense:$vt]
 
+//Text[HEAD:CAT]
 //Text[HEAD:CAT, def:$d]
-//Text [HEAD:TO_MEOW, i:[HEAD:CAT, def:$def], tense: $t]
-Text [HEAD:TO_MEOW, i:[HEAD:CAT]]
+Text [HEAD:TO_MEOW, i:[HEAD:CAT, @s]]
 
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
@@ -53,7 +55,10 @@ Text [HEAD:TO_MEOW, i:[HEAD:CAT]]
 //Text [HEAD:CAT, @p, MOD:<[HEAD:BLACK],[HEAD:BIG]>]
 //Text [HEAD:TABLE, @s, MOD:<[HEAD:BEAUTIFUL], [HEAD:LARGE], [HEAD:ROUND], [HEAD:WOODEN]>]
 
-//Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX], vtense:$tense]
+//Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_1s], ii:[HEAD:ELVEX]]
+//Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_1s], ii:[HEAD:ELVEX], tense:present]
+//Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro], ii:[HEAD:ELVEX], vtense:$tense]
+
 //Text_with_features[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX]]
 //Text[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX]]
 

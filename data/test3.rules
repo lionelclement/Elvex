@@ -20,7 +20,7 @@ S → [adj] n [adj]
   /***
   [HEAD:$P];
   ↓2 = ↑;
-  wait (⇓2) {
+  deferred (⇓2) {
     [mod:$list, number:$inheritedNumber] ⊂ ↑;
     [gender:$synthesizedGender, number:$synthesizedNumber] ⊂ ⇓2;
     foreach $i in $list {
@@ -29,7 +29,7 @@ S → [adj] n [adj]
       $z = "xxx";
       //println ("$i: ", $i);
       <$lexiconHead::$lexiconTail> = search $i on adj;
-      wait ($lexiconHead)
+      deferred ($lexiconHead)
         println ("$lexiconHead: ", $lexiconHead);
       [pos:$posSynthesized] ⊂ $lexiconHead;
       [pos:$posInherited] ⊂ $i;

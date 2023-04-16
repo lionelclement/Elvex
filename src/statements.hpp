@@ -63,7 +63,7 @@ public:
 
     bool findVariable(const bitsetPtr &variable);
 
-    void print(std::ostream &outStream, unsigned int tabulation, unsigned int color, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
+    void print(std::ostream &outStream, unsigned int tabulationLenght, unsigned int tabulation, unsigned int color, unsigned int bgcolor, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
 
     statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 

@@ -350,9 +350,9 @@ downDoubleArrow "⇓"
     return TOKEN_ELSE;
   }
   
-  "wait" {
-    DBUGPRT("TOKEN_WAIT");
-    return TOKEN_WAIT;
+  "deferred" {
+    DBUGPRT("TOKEN_DEFERRED");
+    return TOKEN_DEFERRED;
   }
   
   "print" {

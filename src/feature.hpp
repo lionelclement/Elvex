@@ -73,7 +73,7 @@ public:
 
     void setValue(const valuePtr);
 
-    enum Type _getType(void) const;
+    enum Type getType(void) const;
 
     void setType(const enum Type);
 

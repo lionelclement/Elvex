@@ -2,12 +2,17 @@
 /* **************************************************
  * 
  ************************************************** */
-Text_with_features → VTENSE S {
+@trace
+Text_with_features → VTENSE S_tense {
   [vtense:$vtense] ⊂ ⇓2;
-  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
+  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
-  if (¬ $tense)
+  //if ($tense ≠ _)
+  //  $tense = present;
+  //else
+  //  $tense = past;
+  if ((¬ $tense))
     $tense = present;
   // not interrogative, not negative
   if (¬ $verbal_constr)
@@ -15,34 +20,35 @@ Text_with_features → VTENSE S {
   [vtense:$vtenseSth] ⊂ ⇓2;
   attest($vtenseSth != infinitive);
   ↓1 = [vtense:$vtenseSth];
-  ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $REST];
+  ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
 }
 
 Text → S_tense strongPunct {
-  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
+  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
   if (¬ $tense)
     $tense = present;
   if (¬ $verbal_constr)
     $verbal_constr = no_int | no_neg;
-  ↓1 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $REST];
+  ↓1 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
   [punct:$punc] ⊂ ⇓1;
   ↓2 = [punct:$punc];
 }
 
 Text → NP {
-  [lexical_function:$lexical_function, $REST] ⊂ ↑;
+  [lexical_function:$lexical_function, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
-  ↓1 = [lexical_function:$lexical_function, $REST];
+  ↓1 = [lexical_function:$lexical_function, $Rest];
 }
 
 /* **************************************************
  * 
  ************************************************** */
+@trace
 S_tense → S_anaphoric {
-  [tense:$tense, $rest];
+  [tense:$tense, $Rest];
   [mode:$mode, vtense:$vtense, aspect:$aspect] ⊂ ↑;
 
   if (¬ $tense)
@@ -85,7 +91,8 @@ S_tense → S_anaphoric {
   }
   }
   
-  ↓1 = [vtense:$vtense, $rest];
+  //↓1 = [vtense:$vtense, $Rest];
+  ↓1 = [vtense:$vtense] ∪ $Rest;
   ⇑ = ⇓1;
 }
 
@@ -114,22 +121,22 @@ S_anaphoric → S_mod {
  * Sentence modifiers
  ************************************************** */
 S_mod → S_mod form {
-  [MOD:<$H :: $T>, $REST];
-  ↓1 = [MOD:$T, $REST];
+  [MOD:<$H :: $T>, $Rest];
+  ↓1 = [MOD:$T, $Rest];
   ↓2 = $H;
   ⇑ = ⇓1;
 }
 
 S_mod → S_mod advs {
-  [MOD:<$H :: $T>, $REST];
-  ↓1 = [MOD:$T, $REST];
+  [MOD:<$H :: $T>, $Rest];
+  ↓1 = [MOD:$T, $Rest];
   ↓2 = $H;
   ⇑ = ⇓1;
 }
 
 S_mod → S {
-  [MOD:NIL, $REST];
-  ↓1 = $REST;
+  [MOD:NIL, $Rest];
+  ↓1 = $Rest;
   ⇑ = ⇓1;
 }
 
@@ -137,15 +144,15 @@ S_mod → S {
  * Cause : conclusion when premise
  ************************************************** */
 S → S_anaphoric form S_anaphoric {
-  [HEAD:CAUSE, i:$premise, ii:$conclusion, $REST];
+  [HEAD:CAUSE, i:$premise, ii:$conclusion, $Rest];
 
 
-  [i:[i:$I_premise, $rest_premise]] ⊂ ↑; // $I_premise = the agent of the premise
-  [ii:[i:$I_conclusion, $rest_conclusion]] ⊂ ↑; // $I_conclusion = the agent of the conclusion
+  [i:[i:$I_premise, $Rest_premise]] ⊂ ↑; // $I_premise = the agent of the premise
+  [ii:[i:$I_conclusion, $Rest_conclusion]] ⊂ ↑; // $I_conclusion = the agent of the conclusion
   [i:[i:[ID:$ID_I_premise]]] ⊂ ↑; // $ID_I_premise = the agent ID of the premise
   [ii:[i:[ID:$ID_I_conclusion]]] ⊂ ↑; // $ID_I_conclusion = the agent ID of the conclusion
   
-  [vtense:$vtense, $Rest_vtense] ⊂ $REST;
+  [vtense:$vtense, $Rest_vtense] ⊂ $Rest;
 
   if (¬ $vtense ∨ ($vtense == present)) {
     ↓2 = [FORM:"now that"];
@@ -168,12 +175,12 @@ S → S_anaphoric form S_anaphoric {
     [i:[HEAD:_, $Synth_I_conclusion]] ⊂ ⇓1; // Provide the characteristics of the realized agent,
                                       //excluding its head that has been synthesized.
     $Inh_I_conclusion = [i:[HEAD:pro, ID:$ID_I_premise, $Synth_I_conclusion]]; //Generate a pronoun to refer to the agent of the conclusion
-    ↓1 = $rest_conclusion ∪ [i:$I_premise] ∪ [vtense:$vtenseConclusion] ∪ $Rest_vtense; // The first clause.
-    ↓3 = $rest_premise ∪ $Inh_I_conclusion ∪ [vtense:$vtensePremise] ∪ $Rest_vtense; // The second clause.
+    ↓1 = $Rest_conclusion ∪ [i:$I_premise] ∪ [vtense:$vtenseConclusion] ∪ $Rest_vtense; // The first clause.
+    ↓3 = $Rest_premise ∪ $Inh_I_conclusion ∪ [vtense:$vtensePremise] ∪ $Rest_vtense; // The second clause.
   }
   else {
-    ↓1 = $conclusion ∪ $REST; // The first clause.
-    ↓3 = $premise ∪ $REST; // The second clause.
+    ↓1 = $conclusion ∪ $Rest; // The first clause.
+    ↓3 = $premise ∪ $Rest; // The second clause.
   }
   ⇑ = ⇓2 ∪ [punct:_dot_];
 }
@@ -182,54 +189,54 @@ S → S_anaphoric form S_anaphoric {
  * Sentence arguments
  ************************************************** */
 S → S {
-  [i:$i, ii:NIL, iii:NIL, $REST];
-  ↓1 = [SUBJECT:$i, $REST];
+  [i:$i, ii:NIL, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, $Rest];
   ⇑ = ⇓1;
 }
 
 S → S {
-  [i:$i, ii:$ii, iii:NIL, $REST];
-  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, $REST];
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, $Rest];
   ⇑ = ⇓1;
 }
 
 S → S {
-  [i:$i, ii:$ii, iii:NIL, $REST];
-  ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $REST];
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $Rest];
   ⇑ = ⇓1;
 }
 
 S → S {
-  [i:$i, ii:$ii, iii:NIL, $REST];
-  ↓1 = [SUBJECT:$i, OBJ_THETA:$ii, iiReal:OBJ_THETA, $REST];
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, OBJ_THETA:$ii, iiReal:OBJ_THETA, $Rest];
   ⇑ = ⇓1;
 }
 
 S → S {
-  [i:$i, ii:$ii, iii:NIL, $REST];
-  ↓1 = [SUBJECT:$i, SCOMP:$ii, iiReal:SCOMP, $REST];
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, SCOMP:$ii, iiReal:SCOMP, $Rest];
   ⇑ = ⇓1;
 }
 
 // Infinitive subject controller
 S → S {
-  [i:$i, ii:$ii, iii:NIL, $REST];
+  [i:$i, ii:$ii, iii:NIL, $Rest];
   [i:[HEAD:$H1, ID:$ID1], ii:[i:[HEAD:$H2, ID:$ID2], $iiRest]] ⊂ ↑;
   attest (¬$H1 ∨ ¬$H2 ∨ ($H1 == $H2));
   attest ($ID1 == $ID2);
-  ↓1 = [SUBJECT:$i, VCOMP:[i:$i, $iiRest], iiReal:VCOMP, $REST];
+  ↓1 = [SUBJECT:$i, VCOMP:[i:$i, $iiRest], iiReal:VCOMP, $Rest];
   ⇑ = ⇓1;
 }
 
 S → S {
-  [i:$i, ii:$ii, iii:$iii, $REST];
-  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, OBJ_THETA:$iii, iiiReal:OBJ_THETA, $REST];
+  [i:$i, ii:$ii, iii:$iii, $Rest];
+  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, OBJ_THETA:$iii, iiiReal:OBJ_THETA, $Rest];
   ⇑ = ⇓1;
 }
 
 S → S {
-  [i:$i, ii:$ii, iii:$iii, $REST];
-  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, SCOMP:$iii, iiiReal:SCOMP, $REST];
+  [i:$i, ii:$ii, iii:$iii, $Rest];
+  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, SCOMP:$iii, iiiReal:SCOMP, $Rest];
   ⇑ = ⇓1;
 }
 
@@ -237,18 +244,18 @@ S → S {
  * Affirmative Sentence
  ************************************************** */
 S → [NP|cln] VP {
-  [SUBJECT:$SUBJECT, vtense:$vtense, $REST];
+  [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   [verbal_constr:$verbal_constr] ⊂ ↑;
   if (#1){
     ↓1 = $SUBJECT ∪ [case:nominative];
     $Synth_Subject = ⇓1;
-    ↓2 = [SUBJECT:$Synth_Subject, vtense:$vtense, tensed:true, $REST];
+    ↓2 = [SUBJECT:$Synth_Subject, vtense:$vtense, tensed:true, $Rest];
     [SUBJECT:$expected_subject] ⊂ ⇓2;
     attest $Synth_Subject ∪ $expected_subject;
   }
   else {
     attest ($vtense == infinitive);
-    ↓2 = [vtense:$vtense, $REST];
+    ↓2 = [vtense:$vtense, $Rest];
   }
     // not Interrogative form
   attest ($verbal_constr == no_int);
@@ -260,10 +267,10 @@ S → [NP|cln] VP {
  * Exclamatory Sentence
  ************************************************** */
 S → VP {
-  [SUBJECT:$SUBJECT, verbal_constr:$verbal_constr, vtense:$vtense, $REST];
+  [SUBJECT:$SUBJECT, verbal_constr:$verbal_constr, vtense:$vtense, $Rest];
   // not Interrogative form
   attest (($verbal_constr == excl));
-  ↓1 = [SUBJECT:[@_2s], vtense:present] ∪ [SUBJECT:$SUBJECT, vtense:$vtense, tensed:true, verbal_constr:$verbal_constr, $REST];
+  ↓1 = [SUBJECT:[@_2s], vtense:present] ∪ [SUBJECT:$SUBJECT, vtense:$vtense, tensed:true, verbal_constr:$verbal_constr, $Rest];
   ⇑ = ⇓1 ∪ [form:excl];
 }
 
@@ -271,7 +278,7 @@ S → VP {
  * Interrogative Sentence
  ************************************************** */
 S → aux NP|cln VP strongPunct {
-  [SUBJECT:$SUBJECT, vtense:$vtense, $REST];
+  [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   [verbal_constr:$verbal_constr] ⊂ ↑;
   ↓2 = $SUBJECT ∪ [case:nominative];
   $Synth_Subject = ⇓2;
@@ -279,22 +286,21 @@ S → aux NP|cln VP strongPunct {
   attest (($verbal_constr == int));
   ↓1 = ↑ ∪ [SUBJECT:$Synth_Subject, tensed:true];
   [verbal_constr:$synth_verbal_constr, aux_form:$aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
-  ↓3 = $REST ∪ [aux_form:$aux_form, vtense:$verb_vform];
+  ↓3 = $Rest ∪ [aux_form:$aux_form, vtense:$verb_vform];
   ⇑ = ⇓1 ∪ [form:int];
 }
 
 /* **************************************************
  * Noun phrase
  ************************************************** */
-@trace
 NP → det N1 {
-  [def:$def, number:$number, $REST] ⊂ ⇓2;
-  wait(⇓2) {
+  [def:$def, number:$number, $Rest] ⊂ ⇓2;
+  deferred(⇓2) {
     if (¬ $def)
       $def = true;
     if (¬ $number)
       $number = sg;
-    ↓1 = [def:$def, number:$number, $REST];
+    ↓1 = [def:$def, number:$number, $Rest];
   }
   ↓2 = ↑;
   ⇑ = ⇓1 ∪ ⇓2 ∪ [def:$def, @_3];
@@ -310,14 +316,12 @@ NP → pro {
   ⇑ = ⇓1;
 }
 
-@trace
 N1 → N {
   [MOD:NIL, $Rest];
   ↓1 = ↑; 
   ⇑ = ⇓1;
 }
 
-@trace
 N1 → [adjQuality] N2 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -330,7 +334,6 @@ N1 → [adjQuality] N2 {
   ⇑ = ⇓2;
 }
 
-@trace
 N2 → [adjSize] N3 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -343,7 +346,6 @@ N2 → [adjSize] N3 {
   ⇑ = ⇓2;
 }
 
-@trace
 N3 → [adjAge] N4 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -356,7 +358,6 @@ N3 → [adjAge] N4 {
   ⇑ = ⇓2;
 }
 
-@trace
 N4 → [adjShape] N5 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -369,7 +370,6 @@ N4 → [adjShape] N5 {
   ⇑ = ⇓2;
 }
 
-@trace
 N5 → [adjColor] N6 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -382,7 +382,6 @@ N5 → [adjColor] N6 {
   ⇑ = ⇓2;
 }
 
-@trace
 N6 → [adjOrigin] N7 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -395,7 +394,6 @@ N6 → [adjOrigin] N7 {
   ⇑ = ⇓2;
 }
 
-@trace
 N7 → [adjMaterial] N8 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -408,7 +406,6 @@ N7 → [adjMaterial] N8 {
   ⇑ = ⇓2;
 }
 
-@trace
 N8 → [adjPurpose] N {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -421,10 +418,9 @@ N8 → [adjPurpose] N {
   ⇑ = ⇓2;
 }
 
-@trace
 N → common_noun {
-  [MOD:NIL, $REST];
-  ↓1 = $REST;
+  [MOD:NIL, $Rest];
+  ↓1 = $Rest;
   ⇑ = ⇓1 ∪ ↑;
 }
 
@@ -433,10 +429,10 @@ N → common_noun {
  ************************************************** */
 VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
   // Given Arguments
-  [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $REST] ⊂ ↑;
+  [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;
   // Idiomatic Arguments
   [OBJECT:$Synth_OBJECT, OBLIQUE:$Synth_OBLIQUE, OBJ_THETA:$Synth_OBJ_THETA, PRED_ADJ:$Synth_PRED_ADJ, SCOMP:$Synth_SCOMP, VCOMP:$Synth_VCOMP, particule:$particle] ⊂ ⇓1;
-  ↓1 = $REST;
+  ↓1 = $Rest;
   
   if (#2) {
     if ($Synth_OBJECT)
@@ -506,8 +502,8 @@ VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
  * Verb 
  ************************************************** */
 VN → VERB {
-  [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, PRED_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $REST];
-  ↓1 = $REST;
+  [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, PRED_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $Rest];
+  ↓1 = $Rest;
   ⇑ = ⇓1;
 }
 
@@ -524,14 +520,14 @@ VN → VERB {
 // was he [not] feeling good
 // had he [not] felt good
 VERB → [not] verb {
-  [verbal_constr:$verbal_constr, aux_form:none, $REST] ⊂ ↑;
+  [verbal_constr:$verbal_constr, aux_form:none, $Rest] ⊂ ↑;
   if (#1) {
     attest (($verbal_constr == neg));
     ↓1 = [];
-    ↓2 = $REST ∪ [vtense:infinitive|past_participle|present_participle];
+    ↓2 = $Rest ∪ [vtense:infinitive|past_participle|present_participle];
   } else {
     attest (($verbal_constr == no_neg));
-    ↓2 = $REST ∪ [vtense:present|preterite|infinitive|past_participle|present_participle];
+    ↓2 = $Rest ∪ [vtense:present|preterite|infinitive|past_participle|present_participle];
   }
   ⇑ = ⇓2;
 }
@@ -540,14 +536,14 @@ VERB → [not] verb {
 // he was accepted
 // he was accepted by the compagny
 zzzVERB → verb {
-  [verbal_constr:$verbal_constr, aux_form:none, $REST] ⊂ ↑;
+  [verbal_constr:$verbal_constr, aux_form:none, $Rest] ⊂ ↑;
   if (#1) {
     attest (($verbal_constr == neg));
     ↓1 = [];
-    ↓2 = $REST ∪ [vtense:infinitive|past_participle|present_participle];
+    ↓2 = $Rest ∪ [vtense:infinitive|past_participle|present_participle];
   } else {
     attest (($verbal_constr == no_neg));
-    ↓2 = $REST ∪ [vtense:present|preterite|infinitive|past_participle|present_participle];
+    ↓2 = $Rest ∪ [vtense:present|preterite|infinitive|past_participle|present_participle];
   }
   ⇑ = ⇓2;
 }
@@ -557,14 +553,14 @@ zzzVERB → verb {
 // had he [not] been feeling good
 VERB → [not] have|be|been|have_been verb {
   [aux_form:have|be|been|have_been];
-  [aux_form:_, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
+  [aux_form:_, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (#1) {
     attest (($verbal_constr == neg));
     ↓1 = [];
   } else {
     attest (($verbal_constr == no_neg));
   }
-  ↓3 = $REST ∪ [vtense:infinitive|past_participle|present_participle];
+  ↓3 = $Rest ∪ [vtense:infinitive|past_participle|present_participle];
   [aux_form:$aux_form] ⊂ ↑;
   [aux_form:$synth_aux_form] ⊂ ⇓3;
   ↓2 = [aux_form:$aux_form] ∪ [aux_form:$synth_aux_form];
@@ -589,7 +585,7 @@ VERB → aux [not] [have|be|been|have_been] verb {
   ↓1 = ↑;
   [verbal_constr:$verbal_constr, aux_form:$aux_form] ⊂ ↑;
   //attest ((¬ $verbal_constr) ∨ ($verbal_constr == int|neg));
-  [vtense:_, tensed:_, $REST] ⊂ ↑;
+  [vtense:_, tensed:_, $Rest] ⊂ ↑;
   [verbal_constr:$synth_verbal_constr, aux_form:$synth_aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
   if (#2) {
     attest (($verbal_constr == neg));
@@ -604,7 +600,7 @@ VERB → aux [not] [have|be|been|have_been] verb {
   else {
     attest ((¬ $synth_aux_form) ∨ ($synth_aux_form == none));
   }
-  ↓4 = $REST ∪ [vtense:$verb_vform];
+  ↓4 = $Rest ∪ [vtense:$verb_vform];
   [vtense:_, tensed:_, $Rest4] ⊂ ⇓4;
   ⇑ = ⇓1 ∪ $Rest4;
 }
@@ -644,14 +640,14 @@ PP → prep NP {
  ************************************************** */
 SCOMP → csu S_tense {
   ↓1 = ↑;
-  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
+  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
   if (¬ $tense)
     $tense = present;
   if (¬ $verbal_constr)
     $verbal_constr = no_int | no_neg;
-  ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $REST];
+  ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
   ⇑ = ⇓2;
 }
 
@@ -660,12 +656,12 @@ SCOMP → csu S_tense {
  ************************************************** */
 VCOMP → to S {
   ↓1 = [];
-  [lexical_function:$lexical_function, verbal_constr:$verbal_constr, $REST] ⊂ ↑;
+  [lexical_function:$lexical_function, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
   // not interrogative, not negative
   if (¬ $verbal_constr)
     $verbal_constr = no_int | no_neg;
-  ↓2 = [lexical_function:$lexical_function, vtense:infinitive, verbal_constr:$verbal_constr, $REST];
+  ↓2 = [lexical_function:$lexical_function, vtense:infinitive, verbal_constr:$verbal_constr, $Rest];
   ⇑ = ⇓1;
 }

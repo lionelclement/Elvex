@@ -80,12 +80,13 @@ bool Environment::add(statementPtr from, const std::string &key, valuePtr value)
             it->second = value;
         }
         else if (it->second->isVariable()) {
+            it->second = value;
             FATAL_ERROR_UNEXPECTED;
-            return false;
         }
         else {
             WARNING(key << " already done " << from->getBufferName() << " (line " << from->getLineno() << ")");
-            //FATAL_ERROR_UNEXPECTED;
+            it->second->print(std::cout);
+            std::cout << std::endl;
             return false;
         }   
     }
@@ -224,7 +225,7 @@ redo:
     for (auto it = features->begin(); it != features->end(); ++it)
     {
         featurePtr feature = *it;
-        switch (feature->_getType())
+        switch (feature->getType())
         {
         case Feature::_HEAD_:
         case Feature::_LEMMA_:
@@ -331,10 +332,11 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
         return;
     if (!value->isNil() && !value->isAnonymous())
     {
-        switch (value->_getType())
+        switch (value->getType())
         {
         case Value::NIL_VALUE:
         case Value::TRUE_VALUE:
+        case Value::FALSE_VALUE:
         case Value::FORM_VALUE:
         case Value::CONSTANT_VALUE:
         case Value::IDENTIFIER_VALUE:

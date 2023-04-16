@@ -109,7 +109,7 @@ void Statements::addStatement(const statementPtr &statement)
 /* **************************************************
  *
  ************************************************** */
-void Statements::print(std::ostream &out, unsigned int tabulation, unsigned int color, bool ln,
+void Statements::print(std::ostream &out, unsigned int tabulationLenght, unsigned int tabulation, unsigned int color, unsigned int bgcolor, bool ln,
                        std::string leftSep, std::string rightSep, std::string sep) const
 {
     if (ln)
@@ -126,7 +126,7 @@ void Statements::print(std::ostream &out, unsigned int tabulation, unsigned int 
     {
         out << "<div>";
     }
-    tabulation += 5;
+    tabulation += tabulationLenght;
     if (guard)
     {
         if (ln)
@@ -134,10 +134,10 @@ void Statements::print(std::ostream &out, unsigned int tabulation, unsigned int 
             for (unsigned int j = 1; j <= tabulation; ++j)
                 out << "&nbsp;";
         }
-        guard->print(out, tabulation, color);
+        guard->print(out, tabulationLenght, tabulation, color, bgcolor);
     }
     bool first = true;
-    for (list::const_iterator i = statements.cbegin(); i != statements.cend(); ++i)
+    for (list::const_iterator statement = statements.cbegin(); statement != statements.cend(); ++statement)
     {
         if (first)
             first = false;
@@ -148,9 +148,9 @@ void Statements::print(std::ostream &out, unsigned int tabulation, unsigned int 
             for (unsigned int j = 1; j <= tabulation; ++j)
                 out << "&nbsp;";
         }
-        (*i)->print(out, tabulation, color);
+        (*statement)->print(out, tabulationLenght, tabulation, color, bgcolor);
     }
-    tabulation -= 5;
+    tabulation -= tabulationLenght;
     if (ln)
     {
         out << "</div>";

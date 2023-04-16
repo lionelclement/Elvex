@@ -795,7 +795,7 @@ void Item::print(std::ostream &out) const
     {
         out << "<td bgcolor=\"white\">";
         if (statements)
-            statements->print(out, 0, 0, true, "{", "}", "");
+            statements->print(out, 5, 0, 0x000000u, 0xFFFFFFu, true, "{", "}", "");
         else
             out << "&nbsp;";
         out << "</td>";

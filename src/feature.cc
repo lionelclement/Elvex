@@ -70,7 +70,7 @@ valuePtr Feature::getValue() const
 /* **************************************************
  *
  ************************************************** */
-Feature::Type Feature::_getType() const
+Feature::Type Feature::getType() const
 {
     return this->type;
 }
@@ -167,7 +167,8 @@ void Feature::print(std::ostream &outStream) const
         if (value)
             value->print(outStream);
         else
-            outStream << "NIL";
+            FATAL_ERROR_UNEXPECTED;
+            //outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_LEMMA_:
@@ -175,7 +176,8 @@ void Feature::print(std::ostream &outStream) const
         if (value)
             value->print(outStream);
         else
-            outStream << "NIL";
+            FATAL_ERROR_UNEXPECTED;
+            //outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_FORM_:
@@ -183,7 +185,8 @@ void Feature::print(std::ostream &outStream) const
         if (value)
             value->print(outStream);
         else
-            outStream << "NIL";
+            FATAL_ERROR_UNEXPECTED;
+            //outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_CONSTANT_:
@@ -191,7 +194,8 @@ void Feature::print(std::ostream &outStream) const
         if (value)
             value->print(outStream);
         else
-            outStream << "NIL";
+            FATAL_ERROR_UNEXPECTED;
+            //outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_VARIABLE_:
@@ -259,25 +263,25 @@ void Feature::makeSerialString()
     switch (type)
     {
     case Feature::_HEAD_:
-        serialString = '\0';
+        serialString = '\x0';
         break;
     case Feature::_LEMMA_:
-        serialString = '\1';
+        serialString = '\x1';
         break;
     case Feature::_FORM_:
-        serialString = '\2';
+        serialString = '\x2';
         break;
     case Feature::_CONSTANT_:
         serialString = attribute->peekSerialString();
         break;
     case Feature::_VARIABLE_:
-        serialString = '\3' + attribute->peekSerialString();
+        serialString = '\x3' + attribute->peekSerialString();
         break;
     }
     if (value)
-        serialString += '\4' + value->peekSerialString();
+        serialString += '\x4' + value->peekSerialString();
     else
-        serialString += '\5';
+        serialString += '\x5';
 }
 
 #ifdef OUTPUT_XML
