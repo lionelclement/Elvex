@@ -35,10 +35,10 @@ What you can do with Elvex
 
 Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data.
 
-BiTheoretical aspects
+Citation
 -----------------
 
---Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism--
+--Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism-- Lionel Clément
 forthcoming from Springer Max Silberztein ed.
 
 Theoretical aspects
