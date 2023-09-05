@@ -38,7 +38,7 @@ Write automatically and quickly relevant and adequate texts in natural language,
 Citation
 -----------------
 
---Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism-- Lionel Clément
+*Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism* Lionel Clément
 forthcoming from Springer Max Silberztein ed.
 
 Theoretical aspects
