@@ -9,7 +9,7 @@ The system is using handwritten *lexicon* and *rules* as parameters, and a *conc
 
 Although it is an Artificial Intelligence program, it is not a stochastic system based on neural networks.
 
-programming language used
+Programming language used
 -------
 
 C++
@@ -33,9 +33,13 @@ The language of **Elvex** is not under licence (it belongs to the public domain)
 What you can do with Elvex
 -----------------------------
 
-Write automatically and quickly relevant and adequate texts in natural language,
-given a meaning and elements of speech.
-Rest assured that **Elvex** avoids any misunderstanding.
+Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data.
+
+BiTheoretical aspects
+-----------------
+
+--Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism--
+forthcoming from Springer Max Silberztein ed.
 
 Theoretical aspects
 -----------------
