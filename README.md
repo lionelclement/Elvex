@@ -1,23 +1,35 @@
-Elvex
+**Elvex**
 =====
 
-**Elvex** is a **Natural Text Generator**
+The name **Elvex** encompasses the name of a software, the name of the language used to write natural language grammars and the name of a natural text generation (NLG) formalism.
+
+What can be fun with **Elvex**
+-----------------------------
+
+Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data. Migrate this solution to an embedded system with limited resources and no connection to a massive data server.
+
+**Elvex** software
+=====
+
+**Elvex** is a **Natural Text Generator** engine wrotten in C++ language
 
 It is written by Lionel Clément at Bordeaux University - France and released by LaBRI under GNU GPL License.
 
-The system is using handwritten *lexicon* and *rules* as parameters, and a *concept* as an input. Finally, it outputs a text in Natural Language that represents exactly the input. The "concept" or "What to say" may be the meaning, but also elements of speech like language level, illocutionary acts, enonciative properties, etc.
+**Elvex** uses custom-written lexicons and grammatical rules as file parameters, along with a **feature structure** as input. The lexicons and grammatical rules serve as linguistic resources used for sentence generation, while the **feature structure** represents the content to be expressed.
 
-Although it is an Artificial Intelligence program, it is not a stochastic system based on neural networks.
+In the end, **Elvex** generates texts in Natural Language that accurately mirrors the input while adhering to the grammar's syntactic and lexical rules.
 
-Programming language used
--------
+Although it is an Artificial Intelligence program, **Elvex** doesn't rely on massive training data in neural networks.
 
-C++
+**Elvex** language
+=====
+
+The lexicons, grammatical rules, and the content to be expressed are all described using the **Elvex** language, which is detailed in the manual documentation.
 
 License
 -------
 
-**Elvex** is released under GNU GPL License V3.
+The **Elvex** software is released under GNU GPL License V3.
 
 In other words
 
@@ -30,18 +42,13 @@ The license shall cover **Elvex** software and the included data except LeFFF wh
 
 The language of **Elvex** is not under licence (it belongs to the public domain), so the data you will write (new grammars, new lexicons) are not part of **Elvex**, it is under another license.
 
-What you can do with Elvex
------------------------------
-
-Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data.
-
 Citation
 -----------------
 
-*Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism* Lionel Clément
+*Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism* Lionel Clément 2023
 forthcoming from Springer Max Silberztein ed.
 
-Theoretical aspects
+Theoretical aspects of **Elvex** formalism
 -----------------
 
 **Elvex** is freely inspired by some syntactic formalisms such as:
@@ -57,7 +64,7 @@ Theoretical aspects
 It's working with handwritten lexicons and grammars that are similar to the linguistic descriptions of the syntactic phenomenon.
 I don’t explain the algorithms here. It’s efficient and monotonic (each rule adds something and never removes the effect of other rules).
 
-Practically speaking: to build Text Generator with Elvex for an application (Chatbot, Letter-writer, etc)
+Practically speaking: to build Text Generator with **Elvex** for an application (Chatbot, Letter-writer, etc)
 --------------------
 
 Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process to write all the simple words, compounds and idiomatic phrases (several months for one person, several weeks in a restricted domain).
@@ -75,10 +82,8 @@ One of the most difficult stuff already done with Elvex
 - Coordinations with Right-Node Raising and Gapping
 - Morphology in standard Breton
 
-Sample: Causal clauses in a little French Grammar first
+An example of a solution to a NLG problem solved with **Elvex**: Causal clauses in a little French Grammar
 -----------------------------------------------
-
-Causal clauses with tense aggrement.
 
 In French, the basis of verbal tense and the conclusion of a causal clause depend on the aspect, the tense and even on the differences in language registers of a sentence
 
