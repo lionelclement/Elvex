@@ -56,6 +56,14 @@ I cannot elaborate on the algorithm here, but let's provide some elements to und
 
 Given a feature structure (FS) that represents the content to be expressed, **Elvex** constructs a tagged shared forest whose boundary is the generated texts. The shared forest (which actually is a context-free grammar) is tagged with synthesized and inherited FS on each node. The synthesized FS constrain rules based on local properties (typically lexical properties), while inherited FS constrain local structures based on their context (typically semantical properties).
 
+The new algorithms used are
+
+-Equations and inequalities on feature structures resolved through unification.
+
+-Equivalence classes defined by an equivalence relation among items.
+
+-Construction of a context-free grammar instance from a context-free grammar.
+
 The **Elvex** algorithm is deterministic and monotonic (each rule adds something and never removes the effect of other rules).
 
 **Elvex** formalism
