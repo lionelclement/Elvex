@@ -55,9 +55,9 @@ Synthesizer::Synthesizer()
 #endif
     this->reduceAll = false;
     this->warning = false;
-    this->random = false;
-    this->first = false;
-    this->attempsRandom = 1000;
+    this->randomResult = false;
+    this->firstResult = false;
+    this->randomAttemps = 1000; // attemps to find a local random result
     this->trace = false;
     this->verbose = false;
 }
@@ -249,33 +249,33 @@ void Synthesizer::setReduceAll(const bool _reduceAll)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setRandom(const bool _random)
+void Synthesizer::setRandomResult(const bool randomResult)
 {
-    this->random = _random;
+    this->randomResult = randomResult;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getRandom() const
+bool Synthesizer::getRandomResult() const
 {
-    return this->random;
+    return this->randomResult;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setFirst(const bool _first)
+void Synthesizer::setFirstResult(const bool firstResult)
 {
-    this->first = _first;
+    this->firstResult = firstResult;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getFirst() const
+bool Synthesizer::getFirstResult() const
 {
-    return this->first;
+    return this->firstResult;
 }
 
 #ifdef OUTPUT_XML
@@ -809,11 +809,11 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                     forestFound = Forest::create(Entry::create((*actualItem)->getRuleLhs()),
                                                                  (*actualItem)->getRanges()[0], row);
                                     forestMap.insert(fi, forestFound);
-                                    nodePtr node = Node::create();
+                                    nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
                                     node->push_back(forestFound);
                                     nodeRoot->push_back(forestFound);
                                 }
-                                nodePtr node = Node::create();
+                                nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
                                 for (auto forestIdentifier : (*actualItem)->getForestIdentifiers())
                                 {
                                     auto _forestMapIt = forestMap.find(forestIdentifier);
@@ -924,7 +924,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                         }
 
                                         // On transmet le contexte de previousItem
-                                        nodePtr node = Node::create();
+                                        nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
                                         for (auto forestIdentifier : (*actualItem)->getForestIdentifiers())
                                         {
                                             auto forestMapIt = forestMap.find(forestIdentifier);
@@ -1127,9 +1127,9 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                 {
                                     entryPtr entry = *entryIt;
                                     
-                                    if (this->getRandom())
+                                    if (this->getRandomResult())
                                     {
-                                        if (tryRandom++ > attempsRandom)
+                                        if (tryRandom++ > randomAttemps)
                                             break;
                                         size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
                                         entry = entries->get(rv);
@@ -1248,7 +1248,7 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                         modification = true;
                                         modificationOnce = true;
                                         (*actualItem)->addFlags(Flags::SEEN);
-                                        if (this->getRandom())
+                                        if (this->getRandomResult())
                                         {
                                             break;
                                         }
@@ -1289,7 +1289,7 @@ void Synthesizer::generate(class Parser &parser)
     }
 
     std::ofstream outfile;
-    nodeRoot = Node::create();
+    nodeRoot = Node::create(false, false, false);
     class ItemSet *initState = ItemSet::create(0);
     std::list<rulePtr> *rules = parser.getRules().findRules(parser.getStartTerm());
     class Item *it;
@@ -1337,7 +1337,7 @@ void Synthesizer::generate(class Parser &parser)
         std::cerr << "Length : " << i << std::endl;
     }
 
-    nodeRoot->generate(this->getRandom(), this->getFirst());
+    nodeRoot->generate(this->getRandomResult(), this->getFirstResult());
 #ifdef OUTPUT_XML
     if (outXML)
     {

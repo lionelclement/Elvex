@@ -1,0 +1,127 @@
+Test → form Text_with_features {
+  ↓1 = [FORM:"\n"];
+  ↓2 = [HEAD:OBJET];
+}
+
+/* **************************************************
+ * 
+ ************************************************** */
+Text_with_features → form TR form Features Groupe_nominal {
+  ↓1 = [FORM:"**********\n"];
+  ↓3 = [FORM:"\n"];
+  ↓5 = ↑;
+  [def:$def, gender:$gender, number:$number, person:$person, poss:$poss] ⊂ ⇓5;
+  deferred(⇓5) {
+   if (¬ $def)
+    $def = none;
+  if (¬ $gender)
+    $gender = none;
+  if (¬ $number)
+    $number = none;
+  if (¬ $person)
+    $person = none;
+  if (¬ $poss)
+    $poss = none;
+  ↓4 = [def:$def, gender:$gender, number:$number, person:$person, poss:$poss];
+  ↓2 = ⇓5;
+  }
+}
+
+Text → Groupe_nominal {
+  ↓1 = ↑;
+}
+
+// def, genre, nombre, personne, possessif 
+Features → form [DefFeature] [GenderFeature] [NumberFeature] [PersonFeature] [PossFeatures] form {
+  ↓1 = [FORM:"["];
+  ↓7 = [FORM:"]\n"];
+  [def:$def, gender:$gender, number:$number, person:$person, poss:$poss] ⊂ ↑;
+  ↓2 = [def:$def];
+  attest ($def != none <=> #2);
+  ↓3 = [gender:$gender];
+  attest ($gender != none <=> #3);
+  ↓4 = [number:$number];
+  attest ($number != none <=> #4);
+  ↓5 = [person:$person];
+  attest ($person != none <=> #5);
+  if ($poss != none)
+    ↓6 = $poss;
+  attest (($poss != none) <=> #6);
+}
+
+// genre, nombre, personne possesseur
+PossFeatures → form [GenderFeature] [NumberFeature] [PersonFeature] form {
+  ↓1 = [FORM:"poss:["];
+  ↓5 = [FORM:"]"];
+  [gender:$gender, number:$number, person:$person] ⊂ ↑;
+  ↓2 = [gender:$gender];
+  attest ($gender <=> #2);
+  ↓3 = [number:$number];
+  attest ($number <=> #3);
+  ↓4 = [person:$person];
+  attest ($person <=> #4);
+}
+
+Groupe_nominal → DÉTERMINANT NOM {
+  deferred(⇓2) {
+    [HEAD:_, def:$def, number:$number, pref:$pref, mutation_consonantique:$mutation_consonantique, $Rest] ⊂ ⇓2;
+    //En standard, la consonne finale de l'article montre une alternance phonologique 
+    // -n, -r, -l. La consonne finale est réalisée [ n ] devant [ n, d, t, h ] ou une 
+    // voyelle; [ l ] avant [ l ] ; et [ r ] partout ailleurs.
+    if (($pref == _N) ∨ ($pref == _D) ∨ ($pref == _T) ∨ ($pref == _H))  {
+      $suff = n;  
+      $consonne_épenthétique=false;
+    }
+    else if ($pref == _Voyelle) {  
+      $suff = n;  
+      $consonne_épenthétique=true;
+    }
+    else if ($pref == _L) { 
+      $suff = l;  
+      $consonne_épenthétique=false;
+    }
+    else {  
+      $suff = r;  
+      $consonne_épenthétique=false;
+    }
+    ↓1 = ↑ ∪ [def:$def, number:$number, suff:$suff, mutation_consonantique:$mutation_consonantique, consonne_épenthétique:$consonne_épenthétique, $Rest];
+  }
+  ↓2 = ↑;
+  ⇑ = ⇓1 ∪ ⇓2 ∪ [number:$number, def:$def, @_3];
+}
+
+@trace
+DÉTERMINANT → Déterminant {
+  [HEAD:_, tr:_, consonne_épenthétique:$consonne_épenthétiqueInh, $rest] ⊂ ↑;
+  ↓1 = $rest ∪ [consonne_épenthétique:$consonne_épenthétiqueInh];
+  [HEAD:_, mutation_consonantique:$mutation_consonantiqueSynth, consonne_épenthétique:$consonne_épenthétiqueSynth, def:$defSynth, poss:$possSynth] ⊂ ⇓1;
+  deferred(⇓1) {
+    if (¬ $mutation_consonantiqueSynth)
+      $mutation_consonantiqueSynth = none;
+    if (¬ $consonne_épenthétiqueSynth)
+      $consonne_épenthétiqueSynth = $consonne_épenthétiqueInh;
+    attest($consonne_épenthétiqueSynth == $consonne_épenthétiqueInh);
+    if (¬ $possSynth)
+      $possSynth = none;
+    if (¬ $defSynth)
+      $defSynth = none;
+    ⇑ = $rest ∪ [mutation_consonantique:$mutation_consonantiqueSynth, consonne_épenthétique:$consonne_épenthétiqueInh, def:$defSynth, poss:$possSynth];
+  }
+}
+
+NOM → Nom {
+  ↓1 = ↑;
+  [mutation_consonantique:$mutation_consonantiqueSynth] ⊂ ⇓1;
+  deferred(⇓1) {
+    if (¬ $mutation_consonantiqueSynth)
+      $mutation_consonantiqueSynth = spirantisation|lénition|durcissante|none;
+  }
+  ⇑ = ↑ ∪ ⇓1 ∪ [mutation_consonantique:$mutation_consonantiqueSynth];
+}
+
+/*
+Périphérie_droite
+Périphérie_gauche
+Rannig
+Champ_du_milieu
+*/

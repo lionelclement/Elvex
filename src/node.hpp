@@ -42,15 +42,17 @@ private:
     unsigned int nbrCS;
     vectorForests forests;
     std::vector<std::string> output;
+    std::vector<std::string> outputRL;
+    bool withSpace;
+    bool bidirectional;
+    bool permutable;
 
-    Node(void);
-
-    void generate(vectorForests_const_iterator);
+    Node(bool withSpace, bool bidirectional, bool permutable);
 
 public:
     ~Node(void);
 
-    static nodePtr create(void);
+    static nodePtr create(bool withSpace, bool bidirectional, bool permutable);
 
     bool empty() const;
 
@@ -69,12 +71,21 @@ public:
     void push_back(const forestPtr&);
     
     const std::vector<std::string>& getOutput(void) const;
+    
+    bool getWithSpace() const;
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
 
-    void generate(bool random, bool first);
+    void generateLR(std::string base, vectorForests::const_iterator forestIterator);
+    void generateRL(std::string base, vectorForests::const_iterator forestIterator);
+    void generateOutputPermutations(std::string base, vectorForests::const_iterator forestIterator);
+    void generatePermutations(vectorForests& forests, int start, int end);
+    void generate(bool randomResult, bool singleResult);
+
+    void _generate(vectorForests_const_iterator);
+    void _generate(bool random, bool first);
 
 };
 

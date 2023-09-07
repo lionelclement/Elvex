@@ -335,6 +335,21 @@ downDoubleArrow "⇓"
     return TOKEN_TRACE;
   }
   
+  "@withspaces" {
+    DBUGPRT("TOKEN_WITH_SPACES");
+    return TOKEN_WITH_SPACES;
+  }
+  
+  "@bidirectional" {
+    DBUGPRT("TOKEN_BIDIRECTIONAL");
+    return TOKEN_BIDIRECTIONAL;
+  }
+  
+  "@permutable" {
+    DBUGPRT("TOKEN_PERMUTABLE");
+    return TOKEN_PERMUTABLE;
+  }
+  
   "attest" {
     DBUGPRT("TOKEN_ATTEST");
     return TOKEN_ATTEST;

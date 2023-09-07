@@ -1,0 +1,85 @@
+/************************************************************
+* Patterns
+************************************************************/
+@m = [gender:ms];
+@f = [gender:fm];
+
+@_1 = [person:one];
+@_2 = [person:two];
+@_3 = [person:three];
+
+@s = [number:sg];
+@p = [number:pl];
+@_1s = [@_1, @s];
+@_2s = [@_2, @s];
+@_3s = [@_3, @s];
+@_1p = [@_1, @p];
+@_2p = [@_2, @p];
+@_3p = [@_3, @p];
+@_3sm = [@_3s, @m];
+@_3sf = [@_3s, @f];
+
+@_poss1s = [poss:[@_1s]];
+@_poss2s = [poss:[@_2s]];
+@_poss3sm = [poss:[@_3sm]];
+@_poss3sf = [poss:[@_3sf]];
+@_poss1p = [poss:[@_1p]];
+@_poss2p = [poss:[@_2p]];
+@_poss3p = [poss:[@_3p]];
+
+@def = [def:true, poss:none];
+@indef = [def:false, poss:none];
+
+@quant = [quant:true];
+
+@poss = [poss:true, def:none];
+
+"gender:$gender" GenderFeature[gender:$gender];
+"number:$number" NumberFeature[number:$number];
+"person:$person" PersonFeature[person:$person];
+"def:$def" DefFeature[def:$def];
+
+/************************************************************
+* Auxiliaires verbaux
+************************************************************/
+/************************************************************
+* 
+************************************************************/
+"?"	strongPunct [punct:_int_];
+"."	strongPunct [punct:_dot_];
+"!"	strongPunct [punct:_excl_];
+
+//En standard, la consonne finale de l'article montre une alternance phonologique 
+// -n, -r, -l. La consonne finale est réalisée [ n ] devant [ n, d, t, h ] ou une 
+// voyelle; [ l ] avant [ l ] ; et [ r ] partout ailleurs.
+//"an, al, ar"
+
+"a$suff"	Déterminant[@s, @def, suff:$suff];
+
+//"un, ul, ur"
+"u$suff"	Déterminant[@s, @indef, suff:$suff];
+
+// pluriel indéfini
+""	Déterminant[@p, @indef, suff:$suff];
+
+// possessif
+ma	Déterminant[@_poss1s, mutation_consonantique:spirantisation];
+da	Déterminant[@_poss2s, mutation_consonantique:lénition];
+e	Déterminant[@_poss3sm];
+//hen	Déterminant[@_poss3sm];
+he	Déterminant[@_poss3sf, mutation_consonantique:spirantisation];
+"hec'h"	Déterminant[@_poss3sf, consonne_épenthétique:true];
+hon	Déterminant[@_poss1p];
+ho	Déterminant[@_poss2p, mutation_consonantique:durcissante];
+o	Déterminant[@_poss3p, mutation_consonantique:spirantisation];
+
+
+//pep	Déterminant[neg:false];
+//kement	Déterminant[@indef, @quant];
+"kalz a"	Déterminant[@indef, @p, @quant, mutation_consonantique:lénition];
+
+"$tr"	TR[tr:$tr];
+
+a	Prep[form:a];
+
+FORM form;

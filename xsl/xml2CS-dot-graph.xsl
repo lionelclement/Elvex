@@ -107,11 +107,20 @@
 
     <!--################################################## # Dessine le contenu
         de la forêt une seule fois ################################################## -->
-    <xsl:template match="OUTPUT">
-        <xsl:value-of select="S/text()"/>
-    </xsl:template>
+  <xsl:template match="OUTPUT">
+    <!-- Sélectionnez tous les éléments <S> et produisez-les comme texte -->
+    <xsl:apply-templates select="S"/>
+  </xsl:template>
 
-    <!--################################################## # ################################################## -->
+  <!-- Correspondance pour l'élément S -->
+  <xsl:template match="S">
+    <!-- Sortie de la balise <S> en tant que texte -->
+    <xsl:value-of select="."/>
+    <xsl:text>\n</xsl:text>
+  </xsl:template>
+
+  <!-- Ignorer d'autres éléments -->
+      <!--################################################## # ################################################## -->
     <xsl:template match="*|text()">
     </xsl:template>
 

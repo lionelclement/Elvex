@@ -3,6 +3,9 @@
 TO_CHASE	verb	TO_CHASE	iiReal:OBJECT
 
 EUPHORIC	verb	TO_BE	iiReal:OBJ_THETA,pcase:_over_,OBJ_THETA:[HEAD:MOON,@s,@def]
+//EUPHORIC	verb	TO_THRILL	SUBJECT:[human:true],passive:yes
+EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[HEAD:HAPPY,MOD:<[HEAD:EXTREMELY]>]
+EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[HEAD:THRILLED]
 TO_FIND_OUT	verb	TO_FIND	particule:_out_,iiReal:SCOMP,compl:_that_
 TO_STUDY	verb	TO_STUDY	SUBJECT:[human:true],iiReal:OBJECT
 TO_MEOW	verb	TO_MEOW	
@@ -67,6 +70,7 @@ MOUSE	common_noun	MOUSE
 TABLE	common_noun	TABLE	
 
 #  Adjectives
+THRILLED	adj	THRILLED	type:opinion
 NICE	adj	NICE	type:opinion
 BAD	adj	BAD	lexical_function:none,type:opinion
 BAD	adj	BAD	lexical_function:magn,MOD:[HEAD:VERY],type:opinion
@@ -79,5 +83,5 @@ BIG	adj	BIG	type:size
 # type:Opinion, Size, Age, Shape, Color, Origin, Material, Purpose/Qualifier
 #  Adverbs
 VERY	adv	VERY	
-
+EXTREMELY	adv	EXTREMELY	
 #  end

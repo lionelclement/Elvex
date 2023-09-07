@@ -2,22 +2,37 @@
  * Start
  ************************************************** */
 @trace
-S → NP
-{
+S → NP dot {
   ↓1 = ↑;
+  ↓2 = [];
 }
 
 @trace
-NP → det N
-{
-  ↓1 = ⇓2;
+@withspaces
+@permutable
+//@bilateral
+NP → det N {
   ↓2 = ↑;
-  ⇑ = [];
+  ↓1 = ⇓2;
+  ⇑ = ⇓2;
 }
 
 @trace
-N → n
-{
+@withspaces
+//@bilateral
+N → adj N {
+  [mod:<$Head::$Tail>, $Rest];
+  [number:$inhNb, gender:$inhGd] ⊂ ↑;
+  ↓1 = [number:$inhNb, gender:$inhGd] ∪ [number:$synthNb, gender:$synthGd, $Head];
+  ↓2 = [mod:$Tail, $Rest];
+  [gender:$synthGd, number:$synthNb] ⊂ ⇓2;
+  ⇑ = ⇓2 ∪ [gender:$synthGd, number:$synthNb] ∪ [qual:yes];
+}
+
+@trace
+@withspaces
+N → n {
+  [mod:NIL];
   ↓1 = ↑;
   ⇑ = ⇓1;
 }

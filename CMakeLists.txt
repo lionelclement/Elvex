@@ -120,6 +120,7 @@ configure_file(
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
 target_compile_options(elvex PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
+#target_compile_options(elvex PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 
 #-DDEBUGLEX\(x\)=x 
 )

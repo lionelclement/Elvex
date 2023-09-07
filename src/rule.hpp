@@ -43,28 +43,31 @@ private:
     std::string filename;
     unsigned int lineno;
     bool trace;
+    bool withSpaces;
+    bool bidirectional;
+    bool permutable;
 
-    Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements = statementsPtr());
+    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements = statementsPtr());
+    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
+    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
-    Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
+    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
 public:
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs,
+    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs,
                           statementsPtr statements = statementsPtr());
 
     static rulePtr
-    create(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements = statementsPtr());
+    create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements = statementsPtr());
 
-    static rulePtr create(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
     ~Rule();
@@ -88,6 +91,12 @@ public:
     void resetUsages(void);
 
     unsigned int getLineno(void);
+
+    bool getWithSpaces(void) const;
+
+    bool getBidirectional(void) const;
+
+    bool getPermutable(void) const;
 
     const std::string &getFilename(void) const;
 

@@ -69,7 +69,7 @@ public:
     void toXML(const xmlNodePtr, bool);
 #endif
 
-    void generate(bool random, bool first);
+    void generate(bool randomResult, bool singleResult);
 };
 
 #endif // ELVEX_FOREST_H

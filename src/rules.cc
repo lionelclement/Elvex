@@ -162,7 +162,7 @@ void Rules::addNewStartTerm(bool addENDTerminal)
     }
 
     std::string fileName = "";
-    r = Rule::create(0, fileName, Vartable::_START_TERM_, rhs);
+    r = Rule::create(0, fileName, false, false, false, Vartable::_START_TERM_, rhs);
     setStartTerm(startTerm);
     rules.push_back(r);
     firstRule = r;

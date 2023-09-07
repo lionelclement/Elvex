@@ -52,10 +52,13 @@
  extern Parser parser;
  unsigned int headLineno;
  bool headTrace;
+ bool withSpaces;
+ bool bidirectional;
+ bool permutable;
 
   void ruleserror(const char* str) {
       std::ostringstream oss;
-      oss << str << " in " << parser.getTopBufferName() << " (line " << ruleslineno << ")";
+      oss << str << " in " << parser.getTopBufferName() << " (" << ruleslineno << ")";
       throw parser_exception(oss);
   }
 
@@ -109,6 +112,9 @@
 %token TOKEN_SEARCH TOKEN_ON
 %token TOKEN_RAND
 %token TOKEN_TRACE
+%token TOKEN_WITH_SPACES
+%token TOKEN_BIDIRECTIONAL
+%token TOKEN_PERMUTABLE
 
 // OPERATORS
 %token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT 
@@ -289,7 +295,7 @@ dictionary_line:
 	}
 
 	//
-	|TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_COLON features TOKEN_SEMI
+	|TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_ASSIGNMENT features TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
 	  parser.addMacros(*$2, *$4);
@@ -367,22 +373,51 @@ rules:
 	};
 
 pref_rule:
-	TOKEN_TRACE
+	 pref_rule TOKEN_TRACE
 	{
 	  DBUGPRT("pref_rule");
 	  headTrace = true;
 	}
 
+	|pref_rule TOKEN_WITH_SPACES 
+	{
+	  DBUGPRT("pref_rule");
+	  withSpaces = true;
+	}
+
+	|pref_rule TOKEN_BIDIRECTIONAL 
+	{
+	  DBUGPRT("pref_rule");
+	  bidirectional = true;
+	}
+
+	|pref_rule TOKEN_PERMUTABLE 
+	{
+	  DBUGPRT("pref_rule");
+	  permutable = true;
+	}
+
 	| /* empty */ {
 	  DBUGPRT("pref_rule");
 	  headTrace = false;
+	  withSpaces = false;
+	  bidirectional = false;
+	  permutable = false;
 	};
 
 rule:
 	pref_rule term TOKEN_RIGHTARROW terms_vector structure_statement
 	{
 	  DBUGPRT("rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), $2, *$4, $5 ? *$5 : statementsPtr());
+	  if (bidirectional && permutable){
+		yyerror((char*)"This rule is both permutable and bidirectional");
+
+	  }
+	  if (permutable && $4->size() <= 2){
+		yyerror((char*)"This rule with fewer than 3 terms must be bidirectional, not permutable");
+
+	  }
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, *$4, $5 ? *$5 : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getRules().addRule(rule);
@@ -397,7 +432,7 @@ rule:
 	|pref_rule term TOKEN_RIGHTARROW structure_statement
 	{
 	  DBUGPRT("Rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), $2, $4 ? *$4 : statementsPtr());
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, $4 ? *$4 : statementsPtr());
 	  rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getRules().addRule(rule);

@@ -821,8 +821,8 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
 
     else if ((type != o->type))
     {
-        std::cerr << type << " " << o->type << std::endl;
-        FATAL_ERROR_UNEXPECTED;
+        //std::cout << type << " " << o->type << std::endl;
+        //FATAL_ERROR_UNEXPECTED;
         ret = false;
     }
 

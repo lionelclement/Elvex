@@ -144,6 +144,12 @@ public:
 
     const std::string &getRuleFilename() const;
 
+    bool getWithSpaces() const;
+
+    bool getBidirectional() const;
+
+    bool getPermutable() const;
+
     termsPtr getTerms(unsigned int) const;
 
     void addRef(unsigned int);

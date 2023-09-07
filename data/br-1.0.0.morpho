@@ -1,0 +1,78 @@
+# @macro	features
+# form	pos	lemma	features
+# ***********************************************************
+# Macros
+# ***********************************************************/
+@m	gender:ms
+@f	gender:fm
+@_1	person:one
+@_2	person:two
+@_3	person:three
+@s	number:sg
+@p	number:pl
+@_1s	person:one,number:sg
+@_2s	person:two,number:sg
+@_3s	person:three,number:sg
+@_1p	person:one,number:pl
+@_2p	person:two,number:pl
+@_3p	person:three,number:pl
+@def	def:true
+
+# ***********************************************************
+#  Noms
+# ***********************************************************/
+  
+# ***********************************************************
+# En breton, les consonnes initiales d'un mot susceptibles de muter sont:
+# K, T, P, G, D, B, M, Gw
+# ***********************************************************/
+// les phonèmes [ n, d, t, h ] ou une voyelle ou [ l ] sont succeptibles de contexte droit
+
+ti	Nom	ti	pref:_T,@s,mutation_consonantique:durcissante|none
+di	Nom	ti	@s,mutation_consonantique:lénition
+zi	Nom	ti	@s,mutation_consonantique:spirantisation
+tier	Nom	ti	pref:_T,@p,mutation_consonantique:durcissante|none
+dier	Nom	ti	@p,mutation_consonantique:lénition
+zier	Nom	ti	@p,mutation_consonantique:spirantisation
+
+taol	Nom	taol	@s,pref:_T,mutation_consonantique:durcissante|none
+daol	Nom	taol	@s,mutation_consonantique:lénition
+zaol	Nom	taol	@s,mutation_consonantique:spirantisation
+taol	Nom	taol	@p,pref:_T,mutation_consonantique:durcissante|none
+daol	Nom	taol	@p,mutation_consonantique:lénition
+zaol	Nom	taol	@p,mutation_consonantique:spirantisation
+
+kegin	Nom	kegin	pref:_K,@s,@f,mutation_consonantique:durcissante|none
+c'hegin	Nom	kegin	@s,@f,mutation_consonantique:spirantisation
+gegin	Nom	kegin	@s,@f,mutation_consonantique:lénition
+keginoù	Nom	kegin	pref:_K,@p,@f,mutation_consonantique:durcissante|none
+c'heginoù	Nom	kegin	@f,@p,mutation_consonantique:spirantisation
+geginoù	Nom	kegin	@f,@p,mutation_consonantique:lénition
+
+karr	Nom	karr	pref:_K,@s,mutation_consonantique:durcissante|none
+c'harr	Nom	karr	@s,mutation_consonantique:spirantisation
+garr	Nom	karr	@s,mutation_consonantique:lénition
+kirri	Nom	karr	pref:_K,@p,mutation_consonantique:durcissante|none
+c'hirri	Nom	karr	@p,mutation_consonantique:spirantisation
+girri	Nom	karr	@p,mutation_consonantique:lénition
+
+uzin	Nom	uzin	pref:_Voyelle,@s
+uzinoù	Nom	uzin	pref:_Voyelle,@p
+
+follen	Nom	follen	pref:_F,@s
+follen	Nom	follen	pref:_F,@p
+
+livr	Nom	livr	pref:_L,@s
+livrioù	Nom	livr	pref:_L,@p
+
+fakteur	Nom	facteur	pref:_F,@s
+fakteur	Nom	fakteur	pref:_F,@p
+//? pluriel
+
+ouiziegezh	Nom	ouiziegezh	pref:_Voyelle,@s
+ouiziegezh	Nom	ouiziegezh	pref:_Voyelle,@p
+//? pluriel
+
+# end
+
+

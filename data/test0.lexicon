@@ -1,40 +1,59 @@
 "tag-$tag" tag[tag:$tag];
 
-@ms: [gender:masc];
+@m = [gender:masc];
+@f = [gender:fem];
+@s = [number:singular];
+@p = [number:plural];
+@ms = [@m, @s];
+@mp = [@m, @p];
+@fs = [@f, @s];
+@fp = [@f, @p];
 
 le det[@ms];
-xxx xxx[@ms];
-yyy yyy[@ms];
-la det[gender:fem];
+la det[@fs];
+les det[@p];
 
-"36" num[];
+/***
+"un certain nombre de" det[@p];
 
-le def[@ms];
-la def[gender:fem];
+ce det[@ms];
+cette det[@f];
+ces det[@p];
 
-ce dem[@ms];
-cette dem[gender:fem];
-
-mon poss[@ms];
-ma poss[gender:fem];
+mon det[@ms];
+ma det[@fs];
+mes det[@p];
+***/
 
 chat n[PRED:chat,@ms];
-chatte n[PRED:chat,gender:fem];
+chatte n[PRED:chat,@fs];
+chats n[PRED:chat,@mp];
+chattes n[PRED:chat,@fp];
 chien n[PRED:chien,@ms];
-chienne n[PRED:chien,gender:fem];
-poule n[PRED:poule,gender:fem];
+chienne n[PRED:chien,@fs];
+chiens n[PRED:chien,@mp];
+chiennes n[PRED:chien,@fp];
+poule n[PRED:poule,@fs];
 poulet n[PRED:poule,@ms];
-
+poules n[PRED:poule,@fp];
+poulets n[PRED:poule,@mp];
 renard n[PRED:renard, @ms];
-//renarde n[PRED:renard, gender:fem];
+renarde n[PRED:renard, @fs];
+renards n[PRED:renard, @mp];
+renardes n[PRED:renard, @fp];
 
-souris n[PRED:souris, gender:fem];
+souris n[PRED:souris, @f];
 
-belle adj[PRED:beau,gender:fem];
+belle adj[PRED:beau,@fs];
 beau adj[PRED:beau,@ms];
-gentille adj[PRED:gentil,gender:fem];
+belles adj[PRED:beau,@fp];
+beaux adj[PRED:beau,@mp];
+gentille adj[PRED:gentil,@fs];
 gentil adj[PRED:gentil,@ms];
-vieux adj[PRED:vieux,@ms];
-vieille adj[PRED:vieux,gender:fem];
+gentilles adj[PRED:gentil,@fp];
+gentils adj[PRED:gentil,@mp];
+vieux adj[PRED:vieux,@m];
+vieille adj[PRED:vieux,@fs];
+vieilles adj[PRED:vieux,@fp];
 
 "." dot[];

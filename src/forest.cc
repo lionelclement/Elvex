@@ -167,7 +167,7 @@ void Forest::toXML(xmlNodePtr nodeRoot, bool root)
 /* **************************************************
  *
  ************************************************** */
-void Forest::generate(bool random, bool first)
+void Forest::generate(bool randomResult, bool singleResult)
 {
     if (isUnsetFlags(Flags::GENERATED))
     {
@@ -180,20 +180,21 @@ void Forest::generate(bool random, bool first)
         {
             auto nodeIt = nodes.begin();
             nodePtr node;
-            if (random)
+            if (randomResult)
             {
                 size_t rv = std::rand() / ((RAND_MAX + 1u) / nodes.size());
                 node = nodes.at(rv);
             }
             while (nodeIt != nodes.end())
             {
-                if (!random)
+                if (!randomResult)
                     node = *nodeIt;
                 if (node->isUnsetFlags(Flags::GENERATED))
-                    node->generate(random, first);
-                for (std::vector<std::string>::const_iterator s = node->getOutput().cbegin(); s != node->getOutput().cend(); ++s)
+                    node->generate(randomResult, singleResult);
+                for (std::vector<std::string>::const_iterator s = node->getOutput().cbegin(); s != node->getOutput().cend(); ++s){
                     output.push_back(*s);
-                if (random || first)
+                }
+                if (randomResult || singleResult)
                     break;
                 ++nodeIt;
             }

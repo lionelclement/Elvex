@@ -599,11 +599,11 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
         break;
 
     case IF_STATEMENT:
-            OPENSPAN;
+        OPENSPAN;
         out << "<B>if</B>&nbsp;(";
         lhs->print(out);
         out << ')';
-            CLOSESPAN;
+        CLOSESPAN;
         rhs->print(out, tabulationLenght, tabulation, color, bgcolor);
         break;
 
@@ -624,9 +624,9 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
         {
             for (unsigned int j = 1; j <= tabulation; j++)
                 out << "&nbsp;";
-                OPENSPAN;
+            OPENSPAN;
             out << "<B>else</B>";
-                CLOSESPAN;
+            CLOSESPAN;
 
             if (rhs->isSetFlags(Flags::REJECTED))
                 bgcolor = PINK;
@@ -643,11 +643,11 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
         break;
 
     case DEFERRED_STATEMENT:
-            OPENSPAN;
+        OPENSPAN;
         out << "<B>deferred</B>&nbsp;(";
         lhs->print(out);
         out << ')';
-            CLOSESPAN;
+        CLOSESPAN;
         if (rhs->isStms())
         {
             rhs->print(out, tabulationLenght, tabulation, color);
@@ -660,19 +660,19 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
         break;
 
     case FOREACH_STATEMENT:
-            OPENSPAN;
+        OPENSPAN;
         out << "<B>foreach</B>&nbsp;";
         lhs->print(out);
         out << "&nbsp;";
-            CLOSESPAN;
+        CLOSESPAN;
         rhs->print(out, tabulationLenght, tabulation, color);
         break;
 
     case FOREACH_CON_T_STATEMENT:
-            OPENSPAN;
+        OPENSPAN;
         out << "<B>in</B>&nbsp;";
         lhs->print(out);
-            CLOSESPAN;
+        CLOSESPAN;
         if (rhs->isStms())
             rhs->print(out, tabulationLenght, tabulation, color);
         else
@@ -858,7 +858,6 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
             FATAL_ERROR_UNEXPECTED;
         }
     }
-
 }
 
 /* **************************************************
@@ -1177,7 +1176,7 @@ Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesiz
         {
             fs1->subFlags(Flags::SEEN);
             fs2->subFlags(Flags::SEEN);
-            resultFeatures = _unif(shared_from_this(), fs1, fs2, item);
+            resultFeatures = unif(shared_from_this(), fs1, fs2, item);
             if (replaceVariables && item->getEnvironment() && item->getEnvironment()->size() > 0)
             {
                 bool effect = false;
@@ -1436,7 +1435,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             {
                 fs1->subFlags(Flags::SEEN);
                 fs2->subFlags(Flags::SEEN);
-                resultFeatures = _unif(shared_from_this(), fs1, fs2, item);
+                resultFeatures = unif(shared_from_this(), fs1, fs2, item);
             }
         }
     }
@@ -1595,10 +1594,12 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
             {
                 resultValue = valuePtr();
             }
-            else if ((v1->isFalse()) || (v2->isFalse()))
+            else if ((v1->isFalse()) || (v2->isFalse())){
                 resultValue = Value::STATIC_FALSE;
-            else
+            }
+            else {
                 resultValue = Value::STATIC_TRUE;
+            }
             goto valueBuilt;
         }
         break;
@@ -1736,8 +1737,9 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *syn
         case NOT:
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
-            if (!v1 || v1->isFalse())
+            if (!v1 || v1->isFalse()){
                 resultValue = Value::STATIC_TRUE;
+            }
             else
                 resultValue = Value::STATIC_FALSE;
             goto valueBuilt;
@@ -1808,7 +1810,7 @@ valueBuilt:
 /* **************************************************
  *
  ************************************************** */
-featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const featuresPtr &fs2, class Item *item)
+featuresPtr Statement::unif(statementPtr from, const featuresPtr &fs1, const featuresPtr &fs2, class Item *item)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::unif #######################" << std::endl;
@@ -1827,6 +1829,11 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
 
     featuresPtr result = featuresPtr();
 
+    if (!fs1 || !fs2)
+    {
+        result = Features::NIL;
+        goto endUnif;
+    }
     if (fs1->isBottom() || fs2->isBottom())
     {
         result = Features::BOTTOM;
@@ -2143,7 +2150,7 @@ featuresPtr Statement::_unif(statementPtr from, const featuresPtr &fs1, const fe
 
                     case Value::FEATURES_VALUE:
                     {
-                        featuresPtr _features = _unif(from, (*i1)->getValue()->getFeatures(),
+                        featuresPtr _features = unif(from, (*i1)->getValue()->getFeatures(),
                                                      (*i2)->getValue()->getFeatures(), item);
                         if (_features->isBottom())
                         {

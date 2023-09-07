@@ -171,6 +171,13 @@ meowed	verb	TO_MEOW	vtense:past_participle,tensed:false
 meowing	verb	TO_MEOW	vtense:present_participle,tensed:false
 meow	verb	TO_MEOW	vtense:infinitive,tensed:false
 
+thrill	verb	TO_THRILL	vtense:present,SUBJECT:[@_12s]
+thrill	verb	TO_THRILL	vtense:present,SUBJECT:[@p]
+thrills	verb	TO_THRILL	vtense:present,SUBJECT:[@_3s]
+thrilled	verb	TO_THRILL	vtense:preterite
+thrilled	verb	TO_THRILL	vtense:past_participle,tensed:false
+thrill	verb	TO_THRILL	vtense:infinitive,tensed:false
+
 # ***********************************************************
 #  Nouns
 # ***********************************************************/
@@ -199,6 +206,7 @@ tables	common_noun	TABLE	@p
 #  Adjectives
 # ***********************************************************/
 nice	adj	NICE	
+thrilled	adj	THRILLED	
 bad	adj	BAD	
 good	adj	GOOD	
 happy	adj	HAPPY	
@@ -209,5 +217,6 @@ black	adj	BLACK
 #  Adverbs
 # ***********************************************************/
 very	adv	VERY	
+extremely	adv	EXTREMELY
 
 # end

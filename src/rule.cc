@@ -29,12 +29,15 @@
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
            statementsPtr statements)
     : Facade(id)
 {
     this->lineno = lineno;
     this->filename = filename;
+    this->withSpaces = withSpaces;
+    this->bidirectional = bidirectional;
+    this->permutable = permutable;
     this->lhs = lhs;
     this->rhs = rhs;
     this->statements = statements;
@@ -46,11 +49,14 @@ Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lh
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
     : Facade(id)
 {
     this->lineno = lineno;
     this->filename = filename;
+    this->withSpaces = withSpaces;
+    this->bidirectional = bidirectional;
+    this->permutable = permutable;
     this->lhs = lhs;
     this->statements = statements;
     this->usages = 0;
@@ -61,51 +67,51 @@ Rule::Rule(size_t id, unsigned int lineno, std::string filename, unsigned int lh
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
-    : Rule(0, lineno, filename, lhs, rhs, statements)
+Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
+    : Rule(0, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements)
 {
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
-    : Rule(0, lineno, filename, lhs, statements)
+Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
+    : Rule(0, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements)
 {
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
-    return rulePtr(new Rule(id, lineno, filename, lhs, rhs, statements));
+    return rulePtr(new Rule(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
+rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
 {
-    return rulePtr(new Rule(id, lineno, filename, lhs, statements));
+    return rulePtr(new Rule(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(unsigned int lineno, std::string filename, unsigned int lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
-    return rulePtr(new Rule(lineno, filename, lhs, rhs, statements));
+    return rulePtr(new Rule(lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements));
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(unsigned int lineno, std::string filename, unsigned int lhs, statementsPtr statements)
+rulePtr Rule::create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
 {
-    return rulePtr(new Rule(lineno, filename, lhs, statements));
+    return rulePtr(new Rule(lineno, filename, withSpaces, bidirectional, permutable, lhs, statements));
 }
 
 /* ************************************************************
@@ -153,6 +159,30 @@ termsPtr Rule::getTerms(unsigned int index) const
 statementsPtr Rule::getStatements(void) const
 {
     return statements;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+bool Rule::getWithSpaces(void) const
+{
+    return withSpaces;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+bool Rule::getBidirectional(void) const
+{
+    return bidirectional;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+bool Rule::getPermutable(void) const
+{
+    return permutable;
 }
 
 /* ************************************************************
@@ -214,7 +244,7 @@ rulePtr Rule::clone() const
     std::vector<termsPtr> rhsCopy;
     for (unsigned int i = 0; i < rhs.size(); ++i)
         rhsCopy.push_back(rhs[i]->clone());
-    rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, lhs, rhsCopy, statements);
+    rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, this->withSpaces, this->bidirectional, this->permutable, lhs, rhsCopy, statements);
     rule->usages = usages;
     rule->trace = trace;
     return rule;

@@ -110,14 +110,14 @@ void generate(bool trace)
         {
             std::vector<forestPtr>::const_iterator forestIt = synthesizer.getNodeRoot()->cbegin();
             forestPtr forest;
-            if (synthesizer.getRandom())
+            if (synthesizer.getRandomResult())
             {
                 unsigned int rv = std::rand() / ((RAND_MAX + 1u) / synthesizer.getNodeRoot()->size());
                 forest = synthesizer.getNodeRoot()->at(rv);
             }
             while (forestIt != synthesizer.getNodeRoot()->cend())
             {
-                if (!synthesizer.getRandom())
+                if (!synthesizer.getRandomResult())
                     forest = *forestIt;
                 for (auto i = forest->getOutput_cbegin(); i != forest->getOutput_cend(); ++i)
                 {
@@ -129,7 +129,7 @@ void generate(bool trace)
                         std::cout << "</li>" << std::endl;
                     }
                 }
-                if (synthesizer.getRandom() || synthesizer.getFirst())
+                if (synthesizer.getRandomResult() || synthesizer.getFirstResult())
                     break;
                 ++forestIt;
             }
@@ -137,7 +137,7 @@ void generate(bool trace)
         if (trace){
             std::cout << "</ul>" << std::endl;
         }
-    } while (synthesizer.getRandom() && synthesizer.getNodeRoot()->empty() &&
+    } while (synthesizer.getRandomResult() && synthesizer.getNodeRoot()->empty() &&
              randomTry++ < MAXATTEMPTS);
 }
 
@@ -185,11 +185,11 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random"))
                     {
                         std::srand(time(nullptr));
-                        synthesizer.setRandom(true);
+                        synthesizer.setRandomResult(true);
                     }
                     else if (!strcmp(argv[arg] + 1, "f") || !strcmp(argv[arg] + 1, "-first"))
                     {
-                        synthesizer.setFirst(true);
+                        synthesizer.setFirstResult(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace"))

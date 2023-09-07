@@ -187,6 +187,30 @@ unsigned int Item::getRuleId() const
 /* **************************************************
  *
  ************************************************** */
+bool Item::getWithSpaces() const
+{
+    return rule->getWithSpaces();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Item::getBidirectional() const
+{
+    return rule->getBidirectional();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Item::getPermutable() const
+{
+    return rule->getPermutable();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 void Item::ruleResetUsages(void)
 {
     rule->resetUsages();

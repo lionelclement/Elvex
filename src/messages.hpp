@@ -37,6 +37,6 @@
 #define FATAL_ERROR_UNEXPECTED {COUT_LINE; throw fatal_exception("*** unexpected");}
 #define WARNING(msg) {std::cout<< "*** warning: " << msg << std::endl;}
 
-//#define _BUG_ {CERR_LINE; std::cerr << "*** Will cause a segmentation fault" << std::endl; int *x = NULL; *x = 36;}
+//#define _BUG_ {CERR_LINE; std::cerr << "*** Will cause a memory access error (segmentation fault)" << std::endl; int *x = NULL; *x = 36;}
 
 #endif // ELVEX_MESSAGES_H

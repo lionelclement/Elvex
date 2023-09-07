@@ -17,6 +17,8 @@
  *
  ************************************************** */
 
+#include <algorithm>
+#include <vector>
 #include "node.hpp"
 #include "messages.hpp"
 #include "forest.hpp"
@@ -24,9 +26,12 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::Node()
+Node::Node(bool withSpace, bool bidirectional, bool permutable)
 {
    NEW;
+   this->withSpace = withSpace;
+   this->bidirectional = bidirectional;
+   this->permutable = permutable;
    this->nbrCS = 0;
 }
 
@@ -41,9 +46,9 @@ Node::~Node()
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-nodePtr Node::create()
+nodePtr Node::create(bool withSpace, bool bidirectional, bool permutable)
 {
-   return nodePtr(new Node());
+   return nodePtr(new Node(withSpace, bidirectional, permutable));
 }
 
 /* ************************************************************
@@ -118,6 +123,14 @@ const std::vector<std::string> &Node::getOutput() const
    return this->output;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
+bool Node::getWithSpace() const
+{
+   return this->withSpace;
+}
+
 #ifdef OUTPUT_XML
 /* **************************************************
  *
@@ -148,7 +161,159 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 /* **************************************************
  *
  ************************************************** */
-void Node::generate(vectorForests::const_iterator forest)
+void Node::generateLR(std::string base, vectorForests::const_iterator forestIterator)
+{
+   if (forestIterator == cend())
+   {
+      output.push_back(base);
+   }
+   else
+   {
+      if ((*forestIterator)->getOutput_size())
+      {
+         for (auto s = (*forestIterator)->getOutput_cbegin(); s != (*forestIterator)->getOutput_cend(); ++s)
+         {
+            if (forestIterator != cbegin() && base.size())
+            {
+               if (withSpace)
+                  generateLR(base + ' ' + *s, forestIterator + 1);
+               else
+                  generateLR(base + *s, forestIterator + 1);
+            }
+            else
+               generateLR(*s, forestIterator + 1);
+         }
+      }
+      else
+      {
+         generateLR(base, forestIterator + 1);
+      }
+   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Node::generateRL(std::string base, vectorForests::const_iterator forestIterator)
+{
+   if (forestIterator < cbegin())
+   {
+      output.push_back(base);
+   }
+   else
+   {
+      if ((*forestIterator)->getOutput_size())
+      {
+         for (auto s = (*forestIterator)->getOutput_cbegin(); s != (*forestIterator)->getOutput_cend(); ++s)
+         {
+            std::string str;
+            if ((forestIterator != cend() - 1) && base.size())
+            {
+               if (withSpace)
+                  generateRL(base + ' ' + *s, forestIterator - 1);
+               else
+                  generateRL(base + *s, forestIterator - 1);
+            }
+            else
+            {
+               generateRL(*s, forestIterator - 1);
+            }
+         }
+      }
+      else
+      {
+         generateRL(base, forestIterator - 1);
+      }
+   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Node::generateOutputPermutations(std::string base, vectorForests::const_iterator forestIterator)
+{
+   if (forestIterator == forests.cend())
+   {
+      output.push_back(base);
+   }
+   else
+   {
+      if ((*forestIterator)->getOutput_size())
+      {
+         for (auto s = (*forestIterator)->getOutput_cbegin(); s != (*forestIterator)->getOutput_cend(); ++s)
+         {
+            if ((forestIterator != cbegin()) && base.size())
+            {
+               if (withSpace)
+                  generateOutputPermutations(base + ' ' + *s, forestIterator + 1);
+               else
+                  generateOutputPermutations(base + *s, forestIterator + 1);
+            }
+            else
+            {
+               generateOutputPermutations(*s, forestIterator + 1);
+            }
+         }
+      }
+      else
+      {
+         generateOutputPermutations(base, forestIterator + 1);
+      }
+   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Node::generatePermutations(Node::vectorForests &forests, int start, int end)
+{
+   if (start == end)
+   {
+      generateOutputPermutations(std::string(), forests.cbegin());
+   }
+   else
+   {
+      for (int i = start; i <= end; i++)
+      {
+         std::swap(forests[start], forests[i]);
+         generatePermutations(forests, start + 1, end);
+         std::swap(forests[start], forests[i]);
+      }
+   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Node::generate(bool randomResult, bool singleResult)
+{
+   if (isUnsetFlags(Flags::GENERATED))
+   {
+      addFlags(Flags::GENERATED);
+      if (!forests.empty())
+      {
+         for (vectorForests::const_iterator forest = cbegin(); forest != cend(); ++forest)
+            if ((*forest)->isUnsetFlags(Flags::GENERATED))
+               (*forest)->generate(randomResult, singleResult);
+         if (permutable)
+            generatePermutations(forests, 0, forests.size() - 1);
+         else if (bidirectional)
+         {
+            generateLR(std::string(), cbegin());
+            generateRL(std::string(), cend() - 1);
+         }
+         else
+         {
+            generateLR(std::string(), cbegin());
+         }
+      }
+   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Node::_generate(vectorForests::const_iterator forest)
 {
    if ((*forest)->getOutput_size() > 0)
    {
@@ -176,13 +341,13 @@ void Node::generate(vectorForests::const_iterator forest)
    }
    forest++;
    if (forest != forests.end())
-      generate(forest);
+      _generate(forest);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Node::generate(bool random, bool first)
+void Node::_generate(bool random, bool first)
 {
    if (isUnsetFlags(Flags::GENERATED))
    {
@@ -193,6 +358,6 @@ void Node::generate(bool random, bool first)
             (*forestIterator)->generate(random, first);
       }
       if (!forests.empty())
-         generate(forests.begin());
+         _generate(forests.begin());
    }
 }

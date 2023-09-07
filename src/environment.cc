@@ -84,9 +84,9 @@ bool Environment::add(statementPtr from, const std::string &key, valuePtr value)
             FATAL_ERROR_UNEXPECTED;
         }
         else {
-            WARNING(key << " already done " << from->getBufferName() << " (line " << from->getLineno() << ")");
-            it->second->print(std::cout);
-            std::cout << std::endl;
+            WARNING(key << " already done " << from->getBufferName() << " (line " << std::dec << from->getLineno() << ")");
+            //it->second->print(std::cout);
+            //std::cout << std::endl;
             return false;
         }   
     }
@@ -186,7 +186,7 @@ valuePtr Environment::find(const bitsetPtr &attr) const
 void Environment::print(std::ostream &out) const
 {
     bool first = true;
-    out << "<TABLE border=\"1\"><TR>";
+    out << "<TABLE border=\"0\"><TR>";
     for (auto &i : env)
     {
         if (first)
@@ -196,7 +196,7 @@ void Environment::print(std::ostream &out) const
         out << "<TD>" << i.first;
         if (i.second)
         {
-            out << "</TD><TD>";
+            out << "</TD><TD>⇒</TD><TD>";
             i.second->print(out);
         }
         out << "</TD>";

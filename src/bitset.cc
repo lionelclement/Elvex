@@ -98,7 +98,7 @@ std::string Bitset::toString() const
             --c;
             s << Vartable::bitToVariable(i);
             if (c > 0)
-                s << '|';
+                s << " | ";
         }
     }
     return s.str();

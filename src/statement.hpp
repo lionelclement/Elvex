@@ -277,7 +277,7 @@ public:
 
     valuePtr evalValue(class Item *, Parser &, Synthesizer *, bool);
 
-    static featuresPtr _unif(statementPtr from, const featuresPtr &, const featuresPtr &, class Item *);
+    static featuresPtr unif(statementPtr from, const featuresPtr &, const featuresPtr &, class Item *);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 

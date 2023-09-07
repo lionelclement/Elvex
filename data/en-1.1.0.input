@@ -46,7 +46,7 @@
 
 //Text[HEAD:CAT]
 //Text[HEAD:CAT, def:$d]
-Text [HEAD:TO_MEOW, i:[HEAD:CAT, @s]]
+//Text [HEAD:TO_MEOW, i:[HEAD:CAT]]
 
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
 //Text [HEAD:TO_MEOW, i:[HEAD:CAT, @p], MOD:<[FORM:"next year"]>]
@@ -63,11 +63,12 @@ Text [HEAD:TO_MEOW, i:[HEAD:CAT, @s]]
 //Text[HEAD:TO_APPRECIATE, i:[HEAD:pro, @_2s], ii:[HEAD:ELVEX]]
 
 
-//Text[HEAD:EUPHORIC, i:[HEAD:STUDENT, @p], tense:past]
+//Text[HEAD:EUPHORIC, i:[HEAD:STUDENT, @p], tense:$t]
 
 //Text[HEAD:TO_STUDY, i:[HEAD:STUDENT, @p]]
 
-//Text_with_features [HEAD:EUPHORIC, i:[HEAD:STUDENT, @p], vtense:$t]
+Axiom [HEAD:EUPHORIC, i:[HEAD:STUDENT], vtense:$t]
+//Axiom [HEAD:EUPHORIC, i:[HEAD:STUDENT, number:sg]]
 
 //S[HEAD:TO_STUDY, i:[HEAD:pro, number:pl, person:three], vtense:present, lexical_function:none, verbal_constr:no_int|no_neg]
 

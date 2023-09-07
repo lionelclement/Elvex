@@ -1,4 +1,5 @@
-//S [PRED:renard, mod:<[PRED:beau]>]
+//S [PRED:renard, gender:masc, number:singular]
+S [PRED:renard, gender:masc, mod:<[PRED:gentil]>]
 //S [PRED:renard, mod:<[]>]
-//S [mod:<[]>]
-S [PRED:renard]
+//S [PRED:renard, mod:<[PRED:_]>]
+//S [PRED:_, mod:<[PRED:_]>]
