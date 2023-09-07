@@ -59,7 +59,7 @@ Given a feature structure (FS) that represents the content to be expressed, **El
 The **Elvex** algorithm is deterministic and monotonic (each rule adds something and never removes the effect of other rules).
 
 **Elvex** formalism
------------------
+=====
 
 **Elvex** formalism is freely inspired by some syntactic formalisms such as:
 
@@ -78,7 +78,7 @@ Citation
 forthcoming from Springer Max Silberztein ed.
 
 One of the most difficult stuff already done with Elvex
------------------------------------------------
+=====
 
 - Adjective order in English (big yellow squared stuff, not squared yellow big stuff)
 - Anaphora resolution process between sentences with pronouns, synonyms and hypernyms
