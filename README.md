@@ -18,7 +18,7 @@ The grammar is more complex, but shorter to write (several weeks).
 **Elvex** software
 =====
 
-**Elvex** is a **Natural Text Generator** engine wrotten in C++ language
+**Elvex** is a **Natural Text Generator** engine written in C++ language
 
 It is written by Lionel Clément at Bordeaux University - France and released by LaBRI under GNU GPL License.
 
