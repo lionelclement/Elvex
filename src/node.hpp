@@ -84,9 +84,6 @@ public:
     void generatePermutations(vectorForests& forests, int start, int end);
     void generate(bool randomResult, bool singleResult);
 
-    void _generate(vectorForests_const_iterator);
-    void _generate(bool random, bool first);
-
 };
 
 #endif // ELVEX_NODE_H
