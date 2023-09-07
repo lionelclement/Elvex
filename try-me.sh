@@ -34,11 +34,4 @@ make -C data en-1.1.0.fsa
 #./bin/elvex --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; open data/en-1.1.0.html
 #lldb bin/elvex -- -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input
 
-#make -C data br-1.0.0.fsa
-#./bin/elvex --traceAll -cld data -clf br-1.0.0 -rulesFile data/br-1.0.0.rules -lexiconFile data/br-1.0.0.lexicon -inputFile data/br-1.0.0.input > data/br-1.0.0.html ; cat data/br-1.0.0.html
-#./bin/elvex --trace -cld data -clf br-1.0.0 -rulesFile data/br-1.0.0.rules -lexiconFile data/br-1.0.0.lexicon -inputFile data/br-1.0.0.input > data/br-1.0.0.html ; cat data/br-1.0.0.html
-#./bin/elvex -cld data -clf br-1.0.0 -rulesFile data/br-1.0.0.rules -lexiconFile data/br-1.0.0.lexicon -inputFile data/br-1.0.0.input
-
-#lldb ./bin/elvex -- -cld data -clf br-1.0.0 -rulesFile data/br-1.0.0.rules -lexiconFile data/br-1.0.0.lexicon -inputFile data/br-1.0.0.input
-#./bin/elvex -cld data -clf br-1.0.0 -rulesFile data/br-1.0.0.rules -lexiconFile data/br-1.0.0.lexicon -inputFile data/br-1.0.0.input
 
