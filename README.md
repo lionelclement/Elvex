@@ -9,7 +9,7 @@ The system is using handwritten *lexicon* and *rules* as parameters, and a *conc
 
 Although it is an Artificial Intelligence program, it is not a stochastic system based on neural networks.
 
-programming language used
+Programming language used
 -------
 
 C++
@@ -33,9 +33,13 @@ The language of **Elvex** is not under licence (it belongs to the public domain)
 What you can do with Elvex
 -----------------------------
 
-Write automatically and quickly relevant and adequate texts in natural language,
-given a meaning and elements of speech.
-Rest assured that **Elvex** avoids any misunderstanding.
+Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data.
+
+Citation
+-----------------
+
+*Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism* Lionel Clément
+forthcoming from Springer Max Silberztein ed.
 
 Theoretical aspects
 -----------------
@@ -56,9 +60,9 @@ I don’t explain the algorithms here. It’s efficient and monotonic (each rule
 Practically speaking: to build Text Generator with Elvex for an application (Chatbot, Letter-writer, etc)
 --------------------
 
-Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process to write all the simple words, compounds and idiomatic phrases (several months for one person in a restricted domain).
+Every time you use a word it has to be fully described in the lexicon, depending on a specific domain. It would be a long and costly process to write all the simple words, compounds and idiomatic phrases (several months for one person, several weeks in a restricted domain).
 
-The grammar is more complex, but shorter to write (several weeks). In order to help grammar-writers, I am presently writing a grammar design-pattern.
+The grammar is more complex, but shorter to write (several weeks).
 
 One of the most difficult stuff already done with Elvex
 -----------------------------------------------
@@ -68,8 +72,8 @@ One of the most difficult stuff already done with Elvex
 - Complex idiomatic phrases (not always contiguous)
 - Past participle aggrement in French with transitive verbs
 - Lexical functions (based on Mel'čuk theory)
-In progress:
 - Coordinations with Right-Node Raising and Gapping
+- Morphology in standard Breton
 
 Sample: Causal clauses in a little French Grammar first
 -----------------------------------------------
