@@ -1,4 +1,0 @@
-/usr/local/bin/elvex
-/usr/local/bin/elvexbuildlexicon
-/usr/local/bin/elvexpostedition_en
-/usr/local/bin/elvexpostedition_fr
