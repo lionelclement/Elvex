@@ -167,3 +167,4 @@ target_compile_options(elvexpostedition_fr PUBLIC -O4 -Wall -Wextra -Wno-depreca
 
 install(TARGETS elvex elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
         RUNTIME DESTINATION bin)
+
