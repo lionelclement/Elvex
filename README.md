@@ -56,7 +56,7 @@ Given a feature structure that represents the content to be expressed, **Elvex**
 
 Each node of the shared forest corresponds to a grammaticl rule 
 
-$A \rightarrow $B$_1 $B$_2 \dots $B$_n$
+$A \rightarrow $B$_1$ $B$_2$ \dots $B$_n$
 $\Gamma(\uparrow)$
 $\downarrow_i = \phi(\uparrow, \downarrow_k, \Downarrow_k)$, $k \ne i$
 $\Uparrow = \psi(\uparrow, \downarrow_i, \Downarrow_i)$
