@@ -52,18 +52,11 @@ The lexicons, grammatical rules, and the content to be expressed are all describ
 **Elvex** algorithm
 =====
 
-Given a feature structure that represents the content to be expressed, **Elvex** constructs a tagged shared forest whose boundary is the generated texts."
+I cannot elaborate on the algorithm here, but let's provide some elements to understand the mechanism in a general sense: 
 
-Each node of the shared forest corresponds to a grammaticl rule 
+Given a feature structure (FS) that represents the content to be expressed, **Elvex** constructs a tagged shared forest whose boundary is the generated texts. The shared forest (which actually is a context-free grammar) is tagged with synthesized and inherited FS on each node. The synthesized FS constrain rules based on local properties (typically lexical properties), while inherited FS constrain local structures based on their context (typically semantical properties).
 
-$A \rightarrow B_1 B_2 \dots B_n$
-$\Gamma(\uparrow)$
-$\downarrow_i = \phi(\uparrow, \downarrow_k, \Downarrow_k)$, $k \ne i$
-$\Uparrow = \psi(\uparrow, \downarrow_i, \Downarrow_i)$
-
-
-**Elvex** 
-I don’t explain the algorithm here. It’s efficient and monotonic (each rule adds something and never removes the effect of other rules).
+The **Elvex** algorithm is deterministic and monotonic (each rule adds something and never removes the effect of other rules).
 
 **Elvex** formalism
 -----------------
