@@ -84,10 +84,11 @@ bool Environment::add(statementPtr from, const std::string &key, valuePtr value)
             FATAL_ERROR_UNEXPECTED;
         }
         else {
-            WARNING(key << " already done " << from->getBufferName() << " (line " << std::dec << from->getLineno() << ")");
+            //WARNING(key << " already done " << from->getBufferName() << " (line " << std::dec << from->getLineno() << ")");
             //it->second->print(std::cout);
             //std::cout << std::endl;
-            return false;
+            it->second = value;
+            //return false;
         }   
     }
     return true;

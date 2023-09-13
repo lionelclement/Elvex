@@ -1,7 +1,7 @@
 **Elvex**
 =====
 
-The name **Elvex** encompasses the name of a software, the name of a natural text generation algorithm, the name of the language used to write natural language grammars and the name of a linguistic formalism.
+The name **Elvex** encompasses the name of a software, the name of a natural text generation (NLG) algorithm, the name of the language used to write natural language grammars and the name of a linguistic formalism.
 
 What can be fun with **Elvex** software
 -----------------------------

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.21.0)
+project(elvex VERSION 2.22.0)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_COMPILER g++)
@@ -114,9 +114,9 @@ set(ELVEX_COMMON_SOURCES
         src/vartable.hpp)
 
 configure_file(
-        src/config.hpp.in
-        src/config.hpp
-        @ONLY)
+    src/config.hpp.in
+    src/config.hpp
+    @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
 target_compile_options(elvex PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
