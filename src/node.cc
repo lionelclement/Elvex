@@ -118,9 +118,17 @@ void Node::push_back(const forestPtr &forestPtr)
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string> &Node::getOutput() const
+const std::vector<std::string>::const_iterator Node::output_cbegin(void) const
 {
-   return this->output;
+   return this->output.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const std::vector<std::string>::const_iterator Node::output_cend(void) const
+{
+   return this->output.cend();
 }
 
 /* **************************************************
@@ -152,7 +160,9 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
    {
       xmlNodePtr o = xmlNewChild(node, nullptr, (const xmlChar *)"OUTPUT", nullptr);
       for (const auto &s : output)
-         xmlNewChild(o, nullptr, (const xmlChar *)"S", (xmlChar *)s.c_str());
+      {
+         xmlNewChild(o, nullptr, (const xmlChar *)"TEXT", (xmlChar *)s.c_str());
+      }
    }
 }
 
@@ -161,17 +171,58 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 /* **************************************************
  *
  ************************************************** */
+void Node::generateLR(vectorForests::const_iterator forest)
+{
+   if (forest != forests.end())
+   {
+      if ((*forest)->output_size() > 0)
+      {
+         for (auto s = (*forest)->output_cbegin(); s != (*forest)->output_cend(); ++s)
+         {
+            if (output.size() == 0)
+            {
+               output.push_back(*s);
+            }
+            else
+            {
+               for (auto o = output.begin(); o != output.end(); ++o)
+               {
+                  if (o->size() != 0 && s->size() != 0)
+                  {
+                     *o += ' ' + *s;
+                  }
+                  else if (s->size() != 0)
+                  {
+                     *o = *s;
+                  }
+               }
+            }
+         }
+      }
+      generateLR(forest + 1);
+   }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+/*
 void Node::generateLR(std::string base, vectorForests::const_iterator forestIterator)
 {
+
+
+
    if (forestIterator == cend())
    {
+      //CERR_LINE;
+      //std::cerr << '(' << base << ')' << std::endl;
       output.push_back(base);
    }
    else
    {
-      if ((*forestIterator)->getOutput_size())
+      if ((*forestIterator)->output_size())
       {
-         for (auto s = (*forestIterator)->getOutput_cbegin(); s != (*forestIterator)->getOutput_cend(); ++s)
+         for (auto s = (*forestIterator)->output_cbegin(); s != (*forestIterator)->output_cend(); ++s)
          {
             if (forestIterator != cbegin() && base.size())
             {
@@ -190,6 +241,7 @@ void Node::generateLR(std::string base, vectorForests::const_iterator forestIter
       }
    }
 }
+*/
 
 /* **************************************************
  *
@@ -202,9 +254,9 @@ void Node::generateRL(std::string base, vectorForests::const_iterator forestIter
    }
    else
    {
-      if ((*forestIterator)->getOutput_size())
+      if ((*forestIterator)->output_size())
       {
-         for (auto s = (*forestIterator)->getOutput_cbegin(); s != (*forestIterator)->getOutput_cend(); ++s)
+         for (auto s = (*forestIterator)->output_cbegin(); s != (*forestIterator)->output_cend(); ++s)
          {
             std::string str;
             if ((forestIterator != cend() - 1) && base.size())
@@ -238,9 +290,9 @@ void Node::generateOutputPermutations(std::string base, vectorForests::const_ite
    }
    else
    {
-      if ((*forestIterator)->getOutput_size())
+      if ((*forestIterator)->output_size())
       {
-         for (auto s = (*forestIterator)->getOutput_cbegin(); s != (*forestIterator)->getOutput_cend(); ++s)
+         for (auto s = (*forestIterator)->output_cbegin(); s != (*forestIterator)->output_cend(); ++s)
          {
             if ((forestIterator != cbegin()) && base.size())
             {
@@ -300,12 +352,14 @@ void Node::generate(bool randomResult, bool singleResult)
          }
          else if (bidirectional)
          {
-            generateLR(std::string(), cbegin());
+            //generateLR(std::string(), cbegin());
+            generateLR(cbegin());
             generateRL(std::string(), cend() - 1);
          }
          else
          {
-            generateLR(std::string(), cbegin());
+            //generateLR(std::string(), cbegin());
+            generateLR(cbegin());
          }
       }
    }

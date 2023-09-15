@@ -57,11 +57,11 @@ public:
 
     bool isEmpty(void) const;
 
-    size_t getOutput_size(void) const;
+    size_t output_size(void) const;
 
-    const std::vector<std::string>::const_iterator getOutput_cbegin(void) const;
+    const std::vector<std::string>::const_iterator output_cbegin(void) const;
 
-    const std::vector<std::string>::const_iterator getOutput_cend(void) const;
+    const std::vector<std::string>::const_iterator output_cend(void) const;
 
     void push_back_node(const nodePtr &);
 

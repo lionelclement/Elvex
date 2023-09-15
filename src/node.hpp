@@ -70,7 +70,12 @@ public:
     
     void push_back(const forestPtr&);
     
-    const std::vector<std::string>& getOutput(void) const;
+    size_t output_size(void) const;
+
+    const std::vector<std::string>::const_iterator output_cbegin(void) const;
+
+    const std::vector<std::string>::const_iterator output_cend(void) const;
+
     
     bool getWithSpace() const;
 
@@ -78,7 +83,8 @@ public:
     void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
 
-    void generateLR(std::string base, vectorForests::const_iterator forestIterator);
+    //void generateLR(std::string base, vectorForests::const_iterator forestIterator);
+    void generateLR(vectorForests::const_iterator forestIterator);
     void generateRL(std::string base, vectorForests::const_iterator forestIterator);
     void generateOutputPermutations(std::string base, vectorForests::const_iterator forestIterator);
     void generatePermutations(vectorForests& forests, int start, int end);

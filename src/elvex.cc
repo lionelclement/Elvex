@@ -119,7 +119,7 @@ void generate(bool trace)
             {
                 if (!generator.getRandomResult())
                     forest = *forestIt;
-                for (auto i = forest->getOutput_cbegin(); i != forest->getOutput_cend(); ++i)
+                for (auto i = forest->output_cbegin(); i != forest->output_cend(); ++i)
                 {
                     if (trace){
                         std::cout << "<li>" << std::endl;

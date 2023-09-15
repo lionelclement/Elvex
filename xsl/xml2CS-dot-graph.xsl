@@ -9,7 +9,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI -- Université Bordeaux
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -36,6 +36,7 @@
         <xsl:text>&quot;</xsl:text>
         <xsl:text>];&#10;node[fontnames=&quot;Palatino-Roman&quot;,fontsize=&quot;12&quot;,fontcolor=&quot;black&quot;,style=&quot;filled&quot;,fillcolor=&quot;white&quot;,width=&quot;0&quot;,height=&quot;0&quot;,shape=&quot;ellipse&quot;,penwidth=&quot;1&quot;];&#10;edge[arrowtail=&quot;none&quot;,arrowhead=&quot;normal&quot;];&#10;</xsl:text>
 
+        
         <xsl:apply-templates select="FOREST"/>
 
         <xsl:text>}&#10;</xsl:text>
@@ -46,7 +47,7 @@
     <xsl:template match="FOREST[NODE/SON]">
         <xsl:variable name="idF" select="@id" />
     <xsl:value-of select="$idF"/>
-        <xsl:text>[shape=&quot;egg&quot;,style=&quot;filled&quot;,height=&quot;0.1&quot;,width=&quot;0.1&quot;,fontcolor=&quot;black&quot;</xsl:text>
+        <xsl:text>[shape=&quot;box&quot;,style=&quot;filled&quot;,height=&quot;0.1&quot;,width=&quot;0.1&quot;,fontcolor=&quot;black&quot;</xsl:text>
         <xsl:text>,label=&quot;</xsl:text>
         <xsl:apply-templates select="OUTPUT"/>
         <xsl:text>&quot;];&#10;</xsl:text>
@@ -58,7 +59,7 @@
                     <xsl:value-of select="$idN"/>
                     <xsl:text>[shape=&quot;circle&quot;,height=&quot;0.15&quot;,width=&quot;0.15&quot;,fontcolor=&quot;black&quot;</xsl:text>
                     <xsl:text>,label=&quot;</xsl:text>
-                    <xsl:apply-templates select="OUTPUT" />
+                    <xsl:apply-templates select="TEXT" />
                     <xsl:text>&quot;];&#10;</xsl:text>
 
                     <xsl:value-of select="$idF"/>
@@ -128,11 +129,11 @@
         de la forêt une seule fois ################################################## -->
   <xsl:template match="OUTPUT">
     <!-- Sélectionnez tous les éléments <S> et produisez-les comme texte -->
-    <xsl:apply-templates select="S"/>
+    <xsl:apply-templates select="TEXT"/>
   </xsl:template>
 
   <!-- Correspondance pour l'élément S -->
-  <xsl:template match="S">
+  <xsl:template match="TEXT">
     <!-- Sortie de la balise <S> en tant que texte -->
     <xsl:value-of select="."/>
     <xsl:text>\n</xsl:text>

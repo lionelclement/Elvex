@@ -91,7 +91,7 @@ bool Forest::isEmpty() const
 /* **************************************************
  *
  ************************************************** */
-size_t Forest::getOutput_size() const
+size_t Forest::output_size() const
 {
     return this->output.size();
 }
@@ -99,7 +99,7 @@ size_t Forest::getOutput_size() const
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string>::const_iterator Forest::getOutput_cbegin() const
+const std::vector<std::string>::const_iterator Forest::output_cbegin() const
 {
     return this->output.cbegin();
 }
@@ -107,7 +107,7 @@ const std::vector<std::string>::const_iterator Forest::getOutput_cbegin() const
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string>::const_iterator Forest::getOutput_cend() const
+const std::vector<std::string>::const_iterator Forest::output_cend() const
 {
     return this->output.cend();
 }
@@ -154,7 +154,7 @@ void Forest::toXML(xmlNodePtr nodeRoot, bool root)
         {
             xmlNodePtr o = xmlNewChild(f, NULL, (const xmlChar *)"OUTPUT", NULL);
             for (std::vector<std::string>::const_iterator s = output.begin(); s != output.end(); ++s)
-                xmlNewChild(o, NULL, (const xmlChar *)"S", (xmlChar *)(*s).c_str());
+                xmlNewChild(o, NULL, (const xmlChar *)"TEXT", (xmlChar *)(*s).c_str());
         }
         for (Forest::vectorNodes::const_iterator n = nodes.begin(); n != nodes.end(); ++n)
         {
@@ -191,7 +191,7 @@ void Forest::generate(bool randomResult, bool singleResult)
                     node = *nodeIt;
                 if (node->isUnsetFlags(Flags::GENERATED))
                     node->generate(randomResult, singleResult);
-                for (std::vector<std::string>::const_iterator s = node->getOutput().cbegin(); s != node->getOutput().cend(); ++s){
+                for (std::vector<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s){
                     output.push_back(*s);
                 }
                 if (randomResult || singleResult)
