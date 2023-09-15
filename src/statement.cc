@@ -1751,6 +1751,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             goto valueBuilt;
         break;
         }
+    break;
 
     default:
         FATAL_ERROR_UNEXPECTED;
