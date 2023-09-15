@@ -1883,9 +1883,10 @@ featuresPtr Statement::unif(statementPtr from, const featuresPtr &fs1, const fea
 
                         case Value::VARIABLE_VALUE:
                             result->add(Feature::create(Feature::_HEAD_, bitsetPtr(), (*i1)->getValue()));
-                            if (!item->getEnvironment())
+                            if (!item->getEnvironment()){
                                 item->setEnvironment(Environment::create());
-                                item->getEnvironment()->add(from, (*i2)->getValue()->getBits(), (*i1)->getValue());
+                            }    
+                            item->getEnvironment()->add(from, (*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
 
                         default:
