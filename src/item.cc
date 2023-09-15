@@ -34,6 +34,8 @@
 #include "terms.hpp"
 #include "serializable.hpp"
 
+unsigned char Item::NA = UCHAR_MAX;
+    
 /* **************************************************
  *
  ************************************************** */
