@@ -191,7 +191,8 @@ void Forest::generate(bool randomResult, bool singleResult)
                     node = *nodeIt;
                 if (node->isUnsetFlags(Flags::GENERATED))
                     node->generate(randomResult, singleResult);
-                for (std::vector<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s){
+                for (std::vector<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s)
+                {
                     output.push_back(*s);
                 }
                 if (randomResult || singleResult)

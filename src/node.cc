@@ -147,14 +147,14 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 {
    xmlNodePtr node = xmlNewChild(nodeFather, nullptr, (const xmlChar *)"NODE", nullptr);
    xmlSetProp(node, (xmlChar *)"id", (xmlChar *)(std::to_string(this->getId())).c_str());
-   for (const auto &s : forests)
+   for (const auto &forest : forests)
    {
-      if (s->isUnsetFlags(Flags::XML))
-         s->toXML(nodeRoot, false);
-      xmlNodePtr forest = xmlNewChild(node, nullptr, (const xmlChar *)"SON", nullptr);
-      xmlSetProp(forest, (xmlChar *)"from", (xmlChar *)std::to_string(s->getFrom()).c_str());
-      xmlSetProp(forest, (xmlChar *)"to", (xmlChar *)std::to_string(s->getTo()).c_str());
-      xmlSetProp(forest, (xmlChar *)"idref", (xmlChar *)(std::to_string(s->getId())).c_str());
+      if (forest->isUnsetFlags(Flags::XML))
+         forest->toXML(nodeRoot, false);
+      xmlNodePtr forestNode = xmlNewChild(node, nullptr, (const xmlChar *)"SON", nullptr);
+      xmlSetProp(forestNode, (xmlChar *)"from", (xmlChar *)std::to_string(forest->getFrom()).c_str());
+      xmlSetProp(forestNode, (xmlChar *)"to", (xmlChar *)std::to_string(forest->getTo()).c_str());
+      xmlSetProp(forestNode, (xmlChar *)"idref", (xmlChar *)(std::to_string(forest->getId())).c_str());
    }
    if (!output.empty())
    {
@@ -171,21 +171,24 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 /* **************************************************
  *
  ************************************************** */
-void Node::generateLR(vectorForests::const_iterator forest)
+void Node::generateLR()
 {
-   if (forest != forests.end())
+   for (const auto &forest : forests)
    {
-      if ((*forest)->output_size() > 0)
+      if (forest->output_size() > 0)
       {
-         for (auto s = (*forest)->output_cbegin(); s != (*forest)->output_cend(); ++s)
+         if (output.size() == 0)
          {
-            if (output.size() == 0)
+            for (auto s = forest->output_cbegin(); s != forest->output_cend(); ++s)
             {
                output.push_back(*s);
             }
-            else
+         }
+         else
+         {
+            for (auto o = output.begin(); o != output.end(); ++o)
             {
-               for (auto o = output.begin(); o != output.end(); ++o)
+               for (auto s = forest->output_cbegin(); s != forest->output_cend(); ++s)
                {
                   if (o->size() != 0 && s->size() != 0)
                   {
@@ -199,49 +202,8 @@ void Node::generateLR(vectorForests::const_iterator forest)
             }
          }
       }
-      generateLR(forest + 1);
    }
 }
-
-/* **************************************************
- *
- ************************************************** */
-/*
-void Node::generateLR(std::string base, vectorForests::const_iterator forestIterator)
-{
-
-
-
-   if (forestIterator == cend())
-   {
-      //CERR_LINE;
-      //std::cerr << '(' << base << ')' << std::endl;
-      output.push_back(base);
-   }
-   else
-   {
-      if ((*forestIterator)->output_size())
-      {
-         for (auto s = (*forestIterator)->output_cbegin(); s != (*forestIterator)->output_cend(); ++s)
-         {
-            if (forestIterator != cbegin() && base.size())
-            {
-               if (withSpace)
-                  generateLR(base + ' ' + *s, forestIterator + 1);
-               else
-                  generateLR(base + *s, forestIterator + 1);
-            }
-            else
-               generateLR(*s, forestIterator + 1);
-         }
-      }
-      else
-      {
-         generateLR(base, forestIterator + 1);
-      }
-   }
-}
-*/
 
 /* **************************************************
  *
@@ -347,20 +309,19 @@ void Node::generate(bool randomResult, bool singleResult)
          for (vectorForests::const_iterator forest = cbegin(); forest != cend(); ++forest)
             if ((*forest)->isUnsetFlags(Flags::GENERATED))
                (*forest)->generate(randomResult, singleResult);
-         if (permutable){
-            generatePermutations(forests, 0, forests.size() - 1);
-         }
-         else if (bidirectional)
-         {
-            //generateLR(std::string(), cbegin());
-            generateLR(cbegin());
-            generateRL(std::string(), cend() - 1);
-         }
-         else
-         {
-            //generateLR(std::string(), cbegin());
-            generateLR(cbegin());
-         }
+      }
+      if (permutable)
+      {
+         generatePermutations(forests, 0, forests.size() - 1);
+      }
+      else if (bidirectional)
+      {
+         generateLR();
+         generateRL(std::string(), cend() - 1);
+      }
+      else
+      {
+         generateLR();
       }
    }
 }

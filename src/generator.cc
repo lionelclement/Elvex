@@ -635,11 +635,10 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
             else
             {
 
-                if ((*actualItem)->getStatements() 
-                    && (*actualItem)->isUnsetFlags(Flags::BOTTOM) 
-                    && (*actualItem)->getStatements()->isUnsetFlags(Flags::SEEN)){
+                if ((*actualItem)->getStatements() && (*actualItem)->isUnsetFlags(Flags::BOTTOM) && (*actualItem)->getStatements()->isUnsetFlags(Flags::SEEN))
+                {
                     if (getTraceAction() || ((getTrace() && (*actualItem)->getRuleTrace())))
-                     {
+                    {
                         std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
                         (*actualItem)->print(std::cout);
                         std::cout << std::endl;
@@ -1126,10 +1125,11 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                 while (entryIt != entries->end())
                                 {
                                     entryPtr entry = *entryIt;
-                                    
+
                                     if (this->getRandomResult())
                                     {
-                                        if (tryRandom++ > randomAttemps){
+                                        if (tryRandom++ > randomAttemps)
+                                        {
                                             WARNING("too much random trial");
                                             break;
                                         }
@@ -1145,7 +1145,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                     entry_copy->renameVariables(entry->getId());
 
                                     featuresPtr entryFeatures = entry_copy->getFeatures() ? entry_copy->getFeatures()
-                                                                                     : featuresPtr();
+                                                                                          : featuresPtr();
                                     statementsPtr entryStatements = statementsPtr();
                                     environmentPtr env = (*actualItem)->getEnvironment()
                                                              ? (*actualItem)->getEnvironment()->clone(nullptr)
@@ -1175,7 +1175,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
 
                                             resultFeatures = inheritedSonFeaturesCopy;
                                         }
- 
+
                                         if (resultFeatures)
                                         {
                                             if (it->getEnvironment() && (it->getEnvironment()->size() > 0))
@@ -1212,7 +1212,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                                                      entry_copy->getForm(), resultFeatures);
                                             }
                                         }
-                                        //word->print(std::cerr);
+                                        // word->print(std::cerr);
                                         class ForestIdentifier *fi = ForestIdentifier::create(word->getId(),
                                                                                               row - 1,
                                                                                               row,
@@ -1302,7 +1302,7 @@ void Generator::generate(class Parser &parser)
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRange(0);
         it->setInheritedFeatures(parser.getStartFeatures());
-        //it->renameVariables(it->getId());
+        // it->renameVariables(it->getId());
         if (traceInit || (trace && it->getRuleTrace()))
         {
             std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;
@@ -1339,7 +1339,12 @@ void Generator::generate(class Parser &parser)
         std::cerr << "Length : " << i << std::endl;
     }
 
-    nodeRoot->generate(this->getRandomResult(), this->getFirstResult());
+    if (!nodeRoot->empty())
+    {
+        for (auto forest = nodeRoot->cbegin(); forest != nodeRoot->cend(); ++forest)
+            (*forest)->generate(this->getRandomResult(), this->getFirstResult());
+    }
+
 #ifdef OUTPUT_XML
     if (outXML)
     {
@@ -1467,7 +1472,7 @@ bool Generator::getVerbose()
  *
  ************************************************** */
 entriesPtr Generator::findByPos(Parser &parser, Parser::entries_map *listHead,
-                                  unsigned int pos)
+                                unsigned int pos)
 {
     entriesPtr entries = entriesPtr();
     // Without head : UINT_MAX => ...
@@ -1503,7 +1508,7 @@ entriesPtr Generator::findByForm(Parser::entries_map *listHead)
  *
  ************************************************** */
 entriesPtr Generator::findByHead(Parser &parser, Parser::entries_map *listHead,
-                                   unsigned int pos, unsigned int head)
+                                 unsigned int pos, unsigned int head)
 {
     entriesPtr entries = entriesPtr();
     // head => ...

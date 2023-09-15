@@ -83,8 +83,7 @@ public:
     void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
 
-    //void generateLR(std::string base, vectorForests::const_iterator forestIterator);
-    void generateLR(vectorForests::const_iterator forestIterator);
+    void generateLR();
     void generateRL(std::string base, vectorForests::const_iterator forestIterator);
     void generateOutputPermutations(std::string base, vectorForests::const_iterator forestIterator);
     void generatePermutations(vectorForests& forests, int start, int end);
