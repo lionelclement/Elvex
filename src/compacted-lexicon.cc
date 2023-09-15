@@ -114,7 +114,7 @@ unsigned long int CompactedLexicon::search(unsigned long int index, const std::s
         str++;
 
     }
-    delete str2;
+    free (str2);
     return (unsigned long int) (~0UL);
 }
 
