@@ -81,10 +81,11 @@ bool Environment::add(statementPtr from, const std::string &key, valuePtr value)
         }
         else if (it->second->isVariable()) {
             it->second = value;
+            WARNING(from->getBufferName());
             FATAL_ERROR_UNEXPECTED;
         }
         else {
-            WARNING("overwrite previous value of " << key << "  " << from->getBufferName() << " (line " << std::dec << from->getLineno() << ")");
+            //WARNING("overwrite previous value of " << key << "  " << from->getBufferName() << " (line " << std::dec << from->getLineno() << ")");
             it->second = value;
         }   
     }
