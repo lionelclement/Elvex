@@ -501,7 +501,6 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
     bool modification;
     do
     {
-        CERR_LINE;
         modification = false;
 
         // Iterate through list
