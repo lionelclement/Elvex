@@ -3,7 +3,7 @@
 #
 # ELVEX
 #
-# Copyright 2014-2022 LABRI,
+# Copyright 2014-2023 LABRI,
 # CNRS (UMR 5800), the University of Bordeaux,
 # and the Bordeaux INP
 #
@@ -18,20 +18,13 @@
 #
 ################################################## #
 
-#for i in 0 1 2 3
-#do
-    #./bin/elvex --trace -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
-    #./bin/elvex -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
-#done
-
-#(cd data ; ../bin/elvex -V -rulesFile fr-slang.rules)
+for i in 0 1 2 3
+do
+    ./bin/elvex -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
+done
 
 ##################################################
 make -C data en-1.1.0.fsa
 ./bin/elvex -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input
-#./bin/elvex --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; open data/en-1.1.0.html
-#./bin/elvex --traceAction -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; open data/en-1.1.0.html
-#./bin/elvex --trace -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input > data/en-1.1.0.html ; open data/en-1.1.0.html
-#lldb bin/elvex -- -cld data -clf en-1.1.0 -rulesFile data/en-1.1.0.rules -lexiconFile data/en-1.1.0.lexicon -inputFile data/en-1.1.0.input
 
 
