@@ -587,8 +587,8 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                 {
                     insertItemMap(it);
                 }
-                state->erase(*actualItem);
                 eraseItemMap((*actualItem)->getId());
+                state->erase(*actualItem);
                 modification = true;
             }
 
@@ -627,8 +627,8 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                         insertItemMap(it);
                     }
                 }
-                state->erase((*actualItem));
                 eraseItemMap((*actualItem)->getId());
+                state->erase((*actualItem));
                 modification = true;
             }
 
@@ -654,8 +654,8 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
 
                 if ((*actualItem)->isSetFlags(Flags::BOTTOM))
                 {
-                    state->erase((*actualItem));
                     eraseItemMap((*actualItem)->getId());
+                    state->erase((*actualItem));
                     modification = true;
                 }
 
