@@ -35,8 +35,7 @@ class Item : public Facade,
 public:
     typedef std::unordered_set<unsigned int> set_of_unsigned_int;
     typedef set_of_unsigned_int::const_iterator set_of_unsigned_int_const_iterator;
-
-    static const unsigned char NA = UCHAR_MAX;
+    const unsigned char NA = UCHAR_MAX;
     
 private:
 
