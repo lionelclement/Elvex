@@ -93,7 +93,7 @@ void CompactedLexiconTree::printStaticFSA(FILE *out, class CompactedLexicon *lex
 #ifdef TRACE_DIFF
         elt->print(std::cout);
 #endif //TRACE_DIFF
-        free(elt);
+        delete elt;
         if (lexiconSy->child)
             lexiconSy->child->printStaticFSA(out, lex);
     }
