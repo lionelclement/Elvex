@@ -1747,10 +1747,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         break;
 
         case RANDOM:
-        {
             resultValue = Value::create(Value::NUMBER_VALUE, (double)rand());
             goto valueBuilt;
-        }
         break;
         }
 
