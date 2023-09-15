@@ -509,7 +509,7 @@ listPtr List::pushBack(valuePtr _value) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::enable(const statementPtr& root, const itemPtr& item, Synthesizer *synthesizer, bool &effect, bool on) {
+void List::enable(const statementPtr& root, const itemPtr& item, Generator *synthesizer, bool &effect, bool on) {
     switch (type) {
         case NIL:
             break;
@@ -549,7 +549,7 @@ bool List::findVariable(const bitsetPtr& variable) {
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void List::apply(const itemPtr& item, Parser &parser, Synthesizer *synthesizer, const statementPtr& variable, statementPtr body,
+void List::apply(const itemPtr& item, Parser &parser, Generator *synthesizer, const statementPtr& variable, statementPtr body,
                  bool &effect) {
     switch (type) {
         case NIL:

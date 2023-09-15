@@ -66,7 +66,7 @@ public:
 
     set_of_item_const_iterator find(class Item *) const;
 
-    bool insert(class Item *, class Synthesizer *);
+    bool insert(class Item *, class Generator *);
 
     void erase(class Item *);
 

@@ -615,7 +615,7 @@ pairpPtr Pairp::pushBack(valuePtr _value)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+void Pairp::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     switch (type)
     {
@@ -659,7 +659,7 @@ bool Pairp::findVariable(const bitsetPtr &variable)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr statement,
+void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
                  bool &effect)
 {
     switch (type)

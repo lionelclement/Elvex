@@ -86,7 +86,7 @@ public:
 
     statementsPtr getStatements(void) const;
 
-    void incUsages(class Synthesizer *);
+    void incUsages(class Generator *);
 
     void resetUsages(void);
 

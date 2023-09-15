@@ -36,14 +36,17 @@ public:
     typedef std::unordered_set<unsigned int> set_of_unsigned_int;
     typedef set_of_unsigned_int::const_iterator set_of_unsigned_int_const_iterator;
 
+    static const unsigned char NA = UCHAR_MAX;
+    
 private:
+
     rulePtr rule;                                            // the grammar rule
-    unsigned int index;                                      // the \bullet position
-    std::vector<unsigned int> indexTerms;                    // term in a disjunction
+    unsigned char index;                                      // the \bullet position
+    std::vector<unsigned char> indexTerms;                    // term in a disjunction
     statementsPtr statements;                                // the semantics
     set_of_unsigned_int refs;                                // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
-    std::vector<unsigned int> ranges;                        // ranges
+    std::vector<unsigned char> ranges;                        // ranges
     featuresPtr inheritedFeatures;                           // ↑
     listFeaturesPtr inheritedSonFeatures;                    // ↓
     featuresPtr synthesizedFeatures;                         // ⇑
@@ -57,11 +60,11 @@ private:
          s_inheritedSonFeatures = true, s_synthesizedFeatures = true,
          s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
 
-    Item(rulePtr rule, unsigned int index, statementsPtr statements);
+    Item(rulePtr rule, unsigned char index, statementsPtr statements);
 
-    Item(const rulePtr &rule, unsigned int index, unsigned int indexTerm, statementsPtr statements);
+    Item(const rulePtr &rule, unsigned char index, unsigned int indexTerm, statementsPtr statements);
 
-    Item(const rulePtr &rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements);
+    Item(const rulePtr &rule, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr statements);
 
     void makeSerialString(void);
 
@@ -70,9 +73,9 @@ public:
 
     // static constructors
 
-    static class Item *create(const rulePtr &, unsigned int = UINT_MAX, unsigned int = 0, statementsPtr = statementsPtr());
+    static class Item *create(const rulePtr &, unsigned char index = NA, unsigned char indexTerm = 0, statementsPtr = statementsPtr());
 
-    static class Item *create(const rulePtr &, unsigned int, std::vector<unsigned int> &, statementsPtr);
+    static class Item *create(const rulePtr &, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr);
 
     unsigned int getCurrentTerm(void) const;
 
@@ -82,9 +85,9 @@ public:
 
     rulePtr getRule(void) const;
 
-    unsigned int getIndex(void) const;
+    unsigned char getIndex(void) const;
 
-    std::vector<unsigned int> &getIndexTerms(void);
+    std::vector<unsigned char> &getIndexTerms(void);
 
     unsigned int getRuleLhs(void) const;
 
@@ -118,7 +121,7 @@ public:
 
     void setRule(rulePtr);
 
-    void setIndex(unsigned int);
+    void setIndex(unsigned char);
 
     void setRefs(set_of_unsigned_int &);
 
@@ -160,11 +163,11 @@ public:
 
     void addItem(std::unordered_map<unsigned int, class Item *> &, unsigned int, class Item *);
 
-    std::vector<unsigned int> &getRanges(void);
+    std::vector<unsigned char> &getRanges(void);
 
-    void addRanges(unsigned int);
+    void addRange(unsigned char);
 
-    void addRanges(std::vector<unsigned int> &);
+    void addRanges(std::vector<unsigned char> &);
 
     std::vector<class ForestIdentifier *> &getForestIdentifiers(void);
 
@@ -172,9 +175,9 @@ public:
 
     void addForestIdentifiers(std::vector<class ForestIdentifier *> &);
 
-    void buildSynthesizedFeatures(statementPtr from, class Synthesizer *);
+    void buildSynthesizedFeatures(statementPtr from, class Generator *);
 
-    void buildInheritedSonFeatures(statementPtr from, class Synthesizer *);
+    void buildInheritedSonFeatures(statementPtr from, class Generator *);
 
     bool addEnvironment(statementPtr from, environmentPtr);
 
@@ -194,7 +197,7 @@ public:
 
     void defaultInheritedSonFeatures(void);
 
-    void apply(class Parser& parser, class Synthesizer* synthesizer);
+    void apply(class Parser& parser, class Generator* synthesizer);
 
     class Item* clone(const std::bitset<FLAGS>& savedFlags);
 

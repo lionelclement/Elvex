@@ -39,7 +39,7 @@
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::Synthesizer()
+Generator::Generator()
 {
     NEW;
     this->compactedLexicon = nullptr;
@@ -57,7 +57,7 @@ Synthesizer::Synthesizer()
     this->warning = false;
     this->randomResult = false;
     this->firstResult = false;
-    this->randomAttemps = 1000; // attemps to find a local random result
+    this->randomAttemps = MAXATTEMPTS; // attemps to find a local random result
     this->trace = false;
     this->verbose = false;
 }
@@ -65,7 +65,7 @@ Synthesizer::Synthesizer()
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::~Synthesizer()
+Generator::~Generator()
 {
     DELETE;
 }
@@ -73,7 +73,7 @@ Synthesizer::~Synthesizer()
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTrace() const
+bool Generator::getTrace() const
 {
     return trace;
 }
@@ -81,7 +81,7 @@ bool Synthesizer::getTrace() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTrace(bool _trace)
+void Generator::setTrace(bool _trace)
 {
     this->trace = _trace;
 }
@@ -89,7 +89,7 @@ void Synthesizer::setTrace(bool _trace)
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::itemSet_map_const_iterator Synthesizer::cbegin() const
+Generator::itemSet_map_const_iterator Generator::cbegin() const
 {
     return states.cbegin();
 }
@@ -97,7 +97,7 @@ Synthesizer::itemSet_map_const_iterator Synthesizer::cbegin() const
 /* **************************************************
  *
  ************************************************** */
-Synthesizer::itemSet_map_const_iterator Synthesizer::cend() const
+Generator::itemSet_map_const_iterator Generator::cend() const
 {
     return states.cend();
 }
@@ -105,7 +105,7 @@ Synthesizer::itemSet_map_const_iterator Synthesizer::cend() const
 /* **************************************************
  *
  ************************************************** */
-size_t Synthesizer::size() const
+size_t Generator::size() const
 {
     return states.size();
 }
@@ -113,7 +113,7 @@ size_t Synthesizer::size() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setInputFileName(char *name)
+void Generator::setInputFileName(char *name)
 {
     inputFileName = name;
 }
@@ -121,7 +121,7 @@ void Synthesizer::setInputFileName(char *name)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setLexiconFileName(char *name)
+void Generator::setLexiconFileName(char *name)
 {
     lexiconFileName = name;
 }
@@ -129,7 +129,7 @@ void Synthesizer::setLexiconFileName(char *name)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedLexiconFileName(char *bufferName)
+void Generator::setCompactedLexiconFileName(char *bufferName)
 {
     compactedLexiconFileName = bufferName;
 }
@@ -137,7 +137,7 @@ void Synthesizer::setCompactedLexiconFileName(char *bufferName)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedDirectoryName(char *DirectoryName)
+void Generator::setCompactedDirectoryName(char *DirectoryName)
 {
     compactedDirectoryName = DirectoryName;
 }
@@ -145,7 +145,7 @@ void Synthesizer::setCompactedDirectoryName(char *DirectoryName)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setRulesFileName(char *name)
+void Generator::setRulesFileName(char *name)
 {
     rulesFileName = name;
 }
@@ -153,7 +153,7 @@ void Synthesizer::setRulesFileName(char *name)
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getInputFileName() const
+std::string Generator::getInputFileName() const
 {
     return inputFileName;
 }
@@ -161,7 +161,7 @@ std::string Synthesizer::getInputFileName() const
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getLexiconFileName() const
+std::string Generator::getLexiconFileName() const
 {
     return lexiconFileName;
 }
@@ -169,7 +169,7 @@ std::string Synthesizer::getLexiconFileName() const
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getCompactedLexiconFileName() const
+std::string Generator::getCompactedLexiconFileName() const
 {
     return compactedLexiconFileName;
 }
@@ -177,7 +177,7 @@ std::string Synthesizer::getCompactedLexiconFileName() const
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getCompactedDirectoryName() const
+std::string Generator::getCompactedDirectoryName() const
 {
     return compactedDirectoryName;
 }
@@ -185,7 +185,7 @@ std::string Synthesizer::getCompactedDirectoryName() const
 /* **************************************************
  *
  ************************************************** */
-std::string Synthesizer::getRulesFileName() const
+std::string Generator::getRulesFileName() const
 {
     return rulesFileName;
 }
@@ -193,7 +193,7 @@ std::string Synthesizer::getRulesFileName() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxLength(unsigned int _maxLength)
+void Generator::setMaxLength(unsigned int _maxLength)
 {
     this->maxLength = _maxLength;
 }
@@ -201,7 +201,7 @@ void Synthesizer::setMaxLength(unsigned int _maxLength)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxUsages(unsigned int _maxUsages)
+void Generator::setMaxUsages(unsigned int _maxUsages)
 {
     this->maxUsages = _maxUsages;
 }
@@ -209,7 +209,7 @@ void Synthesizer::setMaxUsages(unsigned int _maxUsages)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setMaxItems(unsigned int _maxItems)
+void Generator::setMaxItems(unsigned int _maxItems)
 {
     this->maxItems = _maxItems;
 }
@@ -217,7 +217,7 @@ void Synthesizer::setMaxItems(unsigned int _maxItems)
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::getMaxItems() const
+unsigned int Generator::getMaxItems() const
 {
     return this->maxItems;
 }
@@ -225,7 +225,7 @@ unsigned int Synthesizer::getMaxItems() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Synthesizer::getMaxUsages() const
+unsigned int Generator::getMaxUsages() const
 {
     return this->maxUsages;
 }
@@ -233,7 +233,7 @@ unsigned int Synthesizer::getMaxUsages() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setCompactedLexicon(class CompactedLexicon *compactedLexicon)
+void Generator::setCompactedLexicon(class CompactedLexicon *compactedLexicon)
 {
     this->compactedLexicon = compactedLexicon;
 }
@@ -241,7 +241,7 @@ void Synthesizer::setCompactedLexicon(class CompactedLexicon *compactedLexicon)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setReduceAll(const bool _reduceAll)
+void Generator::setReduceAll(const bool _reduceAll)
 {
     this->reduceAll = _reduceAll;
 }
@@ -249,7 +249,7 @@ void Synthesizer::setReduceAll(const bool _reduceAll)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setRandomResult(const bool randomResult)
+void Generator::setRandomResult(const bool randomResult)
 {
     this->randomResult = randomResult;
 }
@@ -257,7 +257,7 @@ void Synthesizer::setRandomResult(const bool randomResult)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getRandomResult() const
+bool Generator::getRandomResult() const
 {
     return this->randomResult;
 }
@@ -265,7 +265,7 @@ bool Synthesizer::getRandomResult() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setFirstResult(const bool firstResult)
+void Generator::setFirstResult(const bool firstResult)
 {
     this->firstResult = firstResult;
 }
@@ -273,7 +273,7 @@ void Synthesizer::setFirstResult(const bool firstResult)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getFirstResult() const
+bool Generator::getFirstResult() const
 {
     return this->firstResult;
 }
@@ -283,7 +283,7 @@ bool Synthesizer::getFirstResult() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setOutXML(char *_outXML)
+void Generator::setOutXML(char *_outXML)
 {
     this->outXML = _outXML;
 }
@@ -292,7 +292,7 @@ void Synthesizer::setOutXML(char *_outXML)
  *
  ************************************************** */
 char *
-Synthesizer::getOutXML() const
+Generator::getOutXML() const
 {
     return this->outXML;
 }
@@ -302,7 +302,7 @@ Synthesizer::getOutXML() const
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceInit(bool traceInit)
+void Generator::setTraceInit(bool traceInit)
 {
     this->traceInit = traceInit;
 }
@@ -310,7 +310,7 @@ void Synthesizer::setTraceInit(bool traceInit)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceStage(bool traceStage)
+void Generator::setTraceStage(bool traceStage)
 {
     this->traceStage = traceStage;
 }
@@ -318,7 +318,7 @@ void Synthesizer::setTraceStage(bool traceStage)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceClose(bool traceClose)
+void Generator::setTraceClose(bool traceClose)
 {
     this->traceClose = traceClose;
 }
@@ -326,7 +326,7 @@ void Synthesizer::setTraceClose(bool traceClose)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceShift(bool traceShift)
+void Generator::setTraceShift(bool traceShift)
 {
     this->traceShift = traceShift;
 }
@@ -334,7 +334,7 @@ void Synthesizer::setTraceShift(bool traceShift)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceReduce(bool traceReduce)
+void Generator::setTraceReduce(bool traceReduce)
 {
     this->traceReduce = traceReduce;
 }
@@ -342,7 +342,7 @@ void Synthesizer::setTraceReduce(bool traceReduce)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setTraceAction(bool traceAction)
+void Generator::setTraceAction(bool traceAction)
 {
     this->traceAction = traceAction;
 }
@@ -350,7 +350,7 @@ void Synthesizer::setTraceAction(bool traceAction)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceInit(void)
+bool Generator::getTraceInit(void)
 {
     return this->traceInit;
 }
@@ -358,7 +358,7 @@ bool Synthesizer::getTraceInit(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceStage(void)
+bool Generator::getTraceStage(void)
 {
     return this->traceStage;
 }
@@ -366,7 +366,7 @@ bool Synthesizer::getTraceStage(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceClose(void)
+bool Generator::getTraceClose(void)
 {
     return this->traceClose;
 }
@@ -374,7 +374,7 @@ bool Synthesizer::getTraceClose(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceShift(void)
+bool Generator::getTraceShift(void)
 {
     return this->traceShift;
 }
@@ -382,7 +382,7 @@ bool Synthesizer::getTraceShift(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceReduce(void)
+bool Generator::getTraceReduce(void)
 {
     return this->traceReduce;
 }
@@ -390,7 +390,7 @@ bool Synthesizer::getTraceReduce(void)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getTraceAction(void)
+bool Generator::getTraceAction(void)
 {
     return this->traceAction;
 }
@@ -398,7 +398,7 @@ bool Synthesizer::getTraceAction(void)
 /* **************************************************
  *
  ************************************************** */
-std::list<std::string> &Synthesizer::getInputs()
+std::list<std::string> &Generator::getInputs()
 {
     return this->inputs;
 }
@@ -406,7 +406,7 @@ std::list<std::string> &Synthesizer::getInputs()
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::insertItemMap(class Item *item)
+bool Generator::insertItemMap(class Item *item)
 {
     return this->itemMap.insert(std::make_pair(item->getId(), item)).second;
 }
@@ -414,7 +414,7 @@ bool Synthesizer::insertItemMap(class Item *item)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::eraseItemMap(const unsigned int id)
+void Generator::eraseItemMap(const unsigned int id)
 {
     this->itemMap.erase(id);
 }
@@ -422,7 +422,7 @@ void Synthesizer::eraseItemMap(const unsigned int id)
 /* **************************************************
  *
  ************************************************** */
-class Item *Synthesizer::getItemMap(const unsigned int id)
+class Item *Generator::getItemMap(const unsigned int id)
 {
     return this->itemMap[id];
 }
@@ -430,7 +430,7 @@ class Item *Synthesizer::getItemMap(const unsigned int id)
 /* **************************************************
  *
  ************************************************** */
-nodePtr Synthesizer::getNodeRoot()
+nodePtr Generator::getNodeRoot()
 {
     return nodeRoot;
 }
@@ -438,7 +438,7 @@ nodePtr Synthesizer::getNodeRoot()
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::addInput(const std::string &input)
+void Generator::addInput(const std::string &input)
 {
     return this->inputs.push_back(input);
 }
@@ -446,7 +446,7 @@ void Synthesizer::addInput(const std::string &input)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::printState(std::ostream &outStream, class ItemSet *state)
+void Generator::printState(std::ostream &outStream, class ItemSet *state)
 {
     outStream << "Q" << state->getId();
     state->print(outStream);
@@ -455,14 +455,14 @@ void Synthesizer::printState(std::ostream &outStream, class ItemSet *state)
 /* **************************************************
  *
  ************************************************** */
-class Item *Synthesizer::createItem(class Item *item, unsigned int row)
+class Item *Generator::createItem(class Item *item, unsigned int row)
 {
     class Item *it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
                                   item->getStatements() ? item->getStatements()->clone(
                                                               Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED)
                                                         : statementsPtr());
     it->addRanges(item->getRanges());
-    it->addRanges(row);
+    it->addRange(row);
     it->addForestIdentifiers(item->getForestIdentifiers());
     it->setInheritedFeatures(item->getInheritedFeatures()->clone());
     it->setInheritedSonFeatures(item->getInheritedSonFeatures()->clone());
@@ -476,7 +476,7 @@ class Item *Synthesizer::createItem(class Item *item, unsigned int row)
  *
  ************************************************** */
 std::string
-Synthesizer::keyMemoization(class Item *actualItem, class Item *previousItem)
+Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
 {
     return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) +
            actualItem->getSynthesizedFeatures()->peekSerialString();
@@ -485,7 +485,7 @@ Synthesizer::keyMemoization(class Item *actualItem, class Item *previousItem)
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::clear()
+void Generator::clear()
 {
     states.clear();
     forestMap.clear();
@@ -496,11 +496,12 @@ void Synthesizer::clear()
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
+void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
 {
     bool modification;
     do
     {
+        CERR_LINE;
         modification = false;
 
         // Iterate through list
@@ -546,7 +547,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                 }
                 it->setIndex((*actualItem)->getIndex() + 1);
                 it->getIndexTerms()[(*actualItem)->getIndex()] = 0;
-                it->addRanges(row);
+                it->addRange(row);
                 it->resetSerial();
 #ifdef TRACE_PASS
                 std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
@@ -570,7 +571,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                 }
                 else
                 {
-                    it->getIndexTerms()[(*actualItem)->getIndex()] = UINT_MAX - 1;
+                    it->getIndexTerms()[(*actualItem)->getIndex()] = Item::NA - 1;
                 }
                 it->getCurrentTerms()->unsetOptional();
                 it->resetSerial();
@@ -695,7 +696,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
                                 it = Item::create(iterRules->clone(), 0, 0,
                                                   iterRules->getStatements() ? iterRules->getStatements()->clone(0)
                                                                              : statementsPtr());
-                                it->addRanges(row);
+                                it->addRange(row);
                                 // it->renameVariables(it->getId());
                                 it->setInheritedFeatures(inheritedSonFeatures->clone());
 
@@ -1023,7 +1024,7 @@ void Synthesizer::close(Parser &parser, class ItemSet *state, unsigned int row)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int row)
+bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int row)
 {
     bool modificationOnce = false;
     bool modification;
@@ -1129,8 +1130,10 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
                                     
                                     if (this->getRandomResult())
                                     {
-                                        if (tryRandom++ > randomAttemps)
+                                        if (tryRandom++ > randomAttemps){
+                                            WARNING("too much random trial");
                                             break;
+                                        }
                                         size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
                                         entry = entries->get(rv);
                                     }
@@ -1275,7 +1278,7 @@ bool Synthesizer::shift(class Parser &parser, class ItemSet *state, unsigned int
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::generate(class Parser &parser)
+void Generator::generate(class Parser &parser)
 {
 #ifdef OUTPUT_XML
     extern xmlNodePtr xmlNodeRoot;
@@ -1296,9 +1299,9 @@ void Synthesizer::generate(class Parser &parser)
     for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule)
     {
         (*rule)->incUsages(this);
-        it = Item::create(*rule, UINT_MAX, 0,
+        it = Item::create(*rule, UCHAR_MAX, 0,
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
-        it->addRanges(0);
+        it->addRange(0);
         it->setInheritedFeatures(parser.getStartFeatures());
         //it->renameVariables(it->getId());
         if (traceInit || (trace && it->getRuleTrace()))
@@ -1314,7 +1317,7 @@ void Synthesizer::generate(class Parser &parser)
     states.insert(std::make_pair(0, initState));
     close(parser, initState, 0);
 
-    unsigned int i = 0;
+    int i = 0;
     while (i <= maxLength)
     {
         class ItemSet *actualState = ItemSet::create(++i);
@@ -1354,7 +1357,7 @@ void Synthesizer::generate(class Parser &parser)
  * returns entries= (entry1, entry2, ...)
  * where entryi= (unsigned int pos, unsigned int head, std::string form, featuresPtr features)
  ************************************************** */
-entriesPtr Synthesizer::findCompactedLexicon(
+entriesPtr Generator::findCompactedLexicon(
     Parser &parser,
     const unsigned int pos,
     const unsigned int head)
@@ -1448,7 +1451,7 @@ entriesPtr Synthesizer::findCompactedLexicon(
 /* **************************************************
  *
  ************************************************** */
-void Synthesizer::setVerbose(bool _verbose)
+void Generator::setVerbose(bool _verbose)
 {
     this->verbose = _verbose;
 }
@@ -1456,7 +1459,7 @@ void Synthesizer::setVerbose(bool _verbose)
 /* **************************************************
  *
  ************************************************** */
-bool Synthesizer::getVerbose()
+bool Generator::getVerbose()
 {
     return this->verbose;
 }
@@ -1464,7 +1467,7 @@ bool Synthesizer::getVerbose()
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listHead,
+entriesPtr Generator::findByPos(Parser &parser, Parser::entries_map *listHead,
                                   unsigned int pos)
 {
     entriesPtr entries = entriesPtr();
@@ -1487,7 +1490,7 @@ entriesPtr Synthesizer::findByPos(Parser &parser, Parser::entries_map *listHead,
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findByForm(Parser::entries_map *listHead)
+entriesPtr Generator::findByForm(Parser::entries_map *listHead)
 {
     entriesPtr entries = entriesPtr();
     // FORM : 0 => ...
@@ -1500,7 +1503,7 @@ entriesPtr Synthesizer::findByForm(Parser::entries_map *listHead)
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Synthesizer::findByHead(Parser &parser, Parser::entries_map *listHead,
+entriesPtr Generator::findByHead(Parser &parser, Parser::entries_map *listHead,
                                    unsigned int pos, unsigned int head)
 {
     entriesPtr entries = entriesPtr();

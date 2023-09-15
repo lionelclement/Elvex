@@ -43,7 +43,7 @@
 #define MAXATTEMPTS 3000
 #endif
 
-class Synthesizer
+class Generator
 {
 
 public:
@@ -99,9 +99,9 @@ private:
 #endif
 
 public:
-    Synthesizer();
+    Generator();
 
-    ~Synthesizer();
+    ~Generator();
 
     itemSet_map_const_iterator cbegin() const;
 

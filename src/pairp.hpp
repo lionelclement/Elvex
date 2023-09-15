@@ -111,7 +111,7 @@ public:
 
     bool renameVariables(size_t);
 
-    void apply(statementPtr from, class Item *, class Parser &, class Synthesizer *, const statementPtr &, statementPtr,
+    void apply(statementPtr from, class Item *, class Parser &, class Generator *, const statementPtr &, statementPtr,
           bool &);
 
 #ifdef OUTPUT_XML
@@ -120,7 +120,7 @@ public:
 
     pairpPtr clone(void) const;
 
-    void enable(const statementPtr &, class Item *, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 
     bool subsumes(statementPtr from, const pairpPtr &, const environmentPtr &);
 

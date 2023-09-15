@@ -37,7 +37,7 @@
 /* **************************************************
  *
  ************************************************** */
-Item::Item(rulePtr rule, unsigned int index, statementsPtr statements)
+Item::Item(rulePtr rule, unsigned char index, statementsPtr statements)
 {
     NEW;
     this->rule = std::move(rule);
@@ -53,27 +53,27 @@ Item::Item(rulePtr rule, unsigned int index, statementsPtr statements)
 /* **************************************************
  *
  ************************************************** */
-Item::Item(const rulePtr &rule, unsigned int index, unsigned int indexTerm, statementsPtr statements)
+Item::Item(const rulePtr &rule, unsigned char index, unsigned int indexTerm, statementsPtr statements)
     : Item(rule, index, std::move(statements))
 {
     std::vector<termsPtr> terms = rule->getRhs();
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
-        this->indexTerms.push_back(UINT_MAX);
+        this->indexTerms.push_back(NA);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedSonFeatures->push_back(Features::NIL);
         this->inheritedSonFeatures->push_back(Features::NIL);
     }
-    if ((terms.size() < index) && (index != UINT_MAX))
+    if ((terms.size() < index) && (index != NA))
         this->indexTerms[index] = indexTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Item::Item(const rulePtr &rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
+Item::Item(const rulePtr &rule, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr statements)
     : Item(rule, index, std::move(statements))
 {
     this->indexTerms = indexTerms;
@@ -122,7 +122,7 @@ Item::~Item()
 /* **************************************************
  *
  ************************************************** */
-class Item *Item::create(const rulePtr &rule, unsigned int index, unsigned int indexTerm, statementsPtr statements)
+class Item *Item::create(const rulePtr &rule, unsigned char index, unsigned char indexTerm, statementsPtr statements)
 {
     return new Item(rule, index, indexTerm, std::move(statements));
 }
@@ -131,7 +131,7 @@ class Item *Item::create(const rulePtr &rule, unsigned int index, unsigned int i
  *
  ************************************************** */
 class Item *
-Item::create(const rulePtr &rule, unsigned int index, std::vector<unsigned int> &indexTerms, statementsPtr statements)
+Item::create(const rulePtr &rule, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr statements)
 {
     return new Item(rule, index, indexTerms, std::move(statements));
 }
@@ -227,7 +227,7 @@ const std::string &Item::getRuleFilename() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getIndex() const
+unsigned char Item::getIndex() const
 {
     return index;
 }
@@ -235,7 +235,7 @@ unsigned int Item::getIndex() const
 /* **************************************************
  *
  ************************************************** */
-void Item::setIndex(unsigned int _index)
+void Item::setIndex(unsigned char _index)
 {
     this->index = _index;
 }
@@ -243,7 +243,7 @@ void Item::setIndex(unsigned int _index)
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int> &Item::getIndexTerms()
+std::vector<unsigned char> &Item::getIndexTerms()
 {
     return indexTerms;
 }
@@ -269,7 +269,7 @@ termsPtr Item::getTerms(const unsigned int _index) const
  ************************************************** */
 termsPtr Item::getCurrentTerms() const
 {
-    if ((this->index == UINT_MAX) || (this->index >= this->getRuleRhs().size()))
+    if ((this->index == NA) || (this->index >= this->getRuleRhs().size()))
         return nullptr;
     return rule->getRhs()[this->index];
 }
@@ -385,7 +385,7 @@ void Item::addItem(std::unordered_map<unsigned int, class Item *> &table, unsign
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned int> &Item::getRanges()
+std::vector<unsigned char> &Item::getRanges()
 {
     return ranges;
 }
@@ -393,18 +393,18 @@ std::vector<unsigned int> &Item::getRanges()
 /* **************************************************
  *
  ************************************************** */
-void Item::addRanges(unsigned int k)
+void Item::addRange(unsigned char range)
 {
-    ranges.push_back(k);
+    ranges.push_back(range);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::addRanges(std::vector<unsigned int> &l)
+void Item::addRanges(std::vector<unsigned char> &ranges)
 {
-    for (std::vector<unsigned int>::const_iterator i = l.begin(); i != l.end(); ++i)
-        addRanges(*i);
+    for (std::vector<unsigned char>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
+        addRange(*i);
 }
 
 /* **************************************************
@@ -712,8 +712,8 @@ void Item::print(std::ostream &out) const
     if (s_index)
     {
         out << "<td>";
-        if (index == UINT_MAX)
-            out << "UINT_MAX";
+        if (index == NA)
+            out << "NA";
         else
             out << index;
         out << "</td>";
@@ -878,11 +878,11 @@ void Item::step(bool &effect)
         }
     }
 
-    if (!effect && (index == UINT_MAX) && isCompleted())
+    if (!effect && (index == NA) && isCompleted())
     {
         this->index = this->getRuleRhs().size();
     }
-    if (this->index != UINT_MAX)
+    if (this->index != NA)
         this->setSeen(this->index, true);
 
 #ifdef TRACE_STEP
@@ -895,7 +895,7 @@ void Item::step(bool &effect)
 /* **************************************************
  *
  ************************************************** */
-void Item::apply(Parser &parser, Synthesizer *synthesizer)
+void Item::apply(Parser &parser, Generator *synthesizer)
 {
     bool effect = false;
     statements->apply(this, parser, synthesizer, effect);
@@ -910,13 +910,13 @@ void Item::makeSerialString()
 {
 
     serialString = std::to_string(getRuleId());
-    if (index == UINT_MAX)
+    if (index == NA)
         serialString += '\1';
     else
         serialString += std::to_string(index);
     
     serialString += '\0';
-    std::vector<unsigned int>::const_iterator ind = indexTerms.cbegin();
+    std::vector<unsigned char>::const_iterator ind = indexTerms.cbegin();
     while (ind != indexTerms.cend())
         serialString += std::to_string(*(ind++)) + '\2';
 

@@ -1090,7 +1090,7 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
  *
  ************************************************** */
 featuresPtr
-Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
+Statement::evalFeatures(class Item *item, Parser &parser, Generator *synthesizer, bool replaceVariables)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalFeatures #######################" << std::endl;
@@ -1206,7 +1206,7 @@ Statement::evalFeatures(class Item *item, Parser &parser, Synthesizer *synthesiz
 /* **************************************************
  *
  ************************************************** */
-pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
+pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synthesizer, bool replaceVariables)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalPairp #######################" << std::endl;
@@ -1311,7 +1311,7 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Synthesizer *syn
 /* **************************************************
  *
  ************************************************** */
-valuePtr Statement::evalValue(class Item *item, Parser &parser, Synthesizer *synthesizer, bool replaceVariables)
+valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synthesizer, bool replaceVariables)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalValue #######################" << std::endl;
@@ -2212,7 +2212,7 @@ endUnif:
 /* ************************************************************
  * ↓i = …
  ************************************************************ */
-void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Generator *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildInheritedSonFeatures #######################" << std::endl;
@@ -2243,7 +2243,7 @@ void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Synt
 /* ************************************************************
  * ⇑ = …
  ************************************************************ */
-void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Generator *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildSynthesizedFeatures #######################" << std::endl;
@@ -2271,7 +2271,7 @@ void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Synth
  * [ … $X … ] ⊂ ⇓1;
  * $X = ⇓1;
  ************************************************************ */
-void Statement::buildEnvironmentWithSynthesize(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::buildEnvironmentWithSynthesize(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildEnvironmentWithSynthesize #######################" << std::endl;
@@ -2358,7 +2358,7 @@ void Statement::buildEnvironmentWithSynthesize(statementPtr from, class Item *it
  * [ … $X … ] ⊂ ↑;
  * $X = ↑;
  ************************************************************ */
-void Statement::buildEnvironmentWithInherited(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::buildEnvironmentWithInherited(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildEnvironmentWithInherited #######################" << std::endl;
@@ -2455,7 +2455,7 @@ void Statement::buildEnvironmentWithInherited(statementPtr from, class Item *ite
  * < … > = reverse $X;
  * < … > = $X;
  ************************************************************ */
-void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildEnvironmentWithValue #######################" << std::endl;
@@ -2591,7 +2591,7 @@ void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, P
 /* ************************************************************
  * attest
  ************************************************************ */
-void Statement::stmAttest(class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::stmAttest(class Item *item, Parser &parser, Generator *synthesizer)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmAttest #######################" << std::endl;
@@ -2669,7 +2669,7 @@ void Statement::stmGuard(statementPtr from, class Item *item /*, Synthesizer *sy
 /* ************************************************************
  * foreach
  ************************************************************ */
-void Statement::stmForeach(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
+void Statement::stmForeach(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmForeach #######################" << std::endl;
@@ -2705,7 +2705,7 @@ void Statement::stmForeach(statementPtr from, class Item *item, Parser &parser, 
 /* ************************************************************
  * if
  ************************************************************ */
-void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
+void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmIf #######################" << std::endl;
@@ -2782,7 +2782,7 @@ void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Synth
 /* ************************************************************
  * DEFERRED
  ************************************************************ */
-void Statement::stmDeferred(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
+void Statement::stmDeferred(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
 {
     rhs->apply(from, item, parser, synthesizer, effect);
     if (rhs->isSetFlags(Flags::BOTTOM))
@@ -2794,7 +2794,7 @@ void Statement::stmDeferred(statementPtr from, class Item *item, Parser &parser,
 /* ************************************************************
  * print
  ************************************************************ */
-void Statement::stmPrint(class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::stmPrint(class Item *item, Parser &parser, Generator *synthesizer)
 {
     addFlags(Flags::SEEN);
     for (auto statement = getStatements()->cbegin(); statement != getStatements()->cend(); ++statement)
@@ -2817,7 +2817,7 @@ void Statement::stmPrint(class Item *item, Parser &parser, Synthesizer *synthesi
 /* ************************************************************
  * println
  ************************************************************ */
-void Statement::stmPrintln(class Item *item, Parser &parser, Synthesizer *synthesizer)
+void Statement::stmPrintln(class Item *item, Parser &parser, Generator *synthesizer)
 {
     stmPrint(item, parser, synthesizer);
     std::cout << std::endl;
@@ -2882,7 +2882,7 @@ void Statement::renameVariables(size_t i)
 /* ************************************************************
  *
  ************************************************************ */
-void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &result, bool on)
+void Statement::toggleEnable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &result, bool on)
 {
 #ifdef TRACE_ENABLE_STATEMENT
     std::cout << "<H3>####################### TRACE_ENABLE_STATEMENT #######################</H3>" << std::endl;
@@ -2917,7 +2917,7 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
         // }
         if (on)
         {
-            if (item->getIndexTerms()[getFirst()] == UINT_MAX)
+            if (item->getIndexTerms()[getFirst()] == Item::NA)
             //|| ((getSecond() != UINT_MAX) && (item->getIndexTerms()[getFirst()] != getSecond())))
             {
                 root->addFlags(Flags::DISABLED);
@@ -3107,7 +3107,7 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Synthes
 /* **************************************************
  *
  ************************************************** */
-void Statement::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
+void Statement::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "<H3>####################### TRACE_APPLY_STATEMENT #######################</H3>" << std::endl;

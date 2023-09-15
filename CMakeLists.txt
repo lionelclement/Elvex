@@ -130,12 +130,12 @@ if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
             OUTPUT_XML
             MEMOIZATION
-            RESTORE_MEMORY
+            #RESTORE_MEMORY
             MAXBITS=512
             MAXLENGTH=12000
             MAXUSAGES=12000
             MAXITEMS=12000
-            MAXATTEMPTS=12000
+            MAXATTEMPTS=120
             #TRACE_ENVIRONMENT
             #TRACE_BUILD_ENVIRONMENT
             #TRACE_ENABLE_STATEMENT

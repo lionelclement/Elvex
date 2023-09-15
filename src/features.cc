@@ -614,7 +614,7 @@ bool Features::renameVariables(size_t i)
 /* **************************************************
  *
  ************************************************** */
-void Features::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+void Features::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     for (auto &feature : features)
         feature->enable(root, item, synthesizer, effect, on);
@@ -731,7 +731,7 @@ void Features::setVariableFlag(enum VariableFlag::flagValues flag)
 /* **************************************************
  *
  ************************************************** */
-void Features::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Features::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
                      const statementPtr &statement,
                      bool &effect)
 {

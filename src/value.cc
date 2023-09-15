@@ -887,7 +887,7 @@ bool Value::eq(valuePtr o) const
     else if (o->isNil() || this->isNil())
         ret = false;
 
-    if (o->isAnonymous() && this->isAnonymous())
+    else if (o->isAnonymous() && this->isAnonymous())
         ret = true;
 
     else if (o->isAnonymous() || this->isAnonymous())
@@ -1056,7 +1056,7 @@ bool Value::renameVariables(size_t i)
 /* **************************************************
  *
  ************************************************** */
-void Value::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+void Value::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     switch (type)
     {
@@ -1130,7 +1130,7 @@ bool Value::findVariable(const bitsetPtr &variable) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+void Value::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
                   const statementPtr &statement,
                   bool &effect)
 {

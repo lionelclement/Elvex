@@ -112,7 +112,7 @@ public:
 
     bool isBottom() const;
 
-    void enable(const statementPtr &, class Item *, class Synthesizer *synthesizer, bool &, bool);
+    void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 
     bool subsumes(statementPtr from, const featuresPtr &, const environmentPtr &);
 
@@ -126,7 +126,7 @@ public:
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 
-    void apply(statementPtr from, class Item* item, class Parser &parser, Synthesizer *synthesizer, const statementPtr &variable,
+    void apply(statementPtr from, class Item* item, class Parser &parser, Generator *synthesizer, const statementPtr &variable,
                   const statementPtr& body,
                   bool &effect);
 

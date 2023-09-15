@@ -188,7 +188,7 @@ bool Rule::getPermutable(void) const
 /* ************************************************************
  *
  ************************************************************ */
-void Rule::incUsages(class Synthesizer *synthesizer)
+void Rule::incUsages(class Generator *synthesizer)
 {
     if (++usages > synthesizer->getMaxUsages())
     {

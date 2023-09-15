@@ -36,7 +36,7 @@
 #include "parser_exception.hpp"
 
 Parser parser = Parser();
-Synthesizer synthesizer = Synthesizer();
+Generator generator = Generator();
 
 time_t before, after;
 #ifdef OUTPUT_XML
@@ -98,26 +98,26 @@ void generate(bool trace)
     int randomTry = 0;
     do
     {
-        synthesizer.clear();
+        generator.clear();
         if (parser.getStartTerm())
         {
-            synthesizer.generate(parser);
+            generator.generate(parser);
         }
         if (trace){
             std::cout << "<ul>" << std::endl;
         }
-        if (synthesizer.getNodeRoot() && !synthesizer.getNodeRoot()->empty())
+        if (generator.getNodeRoot() && !generator.getNodeRoot()->empty())
         {
-            std::vector<forestPtr>::const_iterator forestIt = synthesizer.getNodeRoot()->cbegin();
+            std::vector<forestPtr>::const_iterator forestIt = generator.getNodeRoot()->cbegin();
             forestPtr forest;
-            if (synthesizer.getRandomResult())
+            if (generator.getRandomResult())
             {
-                unsigned int rv = std::rand() / ((RAND_MAX + 1u) / synthesizer.getNodeRoot()->size());
-                forest = synthesizer.getNodeRoot()->at(rv);
+                unsigned int rv = std::rand() / ((RAND_MAX + 1u) / generator.getNodeRoot()->size());
+                forest = generator.getNodeRoot()->at(rv);
             }
-            while (forestIt != synthesizer.getNodeRoot()->cend())
+            while (forestIt != generator.getNodeRoot()->cend())
             {
-                if (!synthesizer.getRandomResult())
+                if (!generator.getRandomResult())
                     forest = *forestIt;
                 for (auto i = forest->getOutput_cbegin(); i != forest->getOutput_cend(); ++i)
                 {
@@ -129,7 +129,7 @@ void generate(bool trace)
                         std::cout << "</li>" << std::endl;
                     }
                 }
-                if (synthesizer.getRandomResult() || synthesizer.getFirstResult())
+                if (generator.getRandomResult() || generator.getFirstResult())
                     break;
                 ++forestIt;
             }
@@ -137,7 +137,7 @@ void generate(bool trace)
         if (trace){
             std::cout << "</ul>" << std::endl;
         }
-    } while (synthesizer.getRandomResult() && synthesizer.getNodeRoot()->empty() &&
+    } while (generator.getRandomResult() && generator.getNodeRoot()->empty() &&
              randomTry++ < MAXATTEMPTS);
 }
 
@@ -150,7 +150,7 @@ int main(int argn, char **argv)
     try
     {
 #ifdef OUTPUT_XML
-        synthesizer.setOutXML(nullptr);
+        generator.setOutXML(nullptr);
 #endif
         if (argn <= 1)
         {
@@ -170,7 +170,7 @@ int main(int argn, char **argv)
 
                     if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose"))
                     {
-                        synthesizer.setVerbose(true);
+                        generator.setVerbose(true);
                         parser.setVerbose(true);
                     }
                     else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help"))
@@ -180,75 +180,75 @@ int main(int argn, char **argv)
                     }
                     else if (!strcmp(argv[arg] + 1, "a") || !strcmp(argv[arg] + 1, "-reduceAll"))
                     {
-                        synthesizer.setReduceAll(true);
+                        generator.setReduceAll(true);
                     }
                     else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random"))
                     {
                         std::srand(time(nullptr));
-                        synthesizer.setRandomResult(true);
+                        generator.setRandomResult(true);
                     }
                     else if (!strcmp(argv[arg] + 1, "f") || !strcmp(argv[arg] + 1, "-first"))
                     {
-                        synthesizer.setFirstResult(true);
+                        generator.setFirstResult(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace"))
                     {
                         trace = true;
-                        synthesizer.setTrace(true);
+                        generator.setTrace(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "-traceAll"))
                     {
                         trace = true;
-                        synthesizer.setTraceInit(true);
-                        synthesizer.setTraceStage(true);
-                        synthesizer.setTraceClose(true);
-                        synthesizer.setTraceShift(true);
-                        synthesizer.setTraceReduce(true);
-                        synthesizer.setTraceAction(true);
+                        generator.setTraceInit(true);
+                        generator.setTraceStage(true);
+                        generator.setTraceClose(true);
+                        generator.setTraceShift(true);
+                        generator.setTraceReduce(true);
+                        generator.setTraceAction(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "-traceInit"))
                     {
                         trace = true;
-                        synthesizer.setTraceInit(true);
+                        generator.setTraceInit(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "-traceStage"))
                     {
                         trace = true;
-                        synthesizer.setTraceStage(true);
+                        generator.setTraceStage(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "-traceClose"))
                     {
                         trace = true;
-                        synthesizer.setTraceClose(true);
+                        generator.setTraceClose(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "-traceShift"))
                     {
                         trace = true;
-                        synthesizer.setTraceShift(true);
+                        generator.setTraceShift(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "-traceReduce"))
                     {
                         trace = true;
-                        synthesizer.setTraceReduce(true);
+                        generator.setTraceReduce(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "-traceAction"))
                     {
                         trace = true;
-                        synthesizer.setTraceAction(true);
+                        generator.setTraceAction(true);
                     }
 
                     else if (!strcmp(argv[arg] + 1, "lexiconFile"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setLexiconFileName(argv[++arg]);
+                            generator.setLexiconFileName(argv[++arg]);
                         else
                         {
                             throw usage_exception("bad lexiconFile argument");
@@ -257,7 +257,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "rulesFile"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setRulesFileName(argv[++arg]);
+                            generator.setRulesFileName(argv[++arg]);
                         else
                         {
                             throw usage_exception("bad rulesFile argument");
@@ -266,7 +266,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "inputFile"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setInputFileName(argv[++arg]);
+                            generator.setInputFileName(argv[++arg]);
                         else
                         {
                             throw usage_exception("bad inputFile argument");
@@ -275,7 +275,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "maxLength"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setMaxLength(atoi(argv[++arg]));
+                            generator.setMaxLength(atoi(argv[++arg]));
                         else
                         {
                             throw usage_exception("bad maxLength argument");
@@ -284,7 +284,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "maxUsages"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setMaxUsages(atoi(argv[++arg]));
+                            generator.setMaxUsages(atoi(argv[++arg]));
                         else
                         {
                             throw usage_exception("bad maxUsages argument");
@@ -293,7 +293,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "maxItems"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setMaxItems(atoi(argv[++arg]));
+                            generator.setMaxItems(atoi(argv[++arg]));
                         else
                         {
                             throw usage_exception("bad maxItems argument");
@@ -315,7 +315,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setCompactedDirectoryName(argv[++arg]);
+                            generator.setCompactedDirectoryName(argv[++arg]);
                         else
                         {
                             throw usage_exception("bad compactedLexiconDirectory argument");
@@ -324,7 +324,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "cld"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setCompactedDirectoryName(argv[++arg]);
+                            generator.setCompactedDirectoryName(argv[++arg]);
                         else
                         {
                             throw usage_exception("bad cld argument");
@@ -333,7 +333,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "compactedLexiconFile"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setCompactedLexiconFileName(argv[++arg]);
+                            generator.setCompactedLexiconFileName(argv[++arg]);
                         else
                         {
                             throw usage_exception("bad compactedLexiconFile argument");
@@ -342,7 +342,7 @@ int main(int argn, char **argv)
                     else if (!strcmp(argv[arg] + 1, "clf"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            synthesizer.setCompactedLexiconFileName(argv[++arg]);
+                            generator.setCompactedLexiconFileName(argv[++arg]);
                         else
                         {
                             throw usage_exception("bad clf argument");
@@ -354,7 +354,7 @@ int main(int argn, char **argv)
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
                         {
-                            synthesizer.setOutXML(strdup(argv[++arg]));
+                            generator.setOutXML(strdup(argv[++arg]));
                         }
                         else
                         {
@@ -372,37 +372,37 @@ int main(int argn, char **argv)
                 }
                 else
                 {
-                    synthesizer.addInput(argv[arg]);
+                    generator.addInput(argv[arg]);
                 }
             }
 
-            if (synthesizer.getLexiconFileName().length() > 0)
+            if (generator.getLexiconFileName().length() > 0)
             {
-                parser.parseFile("@lexicon (", ")", synthesizer.getLexiconFileName());
+                parser.parseFile("@lexicon (", ")", generator.getLexiconFileName());
             }
 
-            if (synthesizer.getRulesFileName().length() > 0)
+            if (generator.getRulesFileName().length() > 0)
             {
-                parser.parseFile("@rules (", ")", synthesizer.getRulesFileName());
+                parser.parseFile("@rules (", ")", generator.getRulesFileName());
                 parser.getRules().analyseTerms(parser);
             }
 
-            if (synthesizer.getCompactedLexiconFileName().length() > 0)
+            if (generator.getCompactedLexiconFileName().length() > 0)
             {
-                char *dir = strdup((synthesizer.getCompactedDirectoryName().length() > 0)
-                                       ? synthesizer.getCompactedDirectoryName().c_str()
+                char *dir = strdup((generator.getCompactedDirectoryName().length() > 0)
+                                       ? generator.getCompactedDirectoryName().c_str()
                                        : ".");
-                char *file = strdup(synthesizer.getCompactedLexiconFileName().c_str());
+                char *file = strdup(generator.getCompactedLexiconFileName().c_str());
                 auto *lex = new CompactedLexicon(std::string(dir), std::string(file));
                 lex->openFiles("r");
                 lex->loadFsa();
                 lex->loadData();
                 lex->closeFiles();
-                synthesizer.setCompactedLexicon(lex);
+                generator.setCompactedLexicon(lex);
             }
 
 #ifdef OUTPUT_XML
-            if (synthesizer.getOutXML())
+            if (generator.getOutXML())
             {
                 document = xmlNewDoc((xmlChar *)"1.0");
                 xmlDocSetRootElement(document, xmlNewNode(nullptr, (xmlChar *)"ROOT"));
@@ -419,24 +419,25 @@ int main(int argn, char **argv)
             std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
         }
         srand(time(nullptr));
-        if (synthesizer.getInputFileName().length() > 0)
+
+        if (generator.getInputFileName().length() > 0)
         {
-            parser.parseFile("@input (", ")", synthesizer.getInputFileName());
+            parser.parseFile("@input (", ")", generator.getInputFileName());
             generate(trace);
         }
 
-        for (std::list<std::string>::const_iterator i = synthesizer.getInputs().begin();
-             i != synthesizer.getInputs().end(); ++i)
+        for (std::list<std::string>::const_iterator i = generator.getInputs().begin();
+             i != generator.getInputs().end(); ++i)
         {
             parser.parseBuffer("@input (", ")", *i, "input");
             generate(trace);
         }
 
 #ifdef OUTPUT_XML
-        if (synthesizer.getOutXML())
+        if (generator.getOutXML())
         {
             std::string encoding = "UTF-8";
-            xmlSaveFormatFileEnc(synthesizer.getOutXML(), document, encoding.c_str(), 1);
+            xmlSaveFormatFileEnc(generator.getOutXML(), document, encoding.c_str(), 1);
         }
 #endif
     }

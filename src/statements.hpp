@@ -67,9 +67,9 @@ public:
 
     statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
 
-    void toggleEnable(class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void toggleEnable(class Item *item, class Generator *synthesizer, bool &effect, bool on);
 
-    void apply(class Item *item, class Parser &parser, class Synthesizer *synthesizer, bool &effect);
+    void apply(class Item *item, class Parser &parser, class Generator *synthesizer, bool &effect);
 
 };
 

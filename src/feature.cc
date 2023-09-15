@@ -360,7 +360,7 @@ bool Feature::renameVariables(size_t i)
 /* **************************************************
  *
  ************************************************** */
-void Feature::enable(const statementPtr &root, class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+void Feature::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     switch (type)
     {

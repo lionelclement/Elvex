@@ -217,7 +217,7 @@ bool Statements::findVariable(const bitsetPtr &variable)
 /* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
-void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesizer, bool &effect)
+void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
 {
     bool allSeen = true;
     if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
@@ -343,7 +343,7 @@ void Statements::apply(class Item *item, Parser &parser, Synthesizer *synthesize
 /* **************************************************
  *
  ************************************************** */
-void Statements::toggleEnable(class Item *item, Synthesizer *synthesizer, bool &effect, bool on)
+void Statements::toggleEnable(class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     if (guard)
         guard->toggleEnable(guard, item, synthesizer, effect, on);

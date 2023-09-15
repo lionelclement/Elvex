@@ -295,8 +295,9 @@ void Node::generate(bool randomResult, bool singleResult)
          for (vectorForests::const_iterator forest = cbegin(); forest != cend(); ++forest)
             if ((*forest)->isUnsetFlags(Flags::GENERATED))
                (*forest)->generate(randomResult, singleResult);
-         if (permutable)
+         if (permutable){
             generatePermutations(forests, 0, forests.size() - 1);
+         }
          else if (bidirectional)
          {
             generateLR(std::string(), cbegin());

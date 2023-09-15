@@ -158,7 +158,7 @@ public:
 
     bool isListFeatures(void) const;
 
-    void enable(const statementPtr &root, class Item *item, class Synthesizer *synthesizer, bool &effect, bool on);
+    void enable(const statementPtr &root, class Item *item, class Generator *synthesizer, bool &effect, bool on);
 
     bool eq(valuePtr) const;
 
@@ -166,7 +166,7 @@ public:
 
     bool findVariable(const bitsetPtr &) const;
 
-    void apply(statementPtr from, class Item *item, class Parser &parser, class Synthesizer *synthesizer, const statementPtr &variable, const statementPtr &body,
+    void apply(statementPtr from, class Item *item, class Parser &parser, class Generator *synthesizer, const statementPtr &variable, const statementPtr &body,
           bool &effect);
 
     bool containsVariable(void);

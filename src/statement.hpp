@@ -271,45 +271,45 @@ public:
 
     void print(std::ostream &, unsigned int tabulationLenght = 5, unsigned int tabulation = 0, unsigned int color = 0x000000, unsigned int bgcolor = 0xFFFFFF) const;
 
-    featuresPtr evalFeatures(class Item *, class Parser &, class Synthesizer *, bool);
+    featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool);
 
-    pairpPtr evalPairp(class Item *, Parser &, Synthesizer *, bool);
+    pairpPtr evalPairp(class Item *, Parser &, Generator *, bool);
 
-    valuePtr evalValue(class Item *, Parser &, Synthesizer *, bool);
+    valuePtr evalValue(class Item *, Parser &, Generator *, bool);
 
     static featuresPtr unif(statementPtr from, const featuresPtr &, const featuresPtr &, class Item *);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
-    void buildInheritedSonFeatures(class Item *, Parser &, Synthesizer *synthesizer);
+    void buildInheritedSonFeatures(class Item *, Parser &, Generator *synthesizer);
 
-    void buildSynthesizedFeatures(class Item *, Parser &, Synthesizer *synthesizer);
+    void buildSynthesizedFeatures(class Item *, Parser &, Generator *synthesizer);
 
-    void buildEnvironmentWithInherited(statementPtr from, class Item *, Parser &, Synthesizer *synthesizer);
+    void buildEnvironmentWithInherited(statementPtr from, class Item *, Parser &, Generator *synthesizer);
 
-    void buildEnvironmentWithSynthesize(statementPtr from, class Item *, Parser &, Synthesizer *synthesizer);
+    void buildEnvironmentWithSynthesize(statementPtr from, class Item *, Parser &, Generator *synthesizer);
 
-    void buildEnvironmentWithValue(statementPtr from, class Item *, Parser &, Synthesizer *);
+    void buildEnvironmentWithValue(statementPtr from, class Item *, Parser &, Generator *);
 
-    void stmAttest(class Item *, class Parser &, class Synthesizer *);
+    void stmAttest(class Item *, class Parser &, class Generator *);
 
     void stmGuard(statementPtr from, class Item *);
 
-    void stmForeach(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
+    void stmForeach(statementPtr from, class Item *item, class Parser &, class Generator *, bool &);
 
-    void stmIf(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
+    void stmIf(statementPtr from, class Item *item, class Parser &, class Generator *, bool &);
 
-    void stmDeferred(statementPtr from, class Item *item, class Parser &, class Synthesizer *, bool &);
+    void stmDeferred(statementPtr from, class Item *item, class Parser &, class Generator *, bool &);
 
-    void stmPrint(class Item *, class Parser &, class Synthesizer *);
+    void stmPrint(class Item *, class Parser &, class Generator *);
 
-    void stmPrintln(class Item *, class Parser &, class Synthesizer *);
+    void stmPrintln(class Item *, class Parser &, class Generator *);
 
     void renameVariables(size_t);
 
-    void toggleEnable(const statementPtr &, class Item *, class Synthesizer *, bool &, bool);
+    void toggleEnable(const statementPtr &, class Item *, class Generator *, bool &, bool);
 
-    void apply(statementPtr from, class Item *, class Parser &, class Synthesizer *, bool &);
+    void apply(statementPtr from, class Item *, class Parser &, class Generator *, bool &);
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 

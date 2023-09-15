@@ -171,7 +171,7 @@ void ListFeatures::flatPrint(std::ostream &outStream) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Synthesizer *synthesizer, const statementPtr &variable, statementPtr statement,
+void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
                          bool &effect)
 {
     for (auto &features : listFeatures) {
