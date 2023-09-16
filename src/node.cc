@@ -171,118 +171,104 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 /* **************************************************
  * Algorithm to Rewrite
  ************************************************** */
-void Node::generateLR()
+void Node::generateLR(std::string currentCombination, vectorForests::const_iterator forestIt)
 {
-   std::vector<std::string> list;
-   for (const auto &forestIt : forests)
+   if (forestIt == cend())
    {
-      if (forestIt->output_size() > 0)
+      output.push_back(currentCombination);
+      return;
+   }
+
+   if ((*forestIt)->output_size())
+   {
+      for (std::vector<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
       {
-         if (list.empty())
+         if (withSpace && !currentCombination.empty())
          {
-            for (auto s = forestIt->output_cbegin(); s != forestIt->output_cend(); ++s)
-            {
-               list.push_back(*s);
-            }
+            generateLR(currentCombination + ' ' + *item, forestIt + 1);
+         }
+         else if (currentCombination.empty())
+         {
+            generateLR(*item, forestIt + 1);
          }
          else
          {
-            for (auto o = list.begin(); o != list.end(); ++o)
-            {
-               for (auto s = forestIt->output_cbegin(); s != forestIt->output_cend(); ++s)
-               {
-                  if (!o->empty() && !s->empty())
-                  {
-                     *o += ' ' + *s;
-                  }
-                  else if (!s->empty())
-                  {
-                     *o = *s;
-                  }
-               }
-            }
+            generateLR(currentCombination + *item, forestIt + 1);
          }
       }
-   }
-   for (auto &o : list)
-   {
-      output.push_back(o);
-   }
-}
-
-/* **************************************************
- * Algorithm to Rewrite
- ************************************************** */
-void Node::generateRL()
-{
-   std::vector<std::string> list;
-   for (auto forest = forests.end() - 1; forest >= forests.begin(); forest = forest - 1)
-   {
-      if ((*forest)->output_size() > 0)
-      {
-         if (list.empty())
-         {
-            for (auto s = (*forest)->output_cbegin(); s != (*forest)->output_cend(); ++s)
-            {
-               list.push_back(*s);
-            }
-         }
-         else
-         {
-            for (auto o = list.begin(); o != list.end(); ++o)
-            {
-               for (auto s = (*forest)->output_cbegin(); s != (*forest)->output_cend(); ++s)
-               {
-                  if (!o->empty() && !s->empty())
-                  {
-                     *o += ' ' + *s;
-                  }
-                  else if (!s->empty())
-                  {
-                     *o = *s;
-                  }
-               }
-            }
-         }
-      }
-   }
-   for (auto &o : list)
-   {
-      output.push_back(o);
-   }
-}
-
-/* **************************************************
- * Algorithm to Rewrite
- ************************************************** */
-void Node::generateOutputPermutations(std::string base, vectorForests::const_iterator forestIterator)
-{
-   if (forestIterator == forests.cend())
-   {
-      output.push_back(base);
    }
    else
    {
-      if ((*forestIterator)->output_size())
+      generateLR(currentCombination, forestIt + 1);
+   }
+}
+
+/* **************************************************
+ * Algorithm to Rewrite
+ ************************************************** */
+void Node::generateRL(std::string currentCombination, vectorForests::const_iterator forestIt)
+{
+   if (forestIt < cbegin())
+   {
+      output.push_back(currentCombination);
+      return;
+   }
+
+   if ((*forestIt)->output_size())
+   {
+      for (std::vector<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
       {
-         for (auto s = (*forestIterator)->output_cbegin(); s != (*forestIterator)->output_cend(); ++s)
+         if (withSpace && !currentCombination.empty())
          {
-            if ((forestIterator != cbegin()) && base.size())
+            generateRL(currentCombination + ' ' + *item, forestIt - 1);
+         }
+         else if (currentCombination.empty())
+         {
+            generateRL(*item, forestIt - 1);
+         }
+         else
+         {
+            generateRL(currentCombination + *item, forestIt - 1);
+         }
+      }
+   }
+   else
+   {
+      generateRL(currentCombination, forestIt - 1);
+   }
+}
+
+/* **************************************************
+ * Algorithm to Rewrite
+ ************************************************** */
+void Node::generatePermutations(std::string currentCombination, vectorForests::const_iterator forestIt)
+{
+   if (forestIt == forests.cend())
+   {
+      output.push_back(currentCombination);
+   }
+   else
+   {
+      if ((*forestIt)->output_size())
+      {
+         for (auto s = (*forestIt)->output_cbegin(); s != (*forestIt)->output_cend(); ++s)
+         {
+            if ((forestIt != cbegin()) && currentCombination.size())
             {
                if (withSpace)
-                  generateOutputPermutations(base + ' ' + *s, forestIterator + 1);
+                  generatePermutations(currentCombination + ' ' + *s, forestIt + 1);
                else
-                  generateOutputPermutations(base + *s, forestIterator + 1);
+                  generatePermutations(currentCombination + *s, forestIt + 1);
             }
             else
             {
-               generateOutputPermutations(*s, forestIterator + 1);
+               generatePermutations(*s, forestIt + 1);
             }
          }
       }
       else
       {
-         generateOutputPermutations(base, forestIterator + 1);
+         generatePermutations(currentCombination, forestIt + 1);
       }
    }
 }
@@ -294,7 +280,7 @@ void Node::generatePermutations(Node::vectorForests &forests, int start, int end
 {
    if (start == end)
    {
-      generateOutputPermutations(std::string(), forests.cbegin());
+      generatePermutations(std::string(), forests.cbegin());
    }
    else
    {
@@ -323,18 +309,17 @@ void Node::generate(bool randomResult, bool singleResult)
       }
       if (permutable)
       {
-         WARNING("@permutable Not yet implemented");
+         WARNING("not yet implemented");
          generatePermutations(forests, 0, forests.size() - 1);
       }
       else if (bidirectional)
       {
-         WARNING("@bidirectional Not yet implemented");
-         generateLR();
-         generateRL();
+         generateLR(std::string(), forests.cbegin());
+         generateRL(std::string(), forests.cend()-1);
       }
       else
       {
-         generateLR();
+         generateLR(std::string(), forests.cbegin());
       }
    }
 }

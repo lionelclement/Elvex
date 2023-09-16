@@ -180,6 +180,8 @@ void Forest::generate(bool randomResult, bool singleResult)
         if (entry && !entry->getForm().empty())
         {
             output.push_back(entry->getForm());
+            //CERR_LINE;
+            //output.push_back(entry->getForm() + "(2)");
         }
         else if (!nodes.empty())
         {
