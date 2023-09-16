@@ -180,8 +180,6 @@ void Forest::generate(bool randomResult, bool singleResult)
         if (entry && !entry->getForm().empty())
         {
             output.push_back(entry->getForm());
-            //CERR_LINE;
-            //output.push_back(entry->getForm() + "(2)");
         }
         else if (!nodes.empty())
         {
@@ -201,13 +199,15 @@ void Forest::generate(bool randomResult, bool singleResult)
                 }
                 for (std::vector<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s)
                     {
-                        //std::cerr << *s << std::endl;
                         output.push_back(*s);
                     }
                 if (randomResult || singleResult)
                     break;
                 ++nodeIt;
             }
+        }
+        else {
+            //output.push_back("EMPTY");
         }
     }
 }

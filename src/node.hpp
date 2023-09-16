@@ -85,7 +85,6 @@ public:
 
     void generateLR(std::string currentCombination, vectorForests::const_iterator forestIt);
     void generateRL(std::string currentCombination, vectorForests::const_iterator forestIt);
-    void generatePermutations(std::string currentCombination, vectorForests::const_iterator forestIt);
     void generatePermutations(vectorForests& forests, int start, int end);
     void generate(bool randomResult, bool singleResult);
 

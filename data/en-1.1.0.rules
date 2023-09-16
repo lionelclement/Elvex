@@ -308,6 +308,7 @@ S → aux NP|cln VP strongPunct {
  * Noun phrase
  ************************************************** */
 @withspaces
+//@bidirectional
 NP → det N1 {
   [def:$def, number:$number, $Rest] ⊂ ⇓2;
   deferred(⇓2) {
@@ -451,6 +452,7 @@ N → common_noun {
  * Verb and its complements
  ************************************************** */
 @withspaces
+//@permutable
 VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
   // Given Arguments
   [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;

@@ -169,7 +169,7 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 #endif
 
 /* **************************************************
- * Algorithm to Rewrite
+ * 
  ************************************************** */
 void Node::generateLR(std::string currentCombination, vectorForests::const_iterator forestIt)
 {
@@ -204,7 +204,7 @@ void Node::generateLR(std::string currentCombination, vectorForests::const_itera
 }
 
 /* **************************************************
- * Algorithm to Rewrite
+ * 
  ************************************************** */
 void Node::generateRL(std::string currentCombination, vectorForests::const_iterator forestIt)
 {
@@ -239,62 +239,27 @@ void Node::generateRL(std::string currentCombination, vectorForests::const_itera
 }
 
 /* **************************************************
- * Algorithm to Rewrite
- ************************************************** */
-void Node::generatePermutations(std::string currentCombination, vectorForests::const_iterator forestIt)
-{
-   if (forestIt == forests.cend())
-   {
-      output.push_back(currentCombination);
-   }
-   else
-   {
-      if ((*forestIt)->output_size())
-      {
-         for (auto s = (*forestIt)->output_cbegin(); s != (*forestIt)->output_cend(); ++s)
-         {
-            if ((forestIt != cbegin()) && currentCombination.size())
-            {
-               if (withSpace)
-                  generatePermutations(currentCombination + ' ' + *s, forestIt + 1);
-               else
-                  generatePermutations(currentCombination + *s, forestIt + 1);
-            }
-            else
-            {
-               generatePermutations(*s, forestIt + 1);
-            }
-         }
-      }
-      else
-      {
-         generatePermutations(currentCombination, forestIt + 1);
-      }
-   }
-}
-
-/* **************************************************
  *
  ************************************************** */
 void Node::generatePermutations(Node::vectorForests &forests, int start, int end)
 {
    if (start == end)
    {
-      generatePermutations(std::string(), forests.cbegin());
+      generateLR(std::string(), forests.cbegin());
    }
    else
    {
-      for (int i = start; i <= end; i++)
+      for (int i = start; i <= end; ++i)
       {
-         std::swap(forests[start], forests[i]);
-         generatePermutations(forests, start + 1, end);
-         std::swap(forests[start], forests[i]);
+            std::swap(forests[start], forests[i]);
+            generatePermutations(forests, start + 1, end);
+            std::swap(forests[start], forests[i]);
       }
    }
 }
 
 /* **************************************************
- *
+ * TO do: remove empty forests
  ************************************************** */
 void Node::generate(bool randomResult, bool singleResult)
 {
@@ -309,7 +274,6 @@ void Node::generate(bool randomResult, bool singleResult)
       }
       if (permutable)
       {
-         WARNING("not yet implemented");
          generatePermutations(forests, 0, forests.size() - 1);
       }
       else if (bidirectional)
