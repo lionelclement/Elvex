@@ -147,8 +147,8 @@ void Forest::toXML(xmlNodePtr nodeRoot, bool root)
         else
             xmlSetProp(f, (xmlChar *)"empty", (xmlChar *)"no");
 
-        if (entry)
-            entry->toXML(f);
+        //if (entry)
+        //    entry->toXML(f);
 
         if (output.size() > 0)
         {
@@ -156,6 +156,11 @@ void Forest::toXML(xmlNodePtr nodeRoot, bool root)
             for (std::vector<std::string>::const_iterator s = output.begin(); s != output.end(); ++s)
                 xmlNewChild(o, NULL, (const xmlChar *)"TEXT", (xmlChar *)(*s).c_str());
         }
+        else {
+            xmlNodePtr o = xmlNewChild(f, NULL, (const xmlChar *)"OUTPUT", NULL);
+            xmlNewChild(o, NULL, (const xmlChar *)"TEXT", (xmlChar *)"NONE");
+        
+        }        
         for (Forest::vectorNodes::const_iterator n = nodes.begin(); n != nodes.end(); ++n)
         {
             (*n)->toXML(nodeRoot, f);
@@ -189,12 +194,14 @@ void Forest::generate(bool randomResult, bool singleResult)
             {
                 if (!randomResult)
                     node = *nodeIt;
-                if (node->isUnsetFlags(Flags::GENERATED))
+                if (node->isUnsetFlags(Flags::GENERATED)){
                     node->generate(randomResult, singleResult);
-                for (std::vector<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s)
-                {
-                    output.push_back(*s);
                 }
+                for (std::vector<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s)
+                    {
+                        //std::cerr << *s << std::endl;
+                        output.push_back(*s);
+                    }
                 if (randomResult || singleResult)
                     break;
                 ++nodeIt;

@@ -1135,6 +1135,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                         }
                                         size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
                                         entry = entries->get(rv);
+                                        //CERR_LINE;
+                                        //entry->print(std::cerr);
                                     }
                                     else
                                     {

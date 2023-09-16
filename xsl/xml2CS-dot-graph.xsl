@@ -47,7 +47,7 @@
     <xsl:template match="FOREST[NODE/SON]">
         <xsl:variable name="idF" select="@id" />
     <xsl:value-of select="$idF"/>
-        <xsl:text>[shape=&quot;box&quot;,style=&quot;filled&quot;,height=&quot;0.1&quot;,width=&quot;0.1&quot;,fontcolor=&quot;black&quot;</xsl:text>
+        <xsl:text>[shape=&quot;box&quot;,color=red;style=&quot;filled&quot;,height=&quot;0.1&quot;,width=&quot;0.1&quot;,fontcolor=&quot;black&quot;</xsl:text>
         <xsl:text>,label=&quot;</xsl:text>
         <xsl:apply-templates select="OUTPUT"/>
         <xsl:text>&quot;];&#10;</xsl:text>
@@ -57,9 +57,9 @@
                 <xsl:for-each select="NODE">
                     <xsl:variable name="idN" select="@id"/>
                     <xsl:value-of select="$idN"/>
-                    <xsl:text>[shape=&quot;circle&quot;,height=&quot;0.15&quot;,width=&quot;0.15&quot;,fontcolor=&quot;black&quot;</xsl:text>
+                    <xsl:text>[shape=&quot;none&quot;,height=&quot;0.15&quot;,width=&quot;0.15&quot;,fontcolor=&quot;black&quot;</xsl:text>
                     <xsl:text>,label=&quot;</xsl:text>
-                    <xsl:apply-templates select="TEXT" />
+                    <xsl:apply-templates select="OUTPUT" />
                     <xsl:text>&quot;];&#10;</xsl:text>
 
                     <xsl:value-of select="$idF"/>
@@ -98,7 +98,7 @@
         <xsl:param name="idForest"/>
 
         <xsl:value-of select="@id"/>
-        <xsl:text>[shape=&quot;plaintext&quot;,label=&quot;</xsl:text>
+        <xsl:text>[shape=&quot;none&quot;,label=&quot;</xsl:text>
         <xsl:apply-templates select="OUTPUT"/>
         <xsl:text>&quot;</xsl:text>
 
@@ -121,7 +121,7 @@
     <xsl:template match="FOREST[@empty='true']">
         <xsl:param name="idForest"/>
         <xsl:value-of select="@id"/>
-        <xsl:text>[shape=&quot;plaintext&quot;,label=&quot;</xsl:text>
+        <xsl:text>[shape=&quot;box&quot;,label=&quot;</xsl:text>
         <xsl:text>&quot;];&#10;</xsl:text>
     </xsl:template>
 

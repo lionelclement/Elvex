@@ -169,32 +169,33 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 #endif
 
 /* **************************************************
- *
+ * Algorithm to Rewrite
  ************************************************** */
 void Node::generateLR()
 {
-   for (const auto &forest : forests)
+   std::vector<std::string> list;
+   for (const auto &forestIt : forests)
    {
-      if (forest->output_size() > 0)
+      if (forestIt->output_size() > 0)
       {
-         if (output.size() == 0)
+         if (list.empty())
          {
-            for (auto s = forest->output_cbegin(); s != forest->output_cend(); ++s)
+            for (auto s = forestIt->output_cbegin(); s != forestIt->output_cend(); ++s)
             {
-               output.push_back(*s);
+               list.push_back(*s);
             }
          }
          else
          {
-            for (auto o = output.begin(); o != output.end(); ++o)
+            for (auto o = list.begin(); o != list.end(); ++o)
             {
-               for (auto s = forest->output_cbegin(); s != forest->output_cend(); ++s)
+               for (auto s = forestIt->output_cbegin(); s != forestIt->output_cend(); ++s)
                {
-                  if (o->size() != 0 && s->size() != 0)
+                  if (!o->empty() && !s->empty())
                   {
                      *o += ' ' + *s;
                   }
-                  else if (s->size() != 0)
+                  else if (!s->empty())
                   {
                      *o = *s;
                   }
@@ -203,46 +204,56 @@ void Node::generateLR()
          }
       }
    }
+   for (auto &o : list)
+   {
+      output.push_back(o);
+   }
 }
 
 /* **************************************************
- *
+ * Algorithm to Rewrite
  ************************************************** */
-void Node::generateRL(std::string base, vectorForests::const_iterator forestIterator)
+void Node::generateRL()
 {
-   if (forestIterator < cbegin())
+   std::vector<std::string> list;
+   for (auto forest = forests.end() - 1; forest >= forests.begin(); forest = forest - 1)
    {
-      output.push_back(base);
-   }
-   else
-   {
-      if ((*forestIterator)->output_size())
+      if ((*forest)->output_size() > 0)
       {
-         for (auto s = (*forestIterator)->output_cbegin(); s != (*forestIterator)->output_cend(); ++s)
+         if (list.empty())
          {
-            std::string str;
-            if ((forestIterator != cend() - 1) && base.size())
+            for (auto s = (*forest)->output_cbegin(); s != (*forest)->output_cend(); ++s)
             {
-               if (withSpace)
-                  generateRL(base + ' ' + *s, forestIterator - 1);
-               else
-                  generateRL(base + *s, forestIterator - 1);
+               list.push_back(*s);
             }
-            else
+         }
+         else
+         {
+            for (auto o = list.begin(); o != list.end(); ++o)
             {
-               generateRL(*s, forestIterator - 1);
+               for (auto s = (*forest)->output_cbegin(); s != (*forest)->output_cend(); ++s)
+               {
+                  if (!o->empty() && !s->empty())
+                  {
+                     *o += ' ' + *s;
+                  }
+                  else if (!s->empty())
+                  {
+                     *o = *s;
+                  }
+               }
             }
          }
       }
-      else
-      {
-         generateRL(base, forestIterator - 1);
-      }
+   }
+   for (auto &o : list)
+   {
+      output.push_back(o);
    }
 }
 
 /* **************************************************
- *
+ * Algorithm to Rewrite
  ************************************************** */
 void Node::generateOutputPermutations(std::string base, vectorForests::const_iterator forestIterator)
 {
@@ -312,12 +323,14 @@ void Node::generate(bool randomResult, bool singleResult)
       }
       if (permutable)
       {
+         WARNING("@permutable Not yet implemented");
          generatePermutations(forests, 0, forests.size() - 1);
       }
       else if (bidirectional)
       {
+         WARNING("@bidirectional Not yet implemented");
          generateLR();
-         generateRL(std::string(), cend() - 1);
+         generateRL();
       }
       else
       {

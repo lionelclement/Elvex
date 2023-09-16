@@ -84,7 +84,8 @@ public:
 #endif
 
     void generateLR();
-    void generateRL(std::string base, vectorForests::const_iterator forestIterator);
+    void generateRL();
+    //void generateRL(std::string base, vectorForests::const_iterator forestIterator);
     void generateOutputPermutations(std::string base, vectorForests::const_iterator forestIterator);
     void generatePermutations(vectorForests& forests, int start, int end);
     void generate(bool randomResult, bool singleResult);
