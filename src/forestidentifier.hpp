@@ -28,31 +28,31 @@ class ForestIdentifier :
 
 private:
 
-    unsigned int code;
-    unsigned int from;
-    unsigned int to;
+    uint16_t code;
+    uint8_t from;
+    uint8_t to;
     std::string featuresSerialString;
 
-    ForestIdentifier(unsigned int code, unsigned int from, unsigned int to, 
+    ForestIdentifier(uint16_t code, uint8_t from, uint8_t to, 
             const std::string& featuresSerialString);
 
 public:
     ~ForestIdentifier() override;
 
-    static class ForestIdentifier* create(unsigned int code, unsigned int from, unsigned int to, 
+    static class ForestIdentifier* create(uint16_t code, uint8_t from, uint8_t to, 
             const std::string& featuresSerialString);
 
     void makeSerialString() override;
 
-    unsigned int getFrom() const {
+    uint8_t getFrom() const {
         return from;
     };
 
-    unsigned int getTo() const {
+    uint8_t getTo() const {
         return to;
     };
 
-    unsigned int getCode() const {
+    uint16_t getCode() const {
         return code;
     };
 

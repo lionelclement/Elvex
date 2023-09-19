@@ -206,8 +206,5 @@ void Forest::generate(bool randomResult, bool singleResult)
                 ++nodeIt;
             }
         }
-        else {
-            //output.push_back("EMPTY");
-        }
     }
 }

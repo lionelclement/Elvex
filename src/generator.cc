@@ -809,8 +809,10 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                                                                  (*actualItem)->getRanges()[0], row);
                                     forestMap.insert(fi, forestFound);
                                     nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
-                                    node->push_back(forestFound);
-                                    nodeRoot->push_back(forestFound);
+                                    if (forestFound->getFrom() != forestFound->getTo()){
+                                        node->push_back(forestFound);
+                                        nodeRoot->push_back(forestFound);
+                                    }
                                 }
                                 nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
                                 for (auto forestIdentifier : (*actualItem)->getForestIdentifiers())
@@ -818,7 +820,11 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                                     auto _forestMapIt = forestMap.find(forestIdentifier);
                                     if (_forestMapIt != forestMap.cend())
                                     {
-                                        node->push_back((*_forestMapIt).second);
+                                        forestPtr forest = (*_forestMapIt).second;
+                                            
+                                        if (forest->getFrom() != forest->getTo()){
+                                            node->push_back(forest);
+                                        }
                                     }
                                 }
                                 forestFound->push_back_node(node);
@@ -932,7 +938,8 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                                                 FATAL_ERROR_UNEXPECTED
                                             }
                                             forestPtr forest = (*forestMapIt).second;
-                                            node->push_back(forest);
+                                            if (forest->getFrom() != forest->getTo())
+                                                node->push_back(forest);
                                         }
                                         forestPtr forestFound = forestPtr();
                                         class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getId(),
@@ -1213,10 +1220,17 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                             }
                                         }
                                         // word->print(std::cerr);
-                                        class ForestIdentifier *fi = ForestIdentifier::create(word->getId(),
+                                        ForestIdentifier *fi = ForestIdentifier::create(word->getId(),
                                                                                               row - 1,
                                                                                               row,
                                                                                               resultFeatures->peekSerialString());
+                                        /*
+                                        CERR_LINE;
+                                        ForestIdentifier *fi = ForestIdentifier::create(word->getPos(),
+                                                                                              row - 1,
+                                                                                              row,
+                                                                                              resultFeatures->peekSerialString());
+                                        */
                                         auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
                                         {

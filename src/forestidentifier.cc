@@ -24,7 +24,7 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-ForestIdentifier::ForestIdentifier(unsigned int code, unsigned int from, unsigned int to,
+ForestIdentifier::ForestIdentifier(uint16_t code, uint8_t from, uint8_t to,
                                    const std::string &featuresSerialString)
 {
     NEW;
@@ -46,9 +46,9 @@ ForestIdentifier::~ForestIdentifier()
  *                                                            *
  ************************************************************ */
 class ForestIdentifier *
-ForestIdentifier::create(unsigned int code,
-                         unsigned int from,
-                         unsigned int to,
+ForestIdentifier::create(uint16_t code,
+                         uint8_t from,
+                         uint8_t to,
                          const std::string &featuresSerialString)
 {
     return new ForestIdentifier(code, from, to, featuresSerialString);
@@ -59,8 +59,8 @@ ForestIdentifier::create(unsigned int code,
  ************************************************** */
 void ForestIdentifier::makeSerialString()
 {
-    serialString =
-        std::to_string(code) + '[' + std::to_string(from) + '-' + std::to_string(to) + ']' + featuresSerialString;
+    uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint32_t>(from) << 8 | static_cast<uint32_t>(to);
+    serialString = std::to_string(encode);
 }
 
 /* ************************************************************
