@@ -13,9 +13,13 @@ In practical terms, how can you use Elvex to build a Text Generator for an appli
 
 To use **Elvex** software on your application, you first need to create a lexicon and a grammar by using the **Elvex** language and adhering to the **Elvex** formalism.
 
-Each time you want to use a word, it needs to be thoroughly defined in the lexicon, which can vary depending on the specific domain. This entails describing every word you intend to generate. Writing entries for all the basic words, compounds, and idiomatic phrases can be a time-consuming and expensive endeavor (taking several months for one person or several weeks within a narrow domain).
+The inputs will depend on the **Elvex** grammar built for your application.
 
-In addition to the lexicon, you'll need to create a natural language grammar. While the grammar may be more complex, it typically requires less time to develop (usually just several weeks).
+To write the lexicon: Each time you want to use a word, it needs to be thoroughly defined in the lexicon, which can vary depending on the specific domain. This entails describing every word you intend to generate. Writing entries for all the basic words, compounds, and idiomatic phrases can be a time-consuming and expensive endeavor (taking several months for one person or several weeks within a narrow domain).
+
+To write the grammar: In addition to the lexicon, you'll need to create a natural language grammar. While the grammar may be more complex, it typically requires less time to develop (usually just several weeks).
+
+The Elvex program is a software that can be compiled on any platform and launched from an application or operating system.
 
 Elvex software
 =====
