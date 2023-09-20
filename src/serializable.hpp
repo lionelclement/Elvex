@@ -25,7 +25,7 @@
 class Serializable {
 
 private:
-    uint16_t serialHashCode;
+    uint32_t serialHashCode;
 
     virtual void makeSerialString() = 0;
 
@@ -39,7 +39,7 @@ public:
 
     std::string peekSerialString();
 
-    uint16_t hashCode();
+    uint32_t hashCode();
 
     void resetSerial();
 
