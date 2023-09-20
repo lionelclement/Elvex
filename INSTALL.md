@@ -1,6 +1,6 @@
 ## Requirements
 
-To fully compile Elvex, make sure you have the following tools installed on your computer:
+To fully compile **Elvex**, make sure you have the following tools installed on your computer:
 
 - g++
 - flex
@@ -10,7 +10,7 @@ To fully compile Elvex, make sure you have the following tools installed on your
 
 ## Compilation
 
-To compile Elvex, follow these commands:
+To compile **Elvex**, follow these commands:
 
 1. Run: `cmake .`
 2. Run: `make`
@@ -18,7 +18,7 @@ To compile Elvex, follow these commands:
 
 ## Testing
 
-After you've successfully installed Elvex, execute the following command:
+After you've successfully installed **Elvex**, execute the following command:
 
 ```shell
 . ./try-me.sh
