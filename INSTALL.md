@@ -1,25 +1,24 @@
-Requires
-===
+## Requirements
 
-The full compilation of Elvex requires the following tools on your computer:
----
+To fully compile Elvex, make sure you have the following tools installed on your computer:
 
-— g++
-— flex
-— bison
-— libxml2-dev
+- g++
+- flex
+- bison
+- libxml2-dev
 - cmake
 
-Compilation
-===
+## Compilation
 
-_cmake ._
-_make_
-_sudo make install_
+To compile Elvex, follow these commands:
 
-Trying
-===
+1. Run: `cmake .`
+2. Run: `make`
+3. Run: `sudo make install`
 
-Once you have installed Elvex execute these commands:
-_. ./try-me.sh_
+## Testing
 
+After you've successfully installed Elvex, execute the following command:
+
+```shell
+. ./try-me.sh
