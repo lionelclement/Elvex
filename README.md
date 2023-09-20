@@ -1,9 +1,9 @@
-**Elvex Project**
+*Elvex* Project
 =====
 
 The name **Elvex** encompasses the name of a software, the name of a natural text generation (NLG) algorithm, the name of the language used to write natural language grammars and the name of a linguistic formalism for NLG.
 
-What can you do with **Elvex** software?
+What can you do with *Elvex* software?
 -----------------------------
 
 Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data. Migrate this solution to an embedded system with limited resources and no connection to a massive data server.
@@ -17,7 +17,7 @@ Each time you want to use a word, it needs to be thoroughly defined in the lexic
 
 In addition to the lexicon, you'll need to create a natural language grammar. While the grammar may be more complex, it typically requires less time to develop (usually just several weeks).
 
-**Elvex** software
+*Elvex* software
 =====
 
 **Elvex** is a **Natural Text Generator** engine written in C++ language
@@ -44,12 +44,12 @@ In other words
 
 The language of **Elvex** formalism is not under licence (it belongs to the public domain), so the data you will write (new grammars, new lexicons) are not part of **Elvex**, it is under another license.
 
-**Elvex** language
+*Elvex* language
 =====
 
 The lexicons, grammatical rules, and the content to be expressed are all described using the **Elvex** language, which is detailed in the manual documentation.
 
-**Elvex** algorithm
+*Elvex* algorithm
 =====
 
 I cannot elaborate on the algorithm here, but let's provide some elements to understand the mechanism in a general sense: 
@@ -66,7 +66,7 @@ The new algorithms used are
 
 The **Elvex** algorithm is deterministic and monotonic (each rule adds something and never removes the effect of other rules).
 
-**Elvex** formalism
+*Elvex* formalism
 =====
 
 **Elvex** formalism is freely inspired by some syntactic formalisms such as:
