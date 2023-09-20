@@ -9,7 +9,7 @@
 #
 # Author:
 # Lionel Clément
-# LaBRI -- Université Bordeaux
+# LaBRI - Université Bordeaux
 # 351, cours de la Libération
 # 33405 Talence Cedex - France
 # lionel.clement@labri.fr
