@@ -132,9 +132,9 @@
     <xsl:apply-templates select="TEXT"/>
   </xsl:template>
 
-  <!-- Correspondance pour l'élément S -->
+  <!-- Correspondance pour l'élément TEXT -->
   <xsl:template match="TEXT">
-    <!-- Sortie de la balise <S> en tant que texte -->
+    <!-- Sortie de la balise <TEXT> en tant que texte -->
     <xsl:value-of select="."/>
     <xsl:text>\n</xsl:text>
   </xsl:template>
