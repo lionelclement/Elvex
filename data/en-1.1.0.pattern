@@ -22,6 +22,8 @@ TO_ENJOY	verb	TO_ENJOY	SUBJECT:[human:true],iiReal:OBJECT
 TO_SUFFER	verb	TO_SUFFER	SUBJECT:[human:true],iiReal:OBJECT
 TO_ENDURE	verb	TO_ENDURE	SUBJECT:[human:true],iiReal:OBJECT
 
+TO_USE	verb	TO_USE	SUBJECT:[human:true],iiReal:OBJECT
+
 TO_STAY_AWAY	verb	TO_STAY_AWAY	SUBJECT:[human:true]
 
 #  To CALL

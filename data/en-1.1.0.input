@@ -67,8 +67,9 @@
 
 //Text[HEAD:TO_STUDY, i:[HEAD:STUDENT, @p]]
 
-Axiom [HEAD:EUPHORIC, i:[HEAD:STUDENT], vtense:$t]
+//Axiom [HEAD:EUPHORIC, i:[HEAD:STUDENT], vtense:$t]
 //Axiom [HEAD:EUPHORIC, i:[HEAD:STUDENT, number:sg]]
+Axiom [HEAD:EUPHORIC, i:[HEAD:STUDENT, ID:1], ii:[HEAD:TO_USE, i:[ID:1], ii:[HEAD:ELVEX]], vtense:$t]
 
 //S[HEAD:TO_STUDY, i:[HEAD:pro, number:pl, person:three], vtense:present, lexical_function:none, verbal_constr:no_int|no_neg]
 

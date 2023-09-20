@@ -231,12 +231,13 @@ S → S {
 }
 
 // Infinitive subject controller
+@trace
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   [i:[HEAD:$H1, ID:$ID1], ii:[i:[HEAD:$H2, ID:$ID2], $iiRest]] ⊂ ↑;
   attest (¬$H1 ∨ ¬$H2 ∨ ($H1 == $H2));
   attest ($ID1 == $ID2);
-  ↓1 = [SUBJECT:$i, VCOMP:[i:$i, $iiRest], iiReal:VCOMP, $Rest];
+  ↓1 = [SUBJECT:$i, VCOMP:[i:$i, $iiRest]/*, iiReal:VCOMP*/, $Rest];
   ⇑ = ⇓1;
 }
 
@@ -260,6 +261,7 @@ S → [NP|cln] VP {
   [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   [verbal_constr:$verbal_constr] ⊂ ↑;
   if (#1){
+    attest ($vtense != infinitive);
     ↓1 = $SUBJECT ∪ [case:nominative];
     $Synth_Subject = ⇓1;
     ↓2 = [SUBJECT:$Synth_Subject, vtense:$vtense, tensed:true, $Rest];

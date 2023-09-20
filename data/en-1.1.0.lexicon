@@ -100,7 +100,7 @@ has	aux [vtense:present_perfect, tensed:true, SUBJECT:[@_3s], verb_vform:past_pa
 will	aux [vtense:future, tensed:true, verb_vform:infinitive];
 
 was	aux [vtense:past_continous, tensed:true, SUBJECT:[@_13s], verb_vform:present_participle];
-where	aux [vtense:past_continous, tensed:true, SUBJECT:[@_2s], verb_vform:present_participle]
+were	aux [vtense:past_continous, tensed:true, SUBJECT:[@_2s], verb_vform:present_participle]
 	| aux [vtense:past_continous, tensed:true, SUBJECT:[@p], verb_vform:present_participle];
 
 had	aux [vtense:past_perfect, tensed:true, verb_vform:past_participle];

@@ -41,6 +41,14 @@ appreciated	verb	TO_APPRECIATE	vtense:past_participle,tensed:false
 appreciating	verb	TO_APPRECIATE	vtense:present_participle,tensed:false
 appreciate	verb	TO_APPRECIATE	vtense:infinitive
 
+use	verb	TO_USE	vtense:present,SUBJECT:[@_12s]
+use	verb	TO_USE	vtense:present,SUBJECT:[@p]
+uses	verb	TO_USE	vtense:present,SUBJECT:[@_3s]
+used	verb	TO_USE	vtense:preterite
+used	verb	TO_USE	vtense:past_participle,tensed:false
+using	verb	TO_USE	vtense:present_participle,tensed:false
+use	verb	TO_USE	vtense:infinitive
+
 accept	verb	TO_ACCEPT	vtense:present,SUBJECT:[@_12s]
 accept	verb	TO_ACCEPT	vtense:present,SUBJECT:[@p]
 accepts	verb	TO_ACCEPT	vtense:present,SUBJECT:[@_3s]
