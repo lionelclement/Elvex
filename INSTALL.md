@@ -18,7 +18,7 @@ git clone https://github.com/lionelclement/Elvex/
 
 ## Compilation
 
-To compile **Elvex**, follow these commands:
+To compile **Elvex**, follow these commands from the Elvex directory:
 
 1. Run: `cmake .`
 2. Run: `make`
