@@ -36,7 +36,7 @@ Serializable::~Serializable() {
 /* **************************************************
  *
  ************************************************** */
-size_t Serializable::hashCode() {
+uint16_t Serializable::hashCode() {
     if (serialHashCode == 0) {
         peekSerialString();
     }
@@ -49,7 +49,7 @@ size_t Serializable::hashCode() {
 std::string Serializable::peekSerialString() {
   if (serialString.empty()) {
         makeSerialString();
-        serialHashCode = std::hash<std::string>{}(serialString);
+        serialHashCode = static_cast<uint16_t>(std::hash<std::string>{}(serialString));
     }
     return serialString;
 }

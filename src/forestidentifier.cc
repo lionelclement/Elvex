@@ -60,39 +60,21 @@ ForestIdentifier::create(uint16_t code,
 void ForestIdentifier::makeSerialString()
 {
     uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint32_t>(from) << 8 | static_cast<uint32_t>(to);
-    serialString = std::to_string(encode);
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-bool ForestIdentifier::operator<(const ForestIdentifier &o) const
-{
-    return ((this->code < o.code) || (this->from < o.from) || (this->to < o.to) ||
-            (this->featuresSerialString < o.featuresSerialString));
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-bool ForestIdentifier::operator!=(const ForestIdentifier &o) const
-{
-    return ((this->code != o.code) || (this->from != o.from) || (this->to != o.to) ||
-            (this->featuresSerialString != o.featuresSerialString));
+    serialString = std::to_string(encode) + '-' + featuresSerialString;
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t ForestIdentifier::hash::operator()(class ForestIdentifier *i) const
+size_t ForestIdentifier::hash::operator()(class ForestIdentifier *forestIdentifier) const
 {
-    return i->hashCode();
+    return forestIdentifier->hashCode();
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool ForestIdentifier::equal_to::operator()(class ForestIdentifier *i1, class ForestIdentifier *i2) const
+bool ForestIdentifier::equal_to::operator()(class ForestIdentifier *forestIdentifier1, class ForestIdentifier *forestIdentifier2) const
 {
-    return i1->peekSerialString() == i2->peekSerialString();
+    return forestIdentifier1->peekSerialString() == forestIdentifier2->peekSerialString();
 }

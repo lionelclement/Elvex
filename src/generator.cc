@@ -541,6 +541,7 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                 else
                 {
                     forestFound = Forest::create(Entry::create(it->getCurrentTerm()), row, row);
+
                     forestMap.insert(fi, forestFound);
                     it->addForestIdentifiers(it->getIndex(), fi);
                 }
@@ -1068,18 +1069,18 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
 
                     std::string *form = nullptr;
                     unsigned int head = inheritedSonFeatures->assignHead();
-                    Stage _stage;
+                    Stage stage;
                     if (head == UINT_MAX)
                     {
                         form = inheritedSonFeatures->assignForm();
                         if (form)
-                            _stage = FORM_FEATURES;
+                            stage = FORM_FEATURES;
                         else
-                            _stage = MORPHO_FEATURES;
+                            stage = MORPHO_FEATURES;
                     }
                     else
                     {
-                        _stage = HEAD_FEATURES;
+                        stage = HEAD_FEATURES;
                     }
 
                     /*
@@ -1105,7 +1106,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                             std::cout << "head : " << Vartable::codeToString(head) << std::endl;
                             std::cout << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
                             ***** */
-                            switch (_stage)
+                            switch (stage)
                             {
 
                             case MORPHO_FEATURES:
@@ -1160,7 +1161,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
 
                                     // Filter !!
                                     // entryFeatures subsumes ↑
-                                    if (_stage == FORM_FEATURES ||
+                                    if (stage == FORM_FEATURES ||
                                         (entryFeatures && entryFeatures->subsumes(nullptr, inheritedSonFeatures, env)))
                                     {
 
@@ -1197,10 +1198,10 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                                                              entryFeaturesCopy);
                                         if (entryStatements)
                                             entryStatements->renameVariables(entry_copy->getId());
-                                        entryPtr word;
-                                        if (_stage == FORM_FEATURES)
+                                        entryPtr entry;
+                                        if (stage == FORM_FEATURES)
                                         {
-                                            word = Entry::create(entry_copy->getPos(), UINT_MAX, *form, resultFeatures);
+                                            entry = Entry::create(entry_copy->getPos(), UINT_MAX, *form, resultFeatures);
                                         }
                                         else
                                         {
@@ -1210,28 +1211,22 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                                 bool effect = false;
                                                 std::string _form = entry_copy->getForm();
                                                 it->getEnvironment()->replaceVariables(_form, effect);
-                                                word = Entry::create(entry_copy->getPos(), entry_copy->getHead(), _form,
+                                                entry = Entry::create(entry_copy->getPos(), entry_copy->getHead(), _form,
                                                                      resultFeatures);
                                             }
                                             else
                                             {
-                                                word = Entry::create(entry_copy->getPos(), entry_copy->getHead(),
+                                                entry = Entry::create(entry_copy->getPos(), entry_copy->getHead(),
                                                                      entry_copy->getForm(), resultFeatures);
                                             }
                                         }
-                                        // word->print(std::cerr);
-                                        ForestIdentifier *fi = ForestIdentifier::create(word->getId(),
-                                                                                              row - 1,
-                                                                                              row,
+                                        ForestIdentifier *fi = ForestIdentifier::create(entry->hashCode(),
+                                                                                              0, 0, 
+                                                                                              //row - 1,
+                                                                                              //row,
                                                                                               resultFeatures->peekSerialString());
-                                        /*
-                                        CERR_LINE;
-                                        ForestIdentifier *fi = ForestIdentifier::create(word->getPos(),
-                                                                                              row - 1,
-                                                                                              row,
-                                                                                              resultFeatures->peekSerialString());
-                                        */
-                                        auto forestMapIt = forestMap.find(fi);
+                                        
+                                       auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
                                         {
                                             it->addForestIdentifiers((*actualItem)->getIndex(),
@@ -1243,7 +1238,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                         }
                                         else
                                         {
-                                            forestMap.insert(fi, Forest::create(word, row - 1, row));
+                                            forestMap.insert(fi, Forest::create(entry, row - 1, row));
                                             it->addForestIdentifiers((*actualItem)->getIndex(), fi);
                                         }
                                         it->setRefs((*actualItem)->getRefs());
