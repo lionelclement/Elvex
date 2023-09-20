@@ -8,6 +8,13 @@ To fully compile **Elvex**, make sure you have the following tools installed on 
 - libxml2-dev
 - cmake
 
+## Download
+
+To download **Elvex**, follow this command: 
+
+```shell
+git clone https://github.com/lionelclement/Elvex/
+
 ## Compilation
 
 To compile **Elvex**, follow these commands:
