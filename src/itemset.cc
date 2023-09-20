@@ -113,7 +113,7 @@ ItemSet::set_of_item_const_iterator ItemSet::find(class Item *item) const
 /* **************************************************
  *
  ************************************************** */
-bool ItemSet::insert(class Item* item, Generator* synthesizer)
+bool ItemSet::insert(class Item *item, Generator *synthesizer)
 {
     if (items.size() > synthesizer->getMaxItems())
     {

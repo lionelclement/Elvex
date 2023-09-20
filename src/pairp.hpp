@@ -30,8 +30,8 @@
 #endif
 
 class Pairp : public Facade,
-             public Serializable,
-             public std::enable_shared_from_this<Pairp>
+              public Serializable,
+              public std::enable_shared_from_this<Pairp>
 {
 
 public:
@@ -112,7 +112,7 @@ public:
     bool renameVariables(size_t);
 
     void apply(statementPtr from, class Item *, class Parser &, class Generator *, const statementPtr &, statementPtr,
-          bool &);
+               bool &);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);

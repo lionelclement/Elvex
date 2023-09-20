@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2023 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -22,7 +22,8 @@
 /* **************************************************
  *
  ************************************************** */
-Serializable::Serializable() {
+Serializable::Serializable()
+{
     serialHashCode = 0;
     serialString = std::string();
 }
@@ -30,14 +31,17 @@ Serializable::Serializable() {
 /* **************************************************
  *
  ************************************************** */
-Serializable::~Serializable() {
+Serializable::~Serializable()
+{
 }
 
 /* **************************************************
  *
  ************************************************** */
-uint32_t Serializable::hashCode() {
-    if (serialHashCode == 0) {
+uint32_t Serializable::hashCode()
+{
+    if (serialHashCode == 0)
+    {
         peekSerialString();
     }
     return serialHashCode;
@@ -46,8 +50,10 @@ uint32_t Serializable::hashCode() {
 /* **************************************************
  *
  ************************************************** */
-std::string Serializable::peekSerialString() {
-  if (serialString.empty()) {
+std::string Serializable::peekSerialString()
+{
+    if (serialString.empty())
+    {
         makeSerialString();
         serialHashCode = static_cast<uint32_t>(std::hash<std::string>{}(serialString));
     }
@@ -57,7 +63,8 @@ std::string Serializable::peekSerialString() {
 /* **************************************************
  *
  ************************************************** */
-void Serializable::resetSerial() {
+void Serializable::resetSerial()
+{
     serialHashCode = 0;
     serialString = std::string();
 }

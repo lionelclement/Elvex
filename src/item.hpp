@@ -36,16 +36,15 @@ public:
     typedef std::unordered_set<unsigned int> set_of_unsigned_int;
     typedef set_of_unsigned_int::const_iterator set_of_unsigned_int_const_iterator;
     static uint8_t NA;
-    
-private:
 
+private:
     rulePtr rule;                                            // the grammar rule
-    uint8_t index;                                      // the \bullet position
-    std::vector<uint8_t> indexTerms;                    // term in a disjunction
+    uint8_t index;                                           // the \bullet position
+    std::vector<uint8_t> indexTerms;                         // term in a disjunction
     statementsPtr statements;                                // the semantics
     set_of_unsigned_int refs;                                // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
-    std::vector<uint8_t> ranges;                        // ranges
+    std::vector<uint8_t> ranges;                             // ranges
     featuresPtr inheritedFeatures;                           // ↑
     listFeaturesPtr inheritedSonFeatures;                    // ↓
     featuresPtr synthesizedFeatures;                         // ⇑
@@ -196,9 +195,9 @@ public:
 
     void defaultInheritedSonFeatures(void);
 
-    void apply(class Parser& parser, class Generator* synthesizer);
+    void apply(class Parser &parser, class Generator *synthesizer);
 
-    class Item* clone(const std::bitset<FLAGS>& savedFlags);
+    class Item *clone(const std::bitset<FLAGS> &savedFlags);
 
     struct hash
     {

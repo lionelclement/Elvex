@@ -17,8 +17,6 @@
  *
  ************************************************** */
 
-// #include <utility>
-
 #include "feature.hpp"
 #include "environment.hpp"
 #include "value.hpp"
@@ -168,7 +166,7 @@ void Feature::print(std::ostream &outStream) const
             value->print(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-            //outStream << "nullptr";
+        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_LEMMA_:
@@ -177,7 +175,7 @@ void Feature::print(std::ostream &outStream) const
             value->print(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-            //outStream << "nullptr";
+        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_FORM_:
@@ -186,7 +184,7 @@ void Feature::print(std::ostream &outStream) const
             value->print(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-            //outStream << "nullptr";
+        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_CONSTANT_:
@@ -195,7 +193,7 @@ void Feature::print(std::ostream &outStream) const
             value->print(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-            //outStream << "nullptr";
+        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_VARIABLE_:

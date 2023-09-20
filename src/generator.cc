@@ -810,7 +810,8 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                                                                  (*actualItem)->getRanges()[0], row);
                                     forestMap.insert(fi, forestFound);
                                     nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
-                                    if (forestFound->getFrom() != forestFound->getTo()){
+                                    if (forestFound->getFrom() != forestFound->getTo())
+                                    {
                                         node->push_back(forestFound);
                                         nodeRoot->push_back(forestFound);
                                     }
@@ -822,8 +823,9 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                                     if (_forestMapIt != forestMap.cend())
                                     {
                                         forestPtr forest = (*_forestMapIt).second;
-                                            
-                                        if (forest->getFrom() != forest->getTo()){
+
+                                        if (forest->getFrom() != forest->getTo())
+                                        {
                                             node->push_back(forest);
                                         }
                                     }
@@ -1211,21 +1213,21 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                                 std::string _form = entry_copy->getForm();
                                                 it->getEnvironment()->replaceVariables(_form, effect);
                                                 entry = Entry::create(entry_copy->getPos(), entry_copy->getHead(), _form,
-                                                                     resultFeatures);
+                                                                      resultFeatures);
                                             }
                                             else
                                             {
                                                 entry = Entry::create(entry_copy->getPos(), entry_copy->getHead(),
-                                                                     entry_copy->getForm(), resultFeatures);
+                                                                      entry_copy->getForm(), resultFeatures);
                                             }
                                         }
                                         ForestIdentifier *fi = ForestIdentifier::create(entry->hashCode(),
-                                                                                              0, 0, 
-                                                                                              //row - 1,
-                                                                                              //row,
-                                                                                              resultFeatures->peekSerialString());
-                                        
-                                       auto forestMapIt = forestMap.find(fi);
+                                                                                        0, 0,
+                                                                                        // row - 1,
+                                                                                        // row,
+                                                                                        resultFeatures->peekSerialString());
+
+                                        auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
                                         {
                                             it->addForestIdentifiers((*actualItem)->getIndex(),

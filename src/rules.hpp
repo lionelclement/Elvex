@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2023 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -28,7 +28,8 @@
 #include <libxml/tree.h>
 #endif
 
-class Rules {
+class Rules
+{
 public:
     typedef std::list<rulePtr> list_of_rule;
     typedef std::unordered_set<unsigned int> set_of_unsigned_int;
@@ -46,17 +47,17 @@ public:
 
     ~Rules(void);
 
-    set_of_unsigned_int& getTerminals(void);
+    set_of_unsigned_int &getTerminals(void);
 
-    set_of_unsigned_int& getNonTerminals(void);
+    set_of_unsigned_int &getNonTerminals(void);
 
-    const list_of_rule& getRules(void) const;
+    const list_of_rule &getRules(void) const;
 
     unsigned int getStartTerm(void) const;
 
     rulePtr getFirstRule(void) const;
 
-    const unsigned int* getRefIdMax(void) const;
+    const unsigned int *getRefIdMax(void) const;
 
     void setStartTerm(unsigned int startTerm);
 
@@ -72,19 +73,19 @@ public:
 
     void addTerminal(unsigned int);
 
-    void print(std::ostream& ) const;
+    void print(std::ostream &) const;
 
     bool isTerminal(unsigned int) const;
 
     bool isNonTerminal(unsigned int) const;
 
-    void analyseTerms(class Parser&);
+    void analyseTerms(class Parser &);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
 #endif
 
-    list_of_rule* findRules(unsigned int lhs);
+    list_of_rule *findRules(unsigned int lhs);
 };
 
 #endif // ELVEX_RULES_H

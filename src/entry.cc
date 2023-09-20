@@ -109,7 +109,7 @@ unsigned int Entry::getHead() const
 /* **************************************************
  *
  ************************************************** */
-std::string & Entry::getForm()
+std::string &Entry::getForm()
 {
     return form;
 }
@@ -190,12 +190,13 @@ void Entry::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-void Entry::renameVariables(size_t k){
+void Entry::renameVariables(size_t k)
+{
 
     std::string pattern =
         std::string(
             "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
-    //std::cmatch match;
+    // std::cmatch match;
 
     try
     {
@@ -217,7 +218,7 @@ void Entry::renameVariables(size_t k){
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::clone() const{
+entryPtr Entry::clone() const
+{
     return create(pos, head, form, features->clone());
 }
-    

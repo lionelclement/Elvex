@@ -103,7 +103,8 @@ void generate(bool trace)
         {
             generator.generate(parser);
         }
-        if (trace){
+        if (trace)
+        {
             std::cout << "<ul>" << std::endl;
         }
         if (generator.getNodeRoot() && !generator.getNodeRoot()->empty())
@@ -121,11 +122,13 @@ void generate(bool trace)
                     forest = *forestIt;
                 for (auto i = forest->output_cbegin(); i != forest->output_cend(); ++i)
                 {
-                    if (trace){
+                    if (trace)
+                    {
                         std::cout << "<li>" << std::endl;
                     }
                     std::cout << (*i) << std::endl;
-                    if (trace){
+                    if (trace)
+                    {
                         std::cout << "</li>" << std::endl;
                     }
                 }
@@ -134,7 +137,8 @@ void generate(bool trace)
                 ++forestIt;
             }
         }
-        if (trace){
+        if (trace)
+        {
             std::cout << "</ul>" << std::endl;
         }
     } while (generator.getRandomResult() && generator.getNodeRoot()->empty() &&
@@ -411,11 +415,11 @@ int main(int argn, char **argv)
 #endif
         }
 
-    //COUT_LINE;
-    //parser.printCacheLexicon(std::cout);
+        // COUT_LINE;
+        // parser.printCacheLexicon(std::cout);
 
-
-        if (trace){
+        if (trace)
+        {
             std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
         }
         srand(time(nullptr));
@@ -460,7 +464,8 @@ int main(int argn, char **argv)
         std::flush(std::cerr);
         return EXIT_FAILURE;
     }
-    if (trace){
+    if (trace)
+    {
         std::cout << "</body></html>" << std::endl;
     }
     return EXIT_SUCCESS;

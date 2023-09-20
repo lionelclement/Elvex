@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2023 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -23,22 +23,25 @@
 /* **************************************************
  *
  ************************************************** */
-VariableFlag::VariableFlag() noexcept {
+VariableFlag::VariableFlag() noexcept
+{
     NEW
-    flag = NONE;
+        flag = NONE;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void VariableFlag::setFlag(enum flagValues _flag) {
+void VariableFlag::setFlag(enum flagValues _flag)
+{
     this->flag = _flag;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool VariableFlag::containsVariable() {
+bool VariableFlag::containsVariable()
+{
     if (flag != 0)
         return (flag == 1);
     return false;

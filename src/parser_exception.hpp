@@ -23,13 +23,12 @@
 #include <string>
 #include "fatal_exception.hpp"
 
-class parser_exception :
-    public fatal_exception {
+class parser_exception : public fatal_exception
+{
 
-    public:
-        parser_exception(std::string message);
-        parser_exception(std::ostringstream& oss);
-
+public:
+    parser_exception(std::string message);
+    parser_exception(std::ostringstream &oss);
 };
 
-#endif //ELVEX_PARSER_EXCEPTION_HPP
+#endif // ELVEX_PARSER_EXCEPTION_HPP

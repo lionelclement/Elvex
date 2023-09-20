@@ -22,7 +22,7 @@
 #include "features.hpp"
 #include "shared_ptr.hpp"
 #include "messages.hpp"
-#include "statement.hpp" 
+#include "statement.hpp"
 
 /* **************************************************
  *
@@ -161,8 +161,12 @@ void ListFeatures::flatPrint(std::ostream &outStream) const
 {
     outStream << '(';
     bool first = true;
-    for (auto &listFeature : listFeatures){
-        if (first) first=false; else outStream << ", ";
+    for (auto &listFeature : listFeatures)
+    {
+        if (first)
+            first = false;
+        else
+            outStream << ", ";
         listFeature->flatPrint(outStream);
     }
     outStream << ')';
@@ -174,7 +178,8 @@ void ListFeatures::flatPrint(std::ostream &outStream) const
 void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
                          bool &effect)
 {
-    for (auto &features : listFeatures) {
+    for (auto &features : listFeatures)
+    {
         features->apply(from, item, parser, synthesizer, variable, statement->clone(0), effect);
     }
 }
@@ -199,9 +204,9 @@ void ListFeatures::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr lfs = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"LFS", nullptr);
     xmlSetProp(lfs, (xmlChar *)"id", (xmlChar *)std::to_string(this->getId()).c_str());
-    for (auto &features : listFeatures){
-            features->toXML(lfs);
+    for (auto &features : listFeatures)
+    {
+        features->toXML(lfs);
     }
 }
 #endif
-

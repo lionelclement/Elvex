@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2020 LABRI, 
+ * Copyright 2014-2020 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@labri.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -28,7 +28,8 @@
 /* **************************************************
  *
  ************************************************** */
-Grammar::Grammar(void) {
+Grammar::Grammar(void)
+{
     this->firstRule = nullptr;
     this->startTerm = 0;
     this->idMax = 0;
@@ -38,17 +39,20 @@ Grammar::Grammar(void) {
 /* **************************************************
  *
  ************************************************** */
-Grammar::~Grammar(void) {
+Grammar::~Grammar(void)
+{
     DELETE
     terminals.clear();
     nonTerminals.clear();
-    for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules)
+    {
         rulePtr tmp = *iterRules;
         if (tmp)
             tmp.reset();
     }
     rules.clear();
-    if (firstRule) {
+    if (firstRule)
+    {
         firstRule.reset();
     }
 }
@@ -56,83 +60,95 @@ Grammar::~Grammar(void) {
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int> &Grammar::getTerminals(void) {
+std::set<unsigned int> &Grammar::getTerminals(void)
+{
     return terminals;
 }
 
 /* **************************************************
  *
  ************************************************** */
-std::set<unsigned int> &Grammar::getNonTerminals(void) {
+std::set<unsigned int> &Grammar::getNonTerminals(void)
+{
     return nonTerminals;
 }
 
 /* **************************************************
  *
  ************************************************** */
-const Grammar::ruleList &Grammar::getRules(void) const {
+const Grammar::ruleList &Grammar::getRules(void) const
+{
     return rules;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Grammar::getStartTerm(void) const {
+unsigned int Grammar::getStartTerm(void) const
+{
     return startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-rulePtr Grammar::getFirstRule(void) const {
+rulePtr Grammar::getFirstRule(void) const
+{
     return firstRule;
 }
 
 /* **************************************************
  *
  ************************************************** */
-const unsigned int *Grammar::getRefIdMax(void) const {
+const unsigned int *Grammar::getRefIdMax(void) const
+{
     return &idMax;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Grammar::setStartTerm(unsigned int _startTerm) {
+void Grammar::setStartTerm(unsigned int _startTerm)
+{
     this->startTerm = _startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Grammar::ruleList::const_iterator Grammar::rulesBegin(void) const {
+Grammar::ruleList::const_iterator Grammar::rulesBegin(void) const
+{
     return rules.begin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Grammar::ruleList::const_iterator Grammar::rulesEnd(void) const {
+Grammar::ruleList::const_iterator Grammar::rulesEnd(void) const
+{
     return rules.end();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addRule(rulePtr rule) {
+void Grammar::addRule(rulePtr rule)
+{
     rules.push_back(rule);
-    //std::pair<ruleList::iterator, bool> result = rules.insert(rule);
-    //return result.second;
+    // std::pair<ruleList::iterator, bool> result = rules.insert(rule);
+    // return result.second;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addNewStartTerm(bool addENDTerminal) {
+void Grammar::addNewStartTerm(bool addENDTerminal)
+{
     rulePtr r;
     std::vector<termsPtr> rhs;
 
-    if (addENDTerminal) {
+    if (addENDTerminal)
+    {
         terminals.insert(Vartable::END_);
     }
 
@@ -140,7 +156,8 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
     nonTerminals.insert(Vartable::STARTTERM_);
 
     rhs.push_back(Terms::create(getStartTerm()));
-    if (addENDTerminal) {
+    if (addENDTerminal)
+    {
         rhs.push_back(Terms::create(Vartable::END_));
     }
 
@@ -154,29 +171,30 @@ void Grammar::addNewStartTerm(bool addENDTerminal) {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::print(std::ostream &outStream) const {
+void Grammar::print(std::ostream &outStream) const
+{
     outStream << "<table border=\"1\"><tr><td>";
     outStream << "Terminals</td><td>";
     std::set<unsigned int>::const_iterator iter;
     bool first = true;
-    for (iter = terminals.begin(); iter != terminals.end(); ++iter) {
+    for (iter = terminals.begin(); iter != terminals.end(); ++iter)
+    {
         if (first)
             first = false;
         else
             outStream << ", ";
         outStream << Vartable::codeToIdentifier(*iter);
-
     }
     outStream << "</td></tr><tr><td>";
     outStream << "NonTerminals</td><td>";
     first = true;
-    for (iter = nonTerminals.begin(); iter != nonTerminals.end(); ++iter) {
+    for (iter = nonTerminals.begin(); iter != nonTerminals.end(); ++iter)
+    {
         if (first)
             first = false;
         else
             outStream << ", ";
         outStream << Vartable::codeToIdentifier(*iter);
-
     }
     outStream << "</td></tr><tr><td>";
     outStream << "StartTerm</td><td>";
@@ -186,11 +204,11 @@ void Grammar::print(std::ostream &outStream) const {
         outStream << "NULL";
     outStream << std::endl;
     outStream << "</td></tr><tr><td>Rules</td><td><table>";
-    for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    for (ruleList::const_iterator iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules)
+    {
         outStream << "<tr><td>";
         (*iterRules)->print(outStream, -1, true);
         outStream << "</td></tr>";
-
     }
     outStream << "</table></td></tr></td></table>";
     outStream << std::endl;
@@ -199,21 +217,24 @@ void Grammar::print(std::ostream &outStream) const {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addNonTerminal(unsigned int s) {
+void Grammar::addNonTerminal(unsigned int s)
+{
     nonTerminals.insert(s);
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Grammar::addTerminal(unsigned int s) {
+void Grammar::addTerminal(unsigned int s)
+{
     terminals.insert(s);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Grammar::isTerminal(unsigned int t) const {
+bool Grammar::isTerminal(unsigned int t) const
+{
     std::set<unsigned int>::const_iterator iter = terminals.find(t);
     return (iter != terminals.end());
 }
@@ -221,7 +242,8 @@ bool Grammar::isTerminal(unsigned int t) const {
 /* **************************************************
  *
  ************************************************** */
-bool Grammar::isNonTerminal(unsigned int t) const {
+bool Grammar::isNonTerminal(unsigned int t) const
+{
     std::set<unsigned int>::const_iterator iter = nonTerminals.find(t);
     return (iter != nonTerminals.end());
 }
@@ -229,25 +251,32 @@ bool Grammar::isNonTerminal(unsigned int t) const {
 /* **************************************************
  *
  ************************************************** */
-void Grammar::analyseTerms(class Parser &parser) {
+void Grammar::analyseTerms(class Parser &parser)
+{
     nonTerminals.clear();
     terminals.clear();
     ruleList::const_iterator iterRules;
-    for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules)
+    {
         nonTerminals.insert((*iterRules)->getLhs());
     }
-    for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
+    for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules)
+    {
         unsigned int i;
-        for (i = 0; i < (*iterRules)->getRhs().size(); ++i) {
+        for (i = 0; i < (*iterRules)->getRhs().size(); ++i)
+        {
             for (std::vector<unsigned int>::const_iterator term = (*iterRules)->getTerms(i)->begin();
-                 term != (*iterRules)->getTerms(i)->end(); ++term) {
-                if (nonTerminals.find(*term) == nonTerminals.end()) {
+                 term != (*iterRules)->getTerms(i)->end(); ++term)
+            {
+                if (nonTerminals.find(*term) == nonTerminals.end())
+                {
                     unsigned long int code = (*term);
                     terminals.insert(code);
 
                     Parser::entries_map *predToEntries;
                     Parser::entries_map_map::iterator foundCode = parser.getLexicon().find(code);
-                    if (foundCode == parser.getLexicon().end()) {
+                    if (foundCode == parser.getLexicon().end())
+                    {
                         predToEntries = new std::map<unsigned int, entriesPtr>;
                         predToEntries->insert(std::make_pair(code, Entries::create()));
                         parser.getLexicon().insert(std::make_pair(code, predToEntries));
@@ -262,24 +291,26 @@ void Grammar::analyseTerms(class Parser &parser) {
 /* **************************************************
  *
  ************************************************** */
-void
-Grammar::toXML(xmlNodePtr nodeRoot)
+void Grammar::toXML(xmlNodePtr nodeRoot)
 {
-   xmlNodePtr g=xmlNewChild(nodeRoot, NULL, (const xmlChar*)"GRAMMAR", NULL);
-   xmlNodePtr t=xmlNewChild(g, NULL, (const xmlChar*)"TERMINALS", NULL);
-   std::set<unsigned int>::const_iterator iter;
-   for (iter=terminals.begin(); iter != terminals.end(); ++iter) {
-      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
-   }
-   t=xmlNewChild(g, NULL, (const xmlChar*)"NON-TERMINALS", NULL);
-   for (iter=nonTerminals.begin(); iter != nonTerminals.end(); ++iter) {
-      xmlNewChild(t, NULL, (const xmlChar*)"TERM", (const xmlChar*)(Vartable::codeToIdentifier(*iter).c_str()));
-   }
-   //xmlNodePtr r = xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
-   ruleList::const_iterator iterRules;
-   for (iterRules=rulesBegin(); iterRules != rulesEnd(); ++iterRules) {
-      (*iterRules)->toXML(/*r*/);
-   }
+    xmlNodePtr g = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"GRAMMAR", NULL);
+    xmlNodePtr t = xmlNewChild(g, NULL, (const xmlChar *)"TERMINALS", NULL);
+    std::set<unsigned int>::const_iterator iter;
+    for (iter = terminals.begin(); iter != terminals.end(); ++iter)
+    {
+        xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToIdentifier(*iter).c_str()));
+    }
+    t = xmlNewChild(g, NULL, (const xmlChar *)"NON-TERMINALS", NULL);
+    for (iter = nonTerminals.begin(); iter != nonTerminals.end(); ++iter)
+    {
+        xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToIdentifier(*iter).c_str()));
+    }
+    // xmlNodePtr r = xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
+    ruleList::const_iterator iterRules;
+    for (iterRules = rulesBegin(); iterRules != rulesEnd(); ++iterRules)
+    {
+        (*iterRules)->toXML(/*r*/);
+    }
 }
 #endif
 
@@ -287,11 +318,14 @@ Grammar::toXML(xmlNodePtr nodeRoot)
  *
  % ************************************************** */
 std::list<rulePtr> *
-Grammar::findRules(unsigned int lhs) {
+Grammar::findRules(unsigned int lhs)
+{
     std::list<rulePtr> *result = new std::list<rulePtr>;
     ruleList::const_iterator iterRules;
-    for (iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++) {
-        if (lhs == (*iterRules)->getLhs()) {
+    for (iterRules = rulesBegin(); iterRules != rulesEnd(); iterRules++)
+    {
+        if (lhs == (*iterRules)->getLhs())
+        {
             result->push_back(*iterRules);
         }
     }

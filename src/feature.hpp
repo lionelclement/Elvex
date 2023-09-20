@@ -78,15 +78,15 @@ public:
     void setType(const enum Type);
 
     bool isForm() const;
-    
+
     bool isHead() const;
-    
+
     bool isLemma() const;
-    
+
     bool isConstant() const;
-    
+
     bool isVariable() const;
-    
+
     std::string attributeToString(void) const;
 
     featurePtr clone(void) const;

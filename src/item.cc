@@ -35,7 +35,7 @@
 #include "serializable.hpp"
 
 uint8_t Item::NA = UCHAR_MAX;
-    
+
 /* **************************************************
  *
  ************************************************** */
@@ -83,7 +83,7 @@ Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms,
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
-        //this->indexTerms.push_back(UINT_MAX);
+        // this->indexTerms.push_back(UINT_MAX);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedSonFeatures->push_back(Features::NIL);
@@ -554,13 +554,13 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment)
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
-     std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
-     std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
-     std::cout << "<tr><td>";
-     this->print(std::cout);
-     std::cout << "</td><td>";
-     environment->print(std::cout);
-     std::cout << "</td></tr></table>";
+    std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
+    std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
+    std::cout << "<tr><td>";
+    this->print(std::cout);
+    std::cout << "</td><td>";
+    environment->print(std::cout);
+    std::cout << "</td></tr></table>";
 #endif
     if (!this->environment)
         this->environment = Environment::create();
@@ -574,13 +574,13 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, enviro
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
-     std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
-     std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
-     std::cout << "<tr><td>";
-     this->print(std::cout);
-     std::cout << "</td><td>";
-     environment->print(std::cout);
-     std::cout << "</td></tr></table>";
+    std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
+    std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
+    std::cout << "<tr><td>";
+    this->print(std::cout);
+    std::cout << "</td><td>";
+    environment->print(std::cout);
+    std::cout << "</td></tr></table>";
 #endif
     if (!this->environment)
         this->environment = Environment::create();
@@ -725,7 +725,8 @@ void Item::print(std::ostream &out) const
         out << "<td>";
         for (unsigned int indexTerm : indexTerms)
             if (indexTerm == UINT_MAX)
-                out << "UINT_MAX" << "&nbsp;";
+                out << "UINT_MAX"
+                    << "&nbsp;";
             else
                 out << indexTerm << "&nbsp;";
         out << "</td>";
@@ -902,7 +903,7 @@ void Item::apply(Parser &parser, Generator *synthesizer)
     bool effect = false;
     statements->apply(this, parser, synthesizer, effect);
     if (statements->isSetFlags(Flags::BOTTOM))
-                addFlags(Flags::BOTTOM);
+        addFlags(Flags::BOTTOM);
 }
 
 /* **************************************************
@@ -916,7 +917,7 @@ void Item::makeSerialString()
         serialString += '\1';
     else
         serialString += std::to_string(index);
-    
+
     serialString += '\0';
     std::vector<uint8_t>::const_iterator ind = indexTerms.cbegin();
     while (ind != indexTerms.cend())

@@ -22,12 +22,13 @@
 /* **************************************************
  *
  ************************************************** */
-parser_exception::parser_exception(std::string message): fatal_exception(message) {
+parser_exception::parser_exception(std::string message) : fatal_exception(message)
+{
 }
 
 /* **************************************************
  *
  ************************************************** */
-parser_exception::parser_exception(std::ostringstream& oss): fatal_exception(oss) {
+parser_exception::parser_exception(std::ostringstream &oss) : fatal_exception(oss)
+{
 }
-

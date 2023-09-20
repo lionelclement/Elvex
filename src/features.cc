@@ -263,7 +263,7 @@ void Features::makeSerialString()
         {
             for (const auto &f : features)
             {
-                serialString += '\x9' + f->peekSerialString() ;
+                serialString += '\x9' + f->peekSerialString();
             }
         }
     }
@@ -361,7 +361,8 @@ valuePtr Features::find(const bitsetPtr &code) const
  ************************************************** */
 bool Features::buildEnvironment(statementPtr from, const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
-, bool root
+                                ,
+                                bool root
 #endif
 )
 {
@@ -374,7 +375,8 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
     //	}
 
 #ifdef TRACE_BUILD_ENVIRONMENT
-     if (root) {
+    if (root)
+    {
         COUT_LINE;
         std::cout << "<H4>Features::buildEnvironment</H4>" << std::endl;
         std::cout << "<table border = \"1\"><tr><th>this</th><th>features</th><th>Environment</th></tr>";
@@ -388,7 +390,7 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
         std::cout << "</td><td>";
         environment->print(std::cout);
         std::cout << "</td></tr></table>";
-     }
+    }
 #endif
 
     // Traite tous les attributs constants
@@ -412,11 +414,12 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
                     {
                     }
                     // If both are TRUE
-                    //else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
+                    // else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
                     //}
 
                     // If one is ANONYMOUS
-                    else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous())) {
+                    else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous()))
+                    {
                     }
 
                     // Else build environment with the two values
@@ -500,13 +503,14 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
     _features->subFlags(Flags::SEEN);
 
 #ifdef TRACE_BUILD_ENVIRONMENT
-     if (root) {
+    if (root)
+    {
         std::cout << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
         std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-        std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
+        std::cout << "<tr><td>" << (ret ? "TRUE" : "FALSE") << "</td><td>";
         environment->print(std::cout);
         std::cout << "</td></tr></table>";
-     }
+    }
 #endif
     return ret;
 }
@@ -518,20 +522,20 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
 bool Features::subsumes(statementPtr from, const featuresPtr &o, const environmentPtr &environment)
 {
 #ifdef TRACE_FEATURES
-     COUT_LINE;
-     std::cout << "<DIV>";
-     std::cout << "Subsumes (" << this << ")";
-     std::cout << "<TABLE border=\"1\"><TR><TH>this</TH><TH></TH><TH>other</TH><TH>env</TH></TR><TR>";
-     std::cout << "<TD>";
-     this->print(std::cout);
-     std::cout << "</TD><TD>&lt;</TD><TD>";
-     o->print(std::cout);
-     std::cout << "</TD>";
-     std::cout << "<TD>";
-     environment->print(std::cout);
-     std::cout << "</TD>";
-     std::cout << "</TR></TABLE>";
-     std::cout << "</DIV>";
+    COUT_LINE;
+    std::cout << "<DIV>";
+    std::cout << "Subsumes (" << this << ")";
+    std::cout << "<TABLE border=\"1\"><TR><TH>this</TH><TH></TH><TH>other</TH><TH>env</TH></TR><TR>";
+    std::cout << "<TD>";
+    this->print(std::cout);
+    std::cout << "</TD><TD>&lt;</TD><TD>";
+    o->print(std::cout);
+    std::cout << "</TD>";
+    std::cout << "<TD>";
+    environment->print(std::cout);
+    std::cout << "</TD>";
+    std::cout << "</TR></TABLE>";
+    std::cout << "</DIV>";
 #endif
 
     bool ret = true;
@@ -577,11 +581,11 @@ bool Features::subsumes(statementPtr from, const featuresPtr &o, const environme
         }
     }
 #ifdef TRACE_FEATURES
-     std::cout << "<DIV>";
-     std::cout << "result: (" << shared_from_this() << ")";
-     std::cout << (ret?"true":"false") << std::endl;
-     environment->print(std::cout);
-     std::cout << "</DIV>";
+    std::cout << "<DIV>";
+    std::cout << "result: (" << shared_from_this() << ")";
+    std::cout << (ret ? "true" : "false") << std::endl;
+    environment->print(std::cout);
+    std::cout << "</DIV>";
 #endif
     return ret;
 }

@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2023 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -22,7 +22,8 @@
 
 #include <iostream>
 
-struct CompactedLexiconBuffer {
+struct CompactedLexiconBuffer
+{
 private:
     unsigned long int next;
     unsigned long int offset;
@@ -41,7 +42,6 @@ public:
     bool isOffset() const;
 
     void print(std::ostream &) const;
-
 };
 
 #endif // COMPACTEDLEXICONBUFFER_H

@@ -311,15 +311,15 @@ bool Pairp::buildEnvironment(statementPtr from, const environmentPtr &environmen
     bool ret = true;
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
-     std::cout << "<H4>Pairp::buildEnvironment</H4>" << std::endl;
-     std::cout << "<table border = \"1\"><tr><th>this</th><th>otherPairp</th><th>Environment</th></tr>";
-     std::cout << "<tr><td>";
-     this->flatPrint(std::cout, true);
-     std::cout << "</td><td>";
-     otherPairp->flatPrint(std::cout, true);
-     std::cout << "</td><td>";
-     environment->print(std::cout);
-     std::cout << "</td></tr></table>";
+    std::cout << "<H4>Pairp::buildEnvironment</H4>" << std::endl;
+    std::cout << "<table border = \"1\"><tr><th>this</th><th>otherPairp</th><th>Environment</th></tr>";
+    std::cout << "<tr><td>";
+    this->flatPrint(std::cout, true);
+    std::cout << "</td><td>";
+    otherPairp->flatPrint(std::cout, true);
+    std::cout << "</td><td>";
+    environment->print(std::cout);
+    std::cout << "</td></tr></table>";
 #endif
 
     switch (this->type)
@@ -410,11 +410,11 @@ bool Pairp::buildEnvironment(statementPtr from, const environmentPtr &environmen
     }
 
 #ifdef TRACE_ENVIRONMENT
-     std::cout << "<H4>Result Pairp::buildEnvironment</H4>" << std::endl;
-     std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-     std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-     environment->print(std::cout);
-     std::cout << "</td></tr></table>";
+    std::cout << "<H4>Result Pairp::buildEnvironment</H4>" << std::endl;
+    std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+    std::cout << "<tr><td>" << (ret ? "TRUE" : "FALSE") << "</td><td>";
+    environment->print(std::cout);
+    std::cout << "</td></tr></table>";
 #endif
     return ret;
 }
@@ -660,21 +660,21 @@ bool Pairp::findVariable(const bitsetPtr &variable)
  *                                                            *
  ************************************************************ */
 void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
-                 bool &effect)
+                  bool &effect)
 {
     switch (type)
     {
     case _NIL_:
         break;
     case _ATOM_:
-        {
-            environmentPtr save = item->getEnvironment();
-            item->setEnvironment(item->getEnvironment() ? item->getEnvironment()->clone(nullptr) : environmentPtr());
-            value->apply(from, item, parser, synthesizer, variable, statement->clone(0), effect);
-            item->getEnvironment().reset();
-            item->setEnvironment(save);
-        }
-        break;
+    {
+        environmentPtr save = item->getEnvironment();
+        item->setEnvironment(item->getEnvironment() ? item->getEnvironment()->clone(nullptr) : environmentPtr());
+        value->apply(from, item, parser, synthesizer, variable, statement->clone(0), effect);
+        item->getEnvironment().reset();
+        item->setEnvironment(save);
+    }
+    break;
     case _PAIRP_:
         if (pairp.car)
             pairp.car->apply(from, item, parser, synthesizer, variable, statement, effect);

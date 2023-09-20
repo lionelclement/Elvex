@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2023 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -23,9 +23,9 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconInfo::CompactedLexiconInfo(class CompactedLexiconInfo *next, unsigned long int offset) {
-    NEW
-    this->address = 0;
+CompactedLexiconInfo::CompactedLexiconInfo(class CompactedLexiconInfo *next, unsigned long int offset)
+{
+    NEW this->address = 0;
     this->next = next;
     this->offset = offset;
 }
@@ -33,9 +33,11 @@ CompactedLexiconInfo::CompactedLexiconInfo(class CompactedLexiconInfo *next, uns
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconInfo::~CompactedLexiconInfo() {
+CompactedLexiconInfo::~CompactedLexiconInfo()
+{
     DELETE
-    if (next) {
+    if (next)
+    {
         delete (next);
         next = NULL;
     }
@@ -44,28 +46,31 @@ CompactedLexiconInfo::~CompactedLexiconInfo() {
 /* **************************************************
  *
  ************************************************** */
-class CompactedLexiconInfo *CompactedLexiconInfo::getNext(void) const {
+class CompactedLexiconInfo *CompactedLexiconInfo::getNext(void) const
+{
     return next;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconInfo::getOffset(void) const {
+unsigned long int CompactedLexiconInfo::getOffset(void) const
+{
     return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconInfo::getAddress(void) const {
+unsigned long int CompactedLexiconInfo::getAddress(void) const
+{
     return address;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexiconInfo::setAddress(unsigned long int _address) {
+void CompactedLexiconInfo::setAddress(unsigned long int _address)
+{
     this->address = _address;
 }
-

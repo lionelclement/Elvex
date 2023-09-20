@@ -20,8 +20,10 @@
 #ifndef BUILDLEXICON_HH_
 #define BUILDLEXICON_HH_
 
-namespace Buildlexicon {
-    enum Choice {
+namespace Buildlexicon
+{
+    enum Choice
+    {
         BUILD,
         CONSULT,
         LIST,

@@ -96,7 +96,8 @@ public:
 
     bool buildEnvironment(statementPtr from, const environmentPtr &, const featuresPtr &, bool
 #ifdef TRACE_BUILD_ENVIRONMENT
-    ,bool
+                          ,
+                          bool
 #endif
     );
 
@@ -126,10 +127,9 @@ public:
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 
-    void apply(statementPtr from, class Item* item, class Parser &parser, Generator *synthesizer, const statementPtr &variable,
-                  const statementPtr& body,
-                  bool &effect);
-
+    void apply(statementPtr from, class Item *item, class Parser &parser, Generator *synthesizer, const statementPtr &variable,
+               const statementPtr &body,
+               bool &effect);
 };
 
 #endif // ELVEX_FEATURES_H
