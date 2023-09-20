@@ -34,12 +34,12 @@
 #include "terms.hpp"
 #include "serializable.hpp"
 
-unsigned char Item::NA = UCHAR_MAX;
+uint8_t Item::NA = UCHAR_MAX;
     
 /* **************************************************
  *
  ************************************************** */
-Item::Item(rulePtr rule, unsigned char index, statementsPtr statements)
+Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
 {
     NEW;
     this->rule = std::move(rule);
@@ -55,7 +55,7 @@ Item::Item(rulePtr rule, unsigned char index, statementsPtr statements)
 /* **************************************************
  *
  ************************************************** */
-Item::Item(const rulePtr &rule, unsigned char index, unsigned int indexTerm, statementsPtr statements)
+Item::Item(const rulePtr &rule, uint8_t index, unsigned int indexTerm, statementsPtr statements)
     : Item(rule, index, std::move(statements))
 {
     std::vector<termsPtr> terms = rule->getRhs();
@@ -75,7 +75,7 @@ Item::Item(const rulePtr &rule, unsigned char index, unsigned int indexTerm, sta
 /* **************************************************
  *
  ************************************************** */
-Item::Item(const rulePtr &rule, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr statements)
+Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements)
     : Item(rule, index, std::move(statements))
 {
     this->indexTerms = indexTerms;
@@ -124,7 +124,7 @@ Item::~Item()
 /* **************************************************
  *
  ************************************************** */
-class Item *Item::create(const rulePtr &rule, unsigned char index, unsigned char indexTerm, statementsPtr statements)
+class Item *Item::create(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements)
 {
     return new Item(rule, index, indexTerm, std::move(statements));
 }
@@ -133,7 +133,7 @@ class Item *Item::create(const rulePtr &rule, unsigned char index, unsigned char
  *
  ************************************************** */
 class Item *
-Item::create(const rulePtr &rule, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr statements)
+Item::create(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements)
 {
     return new Item(rule, index, indexTerms, std::move(statements));
 }
@@ -229,7 +229,7 @@ const std::string &Item::getRuleFilename() const
 /* **************************************************
  *
  ************************************************** */
-unsigned char Item::getIndex() const
+uint8_t Item::getIndex() const
 {
     return index;
 }
@@ -237,7 +237,7 @@ unsigned char Item::getIndex() const
 /* **************************************************
  *
  ************************************************** */
-void Item::setIndex(unsigned char _index)
+void Item::setIndex(uint8_t _index)
 {
     this->index = _index;
 }
@@ -245,7 +245,7 @@ void Item::setIndex(unsigned char _index)
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned char> &Item::getIndexTerms()
+std::vector<uint8_t> &Item::getIndexTerms()
 {
     return indexTerms;
 }
@@ -387,7 +387,7 @@ void Item::addItem(std::unordered_map<unsigned int, class Item *> &table, unsign
 /* **************************************************
  *
  ************************************************** */
-std::vector<unsigned char> &Item::getRanges()
+std::vector<uint8_t> &Item::getRanges()
 {
     return ranges;
 }
@@ -395,7 +395,7 @@ std::vector<unsigned char> &Item::getRanges()
 /* **************************************************
  *
  ************************************************** */
-void Item::addRange(unsigned char range)
+void Item::addRange(uint8_t range)
 {
     ranges.push_back(range);
 }
@@ -403,9 +403,9 @@ void Item::addRange(unsigned char range)
 /* **************************************************
  *
  ************************************************** */
-void Item::addRanges(std::vector<unsigned char> &ranges)
+void Item::addRanges(std::vector<uint8_t> &ranges)
 {
-    for (std::vector<unsigned char>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
+    for (std::vector<uint8_t>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
         addRange(*i);
 }
 
@@ -918,7 +918,7 @@ void Item::makeSerialString()
         serialString += std::to_string(index);
     
     serialString += '\0';
-    std::vector<unsigned char>::const_iterator ind = indexTerms.cbegin();
+    std::vector<uint8_t>::const_iterator ind = indexTerms.cbegin();
     while (ind != indexTerms.cend())
         serialString += std::to_string(*(ind++)) + '\2';
 

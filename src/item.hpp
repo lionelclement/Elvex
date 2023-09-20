@@ -35,17 +35,17 @@ class Item : public Facade,
 public:
     typedef std::unordered_set<unsigned int> set_of_unsigned_int;
     typedef set_of_unsigned_int::const_iterator set_of_unsigned_int_const_iterator;
-    static  unsigned char NA;
+    static uint8_t NA;
     
 private:
 
     rulePtr rule;                                            // the grammar rule
-    unsigned char index;                                      // the \bullet position
-    std::vector<unsigned char> indexTerms;                    // term in a disjunction
+    uint8_t index;                                      // the \bullet position
+    std::vector<uint8_t> indexTerms;                    // term in a disjunction
     statementsPtr statements;                                // the semantics
     set_of_unsigned_int refs;                                // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
-    std::vector<unsigned char> ranges;                        // ranges
+    std::vector<uint8_t> ranges;                        // ranges
     featuresPtr inheritedFeatures;                           // ↑
     listFeaturesPtr inheritedSonFeatures;                    // ↓
     featuresPtr synthesizedFeatures;                         // ⇑
@@ -59,11 +59,11 @@ private:
          s_inheritedSonFeatures = true, s_synthesizedFeatures = true,
          s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
 
-    Item(rulePtr rule, unsigned char index, statementsPtr statements);
+    Item(rulePtr rule, uint8_t index, statementsPtr statements);
 
-    Item(const rulePtr &rule, unsigned char index, unsigned int indexTerm, statementsPtr statements);
+    Item(const rulePtr &rule, uint8_t index, unsigned int indexTerm, statementsPtr statements);
 
-    Item(const rulePtr &rule, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr statements);
+    Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements);
 
     void makeSerialString(void);
 
@@ -72,9 +72,9 @@ public:
 
     // static constructors
 
-    static class Item *create(const rulePtr &, unsigned char index = NA, unsigned char indexTerm = 0, statementsPtr = statementsPtr());
+    static class Item *create(const rulePtr &, uint8_t index = NA, uint8_t indexTerm = 0, statementsPtr = statementsPtr());
 
-    static class Item *create(const rulePtr &, unsigned char index, std::vector<unsigned char> &indexTerms, statementsPtr);
+    static class Item *create(const rulePtr &, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr);
 
     unsigned int getCurrentTerm(void) const;
 
@@ -84,9 +84,9 @@ public:
 
     rulePtr getRule(void) const;
 
-    unsigned char getIndex(void) const;
+    uint8_t getIndex(void) const;
 
-    std::vector<unsigned char> &getIndexTerms(void);
+    std::vector<uint8_t> &getIndexTerms(void);
 
     unsigned int getRuleLhs(void) const;
 
@@ -120,7 +120,7 @@ public:
 
     void setRule(rulePtr);
 
-    void setIndex(unsigned char);
+    void setIndex(uint8_t);
 
     void setRefs(set_of_unsigned_int &);
 
@@ -162,11 +162,11 @@ public:
 
     void addItem(std::unordered_map<unsigned int, class Item *> &, unsigned int, class Item *);
 
-    std::vector<unsigned char> &getRanges(void);
+    std::vector<uint8_t> &getRanges(void);
 
-    void addRange(unsigned char);
+    void addRange(uint8_t);
 
-    void addRanges(std::vector<unsigned char> &);
+    void addRanges(std::vector<uint8_t> &);
 
     std::vector<class ForestIdentifier *> &getForestIdentifiers(void);
 

@@ -9,8 +9,7 @@ S → NP dot {
 
 @trace
 @withspaces
-@permutable
-//@bilateral
+//@bidirectional
 NP → det N {
   ↓2 = ↑;
   ↓1 = ⇓2;
@@ -19,7 +18,7 @@ NP → det N {
 
 @trace
 @withspaces
-//@bilateral
+//@bidirectional
 N → adj N {
   [mod:<$Head::$Tail>, $Rest];
   [number:$inhNb, gender:$inhGd] ⊂ ↑;

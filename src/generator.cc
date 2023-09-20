@@ -978,7 +978,6 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                                         {
 
                                             // tabulates this result
-                                            // std::string key = keyMemoization(*actualItem, previousItem);
                                             memoizedMap.insert(key,
                                                                (*it->getSynthesizedSonFeatures())[it->getIndex() - 1],
                                                                it->getForestIdentifiers()[it->getIndex() - 1]);
@@ -1007,7 +1006,7 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
                          !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] && (*actualItem)->getCurrentTerms()->size() == 1 && !(*actualItem)->getCurrentTerms()->isOptional() && parser.getRules().isTerminal((*actualItem)->getCurrentTerm()) &&
                          !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil())
                 {
-                    // shift
+                    // shift the next time
                 }
 
                 else
