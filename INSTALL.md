@@ -14,6 +14,7 @@ To download **Elvex**, follow this command:
 
 ```shell
 git clone https://github.com/lionelclement/Elvex/
+```
 
 ## Compilation
 
@@ -29,3 +30,4 @@ After you've successfully installed **Elvex**, execute the following command:
 
 ```shell
 . ./try-me.sh
+```
