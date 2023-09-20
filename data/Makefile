@@ -20,10 +20,10 @@
 .PHONY: all output debug check
 
 SUBDIRS = lefff
-ELVEX = ../bin/elvex
-ELVEXDEBUG = ../bin/elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction
-BUILDLEXICON = ../bin/elvexbuildlexicon
-POSTEDITION_FR = ../bin/elvexpostedition_fr
+ELVEX = elvex
+ELVEXDEBUG = elvexdebug --traceStage --traceClose --traceShift --traceReduce --traceAction
+BUILDLEXICON = elvexbuildlexicon
+POSTEDITION_FR = elvexpostedition_fr
 XSL = ../xsl/xml2dot.xsl
 CLEANFILES = $(patsubst %.input, %.output, $(wildcard *.input)) $(patsubst %.input, %.xml, $(wildcard *.input)) $(patsubst %.input, %.err, $(wildcard *.input)) $(patsubst %.input, %.html, $(wildcard *.input)) $(patsubst %.input, %.jpg, $(wildcard *.input))
 
