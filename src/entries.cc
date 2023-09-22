@@ -51,7 +51,7 @@ Entries::Entries(const std::vector<entryPtr> &entries)
 /* **************************************************
  *
  ************************************************** */
-Entries::Entries(unsigned int codePos, unsigned int codeLemma, std::string &form)
+Entries::Entries(unsigned int codePos, unsigned int codeLemma, std::string form)
 {
     this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
     NEW;
@@ -97,7 +97,7 @@ entriesPtr Entries::create(const std::vector<entryPtr> &entries)
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string &form)
+entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string form)
 {
     return entriesPtr(new Entries(codePos, codeLemma, form));
 }

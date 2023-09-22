@@ -131,7 +131,7 @@ void Bitset::makeSerialString()
 void Bitset::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr f = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"ALT", nullptr);
-    Vartable::unsigned_int_to_string_iterator varTableIt;
+    Vartable::uint16_t_to_string_iterator varTableIt;
     size_t c = this->count();
     size_t sz = this->size();
     for (unsigned int i = 0; i < sz && c > 0; ++i)

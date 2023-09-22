@@ -290,7 +290,7 @@ void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic,
 {
     std::string space = (html ? "&nbsp;" : " ");
     bool first = true;
-    outStream << Vartable::codeToString(lhs) << space << "→" << space;
+    outStream << Vartable::codeToName(lhs) << space << "→" << space;
     for (unsigned int i = 0; i < rhs.size(); i++)
     {
         if (first)

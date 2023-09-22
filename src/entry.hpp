@@ -33,32 +33,48 @@ class Entry : public Facade,
               public std::enable_shared_from_this<class Entry>
 {
 
+public:
+    static uint16_t FORM_HEAD;
+
 private:
-    unsigned int pos;
-    unsigned int head;
+
+    uint16_t pos;
+    uint16_t head;
     std::string form;
     featuresPtr features;
 
-    Entry(unsigned int, unsigned int, std::string, featuresPtr);
+    Entry(uint16_t pos, uint16_t head, std::string form, featuresPtr features);
 
-    Entry(unsigned int, std::string, std::string, featuresPtr);
+    Entry(uint16_t pos, uint16_t head, featuresPtr features);
+
+    Entry(uint16_t pos, std::string head, std::string form, featuresPtr features);
+
+    Entry(uint16_t pos, featuresPtr features);
+
+    Entry(uint16_t pos);
 
     void makeSerialString(void);
 
 public:
     ~Entry();
 
-    static entryPtr create(unsigned int pos, unsigned int head, std::string form = std::string(),
-                           featuresPtr features = featuresPtr());
+    static entryPtr create(uint16_t pos, uint16_t head, std::string form,
+                            featuresPtr features = featuresPtr());
 
-    static entryPtr create(unsigned int pos, std::string head = std::string(), std::string form = std::string(),
-                           featuresPtr features = featuresPtr());
+    static entryPtr create(uint16_t pos, uint16_t head, featuresPtr features = featuresPtr());
 
-    unsigned int getPos(void) const;
+    static entryPtr create(uint16_t pos, std::string head, std::string form,
+                            featuresPtr features = featuresPtr());
 
-    void setPos(const unsigned int pos);
+    static entryPtr create(uint16_t pos, featuresPtr features);
 
-    unsigned int getHead() const;
+    static entryPtr create(uint16_t pos);
+
+    uint16_t getPos(void) const;
+
+    void setPos(const uint16_t pos);
+
+    uint16_t getHead() const;
 
     void setForm(const std::string form);
 

@@ -32,27 +32,65 @@
 #include "vartable.hpp"
 #include "shared_ptr.hpp"
 
+uint16_t Entry::FORM_HEAD = 0;
+
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int pos, unsigned int head, std::string form, featuresPtr features)
+Entry::Entry(uint16_t pos, uint16_t head, std::string form, featuresPtr features)
 {
     this->pos = pos;
     this->head = head;
     this->form = std::move(form);
-    this->features = std::move(features);
+    this->features = features;
     NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(unsigned int pos, std::string head, std::string form, featuresPtr features)
+Entry::Entry(uint16_t pos, uint16_t head, featuresPtr features)
 {
     this->pos = pos;
-    this->head = Vartable::stringToCode(std::move(head));
+    this->head = head;
+    this->form = std::string();
+    this->features = features;
+    NEW;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Entry::Entry(uint16_t pos, std::string head, std::string form, featuresPtr features)
+{
+    this->pos = pos;
+    this->head = Vartable::nameToCode(std::move(head));
     this->form = std::move(form);
-    this->features = std::move(features);
+    this->features = features;
+    NEW;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Entry::Entry(uint16_t pos, featuresPtr features)
+{
+    this->pos = pos;
+    this->head = UINT16_MAX;
+    this->form = std::string();
+    this->features = features;
+    NEW;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Entry::Entry(uint16_t pos)
+{
+    this->pos = pos;
+    this->head = UINT16_MAX;
+    this->form = std::string();
+    this->features = featuresPtr();
     NEW;
 }
 
@@ -69,23 +107,47 @@ Entry::~Entry()
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(unsigned int term, unsigned int codeHead, std::string form, featuresPtr features)
+entryPtr Entry::create(uint16_t term, uint16_t head, std::string form, featuresPtr features)
 {
-    return entryPtr(new Entry(term, codeHead, std::move(form), std::move(features)));
+    return entryPtr(new Entry(term, head, std::move(form), features));
 }
 
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(unsigned int term, std::string head, std::string form, featuresPtr features)
+entryPtr Entry::create(uint16_t term, uint16_t head, featuresPtr features)
 {
-    return entryPtr(new Entry(term, std::move(head), std::move(form), std::move(features)));
+    return entryPtr(new Entry(term, head, features));
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Entry::getPos() const
+entryPtr Entry::create(uint16_t term, std::string head, std::string form, featuresPtr features)
+{
+    return entryPtr(new Entry(term, std::move(head), std::move(form), features));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entryPtr Entry::create(uint16_t term, featuresPtr features)
+{
+    return entryPtr(new Entry(term, features));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entryPtr Entry::create(uint16_t term)
+{
+    return entryPtr(new Entry(term));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+uint16_t Entry::getPos() const
 {
     return pos;
 }
@@ -93,7 +155,7 @@ unsigned int Entry::getPos() const
 /* **************************************************
  *
  ************************************************** */
-void Entry::setPos(unsigned int pos)
+void Entry::setPos(uint16_t pos)
 {
     this->pos = pos;
 }
@@ -101,7 +163,7 @@ void Entry::setPos(unsigned int pos)
 /* **************************************************
  *
  ************************************************** */
-unsigned int Entry::getHead() const
+uint16_t Entry::getHead() const
 {
     return head;
 }
@@ -137,15 +199,15 @@ featuresPtr Entry::getFeatures() const
 void Entry::toXML(xmlNodePtr nodeRoot) const
 {
     xmlNodePtr entry = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"ENTRY", nullptr);
-    if (this->pos != (unsigned int)-1)
+    if (this->pos != (uint16_t)-1)
     {
         xmlSetProp(entry, (xmlChar *)"pos", (xmlChar *)std::to_string(this->pos).c_str());
-        xmlSetProp(entry, (xmlChar *)"posStr", (xmlChar *)Vartable::codeToString(this->pos).c_str());
+        xmlSetProp(entry, (xmlChar *)"posStr", (xmlChar *)Vartable::codeToName(this->pos).c_str());
     }
-    if (this->head != (unsigned int)-1)
+    if (this->head != (uint16_t)-1)
     {
         xmlSetProp(entry, (xmlChar *)"codeHead", (xmlChar *)std::to_string(this->head).c_str());
-        xmlSetProp(entry, (xmlChar *)"codeHeadStr", (xmlChar *)Vartable::codeToString(this->head).c_str());
+        xmlSetProp(entry, (xmlChar *)"codeHeadStr", (xmlChar *)Vartable::codeToName(this->head).c_str());
     }
     if (!this->form.empty())
     {
@@ -163,11 +225,11 @@ void Entry::toXML(xmlNodePtr nodeRoot) const
  ************************************************** */
 void Entry::print(std::ostream &os) const
 {
-    os << "[pos:" << Vartable::codeToString(this->pos);
-    if ((this->head != UINT_MAX))
-        os << ", head:" << Vartable::codeToString(this->head);
+    os << "[pos:" << Vartable::codeToName(this->pos);
+    if ((this->head != UINT16_MAX))
+        os << ", head:" << Vartable::codeToName(this->head);
     else
-        os << ", head:UINT_MAX";
+        os << ", head:UINT16_MAX";
     if (!this->form.empty())
         os << ", form:\"" << this->form << '"';
     else
@@ -220,5 +282,5 @@ void Entry::renameVariables(size_t k)
  ************************************************** */
 entryPtr Entry::clone() const
 {
-    return create(pos, head, form, features->clone());
+    return create(pos, std::move(head), std::move(form), features->clone());
 }

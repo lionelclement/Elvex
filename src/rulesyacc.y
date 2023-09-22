@@ -218,7 +218,7 @@ dictionary_line:
 	TOKEN_FORM TOKEN_IDENTIFIER TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  unsigned int code = Vartable::stringToCode(*$2);
+	  uint16_t code = Vartable::nameToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
 	  auto foundCode = parser.findCacheLexicon(code);
@@ -229,21 +229,21 @@ dictionary_line:
 	    zeroToEntries = new Parser::entries_map();
 	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
 	  }
-	  auto foundHead = zeroToEntries->find(0);
+	  auto foundHead = zeroToEntries->find(Entry::FORM_HEAD);
 	  entriesPtr entries;
 	  if (foundHead != zeroToEntries->cend()){
 	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
-	    zeroToEntries->insert(std::make_pair(0, entries));
+	    zeroToEntries->insert(std::make_pair(Entry::FORM_HEAD, entries));
 	  }
-	  entries->add(Entry::create(code, UINT_MAX, std::string(), Features::create()));
+	  entries->add(Entry::create(code, Entry::FORM_HEAD, Features::create()));
 	}
 
 	|TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  unsigned int code = Vartable::stringToCode(*$2);
+	  uint16_t code = Vartable::nameToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
 	  auto foundCode = parser.findCacheLexicon(code);
@@ -254,15 +254,15 @@ dictionary_line:
 	    zeroToEntries = new Parser::entries_map;
 	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
 	  }
-	  auto foundHead = zeroToEntries->find(0);
+	  auto foundHead = zeroToEntries->find(Entry::FORM_HEAD);
 	  entriesPtr entries;
 	  if (foundHead != zeroToEntries->cend()){
 	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
-	    zeroToEntries->insert(std::make_pair(0, entries));
+	    zeroToEntries->insert(std::make_pair(Entry::FORM_HEAD, entries));
 	  }
-	  entries->add(Entry::create(code, UINT_MAX, std::string(), *$3));
+	  entries->add(Entry::create(code, Entry::FORM_HEAD, *$3));
 	  free($3);
 	}
 
@@ -345,8 +345,8 @@ lexical_entry:
 	TOKEN_IDENTIFIER features
 	{
 	  DBUGPRT("lexical_entry");
-	  unsigned int head = (*$2)->assignHead();
-	  $$ = new entryPtr(Entry::create(Vartable::stringToCode(*$1), head, std::string(), *$2));
+	  uint16_t head = (*$2)->assignHead();
+	  $$ = new entryPtr(Entry::create(Vartable::nameToCode(*$1), head, std::string(), *$2));
 	  free($1);
 	  free($2);
 	}
@@ -354,7 +354,7 @@ lexical_entry:
 	|TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("lexical_entry");
-	  $$ = new entryPtr(Entry::create(Vartable::stringToCode(*$1), UINT_MAX, std::string(), Features::create()));
+	  $$ = new entryPtr(Entry::create(Vartable::nameToCode(*$1), UINT16_MAX, std::string(), Features::create()));
 	  free($1);
 	};
 
@@ -486,14 +486,14 @@ term:
 	TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("term_id");
-	  $$ = Vartable::stringToCode(*$1);
+	  $$ = Vartable::nameToCode(*$1);
 	  free($1);
 	}
 
 	|TOKEN_VARIABLE
 	{
 	  DBUGPRT("term_id");
-	  $$ = Vartable::stringToCode(*$1);
+	  $$ = Vartable::nameToCode(*$1);
 	  free($1);
 	}
 
@@ -1044,7 +1044,7 @@ expression_statement:
 						  Statement::SEARCH_STATEMENT,
 						  true,
 						  *$2,
-						  Vartable::stringToCode(*$4)));
+						  Vartable::nameToCode(*$4)));
 		free($2);
 	  	free($4);
 	 }

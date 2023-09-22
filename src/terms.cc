@@ -184,12 +184,12 @@ void Terms::print(std::ostream &outStream)
                 first = false;
             else
                 outStream << '|';
-            outStream << Vartable::codeToString(*term);
+            outStream << Vartable::codeToName(*term);
         }
     }
     else
     {
-        outStream << Vartable::codeToString(terms[0]);
+        outStream << Vartable::codeToName(terms[0]);
     }
     if (optional)
         outStream << ']';

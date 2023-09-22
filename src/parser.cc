@@ -75,14 +75,14 @@ featuresPtr Parser::getStartFeatures() const {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::getStartTerm() const {
+uint16_t Parser::getStartTerm() const {
     return startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setStartTerm(unsigned int _startTerm) {
+void Parser::setStartTerm(uint16_t _startTerm) {
     this->startTerm = _startTerm;
 }
 
@@ -124,7 +124,7 @@ void Parser::insertMapLocalEntry(std::pair<std::string, entryPtr> pair){
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::findCacheLexicon(unsigned int i) const {
+Parser::entries_map_map_const_iterator Parser::findCacheLexicon(uint16_t i) const {
     return cacheLexicon.find(i);
 }
 
@@ -209,16 +209,16 @@ void Parser::printCacheLexicon(std::ostream &out) const {
     out << "<ul>";
     for (entries_map_map_const_iterator i = cbeginCacheLexicon(); i != cendCacheLexicon(); ++i) {
         out << "<li>";
-        out << Vartable::codeToString((*i).first);
+        out << Vartable::codeToName((*i).first);
         out << "<ul>";
         for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
             out << "<li>";
             if ((*j).first == 0)
                 out << "0 = &gt; ";
-            else if ((*j).first == UINT_MAX)
-                out << "UINT_MAX = &gt; ";
+            else if ((*j).first == UINT16_MAX)
+                out << "UINT16_MAX = &gt; ";
             else
-                out << Vartable::codeToString((*j).first) << " = &gt; ";
+                out << Vartable::codeToName((*j).first) << " = &gt; ";
             (*j).second->print(out);
             out << "</li>";
 
@@ -289,6 +289,6 @@ void Parser::listMacros() {
 /* **************************************************
  *
  ************************************************** */
-void Parser::insertCacheLexicon(std::pair<unsigned int, entries_map*> pair){
+void Parser::insertCacheLexicon(std::pair<uint16_t, entries_map*> pair){
   cacheLexicon.insert(pair);
 }

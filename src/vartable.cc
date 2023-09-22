@@ -2,17 +2,17 @@
  *
  * ELVEX
  *
- * Copyright 2014-2023 LABRI, 
+ * Copyright 2014-2023 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
- * Author: 
+ * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux  
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
- * 
+ *
  * This file is part of ELVEX.
  *
  ************************************************** */
@@ -24,22 +24,23 @@
 #include "vartable.hpp"
 #include "messages.hpp"
 
-const unsigned int Vartable::_END_;
-const unsigned int Vartable::_START_TERM_;
+const uint16_t Vartable::_END_;
+const uint16_t Vartable::_START_TERM_;
 
-unsigned int Vartable::codeMapIndex;
+uint16_t Vartable::codeMapIndex;
 std::bitset<MAXBITS> Vartable::variableMapIndex;
-Vartable::string_to_bitset Vartable::variableMap;
-Vartable::unsigned_int_to_string Vartable::codeMap;
-Vartable::string_to_unsigned_int Vartable::stringMap;
-Vartable::unsigned_int_to_string Vartable::bitMap;
+Vartable::string_to_bitset Vartable::nameToBitsetMap;
+Vartable::uint16_t_to_string Vartable::codeToNameMap;
+Vartable::string_to_uint16_t Vartable::nameToCodeMap;
+Vartable::uint16_t_to_string Vartable::bitToNameMap;
 
 Vartable vartable;
 
 /* ************************************************************
  *
  ************************************************************ */
-Vartable::Vartable() {
+Vartable::Vartable()
+{
     codeMapIndex = 0;
     variableMapIndex = 1;
     insertCodeMap(_END_, "_END_");
@@ -52,21 +53,25 @@ Vartable::Vartable() {
  * bitMap[poids] := str
  * variableMap[str] := bitset
  ************************************************************ */
-bitsetPtr Vartable::createVariable(std::string str) {
+bitsetPtr Vartable::createVariable(const std::string &str)
+{
     bitsetPtr result = bitsetPtr();
     string_to_bitset_const_iterator varTableIt;
-    varTableIt = variableMap.find(str);
-    if (varTableIt == variableMap.end()) {
+    varTableIt = nameToBitsetMap.find(str);
+    if (varTableIt == nameToBitsetMap.end())
+    {
         result = Bitset::create(variableMapIndex);
-        variableMap.insert(std::make_pair(str, result));
+        nameToBitsetMap.insert(std::make_pair(str, result));
         size_t i = 0;
         while ((i < variableMapIndex.size()) && !variableMapIndex.test(i))
             ++i;
-        Vartable::bitMap[i] = str;
+        Vartable::bitToNameMap[i] = str;
         variableMapIndex <<= 1;
         if (variableMapIndex.none())
             throw fatal_exception("Too much values to create a new variable");
-    } else {
+    }
+    else
+    {
         result = varTableIt->second;
     }
     return result;
@@ -75,16 +80,19 @@ bitsetPtr Vartable::createVariable(std::string str) {
 /* ************************************************************
  *
  ************************************************************ */
-unsigned int Vartable::stringToCode(const std::string& str) {
-    unsigned int code;
-    string_to_unsigned_int_iterator it(stringMap.find(str));
-    if (it == stringMap.end()) {
+uint16_t Vartable::nameToCode(const std::string &str)
+{
+    uint16_t code;
+    string_to_uint16_t_iterator it(nameToCodeMap.find(str));
+    if (it == nameToCodeMap.end())
+    {
         code = codeMapIndex;
-        stringMap.insert(std::make_pair(str, codeMapIndex));
-        codeMap.insert(std::make_pair(codeMapIndex++, str));
-        //stringMap[str] = codeMapIndex;
-        //codeMap[codeMapIndex++] = str;
-    } else
+        nameToCodeMap.insert(std::make_pair(str, codeMapIndex));
+        codeToNameMap.insert(std::make_pair(codeMapIndex++, str));
+        // stringMap[str] = codeMapIndex;
+        // codeMap[codeMapIndex++] = str;
+    }
+    else
         code = it->second;
     return code;
 }
@@ -92,9 +100,10 @@ unsigned int Vartable::stringToCode(const std::string& str) {
 /* ************************************************************
  *
  ************************************************************ */
-std::string Vartable::codeToString(unsigned int i) {
-    if (i != UINT_MAX)
-        return codeMap[i];
+std::string Vartable::codeToName(uint16_t i)
+{
+    if (i != UINT16_MAX)
+        return codeToNameMap[i];
     else
         return std::string("UINT_MAX");
 }
@@ -102,8 +111,9 @@ std::string Vartable::codeToString(unsigned int i) {
 /* ************************************************************
  *
  ************************************************************ */
-void Vartable::insertCodeMap(const unsigned int key, std::string value) {
-    codeMap[key] = std::move(value);
+void Vartable::insertCodeMap(const uint16_t key, const std::string &value)
+{
+    codeToNameMap[key] = std::move(value);
     if (codeMapIndex <= key)
         codeMapIndex = key + 1;
 }
@@ -111,21 +121,23 @@ void Vartable::insertCodeMap(const unsigned int key, std::string value) {
 /* ************************************************************
  *
  ************************************************************ */
-Vartable::unsigned_int_to_string_iterator Vartable::bitMapFind(unsigned int key) {
-    return bitMap.find(key);
+Vartable::uint16_t_to_string_iterator Vartable::bitMapFind(uint16_t key)
+{
+    return bitToNameMap.find(key);
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Vartable::unsigned_int_to_string_const_iterator Vartable::bitMapcEnd() {
-    return bitMap.cend();
+Vartable::uint16_t_to_string_const_iterator Vartable::bitMapcEnd()
+{
+    return bitToNameMap.cend();
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-std::string Vartable::bitToVariable(unsigned int key) {
-    return bitMap[key];
+std::string Vartable::bitToVariable(uint16_t key)
+{
+    return bitToNameMap[key];
 }
-

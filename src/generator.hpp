@@ -197,7 +197,7 @@ public:
 
     void generate(class Parser &);
 
-    entriesPtr findCompactedLexicon(class Parser &parser, unsigned int pos, unsigned int head);
+    entriesPtr findCompactedLexicon(class Parser &parser, uint16_t pos, uint16_t head);
 
     std::string keyMemoization(class Item *, class Item *);
 
@@ -205,11 +205,11 @@ public:
 
     bool getVerbose();
 
-    entriesPtr findByPos(Parser &parser, Parser::entries_map *, unsigned int pos);
+    entriesPtr findByPos(Parser &parser, Parser::entries_map *, uint16_t pos);
 
     entriesPtr findByForm(Parser::entries_map *);
 
-    entriesPtr findByHead(Parser &parser, Parser::entries_map *, unsigned int pos, unsigned int head);
+    entriesPtr findByHead(Parser &parser, Parser::entries_map *, uint16_t pos, uint16_t head);
 };
 
 #endif // ELVEX_GENERATOR_H

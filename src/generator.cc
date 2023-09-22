@@ -1069,9 +1069,9 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                     }
 
                     std::string *form = nullptr;
-                    unsigned int head = inheritedSonFeatures->assignHead();
+                    uint16_t head = inheritedSonFeatures->assignHead();
                     Stage stage;
-                    if (head == UINT_MAX)
+                    if (head == UINT16_MAX)
                     {
                         form = inheritedSonFeatures->assignForm();
                         if (form)
@@ -1202,7 +1202,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int r
                                         entryPtr entry;
                                         if (stage == FORM_FEATURES)
                                         {
-                                            entry = Entry::create(entry_copy->getPos(), UINT_MAX, *form, resultFeatures);
+                                            entry = Entry::create(entry_copy->getPos(), 0, *form, resultFeatures);
                                         }
                                         else
                                         {
@@ -1369,22 +1369,22 @@ void Generator::generate(class Parser &parser)
  * |str(pos)#_
  *
  * returns entries= (entry1, entry2, ...)
- * where entryi= (unsigned int pos, unsigned int head, std::string form, featuresPtr features)
+ * where entryi= (uint16_t pos, uint16_t head, std::string form, featuresPtr features)
  ************************************************** */
 entriesPtr Generator::findCompactedLexicon(
     Parser &parser,
-    const unsigned int pos,
-    const unsigned int head)
+    const uint16_t pos,
+    const uint16_t head)
 {
     unsigned long int info = ~0UL;
     std::string str;
     if (head && pos)
     {
-        str = Vartable::codeToString(pos) + '#' + Vartable::codeToString(head);
+        str = Vartable::codeToName(pos) + '#' + Vartable::codeToName(head);
     }
     else if (pos)
     {
-        str = Vartable::codeToString(pos) + "#_";
+        str = Vartable::codeToName(pos) + "#_";
     }
     else if (head)
     {
@@ -1424,8 +1424,8 @@ entriesPtr Generator::findCompactedLexicon(
                 parser.parseBuffer("#(", ")", features, "features");
                 if (parser.getLocalFeatures())
                 {
-                    unsigned int _head = parser.getLocalFeatures()->assignHead();
-                    entryPtr _localEntry = Entry::create(0, _head, std::string(), parser.getLocalFeatures());
+                    uint16_t head = parser.getLocalFeatures()->assignHead();
+                    entryPtr _localEntry = Entry::create(0, head, std::string(), parser.getLocalFeatures());
 
                     _localEntry->setPos(pos);
                     _localEntry->setForm(form);
@@ -1445,7 +1445,7 @@ entriesPtr Generator::findCompactedLexicon(
             catch (parser_exception &e)
             {
                 std::ostringstream oss;
-                oss << "illegal lexical entry format: " << form << " " << Vartable::codeToString(pos) << " "
+                oss << "illegal lexical entry format: " << form << " " << Vartable::codeToName(pos) << " "
                     << result.substr(result.find('#') + 1, -1);
                 throw fatal_exception(oss);
             }
@@ -1482,11 +1482,11 @@ bool Generator::getVerbose()
  *
  ************************************************** */
 entriesPtr Generator::findByPos(Parser &parser, Parser::entries_map *listHead,
-                                unsigned int pos)
+                                uint16_t pos)
 {
     entriesPtr entries = entriesPtr();
     // Without head : UINT_MAX => ...
-    auto found = listHead->find(UINT_MAX);
+    auto found = listHead->find(UINT16_MAX);
     if (found != listHead->end())
     {
         entries = found->second;
@@ -1495,8 +1495,8 @@ entriesPtr Generator::findByPos(Parser &parser, Parser::entries_map *listHead,
     {
         entries = findCompactedLexicon(parser,
                                        pos,
-                                       UINT_MAX);
-        listHead->insert(std::make_pair(UINT_MAX, entries));
+                                       UINT16_MAX);
+        listHead->insert(std::make_pair(UINT16_MAX, entries));
     }
     return entries;
 }
@@ -1518,7 +1518,7 @@ entriesPtr Generator::findByForm(Parser::entries_map *listHead)
  *
  ************************************************** */
 entriesPtr Generator::findByHead(Parser &parser, Parser::entries_map *listHead,
-                                 unsigned int pos, unsigned int head)
+                                 uint16_t pos, uint16_t head)
 {
     entriesPtr entries = entriesPtr();
     // head => ...

@@ -183,7 +183,7 @@ void Rules::print(std::ostream &outStream) const
             first = false;
         else
             outStream << ", ";
-        outStream << Vartable::codeToString(*iter);
+        outStream << Vartable::codeToName(*iter);
     }
     outStream << "</td></tr><tr><td>";
     outStream << "NonTerminals</td><td>";
@@ -194,12 +194,12 @@ void Rules::print(std::ostream &outStream) const
             first = false;
         else
             outStream << ", ";
-        outStream << Vartable::codeToString(*iter);
+        outStream << Vartable::codeToName(*iter);
     }
     outStream << "</td></tr><tr><td>";
     outStream << "StartTerm</td><td>";
     if (startTerm)
-        outStream << Vartable::codeToString(startTerm);
+        outStream << Vartable::codeToName(startTerm);
     else
         outStream << "NULL";
     outStream << std::endl;
@@ -298,12 +298,12 @@ void Rules::toXML(xmlNodePtr nodeRoot)
     set_of_unsigned_int::const_iterator iter;
     for (iter = terminals.begin(); iter != terminals.end(); ++iter)
     {
-        xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToString(*iter).c_str()));
+        xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToName(*iter).c_str()));
     }
     t = xmlNewChild(g, NULL, (const xmlChar *)"NON-TERMINALS", NULL);
     for (iter = nonTerminals.begin(); iter != nonTerminals.end(); ++iter)
     {
-        xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToString(*iter).c_str()));
+        xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToName(*iter).c_str()));
     }
     // xmlNodePtr r = xmlNewChild(g, NULL, (const xmlChar*)"RULES", NULL);
     // list_of_rule::const_iterator iterRules;

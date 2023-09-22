@@ -48,7 +48,7 @@ Value::Value(Value::Type const type, const std::string &str)
     this->number = 0;
     if (type == IDENTIFIER_VALUE)
     {
-        this->code = Vartable::stringToCode(str);
+        this->code = Vartable::nameToCode(str);
     }
     else if (type == FORM_VALUE)
     {
@@ -336,7 +336,7 @@ void Value::print(std::ostream &outStream) const
         outStream << '_';
         break;
     case IDENTIFIER_VALUE:
-        outStream << Vartable::codeToString(code);
+        outStream << Vartable::codeToName(code);
         break;
     case NUMBER_VALUE:
         outStream << number;
@@ -380,7 +380,7 @@ void Value::flatPrint(std::ostream &outStream) const
         outStream << '_';
         break;
     case IDENTIFIER_VALUE:
-        outStream << Vartable::codeToString(code);
+        outStream << Vartable::codeToName(code);
         break;
     case NUMBER_VALUE:
         outStream << number;
@@ -481,7 +481,7 @@ void Value::toXML(xmlNodePtr nodeRoot) const
         break;
     case IDENTIFIER_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"identifier");
-        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)Vartable::codeToString(getCode()).c_str());
+        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)Vartable::codeToName(getCode()).c_str());
         break;
     case NUMBER_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"double");
@@ -631,7 +631,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
         }
         else if (value->type == IDENTIFIER_VALUE)
         {
-            if (bits->toString() != Vartable::codeToString(value->getCode()))
+            if (bits->toString() != Vartable::codeToName(value->getCode()))
                 ret = false;
         }
         else if (value->type == ANONYMOUS_VALUE)
@@ -650,7 +650,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
         }
         else if (value->type == CONSTANT_VALUE)
         {
-            if (Vartable::codeToString(code) != value->bits->toString())
+            if (Vartable::codeToName(code) != value->bits->toString())
                 ret = false;
         }
         else if (value->type == IDENTIFIER_VALUE)
@@ -904,7 +904,7 @@ bool Value::eq(valuePtr o) const
         case CONSTANT_VALUE:
             if ((type == CONSTANT_VALUE) && ((*bits & *o->bits).any()))
                 ret = true;
-            else if ((type == IDENTIFIER_VALUE) && (o->bits->toString() == Vartable::codeToString(code)))
+            else if ((type == IDENTIFIER_VALUE) && (o->bits->toString() == Vartable::codeToName(code)))
                 ret = true;
             break;
         case FORM_VALUE:

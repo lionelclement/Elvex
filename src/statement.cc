@@ -591,7 +591,7 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
         out << "<B>search</B>&nbsp;";
         lhs->print(out);
         out << "&nbsp;<B>on</B>&nbsp;";
-        out << Vartable::codeToString(first);
+        out << Vartable::codeToName(first);
         break;
     
     case STMS_STATEMENT:
@@ -1470,7 +1470,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 if (v1->isVariable())
                     v1str = v1->getBits()->to_string();
                 else if (v1->isIdentifier())
-                    v1str = Vartable::codeToString(v1->getCode());
+                    v1str = Vartable::codeToName(v1->getCode());
                 else if (v1->isForm())
                     v1str = v1->getStr();
                 else
@@ -1485,7 +1485,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 if (v2->isVariable())
                     v2str = v2->getBits()->to_string();
                 else if (v2->isIdentifier())
-                    v2str = Vartable::codeToString(v2->getCode());
+                    v2str = Vartable::codeToName(v2->getCode());
                 else if (v2->isForm())
                     v2str = v2->getStr();
                 else

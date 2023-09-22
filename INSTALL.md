@@ -13,7 +13,7 @@ To fully compile **Elvex**, make sure you have the following tools installed on 
 To download **Elvex**, follow this command: 
 
 ```shell
-git clone https://github.com/lionelclement/Elvex/
+git clone https://github.com/lionelclement/Elvex.git
 ```
 
 ## Compilation
