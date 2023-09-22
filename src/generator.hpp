@@ -187,13 +187,13 @@ public:
 
     void printState(std::ostream &, class ItemSet *);
 
-    void close(class Parser &, class ItemSet *, unsigned int);
+    void close(class Parser &, class ItemSet *, uint8_t);
 
-    bool shift(class Parser &, class ItemSet *, unsigned int);
+    bool shift(class Parser &, class ItemSet *, uint8_t);
 
     void clear();
 
-    static class Item *createItem(class Item *, unsigned int);
+    static class Item *createItem(class Item *, uint8_t);
 
     void generate(class Parser &);
 

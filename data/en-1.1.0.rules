@@ -237,7 +237,7 @@ S → S {
   [i:[HEAD:$H1, ID:$ID1], ii:[i:[HEAD:$H2, ID:$ID2], $iiRest]] ⊂ ↑;
   attest (¬$H1 ∨ ¬$H2 ∨ ($H1 == $H2));
   attest ($ID1 == $ID2);
-  ↓1 = [SUBJECT:$i, VCOMP:[i:$i, $iiRest]/*, iiReal:VCOMP*/, $Rest];
+  ↓1 = [SUBJECT:$i, VCOMP:[i:$i, $iiRest], iiReal:VCOMP, $Rest];
   ⇑ = ⇓1;
 }
 
@@ -455,7 +455,7 @@ N → common_noun {
  ************************************************** */
 @withspaces
 //@permutable
-VP → VN [NP] [part] [NP] [AP] [PP] [SCOMP|VCOMP] {
+VP → VN [NP] [part] [NP] [AP|form] [PP] [SCOMP|VCOMP] {
   // Given Arguments
   [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;
   // Idiomatic Arguments

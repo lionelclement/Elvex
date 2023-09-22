@@ -60,7 +60,7 @@ private:
 
     Item(rulePtr rule, uint8_t index, statementsPtr statements);
 
-    Item(const rulePtr &rule, uint8_t index, unsigned int indexTerm, statementsPtr statements);
+    Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements);
 
     Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements);
 
@@ -75,7 +75,7 @@ public:
 
     static class Item *create(const rulePtr &, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr);
 
-    unsigned int getCurrentTerm(void) const;
+    uint16_t getCurrentTerm(void) const;
 
     // getters
 
@@ -87,7 +87,7 @@ public:
 
     std::vector<uint8_t> &getIndexTerms(void);
 
-    unsigned int getRuleLhs(void) const;
+    uint16_t getRuleLhs(void) const;
 
     std::vector<termsPtr> &getRuleRhs(void) const;
 
@@ -135,11 +135,11 @@ public:
 
     void setSeen(std::vector<bool> &);
 
-    void setSeen(unsigned int, bool);
+    void setSeen(uint8_t, bool);
 
     // rule methods
 
-    void rulePrint(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
+    void rulePrint(std::ostream &, uint8_t index = UINT8_MAX, bool withSemantic = false, bool html = true) const;
 
     void ruleResetUsages(void);
 
@@ -151,13 +151,13 @@ public:
 
     bool getPermutable() const;
 
-    termsPtr getTerms(unsigned int) const;
+    termsPtr getTerms(uint16_t) const;
 
     void addRef(unsigned int);
 
     void addRefs(set_of_unsigned_int &);
 
-    bool isSeen(unsigned int) const;
+    bool isSeen(uint8_t) const;
 
     void addItem(std::unordered_map<unsigned int, class Item *> &, unsigned int, class Item *);
 

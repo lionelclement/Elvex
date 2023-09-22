@@ -18,7 +18,7 @@
 #
 ################################################## #
 
-for i in 0 1 2 3
+for i in 0
 do
     bin/elvex -rulesFile data/test$i.rules -lexiconFile data/test$i.lexicon -inputFile data/test$i.input
 done

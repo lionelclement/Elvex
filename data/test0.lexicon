@@ -25,6 +25,8 @@ ma det[@fs];
 mes det[@p];
 ***/
 
+FORM form;
+
 chat n[PRED:chat,@ms];
 chatte n[PRED:chat,@fs];
 chats n[PRED:chat,@mp];

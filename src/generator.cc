@@ -455,7 +455,7 @@ void Generator::printState(std::ostream &outStream, class ItemSet *state)
 /* **************************************************
  *
  ************************************************** */
-class Item *Generator::createItem(class Item *item, unsigned int row)
+class Item *Generator::createItem(class Item *item, uint8_t row)
 {
     class Item *it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
                                   item->getStatements() ? item->getStatements()->clone(
@@ -496,7 +496,7 @@ void Generator::clear()
 /* **************************************************
  *
  ************************************************** */
-void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
+void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 {
     bool modification;
     do
@@ -606,7 +606,7 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
 
                 (*actualItem)->addFlags(Flags::SEEN);
                 termsPtr terms = (*actualItem)->getCurrentTerms();
-                for (unsigned int indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1)
+                for (uint8_t indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1)
                 {
                     class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
                     it->setRule((*actualItem)->getRule()->clone());
@@ -1031,7 +1031,7 @@ void Generator::close(Parser &parser, class ItemSet *state, unsigned int row)
 /* **************************************************
  *
  ************************************************** */
-bool Generator::shift(class Parser &parser, class ItemSet *state, unsigned int row)
+bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
 {
     bool modificationOnce = false;
     bool modification;

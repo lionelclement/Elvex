@@ -38,22 +38,22 @@ public:
     typedef std::vector<nodePtr> vectorNodes;
 
 private:
-    unsigned int from;
-    unsigned int to;
+    uint8_t from;
+    uint8_t to;
     vectorNodes nodes;
     bool empty;
     entryPtr entry;
     std::vector<std::string> output;
-    Forest(entryPtr entry, unsigned int from, unsigned int to);
+    Forest(entryPtr entry, uint8_t from, uint8_t to);
 
 public:
     ~Forest();
 
-    static forestPtr create(entryPtr entry, unsigned int from, unsigned int to);
+    static forestPtr create(entryPtr entry, uint8_t from, uint8_t to);
 
-    unsigned int getFrom(void) const;
+    uint8_t getFrom(void) const;
 
-    unsigned int getTo(void) const;
+    uint8_t getTo(void) const;
 
     bool isEmpty(void) const;
 

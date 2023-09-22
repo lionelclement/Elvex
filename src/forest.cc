@@ -29,7 +29,7 @@
 /* **************************************************
  *
  ************************************************** */
-Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
+Forest::Forest(entryPtr entry, uint8_t from, uint8_t to)
 {
     NEW;
     this->entry = std::move(entry);
@@ -44,7 +44,7 @@ Forest::Forest(entryPtr entry, unsigned int from, unsigned int to)
 /* **************************************************
  *
  ************************************************** */
-forestPtr Forest::create(entryPtr entry, unsigned int from, unsigned int to)
+forestPtr Forest::create(entryPtr entry, uint8_t from, uint8_t to)
 {
     return forestPtr(new Forest(std::move(entry), from, to));
 }
@@ -67,7 +67,7 @@ Forest::~Forest()
 /* **************************************************
  *
  ************************************************** */
-unsigned int Forest::getFrom() const
+uint8_t Forest::getFrom() const
 {
     return from;
 }
@@ -75,7 +75,7 @@ unsigned int Forest::getFrom() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Forest::getTo() const
+uint8_t Forest::getTo() const
 {
     return to;
 }

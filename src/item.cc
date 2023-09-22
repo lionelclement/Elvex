@@ -55,7 +55,7 @@ Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
 /* **************************************************
  *
  ************************************************** */
-Item::Item(const rulePtr &rule, uint8_t index, unsigned int indexTerm, statementsPtr statements)
+Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements)
     : Item(rule, index, std::move(statements))
 {
     std::vector<termsPtr> terms = rule->getRhs();
@@ -173,7 +173,7 @@ unsigned int Item::getRuleLineno() const
 /* **************************************************
  *
  ************************************************** */
-void Item::rulePrint(std::ostream &os, unsigned int index, bool withSemantic, bool html) const
+void Item::rulePrint(std::ostream &os, uint8_t index, bool withSemantic, bool html) const
 {
     rule->print(os, index, withSemantic, html);
 }
@@ -261,7 +261,7 @@ statementsPtr Item::getStatements()
 /* **************************************************
  *
  ************************************************** */
-termsPtr Item::getTerms(const unsigned int _index) const
+termsPtr Item::getTerms(const uint16_t _index) const
 {
     return rule->getRhs()[_index];
 }
@@ -287,7 +287,7 @@ void Item::setCurrentTerms(termsPtr terms)
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getCurrentTerm() const
+uint16_t Item::getCurrentTerm() const
 {
     termsPtr terms = getCurrentTerms();
     if ((terms == nullptr) || (terms->size() == 0))
@@ -298,7 +298,7 @@ unsigned int Item::getCurrentTerm() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getRuleLhs() const
+uint16_t Item::getRuleLhs() const
 {
     return rule->getLhs();
 }
@@ -363,7 +363,7 @@ void Item::setSeen(std::vector<bool> &_seen)
 /* **************************************************
  *
  ************************************************** */
-bool Item::isSeen(unsigned int _index) const
+bool Item::isSeen(uint8_t _index) const
 {
     return seen[_index];
 }
@@ -371,7 +371,7 @@ bool Item::isSeen(unsigned int _index) const
 /* **************************************************
  *
  ************************************************** */
-void Item::setSeen(unsigned int _index, bool b)
+void Item::setSeen(uint8_t _index, bool b)
 {
     this->seen[_index] = b;
 }
@@ -430,7 +430,7 @@ void Item::addForestIdentifiers(unsigned int key, class ForestIdentifier *forest
  ************************************************** */
 void Item::addForestIdentifiers(std::vector<class ForestIdentifier *> &_forestIdentifiers)
 {
-    for (unsigned int it = 0; it < _forestIdentifiers.size(); ++it)
+    for (uint8_t it = 0; it < _forestIdentifiers.size(); ++it)
         this->forestIdentifiers[it] = _forestIdentifiers[it];
 }
 
@@ -723,8 +723,8 @@ void Item::print(std::ostream &out) const
     if (s_indexTerms)
     {
         out << "<td>";
-        for (unsigned int indexTerm : indexTerms)
-            if (indexTerm == UINT_MAX)
+        for (uint8_t indexTerm : indexTerms)
+            if (indexTerm == UINT8_MAX)
                 out << "UINT_MAX"
                     << "&nbsp;";
             else
@@ -746,7 +746,7 @@ void Item::print(std::ostream &out) const
         out << "<td>"; //<center>Ranges</center><br>";
         int old = -1;
         bool first = true;
-        for (unsigned int range : ranges)
+        for (uint8_t range : ranges)
         {
             if (old != -1)
             {
@@ -867,7 +867,7 @@ void Item::step(bool &effect)
     this->print(std::cout);
     std::cout << std::endl;
 #endif
-    for (unsigned int i = 0; i < this->getRuleRhs().size(); ++i)
+    for (uint8_t i = 0; i < this->getRuleRhs().size(); ++i)
     {
         if ((i == index) || ((*this->inheritedSonFeatures)[i]->isNil() && !this->getTerms(i)->isOptional() &&
                              this->getTerms(i)->size() == 1))
