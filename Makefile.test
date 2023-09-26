@@ -22,9 +22,11 @@
 # Name of the Elvex program
 elvex = bin/elvex
 elvexbuildlexicon = bin/elvexbuildlexicon
-xsltproc = xsltproc
+# Check the existence of dot (Graphviz)
+DOT := $(shell command -v dot 2> /dev/null)
+# Check the existence of xsltproc
+XSLTPROC := $(shell command -v xsltproc 2> /dev/null)
 xslfile = xsl/xml2CS-dot-graph.xsl
-dot = dot
 
 # Directory where test files are located
 test_dir = test
@@ -62,10 +64,24 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	@$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1
 
 %.dot: %.xml $(xsl)
-	@$(xsltproc) $(xslfile) $*.xml > $@
+	# Check the existence of xsltproc
+	ifdef XSLTPROC 
+		@echo "xsltproc is installed."
+	else 
+    		@echo "Error: xsltproc is not installed."
+		@exit 1
+	endif
+	@$(XSLTPROC) $(xslfile) $*.xml > $@
 
 %.pdf: %.dot
-	@$(dot) -T pdf -o $@ $<
+	# Check the existence of dot (Graphviz)
+	ifdef DOT
+		@echo "dot (Graphviz) is installed."
+	else
+		@echo "Error: dot (Graphviz) is not installed."
+		@exit 1
+	endif
+	@$(DOT) -T pdf -o $@ $<
 
 %.fsa: %.tmp-morpho %.tmp-pattern
 	@echo "build $@ from $*.tmp-morpho $*.tmp-pattern"> /dev/null 2>&1
