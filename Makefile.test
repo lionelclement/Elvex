@@ -56,8 +56,10 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
 		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err | sort > $@; \
+		sync ; \
 	else \
 		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err | sort > $@; \
+		sync ; \
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
