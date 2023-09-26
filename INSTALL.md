@@ -26,8 +26,8 @@ To compile **Elvex**, follow these commands from the Elvex directory:
 
 ## Testing
 
-After you've successfully installed **Elvex**, execute the following command:
+After you've successfully compile **Elvex**, execute the following command:
 
 ```shell
-. ./try-me.sh
+make -s -f Makefile.test test
 ```
