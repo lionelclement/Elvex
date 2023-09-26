@@ -1,36 +1,35 @@
 /* **************************************************
  * Start
  ************************************************** */
-@trace
-S → NP dot {
+//@trace
+S → NP dot tag {
   ↓1 = ↑;
   ↓2 = [];
+  ↓3 = ↑;
 }
 
-@trace
+//@trace
 @withspaces
-//@bidirectional
 NP → det N {
   ↓2 = ↑;
   ↓1 = ⇓2;
   ⇑ = ⇓2;
 }
 
-@trace
+//@trace
 @withspaces
-//@bidirectional
-N → adj N {
+N → adj|adjForm N {
   [mod:<$Head::$Tail>, $Rest];
   [number:$inhNb, gender:$inhGd] ⊂ ↑;
-  ↓1 = [number:$inhNb, gender:$inhGd] ∪ [number:$synthNb, gender:$synthGd, $Head];
+  ↓1 = $Head ∪ [number:$inhNb, gender:$inhGd] ∪ [number:$synthNb, gender:$synthGd];
   ↓2 = [mod:$Tail, $Rest];
   [gender:$synthGd, number:$synthNb] ⊂ ⇓2;
   ⇑ = ⇓2 ∪ [gender:$synthGd, number:$synthNb] ∪ [qual:yes];
 }
 
-@trace
+//@trace
 @withspaces
-N → n {
+N → noun {
   [mod:NIL];
   ↓1 = ↑;
   ⇑ = ⇓1;

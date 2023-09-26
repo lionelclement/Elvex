@@ -1,0 +1,88 @@
+# lexeme	pos	lemma	features
+
+TO_CHASE	verb	TO_CHASE	iiReal:OBJECT
+
+EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[FORM:"over the moon"]
+EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[HEAD:HAPPY,MOD:<[HEAD:EXTREMELY]>]
+EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[HEAD:THRILLED]
+TO_FIND_OUT	verb	TO_FIND	particule:_out_,iiReal:SCOMP,compl:_that_
+TO_STUDY	verb	TO_STUDY	SUBJECT:[human:true],iiReal:OBJECT
+TO_MEOW	verb	TO_MEOW	
+TO_ACCEPT	verb	TO_ACCEPT	iiReal:OBJECT|VCOMP|SCOMP,compl:_that_
+
+TO_FEEL	verb	TO_FEEL	HEAD:TO_FEEL,SUBJECT:[human:true],iiReal:PRED_ADJ|SCOMP|OBJECT|OBJ_THETA,pcase:_at_,compl:_that_|_if_
+
+TO_FEEL_THE_PAIN	TO_FEEL	verb	iiReal:OBJECT,OBJECT:[HEAD:PAIN,@def,@s]
+TO_FEEL_BLUE	verb	TO_FEEL	iiReal:PRED_ADJ,PRED_ADJ:[HEAD:BLUE]
+
+TO_APPRECIATE	verb	TO_APPRECIATE	SUBJECT:[human:true],iiReal:OBJECT
+
+TO_ENJOY	verb	TO_ENJOY	SUBJECT:[human:true],iiReal:OBJECT
+TO_SUFFER	verb	TO_SUFFER	SUBJECT:[human:true],iiReal:OBJECT
+TO_ENDURE	verb	TO_ENDURE	SUBJECT:[human:true],iiReal:OBJECT
+
+TO_USE	verb	TO_USE	SUBJECT:[human:true],iiReal:OBJECT
+
+TO_STAY_AWAY	verb	TO_STAY_AWAY	SUBJECT:[human:true]
+
+#  To CALL
+#  to call someone/something
+TO_CALL	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT
+#  to call someone down : to reprimand a person
+TO_CALL_DOWN_1	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:true],particule:_down_
+#  to call something down to someone: to shout something to a person on a lower level
+TO_CALL_DOWN_2	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:_to_,particule:_down_
+#  to call something down on someone: to invoke some sort of divine punishment onto someone
+TO_CALL_DOWN_3	verb	TO_CALL	SUBJECT:[human:true],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:_on_,particule:_down_
+
+TO_SNORE	verb	TO_SNORE	SUBJECT:[animate:true]
+
+TO_SIT	verb	TO_SIT	iiReal:OBJ_THETA,pcase:_on_
+
+TO_SAY	verb	TO_SAY	iiReal:SCOMP,compl:_that_
+
+TO_WANT	verb	TO_WANT	SUBJECT:[],iiReal:VCOMP,VCOMP:[]
+
+TO_TELL	verb	TO_TELL	SUBJECT:[human:true],iiReal:OBJECT,iiiReal:SCOMP,ii_csu:_that_
+
+
+/***
+*   To put on the brakes: to describe the act of slowing down or stopping something, especially a vehicle, in a sudden or emergency situation.
+*   To hit the brakes: to suddenly stop or slow down, especially in a vehicle
+*   To pump the brakes: to apply and release the brakes repeatedly, as a way of slowing down a vehicle without skidding or losing control
+*   To step on the brakes: to press down on the brake pedal in a vehicle, as a way of slowing down or stopping
+***/
+
+
+  // Nouns
+PAIN	common_noun	PAIN	countable:false
+SADNESS	common_noun	SADNESS	countable:false
+HOPE	common_noun	HOPE	countable:false
+TENDERNESS	common_noun	TENDERNESS	countable:false
+WARNING	common_noun	WARNING	
+DIVINE_BLESSINGS	common_noun	DIVINE_BLESSINGS	
+CHAIR	common_noun	CHAIR	
+CHAIR_MAN	common_noun	CHAIR_MAN	
+MOON	common_noun	MOON	
+STUDENT	common_noun	STUDENT	
+PROFESSOR	common_noun	PROFESSOR	
+CAT	common_noun	CAT	
+MOUSE	common_noun	MOUSE	
+TABLE	common_noun	TABLE	
+
+#  Adjectives
+THRILLED	adj	THRILLED	type:opinion
+NICE	adj	NICE	type:opinion
+BAD	adj	BAD	lexical_function:none,type:opinion
+BAD	adj	BAD	lexical_function:magn,MOD:[HEAD:VERY],type:opinion
+GOOD	adj	GOOD	type:opinion
+HAPPY	adj	HAPPY	type:opinion
+BLUE	adj	BLUE	type:color
+BLACK	adj	BLACK	type:color
+BIG	adj	BIG	type:size
+
+# type:Opinion, Size, Age, Shape, Color, Origin, Material, Purpose/Qualifier
+#  Adverbs
+VERY	adv	VERY	
+EXTREMELY	adv	EXTREMELY	
+#  end

@@ -1,0 +1,61 @@
+"." dot;
+"---$val1---$val2---$val3---" tag[attr1:$val1, attr2:$val2, attr3:$val3];
+FORM adjForm [att1:val1, att2: val2];
+FORM nounForm [att3:val3, att4: val4];
+
+@m = [gender:masc];
+@f = [gender:fem];
+@s = [number:singular];
+@p = [number:plural];
+@ms = [@m, @s];
+@mp = [@m, @p];
+@fs = [@f, @s];
+@fp = [@f, @p];
+
+le det[@ms];
+la det[@fs];
+les det[@p];
+
+"un certain nombre de" det[@p];
+
+ce det[@ms];
+cette det[@f];
+ces det[@p];
+
+mon det[@ms];
+ma det[@fs];
+mes det[@p];
+
+chat noun[HEAD:CHAT,@ms];
+chatte noun[HEAD:CHAT,@fs];
+chats noun[HEAD:CHAT,@mp];
+chattes noun[HEAD:CHAT,@fp];
+chien noun[HEAD:CHIEN,@ms];
+chienne noun[HEAD:CHIEN,@fs];
+chiens noun[HEAD:CHIEN,@mp];
+chiennes noun[HEAD:CHIEN,@fp];
+poule noun[HEAD:POULE,@fs];
+poulet noun[HEAD:POULE,@ms];
+poules noun[HEAD:POULE,@fp];
+poulets noun[HEAD:POULE,@mp];
+renard noun[HEAD:RENARD, @ms];
+//renarde noun[HEAD:RENARD, @fs];
+//renards noun[HEAD:RENARD, @mp];
+//renardes noun[HEAD:RENARD, @fp];
+souris noun[HEAD:SOURIS, @f];
+
+"chauve souris (in cache lexicon)" noun[HEAD:CHAUVE_SOURIS, cache:true, @fs];
+"chauves souris (in cache lexicon)" noun[HEAD:CHAUVE_SOURIS, cache:true, @fp];
+
+belle adj[HEAD:BEAU,@fs];
+beau adj[HEAD:BEAU,@ms];
+belles adj[HEAD:BEAU,@fp];
+beaux adj[HEAD:BEAU,@mp];
+gentille adj[HEAD:GENTIL,@fs];
+gentil adj[HEAD:GENTIL,@ms];
+gentilles adj[HEAD:GENTIL,@fp];
+gentils adj[HEAD:GENTIL,@mp];
+vieux adj[HEAD:VIEUX,@m];
+vieille adj[HEAD:VIEUX,@fs];
+vieilles adj[HEAD:VIEUX,@fp];
+

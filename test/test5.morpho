@@ -1,0 +1,31 @@
+# @macro	features
+# form	pos	lemma	features
+# ***********************************************************
+# Macros
+# ***********************************************************/
+@m	gender:masc
+@f	gender:fem
+@_1	person:one
+@_2	person:two
+@_12	person:one|two
+@_3	person:three
+@s	number:singular
+@p	number:plural
+@_1s	person:one,number:singular
+@_2s	person:two,number:singular
+@_12s	person:one|two,number:singular
+@_3s	person:three,number:singular
+@_1p	person:one,number:plural
+@_2p	person:two,number:plural
+@_3p	person:three,number:plural
+@_3masc	person:three,number:singular,gender:masc
+@_3fs	person:three,number:singular,gender:fem
+@def	def:true
+
+# ***********************************************************
+#  Nouns
+# ***********************************************************/
+chauve souris	noun	CHAUVE_SOURIS	@s
+chauves souris	noun	CHAUVE_SOURIS	@p
+
+# end

@@ -1,9 +1,0 @@
-/*
-"a($att1)"	a [att:$att1];
-"b($att2)"	b [att:$att2];
-"c($att3)"	c [att:$att3];
-*/
-
-"a($att1)"	a [att:$att1];
-"b"	b [];
-"c"	c [];

@@ -1,12 +1,15 @@
 /* **************************************************
  * Start
  ************************************************** */
+@withspaces
 S → [A | B] C
 {
   ↓1 = [];
   ↓2 = [];
 }
 
+@withspaces
+@permutable
 A → [aa] ab [ac] ad [ae|af] 
 {
   ↓1 = [];
@@ -16,6 +19,8 @@ A → [aa] ab [ac] ad [ae|af]
   ↓5 = [];
 }
 
+@withspaces
+@bidirectional
 B → [ba|bb] bc|bd [be|bf] 
 {
   ↓1 = [];
@@ -27,3 +32,4 @@ C → [ca|cb]
 {
   ↓1 = [];
 }
+
