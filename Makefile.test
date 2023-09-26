@@ -41,7 +41,7 @@ all_output: $(patsubst $(test_dir)/%.input,$(test_dir)/%.output,$(input_files))
 test: all_output
 	@for file in $(input_files); do \
 		base=$$(basename $$file .input); \
-		if diff $(test_dir)/$$base.output $(test_dir)/$$base.test &> /dev/null; then \
+		if diff $(test_dir)/$$base.output $(test_dir)/$$base.test> /dev/null 2>&1; then \
 			echo "Test $$base passed."; \
 		else \
 			echo "Test $$base failed. Please check the trace with --tracexxx options."; \
@@ -61,7 +61,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
-	@$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml &> /dev/null
+	@$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1
 
 %.dot: %.xml $(xsl)
 	# Check the existence of xsltproc
