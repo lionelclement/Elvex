@@ -100,6 +100,8 @@ set(ELVEX_COMMON_SOURCES
         src/statement.hpp
         src/statements.cc
         src/statements.hpp
+        src/terminal.cc
+        src/terminal.hpp
         src/terms.cc
         src/terms.hpp
         src/uniq-id.cc
@@ -129,8 +131,6 @@ find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
             OUTPUT_XML
-            MEMOIZATION
-            #RESTORE_MEMORY
             MAXBITS=512
             MAXLENGTH=12000
             MAXUSAGES=12000

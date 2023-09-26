@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -45,15 +45,6 @@ Entries::Entries(const entryPtr &entry)
 Entries::Entries(const std::vector<entryPtr> &entries)
 {
     this->entries = entries;
-    NEW;
-}
-
-/* **************************************************
- *
- ************************************************** */
-Entries::Entries(unsigned int codePos, unsigned int codeLemma, std::string form)
-{
-    this->entries.insert(this->entries.begin(), Entry::create(codePos, codeLemma, form));
     NEW;
 }
 
@@ -97,14 +88,6 @@ entriesPtr Entries::create(const std::vector<entryPtr> &entries)
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Entries::create(unsigned int codePos, unsigned int codeLemma, std::string form)
-{
-    return entriesPtr(new Entries(codePos, codeLemma, form));
-}
-
-/* **************************************************
- *
- ************************************************** */
 size_t Entries::size() const
 {
     return this->entries.size();
@@ -139,7 +122,8 @@ void Entries::add(const entryPtr &entry)
  ************************************************** */
 void Entries::add(entriesPtr entries)
 {
-    for(auto entry : *entries){
+    for (auto entry : *entries)
+    {
         this->entries.push_back(entry);
     }
 }
@@ -169,6 +153,13 @@ void Entries::toXML(xmlNodePtr nodeRoot) const
  ************************************************** */
 void Entries::print(std::ostream &out) const
 {
+    bool first = true;
     for (const auto &i : entries)
+    {
+        if (first)
+            first = false;
+        else
+            out << '|';
         i->print(out);
+    }
 }

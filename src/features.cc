@@ -29,6 +29,7 @@
 #include "item.hpp"
 #include "statement.hpp"
 #include "value.hpp"
+#include "vartable.hpp"
 
 featuresPtr Features::BOTTOM = createBottom();
 featuresPtr Features::NIL = createNil();
@@ -272,9 +273,8 @@ void Features::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-unsigned int Features::assignHead()
+uint16_t Features::assignHead()
 {
-    unsigned int ret = UINT_MAX;
     if (this->head)
         return this->head;
     for (const auto &f : features)
@@ -282,12 +282,10 @@ unsigned int Features::assignHead()
         // […, HEAD = …, …]
         if (f->isHead())
         {
-            ret = f->getValue()->getCode();
-            break;
+            return this->head = f->getValue()->getCode();
         }
     }
-    this->head = ret;
-    return ret;
+    return this->head = Vartable::DOES_NOT_CONTAIN_A_HEAD;
 }
 
 /* **************************************************

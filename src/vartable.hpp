@@ -31,8 +31,10 @@ class Vartable
 {
 
 public:
-    static const uint16_t _END_ = 0;
-    static const uint16_t _START_TERM_ = 1;
+    static uint16_t IS_A_FORM;
+
+    static uint16_t DOES_NOT_CONTAIN_A_HEAD;
+
 
     // variable => bitset
     // i.e. subject => 36 (MAXBITS values)

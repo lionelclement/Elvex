@@ -209,16 +209,11 @@ void Parser::printCacheLexicon(std::ostream &out) const {
     out << "<ul>";
     for (entries_map_map_const_iterator i = cbeginCacheLexicon(); i != cendCacheLexicon(); ++i) {
         out << "<li>";
-        out << Vartable::codeToName((*i).first);
+        out << Vartable::codeToName((*i).first) << '(' << (*i).first << ')';
         out << "<ul>";
         for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
             out << "<li>";
-            if ((*j).first == 0)
-                out << "0 = &gt; ";
-            else if ((*j).first == UINT16_MAX)
-                out << "UINT16_MAX = &gt; ";
-            else
-                out << Vartable::codeToName((*j).first) << " = &gt; ";
+            out << Vartable::codeToName((*j).first) << '(' << (*j).first << ')' << " -&gt; ";
             (*j).second->print(out);
             out << "</li>";
 
@@ -289,6 +284,6 @@ void Parser::listMacros() {
 /* **************************************************
  *
  ************************************************** */
-void Parser::insertCacheLexicon(std::pair<uint16_t, entries_map*> pair){
+void Parser::_insertCacheLexicon(std::pair<uint16_t, entries_map*> pair){
   cacheLexicon.insert(pair);
 }

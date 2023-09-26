@@ -17,8 +17,8 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_ENTRY_H
-#define ELVEX_ENTRY_H
+#ifndef ELVEX_TERMINAL_H
+#define ELVEX_TERMINAL_H
 
 #include "facade.hpp"
 #include "serializable.hpp"
@@ -28,30 +28,35 @@
 #include <libxml/tree.h>
 #endif
 
-class Entry : public Facade,
+class Terminal : public Facade,
               public Serializable,
-              public std::enable_shared_from_this<class Entry>
+              public std::enable_shared_from_this<class Terminal>
 {
 
 private:
 
+    uint16_t code;
     std::string form;
     featuresPtr features;
 
-    Entry(std::string form, featuresPtr features);
+    Terminal(uint16_t code);
 
-    Entry(featuresPtr features);
+    Terminal(uint16_t code, std::string form);
+
+    Terminal(uint16_t code, std::string form, featuresPtr features);
 
     void makeSerialString(void);
 
 public:
-    ~Entry();
+    ~Terminal();
 
-    static entryPtr create(std::string form, featuresPtr features);
+    static terminalPtr create(uint16_t code);
 
-    static entryPtr create(featuresPtr features);
+    static terminalPtr create(uint16_t code, std::string form);
 
-    uint16_t getPos(void) const;
+    static terminalPtr create(uint16_t code, std::string form, featuresPtr features);
+
+    uint16_t getCode(void) const;
 
     std::string &getForm();
 
@@ -63,10 +68,8 @@ public:
 
     void print(std::ostream &) const;
     
-    void renameVariables(size_t);
-
-    entryPtr clone(void) const;
+    terminalPtr clone(void) const;
 
 };
 
-#endif // ELVEX_ENTRY_H
+#endif // ELVEX_TERMINAL_H

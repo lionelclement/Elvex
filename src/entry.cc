@@ -32,15 +32,11 @@
 #include "vartable.hpp"
 #include "shared_ptr.hpp"
 
-uint16_t Entry::FORM_HEAD = 0;
-
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(uint16_t pos, uint16_t head, std::string form, featuresPtr features)
+Entry::Entry(std::string form, featuresPtr features)
 {
-    this->pos = pos;
-    this->head = head;
     this->form = std::move(form);
     this->features = features;
     NEW;
@@ -49,48 +45,10 @@ Entry::Entry(uint16_t pos, uint16_t head, std::string form, featuresPtr features
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(uint16_t pos, uint16_t head, featuresPtr features)
+Entry::Entry(featuresPtr features)
 {
-    this->pos = pos;
-    this->head = head;
     this->form = std::string();
     this->features = features;
-    NEW;
-}
-
-/* **************************************************
- *
- ************************************************** */
-Entry::Entry(uint16_t pos, std::string head, std::string form, featuresPtr features)
-{
-    this->pos = pos;
-    this->head = Vartable::nameToCode(std::move(head));
-    this->form = std::move(form);
-    this->features = features;
-    NEW;
-}
-
-/* **************************************************
- *
- ************************************************** */
-Entry::Entry(uint16_t pos, featuresPtr features)
-{
-    this->pos = pos;
-    this->head = UINT16_MAX;
-    this->form = std::string();
-    this->features = features;
-    NEW;
-}
-
-/* **************************************************
- *
- ************************************************** */
-Entry::Entry(uint16_t pos)
-{
-    this->pos = pos;
-    this->head = UINT16_MAX;
-    this->form = std::string();
-    this->features = featuresPtr();
     NEW;
 }
 
@@ -107,65 +65,17 @@ Entry::~Entry()
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(uint16_t term, uint16_t head, std::string form, featuresPtr features)
+entryPtr Entry::create(std::string form, featuresPtr features)
 {
-    return entryPtr(new Entry(term, head, std::move(form), features));
+    return entryPtr(new Entry( std::move(form), features));
 }
 
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(uint16_t term, uint16_t head, featuresPtr features)
+entryPtr Entry::create(featuresPtr features)
 {
-    return entryPtr(new Entry(term, head, features));
-}
-
-/* **************************************************
- *
- ************************************************** */
-entryPtr Entry::create(uint16_t term, std::string head, std::string form, featuresPtr features)
-{
-    return entryPtr(new Entry(term, std::move(head), std::move(form), features));
-}
-
-/* **************************************************
- *
- ************************************************** */
-entryPtr Entry::create(uint16_t term, featuresPtr features)
-{
-    return entryPtr(new Entry(term, features));
-}
-
-/* **************************************************
- *
- ************************************************** */
-entryPtr Entry::create(uint16_t term)
-{
-    return entryPtr(new Entry(term));
-}
-
-/* **************************************************
- *
- ************************************************** */
-uint16_t Entry::getPos() const
-{
-    return pos;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Entry::setPos(uint16_t pos)
-{
-    this->pos = pos;
-}
-
-/* **************************************************
- *
- ************************************************** */
-uint16_t Entry::getHead() const
-{
-    return head;
+    return entryPtr(new Entry(features));
 }
 
 /* **************************************************
@@ -174,14 +84,6 @@ uint16_t Entry::getHead() const
 std::string &Entry::getForm()
 {
     return form;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Entry::setForm(std::string form)
-{
-    this->form = std::move(form);
 }
 
 /* **************************************************
@@ -199,17 +101,7 @@ featuresPtr Entry::getFeatures() const
 void Entry::toXML(xmlNodePtr nodeRoot) const
 {
     xmlNodePtr entry = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"ENTRY", nullptr);
-    if (this->pos != (uint16_t)-1)
-    {
-        xmlSetProp(entry, (xmlChar *)"pos", (xmlChar *)std::to_string(this->pos).c_str());
-        xmlSetProp(entry, (xmlChar *)"posStr", (xmlChar *)Vartable::codeToName(this->pos).c_str());
-    }
-    if (this->head != (uint16_t)-1)
-    {
-        xmlSetProp(entry, (xmlChar *)"codeHead", (xmlChar *)std::to_string(this->head).c_str());
-        xmlSetProp(entry, (xmlChar *)"codeHeadStr", (xmlChar *)Vartable::codeToName(this->head).c_str());
-    }
-    if (!this->form.empty())
+   if (!this->form.empty())
     {
         xmlSetProp(entry, (xmlChar *)"form", (xmlChar *)this->form.c_str());
     }
@@ -225,16 +117,15 @@ void Entry::toXML(xmlNodePtr nodeRoot) const
  ************************************************** */
 void Entry::print(std::ostream &os) const
 {
-    os << "[pos:" << Vartable::codeToName(this->pos);
-    if ((this->head != UINT16_MAX))
-        os << ", head:" << Vartable::codeToName(this->head);
-    else
-        os << ", head:UINT16_MAX";
+    os << "Entry(" /*<< Vartable::codeToName(this->pos) */;
     if (!this->form.empty())
-        os << ", form:\"" << this->form << '"';
-    else
-        os << ", form:\"\"";
-    os << ']';
+        os << "form:\"" << this->form << "\", ";
+    if (features){
+        features->flatPrint(os);
+    } else {
+        FATAL_ERROR_UNEXPECTED;
+    }
+    os << ')';
 }
 
 /* **************************************************
@@ -242,11 +133,11 @@ void Entry::print(std::ostream &os) const
  ************************************************** */
 void Entry::makeSerialString()
 {
-    serialString = std::to_string(pos) + std::to_string(head) + '"' + form + '"';
+    serialString = form + '\1';
     if (features)
         serialString += features->peekSerialString();
     else
-        serialString += 'N';
+        serialString += '\0';
 }
 
 /* **************************************************
@@ -258,7 +149,6 @@ void Entry::renameVariables(size_t k)
     std::string pattern =
         std::string(
             "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
-    // std::cmatch match;
 
     try
     {
@@ -282,5 +172,5 @@ void Entry::renameVariables(size_t k)
  ************************************************** */
 entryPtr Entry::clone() const
 {
-    return create(pos, std::move(head), std::move(form), features->clone());
+    return create(std::move(form), features->clone());
 }

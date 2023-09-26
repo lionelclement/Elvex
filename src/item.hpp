@@ -71,7 +71,7 @@ public:
 
     // static constructors
 
-    static class Item *create(const rulePtr &, uint8_t index = NA, uint8_t indexTerm = 0, statementsPtr = statementsPtr());
+    static class Item *create(const rulePtr &, uint8_t index = NA, uint8_t indexTerm = NA, statementsPtr = statementsPtr());
 
     static class Item *create(const rulePtr &, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr);
 

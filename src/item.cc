@@ -725,7 +725,7 @@ void Item::print(std::ostream &out) const
         out << "<td>";
         for (uint8_t indexTerm : indexTerms)
             if (indexTerm == UINT8_MAX)
-                out << "UINT_MAX"
+                out << "UINT8_MAX"
                     << "&nbsp;";
             else
                 out << indexTerm << "&nbsp;";
@@ -744,11 +744,11 @@ void Item::print(std::ostream &out) const
     if (s_ranges)
     {
         out << "<td>"; //<center>Ranges</center><br>";
-        int old = -1;
+        uint8_t old = UINT8_MAX;
         bool first = true;
         for (uint8_t range : ranges)
         {
-            if (old != -1)
+            if (old != UINT8_MAX)
             {
                 if (first)
                     first = false;
@@ -769,7 +769,7 @@ void Item::print(std::ostream &out) const
             if (*i)
                 out << (*i)->peekSerialString();
             else
-                out << "NULL";
+                out << "null";
             if (++i != forestIdentifiers.end())
             {
                 out << ", ";

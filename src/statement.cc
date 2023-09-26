@@ -1263,7 +1263,7 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
         if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
         {
             Parser::entries_map *listHead = foundpos->second;
-            entriesPtr entries = synthesizer->findByHead(parser, listHead, pos, head);
+            entriesPtr entries = synthesizer->findByHeadThenCompactedLexicon(parser, listHead, pos, head);
             if (entries && entries->size() > 0)
             {
                 for (auto &entry : *entries)

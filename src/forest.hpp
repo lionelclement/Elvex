@@ -42,14 +42,14 @@ private:
     uint8_t to;
     vectorNodes nodes;
     bool empty;
-    entryPtr entry;
+    terminalPtr terminal;
     std::vector<std::string> output;
-    Forest(entryPtr entry, uint8_t from, uint8_t to);
+    Forest(terminalPtr terminal, uint8_t from, uint8_t to);
 
 public:
     ~Forest();
 
-    static forestPtr create(entryPtr entry, uint8_t from, uint8_t to);
+    static forestPtr create(terminalPtr terminal, uint8_t from, uint8_t to);
 
     uint8_t getFrom(void) const;
 

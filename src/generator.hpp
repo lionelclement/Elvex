@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -49,9 +49,9 @@ class Generator
 public:
     enum Stage
     {
-        MORPHO_FEATURES,
-        FORM_FEATURES,
-        HEAD_FEATURES
+        STAGE_MAIN,
+        STAGE_FORM,
+        STAGE_HEAD
     };
 
     typedef std::unordered_map<unsigned int, class Item *> item_map;
@@ -205,11 +205,13 @@ public:
 
     bool getVerbose();
 
-    entriesPtr findByPos(Parser &parser, Parser::entries_map *, uint16_t pos);
+    entriesPtr findByHead(Parser::entries_map *map, uint16_t head);
 
-    entriesPtr findByForm(Parser::entries_map *);
+    entriesPtr findByHeadThenCompactedLexicon(Parser &parser, Parser::entries_map *map, uint16_t pos, uint16_t head);
 
-    entriesPtr findByHead(Parser &parser, Parser::entries_map *, uint16_t pos, uint16_t head);
+    entriesPtr findMain(Parser::entries_map *map);
+
+    entriesPtr findByForm(Parser::entries_map *map);
 };
 
 #endif // ELVEX_GENERATOR_H

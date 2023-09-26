@@ -142,7 +142,8 @@ void Rules::addRule(rulePtr rule)
 /* **************************************************
  *
  ************************************************** */
-void Rules::addNewStartTerm(bool addENDTerminal)
+/*
+void Rules::_addNewStartTerm(bool addENDTerminal)
 {
     rulePtr r;
     std::vector<termsPtr> rhs;
@@ -167,6 +168,7 @@ void Rules::addNewStartTerm(bool addENDTerminal)
     rules.push_back(r);
     firstRule = r;
 }
+*/
 
 /* **************************************************
  *
@@ -273,13 +275,13 @@ void Rules::analyseTerms(class Parser &parser)
                     unsigned long int code = (*term);
                     terminals.insert(code);
 
-                    Parser::entries_map *predToEntries;
+                    Parser::entries_map *headToEntries;
                     Parser::entries_map_map_const_iterator foundCode = parser.findCacheLexicon(code);
                     if (foundCode == parser.cendCacheLexicon())
                     {
-                        predToEntries = new Parser::entries_map;
-                        predToEntries->insert(std::make_pair(code, Entries::create()));
-                        parser.insertCacheLexicon(std::make_pair(code, predToEntries));
+                        headToEntries = new Parser::entries_map;
+                        headToEntries->insert(std::make_pair(code, Entries::create()));
+                        parser._insertCacheLexicon(std::make_pair(code, headToEntries));
                     }
                 }
             }

@@ -39,8 +39,6 @@ private:
 
     Entries(const std::vector<entryPtr> &);
 
-    Entries(unsigned int codePos, unsigned int codeLemma, std::string form);
-
 public:
     ~Entries();
 
@@ -49,8 +47,6 @@ public:
     static entriesPtr create(const entryPtr &);
 
     static entriesPtr create(const std::vector<entryPtr> &);
-
-    static entriesPtr create(unsigned int codePos, unsigned int codeLemma, std::string form);
 
     size_t size() const;
 

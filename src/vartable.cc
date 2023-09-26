@@ -24,15 +24,14 @@
 #include "vartable.hpp"
 #include "messages.hpp"
 
-const uint16_t Vartable::_END_;
-const uint16_t Vartable::_START_TERM_;
-
 uint16_t Vartable::codeMapIndex;
 std::bitset<MAXBITS> Vartable::variableMapIndex;
 Vartable::string_to_bitset Vartable::nameToBitsetMap;
 Vartable::uint16_t_to_string Vartable::codeToNameMap;
 Vartable::string_to_uint16_t Vartable::nameToCodeMap;
 Vartable::uint16_t_to_string Vartable::bitToNameMap;
+uint16_t Vartable::IS_A_FORM;
+uint16_t Vartable::DOES_NOT_CONTAIN_A_HEAD;
 
 Vartable vartable;
 
@@ -43,8 +42,11 @@ Vartable::Vartable()
 {
     codeMapIndex = 0;
     variableMapIndex = 1;
-    insertCodeMap(_END_, "_END_");
-    insertCodeMap(_START_TERM_, "_STARTTERM_");
+    createVariable("CONTAINS_A_FORM");
+    IS_A_FORM = nameToCode("CONTAINS_A_FORM");
+    createVariable("DOES_NOT_CONTAIN_A_HEAD");
+    DOES_NOT_CONTAIN_A_HEAD = nameToCode("DOES_NOT_CONTAIN_A_HEAD");
+
 }
 
 /* ************************************************************
@@ -68,7 +70,7 @@ bitsetPtr Vartable::createVariable(const std::string &str)
         Vartable::bitToNameMap[i] = str;
         variableMapIndex <<= 1;
         if (variableMapIndex.none())
-            throw fatal_exception("Too much values to create a new variable");
+            throw fatal_exception("Too much values to create a new variable (" + str + " not created)");
     }
     else
     {

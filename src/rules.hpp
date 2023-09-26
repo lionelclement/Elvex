@@ -67,7 +67,7 @@ public:
 
     void addRule(rulePtr);
 
-    void addNewStartTerm(bool);
+    //void _addNewStartTerm(bool);
 
     void addNonTerminal(unsigned int);
 

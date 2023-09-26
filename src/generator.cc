@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -35,6 +35,7 @@
 #include "node.hpp"
 #include "vartable.hpp"
 #include "parser_exception.hpp"
+#include "terminal.hpp"
 
 /* **************************************************
  *
@@ -540,7 +541,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 }
                 else
                 {
-                    forestFound = Forest::create(Entry::create(it->getCurrentTerm()), row, row);
+                    forestFound = Forest::create(Terminal::create(it->getCurrentTerm()), row, row);
 
                     forestMap.insert(fi, forestFound);
                     it->addForestIdentifiers(it->getIndex(), fi);
@@ -692,11 +693,10 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 
                                 class Item *it;
                                 iterRules->incUsages(this);
-                                it = Item::create(iterRules->clone(), 0, 0,
+                                it = Item::create(iterRules->clone(), 0, Item::NA,
                                                   iterRules->getStatements() ? iterRules->getStatements()->clone(0)
                                                                              : statementsPtr());
                                 it->addRange(row);
-                                // it->renameVariables(it->getId());
                                 it->setInheritedFeatures(inheritedSonFeatures->clone());
 
                                 if (traceClose || (trace && it->getRuleTrace()))
@@ -806,7 +806,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                 }
                                 else
                                 {
-                                    forestFound = Forest::create(Entry::create((*actualItem)->getRuleLhs()),
+                                    forestFound = Forest::create(Terminal::create((*actualItem)->getRuleLhs()),
                                                                  (*actualItem)->getRanges()[0], row);
                                     forestMap.insert(fi, forestFound);
                                     nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
@@ -958,7 +958,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                         }
                                         else
                                         {
-                                            forestFound = Forest::create(Entry::create((*actualItem)->getRuleLhs()),
+                                            forestFound = Forest::create(Terminal::create((*actualItem)->getRuleLhs()),
                                                                          (*actualItem)->getRanges()[0], row);
                                             forestMap.insert(fi, forestFound);
                                             it->addForestIdentifiers(previousItem->getIndex(), fi);
@@ -1051,7 +1051,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
             {
                 featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
                 if (!(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
-                    !(*actualItem)->getCurrentTerms()->isOptional() && (*actualItem)->getCurrentTerm() && !inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom() && parser.getRules().getTerminals().find((*actualItem)->getCurrentTerm()) != parser.getRules().getTerminals().end())
+                    !(*actualItem)->getCurrentTerms()->isOptional() && (*actualItem)->getCurrentTerm() != Item::NA && !inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom() && parser.getRules().getTerminals().find((*actualItem)->getCurrentTerm()) != parser.getRules().getTerminals().end())
                 {
 
                     if (traceShift || (trace && (*actualItem)->getRuleTrace()))
@@ -1071,17 +1071,21 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                     std::string *form = nullptr;
                     uint16_t head = inheritedSonFeatures->assignHead();
                     Stage stage;
-                    if (head == UINT16_MAX)
+                    if (head != Vartable::DOES_NOT_CONTAIN_A_HEAD)
                     {
-                        form = inheritedSonFeatures->assignForm();
-                        if (form)
-                            stage = FORM_FEATURES;
-                        else
-                            stage = MORPHO_FEATURES;
+                        stage = STAGE_HEAD;
                     }
                     else
                     {
-                        stage = HEAD_FEATURES;
+                        form = inheritedSonFeatures->assignForm();
+                        if (!form)
+                        {
+                            stage = STAGE_MAIN;
+                        }
+                        else
+                        {
+                            stage = STAGE_FORM;
+                        }
                     }
 
                     /*
@@ -1092,36 +1096,38 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                      std::cout << "form:" << form << std::endl;
                      std::cout << "pos : " << Vartable::codeToString((*actualItem)->getCurrentTerm()) << std::endl;
                     */
+                    //COUT_LINE;
+                    //parser.printCacheLexicon(std::cout);
+
                     auto foundpos = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
                     if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
                     {
-                        Parser::entries_map *listHead = foundpos->second;
-                        if (listHead)
+                        Parser::entries_map *entriesMap = foundpos->second;
+                        if (entriesMap)
                         {
                             Parser::entries_map::const_iterator found;
                             entriesPtr entries = entriesPtr();
 
                             /* *****
-                            CERR_LINE;
-                            std::cout << "stage : " << _stage << std::endl;
-                            std::cout << "head : " << Vartable::codeToString(head) << std::endl;
+                            COUT_LINE;
+                            std::cout << "stage : " << (stage == STAGE_HEAD ? "STAGE_HEAD" : (stage == STAGE_FORM ? "STAGE_FORM" : "STAGE_MAIN")) << std::endl;
+                            std::cout << "head : " << Vartable::codeToName(head) << std::endl;
                             std::cout << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
                             ***** */
+
                             switch (stage)
                             {
 
-                            case MORPHO_FEATURES:
-                                entries = findByPos(parser, listHead, (*actualItem)->getCurrentTerm());
+                            case STAGE_HEAD:
+                                entries = findByHeadThenCompactedLexicon(parser, entriesMap, (*actualItem)->getCurrentTerm(), head);
                                 break;
 
-                            case FORM_FEATURES:
-                                entries = findByForm(listHead);
+                            case STAGE_MAIN:
+                                entries = findMain(/*parser, */entriesMap);
                                 break;
 
-                            case HEAD_FEATURES:
-                                entries = findByHead(parser, listHead, (*actualItem)->getCurrentTerm(), head);
-                                if (!entries)
-                                    entries = findByPos(parser, listHead, (*actualItem)->getCurrentTerm());
+                            case STAGE_FORM:
+                                entries = findByForm(entriesMap);
                                 break;
                             }
 
@@ -1162,7 +1168,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
 
                                     // Filter !!
                                     // entryFeatures subsumes ↑
-                                    if (stage == FORM_FEATURES ||
+                                    if (stage == STAGE_FORM ||
                                         (entryFeatures && entryFeatures->subsumes(nullptr, inheritedSonFeatures, env)))
                                     {
 
@@ -1199,10 +1205,10 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                                                              entryFeaturesCopy);
                                         if (entryStatements)
                                             entryStatements->renameVariables(entry_copy->getId());
-                                        entryPtr entry;
-                                        if (stage == FORM_FEATURES)
+                                        terminalPtr terminal;
+                                        if (stage == STAGE_FORM)
                                         {
-                                            entry = Entry::create(entry_copy->getPos(), 0, *form, resultFeatures);
+                                            terminal = Terminal::create(Vartable::IS_A_FORM, *form, resultFeatures);
                                         }
                                         else
                                         {
@@ -1210,21 +1216,20 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                             if (_found != std::string::npos)
                                             {
                                                 bool effect = false;
-                                                std::string _form = entry_copy->getForm();
-                                                it->getEnvironment()->replaceVariables(_form, effect);
-                                                entry = Entry::create(entry_copy->getPos(), entry_copy->getHead(), _form,
-                                                                      resultFeatures);
+                                                std::string formStr = entry_copy->getForm();
+                                                it->getEnvironment()->replaceVariables(formStr, effect);
+                                                terminal = Terminal::create(0, formStr,
+                                                                            resultFeatures);
                                             }
                                             else
                                             {
-                                                entry = Entry::create(entry_copy->getPos(), entry_copy->getHead(),
-                                                                      entry_copy->getForm(), resultFeatures);
+                                                terminal = Terminal::create(0, 
+                                                                               entry_copy->getForm(),
+                                                                            resultFeatures);
                                             }
                                         }
                                         ForestIdentifier *fi = ForestIdentifier::create(entry->hashCode(),
                                                                                         0, 0,
-                                                                                        // row - 1,
-                                                                                        // row,
                                                                                         resultFeatures->peekSerialString());
 
                                         auto forestMapIt = forestMap.find(fi);
@@ -1239,7 +1244,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         }
                                         else
                                         {
-                                            forestMap.insert(fi, Forest::create(entry, row - 1, row));
+                                            forestMap.insert(fi, Forest::create(terminal, row - 1, row));
                                             it->addForestIdentifiers((*actualItem)->getIndex(), fi);
                                         }
                                         it->setRefs((*actualItem)->getRefs());
@@ -1254,8 +1259,11 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         // record the item
                                         if (!states[row]->insert(it, this))
                                         {
+                                            // synomym and homonym
+                                            // i.e. two different form
                                             FATAL_ERROR_UNEXPECTED
                                         }
+
                                         insertItemMap(it);
                                         modification = true;
                                         modificationOnce = true;
@@ -1308,7 +1316,7 @@ void Generator::generate(class Parser &parser)
     for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule)
     {
         (*rule)->incUsages(this);
-        it = Item::create(*rule, UCHAR_MAX, 0,
+        it = Item::create(*rule, Item::NA, Item::NA,
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRange(0);
         it->setInheritedFeatures(parser.getStartFeatures());
@@ -1364,6 +1372,94 @@ void Generator::generate(class Parser &parser)
 }
 
 /* **************************************************
+ *
+ ************************************************** */
+void Generator::setVerbose(bool _verbose)
+{
+    this->verbose = _verbose;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Generator::getVerbose()
+{
+    return this->verbose;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entriesPtr Generator::findByHead(Parser::entries_map *listHead, uint16_t head)
+{
+    entriesPtr entries = entriesPtr();
+    auto found = listHead->find(head);
+    if (found != listHead->end())
+    {
+        entries = found->second;
+    }
+    return entries;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entriesPtr Generator::findMain(Parser::entries_map *map)
+{
+    entriesPtr entries = entriesPtr();
+    auto found = map->find(Vartable::DOES_NOT_CONTAIN_A_HEAD);
+    if (found != map->end())
+    {
+        entries = found->second;
+    }
+    return entries;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entriesPtr Generator::findByHeadThenCompactedLexicon(Parser &parser, Parser::entries_map *map,
+                                                     uint16_t pos, uint16_t head)
+{
+
+    entriesPtr entries = findByHead(map, head);
+    // if none entry found by head
+    if (!entries){
+        entries = findMain(map);
+    }
+
+    if (compactedLexicon)
+    {
+        entriesPtr localEntries = findCompactedLexicon(parser,
+                                                       pos,
+                                                       head);
+        if (localEntries)
+        {
+            if (entries)
+            {
+                entries->add(localEntries);
+            }
+            else {
+                entries = localEntries;
+            }
+        }
+    }
+    return entries;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+entriesPtr Generator::findByForm(Parser::entries_map *map)
+{
+    entriesPtr entries = entriesPtr();
+    auto found = map->find(Vartable::IS_A_FORM);
+    if (found != map->end())
+        entries = found->second;
+    return entries;
+}
+
+/* **************************************************
  * search
  * |str(pos)#str(head)
  * |str(pos)#_
@@ -1376,7 +1472,7 @@ entriesPtr Generator::findCompactedLexicon(
     const uint16_t pos,
     const uint16_t head)
 {
-    unsigned long int info = ~0UL;
+    long int info = ~0UL;
     std::string str;
     if (head && pos)
     {
@@ -1397,8 +1493,7 @@ entriesPtr Generator::findCompactedLexicon(
     if (!compactedLexicon)
         throw fatal_exception("search operator error: No compact lexicon defined.");
 
-    // CERR_LINE;
-    // std::cerr << "search " << str << " in compactedLexicon" << std::endl;
+    //std::cerr << "search " << str << " in compactedLexicon" << std::endl;
     info = compactedLexicon->search(compactedLexicon->init, str);
     // in : pos#lemma
     // out : form#fs
@@ -1424,11 +1519,11 @@ entriesPtr Generator::findCompactedLexicon(
                 parser.parseBuffer("#(", ")", features, "features");
                 if (parser.getLocalFeatures())
                 {
-                    uint16_t head = parser.getLocalFeatures()->assignHead();
-                    entryPtr _localEntry = Entry::create(0, head, std::string(), parser.getLocalFeatures());
+                    // uint16_t head = parser.getLocalFeatures()->assignHead();
+                    entryPtr _localEntry = Entry::create(form, parser.getLocalFeatures());
 
-                    _localEntry->setPos(pos);
-                    _localEntry->setForm(form);
+                    //_localEntry->setPos(pos);
+                    //_localEntry->setForm(form);
                     std::string localEntrySerialString = _localEntry->peekSerialString();
                     auto found = parser.findMapLocalEntry(localEntrySerialString);
                     if (found != parser.cendMapLocalEntry())
@@ -1460,86 +1555,4 @@ entriesPtr Generator::findCompactedLexicon(
     {
         return entriesPtr();
     }
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Generator::setVerbose(bool _verbose)
-{
-    this->verbose = _verbose;
-}
-
-/* **************************************************
- *
- ************************************************** */
-bool Generator::getVerbose()
-{
-    return this->verbose;
-}
-
-/* **************************************************
- *
- ************************************************** */
-entriesPtr Generator::findByPos(Parser &parser, Parser::entries_map *listHead,
-                                uint16_t pos)
-{
-    entriesPtr entries = entriesPtr();
-    // Without head : UINT_MAX => ...
-    auto found = listHead->find(UINT16_MAX);
-    if (found != listHead->end())
-    {
-        entries = found->second;
-    }
-    else if (compactedLexicon)
-    {
-        entries = findCompactedLexicon(parser,
-                                       pos,
-                                       UINT16_MAX);
-        listHead->insert(std::make_pair(UINT16_MAX, entries));
-    }
-    return entries;
-}
-
-/* **************************************************
- *
- ************************************************** */
-entriesPtr Generator::findByForm(Parser::entries_map *listHead)
-{
-    entriesPtr entries = entriesPtr();
-    // FORM : 0 => ...
-    auto found = listHead->find(0);
-    if (found != listHead->end())
-        entries = found->second;
-    return entries;
-}
-
-/* **************************************************
- *
- ************************************************** */
-entriesPtr Generator::findByHead(Parser &parser, Parser::entries_map *listHead,
-                                 uint16_t pos, uint16_t head)
-{
-    entriesPtr entries = entriesPtr();
-    // head => ...
-    auto found = listHead->find(head);
-    if (found != listHead->end())
-    {
-        entries = found->second;
-    }
-    if (compactedLexicon)
-    {
-        entriesPtr localEntries = findCompactedLexicon(parser,
-                                                       pos,
-                                                       head);
-        if (localEntries)
-        {
-            if (entries)
-            {
-                localEntries->add(entries);
-            }
-            entries = localEntries;
-        }
-    }
-    return entries;
 }

@@ -74,10 +74,10 @@
   unsigned int integer_slot;
   double double_slot;
   termsPtr* terms_slot; //(A|B)
-  std::vector< termsPtr  >* vector_terms_slot; // X Y
+  std::vector< termsPtr >* vector_terms_slot; // X Y
   std::string* string_slot;
-  entryPtr* entry_slot;
-  entriesPtr* entries_slot;
+  std::pair<uint16_t, featuresPtr >* entry_slot;
+  std::vector<std::pair<uint16_t, featuresPtr> >* entries_slot;
   bitsetPtr* bits_slot;
   valuePtr* value_slot;
   featurePtr* feature_slot;
@@ -193,7 +193,7 @@ begin:
 
 	|TOKEN_LEXICON TOKEN_LPAR dictionary TOKEN_RPAR{
 	  DBUGPRT("begin lexicon");
-	  //CERR_LINE;
+	  //COUT_LINE;
 	  //parser.printCacheLexicon(std::cout);
 	}
 
@@ -222,22 +222,22 @@ dictionary_line:
 	  free($2);
 	  // constantNoun => (0 => args)
 	  auto foundCode = parser.findCacheLexicon(code);
-	  Parser::entries_map* zeroToEntries;
+	  Parser::entries_map* formToEntries;
 	  if (foundCode != parser.cendCacheLexicon()){
-	    zeroToEntries = foundCode->second;
+	    formToEntries = foundCode->second;
 	  } else {
-	    zeroToEntries = new Parser::entries_map();
-	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
+	    formToEntries = new Parser::entries_map();
+	    parser._insertCacheLexicon(std::make_pair(code, formToEntries));
 	  }
-	  auto foundHead = zeroToEntries->find(Entry::FORM_HEAD);
+	  auto foundHead = formToEntries->find(Vartable::IS_A_FORM);
 	  entriesPtr entries;
-	  if (foundHead != zeroToEntries->cend()){
+	  if (foundHead != formToEntries->cend()){
 	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
-	    zeroToEntries->insert(std::make_pair(Entry::FORM_HEAD, entries));
+	    formToEntries->insert(std::make_pair(Vartable::IS_A_FORM, entries));
 	  }
-	  entries->add(Entry::create(code, Entry::FORM_HEAD, Features::create()));
+	  entries->add(Entry::create(/*code, */Features::create()));
 	}
 
 	|TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
@@ -247,22 +247,22 @@ dictionary_line:
 	  free($2);
 	  // constantNoun => (0 => args)
 	  auto foundCode = parser.findCacheLexicon(code);
-	  Parser::entries_map* zeroToEntries;
+	  Parser::entries_map* formToEntries;
 	  if (foundCode != parser.cendCacheLexicon()) {
-	    zeroToEntries = foundCode->second;
+	    formToEntries = foundCode->second;
 	  } else {
-	    zeroToEntries = new Parser::entries_map;
-	    parser.insertCacheLexicon(std::make_pair(code, zeroToEntries));
+	    formToEntries = new Parser::entries_map;
+	    parser._insertCacheLexicon(std::make_pair(code, formToEntries));
 	  }
-	  auto foundHead = zeroToEntries->find(Entry::FORM_HEAD);
+	  auto foundHead = formToEntries->find(Vartable::IS_A_FORM);
 	  entriesPtr entries;
-	  if (foundHead != zeroToEntries->cend()){
+	  if (foundHead != formToEntries->cend()){
 	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
-	    zeroToEntries->insert(std::make_pair(Entry::FORM_HEAD, entries));
+	    formToEntries->insert(std::make_pair(Vartable::IS_A_FORM, entries));
 	  }
-	  entries->add(Entry::create(code, Entry::FORM_HEAD, *$3));
+	  entries->add(Entry::create(/*code, */*$3));
 	  free($3);
 	}
 
@@ -270,25 +270,33 @@ dictionary_line:
 	|stringOrIdentifier lexical_entries TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  for (auto entry = (*$2)->begin() ; entry != (*$2)->end() ; ++entry) {
-	    (*entry)->setForm(*$1);
-	    entriesPtr lp;
+	  for (auto entries_map = (*$2).cbegin() ; entries_map != (*$2).cend() ; ++entries_map) {
+		uint16_t pos = entries_map->first;
+		featuresPtr features = entries_map->second;
+		uint16_t head = features->assignHead();
+		
+		//std::cerr << Vartable::codeToName(pos) << std::endl;
+		//features->flatPrint(std::cerr);
+		//std::cerr << Vartable::codeToName(head) << std::endl;
+		
+	    //(*entry)->setForm(*$1);
+	    entriesPtr entries;
 	    Parser::entries_map* headToEntries;
-		auto foundCode = parser.findCacheLexicon((*entry)->getPos());
+		auto foundCode = parser.findCacheLexicon(pos);
 	    if (foundCode != parser.cendCacheLexicon()){
 	      headToEntries = foundCode->second;
 	    } else {
 	      headToEntries = new Parser::entries_map;
-	      parser.insertCacheLexicon(std::make_pair((*entry)->getPos(), headToEntries));
+	      parser._insertCacheLexicon(std::make_pair(pos, headToEntries));
 	    }
-	    Parser::entries_map_iterator foundHead = headToEntries->find((*entry)->getHead());
+	    Parser::entries_map_iterator foundHead = headToEntries->find(head);
 	    if (foundHead != headToEntries->cend()){
-	      lp = foundHead->second;
+	      entries = foundHead->second;
 	    } else {
-	      lp = Entries::create();
-	      headToEntries->insert(std::make_pair((*entry)->getHead(), lp));
+	      entries = Entries::create();
+	      headToEntries->insert(std::make_pair(head, entries));
 	    }
-	    lp->add(*entry);
+	    entries->add(Entry::create(*$1, features));
 	  }
 	  free($1);
 	  free($2);
@@ -330,31 +338,33 @@ lexical_entries:
 	{
 	  DBUGPRT("lexical_entries");
 	  $$ = $3;
-	  (*$$)->add(*$1);
+	  $$->push_back(*$1);
 	  free($1);
 	}
 
+
 	|lexical_entry {
 	  DBUGPRT("lexical_entries");
-	  $$ = new entriesPtr(Entries::create(*$1));
+	  $$ = new std::vector<std::pair<uint16_t, featuresPtr> >;
+	  $$->push_back(*$1);
 	  free($1);
 	 };
 
 lexical_entry:
-	// pos
+	// pos [...]
 	TOKEN_IDENTIFIER features
 	{
 	  DBUGPRT("lexical_entry");
-	  uint16_t head = (*$2)->assignHead();
-	  $$ = new entryPtr(Entry::create(Vartable::nameToCode(*$1), head, std::string(), *$2));
+	  $$ = new std::pair<uint16_t, featuresPtr>(std::make_pair(Vartable::nameToCode(*$1), *$2));
 	  free($1);
 	  free($2);
 	}
 
+	// pos
 	|TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("lexical_entry");
-	  $$ = new entryPtr(Entry::create(Vartable::nameToCode(*$1), UINT16_MAX, std::string(), Features::create()));
+	  $$ = new std::pair<uint16_t, featuresPtr>(std::make_pair(Vartable::nameToCode(*$1), Features::create()));
 	  free($1);
 	};
 

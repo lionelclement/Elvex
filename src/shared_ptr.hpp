@@ -35,6 +35,7 @@ typedef std::shared_ptr<class Node> nodePtr;
 typedef std::shared_ptr<class Rule> rulePtr;
 typedef std::shared_ptr<class Statement> statementPtr;
 typedef std::shared_ptr<class Statements> statementsPtr;
+typedef std::shared_ptr<class Terminal> terminalPtr;
 typedef std::shared_ptr<class Terms> termsPtr;
 typedef std::shared_ptr<class Value> valuePtr;
 

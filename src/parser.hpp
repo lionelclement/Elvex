@@ -41,7 +41,7 @@ public:
   typedef entries_map::iterator entries_map_iterator;
 
   // POS => (LEMMA => ENTRY)
-  // i.e.: verb => (manger => (mangions, mange|mange))
+  // i.e.: verb => (MANGER => (mangions[…], mange|mange[…]))
   // typedef std::map<uint16_t, entries_map*> entries_map_map;
   typedef std::unordered_map<uint16_t, entries_map *> entries_map_map;
   typedef entries_map_map::const_iterator entries_map_map_const_iterator;
@@ -94,7 +94,7 @@ public:
 
   void setLocalFeatures(featuresPtr);
 
-  void insertCacheLexicon(std::pair<uint16_t, entries_map *>);
+  void _insertCacheLexicon(std::pair<uint16_t, entries_map *>);
 
   entries_map_map_const_iterator findCacheLexicon(uint16_t) const;
 

@@ -22,17 +22,17 @@
 
 #include "forest.hpp"
 #include "messages.hpp"
-#include "entry.hpp"
+#include "terminal.hpp"
 #include "shared_ptr.hpp"
 #include "node.hpp"
 
 /* **************************************************
  *
  ************************************************** */
-Forest::Forest(entryPtr entry, uint8_t from, uint8_t to)
+Forest::Forest(terminalPtr terminal, uint8_t from, uint8_t to)
 {
     NEW;
-    this->entry = std::move(entry);
+    this->terminal = std::move(terminal);
     this->from = from;
     this->to = to;
     if (from == to)
@@ -44,9 +44,9 @@ Forest::Forest(entryPtr entry, uint8_t from, uint8_t to)
 /* **************************************************
  *
  ************************************************** */
-forestPtr Forest::create(entryPtr entry, uint8_t from, uint8_t to)
+forestPtr Forest::create(terminalPtr terminal, uint8_t from, uint8_t to)
 {
-    return forestPtr(new Forest(std::move(entry), from, to));
+    return forestPtr(new Forest(std::move(terminal), from, to));
 }
 
 /* **************************************************
@@ -60,8 +60,8 @@ Forest::~Forest()
         if (tmp)
             tmp.reset();
     }
-    if (entry)
-        entry.reset();
+    if (terminal)
+        terminal.reset();
 }
 
 /* **************************************************
@@ -147,8 +147,8 @@ void Forest::toXML(xmlNodePtr nodeRoot, bool root)
         else
             xmlSetProp(f, (xmlChar *)"empty", (xmlChar *)"no");
 
-        //if (entry)
-        //    entry->toXML(f);
+        if (terminal)
+            terminal->toXML(f);
 
         if (output.size() > 0)
         {
@@ -177,9 +177,9 @@ void Forest::generate(bool randomResult, bool singleResult)
     if (isUnsetFlags(Flags::GENERATED))
     {
         addFlags(Flags::GENERATED);
-        if (entry && !entry->getForm().empty())
+        if (terminal && !terminal->getForm().empty())
         {
-            output.push_back(entry->getForm());
+            output.push_back(terminal->getForm());
         }
         else if (!nodes.empty())
         {
