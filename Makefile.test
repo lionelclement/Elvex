@@ -68,23 +68,19 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 
 %.dot: %.xml $(xsl)
 	# Check the existence of xsltproc
-	if $(XSLTPROC) then \ 
-		@echo "xsltproc is installed.";\
+	@if [ -z "$(XSLTPROC)" ] ; then \ 
+		echo "Error: xsltproc is not installed."; \
 	else \
-    	@echo "Error: xsltproc is not installed."; \
-		@exit 1; \
+		$(XSLTPROC) $(xslfile) $*.xml > $@; \
 	fi
-	@$(XSLTPROC) $(xslfile) $*.xml > $@
 
 %.pdf: %.dot
 	# Check the existence of dot (Graphviz)
-	if $(DOT) then \
-		@echo "dot (Graphviz) is installed."; \
+	@if [ -z "$(DOT)" ] ; then \
+		echo "Error: dot (Graphviz) is not installed."; \
 	else \
-		@echo "Error: dot (Graphviz) is not installed."; \
-		@exit 1; \
+		@$(DOT) -T pdf -o $@ $<; \
 	fi
-	@$(DOT) -T pdf -o $@ $<
 
 %.fsa: %.tmp-morpho %.tmp-pattern
 	@echo "build $@ from $*.tmp-morpho $*.tmp-pattern"> /dev/null 2>&1
