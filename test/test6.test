@@ -1,42 +1,42 @@
 $i: [HEAD:BEAU]
+$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
+$posSynthesized: pre
+$i: [HEAD:JAUNE]
+$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
+$posSynthesized: post
 $i: [HEAD:BEAU]
+$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
+$posSynthesized: pre
+$i: [HEAD:JAUNE]
+$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
+$posSynthesized: post
 $i: [HEAD:BEAU]
+$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
+$posSynthesized: pre
+$i: [HEAD:JAUNE]
+$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
+$posSynthesized: post
 $i: [HEAD:BEAU]
+$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
+$posSynthesized: pre
+$i: [HEAD:JAUNE]
+$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
+$posSynthesized: post
 $i: [HEAD:BEAU]
+$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
+$posSynthesized: pre
+$i: [HEAD:JAUNE]
+$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
+$posSynthesized: post
 $i: [HEAD:BEAU]
-$i: [HEAD:JAUNE]
-$i: [HEAD:JAUNE]
-$i: [HEAD:JAUNE]
-$i: [HEAD:JAUNE]
-$i: [HEAD:JAUNE]
-$i: [HEAD:JAUNE]
 $lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
-$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
-$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
-$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
-$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
-$lexiconHead: [HEAD:BEAU, gender:fm, number:pl, pos:pre, form:"belles"]
-$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
-$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
-$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
-$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
-$lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
+$posSynthesized: pre
+$i: [HEAD:JAUNE]
 $lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
 $posSynthesized: post
-$posSynthesized: post
-$posSynthesized: post
-$posSynthesized: post
-$posSynthesized: post
-$posSynthesized: post
-$posSynthesized: pre
-$posSynthesized: pre
-$posSynthesized: pre
-$posSynthesized: pre
-$posSynthesized: pre
-$posSynthesized: pre
-beau véhicule jaune
-beaux véhicules jaunes
-belle bagnoles jaunes
-belle voitures jaunes
 belles bagnoles jaunes
+belle bagnoles jaunes
+beaux véhicules jaunes
 belles voitures jaunes
+belle voitures jaunes
+beau véhicule jaune
