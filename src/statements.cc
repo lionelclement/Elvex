@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -260,6 +260,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             item->print(std::cout);
             std::cout << std::endl;
         }
+        COUT_LINE;
         for (list::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
@@ -275,6 +276,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             }
         }
 
+        COUT_LINE;
         if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
         {
             std::cout << "<H3>####################### APPLY CON'T (after toggle enable and before apply) #######################</H3>" << std::endl;
@@ -282,6 +284,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             std::cout << std::endl;
         }
 
+        COUT_LINE;
         for (list::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
@@ -312,26 +315,29 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             }
         }
     }
+    COUT_LINE;
     for (list::const_iterator statement = statements.cbegin();
-             statement != statements.cend();
-             ++statement)
+         statement != statements.cend();
+         ++statement)
+    {
+        if ((*statement)->isSetFlags(Flags::SEEN))
         {
-            if ((*statement)->isSetFlags(Flags::SEEN))
-            {
-                continue;
-            }
-            if ((*statement)->isSetFlags(Flags::DISABLED))
-            {
-                allSeen = false;
-            }
+            continue;
         }
+        if ((*statement)->isSetFlags(Flags::DISABLED))
+        {
+            allSeen = false;
+        }
+    }
 
+    COUT_LINE;
     if (allSeen)
         this->addFlags(Flags::SEEN);
-    
-    exitApply:
-    {
-    }
+
+exitApply:
+{
+    COUT_LINE;
+}
     if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
     {
         std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
