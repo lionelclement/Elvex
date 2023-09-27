@@ -64,11 +64,11 @@ void ForestIdentifier::makeSerialString()
     stream << std::hex << encode << '/' << featuresSerialString;
     serialString = stream.str();
 
-    std::cout << "code: 0x" << std::hex << static_cast<uint32_t>(code) << std::endl;
-    std::cout << "from: 0x" << std::hex << static_cast<uint32_t>(from) << std::endl;
-    std::cout << "to: 0x" << std::hex << static_cast<uint32_t>(to) << std::endl;
-    std::cout << "encode: 0x" << std::hex << encode << std::dec << std::endl;
-    std::cout << "serialString: " << serialString << std::endl;
+    //std::cout << "code: 0x" << std::hex << static_cast<uint32_t>(code) << std::endl;
+    //std::cout << "from: 0x" << std::hex << static_cast<uint32_t>(from) << std::endl;
+    //std::cout << "to: 0x" << std::hex << static_cast<uint32_t>(to) << std::endl;
+    //std::cout << "encode: 0x" << std::hex << encode << std::dec << std::endl;
+    //std::cout << "serialString: " << serialString << std::endl;
     //serialString = std::to_string(code) + '/' + std::to_string(from) + '/' + std::to_string(to) + '/' + featuresSerialString;
 }
 
