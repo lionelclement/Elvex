@@ -219,6 +219,7 @@ bool Statements::findVariable(const bitsetPtr &variable)
  ************************************************** */
 void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
 {
+    COUT_LINE;
     bool allSeen = true;
     if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
     {
