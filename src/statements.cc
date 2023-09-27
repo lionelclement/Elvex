@@ -262,23 +262,17 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             item->print(std::cout);
             std::cout << std::endl;
         }
-        COUT_LINE;
         for (list::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
         {
-            COUT_LINE;
             if ((*statement)->isUnsetFlags(Flags::SEEN))
             {
-                COUT_LINE;
                 bool enableResult = false;
                 (*statement)->toggleEnable(*statement, item, synthesizer, enableResult, false);
-                COUT_LINE;
                 if (enableResult)
                 {
-                    COUT_LINE;
                     (*statement)->toggleEnable(*statement, item, synthesizer, enableResult, true);
-                    COUT_LINE;
                 }
             }
         }
