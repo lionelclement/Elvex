@@ -60,7 +60,7 @@ ForestIdentifier::create(uint16_t code,
 void ForestIdentifier::makeSerialString()
 {
     //uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint32_t>(from) << 8 | static_cast<uint32_t>(to);
-    uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint8_t>(from) << 8 | static_cast<uint8_t>(to);
+    uint32_t encode = (code) << 16 | (from) << 8 | (to);
     serialString = std::to_string(encode) + '/' + featuresSerialString;
     //serialString = std::to_string(code) + '/' + std::to_string(from) + '/' + std::to_string(to) + '/' + featuresSerialString;
 }
