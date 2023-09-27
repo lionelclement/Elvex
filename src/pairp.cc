@@ -213,25 +213,25 @@ void Pairp::makeSerialString()
     switch (type)
     {
     case _NIL_:
-        serialString = 'N';
+        serialString = '\x0';
         break;
     case _ATOM_:
         serialString = value->peekSerialString();
         break;
     case _PAIRP_:
-        serialString = '<' + pairp.car->peekSerialString();
+        serialString = '\x1' + pairp.car->peekSerialString();
         if (pairp.cdr->isAtom())
         {
-            serialString += ':' + pairp.cdr->peekSerialString();
+            serialString += '\x2' + pairp.cdr->peekSerialString();
         }
         else if (pairp.cdr->isNil())
         {
         }
         else
         {
-            serialString += ',' + pairp.cdr->peekSerialString();
+            serialString += '\x3' + pairp.cdr->peekSerialString();
         }
-        serialString += '>';
+        serialString += '\x4';
         break;
     }
 }

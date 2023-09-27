@@ -911,36 +911,49 @@ void Item::apply(Parser &parser, Generator *synthesizer)
  ************************************************** */
 void Item::makeSerialString()
 {
+    std::ostringstream stream;
+    stream << std::hex << getRuleId() << '\x0' << index << '\x0';
+    //serialString = std::to_string(getRuleId());
+    //if (index == NA)
+    //    serialString += '\1';
+    //else
+    //    serialString += std::to_string(index);
 
-    serialString = std::to_string(getRuleId());
-    if (index == NA)
-        serialString += '\1';
-    else
-        serialString += std::to_string(index);
-
-    serialString += '\0';
+    //serialString += '\0';
     std::vector<uint8_t>::const_iterator ind = indexTerms.cbegin();
-    while (ind != indexTerms.cend())
-        serialString += std::to_string(*(ind++)) + '\2';
-
-    serialString += '\0';
+    while (ind != indexTerms.cend()){
+        stream << std::hex << *(ind++) << '\x1';
+        //serialString += std::to_string(*(ind++)) + '\2';
+    }
+    stream << '\x0';
+    //serialString += '\0';
     set_of_unsigned_int_const_iterator ref = refs.cbegin();
-    while (ref != refs.cend())
-        serialString += std::to_string(*(ref++)) + '\2';
+    while (ref != refs.cend()){
+        stream << std::hex << *(ref++) << '\x1';
+        //serialString += std::to_string(*(ref++)) + '\2';
+    }
 
-    serialString += '\0';
+    stream << '\x0';
+    //serialString += '\0';
     std::vector<class ForestIdentifier *>::const_iterator fi = forestIdentifiers.cbegin();
     while (fi != forestIdentifiers.cend())
     {
-        if (*fi)
-            serialString += (*fi)->peekSerialString() + '\2';
-        else
-            serialString += '\1';
+        if (*fi){
+            stream << (*fi)->peekSerialString() << '\x1';
+            //serialString += (*fi)->peekSerialString() + '\2';
+        }
+        else{
+            stream << '\x1';
+            //serialString += '\1';
+        }
         ++fi;
     }
 
-    serialString += '\0';
-    serialString += inheritedFeatures->peekSerialString();
+    stream << '\x0';
+    //serialString += '\0';
+    stream << inheritedFeatures->peekSerialString();
+    //serialString += inheritedFeatures->peekSerialString();
+    serialString = stream.str();
 }
 
 /* **************************************************

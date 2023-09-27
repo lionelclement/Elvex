@@ -169,12 +169,12 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
  ************************************************** */
 void Statements::makeSerialString()
 {
-    serialString = '{';
+    serialString = '\x1';
     if (guard)
-        serialString += guard->peekSerialString() + ';';
+        serialString += guard->peekSerialString() + '\x3';
     for (auto i : statements)
-        serialString += i->peekSerialString() + ';';
-    serialString += '}';
+        serialString += i->peekSerialString() + '\x3';
+    serialString += '\x2';
 }
 
 /* **************************************************

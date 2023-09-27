@@ -25,7 +25,7 @@
 Serializable::Serializable()
 {
     serialHashCode = 0;
-    serialString = std::string();
+    //serialString = std::string();
 }
 
 /* **************************************************
@@ -65,6 +65,6 @@ std::string Serializable::peekSerialString()
  ************************************************** */
 void Serializable::resetSerial()
 {
-    serialHashCode = 0;
+    //serialHashCode = 0;
     serialString = std::string();
 }

@@ -253,21 +253,24 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
  ************************************************** */
 void Features::makeSerialString()
 {
+    std::ostringstream stream;
+
     if (isNil())
-        serialString = '\x6';
+        stream << '\x6';
     else if (isBottom())
-        serialString = '\x7';
+        stream << '\x7';
     else
     {
-        serialString = '\x8';
+        stream << '\x8';
         if (!features.empty())
         {
             for (const auto &f : features)
             {
-                serialString += '\x9' + f->peekSerialString();
+                stream << '\x9' << f->peekSerialString();
             }
         }
     }
+    serialString = stream.str();
 }
 
 /* **************************************************

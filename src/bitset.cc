@@ -109,7 +109,7 @@ std::string Bitset::toString() const
  ************************************************************ */
 void Bitset::makeSerialString()
 {
-    serialString = std::string();
+    std::ostringstream stream;
     size_t c = this->count();
     size_t sz = this->size();
     for (size_t i = 0; i < sz && c > 0; ++i)
@@ -117,11 +117,12 @@ void Bitset::makeSerialString()
         if ((*this)[i])
         {
             --c;
-            serialString += std::to_string(i);
+            stream << std::hex << i;
             if (c > 0)
-                serialString += '|';
+                stream << '\x0';
         }
     }
+    serialString = stream.str();
 }
 
 #ifdef OUTPUT_XML

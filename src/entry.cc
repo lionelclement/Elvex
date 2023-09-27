@@ -133,11 +133,13 @@ void Entry::print(std::ostream &os) const
  ************************************************** */
 void Entry::makeSerialString()
 {
-    serialString = form + '\1';
+    std::ostringstream stream;
+    stream << form << '\x01';
     if (features)
-        serialString += features->peekSerialString();
+        stream << features->peekSerialString();
     else
-        serialString += '\0';
+        stream << '\x02';
+    serialString = stream.str();
 }
 
 /* **************************************************

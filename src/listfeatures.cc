@@ -189,11 +189,15 @@ void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Ge
  ************************************************** */
 void ListFeatures::makeSerialString()
 {
-    serialString = '\x10';
+    std::ostringstream stream;
+    stream << '\x1';
+    //serialString = '\x10';
     for (auto &features : listFeatures)
     {
-        serialString += '\x11' + features->peekSerialString();
+        stream << features->peekSerialString() << '\x2';
+        //serialString += '\x11' + features->peekSerialString();
     }
+    serialString = stream.str();
 }
 
 #ifdef OUTPUT_XML
