@@ -2956,6 +2956,7 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Generat
             FATAL_ERROR_OS_MSG_STM(oss);
         }
         COUT_LINE;
+        std::cout << getFirst() << std::endl;
         if (on)
         {
             if ((*item->getSynthesizedSonFeatures())[getFirst()]->isNil())
