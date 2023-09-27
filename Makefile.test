@@ -23,9 +23,9 @@
 elvex = bin/elvex
 elvexbuildlexicon = bin/elvexbuildlexicon
 # Check the existence of dot (Graphviz)
-DOT := $(shell command -v dot 2> /dev/null)
+DOT = $(shell command -v dot 2> /dev/null)
 # Check the existence of xsltproc
-XSLTPROC := $(shell command -v xsltproc 2> /dev/null)
+XSLTPROC = $(shell command -v xsltproc 2> /dev/null)
 xslfile = xsl/xml2CS-dot-graph.xsl
 
 # Directory where test files are located
