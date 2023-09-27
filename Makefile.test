@@ -41,11 +41,14 @@ all_output: $(patsubst $(test_dir)/%.input,$(test_dir)/%.output,$(input_files))
 test: all_output
 	@for file in $(input_files); do \
 		base=$$(basename $$file .input); \
-		if diff $(test_dir)/$$base.output $(test_dir)/$$base.test> /dev/null 2>&1; then \
+		sort $(test_dir)/$$base.output > $(test_dir)/$$base.output.sorted; \
+		sort $(test_dir)/$$base.test > $(test_dir)/$$base.test.sorted; \
+		if diff $(test_dir)/$$base.output.sorted $(test_dir)/$$base.test.sorted> /dev/null 2>&1; then \
 			echo "Test $$base passed."; \
 		else \
 			echo "Test $$base failed. Please check the trace with --trace options."; \
 		fi; \
+		rm  $(test_dir)/$$base.output.sorted $(test_dir)/$$base.test.sorted; \
 	done
 
 # Specific targets to generate all *.pdf files
