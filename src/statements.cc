@@ -219,7 +219,6 @@ bool Statements::findVariable(const bitsetPtr &variable)
  ************************************************** */
 void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
 {
-    COUT_LINE;
     bool allSeen = true;
     if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
     {
@@ -250,7 +249,6 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
         }
     }
 
-    COUT_LINE;
     localEffect = true;
     while (localEffect && item->isUnsetFlags(Flags::BOTTOM))
     {
@@ -277,7 +275,6 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             }
         }
 
-        COUT_LINE;
         if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
         {
             std::cout << "<H3>####################### APPLY CON'T (after toggle enable and before apply) #######################</H3>" << std::endl;
@@ -285,7 +282,6 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             std::cout << std::endl;
         }
 
-        COUT_LINE;
         for (list::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
@@ -316,7 +312,6 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             }
         }
     }
-    COUT_LINE;
     for (list::const_iterator statement = statements.cbegin();
          statement != statements.cend();
          ++statement)
@@ -331,13 +326,11 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
         }
     }
 
-    COUT_LINE;
     if (allSeen)
         this->addFlags(Flags::SEEN);
 
 exitApply:
 {
-    COUT_LINE;
 }
     if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
     {
