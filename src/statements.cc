@@ -249,6 +249,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
         }
     }
 
+    COUT_LINE;
     localEffect = true;
     while (localEffect && item->isUnsetFlags(Flags::BOTTOM))
     {
