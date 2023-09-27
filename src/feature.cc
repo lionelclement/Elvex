@@ -270,16 +270,16 @@ void Feature::makeSerialString()
         serialString = '\x2';
         break;
     case Feature::_CONSTANT_:
-        serialString = attribute->peekSerialString();
+        serialString = '\x3' + attribute->peekSerialString();
         break;
     case Feature::_VARIABLE_:
-        serialString = '\x3' + attribute->peekSerialString();
+        serialString = '\x4' + attribute->peekSerialString();
         break;
     }
     if (value)
-        serialString += '\x4' + value->peekSerialString();
+        serialString += '\x5' + value->peekSerialString();
     else
-        serialString += '\x5';
+        serialString += '\x6';
 }
 
 #ifdef OUTPUT_XML
