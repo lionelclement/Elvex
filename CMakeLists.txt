@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.22.1)
+project(elvex VERSION 2.23.1)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_COMPILER g++)
