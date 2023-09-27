@@ -44,7 +44,7 @@ test: all_output
 		if diff $(test_dir)/$$base.output $(test_dir)/$$base.test> /dev/null 2>&1; then \
 			echo "Test $$base passed."; \
 		else \
-			echo "Test $$base failed. Please check the trace with --tracexxx options."; \
+			echo "Test $$base failed. Please check the trace with --trace options."; \
 		fi; \
 	done
 
@@ -56,10 +56,8 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
 		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err | sort > $@; \
-		sync ; \
 	else \
 		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err | sort > $@; \
-		sync ; \
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
