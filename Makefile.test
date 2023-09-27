@@ -76,22 +76,27 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
-	@$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1
+	@if test -f $*.pattern; then \
+		make -f Makefile.test $*.fsa ; \
+		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -xml $*.xml -inputFile $< > /dev/null 2>&1; \
+	else \
+		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -xml $*.xml -inputFile $< > /dev/null 2>&1; \
+	fi
 
+# Check the existence of xsltproc
 %.dot: %.xml $(xslfile)
-	# Check the existence of xsltproc
-	@if test -z "$(XSLTPROC)"; then \ 
+	@if test -z "$(XSLTPROC)"; then \
 		echo "Error: xsltproc is not installed."; \
 	else \
 		$(XSLTPROC) $(xslfile) $*.xml > $@; \
 	fi
 
+# Check the existence of dot (Graphviz)
 %.pdf: %.dot
-	# Check the existence of dot (Graphviz)
-	if test -z "$(DOT)" ; then \
+	@if test -z "$(DOT)" ; then \
 		echo "Error: dot (Graphviz) is not installed."; \
 	else \
-		@$(DOT) -T pdf -o $@ $<; \
+		$(DOT) -T pdf -o $@ $<; \
 	fi
 
 %.fsa: %.tmp-morpho %.tmp-pattern

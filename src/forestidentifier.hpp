@@ -43,7 +43,7 @@ public:
             const std::string& featuresSerialString);
 
     void makeSerialString() override;
-
+    
     uint8_t getFrom() const {
         return from;
     };
@@ -55,10 +55,6 @@ public:
     uint16_t getCode() const {
         return code;
     };
-
-    bool operator<(ForestIdentifier const&) const;
-
-    bool operator!=(ForestIdentifier const&) const;
 
     struct hash {
         size_t operator()(class ForestIdentifier*) const;
