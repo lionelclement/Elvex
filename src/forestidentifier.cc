@@ -59,9 +59,14 @@ ForestIdentifier::create(uint16_t code,
  ************************************************** */
 void ForestIdentifier::makeSerialString()
 {
-    //uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint32_t>(from) << 8 | static_cast<uint32_t>(to);
-    uint32_t encode = (code) << 16 | (from) << 8 | (to);
+    uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint32_t>(from) << 8 | static_cast<uint32_t>(to);
     serialString = std::to_string(encode) + '/' + featuresSerialString;
+
+    std::cout << "code: 0x" << std::hex << static_cast<uint32_t>(code) << std::endl;
+    std::cout << "from: 0x" << std::hex << static_cast<uint32_t>(from) << std::endl;
+    std::cout << "to: 0x" << std::hex << static_cast<uint32_t>(to) << std::endl;
+    std::cout << "encode: 0x" << std::hex << encode << std::dec << std::endl;
+    std::cout << "serialString: " << serialString << std::endl;
     //serialString = std::to_string(code) + '/' + std::to_string(from) + '/' + std::to_string(to) + '/' + featuresSerialString;
 }
 
