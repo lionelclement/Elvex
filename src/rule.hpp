@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -36,7 +36,7 @@ class Rule : public Facade,
 {
 
 private:
-    unsigned int lhs;
+    uint16_t lhs;
     std::vector<termsPtr> rhs;
     statementsPtr statements;
     unsigned int usages;
@@ -47,40 +47,40 @@ private:
     bool bidirectional;
     bool permutable;
 
-    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements = statementsPtr());
+    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements = statementsPtr());
+    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
+    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
-    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
+    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
 public:
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs,
+    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs,
                           statementsPtr statements = statementsPtr());
 
     static rulePtr
-    create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements = statementsPtr());
+    create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
 
-    static rulePtr create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
     ~Rule();
 
-    unsigned int getLhs(void) const;
+    uint16_t getLhs(void) const;
 
     std::vector<termsPtr> &getRhs(void);
 
-    unsigned int getCurrentTerm(void) const;
+    uint16_t getCurrentTerm(void) const;
 
     termsPtr getCurrentTerms() const;
 
-    termsPtr getTerms(unsigned int) const;
+    termsPtr getTerms(size_t) const;
 
     void setCurrentTerms(termsPtr);
 
@@ -106,7 +106,7 @@ public:
 
     rulePtr clone() const;
 
-    void print(std::ostream &, unsigned int index = UINT_MAX, bool withSemantic = false, bool html = true) const;
+    void print(std::ostream &, uint8_t index = UINT8_MAX, bool withSemantic = false, bool html = true) const;
 
     std::string toString() const;
 
@@ -114,7 +114,7 @@ public:
     void toXML(xmlNodePtr);
 #endif
 
-    void addDefaults(void);
+//    void __addDefaults(void);
 };
 
 #endif // ELVEX_RULE_H

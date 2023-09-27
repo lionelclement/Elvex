@@ -29,7 +29,7 @@
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
            statementsPtr statements)
     : Facade(id)
 {
@@ -49,7 +49,7 @@ Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
+Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements)
     : Facade(id)
 {
     this->lineno = lineno;
@@ -67,7 +67,7 @@ Rule::Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
+Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
     : Rule(0, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements)
 {
 }
@@ -75,7 +75,7 @@ Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidi
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
+Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements)
     : Rule(0, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements)
 {
 }
@@ -83,7 +83,7 @@ Rule::Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidi
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
     return rulePtr(new Rule(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements));
@@ -92,7 +92,7 @@ rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
+rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements)
 {
     return rulePtr(new Rule(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements));
 }
@@ -100,7 +100,7 @@ rulePtr Rule::create(size_t id, unsigned int lineno, std::string filename, bool 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
     return rulePtr(new Rule(lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements));
@@ -109,7 +109,7 @@ rulePtr Rule::create(unsigned int lineno, std::string filename, bool withSpaces,
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, unsigned int lhs, statementsPtr statements)
+rulePtr Rule::create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements)
 {
     return rulePtr(new Rule(lineno, filename, withSpaces, bidirectional, permutable, lhs, statements));
 }
@@ -132,7 +132,7 @@ Rule::~Rule()
 /* ************************************************************
  *
  ************************************************************ */
-unsigned int Rule::getLhs(void) const
+uint16_t Rule::getLhs(void) const
 {
     return lhs;
 }
@@ -148,7 +148,7 @@ std::vector<termsPtr> &Rule::getRhs(void)
 /* ************************************************************
  *
  ************************************************************ */
-termsPtr Rule::getTerms(unsigned int index) const
+termsPtr Rule::getTerms(size_t index) const
 {
     return this->rhs[index];
 }
@@ -242,7 +242,7 @@ void Rule::setTrace(bool _trace)
 rulePtr Rule::clone() const
 {
     std::vector<termsPtr> rhsCopy;
-    for (unsigned int i = 0; i < rhs.size(); ++i)
+    for (size_t i = 0; i < rhs.size(); ++i)
         rhsCopy.push_back(rhs[i]->clone());
     rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, this->withSpaces, this->bidirectional, this->permutable, lhs, rhsCopy, statements);
     rule->usages = usages;
@@ -262,7 +262,7 @@ void Rule::toXML(xmlNodePtr nodeRoot)
     /*
     lhs->toXML(hs);
     hs = xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
-    for(unsigned int i = 0; i < rhs.size(); ++i){
+    for(size_t i = 0; i < rhs.size(); ++i){
      for (featuresVector<termsPtr>::const_iterator term=rhs[i]->begin();
      term != rhs[i]->end();
      term++) {
@@ -273,25 +273,25 @@ void Rule::toXML(xmlNodePtr nodeRoot)
 }
 #endif
 
-/* **************************************************
- *
- ************************************************** */
-void Rule::addDefaults()
-{
-    std::vector<unsigned int> downs;
-    for (unsigned int i = 0; i < rhs.size(); i++)
-        downs.push_back(0);
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// void Rule::__addDefaults()
+// {
+//     std::vector<unsigned int> downs;
+//     for (unsigned int i = 0; i < rhs.size(); i++)
+//         downs.push_back(0);
+// }
 
 /* ************************************************************
  *
  ************************************************************ */
-void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic, bool html) const
+void Rule::print(std::ostream &outStream, uint8_t index, bool withSemantic, bool html) const
 {
     std::string space = (html ? "&nbsp;" : " ");
     bool first = true;
     outStream << Vartable::codeToName(lhs) << space << "→" << space;
-    for (unsigned int i = 0; i < rhs.size(); i++)
+    for (size_t i = 0; i < rhs.size(); i++)
     {
         if (first)
             first = false;
@@ -318,6 +318,6 @@ void Rule::print(std::ostream &outStream, unsigned int index, bool withSemantic,
 std::string Rule::toString() const
 {
     std::stringstream s;
-    print(s, UINT_MAX, false, false);
+    print(s, UINT8_MAX, false, false);
     return s.str();
 }
