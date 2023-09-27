@@ -2948,12 +2948,14 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Generat
         break;
 
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
+        COUT_LINE;
         if (getFirst() > item->getRuleRhs().size())
         {
             std::ostringstream oss;
             oss << "⇓" << lhs->getFirst() + 1 << " not available";
             FATAL_ERROR_OS_MSG_STM(oss);
         }
+        COUT_LINE;
         if (on)
         {
             if ((*item->getSynthesizedSonFeatures())[getFirst()]->isNil())
@@ -2967,6 +2969,7 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Generat
             root->subFlags(Flags::DISABLED);
             result = true;
         }
+        COUT_LINE;
         break;
 
     case INHERITED_FEATURES_STATEMENT:
