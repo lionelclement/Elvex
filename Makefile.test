@@ -1,4 +1,4 @@
-##*************************************************
+#*************************************************
 #
 # ELVEX
 #
@@ -17,7 +17,10 @@
 #
 #**************************************************
 
-.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa
+# Phony targets to avoid conflicts with files of the same name
+.PHONY: test all_pdf clean
+
+.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa .html
 
 # Name of the Elvex program
 elvex = bin/elvex
@@ -63,12 +66,21 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
 	fi
 
+# Rule to generate an *.output file from an *.input file
+%.html: %.input %.rules %.lexicon $(elvex)
+	@if test -f $*.pattern; then \
+		make -f Makefile.test $*.fsa ; \
+		$(elvex) --traceAll -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+	else \
+		$(elvex) --traceAll -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+	fi
+
 %.xml: %.input %.rules %.lexicon $(elvex)
 	@$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1
 
-%.dot: %.xml $(xsl)
+%.dot: %.xml $(xslfile)
 	# Check the existence of xsltproc
-	@if [ -z "$(XSLTPROC)" ] ; then \ 
+	@if test -z "$(XSLTPROC)"; then \ 
 		echo "Error: xsltproc is not installed."; \
 	else \
 		$(XSLTPROC) $(xslfile) $*.xml > $@; \
@@ -76,7 +88,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 
 %.pdf: %.dot
 	# Check the existence of dot (Graphviz)
-	@if [ -z "$(DOT)" ] ; then \
+	if test -z "$(DOT)" ; then \
 		echo "Error: dot (Graphviz) is not installed."; \
 	else \
 		@$(DOT) -T pdf -o $@ $<; \
@@ -118,5 +130,3 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 clean:
 	@rm -f $(test_dir)/*.output $(test_dir)/*.pdf
 
-# Phony targets to avoid conflicts with files of the same name
-.PHONY: test all_pdf clean

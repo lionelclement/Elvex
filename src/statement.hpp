@@ -133,8 +133,8 @@ private:
 
     statementPtr lhs;
     statementPtr rhs;
-    unsigned int first;
-    unsigned int second;
+    uint8_t first;
+    uint8_t second;
     featuresPtr features;
     valuePtr value;
     bitsetPtr bitset;
@@ -156,7 +156,7 @@ public:
     static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp);
 
     // DOWN DOWN2 DASH
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, unsigned int first, unsigned int second = UINT_MAX);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second = UINT8_MAX);
 
     // STMS PRINT PRINTLN
     static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementsPtr);
@@ -191,7 +191,7 @@ public:
     static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, valuePtr &value);
 
     // SEARCH
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, unsigned int first);
+    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, uint8_t first);
 
     bool isAssignment() const;
 
@@ -251,9 +251,9 @@ public:
 
     bitsetPtr getBits() const;
 
-    unsigned int getFirst() const;
+    uint8_t getFirst() const;
 
-    unsigned int getSecond() const;
+    uint8_t getSecond() const;
 
     std::string getString() const;
 
@@ -269,7 +269,7 @@ public:
 
     void brln(std::ostream &out, int tabulation) const;
 
-    void print(std::ostream &, unsigned int tabulationLenght = 5, unsigned int tabulation = 0, unsigned int color = 0x000000, unsigned int bgcolor = 0xFFFFFF) const;
+    void print(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, unsigned int color = 0x000000, unsigned int bgcolor = 0xFFFFFF) const;
 
     featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool);
 

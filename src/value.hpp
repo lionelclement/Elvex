@@ -53,7 +53,7 @@ public:
 
 private:
     bitsetPtr bits;    // pour encoder les constantes et les variables
-    unsigned int code; // pour encoder les identifiers
+    uint16_t code; // pour encoder les identifiers
     pairpPtr pairp;
     std::string str;
     double number;
@@ -72,7 +72,7 @@ public:
 private:
     Value(const enum Type, const std::string &);
 
-    Value(const enum Type, unsigned int = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
+    Value(const enum Type, uint16_t = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
           pairpPtr = pairpPtr(), listFeaturesPtr = listFeaturesPtr());
 
     void makeSerialString(void);
@@ -84,7 +84,7 @@ public:
 
     static valuePtr create(const enum Type, double);
 
-    static valuePtr create(const enum Type, unsigned int);
+    static valuePtr create(const enum Type, uint16_t);
 
     static valuePtr create(const enum Type, const std::string &);
 
@@ -102,7 +102,7 @@ public:
 
     bitsetPtr getBits(void) const;
 
-    unsigned int getCode(void) const;
+    uint16_t getCode(void) const;
 
     featuresPtr getFeatures(void) const;
 

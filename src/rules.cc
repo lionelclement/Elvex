@@ -84,7 +84,7 @@ const Rules::list_of_rule &Rules::getRules(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Rules::getStartTerm(void) const
+uint16_t Rules::getStartTerm(void) const
 {
     return startTerm;
 }
@@ -108,7 +108,7 @@ const unsigned int *Rules::getRefIdMax(void) const
 /* **************************************************
  *
  ************************************************** */
-void Rules::setStartTerm(unsigned int _startTerm)
+void Rules::setStartTerm(uint16_t _startTerm)
 {
     this->startTerm = _startTerm;
 }
@@ -219,7 +219,7 @@ void Rules::print(std::ostream &outStream) const
 /* **************************************************
  *
  ************************************************** */
-void Rules::addNonTerminal(unsigned int s)
+void Rules::addNonTerminal(uint16_t s)
 {
     nonTerminals.insert(s);
 }
@@ -227,7 +227,7 @@ void Rules::addNonTerminal(unsigned int s)
 /* **************************************************
  *
  ************************************************** */
-void Rules::addTerminal(unsigned int s)
+void Rules::addTerminal(uint16_t s)
 {
     terminals.insert(s);
 }
@@ -235,7 +235,7 @@ void Rules::addTerminal(unsigned int s)
 /* **************************************************
  *
  ************************************************** */
-bool Rules::isTerminal(unsigned int t) const
+bool Rules::isTerminal(uint16_t t) const
 {
     set_of_unsigned_int::const_iterator iter = terminals.find(t);
     return (iter != terminals.end());
@@ -244,7 +244,7 @@ bool Rules::isTerminal(unsigned int t) const
 /* **************************************************
  *
  ************************************************** */
-bool Rules::isNonTerminal(unsigned int t) const
+bool Rules::isNonTerminal(uint16_t t) const
 {
     set_of_unsigned_int::const_iterator iter = nonTerminals.find(t);
     return (iter != nonTerminals.end());
@@ -267,7 +267,7 @@ void Rules::analyseTerms(class Parser &parser)
         unsigned int i;
         for (i = 0; i < (*iterRules)->getRhs().size(); ++i)
         {
-            for (std::vector<unsigned int>::const_iterator term = (*iterRules)->getTerms(i)->begin();
+            for (std::vector<uint16_t>::const_iterator term = (*iterRules)->getTerms(i)->begin();
                  term != (*iterRules)->getTerms(i)->end(); ++term)
             {
                 if (nonTerminals.find(*term) == nonTerminals.end())
@@ -319,7 +319,7 @@ void Rules::toXML(xmlNodePtr nodeRoot)
  *
  % ************************************************** */
 std::list<rulePtr> *
-Rules::findRules(unsigned int lhs)
+Rules::findRules(uint16_t lhs)
 {
     std::list<rulePtr> *result = new std::list<rulePtr>;
     list_of_rule::const_iterator iterRules;

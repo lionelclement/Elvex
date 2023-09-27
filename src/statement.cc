@@ -73,7 +73,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * DOWN DOWN2 DASH
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, unsigned int first, unsigned int second)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->first = first;
@@ -188,7 +188,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * SEARCH
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, unsigned int first)
+statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, uint8_t first)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->lhs = std::move(lhs);
@@ -436,7 +436,7 @@ bitsetPtr Statement::getBits() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Statement::getFirst() const
+uint8_t Statement::getFirst() const
 {
     return first;
 }
@@ -444,7 +444,7 @@ unsigned int Statement::getFirst() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Statement::getSecond() const
+uint8_t Statement::getSecond() const
 {
     return second;
 }
@@ -503,14 +503,14 @@ std::string Statement::getBufferName() const
 void Statement::brln(std::ostream &out, int tabulation) const
 {
     out << "<BR>";
-    for (unsigned int j = 1; j <= tabulation; ++j)
+    for (uint8_t j = 1; j <= tabulation; ++j)
         out << "&nbsp;";
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned int tabulation, unsigned int color, unsigned int bgcolor) const
+void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabulation, unsigned int color, unsigned int bgcolor) const
 {
 #define BLACK 0x000000u
 #define RED 0xFF0000u
@@ -622,7 +622,7 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
 
         if (rhs)
         {
-            for (unsigned int j = 1; j <= tabulation; j++)
+            for (uint8_t j = 1; j <= tabulation; j++)
                 out << "&nbsp;";
             OPENSPAN;
             out << "<B>else</B>";
@@ -721,13 +721,13 @@ void Statement::print(std::ostream &out, unsigned int tabulationLenght, unsigned
     
     case DASH_STATEMENT:
         out << '#' << std::to_string(getFirst() + 1);
-        if (getSecond() != UINT_MAX)
+        if (getSecond() != UINT8_MAX)
             out << "." << std::to_string(getSecond() + 1);
         break;
     
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
         out << "↓" << getFirst() + 1;
-        if (getSecond() != UINT_MAX)
+        if (getSecond() != UINT8_MAX)
             out << "." << getSecond() + 1;
         break;
     
@@ -969,12 +969,12 @@ void Statement::makeSerialString()
         break;
     case DASH_STATEMENT:
         serialString = '\x1C' + std::to_string(getFirst());
-        if (getSecond() != UINT_MAX)
+        if (getSecond() != UINT8_MAX)
             serialString += '\x1D' + std::to_string(getSecond());
         break;
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
         serialString = '\x1E' + std::to_string(getFirst() + 1);
-        if (getSecond() != UINT_MAX)
+        if (getSecond() != UINT8_MAX)
             serialString += '\x1F' + std::to_string(getSecond() + 1);
         break;
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
@@ -1257,8 +1257,8 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
         {
             FATAL_ERROR_UNEXPECTED;
         }
-        unsigned int head = features->assignHead();
-        unsigned int pos = this->getFirst();
+        uint16_t head = features->assignHead();
+        uint16_t pos = this->getFirst();
         auto foundpos = parser.findCacheLexicon(pos);
         if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
         {
@@ -1343,7 +1343,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         else
         {
             // if (#i)
-            if (getSecond() == UINT_MAX)
+            if (getSecond() == UINT8_MAX)
             {
                 resultValue = Value::STATIC_TRUE;
             }
@@ -2918,7 +2918,7 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Generat
         if (on)
         {
             if (item->getIndexTerms()[getFirst()] == Item::NA)
-            //|| ((getSecond() != UINT_MAX) && (item->getIndexTerms()[getFirst()] != getSecond())))
+            //|| ((getSecond() != UINT8_MAX) && (item->getIndexTerms()[getFirst()] != getSecond())))
             {
                 root->addFlags(Flags::DISABLED);
                 result = true;

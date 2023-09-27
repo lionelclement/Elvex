@@ -59,7 +59,7 @@ Value::Value(Value::Type const type, const std::string &str)
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, unsigned int code, double number, bitsetPtr _bits, featuresPtr _features,
+Value::Value(Value::Type const type, uint16_t code, double number, bitsetPtr _bits, featuresPtr _features,
              pairpPtr _list, listFeaturesPtr _listFeatures)
 {
     NEW;
@@ -105,9 +105,9 @@ valuePtr Value::create(const enum Type type, double number)
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, unsigned int integer)
+valuePtr Value::create(const enum Type type, uint16_t code)
 {
-    return valuePtr(new Value(type, integer));
+    return valuePtr(new Value(type, code));
 }
 
 /* **************************************************
@@ -169,7 +169,7 @@ bitsetPtr Value::getBits() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Value::getCode() const
+uint16_t Value::getCode() const
 {
     return code;
 }

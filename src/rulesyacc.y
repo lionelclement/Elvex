@@ -1094,27 +1094,27 @@ down:
 	TOKEN_DOWNARROW TOKEN_INTEGER
 	{
 	  DBUGPRT("down");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::INHERITED_CHILDREN_FEATURES_STATEMENT, false, (unsigned int)$2-1));
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::INHERITED_CHILDREN_FEATURES_STATEMENT, false, static_cast<uint8_t>($2-1)));
 	};
 
 down2:
 	TOKEN_DOWN2ARROW TOKEN_INTEGER
 	{
 	  DBUGPRT("down2");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::SYNTHESIZED_CHILDREN_FEATURES_STATEMENT, false, (unsigned int)($2-1)));
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::SYNTHESIZED_CHILDREN_FEATURES_STATEMENT, false, static_cast<uint8_t>($2-1)));
 	};
 
 dash_statement:
 	TOKEN_DASH TOKEN_INTEGER TOKEN_DOT TOKEN_INTEGER
 	{
 	  DBUGPRT("dash_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::DASH_STATEMENT, false, (unsigned int)($2-1), (unsigned int)($4-1)));
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::DASH_STATEMENT, false, static_cast<uint8_t>($2-1), static_cast<uint8_t>($4-1)));
 	}
 
 	|TOKEN_DASH TOKEN_INTEGER
 	{
 	  DBUGPRT("dash_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::DASH_STATEMENT, false, (unsigned int)($2-1), (unsigned int)UINT_MAX));
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::DASH_STATEMENT, false, static_cast<uint8_t>($2-1), UINT8_MAX));
 	};
 
 //////////////////////////

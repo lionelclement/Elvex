@@ -38,7 +38,7 @@ private:
     set_of_unsigned_int terminals;
     set_of_unsigned_int nonTerminals;
     list_of_rule rules;
-    unsigned int startTerm;
+    uint16_t startTerm;
     rulePtr firstRule;
     unsigned int idMax;
 
@@ -53,13 +53,13 @@ public:
 
     const list_of_rule &getRules(void) const;
 
-    unsigned int getStartTerm(void) const;
+    uint16_t getStartTerm(void) const;
 
     rulePtr getFirstRule(void) const;
 
     const unsigned int *getRefIdMax(void) const;
 
-    void setStartTerm(unsigned int startTerm);
+    void setStartTerm(uint16_t startTerm);
 
     list_of_rule::const_iterator cbegin(void) const;
 
@@ -69,15 +69,15 @@ public:
 
     //void _addNewStartTerm(bool);
 
-    void addNonTerminal(unsigned int);
+    void addNonTerminal(uint16_t);
 
-    void addTerminal(unsigned int);
+    void addTerminal(uint16_t);
 
     void print(std::ostream &) const;
 
-    bool isTerminal(unsigned int) const;
+    bool isTerminal(uint16_t) const;
 
-    bool isNonTerminal(unsigned int) const;
+    bool isNonTerminal(uint16_t) const;
 
     void analyseTerms(class Parser &);
 
@@ -85,7 +85,7 @@ public:
     void toXML(xmlNodePtr);
 #endif
 
-    list_of_rule *findRules(unsigned int lhs);
+    list_of_rule *findRules(uint16_t lhs);
 };
 
 #endif // ELVEX_RULES_H
