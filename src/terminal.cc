@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -133,7 +133,6 @@ void Terminal::makeSerialString()
     std::ostringstream stream;
     stream << std::hex << code << '/' << form << '/' << features->peekSerialString();
     serialString = stream.str();
-   //serialString = std::to_string(code);
 }
 
 /* **************************************************
