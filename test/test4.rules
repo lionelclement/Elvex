@@ -33,7 +33,6 @@ S → [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ]
   attest (↓6 => #6);
   attest (↓7 => #7);
   attest (↓8 => #8);
-  ⇑ = ⇓8;
 }
 
 ADJ → adj
