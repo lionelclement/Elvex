@@ -56,11 +56,11 @@ public:
 
     static terminalPtr create(uint16_t code, std::string form, featuresPtr features);
 
-    uint16_t getCode(void) const;
+    //uint16_t getCode(void) const;
 
     std::string &getForm();
 
-    featuresPtr getFeatures() const;
+    //featuresPtr getFeatures() const;
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr nodeRoot) const;

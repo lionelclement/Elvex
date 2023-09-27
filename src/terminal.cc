@@ -130,7 +130,10 @@ void Terminal::print(std::ostream &os) const
  ************************************************** */
 void Terminal::makeSerialString()
 {
-    serialString = std::to_string(code);
+    std::ostringstream stream;
+    stream << std::hex << code << '/' << form << '/' << features->peekSerialString();
+    serialString = stream.str();
+   //serialString = std::to_string(code);
 }
 
 /* **************************************************
