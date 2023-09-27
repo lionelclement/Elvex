@@ -139,7 +139,7 @@ if (LibXml2_FOUND)
             #TRACE_ENVIRONMENT
             #TRACE_BUILD_ENVIRONMENT
             #TRACE_ENABLE_STATEMENT
-            #TRACE_APPLY_STATEMENT
+            TRACE_APPLY_STATEMENT
             #TRACE_EVAL
             #TRACE_FEATURES
             #TRACE_STEP
