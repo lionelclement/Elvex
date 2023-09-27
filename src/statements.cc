@@ -109,7 +109,7 @@ void Statements::addStatement(const statementPtr &statement)
 /* **************************************************
  *
  ************************************************** */
-void Statements::print(std::ostream &out, unsigned int tabulationLenght, unsigned int tabulation, unsigned int color, unsigned int bgcolor, bool ln,
+void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabulation, uint32_t color, uint32_t bgcolor, bool ln,
                        std::string leftSep, std::string rightSep, std::string sep) const
 {
     if (ln)
@@ -118,7 +118,7 @@ void Statements::print(std::ostream &out, unsigned int tabulationLenght, unsigne
     }
     if (ln)
     {
-        for (unsigned int j = 1; j <= tabulation; ++j)
+        for (uint8_t j = 1; j <= tabulation; ++j)
             out << "&nbsp;";
     }
     out << leftSep;
@@ -131,7 +131,7 @@ void Statements::print(std::ostream &out, unsigned int tabulationLenght, unsigne
     {
         if (ln)
         {
-            for (unsigned int j = 1; j <= tabulation; ++j)
+            for (uint8_t j = 1; j <= tabulation; ++j)
                 out << "&nbsp;";
         }
         guard->print(out, tabulationLenght, tabulation, color, bgcolor);
@@ -145,7 +145,7 @@ void Statements::print(std::ostream &out, unsigned int tabulationLenght, unsigne
             out << sep;
         if (ln)
         {
-            for (unsigned int j = 1; j <= tabulation; ++j)
+            for (uint8_t j = 1; j <= tabulation; ++j)
                 out << "&nbsp;";
         }
         (*statement)->print(out, tabulationLenght, tabulation, color, bgcolor);
@@ -154,7 +154,7 @@ void Statements::print(std::ostream &out, unsigned int tabulationLenght, unsigne
     if (ln)
     {
         out << "</div>";
-        for (unsigned int j = 1; j <= tabulation; ++j)
+        for (uint8_t j = 1; j <= tabulation; ++j)
             out << "&nbsp;";
     }
     out << rightSep;

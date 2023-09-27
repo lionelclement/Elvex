@@ -44,7 +44,7 @@
 /* **************************************************
  *
  ************************************************** */
-Statement::Statement(unsigned int lineno, std::string bufferName, type op, bool rootOp)
+Statement::Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp)
 {
     NEW;
     this->lineno = lineno;
@@ -64,7 +64,7 @@ Statement::~Statement()
 /* **************************************************
  * NIL UP UP2
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     return statementPtr(statement);
@@ -73,7 +73,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * DOWN DOWN2 DASH
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->first = first;
@@ -84,7 +84,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * STMS PRINT PRINTLN
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementsPtr statements)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementsPtr statements)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->statements = statements;
@@ -94,7 +94,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * GUARD FEATURES
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, featuresPtr features)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, featuresPtr features)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->features = std::move(features);
@@ -104,7 +104,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * ATTEST
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->lhs = std::move(lhs);
@@ -114,7 +114,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * AFF SUBSUME IF IF_CON_T DEFERRED FOREACH FOREACH_CON_T UNIF
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->lhs = std::move(lhs);
@@ -125,7 +125,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * VARIABLE CONSTANT
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, bitsetPtr bitset)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, bitsetPtr bitset)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->bitset = std::move(bitset);
@@ -135,7 +135,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * PAIRP
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, pairpPtr pairp)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, pairpPtr pairp)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->pairp = std::move(pairp);
@@ -145,7 +145,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * FCT
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp,
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp,
                                arithmetic_op fct, statementPtr lhs, statementPtr rhs)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
@@ -158,7 +158,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * NUMBER
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, double number)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, double number)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->number = number;
@@ -168,7 +168,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * STRING
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, std::string string)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, std::string string)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->string = string;
@@ -178,7 +178,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * ANONYMOUS
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, valuePtr &value)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, valuePtr &value)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->value = std::move(value);
@@ -188,7 +188,7 @@ statementPtr Statement::create(unsigned int lineno, std::string bufferName, type
 /* **************************************************
  * SEARCH
  ************************************************** */
-statementPtr Statement::create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, uint8_t first)
+statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, uint8_t first)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
     statement->lhs = std::move(lhs);
@@ -484,7 +484,7 @@ double Statement::getNumber() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Statement::getLineno() const
+uint32_t Statement::getLineno() const
 {
     return lineno;
 }
@@ -510,7 +510,7 @@ void Statement::brln(std::ostream &out, int tabulation) const
 /* **************************************************
  *
  ************************************************** */
-void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabulation, unsigned int color, unsigned int bgcolor) const
+void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabulation, uint32_t color, uint32_t bgcolor) const
 {
 #define BLACK 0x000000u
 #define RED 0xFF0000u

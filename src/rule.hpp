@@ -39,35 +39,35 @@ private:
     uint16_t lhs;
     std::vector<termsPtr> rhs;
     statementsPtr statements;
-    unsigned int usages;
+    uint32_t usages;
     std::string filename;
-    unsigned int lineno;
+    uint32_t lineno;
     bool trace;
     bool withSpaces;
     bool bidirectional;
     bool permutable;
 
-    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
+    Rule(size_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
+    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
 
-    Rule(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
+    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
-    Rule(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
+    Rule(size_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
 public:
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs,
+    static rulePtr create(size_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs,
                           statementsPtr statements = statementsPtr());
 
     static rulePtr
-    create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
+    create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, statementsPtr statements = statementsPtr());
 
-    static rulePtr create(unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
-    static rulePtr create(size_t id, unsigned int lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(size_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint16_t lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
     ~Rule();
@@ -90,7 +90,7 @@ public:
 
     void resetUsages(void);
 
-    unsigned int getLineno(void);
+    uint32_t getLineno(void);
 
     bool getWithSpaces(void) const;
 
@@ -114,7 +114,6 @@ public:
     void toXML(xmlNodePtr);
 #endif
 
-//    void __addDefaults(void);
 };
 
 #endif // ELVEX_RULE_H

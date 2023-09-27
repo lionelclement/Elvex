@@ -182,15 +182,15 @@ std::string Parser::getTopBufferName() {
 /* **************************************************
  *
  ************************************************** */
-void Parser::pushLineno(unsigned int i) {
+void Parser::pushLineno(uint32_t i) {
     linenos.push_front(i);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::popLineno() {
-    unsigned int i = linenos.front();
+uint32_t Parser::popLineno() {
+    uint32_t i = linenos.front();
     linenos.pop_front();
     return i;
 }
@@ -198,7 +198,7 @@ unsigned int Parser::popLineno() {
 /* **************************************************
  *
  ************************************************** */
-unsigned int Parser::getTopLineno() {
+uint32_t Parser::getTopLineno() {
     return linenos.front();
 }
 

@@ -61,7 +61,7 @@ private:
   bool verbose;
   featuresPtr localFeatures;
   std::deque<std::string> bufferNames;
-  std::deque<unsigned int> linenos;
+  std::deque<uint32_t> linenos;
 
 public:
   Parser();
@@ -72,11 +72,11 @@ public:
 
   std::string popBufferName();
 
-  void pushLineno(unsigned int);
+  void pushLineno(uint32_t);
 
-  unsigned int popLineno();
+  uint32_t popLineno();
 
-  unsigned int getTopLineno();
+  uint32_t getTopLineno();
 
   class Rules &getRules();
 

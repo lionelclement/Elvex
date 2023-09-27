@@ -428,7 +428,6 @@ rule:
 
 	  }
 	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, *$4, $5 ? *$5 : statementsPtr());
-	  //rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getRules().addRule(rule);
 	  if (!parser.getRules().getStartTerm()){
@@ -443,7 +442,6 @@ rule:
 	{
 	  DBUGPRT("Rule");
 	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, $4 ? *$4 : statementsPtr());
-	  //rule->addDefaults();
 	  rule->setTrace(headTrace);
 	  parser.getRules().addRule(rule);
 	  if (!parser.getRules().getStartTerm()){

@@ -32,7 +32,7 @@ Node::Node(bool withSpace, bool bidirectional, bool permutable)
    this->withSpace = withSpace;
    this->bidirectional = bidirectional;
    this->permutable = permutable;
-   this->nbrCS = 0;
+   //this->nbrCS = 0;
 }
 
 /* ************************************************************

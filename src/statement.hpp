@@ -125,7 +125,7 @@ public:
     };
 
 private:
-    unsigned int lineno;
+    uint32_t lineno;
     std::string bufferName;
     static std::string nullBufferName;
     enum type op;
@@ -145,7 +145,7 @@ private:
     double number;
 
 public:
-    Statement(unsigned int lineno, std::string bufferName, type op, bool rootOp);
+    Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);
 
     void makeSerialString();
 
@@ -153,45 +153,45 @@ public:
     ~Statement();
 
     // NIL UP UP2
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp);
 
     // DOWN DOWN2 DASH
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second = UINT8_MAX);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second = UINT8_MAX);
 
     // STMS PRINT PRINTLN
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementsPtr);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementsPtr);
 
     // GUARD FEATURES
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, featuresPtr features);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, featuresPtr features);
 
     // ATTEST THEN
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
 
     // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH FOREACH_CON_T UNIF
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
 
     // VARIABLE CONSTANT
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, bitsetPtr bits);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, bitsetPtr bits);
 
     // PAIRP
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, pairpPtr);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, pairpPtr);
 
     // FCT
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, arithmetic_op fct,
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, arithmetic_op fct,
                                statementPtr lhs = statementPtr(),
                                statementPtr rhs = statementPtr());
 
     // NUMBER
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, double);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, double);
 
     // STRING
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, std::string str);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, std::string str);
 
     // ANONYMOUS
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, valuePtr &value);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, valuePtr &value);
 
     // SEARCH
-    static statementPtr create(unsigned int lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, uint8_t first);
+    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, uint8_t first);
 
     bool isAssignment() const;
 
@@ -263,13 +263,13 @@ public:
 
     double getNumber() const;
 
-    unsigned int getLineno() const;
+    uint32_t getLineno() const;
 
     std::string getBufferName() const;
 
     void brln(std::ostream &out, int tabulation) const;
 
-    void print(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, unsigned int color = 0x000000, unsigned int bgcolor = 0xFFFFFF) const;
+    void print(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, uint32_t color = 0x000000, uint32_t bgcolor = 0xFFFFFF) const;
 
     featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool);
 
