@@ -17,10 +17,6 @@ Text_with_features → VTENSE S_tense {
   [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
-  //if ($tense ≠ _)
-  //  $tense = present;
-  //else
-  //  $tense = past;
   if ((¬ $tense))
     $tense = present;
   // not interrogative, not negative
@@ -310,7 +306,6 @@ S → aux NP|cln VP strongPunct {
  * Noun phrase
  ************************************************** */
 @withspaces
-//@bidirectional
 NP → det N1 {
   [def:$def, number:$number, $Rest] ⊂ ⇓2;
   deferred(⇓2) {
@@ -454,7 +449,6 @@ N → common_noun {
  * Verb and its complements
  ************************************************** */
 @withspaces
-//@permutable
 VP → VN [NP] [part] [NP] [AP|form] [PP] [SCOMP|VCOMP] {
   // Given Arguments
   [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;
@@ -561,22 +555,6 @@ VERB → [not] verb {
   ⇑ = ⇓2;
 }
 
-// passive voice
-// he was accepted
-// he was accepted by the compagny
-zzzVERB → verb {
-  [verbal_constr:$verbal_constr, aux_form:none, $Rest] ⊂ ↑;
-  if (#1) {
-    attest (($verbal_constr == neg));
-    ↓1 = [];
-    ↓2 = $Rest ∪ [vtense:infinitive|past_participle|present_participle];
-  } else {
-    attest (($verbal_constr == no_neg));
-    ↓2 = $Rest ∪ [vtense:present|preterite|infinitive|past_participle|present_participle];
-  }
-  ⇑ = ⇓2;
-}
-
 // will he [not] have felt good
 // has he [not] been feeling good
 // had he [not] been feeling good
@@ -640,7 +618,6 @@ VERB → aux [not] [have|be|been|have_been] verb {
  * Adjective phrase
  ************************************************** */
 @withspaces
-//@trace
 AP → [adv] adj {
   ↓2 = ↑;
   [MOD:<$MOD>] ⊂ ↑;
