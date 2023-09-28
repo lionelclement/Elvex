@@ -191,11 +191,9 @@ void ListFeatures::makeSerialString()
 {
     std::ostringstream stream;
     stream << '\x1';
-    //serialString = '\x10';
     for (auto &features : listFeatures)
     {
         stream << features->peekSerialString() << '\x2';
-        //serialString += '\x11' + features->peekSerialString();
     }
     serialString = stream.str();
 }

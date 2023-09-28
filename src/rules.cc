@@ -135,40 +135,7 @@ Rules::list_of_rule::const_iterator Rules::cend(void) const
 void Rules::addRule(rulePtr rule)
 {
     rules.push_back(rule);
-    // std::pair<list_of_rule::iterator, bool> result = rules.insert(rule);
-    // return result.second;
 }
-
-/* **************************************************
- *
- ************************************************** */
-/*
-void Rules::_addNewStartTerm(bool addENDTerminal)
-{
-    rulePtr r;
-    std::vector<termsPtr> rhs;
-
-    if (addENDTerminal)
-    {
-        terminals.insert(Vartable::_END_);
-    }
-
-    Vartable::insertCodeMap(Vartable::_START_TERM_, "_START_TERM_");
-    nonTerminals.insert(Vartable::_START_TERM_);
-
-    rhs.push_back(Terms::create(getStartTerm()));
-    if (addENDTerminal)
-    {
-        rhs.push_back(Terms::create(Vartable::_END_));
-    }
-
-    std::string fileName = "";
-    r = Rule::create(0, fileName, false, false, false, Vartable::_START_TERM_, rhs);
-    setStartTerm(startTerm);
-    rules.push_back(r);
-    firstRule = r;
-}
-*/
 
 /* **************************************************
  *

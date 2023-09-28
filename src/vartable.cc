@@ -91,8 +91,6 @@ uint16_t Vartable::nameToCode(const std::string &str)
         code = codeMapIndex;
         nameToCodeMap.insert(std::make_pair(str, codeMapIndex));
         codeToNameMap.insert(std::make_pair(codeMapIndex++, str));
-        // stringMap[str] = codeMapIndex;
-        // codeMap[codeMapIndex++] = str;
     }
     else
         code = it->second;

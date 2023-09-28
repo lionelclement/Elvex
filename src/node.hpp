@@ -39,7 +39,6 @@ public:
     typedef vectorForests::const_iterator vectorForests_const_iterator;
 
 private:
-    //unsigned int nbrCS;
     vectorForests forests;
     std::vector<std::string> output;
     std::vector<std::string> outputRL;
