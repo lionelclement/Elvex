@@ -381,13 +381,13 @@ downDoubleArrow "⇓"
   }
   
   "printstderr" {
-    DBUGPRT("TOKEN_STDERR_PRINT");
-    return TOKEN_STDERR_PRINT;
+    DBUGPRT("TOKEN_PRINTSTDERR");
+    return TOKEN_PRINTSTDERR;
   }
   
   "printlnstderr" {
-    DBUGPRT("TOKEN_STDERR_PRINTLN");
-    return TOKEN_STDERR_PRINTLN;
+    DBUGPRT("TOKEN_PRINTLNSTDERR");
+    return TOKEN_PRINTLNSTDERR;
   }
   
   "search" {
