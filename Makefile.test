@@ -61,18 +61,18 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 %.output: %.input %.rules %.lexicon $(elvex)
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
 	else \
-		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
 	fi
 
 # Rule to generate an *.output file from an *.input file
 %.html: %.input %.rules %.lexicon $(elvex)
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) --traceAll -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(elvex) --trace -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
 	else \
-		$(elvex) --traceAll -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(elvex) --trace -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
@@ -101,7 +101,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 
 %.fsa: %.tmp-morpho %.tmp-pattern
 	@echo "build $@ from $*.tmp-morpho $*.tmp-pattern"> /dev/null 2>&1
-	@$(elvexbuildlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build> /dev/null 2>&1
+	$(elvexbuildlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build> /dev/null 2> $*.err
 
 %.tmp-morpho: %.tmp-form %.tmp-pos %.tmp-lemma %.tmp-features
 	@echo "build $@ from $^"> /dev/null 2>&1

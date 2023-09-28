@@ -82,6 +82,8 @@ public:
         GUARD_STATEMENT,
         PRINT_STATEMENT,
         PRINTLN_STATEMENT,
+        PRINTSTDERR_STATEMENT,
+        PRINTLNSTDERR_STATEMENT,
         ATTEST_STATEMENT,
         IF_STATEMENT,
         IF_CON_T_STATEMENT,
@@ -219,6 +221,10 @@ public:
 
     bool isPrintln() const;
 
+    bool isPrintstderr() const;
+
+    bool isPrintlnstderr() const;
+
     bool isAttest() const;
 
     bool isIf() const;
@@ -301,9 +307,9 @@ public:
 
     void stmDeferred(statementPtr from, class Item *item, class Parser &, class Generator *, bool &);
 
-    void stmPrint(class Item *, class Parser &, class Generator *);
+    void stmPrint(class Item *, class Parser &, class Generator *, std::ostream &out);
 
-    void stmPrintln(class Item *, class Parser &, class Generator *);
+    void stmPrintln(class Item *, class Parser &, class Generator *, std::ostream &out);
 
     void renameVariables(size_t);
 

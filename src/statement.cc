@@ -82,7 +82,7 @@ statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op,
 }
 
 /* **************************************************
- * STMS PRINT PRINTLN
+ * STMS PRINT PRINTLN PRINTSTDERR PRINTSTDERRLN
  ************************************************** */
 statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementsPtr statements)
 {
@@ -306,6 +306,22 @@ bool Statement::isPrint() const
 bool Statement::isPrintln() const
 {
     return op == PRINTLN_STATEMENT;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Statement::isPrintstderr() const
+{
+    return op == PRINTSTDERR_STATEMENT;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Statement::isPrintlnstderr() const
+{
+    return op == PRINTLNSTDERR_STATEMENT;
 }
 
 /* **************************************************
@@ -581,6 +597,24 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
     case PRINTLN_STATEMENT:
         OPENSPAN;
         out << "<B>println</B>&nbsp;";
+        getStatements()->print(out, tabulationLenght, tabulation, color, bgcolor, false, "(", ")", ",&nbsp;");
+        out << ";";
+        BR;
+        CLOSESPAN;
+        break;
+    
+    case PRINTSTDERR_STATEMENT:
+        OPENSPAN;
+        out << "<B>printstderr</B>&nbsp;";
+        getStatements()->print(out, tabulationLenght, tabulation, color, bgcolor, false, "(", ")", ",&nbsp;");
+        out << ";";
+        BR;
+        CLOSESPAN;
+        break;
+    
+    case PRINTLNSTDERR_STATEMENT:
+        OPENSPAN;
+        out << "<B>printlnstderr</B>&nbsp;";
         getStatements()->print(out, tabulationLenght, tabulation, color, bgcolor, false, "(", ")", ",&nbsp;");
         out << ";";
         BR;
@@ -949,74 +983,80 @@ void Statement::makeSerialString()
     case PRINTLN_STATEMENT:
         serialString = '\x17' + getStatements()->peekSerialString();
         break;
+    case PRINTSTDERR_STATEMENT:
+        serialString = '\x18' + getStatements()->peekSerialString();
+        break;
+    case PRINTLNSTDERR_STATEMENT:
+        serialString = '\x19' + getStatements()->peekSerialString();
+        break;
     case FEATURES_STATEMENT:
-        serialString = getFeatures()->peekSerialString();
+        serialString = '\x1A' + getFeatures()->peekSerialString();
         break;
     case PAIRP_STATEMENT:
-        serialString = getPairp()->peekSerialString();
+        serialString = '\x1B' + getPairp()->peekSerialString();
         break;
     case GUARD_STATEMENT:
-        serialString = '\x18' + getFeatures()->peekSerialString();
+        serialString = '\x1C' + getFeatures()->peekSerialString();
         break;
     case UNIF_STATEMENT:
-        serialString = '\x19' + lhs->peekSerialString() + rhs->peekSerialString();
+        serialString = '\x1D' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case INHERITED_FEATURES_STATEMENT:
-        serialString = '\x1A';
+        serialString = '\x1E';
         break;
     case SYNTHESIZED_FEATURES_STATEMENT:
-        serialString = '\x1B';
+        serialString = '\x1F';
         break;
     case DASH_STATEMENT:
-        serialString = '\x1C' + std::to_string(getFirst());
+        serialString = '\x20' + std::to_string(getFirst());
         if (getSecond() != UINT8_MAX)
-            serialString += '\x1D' + std::to_string(getSecond());
+            serialString += '\x21' + std::to_string(getSecond());
         break;
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
-        serialString = '\x1E' + std::to_string(getFirst() + 1);
+        serialString = '\x22' + std::to_string(getFirst() + 1);
         if (getSecond() != UINT8_MAX)
-            serialString += '\x1F' + std::to_string(getSecond() + 1);
+            serialString += '\x23' + std::to_string(getSecond() + 1);
         break;
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
-        serialString = '\x20' + std::to_string(getFirst() + 1);
+        serialString = '\x24' + std::to_string(getFirst() + 1);
         break;
     case IF_STATEMENT:
-        serialString = '\x21' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case IF_CON_T_STATEMENT:
-        serialString = '\x22' + lhs->peekSerialString();
-        if (rhs)
-        {
-            serialString += '\x23' + rhs->peekSerialString();
-        }
-        break;
-    case DEFERRED_STATEMENT:
-        serialString = '\x24' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case FOREACH_STATEMENT:
         serialString = '\x25' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
-    case FOREACH_CON_T_STATEMENT:
+    case IF_CON_T_STATEMENT:
         serialString = '\x26' + lhs->peekSerialString();
         if (rhs)
         {
             serialString += '\x27' + rhs->peekSerialString();
         }
         break;
+    case DEFERRED_STATEMENT:
+        serialString = '\x28' + lhs->peekSerialString() + rhs->peekSerialString();
+        break;
+    case FOREACH_STATEMENT:
+        serialString = '\x29' + lhs->peekSerialString() + rhs->peekSerialString();
+        break;
+    case FOREACH_CON_T_STATEMENT:
+        serialString = '\x2A' + lhs->peekSerialString();
+        if (rhs)
+        {
+            serialString += '\x2B' + rhs->peekSerialString();
+        }
+        break;
     case STRING_STATEMENT:
-        serialString = '"' + getString() + '"';
+        serialString = '\x2C' + getString() + '\x2D';
         break;
     case STMS_STATEMENT:
-        serialString = getStatements()->peekSerialString();
+        serialString = '\x2E' + getStatements()->peekSerialString();
         break;
     case NUMBER_STATEMENT:
-        serialString = getNumber();
+        serialString = '\x2F' + getNumber();
         break;
     case SEARCH_STATEMENT:
         if (getBits())
-            serialString = '\x28' + getBits()->peekSerialString() + lhs->peekSerialString();
+            serialString = '\x30' + getBits()->peekSerialString() + '\x31' + lhs->peekSerialString();
         else
-            serialString = '\x29' + lhs->peekSerialString();
+            serialString = '\x32' + lhs->peekSerialString();
         break;
     }
 }
@@ -1074,6 +1114,8 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
     case STMS_STATEMENT:
     case PRINT_STATEMENT:
     case PRINTLN_STATEMENT:
+    case PRINTSTDERR_STATEMENT:
+    case PRINTLNSTDERR_STATEMENT:
         statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp,
                                       getStatements()->clone(protectedFlags));
         break;
@@ -2794,22 +2836,22 @@ void Statement::stmDeferred(statementPtr from, class Item *item, Parser &parser,
 /* ************************************************************
  * print
  ************************************************************ */
-void Statement::stmPrint(class Item *item, Parser &parser, Generator *synthesizer)
+void Statement::stmPrint(class Item *item, Parser &parser, Generator *generator, std::ostream &out)
 {
     addFlags(Flags::SEEN);
     for (auto statement = getStatements()->cbegin(); statement != getStatements()->cend(); ++statement)
     {
         if ((*statement)->isString())
         {
-            std::cout << (*statement)->getString();
+            out << (*statement)->getString();
         }
         else
         {
-            valuePtr value = (*statement)->evalValue(item, parser, synthesizer, true);
+            valuePtr value = (*statement)->evalValue(item, parser, generator, true);
             if (value->isForm())
-                std::cout << value->getStr();
+                out << value->getStr();
             else
-                value->flatPrint(std::cout);
+                value->flatPrint(out);
         }
     }
 }
@@ -2817,10 +2859,10 @@ void Statement::stmPrint(class Item *item, Parser &parser, Generator *synthesize
 /* ************************************************************
  * println
  ************************************************************ */
-void Statement::stmPrintln(class Item *item, Parser &parser, Generator *synthesizer)
+void Statement::stmPrintln(class Item *item, Parser &parser, Generator *generator, std::ostream &out)
 {
-    stmPrint(item, parser, synthesizer);
-    std::cout << std::endl;
+    stmPrint(item, parser, generator, out);
+    out << std::endl;
 }
 
 /* **************************************************
@@ -2874,6 +2916,8 @@ void Statement::renameVariables(size_t i)
     case STMS_STATEMENT:
     case PRINT_STATEMENT:
     case PRINTLN_STATEMENT:
+    case PRINTSTDERR_STATEMENT:
+    case PRINTLNSTDERR_STATEMENT:
         getStatements()->renameVariables(i);
         break;
     }
@@ -3007,6 +3051,8 @@ void Statement::toggleEnable(const statementPtr &root, class Item *item, Generat
 
     case PRINT_STATEMENT:
     case PRINTLN_STATEMENT:
+    case PRINTSTDERR_STATEMENT:
+    case PRINTLNSTDERR_STATEMENT:
 
         if (on)
         {
@@ -3219,14 +3265,28 @@ void Statement::apply(statementPtr from, class Item *item, Parser &parser, Gener
     // print
     else if (isPrint())
     {
-        stmPrint(item, parser, synthesizer);
+        stmPrint(item, parser, synthesizer, std::cout);
         addFlags(Flags::SEEN);
     }
 
     // println
     else if (isPrintln())
     {
-        stmPrintln(item, parser, synthesizer);
+        stmPrintln(item, parser, synthesizer, std::cout);
+        addFlags(Flags::SEEN);
+    }
+
+    // printstderr
+    else if (isPrintstderr())
+    {
+        stmPrint(item, parser, synthesizer, std::cerr);
+        addFlags(Flags::SEEN);
+    }
+
+    // printlnsterr
+    else if (isPrintlnstderr())
+    {
+        stmPrintln(item, parser, synthesizer, std::cerr);
         addFlags(Flags::SEEN);
     }
 
@@ -3298,6 +3358,8 @@ bool Statement::findVariable(const bitsetPtr &variable)
     case STMS_STATEMENT:
     case PRINT_STATEMENT:
     case PRINTLN_STATEMENT:
+    case PRINTSTDERR_STATEMENT:
+    case PRINTLNSTDERR_STATEMENT:
         if (getStatements()->findVariable(variable))
             return true;
         break;

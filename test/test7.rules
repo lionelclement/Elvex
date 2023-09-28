@@ -3,6 +3,7 @@
  * 
  ************************************************** */
 Axiom → Text_with_features strongPunct {
+  printlnstderr "test7 will take a while...";
   ↓1 = ↑;
   [punct:$punc] ⊂ ⇓1;
   ↓2 = [punct:$punc];
@@ -17,7 +18,7 @@ Text_with_features → VTENSE S_tense {
   [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
     $lexical_function = none;
-  if ((¬ $tense))
+  if (¬ $tense)
     $tense = present;
   // not interrogative, not negative
   if (¬ $verbal_constr)
@@ -52,51 +53,54 @@ Text → NP {
 /* **************************************************
  * 
  ************************************************** */
+@trace
 S_tense → S_anaphoric {
   [tense:$tense, $Rest];
   [mode:$mode, vtense:$vtense, aspect:$aspect] ⊂ ↑;
 
-  if (¬ $tense)
-    $tense = present;
-
-  if (¬ $mode)
-    $mode = indicative;
-
-  if (¬ $aspect)
-    $aspect = default;
-
   if (¬ $vtense){
+    if (¬ $tense)
+      $tense = present;
+
+    if (¬ $mode)
+      $mode = indicative;
+
+    if (¬ $aspect)
+      $aspect = default;
+
     if ($mode == indicative) {
-    // $Present
-    if ($tense == present){
-      if ($aspect == continuous)
-        $vtense=present_continuous;
+      // $Present
+      if ($tense == present){
+        if ($aspect == continuous)
+          $vtense=present_continuous;
+        else
+          $vtense=present;
+      }
+      // Past
+      else if ($tense == past){
+        if ($aspect == continuous)
+          $vtense=past_continous;
+        else if ($aspect == perfect)
+          $vtense=present_perfect;
+        else
+          $vtense=preterite;
+      }
+      // Future
+      else if ($tense == future){
+        if ($aspect == continuous)
+          $vtense=future_continuous;
+        else
+          $vtense=future;
+      }
+      // Else
       else
-        $vtense=present;
-    }
-    // Past
-    else if ($tense == past){
-      if ($aspect == continuous)
-        $vtense=past_continous;
-      else if ($aspect == perfect)
-        $vtense=present_perfect;
-      else
-        $vtense=preterite;
-    }
-    // Future
-    else if ($tense == future){
-      if ($aspect == continuous)
-        $vtense=future_continuous;
-      else
-        $vtense=future;
+        $vtense=$tense;
     }
     // Else
     else
-      $vtense=$tense;
-  }
+      $vtense=$vtense;
   }
   
-  //↓1 = [vtense:$vtense, $Rest];
   ↓1 = [vtense:$vtense] ∪ $Rest;
   ⇑ = ⇓1;
 }
@@ -107,6 +111,7 @@ S_tense → S_anaphoric {
 * =>
 * [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R]
  ************************************************** */
+
 S_anaphoric → S_mod {
   [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
   attest ($ID1 == $ID2);
@@ -114,6 +119,7 @@ S_anaphoric → S_mod {
   ↓1 = [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
   ⇑ = ⇓1;
 }
+
 
 S_anaphoric → S_mod {
   [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R] ⊂ ↑;
@@ -126,6 +132,7 @@ S_anaphoric → S_mod {
  * Sentence modifiers
  ************************************************** */
 @withspaces
+
 S_mod → S_mod form {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
@@ -134,12 +141,14 @@ S_mod → S_mod form {
 }
 
 @withspaces
+
 S_mod → S_mod advs {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
   ↓2 = $H;
   ⇑ = ⇓1;
 }
+
 
 S_mod → S {
   [MOD:NIL, $Rest];
@@ -196,11 +205,13 @@ S → S_anaphoric form S_anaphoric {
 /* **************************************************
  * Sentence arguments
  ************************************************** */
+
 S → S {
   [i:$i, ii:NIL, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, $Rest];
   ⇑ = ⇓1;
 }
+
 
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
@@ -208,17 +219,20 @@ S → S {
   ⇑ = ⇓1;
 }
 
+
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $Rest];
   ⇑ = ⇓1;
 }
 
+
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, OBJ_THETA:$ii, iiReal:OBJ_THETA, $Rest];
   ⇑ = ⇓1;
 }
+
 
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
@@ -227,7 +241,7 @@ S → S {
 }
 
 // Infinitive subject controller
-@trace
+
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   [i:[HEAD:$H1, ID:$ID1], ii:[i:[HEAD:$H2, ID:$ID2], $iiRest]] ⊂ ↑;
@@ -237,11 +251,13 @@ S → S {
   ⇑ = ⇓1;
 }
 
+
 S → S {
   [i:$i, ii:$ii, iii:$iii, $Rest];
   ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, OBJ_THETA:$iii, iiiReal:OBJ_THETA, $Rest];
   ⇑ = ⇓1;
 }
+
 
 S → S {
   [i:$i, ii:$ii, iii:$iii, $Rest];
@@ -252,6 +268,7 @@ S → S {
 /* **************************************************
  * Affirmative Sentence
  ************************************************** */
+@trace
 @withspaces
 S → [NP|cln] VP {
   [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];

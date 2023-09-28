@@ -380,6 +380,16 @@ downDoubleArrow "⇓"
     return TOKEN_PRINTLN;
   }
   
+  "printstderr" {
+    DBUGPRT("TOKEN_STDERR_PRINT");
+    return TOKEN_STDERR_PRINT;
+  }
+  
+  "printlnstderr" {
+    DBUGPRT("TOKEN_STDERR_PRINTLN");
+    return TOKEN_STDERR_PRINTLN;
+  }
+  
   "search" {
     DBUGPRT("TOKEN_SEARCH");
     return TOKEN_SEARCH;

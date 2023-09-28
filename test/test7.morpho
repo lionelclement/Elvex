@@ -210,6 +210,11 @@ mice	common_noun	MOUSE	@p
 table	common_noun	TABLE	@s
 tables	common_noun	TABLE	@p
 
+student	common_noun	HUMAN	@s
+students	common_noun	HUMAN	@p
+professor	common_noun	HUMAN	@s
+professors	common_noun	HUMAN	@p
+
 # ***********************************************************
 #  Adjectives
 # ***********************************************************/

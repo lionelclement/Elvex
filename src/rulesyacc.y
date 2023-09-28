@@ -104,7 +104,7 @@
 // KEYWORDS
 %token TOKEN_RULES TOKEN_INPUT TOKEN_LEXICON
 %token TOKEN_LEMMA TOKEN_HEAD TOKEN_FORM
-%token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN
+%token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN TOKEN_STDERR_PRINT TOKEN_STDERR_PRINTLN
 %token TOKEN_IF TOKEN_ELSE
 %token TOKEN_DEFERRED
 %token TOKEN_NIL TOKEN_TRUE TOKEN_FALSE
@@ -595,6 +595,28 @@ statement:
 			ruleslineno, 
 			parser.getTopBufferName(), 
 			Statement::PRINTLN_STATEMENT, 
+			true, 
+			*$2));
+	  free($2);
+	}
+
+	|TOKEN_STDERR_PRINT expression_statement_composite TOKEN_SEMI {
+	  DBUGPRT("statement");
+		$$ = new statementPtr(Statement::create(
+			ruleslineno, 
+			parser.getTopBufferName(), 
+			Statement::PRINT_STDERR_STATEMENT, 
+			true, 
+			*$2));
+	  free($2);
+	}
+
+	|TOKEN_STDERR_PRINTLN expression_statement_composite TOKEN_SEMI {
+	  	DBUGPRT("statement");
+		$$ = new statementPtr(Statement::create(
+			ruleslineno, 
+			parser.getTopBufferName(), 
+			Statement::PRINTLN_STDERR_STATEMENT, 
 			true, 
 			*$2));
 	  free($2);
