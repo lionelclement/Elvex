@@ -132,7 +132,7 @@ public:
 
     void deleteVariables(void);
 
-    bool renameVariables(size_t);
+    bool renameVariables(u_int32_t);
 
     bool isNil(void) const;
 

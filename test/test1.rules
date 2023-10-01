@@ -4,6 +4,7 @@
 @withspaces
 S → [A | B] C
 {
+  printlnstderr "test1...";
   ↓1 = [];
   ↓2 = [];
 }

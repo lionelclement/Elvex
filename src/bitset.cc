@@ -104,25 +104,71 @@ std::string Bitset::toString() const
     return s.str();
 }
 
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-void Bitset::makeSerialString()
-{
-    std::ostringstream stream;
-    size_t c = this->count();
-    size_t sz = this->size();
-    for (size_t i = 0; i < sz && c > 0; ++i)
-    {
-        if ((*this)[i])
-        {
-            --c;
-            stream << std::hex << i;
-            if (c > 0)
-                stream << '\x0';
+std::string replaceZeroSequences(const std::string& input) {
+    std::string result;
+    size_t count = 0;
+
+    for (char c : input) {
+        if (c == '0') {
+            count++;
+        } else {
+            if (count > 0) {
+                result += "_#" + std::to_string(count) + "_";
+                count = 0;
+            }
+            result += c;
         }
     }
+
+    if (count > 0) {
+        result += "_#" + std::to_string(count) + "_";
+    }
+
+    return result;
+}
+
+/* ************************************************************
+ * template<size_t N>
+ * serialString = std::hex numbers from right to left
+ ************************************************************ */
+void Bitset::makeSerialString(){
+   //serialString = toString();
+   serialString = replaceZeroSequences(this->to_string()); 
+   /***
+    std::ostringstream stream;
+    std::bitset<MAXBITS> copy = *this;
+    for (size_t i = 0; i <= MAXBITS/8 ; ++i){
+        uint8_t sample = 0;
+        for (size_t j = 0 ; j <= 7 ; ++j){
+            if (copy.test(j))
+                sample |= 1 << j;
+        } 
+        stream << std::hex << static_cast<unsigned>(sample);
+        copy >>= 8;
+    }
     serialString = stream.str();
+   ***/
+  /***
+    size_t firstNonZero = serialString.find_first_not_of('0');
+    if (firstNonZero != std::string::npos) {
+        // Si un caractère différent de '0' est trouvé, supprime les '0' au début
+        serialString.erase(0, firstNonZero);
+    } else {
+        // Si la chaîne est composée uniquement de '0', la vide
+        serialString = " ";
+    }
+    ***/
+
+   /***
+   size_t i = serialString.length();
+    while (i > 0 && serialString[i - 1] == '0') {
+        --i;
+    }
+    // Remove characters '0' from position i
+    serialString.erase(i);
+   ***/
+  
+   //std::cerr << serialString << std::endl;  
 }
 
 #ifdef OUTPUT_XML
@@ -145,3 +191,10 @@ void Bitset::toXML(xmlNodePtr nodeRoot)
         }
 }
 #endif
+
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+//bitsetPtr Bitset::_clone()
+//{
+//}

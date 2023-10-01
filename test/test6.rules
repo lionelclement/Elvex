@@ -5,6 +5,7 @@
 @withspaces
 S → adj n adj
 {
+  printlnstderr "test6...";
   [HEAD:_];
   ↓2 = ↑;
   deferred (⇓2) {

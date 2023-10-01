@@ -18,13 +18,15 @@
  ************************************************** */
 
 #include "uniq-id.hpp"
+#include <iostream>
+#include <sstream> 
 
-std::size_t UniqId::uniqId = 1;
+std::uint32_t UniqId::uniqId = 1;
 
 /* **************************************************
  *
  ************************************************** */
-UniqId::UniqId(size_t id)
+UniqId::UniqId(uint32_t id)
 {
     if (id)
         this->id = id;
@@ -35,7 +37,17 @@ UniqId::UniqId(size_t id)
 /* **************************************************
  *
  ************************************************** */
-std::size_t UniqId::getId() const
+std::uint32_t UniqId::getId() const
 {
     return this->id;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+std::string UniqId::getIdStr() const
+{
+    std::stringstream ss;
+    ss << std::hex << this->id;
+    return ss.str();
 }

@@ -109,7 +109,7 @@ public:
 
     void deleteAnonymousVariables(void);
 
-    bool renameVariables(size_t);
+    bool renameVariables(uint32_t);
 
     void apply(statementPtr from, class Item *, class Parser &, class Generator *, const statementPtr &, statementPtr,
                bool &);

@@ -316,7 +316,7 @@ std::string *Features::assignForm()
 void Features::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr f = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"FS", nullptr);
-    xmlSetProp(f, (xmlChar *)"id", (xmlChar *)std::to_string(this->getId()).c_str());
+    xmlSetProp(f, (xmlChar *)"id", (xmlChar *)this->getIdStr().c_str());
     if (!features.empty())
         for (list_of_feature::const_iterator i = features.begin();
              i != features.end();
@@ -603,7 +603,7 @@ void Features::subFlags(const std::bitset<FLAGS> &flags)
 /* **************************************************
  *
  ************************************************** */
-bool Features::renameVariables(size_t i)
+bool Features::renameVariables(uint32_t i)
 {
     bool effect = false;
     for (auto &feature : features)

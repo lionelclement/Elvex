@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -35,9 +35,9 @@
 /* **************************************************
  *
  ************************************************** */
-Entry::Entry(std::string form, featuresPtr features)
+Entry::Entry(const std::string &form, featuresPtr features)
 {
-    this->form = std::move(form);
+    this->form = form;
     this->features = features;
     NEW;
 }
@@ -65,9 +65,9 @@ Entry::~Entry()
 /* **************************************************
  *
  ************************************************** */
-entryPtr Entry::create(std::string form, featuresPtr features)
+entryPtr Entry::create(const std::string &form, featuresPtr features)
 {
-    return entryPtr(new Entry( std::move(form), features));
+    return entryPtr(new Entry(form, features));
 }
 
 /* **************************************************
@@ -101,7 +101,7 @@ featuresPtr Entry::getFeatures() const
 void Entry::toXML(xmlNodePtr nodeRoot) const
 {
     xmlNodePtr entry = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"ENTRY", nullptr);
-   if (!this->form.empty())
+    if (!this->form.empty())
     {
         xmlSetProp(entry, (xmlChar *)"form", (xmlChar *)this->form.c_str());
     }
@@ -120,9 +120,12 @@ void Entry::print(std::ostream &os) const
     os << "Entry(" /*<< Vartable::codeToName(this->pos) */;
     if (!this->form.empty())
         os << "form:\"" << this->form << "\", ";
-    if (features){
+    if (features)
+    {
         features->flatPrint(os);
-    } else {
+    }
+    else
+    {
         FATAL_ERROR_UNEXPECTED;
     }
     os << ')';
@@ -145,27 +148,26 @@ void Entry::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-void Entry::renameVariables(size_t k)
+void Entry::renameVariables(uint32_t code)
 {
 
-    std::string pattern =
-        std::string(
-            "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
+    size_t found = form.find('$');
 
-    try
+    if (found != (std::string::npos))
     {
-        std::regex regexpression(pattern, std::regex_constants::ECMAScript);
-        std::string replacement_str = "$&_" + std::to_string(k);
-        form = std::regex_replace(form, regexpression, replacement_str);
-    }
+        std::string pattern =
+            std::string(
+                "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
 
-    catch (const std::regex_error &e)
-    {
-        std::cout << "regex_error caught: " << e.what() << '(' << e.code() << ')' << std::regex_constants::error_brack
-                  << '\n';
-    }
+            std::regex regexpression(pattern, std::regex_constants::ECMAScript);
+            std::stringstream ss;
+            ss << "$_" << std::hex << code;
+            std::string target = std::regex_replace(form, regexpression, ss.str());
+            form = target;
+    } 
+
     if (features)
-        features->renameVariables(k);
+        features->renameVariables(code);
     resetSerial();
 }
 
@@ -174,5 +176,5 @@ void Entry::renameVariables(size_t k)
  ************************************************** */
 entryPtr Entry::clone() const
 {
-    return create(std::move(form), features->clone());
+    return create(std::string(form), features->clone());
 }

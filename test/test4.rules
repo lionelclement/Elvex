@@ -1,6 +1,7 @@
 @withspaces
 S → [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ]
 {
+  printlnstderr "test4...";
   [mod:$modifiers];
   foreach $modifier in $modifiers {
     $entries = search $modifier on adj;

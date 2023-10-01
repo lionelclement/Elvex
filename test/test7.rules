@@ -1,9 +1,9 @@
-
 /* **************************************************
  * 
  ************************************************** */
 Axiom → Text_with_features strongPunct {
-  printlnstderr "test7 will take a while...";
+  printlnstderr "test7...";
+  printlnstderr "test7 will take a while due to the large number of possible combinations.";
   ↓1 = ↑;
   [punct:$punc] ⊂ ⇓1;
   ↓2 = [punct:$punc];
@@ -23,7 +23,8 @@ Text_with_features → VTENSE S_tense {
   // not interrogative, not negative
   if (¬ $verbal_constr)
     $verbal_constr = no_int | no_neg;
-    [vtense:$vtenseSth] ⊂ ⇓2;
+  [vtense:$vtenseSth] ⊂ ⇓2;
+  //println "[", $vtenseSth, "]";
   attest($vtenseSth != infinitive);
   ↓1 = [vtense:$vtenseSth];
   ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
@@ -306,7 +307,7 @@ S → VP {
  * Interrogative Sentence
  ************************************************** */
 @withspaces
-S → aux NP|cln VP strongPunct {
+___S → aux NP|cln VP strongPunct {
   [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   [verbal_constr:$verbal_constr] ⊂ ↑;
   ↓2 = $SUBJECT ∪ [case:nominative];

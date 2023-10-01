@@ -47,10 +47,10 @@
 #define DBUGPRT(x) DEBUGYACC({std::cerr << "*** " << x << std::endl;})
 #define DBUGPRTARG(x, s) DEBUGYACC({std::cerr << "*** " << x << ' ' << s << std::endl});
   
- extern unsigned int ruleslineno;
+ extern uint32_t ruleslineno;
  extern unsigned int ruleslex();
  extern Parser parser;
- unsigned int headLineno;
+ uint32_t headLineno;
  bool headTrace;
  bool withSpaces;
  bool bidirectional;
@@ -71,7 +71,7 @@
   %}
 
 %union{
-  unsigned int integer_slot;
+  uint32_t integer_slot;
   double double_slot;
   termsPtr* terms_slot; //(A|B)
   std::vector< termsPtr >* vector_terms_slot; // X Y

@@ -193,7 +193,7 @@ statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags)
 /* **************************************************
  *
  ************************************************** */
-void Statements::renameVariables(size_t i)
+void Statements::renameVariables(uint32_t i)
 {
     if (guard)
         guard->renameVariables(i);

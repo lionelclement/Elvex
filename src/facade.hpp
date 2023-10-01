@@ -54,7 +54,9 @@ public:
 
     void printFlags(std::ostream &) const;
 
-    std::size_t getId(void) const;
+    std::uint32_t getId(void) const;
+    
+    std::string getIdStr(void) const;
 };
 
 #endif // ELVEX_FACADE_H

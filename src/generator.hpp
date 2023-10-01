@@ -54,8 +54,8 @@ public:
         STAGE_HEAD
     };
 
-    typedef std::unordered_map<unsigned int, class Item *> item_map;
-    typedef std::unordered_map<unsigned int, class ItemSet *> itemSet_map;
+    typedef std::unordered_map<uint32_t, class Item *> item_map;
+    typedef std::unordered_map<uint32_t, class ItemSet *> itemSet_map;
     typedef itemSet_map::const_iterator itemSet_map_const_iterator;
 
 private:
@@ -167,9 +167,9 @@ public:
 
     bool insertItemMap(class Item *);
 
-    void eraseItemMap(unsigned int);
+    void eraseItemMap(uint32_t);
 
-    class Item *getItemMap(unsigned int);
+    class Item *getItemMap(uint32_t);
 
     bool getTrace() const;
 
@@ -201,7 +201,7 @@ public:
 
     std::string keyMemoization(class Item *, class Item *);
 
-    void setVerbose(bool _verbose);
+    void setVerbose(bool);
 
     bool getVerbose();
 

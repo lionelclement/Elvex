@@ -70,8 +70,7 @@ CAT	common_noun	CAT
 MOUSE	common_noun	MOUSE	
 TABLE	common_noun	TABLE	
 
-STUDENT	common_noun	HUMAN	
-PROFESSOR	common_noun	HUMAN	
+HUMAN	common_noun	HUMAN	
 
 #  Adjectives
 THRILLED	adj	THRILLED	type:opinion

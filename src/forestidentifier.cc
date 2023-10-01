@@ -24,7 +24,7 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-ForestIdentifier::ForestIdentifier(uint16_t code, uint8_t from, uint8_t to,
+ForestIdentifier::ForestIdentifier(uint32_t code, uint8_t from, uint8_t to,
                                    const std::string &featuresSerialString)
 {
     NEW;
@@ -46,7 +46,7 @@ ForestIdentifier::~ForestIdentifier()
  *                                                            *
  ************************************************************ */
 class ForestIdentifier *
-ForestIdentifier::create(uint16_t code,
+ForestIdentifier::create(uint32_t code,
                          uint8_t from,
                          uint8_t to,
                          const std::string &featuresSerialString)

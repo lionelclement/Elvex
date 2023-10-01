@@ -17,26 +17,13 @@
  *
  ************************************************** */
 
-#ifndef ELVEX_UNIQ_ID_H
-#define ELVEX_UNIQ_ID_H
+#ifndef CONFIG_H
+#define CONFIG_H
 
-#include <cstddef>
-#include <cstdint>
-#include <string>
+#define ELVEX_VERSION_MAJOR "2"
+#define ELVEX_VERSION_MINOR "23"
+#define ELVEX_VERSION_PATCH "1"
+#define ELVEX_VERSION "2.23.1"
+#define PROJECT_NAME "elvex"
 
-//using std;
-
-class UniqId
-{
-
-private:
-    static uint32_t uniqId;
-    uint32_t id;
-
-public:
-    explicit UniqId(uint32_t id = 0); // if zero => autoinc
-    uint32_t getId(void) const;
-    std::string getIdStr(void) const;
-};
-
-#endif // ELVEX_UNIQ_ID_H
+#endif // CONFIG_H

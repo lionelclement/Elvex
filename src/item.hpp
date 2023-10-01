@@ -33,8 +33,8 @@ class Item : public Facade,
 {
 
 public:
-    typedef std::unordered_set<unsigned int> set_of_unsigned_int;
-    typedef set_of_unsigned_int::const_iterator set_of_unsigned_int_const_iterator;
+    typedef std::unordered_set<uint32_t> set_of_uint32_t;
+    typedef set_of_uint32_t::const_iterator set_of_unsigned_int_const_iterator;
     static uint8_t NA;
 
 private:
@@ -42,7 +42,7 @@ private:
     uint8_t index;                                           // the \bullet position
     std::vector<uint8_t> indexTerms;                         // term in a disjunction
     statementsPtr statements;                                // the semantics
-    set_of_unsigned_int refs;                                // set of items from which this one is derived
+    set_of_uint32_t refs;                                    // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
     std::vector<uint8_t> ranges;                             // ranges
     featuresPtr inheritedFeatures;                           // ↑
@@ -93,7 +93,7 @@ public:
 
     statementsPtr getStatements(void);
 
-    set_of_unsigned_int &getRefs(void);
+    set_of_uint32_t &getRefs(void);
 
     listFeaturesPtr getSynthesizedSonFeatures(void);
 
@@ -105,9 +105,11 @@ public:
 
     environmentPtr getEnvironment() const;
 
-    unsigned int getRuleId(void) const;
+    uint32_t getRuleId(void) const;
 
-    unsigned int getRuleLineno() const;
+    std::string getRuleIdStr(void) const;
+
+    uint32_t getRuleLineno() const;
 
     bool getRuleTrace(void) const;
 
@@ -121,7 +123,7 @@ public:
 
     void setIndex(uint8_t);
 
-    void setRefs(set_of_unsigned_int &);
+    void setRefs(set_of_uint32_t &);
 
     void setSynthesizedSonFeatures(listFeaturesPtr);
 
@@ -153,13 +155,13 @@ public:
 
     termsPtr getTerms(uint16_t) const;
 
-    void addRef(unsigned int);
+    void addRef(uint32_t);
 
-    void addRefs(set_of_unsigned_int &);
+    void addRefs(set_of_uint32_t &);
 
     bool isSeen(uint8_t) const;
 
-    void addItem(std::unordered_map<unsigned int, class Item *> &, unsigned int, class Item *);
+    void addItem(std::unordered_map<uint32_t, class Item *> &, unsigned int, class Item *);
 
     std::vector<uint8_t> &getRanges(void);
 
@@ -185,7 +187,7 @@ public:
 
     void print(std::ostream &) const;
 
-    void renameVariables(size_t);
+    void renameVariables(uint32_t);
 
     bool isCompleted(void);
 

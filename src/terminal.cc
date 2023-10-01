@@ -44,7 +44,7 @@ Terminal::Terminal(uint16_t code)
 /* **************************************************
  *
  ************************************************** */
-Terminal::Terminal(uint16_t code, std::string form)
+Terminal::Terminal(uint16_t code, const std::string &form)
 {
     this->code = code;
     this->form = std::move(form);
@@ -54,7 +54,7 @@ Terminal::Terminal(uint16_t code, std::string form)
 /* **************************************************
  *
  ************************************************** */
-Terminal::Terminal(uint16_t code, std::string form, featuresPtr features)
+Terminal::Terminal(uint16_t code, const std::string &form, featuresPtr features)
 {
     this->code = code;
     this->form = std::move(form);
@@ -73,17 +73,19 @@ Terminal::~Terminal()
 /* **************************************************
  *
  ************************************************** */
-terminalPtr Terminal::create(uint16_t code, std::string form, featuresPtr features)
+terminalPtr Terminal::create(uint16_t code, const std::string &form, featuresPtr features)
 {
-    return terminalPtr(new Terminal(code, std::move(form), features));
+    //return terminalPtr(new Terminal(code, std::move(form), features));
+    return terminalPtr(new Terminal(code, form, features));
 }
 
 /* **************************************************
  *
  ************************************************** */
-terminalPtr Terminal::create(uint16_t code, std::string form)
+terminalPtr Terminal::create(uint16_t code, const std::string &form)
 {
-    return terminalPtr(new Terminal(code, std::move(form)));
+    //return terminalPtr(new Terminal(code, std::move(form)));
+    return terminalPtr(new Terminal(code, form));
 }
 
 /* **************************************************
@@ -133,12 +135,4 @@ void Terminal::makeSerialString()
     std::ostringstream stream;
     stream << std::hex << code << '\x1' << form << '\x1' << features->peekSerialString();
     serialString = stream.str();
-}
-
-/* **************************************************
- *
- ************************************************** */
-terminalPtr Terminal::clone() const
-{
-    return create(code);
 }

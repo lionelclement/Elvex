@@ -34,6 +34,7 @@
 #define MAXBITS 512
 #endif
 
+//template<size_t N>
 class Bitset : public std::bitset<MAXBITS>,
                public Serializable,
                public std::enable_shared_from_this<Bitset>
@@ -62,6 +63,8 @@ public:
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
 #endif
+
+    //bitsetPtr clone(void);
 };
 
 #endif // BITSET_H

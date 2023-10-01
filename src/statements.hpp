@@ -59,7 +59,7 @@ public:
 
     void addStatement(const statementPtr &);
 
-    void renameVariables(size_t);
+    void renameVariables(uint32_t);
 
     bool findVariable(const bitsetPtr &variable);
 

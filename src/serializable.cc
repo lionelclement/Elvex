@@ -67,3 +67,4 @@ void Serializable::resetSerial()
     serialHashCode = 0;
     serialString = std::string();
 }
+

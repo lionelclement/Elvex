@@ -32,7 +32,8 @@
 Forest::Forest(terminalPtr terminal, uint8_t from, uint8_t to)
 {
     NEW;
-    this->terminal = std::move(terminal);
+    //this->terminal = std::move(terminal);
+    this->terminal = terminal;
     this->from = from;
     this->to = to;
     if (from == to)
@@ -46,7 +47,8 @@ Forest::Forest(terminalPtr terminal, uint8_t from, uint8_t to)
  ************************************************** */
 forestPtr Forest::create(terminalPtr terminal, uint8_t from, uint8_t to)
 {
-    return forestPtr(new Forest(std::move(terminal), from, to));
+    //return forestPtr(new Forest(std::move(terminal), from, to));
+    return forestPtr(new Forest(terminal, from, to));
 }
 
 /* **************************************************
@@ -132,11 +134,11 @@ void Forest::toXML(xmlNodePtr nodeRoot, bool root)
         xmlSetProp(f, (xmlChar *)"root", (xmlChar *)"yes");
     if (isSetFlags(Flags::XML))
     {
-        xmlSetProp(f, (xmlChar *)"idref", (xmlChar *)(std::to_string(this->getId())).c_str());
+        xmlSetProp(f, (xmlChar *)"idref", (xmlChar *)(this->getIdStr()).c_str());
     }
     else
     {
-        xmlSetProp(f, (xmlChar *)"id", (xmlChar *)(std::to_string(this->getId())).c_str());
+        xmlSetProp(f, (xmlChar *)"id", (xmlChar *)(this->getIdStr()).c_str());
         addFlags(Flags::XML);
         xmlSetProp(f, (xmlChar *)"from", (xmlChar *)std::to_string(this->from).c_str());
         xmlSetProp(f, (xmlChar *)"to", (xmlChar *)std::to_string(this->to).c_str());

@@ -32,24 +32,24 @@ class Rules
 {
 public:
     typedef std::list<rulePtr> list_of_rule;
-    typedef std::unordered_set<unsigned int> set_of_unsigned_int;
+    typedef std::unordered_set<uint16_t> set_of_uint16_t;
 
 private:
-    set_of_unsigned_int terminals;
-    set_of_unsigned_int nonTerminals;
+    set_of_uint16_t terminals;
+    set_of_uint16_t nonTerminals;
     list_of_rule rules;
     uint16_t startTerm;
     rulePtr firstRule;
-    unsigned int idMax;
+    uint32_t idMax;
 
 public:
     Rules(void);
 
     ~Rules(void);
 
-    set_of_unsigned_int &getTerminals(void);
+    set_of_uint16_t &getTerminals(void);
 
-    set_of_unsigned_int &getNonTerminals(void);
+    set_of_uint16_t &getNonTerminals(void);
 
     const list_of_rule &getRules(void) const;
 
@@ -57,7 +57,7 @@ public:
 
     rulePtr getFirstRule(void) const;
 
-    const unsigned int *getRefIdMax(void) const;
+    const uint32_t *getRefIdMax(void) const;
 
     void setStartTerm(uint16_t startTerm);
 

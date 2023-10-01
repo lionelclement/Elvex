@@ -46,7 +46,6 @@ Vartable::Vartable()
     IS_A_FORM = nameToCode("CONTAINS_A_FORM");
     createVariable("DOES_NOT_CONTAIN_A_HEAD");
     DOES_NOT_CONTAIN_A_HEAD = nameToCode("DOES_NOT_CONTAIN_A_HEAD");
-
 }
 
 /* ************************************************************
@@ -140,4 +139,14 @@ Vartable::uint16_t_to_string_const_iterator Vartable::bitMapcEnd()
 std::string Vartable::bitToVariable(uint16_t key)
 {
     return bitToNameMap[key];
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+bitsetPtr Vartable::renameVariable(const std::string &name, uint32_t code)
+{
+    std::stringstream ss;
+    ss << name << '_' << std::hex << code;
+    return Vartable::createVariable(ss.str());
 }

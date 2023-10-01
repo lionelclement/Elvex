@@ -38,7 +38,7 @@ private:
     std::string form;
     featuresPtr features;
 
-    Entry(std::string form, featuresPtr features);
+    Entry(const std::string &form, featuresPtr features);
 
     Entry(featuresPtr features);
 
@@ -47,11 +47,9 @@ private:
 public:
     ~Entry();
 
-    static entryPtr create(std::string form, featuresPtr features);
+    static entryPtr create(const std::string &form, featuresPtr features);
 
     static entryPtr create(featuresPtr features);
-
-    uint16_t getPos(void) const;
 
     std::string &getForm();
 
@@ -63,7 +61,7 @@ public:
 
     void print(std::ostream &) const;
     
-    void renameVariables(size_t);
+    void renameVariables(uint32_t);
 
     entryPtr clone(void) const;
 

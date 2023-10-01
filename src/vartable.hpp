@@ -77,6 +77,9 @@ public:
     static uint16_t_to_string_iterator bitMapFind(uint16_t);
 
     static uint16_t_to_string_const_iterator bitMapcEnd(void);
+
+    static bitsetPtr renameVariable(const std::string &name, uint32_t code);
+
 };
 
 #endif // ELVEX_VARTABLE_H

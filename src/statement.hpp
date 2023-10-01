@@ -311,7 +311,7 @@ public:
 
     void stmPrintln(class Item *, class Parser &, class Generator *, std::ostream &out);
 
-    void renameVariables(size_t);
+    void renameVariables(uint32_t);
 
     void toggleEnable(const statementPtr &, class Item *, class Generator *, bool &, bool);
 

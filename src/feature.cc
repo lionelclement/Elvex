@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -320,13 +320,17 @@ void Feature::toXML(xmlNodePtr nodeRoot)
  ************************************************** */
 featurePtr Feature::clone() const
 {
-    return create(type, attribute, (value) ? value->clone() : valuePtr());
+    //return create(type, attribute, (value) ? value->clone() : valuePtr());
+    if (attribute)
+        return create(type, Bitset::create(*attribute), (value) ? value->clone() : valuePtr());
+    else
+        return create(type, bitsetPtr(), (value) ? value->clone() : valuePtr());
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Feature::renameVariables(size_t i)
+bool Feature::renameVariables(uint32_t code)
 {
     bool effect = false;
     switch (type)
@@ -335,22 +339,18 @@ bool Feature::renameVariables(size_t i)
     case Feature::_LEMMA_:
     case Feature::_CONSTANT_:
         if (value)
-            if (value->renameVariables(i))
+            if (value->renameVariables(code))
                 effect = true;
         break;
     case Feature::_FORM_:
         break;
     case Feature::_VARIABLE_:
-    {
-        std::string str = attributeToString() + '_' + std::to_string(i);
-        bitsetPtr variableBits = Vartable::createVariable(str);
-        attribute = variableBits;
+        attribute = Vartable::renameVariable(attribute->toString(), code);
         if (value)
-            value->renameVariables(i);
+            value->renameVariables(code);
         resetSerial();
         effect = true;
-    }
-    break;
+        break;
     }
     return effect;
 }

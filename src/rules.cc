@@ -60,7 +60,7 @@ Rules::~Rules(void)
 /* **************************************************
  *
  ************************************************** */
-Rules::set_of_unsigned_int &Rules::getTerminals(void)
+Rules::set_of_uint16_t &Rules::getTerminals(void)
 {
     return terminals;
 }
@@ -68,7 +68,7 @@ Rules::set_of_unsigned_int &Rules::getTerminals(void)
 /* **************************************************
  *
  ************************************************** */
-Rules::set_of_unsigned_int &Rules::getNonTerminals(void)
+Rules::set_of_uint16_t &Rules::getNonTerminals(void)
 {
     return nonTerminals;
 }
@@ -100,7 +100,7 @@ rulePtr Rules::getFirstRule(void) const
 /* **************************************************
  *
  ************************************************** */
-const unsigned int *Rules::getRefIdMax(void) const
+const uint32_t *Rules::getRefIdMax(void) const
 {
     return &idMax;
 }
@@ -144,7 +144,7 @@ void Rules::print(std::ostream &outStream) const
 {
     outStream << "<table border=\"1\"><tr><td>";
     outStream << "Terminals</td><td>";
-    set_of_unsigned_int::const_iterator iter;
+    set_of_uint16_t::const_iterator iter;
     bool first = true;
     for (iter = terminals.begin(); iter != terminals.end(); ++iter)
     {
@@ -204,7 +204,7 @@ void Rules::addTerminal(uint16_t s)
  ************************************************** */
 bool Rules::isTerminal(uint16_t t) const
 {
-    set_of_unsigned_int::const_iterator iter = terminals.find(t);
+    set_of_uint16_t::const_iterator iter = terminals.find(t);
     return (iter != terminals.end());
 }
 
@@ -213,7 +213,7 @@ bool Rules::isTerminal(uint16_t t) const
  ************************************************** */
 bool Rules::isNonTerminal(uint16_t t) const
 {
-    set_of_unsigned_int::const_iterator iter = nonTerminals.find(t);
+    set_of_uint16_t::const_iterator iter = nonTerminals.find(t);
     return (iter != nonTerminals.end());
 }
 
@@ -239,7 +239,7 @@ void Rules::analyseTerms(class Parser &parser)
             {
                 if (nonTerminals.find(*term) == nonTerminals.end())
                 {
-                    unsigned long int code = (*term);
+                    uint16_t code = (*term);
                     terminals.insert(code);
 
                     Parser::entries_map *headToEntries;
@@ -264,7 +264,7 @@ void Rules::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr g = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"GRAMMAR", NULL);
     xmlNodePtr t = xmlNewChild(g, NULL, (const xmlChar *)"TERMINALS", NULL);
-    set_of_unsigned_int::const_iterator iter;
+    set_of_uint16_t::const_iterator iter;
     for (iter = terminals.begin(); iter != terminals.end(); ++iter)
     {
         xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToName(*iter).c_str()));

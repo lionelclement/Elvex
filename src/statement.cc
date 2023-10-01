@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -534,10 +534,14 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
 #define GREEN 0x90EE90u
 #define BLUE 0x0000FFu
 #define GRAY 0xB7B7B7u
-#define OPENSPAN if (color) out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";background-color:#" << std::setw(6) << std::hex << bgcolor << ";\">";
-#define CLOSESPAN if (color) out << "</SPAN>";
+#define OPENSPAN \
+    if (color)   \
+        out << "<SPAN style=\"color:#" << std::setfill('0') << std::setw(6) << std::hex << color << ";background-color:#" << std::setw(6) << std::hex << bgcolor << ";\">";
+#define CLOSESPAN \
+    if (color)    \
+        out << "</SPAN>";
 #define BR out << "<BR>";
-    
+
     if (isSetFlags(Flags::SEEN))
         color |= BLUE;
     if (isSetFlags(Flags::DISABLED))
@@ -555,7 +559,7 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case ATTEST_STATEMENT:
         OPENSPAN;
         out << "<B>attest</B>&nbsp;";
@@ -564,7 +568,7 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case ASSIGNMENT_STATEMENT:
         OPENSPAN;
         lhs->print(out);
@@ -574,7 +578,7 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case SUBSUME_STATEMENT:
         OPENSPAN;
         lhs->print(out);
@@ -584,7 +588,7 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case PRINT_STATEMENT:
         OPENSPAN;
         out << "<B>print</B>&nbsp;";
@@ -593,7 +597,7 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case PRINTLN_STATEMENT:
         OPENSPAN;
         out << "<B>println</B>&nbsp;";
@@ -602,7 +606,7 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case PRINTSTDERR_STATEMENT:
         OPENSPAN;
         out << "<B>printstderr</B>&nbsp;";
@@ -611,7 +615,7 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case PRINTLNSTDERR_STATEMENT:
         OPENSPAN;
         out << "<B>printlnstderr</B>&nbsp;";
@@ -620,14 +624,14 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         BR;
         CLOSESPAN;
         break;
-    
+
     case SEARCH_STATEMENT:
         out << "<B>search</B>&nbsp;";
         lhs->print(out);
         out << "&nbsp;<B>on</B>&nbsp;";
         out << Vartable::codeToName(first);
         break;
-    
+
     case STMS_STATEMENT:
         getStatements()->print(out, tabulationLenght, tabulation, color, bgcolor, true, "{", "}", "");
         break;
@@ -719,24 +723,24 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
     case NIL_STATEMENT:
         out << "<B>NIL</B>";
         break;
-    
+
     case CONSTANT_STATEMENT:
     case VARIABLE_STATEMENT:
         out << getBits()->toString();
         break;
-    
+
     case ANONYMOUS_STATEMENT:
         out << '_';
         break;
-    
+
     case FEATURES_STATEMENT:
         getFeatures()->flatPrint(out);
         break;
-    
+
     case PAIRP_STATEMENT:
         getPairp()->flatPrint(out, true);
         break;
-    
+
     case UNIF_STATEMENT:
         out << "&nbsp;(";
         lhs->print(out);
@@ -744,40 +748,40 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
         rhs->print(out);
         out << ")&nbsp;";
         break;
-    
+
     case INHERITED_FEATURES_STATEMENT:
         out << "↑";
         break;
-    
+
     case SYNTHESIZED_FEATURES_STATEMENT:
         out << "⇑";
         break;
-    
+
     case DASH_STATEMENT:
         out << '#' << std::to_string(getFirst() + 1);
         if (getSecond() != UINT8_MAX)
             out << "." << std::to_string(getSecond() + 1);
         break;
-    
+
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
         out << "↓" << getFirst() + 1;
         if (getSecond() != UINT8_MAX)
             out << "." << getSecond() + 1;
         break;
-    
+
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
         out << "⇓";
         out << getFirst() + 1;
         break;
-    
+
     case STRING_STATEMENT:
         out << "&quot;" << getString() << "&quot;";
         break;
-    
+
     case NUMBER_STATEMENT:
         out << getNumber();
         break;
-    
+
     case FUNCTION_STATEMENT:
         switch (this->getFct())
         {
@@ -1089,7 +1093,7 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
         statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, getPairp()->clone());
         break;
     case VARIABLE_STATEMENT:
-        statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, getBits());
+        statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, Bitset::create(getBits()));
         break;
     case ATTEST_STATEMENT:
         statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, this->lhs ? lhs->clone(protectedFlags) : statementPtr());
@@ -1326,7 +1330,7 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
             }
             else
             {
-                //throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(features->assignHead()));
+                // throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(features->assignHead()));
             }
         }
     }
@@ -1636,10 +1640,12 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             {
                 resultValue = valuePtr();
             }
-            else if ((v1->isFalse()) || (v2->isFalse())){
+            else if ((v1->isFalse()) || (v2->isFalse()))
+            {
                 resultValue = Value::STATIC_FALSE;
             }
-            else {
+            else
+            {
                 resultValue = Value::STATIC_TRUE;
             }
             goto valueBuilt;
@@ -1667,7 +1673,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) && (!v2))
                 resultValue = Value::STATIC_TRUE;
 
-            else if (!v1 || !v2){
+            else if (!v1 || !v2)
+            {
                 FATAL_ERROR_UNEXPECTED;
             }
 
@@ -1685,11 +1692,12 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
             valuePtr v2 = rhs->evalValue(item, parser, synthesizer, replaceVariables);
-            //if ((!v1) && (!v2))
-            //    resultValue = Value::STATIC_FALSE;
+            // if ((!v1) && (!v2))
+            //     resultValue = Value::STATIC_FALSE;
 
-            //else 
-            if ((!v1) || (!v2)) {
+            // else
+            if ((!v1) || (!v2))
+            {
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_TRUE;
             }
@@ -1779,7 +1787,8 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         case NOT:
         {
             valuePtr v1 = lhs->evalValue(item, parser, synthesizer, replaceVariables);
-            if (!v1 || v1->isFalse()){
+            if (!v1 || v1->isFalse())
+            {
                 resultValue = Value::STATIC_TRUE;
             }
             else
@@ -1791,9 +1800,9 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         case RANDOM:
             resultValue = Value::create(Value::NUMBER_VALUE, (double)rand());
             goto valueBuilt;
-        break;
+            break;
         }
-    break;
+        break;
 
     default:
         FATAL_ERROR_UNEXPECTED;
@@ -1924,9 +1933,10 @@ featuresPtr Statement::unif(statementPtr from, const featuresPtr &fs1, const fea
 
                         case Value::VARIABLE_VALUE:
                             result->add(Feature::create(Feature::_HEAD_, bitsetPtr(), (*i1)->getValue()));
-                            if (!item->getEnvironment()){
+                            if (!item->getEnvironment())
+                            {
                                 item->setEnvironment(Environment::create());
-                            }    
+                            }
                             item->getEnvironment()->add(from, (*i2)->getValue()->getBits(), (*i1)->getValue());
                             break;
 
@@ -2278,8 +2288,10 @@ void Statement::buildInheritedSonFeatures(class Item *item, Parser &parser, Gene
 
     if (_features->isNil())
         addFlags(Flags::BOTTOM);
-    else
-        item->getInheritedSonFeatures()->add(lhs->getFirst(), _features);
+    else {
+        //CERR_LINE;
+        item->getInheritedSonFeatures()->add(lhs->getFirst(), _features->clone());
+    }
 }
 
 /* ************************************************************
@@ -2289,9 +2301,9 @@ void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Gener
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildSynthesizedFeatures #######################" << std::endl;
-        std::cout << "buildSynthesizedFeatures: ";
-        print(std::cout);
-        std::cout << std::endl;
+    std::cout << "buildSynthesizedFeatures: ";
+    print(std::cout);
+    std::cout << std::endl;
 #endif
     if (!item->getSynthesizedFeatures()->isNil())
     {
@@ -2305,7 +2317,8 @@ void Statement::buildSynthesizedFeatures(class Item *item, Parser &parser, Gener
         addFlags(Flags::BOTTOM);
     else
     {
-        item->setSynthesizedFeatures(_features);
+        //CERR_LINE;
+        item->setSynthesizedFeatures(_features->clone());
     }
 }
 
@@ -2317,9 +2330,9 @@ void Statement::buildEnvironmentWithSynthesize(statementPtr from, class Item *it
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildEnvironmentWithSynthesize #######################" << std::endl;
-        std::cout << "buildEnvironmentWithSynthesize: ";
-        print(std::cout);
-        std::cout << std::endl;
+    std::cout << "buildEnvironmentWithSynthesize: ";
+    print(std::cout);
+    std::cout << std::endl;
 #endif
     switch (this->op)
     {
@@ -2374,9 +2387,10 @@ void Statement::buildEnvironmentWithSynthesize(statementPtr from, class Item *it
             {
                 if (!left->buildEnvironment(from, environment, sonSynth, true
 #ifdef TRACE_BUILD_ENVIRONMENT
-                    , true
+                                            ,
+                                            true
 #endif
-                    ))
+                                            ))
                 {
 
                     addFlags(Flags::BOTTOM);
@@ -2404,9 +2418,9 @@ void Statement::buildEnvironmentWithInherited(statementPtr from, class Item *ite
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildEnvironmentWithInherited #######################" << std::endl;
-        std::cout << "buildEnvironmentWithInherited: ";
-        print(std::cout);
-        std::cout << std::endl;
+    std::cout << "buildEnvironmentWithInherited: ";
+    print(std::cout);
+    std::cout << std::endl;
 #endif
     switch (this->op)
     {
@@ -2441,7 +2455,7 @@ void Statement::buildEnvironmentWithInherited(statementPtr from, class Item *ite
         if (!left)
         {
             FATAL_ERROR_UNEXPECTED;
-            //WARNING_STM;
+            // WARNING_STM;
         }
         else
         {
@@ -2449,7 +2463,7 @@ void Statement::buildEnvironmentWithInherited(statementPtr from, class Item *ite
             if (!right)
             {
                 FATAL_ERROR_UNEXPECTED;
-                //WARNING_STM;
+                // WARNING_STM;
             }
             else
             {
@@ -2465,13 +2479,13 @@ void Statement::buildEnvironmentWithInherited(statementPtr from, class Item *ite
                 }
                 if (!left->buildEnvironment(from, environment, right, true
 #ifdef TRACE_BUILD_ENVIRONMENT
-                    , true
+                                            ,
+                                            true
 #endif
-                    ))
+                                            ))
                 {
                     addFlags(Flags::BOTTOM);
                 }
-                
             }
         }
     }
@@ -2501,8 +2515,8 @@ void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, P
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::buildEnvironmentWithValue #######################" << std::endl;
-        print(std::cout);
-        std::cout << std::endl;
+    print(std::cout);
+    std::cout << std::endl;
 #endif
     switch (this->op)
     {
@@ -2595,9 +2609,9 @@ void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, P
         }
         else
         {
-            //if (right->isNil())
+            // if (right->isNil())
             //{
-            //} // empty
+            // } // empty
             featuresPtr left = lhs->evalFeatures(item, parser, synthesizer, false);
             if (left)
             {
@@ -2613,9 +2627,10 @@ void Statement::buildEnvironmentWithValue(statementPtr from, class Item *item, P
                 }
                 if (!left->buildEnvironment(from, environment, right, true
 #ifdef TRACE_BUILD_ENVIRONMENT
-                        , true
+                                            ,
+                                            true
 #endif
-))
+                                            ))
                 {
                     addFlags(Flags::BOTTOM);
                 }
@@ -2637,8 +2652,8 @@ void Statement::stmAttest(class Item *item, Parser &parser, Generator *synthesiz
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmAttest #######################" << std::endl;
-        print(std::cout);
-        std::cout << std::endl;
+    print(std::cout);
+    std::cout << std::endl;
 #endif
     switch (this->op)
     {
@@ -2665,9 +2680,9 @@ void Statement::stmGuard(statementPtr from, class Item *item /*, Synthesizer *sy
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmGuard #######################" << std::endl;
-        item->print(std::cout);
-        print(std::cout);
-        std::cout << std::endl;
+    item->print(std::cout);
+    print(std::cout);
+    std::cout << std::endl;
 #endif
     if (isSetFlags(Flags::DISABLED | Flags::SEEN))
     {
@@ -2689,10 +2704,11 @@ void Statement::stmGuard(statementPtr from, class Item *item /*, Synthesizer *sy
     featuresPtr localRhs = item->getInheritedFeatures();
 
     if (!localFeatures->buildEnvironment(from, environment, localRhs, false
-#ifdef TRACE_BUILD_ENVIRONMENT    
-                , true
+#ifdef TRACE_BUILD_ENVIRONMENT
+                                         ,
+                                         true
 #endif
-))
+                                         ))
     {
         addFlags(Flags::BOTTOM);
     }
@@ -2703,8 +2719,8 @@ void Statement::stmGuard(statementPtr from, class Item *item /*, Synthesizer *sy
     }
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmGuard DONE #######################" << std::endl;
-        item->print(std::cout);
-        std::cout << std::endl;
+    item->print(std::cout);
+    std::cout << std::endl;
 #endif
 }
 
@@ -2715,8 +2731,8 @@ void Statement::stmForeach(statementPtr from, class Item *item, Parser &parser, 
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmForeach #######################" << std::endl;
-        item->print(std::cout);
-        std::cout << std::endl;
+    item->print(std::cout);
+    std::cout << std::endl;
 #endif
     addFlags(Flags::SEEN);
     statementPtr variable = getLhs();
@@ -2739,8 +2755,8 @@ void Statement::stmForeach(statementPtr from, class Item *item, Parser &parser, 
     }
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmForeach DONE #######################" << std::endl;
-        item->print(std::cout);
-        std::cout << std::endl;
+    item->print(std::cout);
+    std::cout << std::endl;
 #endif
 }
 
@@ -2751,8 +2767,8 @@ void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Gener
 {
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmIf #######################" << std::endl;
-        item->print(std::cout);
-        std::cout << std::endl;
+    item->print(std::cout);
+    std::cout << std::endl;
 #endif
     statementPtr leftHandSide = getRhs()->getLhs();
     statementPtr rightHandSide = getRhs()->getRhs();
@@ -2816,8 +2832,8 @@ void Statement::stmIf(statementPtr from, class Item *item, Parser &parser, Gener
     }
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmIf DONE #######################" << std::endl;
-        item->print(std::cout);
-        std::cout << std::endl;
+    item->print(std::cout);
+    std::cout << std::endl;
 #endif
 }
 
@@ -2868,17 +2884,14 @@ void Statement::stmPrintln(class Item *item, Parser &parser, Generator *generato
 /* **************************************************
  *
  ************************************************** */
-void Statement::renameVariables(size_t i)
+void Statement::renameVariables(uint32_t code)
 {
     switch (this->op)
     {
     case VARIABLE_STATEMENT:
-    {
-        std::string _str = getBits()->to_string() + "_" + std::to_string(i);
-        bitsetPtr variableBits = Vartable::createVariable(_str);
-        bitset = variableBits;
-    }
-    break;
+        bitset = Vartable::renameVariable(getBits()->toString(), code);
+        resetSerial();
+        break;
     case CONSTANT_STATEMENT:
     case ANONYMOUS_STATEMENT:
     case NIL_STATEMENT:
@@ -2902,23 +2915,23 @@ void Statement::renameVariables(size_t i)
     case FOREACH_CON_T_STATEMENT:
     case DEFERRED_STATEMENT:
         if (lhs)
-            lhs->renameVariables(i);
+            lhs->renameVariables(code);
         if (rhs)
-            rhs->renameVariables(i);
+            rhs->renameVariables(code);
         break;
     case FEATURES_STATEMENT:
     case GUARD_STATEMENT:
-        getFeatures()->renameVariables(i);
+        getFeatures()->renameVariables(code);
         break;
     case PAIRP_STATEMENT:
-        getPairp()->renameVariables(i);
+        getPairp()->renameVariables(code);
         break;
     case STMS_STATEMENT:
     case PRINT_STATEMENT:
     case PRINTLN_STATEMENT:
     case PRINTSTDERR_STATEMENT:
     case PRINTLNSTDERR_STATEMENT:
-        getStatements()->renameVariables(i);
+        getStatements()->renameVariables(code);
         break;
     }
 }

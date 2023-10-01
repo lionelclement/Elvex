@@ -4,6 +4,7 @@
 @withspaces
 S → [A|B] C D
 {
+  printlnstderr "test2...";
   if (#1) {
     ↓2 = [HEAD:CA];
     if (#1.1) {

@@ -89,7 +89,15 @@ void Facade::printFlags(std::ostream &out) const
 /* **************************************************
  *
  ************************************************** */
-std::size_t Facade::getId(void) const
+std::uint32_t Facade::getId(void) const
 {
     return uniqId.getId();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+std::string Facade::getIdStr(void) const
+{
+    return uniqId.getIdStr();
 }

@@ -205,7 +205,7 @@ void ListFeatures::makeSerialString()
 void ListFeatures::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr lfs = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"LFS", nullptr);
-    xmlSetProp(lfs, (xmlChar *)"id", (xmlChar *)std::to_string(this->getId()).c_str());
+    xmlSetProp(lfs, (xmlChar *)"id", (xmlChar *)this->getIdStr().c_str());
     for (auto &features : listFeatures)
     {
         features->toXML(lfs);

@@ -206,6 +206,9 @@ termsPtr Terms::clone(void) const
     return Terms::create(new_terms, optional);
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 uint16_t Terms::operator[](size_t i)
 {
     return terms[i];

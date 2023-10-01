@@ -462,7 +462,7 @@ void Pairp::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Pairp::renameVariables(size_t i)
+bool Pairp::renameVariables(uint32_t code)
 {
     bool effect = false;
     switch (type)
@@ -471,16 +471,17 @@ bool Pairp::renameVariables(size_t i)
         break;
     case _ATOM_:
         if (value)
-            if (value->renameVariables(i))
+            if (value->renameVariables(code))
                 effect = true;
         break;
     case _PAIRP_:
-        if (pairp.car->renameVariables(i))
+        if (pairp.car->renameVariables(code))
             effect = true;
-        if (pairp.cdr->renameVariables(i))
+        if (pairp.cdr->renameVariables(code))
             effect = true;
         break;
     }
+    resetSerial();
     return effect;
 }
 

@@ -479,8 +479,13 @@ class Item *Generator::createItem(class Item *item, uint8_t row)
 std::string
 Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
 {
-    return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) +
-           actualItem->getSynthesizedFeatures()->peekSerialString();
+
+    std::stringstream ss;
+    ss << std::hex << actualItem->getId() << '\x0' << std::hex << previousItem->getCurrentTerm() << '\x0' << std::dec << actualItem->getSynthesizedFeatures()->peekSerialString();
+    return ss.str();
+
+    // return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) +
+    //        actualItem->getSynthesizedFeatures()->peekSerialString();
 }
 
 /* **************************************************
@@ -528,10 +533,10 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 
                 class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
                 forestPtr forestFound = forestPtr();
-                class ForestIdentifier *fi = ForestIdentifier::create(it->getCurrentTerm(),
-                                                                      row,
-                                                                      row,
-                                                                      std::string());
+                class ForestIdentifier *fi = ForestIdentifier::create(static_cast<uint32_t>(it->getCurrentTerm()),
+                                                                       row,
+                                                                       row,
+                                                                       std::string());
                 auto forestMapIt = forestMap.find(fi);
                 if (forestMapIt != forestMap.cend())
                 {
@@ -583,7 +588,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 #endif
                 if (!state->insert(it, this))
                 {
-                    FATAL_ERROR_UNEXPECTED
+                    CERR_LINE;
+                    //FATAL_ERROR_UNEXPECTED;
                 }
                 else
                 {
@@ -622,7 +628,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 #endif
                     if (!state->insert(it, this))
                     {
-                        FATAL_ERROR_UNEXPECTED
+                        CERR_LINE;
+                        //FATAL_ERROR_UNEXPECTED;
                     }
                     else
                     {
@@ -792,12 +799,12 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                 }
 
                                 forestPtr forestFound = forestPtr();
-                                class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
-                                                                                      (*actualItem)->getRanges()[0],
-                                                                                      row,
-                                                                                      ((*actualItem)->getSynthesizedFeatures()
-                                                                                           ? (*actualItem)->getSynthesizedFeatures()->peekSerialString()
-                                                                                           : std::string()));
+                                class ForestIdentifier *fi = ForestIdentifier::create(static_cast<uint32_t>((*actualItem)->getRuleLhs()),
+                                                                                       (*actualItem)->getRanges()[0],
+                                                                                       row,
+                                                                                       ((*actualItem)->getSynthesizedFeatures()
+                                                                                            ? (*actualItem)->getSynthesizedFeatures()->peekSerialString()
+                                                                                            : std::string()));
                                 auto forestMapIt = forestMap.find(fi);
                                 if (forestMapIt != forestMap.cend())
                                 {
@@ -946,9 +953,9 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                         }
                                         forestPtr forestFound = forestPtr();
                                         class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getId(),
-                                                                                              (*actualItem)->getRanges()[0],
-                                                                                              row,
-                                                                                              std::string());
+                                                                                               (*actualItem)->getRanges()[0],
+                                                                                               row,
+                                                                                               std::string());
                                         auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
                                         {
@@ -1096,8 +1103,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                      std::cout << "form:" << form << std::endl;
                      std::cout << "pos : " << Vartable::codeToString((*actualItem)->getCurrentTerm()) << std::endl;
                     */
-                    //COUT_LINE;
-                    //parser.printCacheLexicon(std::cout);
+                    // COUT_LINE;
+                    // parser.printCacheLexicon(std::cout);
 
                     auto foundpos = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
                     if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
@@ -1123,7 +1130,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                 break;
 
                             case STAGE_MAIN:
-                                entries = findMain(/*parser, */entriesMap);
+                                entries = findMain(/*parser, */ entriesMap);
                                 break;
 
                             case STAGE_FORM:
@@ -1157,7 +1164,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         ++entryIt;
                                     }
                                     entryPtr entry_copy = entry->clone();
-                                    entry_copy->renameVariables(entry->getId());
+                                    //CERR_LINE;
+                                    //entry_copy->renameVariables(entry->getId());
 
                                     featuresPtr entryFeatures = entry_copy->getFeatures() ? entry_copy->getFeatures()
                                                                                           : featuresPtr();
@@ -1223,14 +1231,14 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                             }
                                             else
                                             {
-                                                terminal = Terminal::create(0, 
-                                                                               entry_copy->getForm(),
+                                                terminal = Terminal::create(0,
+                                                                            entry_copy->getForm(),
                                                                             resultFeatures);
                                             }
                                         }
                                         ForestIdentifier *fi = ForestIdentifier::create(entry->hashCode(),
-                                                                                        0, 0,
-                                                                                        resultFeatures->peekSerialString());
+                                                                                         0, 0,
+                                                                                         resultFeatures->peekSerialString());
 
                                         auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
@@ -1260,13 +1268,15 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         if (!states[row]->insert(it, this))
                                         {
                                             // synomym and homonym
-                                            // i.e. two different form
-                                            FATAL_ERROR_UNEXPECTED
+                                            // i.e. two different forms
+                                            //FATAL_ERROR_UNEXPECTED
+                                            WARNING("The same word is defined twice");
                                         }
-
-                                        insertItemMap(it);
-                                        modification = true;
-                                        modificationOnce = true;
+                                        else {
+                                            insertItemMap(it);
+                                            modification = true;
+                                            modificationOnce = true;
+                                        }
                                         (*actualItem)->addFlags(Flags::SEEN);
                                         if (this->getRandomResult())
                                         {
@@ -1424,7 +1434,8 @@ entriesPtr Generator::findByHeadThenCompactedLexicon(Parser &parser, Parser::ent
 
     entriesPtr entries = findByHead(map, head);
     // if none entry found by head
-    if (!entries){
+    if (!entries)
+    {
         entries = findMain(map);
     }
 
@@ -1439,7 +1450,8 @@ entriesPtr Generator::findByHeadThenCompactedLexicon(Parser &parser, Parser::ent
             {
                 entries->add(localEntries);
             }
-            else {
+            else
+            {
                 entries = localEntries;
             }
         }
@@ -1493,7 +1505,7 @@ entriesPtr Generator::findCompactedLexicon(
     if (!compactedLexicon)
         throw fatal_exception("search operator error: No compact lexicon defined.");
 
-    //std::cerr << "search " << str << " in compactedLexicon" << std::endl;
+    // std::cerr << "search " << str << " in compactedLexicon" << std::endl;
     info = compactedLexicon->search(compactedLexicon->init, str);
     // in : pos#lemma
     // out : form#fs

@@ -107,7 +107,7 @@ public:
 
     std::string *assignForm();
 
-    bool renameVariables(size_t);
+    bool renameVariables(u_int32_t);
 
     bool isNil() const;
 

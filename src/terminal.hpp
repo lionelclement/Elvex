@@ -41,9 +41,9 @@ private:
 
     Terminal(uint16_t code);
 
-    Terminal(uint16_t code, std::string form);
+    Terminal(uint16_t code, const std::string &form);
 
-    Terminal(uint16_t code, std::string form, featuresPtr features);
+    Terminal(uint16_t code, const std::string &form, featuresPtr features);
 
     void makeSerialString(void);
 
@@ -52,15 +52,11 @@ public:
 
     static terminalPtr create(uint16_t code);
 
-    static terminalPtr create(uint16_t code, std::string form);
+    static terminalPtr create(uint16_t code, const std::string &form);
 
-    static terminalPtr create(uint16_t code, std::string form, featuresPtr features);
-
-    //uint16_t getCode(void) const;
+    static terminalPtr create(uint16_t code, const std::string &form, featuresPtr features);
 
     std::string &getForm();
-
-    //featuresPtr getFeatures() const;
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr nodeRoot) const;
@@ -68,8 +64,6 @@ public:
 
     void print(std::ostream &) const;
     
-    terminalPtr clone(void) const;
-
 };
 
 #endif // ELVEX_TERMINAL_H

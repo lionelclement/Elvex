@@ -99,7 +99,7 @@ public:
     void toXML(xmlNodePtr nodeRoot);
 #endif
 
-    bool renameVariables(size_t);
+    bool renameVariables(uint32_t);
 
     void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 

@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -416,14 +416,14 @@ void Value::makeSerialString()
     case FALSE_VALUE:
         serialString = '\x2';
         break;
+    case ANONYMOUS_VALUE:
+        serialString = '\x5';
+        break;
     case CONSTANT_VALUE:
         serialString = '\x3' + bits->peekSerialString();
         break;
     case VARIABLE_VALUE:
         serialString = '\x4' + bits->peekSerialString();
-        break;
-    case ANONYMOUS_VALUE:
-        serialString = '\x5';
         break;
     case IDENTIFIER_VALUE:
         serialString = '\x6' + std::to_string(code);
@@ -518,22 +518,38 @@ valuePtr Value::clone()
     case NIL_VALUE:
     case TRUE_VALUE:
     case FALSE_VALUE:
-    case CONSTANT_VALUE:
-    case IDENTIFIER_VALUE:
-    case FORM_VALUE:
-    case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
         result = shared_from_this();
         break;
+
+    case CONSTANT_VALUE:
+        result = Value::create(CONSTANT_VALUE, bits);
+        break;
+
+    case IDENTIFIER_VALUE:
+        result = Value::create(IDENTIFIER_VALUE, code);
+        break;
+
+    case FORM_VALUE:
+        result = Value::create(FORM_VALUE, str);
+        break;
+
+    case NUMBER_VALUE:
+        result = Value::create(NUMBER_VALUE, number);
+        break;
+
     case FEATURES_VALUE:
         result = Value::create(getFeatures()->clone());
         break;
+
     case LIST_FEATURES_VALUE:
         result = Value::create(getListFeatures()->clone());
         break;
+
     case PAIRP_VALUE:
         result = Value::create(getPairp()->clone());
         break;
+        
     case VARIABLE_VALUE:
         result = Value::create(VARIABLE_VALUE, bits);
         break;
@@ -554,9 +570,9 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     this->print(std::cout);
     std::cout << "</td><td>";
     if (value)
-      value->print(std::cout);
+        value->print(std::cout);
     else
-      std::cout << "NULL";
+        std::cout << "NULL";
     std::cout << "</td><td>";
     environment->print(std::cout);
     std::cout << "</td></tr></table>";
@@ -598,9 +614,10 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
             if (!this->getFeatures()->buildEnvironment(from, environment, value->getFeatures(),
                                                        acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
-                                                , true
+                                                       ,
+                                                       true
 #endif
-            ))
+                                                       ))
                 ret = false;
         }
         else if (value->type == ANONYMOUS_VALUE)
@@ -608,9 +625,10 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
             if (!this->getFeatures()->buildEnvironment(from, environment, Features::create(),
                                                        acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
-                                                , root
+                                                       ,
+                                                       root
 #endif
-))
+                                                       ))
                 ret = false;
         }
         else
@@ -745,11 +763,11 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
         break;
     }
 #ifdef TRACE_BUILD_ENVIRONMENT
-         std::cout << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
-         std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
-         std::cout << "<tr><td>" << (ret?"TRUE":"FALSE") << "</td><td>";
-         environment->print(std::cout);
-         std::cout << "</td></tr></table>";
+    std::cout << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
+    std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
+    std::cout << "<tr><td>" << (ret ? "TRUE" : "FALSE") << "</td><td>";
+    environment->print(std::cout);
+    std::cout << "</td></tr></table>";
 #endif
     return ret;
 }
@@ -761,17 +779,17 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
 {
     bool ret = true;
 #ifdef TRACE_BUILD_ENVIRONMENT
-        COUT_LINE;
-        std::cout << "<DIV>";
-        std::cout << "Value::subsumes (" << this << ")";
-        std::cout << "<TABLE><TR>";
-        std::cout << "<TD>";
-        this->print(std::cout);
-        std::cout << "</TD>&lt;<TD>";
-        o->print(std::cout);
-        std::cout << "</TD>";
-        std::cout << "</TR></TABLE>";
-        std::cout << "</DIV>";
+    COUT_LINE;
+    std::cout << "<DIV>";
+    std::cout << "Value::subsumes (" << this << ")";
+    std::cout << "<TABLE><TR>";
+    std::cout << "<TD>";
+    this->print(std::cout);
+    std::cout << "</TD>&lt;<TD>";
+    o->print(std::cout);
+    std::cout << "</TD>";
+    std::cout << "</TR></TABLE>";
+    std::cout << "</DIV>";
 #endif
 
     // $X ⊂ …
@@ -797,32 +815,32 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
     }
 
     // NIL ⊂ NIL
-    //else if (isNil() && o->isNil())
+    // else if (isNil() && o->isNil())
     //{
     //}
 
     // NIL ⊂ …
     // … ⊂ NIL
-    //else if (isNil() || o->isNil())
+    // else if (isNil() || o->isNil())
     //{
     //}
 
     // TRUE ⊂ TRUE
-    //else if (isTrue() && o->isTrue())
+    // else if (isTrue() && o->isTrue())
     //{
     //}
 
     // TRUE ⊂ …
     // … ⊂ TRUE
-    //else if (isTrue() || o->isTrue())
+    // else if (isTrue() || o->isTrue())
     //{
     //    ret = false;
     //}
 
     else if ((type != o->type))
     {
-        //std::cout << type << " " << o->type << std::endl;
-        //FATAL_ERROR_UNEXPECTED;
+        // std::cout << type << " " << o->type << std::endl;
+        // FATAL_ERROR_UNEXPECTED;
         ret = false;
     }
 
@@ -859,9 +877,9 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
         }
     }
 #ifdef TRACE_BUILD_ENVIRONMENT
-        std::cout << "<DIV>";
-        std::cout << "result: (" << shared_from_this() << ")";
-        std::cout << "</DIV>";
+    std::cout << "<DIV>";
+    std::cout << "result: (" << shared_from_this() << ")";
+    std::cout << "</DIV>";
 #endif
     return ret;
 }
@@ -1013,7 +1031,7 @@ void Value::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Value::renameVariables(size_t i)
+bool Value::renameVariables(u_int32_t code)
 {
     bool effect = false;
     switch (type)
@@ -1029,24 +1047,18 @@ bool Value::renameVariables(size_t i)
     case LIST_FEATURES_VALUE:
         break;
     case VARIABLE_VALUE:
-    {
-        std::ostringstream oss;
-        oss << bits->toString() << "_" << i;
-        std::string _str = oss.str();
-        bitsetPtr variableBits = Vartable::createVariable(_str);
-        this->bits = variableBits;
+        bits = Vartable::renameVariable(bits->toString(), code);
         resetSerial();
         effect = true;
-    }
-    break;
+        break;
     case FEATURES_VALUE:
         if (getFeatures())
-            if (getFeatures()->renameVariables(i))
+            if (getFeatures()->renameVariables(code))
                 effect = true;
         break;
     case PAIRP_VALUE:
         if (getPairp())
-            if (getPairp()->renameVariables(i))
+            if (getPairp()->renameVariables(code))
                 effect = true;
         break;
     }
@@ -1135,22 +1147,23 @@ void Value::apply(statementPtr from, class Item *item, Parser &parser, Generator
                   bool &effect)
 {
 #ifdef TRACE_BUILD_ENVIRONMENT
-        COUT_LINE;
-        std::cout << "<DIV>";
-        std::cout << "Value::apply ()";
-        std::cout << "<TABLE><TR>";
-        std::cout << "<TD>";
-        this->print(std::cout);
-        std::cout << "</TD>";
-        std::cout << "</TR></TABLE>";
-        std::cout << "</DIV>";
+    COUT_LINE;
+    std::cout << "<DIV>";
+    std::cout << "Value::apply ()";
+    std::cout << "<TABLE><TR>";
+    std::cout << "<TD>";
+    this->print(std::cout);
+    std::cout << "</TD>";
+    std::cout << "</TR></TABLE>";
+    std::cout << "</DIV>";
 #endif
 
     switch (type)
     {
     case FEATURES_VALUE:
     {
-        if (!item->getEnvironment()){
+        if (!item->getEnvironment())
+        {
             item->setEnvironment(Environment::create());
         }
         item->getEnvironment()->add(from, variable->getBits(), shared_from_this());
