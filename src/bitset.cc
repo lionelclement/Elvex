@@ -195,6 +195,7 @@ void Bitset::toXML(xmlNodePtr nodeRoot)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-//bitsetPtr Bitset::_clone()
-//{
-//}
+bitsetPtr Bitset::clone()
+{
+    return create(*this);
+}

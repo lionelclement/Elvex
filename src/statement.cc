@@ -1079,7 +1079,6 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
     case DASH_STATEMENT:
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
-    case CONSTANT_STATEMENT:
     case STRING_STATEMENT:
     case NUMBER_STATEMENT:
     case ANONYMOUS_STATEMENT:
@@ -1093,7 +1092,8 @@ statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
         statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, getPairp()->clone());
         break;
     case VARIABLE_STATEMENT:
-        statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, Bitset::create(getBits()));
+    case CONSTANT_STATEMENT:
+        statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, getBits()->clone());
         break;
     case ATTEST_STATEMENT:
         statement = Statement::create(this->lineno, this->bufferName, this->op, this->rootOp, this->lhs ? lhs->clone(protectedFlags) : statementPtr());

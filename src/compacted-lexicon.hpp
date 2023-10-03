@@ -58,7 +58,7 @@ public:
     class CompactedLexiconTree *lexiconInit;
 
 public:
-    CompactedLexicon(std::string directoryName, std::string fileName);
+    CompactedLexicon(std::string &directoryName, std::string &fileName);
 
     void printResults(std::ostream &, unsigned long int index, bool sep) const;
 

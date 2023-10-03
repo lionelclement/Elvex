@@ -39,7 +39,7 @@ private:
 public:
     ~ForestIdentifier() override;
 
-    static class ForestIdentifier* create(uint32_t code, uint8_t from, uint8_t to, 
+    static class ForestIdentifier* _create(uint32_t code, uint8_t from, uint8_t to, 
             const std::string& featuresSerialString);
 
     void makeSerialString() override;

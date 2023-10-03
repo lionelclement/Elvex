@@ -64,7 +64,7 @@ public:
     void toXML(xmlNodePtr);
 #endif
 
-    //bitsetPtr clone(void);
+    bitsetPtr clone(void);
 };
 
 #endif // BITSET_H

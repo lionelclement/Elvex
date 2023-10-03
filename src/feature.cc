@@ -322,7 +322,7 @@ featurePtr Feature::clone() const
 {
     //return create(type, attribute, (value) ? value->clone() : valuePtr());
     if (attribute)
-        return create(type, Bitset::create(*attribute), (value) ? value->clone() : valuePtr());
+        return create(type, attribute->clone(), (value) ? value->clone() : valuePtr());
     else
         return create(type, bitsetPtr(), (value) ? value->clone() : valuePtr());
 }

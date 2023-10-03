@@ -164,7 +164,6 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
       }
    }
 }
-
 #endif
 
 #include <stack>
@@ -183,6 +182,8 @@ void Node::generateLR(std::string &currentCombination, vectorForests::const_iter
       if (forestIt == cend())
       {
          output.push_back(currentCombination);
+         //if (root)
+         //std::cerr << currentCombination << std::endl;
       }
       else
       {

@@ -46,7 +46,7 @@ ForestIdentifier::~ForestIdentifier()
  *                                                            *
  ************************************************************ */
 class ForestIdentifier *
-ForestIdentifier::create(uint32_t code,
+ForestIdentifier::_create(uint32_t code,
                          uint8_t from,
                          uint8_t to,
                          const std::string &featuresSerialString)

@@ -2,8 +2,8 @@
  * 
  ************************************************** */
 Axiom → Text_with_features strongPunct {
-  printlnstderr "test7...";
-  printlnstderr "test7 will take a while due to the large number of possible combinations.";
+  printlnstderr __FILE__, "...";
+  //printlnstderr __FILE__, " will take a while due to the large number of possible combinations.";
   ↓1 = ↑;
   [punct:$punc] ⊂ ⇓1;
   ↓2 = [punct:$punc];
@@ -54,7 +54,6 @@ Text → NP {
 /* **************************************************
  * 
  ************************************************** */
-@trace
 S_tense → S_anaphoric {
   [tense:$tense, $Rest];
   [mode:$mode, vtense:$vtense, aspect:$aspect] ⊂ ↑;
@@ -73,33 +72,37 @@ S_tense → S_anaphoric {
       // $Present
       if ($tense == present){
         if ($aspect == continuous)
-          $vtense=present_continuous;
+          $vtense = present_continuous;
         else
-          $vtense=present;
+          $vtense = present;
       }
+
       // Past
       else if ($tense == past){
         if ($aspect == continuous)
-          $vtense=past_continous;
+          $vtense = past_continous;
         else if ($aspect == perfect)
-          $vtense=present_perfect;
+          $vtense = present_perfect;
         else
-          $vtense=preterite;
+          $vtense = preterite;
       }
+
       // Future
       else if ($tense == future){
         if ($aspect == continuous)
-          $vtense=future_continuous;
+          $vtense = future_continuous;
         else
-          $vtense=future;
+          $vtense = future;
       }
+
       // Else
       else
-        $vtense=$tense;
+        $vtense = $tense;
     }
+
     // Else
     else
-      $vtense=$vtense;
+      $vtense = $vtense;
   }
   
   ↓1 = [vtense:$vtense] ∪ $Rest;
@@ -112,7 +115,6 @@ S_tense → S_anaphoric {
 * =>
 * [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R]
  ************************************************** */
-
 S_anaphoric → S_mod {
   [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
   attest ($ID1 == $ID2);
@@ -120,7 +122,6 @@ S_anaphoric → S_mod {
   ↓1 = [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
   ⇑ = ⇓1;
 }
-
 
 S_anaphoric → S_mod {
   [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R] ⊂ ↑;
@@ -133,7 +134,6 @@ S_anaphoric → S_mod {
  * Sentence modifiers
  ************************************************** */
 @withspaces
-
 S_mod → S_mod form {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
@@ -142,14 +142,12 @@ S_mod → S_mod form {
 }
 
 @withspaces
-
 S_mod → S_mod advs {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
   ↓2 = $H;
   ⇑ = ⇓1;
 }
-
 
 S_mod → S {
   [MOD:NIL, $Rest];
@@ -163,7 +161,6 @@ S_mod → S {
 @withspaces
 S → S_anaphoric form S_anaphoric {
   [HEAD:CAUSE, i:$premise, ii:$conclusion, $Rest];
-
 
   [i:[i:$I_premise, $Rest_premise]] ⊂ ↑; // $I_premise = the agent of the premise
   [ii:[i:$I_conclusion, $Rest_conclusion]] ⊂ ↑; // $I_conclusion = the agent of the conclusion
@@ -206,13 +203,11 @@ S → S_anaphoric form S_anaphoric {
 /* **************************************************
  * Sentence arguments
  ************************************************** */
-
 S → S {
   [i:$i, ii:NIL, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, $Rest];
   ⇑ = ⇓1;
 }
-
 
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
@@ -220,20 +215,17 @@ S → S {
   ⇑ = ⇓1;
 }
 
-
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $Rest];
   ⇑ = ⇓1;
 }
 
-
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, OBJ_THETA:$ii, iiReal:OBJ_THETA, $Rest];
   ⇑ = ⇓1;
 }
-
 
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
@@ -242,7 +234,6 @@ S → S {
 }
 
 // Infinitive subject controller
-
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   [i:[HEAD:$H1, ID:$ID1], ii:[i:[HEAD:$H2, ID:$ID2], $iiRest]] ⊂ ↑;
@@ -252,13 +243,11 @@ S → S {
   ⇑ = ⇓1;
 }
 
-
 S → S {
   [i:$i, ii:$ii, iii:$iii, $Rest];
   ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, OBJ_THETA:$iii, iiiReal:OBJ_THETA, $Rest];
   ⇑ = ⇓1;
 }
-
 
 S → S {
   [i:$i, ii:$ii, iii:$iii, $Rest];
@@ -269,7 +258,6 @@ S → S {
 /* **************************************************
  * Affirmative Sentence
  ************************************************** */
-@trace
 @withspaces
 S → [NP|cln] VP {
   [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
@@ -559,6 +547,7 @@ VN → VERB {
 // will he [not] feel good
 // was he [not] feeling good
 // had he [not] felt good
+@trace
 @withspaces
 VERB → [not] verb {
   [verbal_constr:$verbal_constr, aux_form:none, $Rest] ⊂ ↑;
@@ -576,6 +565,7 @@ VERB → [not] verb {
 // will he [not] have felt good
 // has he [not] been feeling good
 // had he [not] been feeling good
+@trace
 @withspaces
 VERB → [not] have|be|been|have_been verb {
   [aux_form:have|be|been|have_been];
@@ -607,6 +597,7 @@ VERB → [not] have|be|been|have_been verb {
 // he will feel good
 
 // he will have [not] felt good
+@trace
 @withspaces
 VERB → aux [not] [have|be|been|have_been] verb {
   ↓1 = ↑;

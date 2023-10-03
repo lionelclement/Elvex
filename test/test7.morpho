@@ -230,6 +230,6 @@ black	adj	BLACK
 #  Adverbs
 # ***********************************************************/
 very	adv	VERY	
-extremely	adv	EXTREMELY
+extremely	adv	EXTREMELY	
 
 # end

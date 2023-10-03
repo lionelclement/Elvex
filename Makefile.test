@@ -20,7 +20,7 @@
 # Phony targets to avoid conflicts with files of the same name
 .PHONY: test all_pdf clean
 
-.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa .html
+.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa .html .morpho .pattern .fromScratch
 
 # Name of the Elvex program
 elvex = bin/elvex
@@ -59,23 +59,29 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 
 # Rule to generate an *.output file from an *.input file
 %.output: %.input %.rules %.lexicon $(elvex)
+	@echo "build $@ from $^"
+	@if test -f $*.fromScratch; then \
+		make -f Makefile.test $*.pattern ; \
+	fi
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
+		$(elvex) -maxItems 1000000 -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
 	else \
 		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
 	fi
 
 # Rule to generate an *.output file from an *.input file
 %.html: %.input %.rules %.lexicon $(elvex)
+	@echo "build $@ from $^"
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) --trace --traceShift -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(elvex) --trace -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
 	else \
-		$(elvex) --trace --traceShift -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(elvex) --trace -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
+	@echo "build $@ from $^"
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
 		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -xml $*.xml -inputFile $< > /dev/null 2>&1; \
@@ -85,6 +91,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 
 # Check the existence of xsltproc
 %.dot: %.xml $(xslfile)
+	@echo "build $@ from $^"
 	@if test -z "$(XSLTPROC)"; then \
 		echo "Error: xsltproc is not installed."; \
 	else \
@@ -93,6 +100,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 
 # Check the existence of dot (Graphviz)
 %.pdf: %.dot
+	@echo "build $@ from $^"
 	@if test -z "$(DOT)" ; then \
 		echo "Error: dot (Graphviz) is not installed."; \
 	else \
@@ -100,38 +108,53 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	fi
 
 %.fsa: %.tmp-morpho %.tmp-pattern
-	@echo "build $@ from $*.tmp-morpho $*.tmp-pattern"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@$(elvexbuildlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build> /dev/null
 
 %.tmp-morpho: %.tmp-form %.tmp-pos %.tmp-lemma %.tmp-features
-	@echo "build $@ from $^"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@paste $*.tmp-form $*.tmp-pos $*.tmp-lemma $*.tmp-features > $@
 
 %.tmp-form: %.tmp-fplf
-	@echo "build $@ from $^"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@grep -v '^//' < $< | cut -f1 > $@
 
 %.tmp-pos: %.tmp-fplf
-	@echo "build $@ from $^"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@grep -v '^//' < $< | cut -f2 > $@
 
 %.tmp-lemma: %.tmp-fplf
-	@echo "build $@ from $^"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@cut -f3 < $< | tr '\-/\.' '____' > $@
 
 %.tmp-features: %.tmp-fplf
-	@echo "build $@ from $^"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@cut -f4 < $< | tr '\-/\.' '____' > $@
 
 %.tmp-pattern: %.pattern
-	@echo "build $@ from $^"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | tr '\-/\.' '____' | sort -u > $@
 
 %.tmp-fplf: %.morpho
-	@echo "build $@ from $^"> /dev/null 2>&1
+	@echo "build $@ from $^"
 	@sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | sort -u > $@
+
+%.morpho:
+	@echo "build $@"
+	@if [ -e $*.fromScratch ]; then \
+		python script.py $@ $*.pattern; \
+	fi
+
+%.pattern:
+	@echo "build $@"
+	@if [ -e $*.fromScratch ]; then \
+		python script.py $@ $*.pattern; \
+	fi
 
 # Cleaning generated files
 clean:
-	@rm -f $(test_dir)/*.output $(test_dir)/*.pdf
-
+	@rm -f $(test_dir)/*.output $(test_dir)/*.pdf $(test_dir)/*.fsa $(test_dir)/*.tbl
+	@for fromScratchFile in $(test_dir)/*.fromScratch; do \
+		base=$$(basename $$fromScratchFile .fromScratch); \
+		rm -f $(test_dir)/$$base.morpho $(test_dir)/$$base.pattern; \
+	done

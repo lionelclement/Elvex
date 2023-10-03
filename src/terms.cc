@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -29,7 +29,7 @@ Terms::Terms(std::vector<uint16_t> &terms, bool optional)
 {
     this->terms = terms;
     this->optional = optional;
-    NEW
+    NEW;
 }
 
 /* **************************************************
@@ -39,7 +39,7 @@ Terms::Terms(uint16_t term, bool optional)
 {
     this->terms.push_back(term);
     this->optional = optional;
-    NEW
+    NEW;
 }
 
 /* **************************************************
@@ -48,14 +48,16 @@ Terms::Terms(uint16_t term, bool optional)
 Terms::Terms()
 {
     this->optional = false;
-    NEW
+    NEW;
 }
 
 /* **************************************************
  *
  ************************************************** */
-Terms::~Terms(){
-    DELETE}
+Terms::~Terms()
+{
+    DELETE;
+}
 
 /* **************************************************
  *

@@ -68,9 +68,9 @@ public:
 
     static uint16_t nameToCode(const std::string &); // identifier -> code
 
-    static std::string codeToName(uint16_t); // code -> identifier
+    static std::string &codeToName(uint16_t); // code -> identifier
 
-    static std::string bitToVariable(uint16_t); // bit weight -> identifier 
+    static std::string &bitToVariable(uint16_t); // bit weight -> identifier 
 
     static void insertCodeMap(const uint16_t, const std::string &);
 

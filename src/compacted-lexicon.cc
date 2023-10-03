@@ -41,7 +41,7 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexicon::CompactedLexicon(std::string directoryName, std::string fileName)
+CompactedLexicon::CompactedLexicon(std::string &directoryName, std::string &fileName)
 {
     this->directoryName = std::move(directoryName);
     this->fileName = std::move(fileName);
@@ -361,6 +361,9 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
     {
         unif->flatPrint(stringStream, false);
     }
+    features1.reset();
+    features2.reset();
+    unif.reset();
     return stringStream.str();
 }
 

@@ -99,12 +99,12 @@ uint16_t Vartable::nameToCode(const std::string &str)
 /* ************************************************************
  *
  ************************************************************ */
-std::string Vartable::codeToName(uint16_t i)
+std::string &Vartable::codeToName(uint16_t i)
 {
-    if (i != UINT16_MAX)
+    //if (i != UINT16_MAX)
         return codeToNameMap[i];
-    else
-        return std::string("UINT_MAX");
+    //else
+        //return "UINT_MAX";
 }
 
 /* ************************************************************
@@ -136,7 +136,7 @@ Vartable::uint16_t_to_string_const_iterator Vartable::bitMapcEnd()
 /* ************************************************************
  *
  ************************************************************ */
-std::string Vartable::bitToVariable(uint16_t key)
+std::string &Vartable::bitToVariable(uint16_t key)
 {
     return bitToNameMap[key];
 }

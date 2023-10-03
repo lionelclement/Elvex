@@ -156,6 +156,9 @@ endif()
 
 add_executable(elvexbuildlexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
 target_compile_options(elvexbuildlexicon PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_definitions(elvexbuildlexicon PUBLIC
+        #TRACE_DIFF
+)
 
 FLEX_TARGET(postedition_en src/postedition_en.l ${CMAKE_CURRENT_BINARY_DIR}/src/postedition_en.cc)
 add_executable(elvexpostedition_en ${FLEX_postedition_en_OUTPUTS})

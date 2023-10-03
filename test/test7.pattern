@@ -3,7 +3,7 @@
 TO_CHASE	verb	TO_CHASE	iiReal:OBJECT
 
 EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[FORM:"over the moon"]
-EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[HEAD:HAPPY,MOD:<[HEAD:EXTREMELY]>]
+//EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[HEAD:HAPPY,MOD:<[HEAD:EXTREMELY]>]
 EUPHORIC	verb	TO_BE	SUBJECT:[human:true],PRED_ADJ:[HEAD:THRILLED]
 TO_FIND_OUT	verb	TO_FIND	particule:_out_,iiReal:SCOMP,compl:_that_
 TO_STUDY	verb	TO_STUDY	SUBJECT:[human:true],iiReal:OBJECT

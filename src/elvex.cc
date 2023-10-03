@@ -397,7 +397,9 @@ int main(int argn, char **argv)
                                        ? generator.getCompactedDirectoryName().c_str()
                                        : ".");
                 char *file = strdup(generator.getCompactedLexiconFileName().c_str());
-                auto *lex = new CompactedLexicon(std::string(dir), std::string(file));
+                std::string dirStr = std::string(dir);
+                std::string fileStr = std::string(file);
+                auto *lex = new CompactedLexicon(dirStr, fileStr);
                 lex->openFiles("r");
                 lex->loadFsa();
                 lex->loadData();
