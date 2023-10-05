@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -26,7 +26,7 @@ class Serializable
 {
 
 private:
-    uint32_t serialHashCode;
+    size_t serialHashCode;
 
     virtual void makeSerialString() = 0;
 
@@ -40,7 +40,7 @@ public:
 
     std::string peekSerialString();
 
-    uint32_t hashCode();
+    size_t hash();
 
     void resetSerial();
 };

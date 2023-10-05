@@ -34,8 +34,8 @@ class ItemSet
 
 public:
     typedef std::unordered_set<class Item *,
-                               Item::hash,
-                               Item::equal_to,
+                               Item::Hash,
+                               Item::KeyEqual,
                                std::allocator<class Item *>>
         set_of_item;
     typedef set_of_item::const_iterator set_of_item_const_iterator;

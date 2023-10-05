@@ -20,7 +20,6 @@
 #ifndef COMPACTEDLEXICON_H
 #define COMPACTEDLEXICON_H
 
-#define MAXSTRING 100000
 #define SEP_PREF ""
 #define SEP_UW "UNKNOWN"
 #define SEP_SUFF "\n"
@@ -54,15 +53,15 @@ public:
     char *buffer;
     struct CompactedLexiconFsa *fsa;
     struct CompactedLexiconBuffer *info;
-    unsigned long int init;
+    uint32_t init;
     class CompactedLexiconTree *lexiconInit;
 
 public:
     CompactedLexicon(std::string &directoryName, std::string &fileName);
 
-    void printResults(std::ostream &, unsigned long int index, bool sep) const;
+    void printResults(std::ostream &, uint32_t index, bool sep) const;
 
-    unsigned long int search(unsigned long int index, const std::string &) const;
+    uint32_t search(uint32_t index, const std::string &) const;
 
     void saveFsa();
 

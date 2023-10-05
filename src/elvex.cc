@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <iostream>
+#include <ctime>
 
 #include "compacted-lexicon.hpp"
 #include "parser.hpp"
@@ -188,7 +189,7 @@ int main(int argn, char **argv)
                     }
                     else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random"))
                     {
-                        std::srand(time(nullptr));
+                        std::srand(static_cast<unsigned int>(std::time(nullptr)));
                         generator.setRandomResult(true);
                     }
                     else if (!strcmp(argv[arg] + 1, "f") || !strcmp(argv[arg] + 1, "-first"))

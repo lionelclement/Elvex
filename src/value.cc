@@ -408,40 +408,40 @@ void Value::makeSerialString()
     switch (type)
     {
     case NIL_VALUE:
-        serialString = '\x0';
+        serialString = 'a';
         break;
     case TRUE_VALUE:
-        serialString = '\x1';
+        serialString = 'b';
         break;
     case FALSE_VALUE:
-        serialString = '\x2';
+        serialString = 'c';
         break;
     case ANONYMOUS_VALUE:
-        serialString = '\x5';
+        serialString = 'd';
         break;
     case CONSTANT_VALUE:
-        serialString = '\x3' + bits->peekSerialString();
+        serialString = 'e' + bits->peekSerialString();
         break;
     case VARIABLE_VALUE:
-        serialString = '\x4' + bits->peekSerialString();
+        serialString = 'f' + bits->peekSerialString();
         break;
     case IDENTIFIER_VALUE:
-        serialString = '\x6' + std::to_string(code);
+        serialString = 'g' + std::to_string(code);
         break;
     case NUMBER_VALUE:
-        serialString = '\x7' + std::to_string(number);
+        serialString = 'h' + std::to_string(number);
         break;
     case FORM_VALUE:
-        serialString = '\x8' + str;
+        serialString = 'i' + str;
         break;
     case FEATURES_VALUE:
-        serialString = '\x9' + getFeatures()->peekSerialString();
+        serialString = 'j' + getFeatures()->peekSerialString();
         break;
     case LIST_FEATURES_VALUE:
-        serialString = '\xA' + getListFeatures()->peekSerialString();
+        serialString = 'k' + getListFeatures()->peekSerialString();
         break;
     case PAIRP_VALUE:
-        serialString = '\xB' + getPairp()->peekSerialString();
+        serialString = 'l' + getPairp()->peekSerialString();
         break;
     }
 }

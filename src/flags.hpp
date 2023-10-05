@@ -22,7 +22,7 @@
 
 #include <bitset>
 
-#define FLAGS 9
+#define FLAGS 16
 
 class Flags
 {

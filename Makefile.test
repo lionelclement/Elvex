@@ -65,7 +65,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	fi
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) -maxItems 1000000 -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
+		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
 	else \
 		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
 	fi
@@ -75,7 +75,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	@echo "build $@ from $^"
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) --trace -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(elvex) --traceShift -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
 	else \
 		$(elvex) --trace -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
 	fi

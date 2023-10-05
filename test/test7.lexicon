@@ -32,7 +32,7 @@ FORM form;
 /************************************************************
 *  Variable words
 ************************************************************/
-"$vtense"	VTENSE [vtense:$vtense];
+"$vtense: "	VTENSE [vtense:$vtense];
 
 /************************************************************
 * Noms propres
@@ -40,9 +40,6 @@ FORM form;
 John	proper_noun [HEAD:JOHN, @_3s, @hum];
 Mary	proper_noun [HEAD:MARY, @_3s, @hum];
 Elvex	proper_noun [HEAD:ELVEX, @_3s];
-
-//John	proper_noun [HEAD:HUMAN, @_3s, @hum];
-//Mary	proper_noun [HEAD:HUMAN, @_3s, @hum];
 
 /************************************************************
 * Pronoms nominatifs
@@ -173,9 +170,9 @@ not	not;
 * 
 ************************************************************/
 "that"	csu [compl:_that_];
-//"if"	csu [compl:_if_];
-//"when"	csu [compl:_when_];
-//"whether"	csu [compl:_whether_];
+"if"	csu [compl:_if_];
+"when"	csu [compl:_when_];
+"whether"	csu [compl:_whether_];
 
 /************************************************************
 * 

@@ -132,7 +132,9 @@ void Terminal::print(std::ostream &os) const
  ************************************************** */
 void Terminal::makeSerialString()
 {
+    FATAL_ERROR_UNEXPECTED;
     std::ostringstream stream;
-    stream << std::hex << code << '\x1' << form << '\x1' << features->peekSerialString();
+    stream << std::hex << (int)code << '_' << form << '_' << features->peekSerialString();
     serialString = stream.str();
+    std::cerr << serialString << std::endl;
 }

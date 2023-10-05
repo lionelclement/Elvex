@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <iostream>
 #include "serializable.hpp"
 
 /* **************************************************
@@ -25,6 +26,7 @@
 Serializable::Serializable()
 {
     serialHashCode = 0;
+    serialString = "";
 }
 
 /* **************************************************
@@ -37,24 +39,12 @@ Serializable::~Serializable()
 /* **************************************************
  *
  ************************************************** */
-uint32_t Serializable::hashCode()
-{
-    if (serialHashCode == 0)
-    {
-        peekSerialString();
-    }
-    return serialHashCode;
-}
-
-/* **************************************************
- *
- ************************************************** */
 std::string Serializable::peekSerialString()
 {
-    if (serialString.empty())
+    if (!serialHashCode)
     {
         makeSerialString();
-        serialHashCode = static_cast<uint32_t>(std::hash<std::string>{}(serialString));
+        serialHashCode = std::hash<std::string>{}(serialString);
     }
     return serialString;
 }
@@ -63,8 +53,21 @@ std::string Serializable::peekSerialString()
  *
  ************************************************** */
 void Serializable::resetSerial()
+ {
+     serialHashCode = 0;
+     serialString = "";
+ }
+
+/* **************************************************
+ *
+ ************************************************** */
+size_t Serializable::hash()
 {
-    serialHashCode = 0;
-    serialString = std::string();
+    if (!serialHashCode)
+    {
+        makeSerialString();
+        return serialHashCode = std::hash<std::string>{}(serialString);
+    }
+    return serialHashCode;
 }
 

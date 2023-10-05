@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -32,16 +32,18 @@ public:
                                std::vector<std::string>,
                                std::hash<std::string>,
                                std::equal_to<std::string>,
-                               std::allocator<std::pair<const std::string, std::vector<std::string>>>>
+                               std::allocator<std::pair<const std::string, std::vector<std::string> > > >
         unordered_map;
 
 private:
+    std::string name;
+
     unordered_map the_map;
 
     static std::vector<std::string> emptyList;
 
 public:
-    Lexicon(void);
+    Lexicon(std::string name);
 
     unordered_map::const_iterator cbegin(void);
 
@@ -49,11 +51,11 @@ public:
 
     std::size_t size(void);
 
-    void add(const std::string key, std::string value);
+    void add(std::string key, std::string value);
 
-    std::vector<std::string> find(const std::string key);
+    std::vector<std::string> find(std::string key);
 
-    std::size_t count(const std::string key);
+    std::size_t count(std::string key);
 
     std::string &toString(void) const;
 };

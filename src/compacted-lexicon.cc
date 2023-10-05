@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -60,30 +60,34 @@ CompactedLexicon::CompactedLexicon(std::string &directoryName, std::string &file
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::printResults(std::ostream &output, unsigned long int index, bool sep) const
+void CompactedLexicon::printResults(std::ostream &output, uint32_t index, bool sep) const
 {
-    char tag[MAXSTRING];
     if (sep)
         output << SEP_PREF;
-    if (index == (unsigned long int)(~0UL))
+
+    if (index == static_cast<uint32_t>(~0UL))
     {
         output << SEP_UW;
         if (sep)
             output << SEP_SUFF;
         return;
     }
-    while (index != (unsigned long int)(~0UL))
+
+    while (index != static_cast<uint32_t>(~0UL))
     {
-        // an other element will be describe
-        strcpy(tag, buffer + (info[index].getOffset()));
+        // An element will be described.
+        const char *tag = buffer + info[index].getOffset();
         output << tag;
+
         if (info[index].isNext())
             output << SEP_OR;
+
         if (info[index].isNext())
             index = info[index].getNext();
         else
-            index = (unsigned long int)(~0UL);
+            index = static_cast<uint32_t>(~0UL);
     }
+
     if (sep)
         output << SEP_SUFF;
 }
@@ -92,7 +96,7 @@ void CompactedLexicon::printResults(std::ostream &output, unsigned long int inde
 // input: string
 // output: info
 ////////////////////////////////////////////////////////////
-unsigned long int CompactedLexicon::search(unsigned long int index, const std::string &s) const
+uint32_t CompactedLexicon::search(uint32_t index, const std::string &s) const
 {
     char *str = strdup(s.c_str());
     char *str2 = str;
@@ -106,23 +110,23 @@ unsigned long int CompactedLexicon::search(unsigned long int index, const std::s
             if (fsa[index].hasNext())
                 index = fsa[index].getNext();
             else
-                return (unsigned long int)(~0UL);
+                return (uint32_t)(~0UL);
         }
         if (!fsa[index].equalsThisChar(*str))
-            return ((unsigned long int)(~0UL));
+            return ((uint32_t)(~0UL));
         if (*(str + 1))
         {
             if (fsa[index].hasChild())
                 index = fsa[index].getChild();
             else
-                return (unsigned long int)(~0UL);
+                return (uint32_t)(~0UL);
         }
         else if (fsa[index].hasInfo())
             return fsa[index].getInfo();
         str++;
     }
     free(str2);
-    return (unsigned long int)(~0UL);
+    return (uint32_t)(~0UL);
 }
 
 /* **************************************************
@@ -130,7 +134,7 @@ unsigned long int CompactedLexicon::search(unsigned long int index, const std::s
  ************************************************** */
 void CompactedLexicon::saveFsa()
 {
-    int nbrBytes = sizeof(unsigned long int);
+    int nbrBytes = sizeof(uint32_t);
     std::cerr << "*** Writing Finite State Automata " << std::endl;
     // encodage des offsets (16 ou 32 bits)
     if (!fwrite(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
@@ -138,33 +142,33 @@ void CompactedLexicon::saveFsa()
 #ifdef TRACE_DIFF
     std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif // TRACE_DIFF
-    auto maxSize = (unsigned long int)~0UL;
+    auto maxSize = (uint32_t)~0UL;
     if (!fwrite(&maxSize, sizeof(maxSize), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
     std::cout << "maxSize:" << maxSize << std::endl;
 #endif // TRACE_DIFF
     // nombre d'offsets du fsa
-    unsigned long int sizeFsa = 0;
+    uint32_t sizeFsa = 0;
     lexiconInit->setIndexStaticFSA(sizeFsa);
     if (!fwrite(&sizeFsa, sizeof(sizeFsa), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
     std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif // TRACE_DIFF
-    if (sizeFsa == (unsigned long int)~0UL)
+    if (sizeFsa == (uint32_t)~0UL)
     {
         std::cerr << "*** Error: Lexicon too large" << std::endl;
         throw "";
     }
-    unsigned long int sizeInfo = 0;
+    uint32_t sizeInfo = 0;
     lexiconInit->setIndexStaticInfo(sizeInfo);
     if (!fwrite(&sizeInfo, sizeof(sizeInfo), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED
 #ifdef TRACE_DIFF
     std::cout << "sizeInfo:" << sizeInfo << std::endl;
 #endif // TRACE_DIFF
-    if (sizeInfo == (unsigned long int)~0UL)
+    if (sizeInfo == (uint32_t)~0UL)
     {
         throw fatal_exception("Data too large");
     }
@@ -199,23 +203,23 @@ void CompactedLexicon::loadFsa()
 #ifdef TRACE_DIFF
     std::cout << "nbreBytes:" << nbrBytes << std::endl;
 #endif // TRACE_DIFF
-    unsigned long int maxSize;
+    uint32_t maxSize;
     if (!fread(&maxSize, sizeof(maxSize), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     std::cout << "maxSize:" << maxSize << std::endl;
 #endif // TRACE_DIFF
-    if (nbrBytes != (sizeof(unsigned long int)) || (maxSize != (unsigned long int)~0UL))
+    if (nbrBytes != (sizeof(uint32_t)) || (maxSize != (uint32_t)~0UL))
     {
         throw fatal_exception("lexicon compiled with an incompatible system");
     }
-    unsigned long int sizeFsa;
+    uint32_t sizeFsa;
     if (!fread(&sizeFsa, sizeof(sizeFsa), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
     std::cout << "sizeFsa:" << sizeFsa << std::endl;
 #endif // TRACE_DIFF
-    unsigned long int sizeInfo;
+    uint32_t sizeInfo;
     if (!fread(&sizeInfo, sizeof(sizeInfo), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
@@ -229,7 +233,7 @@ void CompactedLexicon::loadFsa()
     if (!fread(fsa, sizeof(CompactedLexiconFsa), sizeFsa, fsaFile))
         FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
-    for (unsigned long int sizeSy = 0; sizeSy < sizeFsa; sizeSy++)
+    for (uint32_t sizeSy = 0; sizeSy < sizeFsa; sizeSy++)
     {
         fsa[sizeSy].print(std::cout);
     }
@@ -242,7 +246,7 @@ void CompactedLexicon::loadFsa()
     if (!fread(info, sizeof(CompactedLexiconBuffer), sizeInfo, fsaFile))
         FATAL_ERROR_UNEXPECTED;
 #ifdef TRACE_DIFF
-    for (unsigned long int sizeSy = 0; sizeSy < sizeInfo; sizeSy++)
+    for (uint32_t sizeSy = 0; sizeSy < sizeInfo; sizeSy++)
     {
         std::cout << sizeSy << ' ';
         info[sizeSy].print(std::cout);
@@ -303,6 +307,8 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
     featuresPtr features1;
     if (!fs1.empty())
     {
+        //CERR_LINE;
+        //std::cerr << fs1 << std::endl;
         stringStream.str("");
         stringStream << '[' << fs1 << ']';
         std::string fsString = stringStream.str();
@@ -318,12 +324,16 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
         }
         features1 = parser.getLocalFeatures();
     }
-    else
+    else{
+        //CERR_LINE;
         features1 = featuresPtr();
+    }
 
     featuresPtr features2;
     if (!fs2.empty())
     {
+        //CERR_LINE;
+        //std::cerr << fs2 << std::endl;
         stringStream.str("");
         stringStream << '[' << fs2 << ']';
         std::string fsString = stringStream.str();
@@ -339,8 +349,10 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
         }
         features2 = parser.getLocalFeatures();
     }
-    else
+    else{
+        //CERR_LINE;
         features2 = featuresPtr();
+    }
 
     statementPtr statement;
     featuresPtr unif;
@@ -359,6 +371,9 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
     stringStream.str("");
     if (unif && !unif->isBottom())
     {
+        //CERR_LINE;
+        //unif->flatPrint(std::cerr, false);
+
         unif->flatPrint(stringStream, false);
     }
     features1.reset();
@@ -372,12 +387,12 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
  ************************************************** */
 void CompactedLexicon::addToData(const std::string &input, const std::string &form, const std::string &features)
 {
-    // std::cerr << "add:" << form << "[input:" << input << ",form:" << form << ",features:" << features << std::endl;
+    //std::cerr << "CompactedLexicon::addToData:" << "[input:" << input << ",form:" << form << ",features:" << features << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
     stringStream << form << '#' << '[' << features << ']';
     std::string output = stringStream.str();
-    unsigned long int offset;
+    uint32_t offset;
     offset = ftell(dataFile);
     compactedLexicon->add(input.c_str(), offset);
     fprintf(dataFile, "%s%c", output.c_str(), 0);
@@ -388,60 +403,61 @@ void CompactedLexicon::addToData(const std::string &input, const std::string &fo
  *
  ************************************************** */
 void CompactedLexicon::addForms(const std::string &input, std::string inputSearch,
-                                const std::string &patternFs /*, Lexicon& pattern*/,
+                                const std::string &features,
                                 Lexicon &morpho)
 {
-    // std::cerr << "addForms " << inputSearch << std::endl;
+    //CERR_LINE
+    //std::cerr << "CompactedLexicon::addForms[input:" << input << ",inputSearch:" << inputSearch << ",features:" << features << ']' << std::endl;
 
     std::vector<std::string> o = morpho.find(std::move(inputSearch));
     for (std::vector<std::string>::const_iterator it = o.cbegin(); it != o.cend(); ++it)
     {
 
-        char form[MAXSTRING];
-        strcpy(form, it->c_str());
-        char *rhs = strchr(form, '#');
-        *rhs = 0;
-
-        char line[MAXSTRING];
-        strcpy(line, it->c_str());
-        char *morphoFs = strchr(line, '#') + 1;
-
-        // std::cerr << "addToData " << input << " => " << form << ' ' << unif(patternFs, morphoFs) << std::endl;
-        addToData(input, form, unif(patternFs, morphoFs));
+        std::string form = *it;
+        //CERR_LINE
+        //std::cerr << "form found: [" << form << "]" << std::endl;
+        auto rhsPos = form.find('#');
+        if (rhsPos != std::string::npos)
+        {
+            std::string form2 = form.substr(0, rhsPos);
+            std::string morphoFs = form.substr(rhsPos + 1);
+            addToData(input, form2, unif(features, morphoFs));
+        }
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &patternFs,
+void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &features,
                                   const std::string &lemma, const std::string &pos)
 {
-    // std::cout << "addPattern with " << "[input:" << input << ";patternFs:[" << patternFs << "];lemma:" << lemma << ";pos:" << pos << ']' << std::endl;
+    //CERR_LINE;
+    //std::cerr << "addPattern with " << "[input:" << input << ";features:\"" << features << "\";lemma:\"" << lemma << "\";pos:\"" << pos << "\"]" << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
     stringStream << pos << '#' << lemma;
     std::string inputSearch = std::string(stringStream.str());
     if (morpho.count(inputSearch))
     {
-        addForms(input, inputSearch, patternFs, morpho);
+        addForms(input, inputSearch, features, morpho);
     }
     else if (pattern.count(inputSearch))
     {
         std::vector<std::string> o = pattern.find(inputSearch);
         for (auto &it : o)
         {
-            char patternLemma[MAXSTRING];
-            strcpy(patternLemma, it.c_str());
-            char *rhs = strchr(patternLemma, '#');
-            *rhs = 0;
-            char line2[MAXSTRING];
-            strcpy(line2, it.c_str());
-            std::string pattern2Fs = strchr(line2, '#') + 1;
-            if (patternFs != pattern2Fs)
+            std::string patternLemma = it;
+            auto rhsPos = patternLemma.find('#');
+            if (rhsPos != std::string::npos)
             {
-                // std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << patternFs << '-' << pattern2Fs << ')' << std::endl;
-                addPattern(pattern, morpho, input, unif(patternFs, pattern2Fs), patternLemma, pos);
+                std::string features2 = patternLemma.substr(rhsPos + 1);
+                if (features != features2)
+                {
+                    //CERR_LINE;
+                    //std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << features << '-' << features2 << ')' << std::endl;
+                    addPattern(pattern, morpho, input, unif(features, features2), patternLemma, pos);
+                }
             }
         }
     }
@@ -452,37 +468,52 @@ void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::
  ************************************************** */
 void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho)
 {
-
-    std::stringstream _inputStream;
     std::size_t size = pattern.size();
     std::size_t range = 0;
+
     for (auto patternIt = pattern.cbegin(); patternIt != pattern.cend(); ++patternIt)
     {
-        // std::cerr << "pattern:" << patternIt->first << std::endl;
-        char pos[MAXSTRING];
-        strcpy(pos, patternIt->first.c_str());
-        char *rhs = strchr(pos, '#');
-        *rhs = 0;
+        //CERR_LINE;
+        //std::cerr << patternIt->first << std::endl;
 
-        for (const auto &it2 : patternIt->second)
+        // Extraire la partie "pos" de la clé
+        std::string pos = patternIt->first;
+        auto rhsPos = pos.find('#');
+        if (rhsPos != std::string::npos)
         {
-
-            // std::cout << "str:" << it2 << std::endl;
-
-            char lemma[MAXSTRING];
-            strcpy(lemma, it2.c_str());
-            rhs = strchr(lemma, '#');
-            *rhs = 0;
-
-            char line4[MAXSTRING];
-            strcpy(line4, it2.c_str());
-            char *features = strchr(line4, '#') + 1;
-
-            std::string patternFs = ((*features) ? features : std::string());
-            addPattern(pattern, morpho, patternIt->first, patternFs, lemma, pos);
+            pos.resize(rhsPos); // Tronquer la chaîne à la position de '#'
         }
 
-        if (!(range++ % 1009))
+        //CERR_LINE;
+        //std::cerr << '[' << pos << ']' << std::endl;
+        for (const auto &it2 : patternIt->second)
+        {
+            // Extraire la partie "lemma" de la valeur
+            std::string lemma = it2;
+            auto lemmaPos = lemma.find('#');
+            if (lemmaPos != std::string::npos)
+            {
+                lemma.resize(lemmaPos); // Tronquer la chaîne à la position de '#'
+            }
+
+            //CERR_LINE;
+            //std::cerr << '[' << lemma << ']' << std::endl;
+            // Extraire la partie "features" de la valeur
+            std::string features;
+            if (lemmaPos != std::string::npos)
+            {
+                features = it2.substr(lemmaPos + 1); // Prendre tout après '#'
+            }
+
+            //CERR_LINE;
+            //std::cerr << '[' << features << ']' << std::endl;
+            //void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &features,
+            //                      const std::string &lemma, const std::string &pos)
+
+            addPattern(pattern, morpho, patternIt->first, features, lemma, pos);
+        }
+
+        if ((range++ % 1009) == 0)
         {
             unsigned int k = 40 * range / size;
             std::cerr << " " << round(2.5 * k) << "%[";
@@ -491,7 +522,7 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho)
                 std::cerr << '#';
             while (i++ <= 40)
                 std::cerr << ' ';
-            std::cerr << ']' << "\r";
+            std::cerr << "]\r";
         }
     }
 
@@ -524,7 +555,7 @@ void CompactedLexicon::loadData()
  ************************************************** */
 void CompactedLexicon::consult()
 {
-    unsigned long int _info;
+    uint32_t _info;
     std::string str;
     while (!this->inputStream->eof())
     {

@@ -190,10 +190,10 @@ void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Ge
 void ListFeatures::makeSerialString()
 {
     std::ostringstream stream;
-    stream << '\x1';
+    stream << '-';
     for (auto &features : listFeatures)
     {
-        stream << features->peekSerialString() << '\x2';
+        stream << features->peekSerialString() << '-';
     }
     serialString = stream.str();
 }

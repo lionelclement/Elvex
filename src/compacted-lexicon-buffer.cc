@@ -22,7 +22,7 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconBuffer::CompactedLexiconBuffer(unsigned long int next, unsigned long int offset) {
+CompactedLexiconBuffer::CompactedLexiconBuffer(uint32_t next, uint32_t offset) {
     this->next = next;
     this->offset = offset;
 }
@@ -31,21 +31,21 @@ CompactedLexiconBuffer::CompactedLexiconBuffer(unsigned long int next, unsigned 
  *
  ************************************************** */
 CompactedLexiconBuffer::CompactedLexiconBuffer() {
-    this->next = (unsigned long int) (~0UL);
-    this->offset = (unsigned long int) (~0UL);
+    this->next = (uint32_t) (~0UL);
+    this->offset = (uint32_t) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconBuffer::getOffset() const {
+uint32_t CompactedLexiconBuffer::getOffset() const {
     return offset;
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconBuffer::getNext() const {
+uint32_t CompactedLexiconBuffer::getNext() const {
     return next;
 }
 
@@ -53,14 +53,14 @@ unsigned long int CompactedLexiconBuffer::getNext() const {
  *
  ************************************************** */
 bool CompactedLexiconBuffer::isNext() const {
-    return next != (unsigned long int) (~0UL);
+    return next != (uint32_t) (~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
 bool CompactedLexiconBuffer::isOffset() const {
-    return offset != (unsigned long int) (~0UL);
+    return offset != (uint32_t) (~0UL);
 }
 
 /* **************************************************

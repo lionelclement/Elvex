@@ -135,7 +135,7 @@ if (LibXml2_FOUND)
             MAXLENGTH=12000
             MAXUSAGES=12000
             MAXITEMS=12000
-            MAXATTEMPTS=120
+            MAXATTEMPTS=1200
             #TRACE_ENVIRONMENT
             #TRACE_BUILD_ENVIRONMENT
             #TRACE_ENABLE_STATEMENT

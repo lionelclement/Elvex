@@ -48,9 +48,9 @@ Generator::Generator()
     this->maxUsages = MAXUSAGES;
     this->maxItems = MAXITEMS;
     this->nodeRoot = nodePtr();
-    this->lexiconFileName = std::string();
-    this->rulesFileName = std::string();
-    this->inputFileName = std::string();
+    this->lexiconFileName = "";
+    this->rulesFileName = "";
+    this->inputFileName = "";
 #ifdef OUTPUT_XML
     this->outXML = nullptr;
 #endif
@@ -481,11 +481,8 @@ Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
 {
 
     std::stringstream ss;
-    ss << std::hex << actualItem->getId() << '\x0' << std::hex << previousItem->getCurrentTerm() << '\x0' << std::dec << actualItem->getSynthesizedFeatures()->peekSerialString();
+    ss << std::hex << actualItem->getId() << '\x0' << previousItem->getCurrentTerm() << '\x0' << std::dec << actualItem->getSynthesizedFeatures()->peekSerialString();
     return ss.str();
-
-    // return std::to_string(actualItem->getId()) + '.' + std::to_string(previousItem->getCurrentTerm()) +
-    //        actualItem->getSynthesizedFeatures()->peekSerialString();
 }
 
 /* **************************************************
@@ -533,10 +530,10 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 
                 class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
                 forestPtr forestFound = forestPtr();
-                class ForestIdentifier *fi = ForestIdentifier::_create(static_cast<uint32_t>(it->getCurrentTerm()),
-                                                                       row,
-                                                                       row,
-                                                                       std::string());
+                class ForestIdentifier *fi = ForestIdentifier::create(static_cast<size_t>(it->getCurrentTerm()),
+                                                                      row,
+                                                                      row,
+                                                                      "");
                 auto forestMapIt = forestMap.find(fi);
                 if (forestMapIt != forestMap.cend())
                 {
@@ -546,7 +543,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 }
                 else
                 {
-                    forestFound = Forest::create(Terminal::create(it->getCurrentTerm()), row, row);
+                    forestFound = Forest::create(row, row);
 
                     forestMap.insert(fi, forestFound);
                     it->addForestIdentifiers(it->getIndex(), fi);
@@ -562,7 +559,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 #endif
                 if (!state->insert(it, this))
                 {
-                    //FATAL_ERROR_UNEXPECTED
+                    // FATAL_ERROR_UNEXPECTED
                     CERR_LINE;
                 }
                 else
@@ -590,7 +587,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 if (!state->insert(it, this))
                 {
                     CERR_LINE;
-                    //FATAL_ERROR_UNEXPECTED;
+                    // FATAL_ERROR_UNEXPECTED;
                 }
                 else
                 {
@@ -630,7 +627,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                     if (!state->insert(it, this))
                     {
                         CERR_LINE;
-                        //FATAL_ERROR_UNEXPECTED;
+                        // FATAL_ERROR_UNEXPECTED;
                     }
                     else
                     {
@@ -800,12 +797,12 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                 }
 
                                 forestPtr forestFound = forestPtr();
-                                class ForestIdentifier *fi = ForestIdentifier::_create(static_cast<uint32_t>((*actualItem)->getRuleLhs()),
-                                                                                       (*actualItem)->getRanges()[0],
-                                                                                       row,
-                                                                                       ((*actualItem)->getSynthesizedFeatures()
-                                                                                            ? (*actualItem)->getSynthesizedFeatures()->peekSerialString()
-                                                                                            : std::string()));
+                                class ForestIdentifier *fi = ForestIdentifier::create(static_cast<size_t>((*actualItem)->getRuleLhs()),
+                                                                                      (*actualItem)->getRanges()[0],
+                                                                                      row,
+                                                                                      ((*actualItem)->getSynthesizedFeatures()
+                                                                                           ? (*actualItem)->getSynthesizedFeatures()->peekSerialString()
+                                                                                           : ""));
                                 auto forestMapIt = forestMap.find(fi);
                                 if (forestMapIt != forestMap.cend())
                                 {
@@ -814,8 +811,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                 }
                                 else
                                 {
-                                    forestFound = Forest::create(Terminal::create((*actualItem)->getRuleLhs()),
-                                                                 (*actualItem)->getRanges()[0], row);
+                                    forestFound = Forest::create((*actualItem)->getRanges()[0], row);
                                     forestMap.insert(fi, forestFound);
                                     nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
                                     if (forestFound->getFrom() != forestFound->getTo())
@@ -838,7 +834,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                         }
                                     }
                                 }
-                                forestFound->push_back_node(node);
+                                forestFound->push_node(node);
                             }
                             for (auto ref : (*actualItem)->getRefs())
                             {
@@ -953,10 +949,10 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                                 node->push_back(forest);
                                         }
                                         forestPtr forestFound = forestPtr();
-                                        class ForestIdentifier *fi = ForestIdentifier::_create((*actualItem)->getId(),
-                                                                                               (*actualItem)->getRanges()[0],
-                                                                                               row,
-                                                                                               std::string());
+                                        class ForestIdentifier *fi = ForestIdentifier::create(static_cast<size_t>((*actualItem)->getId()),
+                                                                                              (*actualItem)->getRanges()[0],
+                                                                                              row,
+                                                                                              "");
                                         auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
                                         {
@@ -966,12 +962,11 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                         }
                                         else
                                         {
-                                            forestFound = Forest::create(Terminal::create((*actualItem)->getRuleLhs()),
-                                                                         (*actualItem)->getRanges()[0], row);
+                                            forestFound = Forest::create((*actualItem)->getRanges()[0], row);
                                             forestMap.insert(fi, forestFound);
                                             it->addForestIdentifiers(previousItem->getIndex(), fi);
                                         }
-                                        forestFound->push_back_node(node);
+                                        forestFound->push_node(node);
                                         if (traceReduce || (trace && it->getRuleTrace()))
                                         {
                                             std::cout << "<H3>####################### REDUCE CON'T (X -> α Y • β) #######################</H3>" << std::endl;
@@ -1153,7 +1148,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                     {
                                         if (tryRandom++ > randomAttemps)
                                         {
-                                            WARNING("too much random trial");
+                                            //WARNING("too much random trial");
                                             break;
                                         }
                                         size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
@@ -1165,9 +1160,6 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         ++entryIt;
                                     }
                                     entryPtr entry_copy = entry->clone();
-                                    //CERR_LINE;
-                                    //entry_copy->renameVariables(entry->getId());
-
                                     featuresPtr entryFeatures = entry_copy->getFeatures() ? entry_copy->getFeatures()
                                                                                           : featuresPtr();
                                     statementsPtr entryStatements = statementsPtr();
@@ -1214,47 +1206,39 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                                                              entryFeaturesCopy);
                                         if (entryStatements)
                                             entryStatements->renameVariables(entry_copy->getId());
-                                        terminalPtr terminal;
+                                        forestPtr forest;
                                         if (stage == STAGE_FORM)
                                         {
-                                            terminal = Terminal::create(Vartable::IS_A_FORM, *form, resultFeatures);
+                                            forest = Forest::create(row - 1, row, *form);
                                         }
                                         else
                                         {
-                                            size_t _found = entry_copy->getForm().find('$');
-                                            if (_found != std::string::npos)
-                                            {
-                                                bool effect = false;
-                                                std::string formStr = entry_copy->getForm();
-                                                it->getEnvironment()->replaceVariables(formStr, effect);
-                                                terminal = Terminal::create(0, formStr,
-                                                                            resultFeatures);
-                                            }
-                                            else
-                                            {
-                                                terminal = Terminal::create(0,
-                                                                            entry_copy->getForm(),
-                                                                            resultFeatures);
-                                            }
+                                            forest = Forest::create(row - 1, row, entry_copy->getForm());
                                         }
-                                        ForestIdentifier *fi = ForestIdentifier::_create(entry->hashCode(),
-                                                                                         0, 0,
-                                                                                         resultFeatures->peekSerialString());
+                                        if (forest->getForm().find('$') != std::string::npos)
+                                        {
+                                            bool effect = false;
+                                            it->getEnvironment()->replaceVariables(forest->getForm(), effect);
+                                        }
+                                        // entry_copy->resetSerial();
+                                        ForestIdentifier *forestIdentifier = ForestIdentifier::create(static_cast<size_t>(entry_copy->hash()),
+                                                                                                      row - 1, row,
+                                                                                                      resultFeatures->peekSerialString());
 
-                                        auto forestMapIt = forestMap.find(fi);
+                                        auto forestMapIt = forestMap.find(forestIdentifier);
                                         if (forestMapIt != forestMap.cend())
                                         {
                                             it->addForestIdentifiers((*actualItem)->getIndex(),
                                                                      (*forestMapIt).first);
-                                            free(fi);
+                                            free(forestIdentifier);
                                             // std::cerr << "stage : " << stage! << "<BR>" << std::endl;
                                             // std::cerr << "head : " << Vartable::codeToString(head) << "<BR>" << std::endl;
                                             // std::cout << "form : " << form << "<BR>" << std::endl;
                                         }
                                         else
                                         {
-                                            forestMap.insert(fi, Forest::create(terminal, row - 1, row));
-                                            it->addForestIdentifiers((*actualItem)->getIndex(), fi);
+                                            forestMap.insert(forestIdentifier, forest);
+                                            it->addForestIdentifiers((*actualItem)->getIndex(), forestIdentifier);
                                         }
                                         it->setRefs((*actualItem)->getRefs());
 
@@ -1270,10 +1254,11 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         {
                                             // synomym and homonym
                                             // i.e. two different forms
-                                            //FATAL_ERROR_UNEXPECTED
+                                            // FATAL_ERROR_UNEXPECTED
                                             WARNING("The same word is defined twice");
                                         }
-                                        else {
+                                        else
+                                        {
                                             insertItemMap(it);
                                             modification = true;
                                             modificationOnce = true;
@@ -1480,12 +1465,9 @@ entriesPtr Generator::findByForm(Parser::entries_map *map)
  * returns entries= (entry1, entry2, ...)
  * where entryi= (uint16_t pos, uint16_t head, std::string form, featuresPtr features)
  ************************************************** */
-entriesPtr Generator::findCompactedLexicon(
-    Parser &parser,
-    const uint16_t pos,
-    const uint16_t head)
+entriesPtr Generator::findCompactedLexicon(Parser &parser, const uint16_t pos, const uint16_t head)
 {
-    long int info = ~0UL;
+    uint32_t info = (uint32_t)~0UL;
     std::string str;
     if (head && pos)
     {
@@ -1518,10 +1500,10 @@ entriesPtr Generator::findCompactedLexicon(
     std::cout << "</DIV>" << std::endl;
     std::cout << std::endl;
 #endif
-    if (info != ~0UL)
+    if (info != (uint32_t)~0UL)
     {
         entriesPtr entries = Entries::create();
-        while (info != ~0UL)
+        while (info != (uint32_t)~0UL)
         {
             std::string result = compactedLexicon->buffer + (compactedLexicon->info[info].getOffset());
             std::string form = result.substr(0, result.find('#'));
@@ -1532,13 +1514,10 @@ entriesPtr Generator::findCompactedLexicon(
                 parser.parseBuffer("#(", ")", features, "features");
                 if (parser.getLocalFeatures())
                 {
-                    // uint16_t head = parser.getLocalFeatures()->assignHead();
-                    //entryPtr _localEntry = Entry::create(form, parser.getLocalFeatures());
-                    entryPtr _localEntry = Entry::create(form, parser.getLocalFeatures()->clone());
+                    //entryPtr localEntry = Entry::create(form, parser.getLocalFeatures())->clone();
+                    entryPtr localEntry = Entry::create(form, parser.getLocalFeatures());
 
-                    //_localEntry->setPos(pos);
-                    //_localEntry->setForm(form);
-                    std::string localEntrySerialString = _localEntry->peekSerialString();
+                    std::string localEntrySerialString = localEntry->peekSerialString();
                     auto found = parser.findMapLocalEntry(localEntrySerialString);
                     if (found != parser.cendMapLocalEntry())
                     {
@@ -1547,9 +1526,8 @@ entriesPtr Generator::findCompactedLexicon(
                     }
                     else
                     {
-                        //parser.insertMapLocalEntry(std::make_pair(localEntrySerialString, _localEntry->clone()));
-                        parser.insertMapLocalEntry(std::make_pair(localEntrySerialString, _localEntry));
-                        entries->add(_localEntry);
+                        //entries->add(localEntry->clone());
+                        entries->add(localEntry);
                     }
                 }
             }
@@ -1560,10 +1538,10 @@ entriesPtr Generator::findCompactedLexicon(
                     << result.substr(result.find('#') + 1, -1);
                 throw fatal_exception(oss);
             }
-            if ((compactedLexicon->info[info].isNext()))
+            if (compactedLexicon->info[info].isNext())
                 info = compactedLexicon->info[info].getNext();
             else
-                info = (unsigned long int)(~(0UL));
+                info = (uint32_t)(~(0UL));
         }
         return entries;
     }

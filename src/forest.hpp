@@ -20,6 +20,7 @@
 #ifndef ELVEX_FOREST_H
 #define ELVEX_FOREST_H
 
+#include <forward_list>
 #include <vector>
 #include "facade.hpp"
 
@@ -38,32 +39,36 @@ public:
     typedef std::vector<nodePtr> vectorNodes;
 
 private:
+    static std::string EMPTY_FORM;
     uint8_t from;
     uint8_t to;
     vectorNodes nodes;
     bool empty;
-    terminalPtr terminal;
-    std::vector<std::string> output;
-    Forest(terminalPtr terminal, uint8_t from, uint8_t to);
+    std::forward_list<std::string> output;
+    std::string form;
+    Forest(uint8_t from, uint8_t to, std::string &form);
 
 public:
     ~Forest();
 
-    static forestPtr create(terminalPtr terminal, uint8_t from, uint8_t to);
+    static forestPtr create(uint8_t from, uint8_t to, std::string &form = EMPTY_FORM);
 
     uint8_t getFrom(void) const;
 
     uint8_t getTo(void) const;
 
-    bool isEmpty(void) const;
+    bool output_empty(void) const;
 
-    size_t output_size(void) const;
+    const std::forward_list<std::string>::const_iterator output_cbegin(void) const;
 
-    const std::vector<std::string>::const_iterator output_cbegin(void) const;
+    const std::forward_list<std::string>::const_iterator output_cend(void) const;
 
-    const std::vector<std::string>::const_iterator output_cend(void) const;
+    void push_node(const nodePtr &);
 
-    void push_back_node(const nodePtr &);
+    void push_output(std::string output);
+
+    std::string &getForm(void);
+
 
 #ifdef OUTPUT_XML
     void toXML(const xmlNodePtr, bool);

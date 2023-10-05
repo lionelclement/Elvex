@@ -24,7 +24,7 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-ForestIdentifier::ForestIdentifier(uint32_t code, uint8_t from, uint8_t to,
+ForestIdentifier::ForestIdentifier(size_t code, uint8_t from, uint8_t to,
                                    const std::string &featuresSerialString)
 {
     NEW;
@@ -46,10 +46,10 @@ ForestIdentifier::~ForestIdentifier()
  *                                                            *
  ************************************************************ */
 class ForestIdentifier *
-ForestIdentifier::_create(uint32_t code,
+ForestIdentifier::create(size_t code,
                          uint8_t from,
                          uint8_t to,
-                         const std::string &featuresSerialString)
+                         const std::string featuresSerialString)
 {
     return new ForestIdentifier(code, from, to, featuresSerialString);
 }
@@ -60,23 +60,25 @@ ForestIdentifier::_create(uint32_t code,
 void ForestIdentifier::makeSerialString()
 {
     std::ostringstream stream;
-    uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint32_t>(from) << 8 | static_cast<uint32_t>(to);
-    stream << std::hex << encode << '\x0' << featuresSerialString;
+    //uint32_t encode = static_cast<uint32_t>(code) << 16 | static_cast<uint32_t>(from) << 8 | static_cast<uint32_t>(to);
+    //stream << std::hex << encode << '-' << featuresSerialString;
+    stream << std::hex << code << '-' << from << '-' << to << '-' << featuresSerialString;
+    stream.flush();
     serialString = stream.str();
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t ForestIdentifier::hash::operator()(class ForestIdentifier *forestIdentifier) const
+size_t ForestIdentifier::Hash::operator()(ForestIdentifier *forestIdentifier) const
 {
-    return forestIdentifier->hashCode();
+    return forestIdentifier->hash();
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool ForestIdentifier::equal_to::operator()(class ForestIdentifier *forestIdentifier1, class ForestIdentifier *forestIdentifier2) const
+bool ForestIdentifier::KeyEqual::operator()(ForestIdentifier *forestIdentifier1, ForestIdentifier *forestIdentifier2) const
 {
     return forestIdentifier1->peekSerialString() == forestIdentifier2->peekSerialString();
 }

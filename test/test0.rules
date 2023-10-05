@@ -1,0 +1,19 @@
+@trace
+@withspaces
+S → A B
+{
+  printlnstderr __FILE__, "...";
+  ↓1 = [];
+  ↓2 = [];
+}
+
+A → a 
+{
+  ↓1 = [];
+}
+
+B → b 
+{
+  ↓1 = [];
+}
+

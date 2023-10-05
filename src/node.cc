@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <forward_list>
 #include "node.hpp"
 #include "messages.hpp"
 #include "forest.hpp"
@@ -117,7 +118,7 @@ void Node::push_back(const forestPtr &forestPtr)
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string>::const_iterator Node::output_cbegin(void) const
+const std::forward_list<std::string>::const_iterator Node::output_cbegin(void) const
 {
    return this->output.cbegin();
 }
@@ -125,7 +126,7 @@ const std::vector<std::string>::const_iterator Node::output_cbegin(void) const
 /* **************************************************
  *
  ************************************************** */
-const std::vector<std::string>::const_iterator Node::output_cend(void) const
+const std::forward_list<std::string>::const_iterator Node::output_cend(void) const
 {
    return this->output.cend();
 }
@@ -160,7 +161,7 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
       xmlNodePtr o = xmlNewChild(node, nullptr, (const xmlChar *)"OUTPUT", nullptr);
       for (const auto &s : output)
       {
-         xmlNewChild(o, nullptr, (const xmlChar *)"TEXT", (xmlChar *)s.c_str());
+         xmlNewChild(o, nullptr, (const xmlChar *)"TEXT", (xmlChar *)(s.c_str()));
       }
    }
 }
@@ -168,6 +169,9 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 
 #include <stack>
 
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
 void Node::generateLR(std::string &currentCombination, vectorForests::const_iterator forestIt)
 {
    std::stack<std::pair<std::string, vectorForests::const_iterator>> stack;
@@ -179,37 +183,41 @@ void Node::generateLR(std::string &currentCombination, vectorForests::const_iter
       forestIt = stack.top().second;
       stack.pop();
 
-      if (forestIt == cend())
+      if (!(*forestIt)->output_empty())
       {
-         output.push_back(currentCombination);
-         //if (root)
-         //std::cerr << currentCombination << std::endl;
+         for (std::forward_list<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
+         {
+            if (withSpace && !currentCombination.empty())
+            {
+               if (forestIt + 1 == cend())
+                  output.push_front(currentCombination + ' ' + *item);
+               else
+
+                  stack.push({currentCombination + ' ' + *item, forestIt + 1});
+            }
+            else
+            {
+               if (forestIt + 1 == cend())
+                  output.push_front(currentCombination + *item);
+               else
+                  stack.push({currentCombination + *item, forestIt + 1});
+            }
+         }
       }
       else
       {
-         if ((*forestIt)->output_size())
-         {
-            for (std::vector<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
-            {
-               if (withSpace && !currentCombination.empty())
-               {
-                  stack.push({currentCombination + ' ' + *item, forestIt + 1});
-               }
-               else
-               {
-                  stack.push({currentCombination + *item, forestIt + 1});
-               }
-            }
-         }
+         if (forestIt + 1 == cend())
+            output.push_front(currentCombination);
          else
-         {
             stack.push({currentCombination, forestIt + 1});
-         }
       }
    }
 }
 
-void Node::generateRL(std::string &currentCombination, vectorForests::const_iterator forestIt)
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+void Node::generateRL(std::string currentCombination, vectorForests::const_iterator forestIt)
 {
    std::stack<std::pair<std::string, vectorForests::const_iterator>> stack;
    stack.push({currentCombination, forestIt});
@@ -222,13 +230,13 @@ void Node::generateRL(std::string &currentCombination, vectorForests::const_iter
 
       if (forestIt < cbegin())
       {
-         output.push_back(currentCombination);
+         output.push_front(currentCombination);
       }
       else
       {
-         if ((*forestIt)->output_size())
+         if (!(*forestIt)->output_empty())
          {
-            for (std::vector<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
+            for (std::forward_list<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
             {
                if (withSpace && !currentCombination.empty())
                {
@@ -255,7 +263,7 @@ void Node::generatePermutations(Node::vectorForests &forests, int start, int end
 {
    if (start == end)
    {
-      std::string currentCombination = std::string();
+      std::string currentCombination = "";
       generateLR(currentCombination, forests.cbegin());
    }
    else
@@ -289,14 +297,14 @@ void Node::generate(bool randomResult, bool singleResult)
       }
       else if (bidirectional)
       {
-         std::string currentCombination = std::string();
+         std::string currentCombination = "";
          generateLR(currentCombination, forests.cbegin());
-         currentCombination = std::string();
+         currentCombination = "";
          generateRL(currentCombination, forests.cend() - 1);
       }
       else
       {
-         std::string currentCombination = std::string();
+         std::string currentCombination = "";
          generateLR(currentCombination, forests.cbegin());
       }
    }

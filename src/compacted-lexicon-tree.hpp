@@ -31,7 +31,7 @@ private:
     class CompactedLexiconInfo *info;
 
     char character;
-    unsigned long int address;
+    uint32_t address;
 
 public:
     CompactedLexiconTree(CompactedLexiconTree *child, CompactedLexiconTree *sibling, class CompactedLexiconInfo *info,
@@ -43,13 +43,13 @@ public:
 
     CompactedLexiconTree *getChild() const;
 
-    void add(const char *, unsigned long int);
+    void add(const char *, uint32_t);
 
-    void setIndexStaticFSA(unsigned long int &);
+    void setIndexStaticFSA(uint32_t &);
 
     void printStaticFSA(FILE *, class CompactedLexicon *) const;
 
-    void setIndexStaticInfo(unsigned long int &);
+    void setIndexStaticInfo(uint32_t &);
 
     void printStaticInfo(FILE *) const;
 };

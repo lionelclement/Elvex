@@ -122,7 +122,7 @@ public:
 
   void parseBuffer(std::string prefix, std::string suffix, std::string buffer, std::string bufferName);
 
-  void listMacros();
+  void printMacros();
 
 private:
   void parseString(std::string buffer);

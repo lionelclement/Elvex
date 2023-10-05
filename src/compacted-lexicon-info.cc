@@ -23,7 +23,7 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconInfo::CompactedLexiconInfo(class CompactedLexiconInfo *next, unsigned long int offset)
+CompactedLexiconInfo::CompactedLexiconInfo(class CompactedLexiconInfo *next, uint32_t offset)
 {
     NEW this->address = 0;
     this->next = next;
@@ -54,7 +54,7 @@ class CompactedLexiconInfo *CompactedLexiconInfo::getNext(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconInfo::getOffset(void) const
+uint32_t CompactedLexiconInfo::getOffset(void) const
 {
     return offset;
 }
@@ -62,7 +62,7 @@ unsigned long int CompactedLexiconInfo::getOffset(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconInfo::getAddress(void) const
+uint32_t CompactedLexiconInfo::getAddress(void) const
 {
     return address;
 }
@@ -70,7 +70,7 @@ unsigned long int CompactedLexiconInfo::getAddress(void) const
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexiconInfo::setAddress(unsigned long int _address)
+void CompactedLexiconInfo::setAddress(uint32_t _address)
 {
     this->address = _address;
 }

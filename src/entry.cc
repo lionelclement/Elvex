@@ -47,7 +47,7 @@ Entry::Entry(const std::string &form, featuresPtr features)
  ************************************************** */
 Entry::Entry(featuresPtr features)
 {
-    this->form = std::string();
+    this->form = "";
     this->features = features;
     NEW;
 }
@@ -137,11 +137,11 @@ void Entry::print(std::ostream &os) const
 void Entry::makeSerialString()
 {
     std::ostringstream stream;
-    stream << form << '\x01';
+    stream << form << '/';
     if (features)
         stream << features->peekSerialString();
     else
-        stream << '\x02';
+        stream << '/';
     serialString = stream.str();
 }
 

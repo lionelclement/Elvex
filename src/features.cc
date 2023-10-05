@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -254,20 +254,16 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
 void Features::makeSerialString()
 {
     std::ostringstream stream;
-
+    stream.clear();
     if (isNil())
-        stream << '\x6';
+        stream << 'N';
     else if (isBottom())
-        stream << '\x7';
+        stream << 'B';
     else
     {
-        stream << '\x8';
-        if (!features.empty())
+        for (const auto &feature : features)
         {
-            for (const auto &f : features)
-            {
-                stream << '\x9' << f->peekSerialString();
-            }
+            stream << '_' << feature->peekSerialString();
         }
     }
     serialString = stream.str();

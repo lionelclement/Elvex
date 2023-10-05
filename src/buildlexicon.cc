@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -53,19 +53,155 @@ void usage()
 /* **************************************************
  *
  ************************************************** */
+void addMacro(std::string line, std::string morphoFile, int lineno)
+{
+	// Macro
+	// @f	gender:fem
+	featuresPtr features;
+
+	auto pos1 = line.find('@');
+	auto pos2 = line.find('\t');
+	if (pos2 == std::string::npos)
+	{
+		std::ostringstream oss;
+		oss << "No '\\t' found in line: \"" << line << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss.str());
+	}
+
+	std::string input = line.substr(pos1 + 1, pos2 - 1);
+	std::string f = "[" + line.substr(pos2 + 1, line.size() - 1) + "]";
+	try
+	{
+		parser.parseBuffer("#(", ")", f, "morphology");
+	}
+	catch (parser_exception &e)
+	{
+
+		std::ostringstream oss;
+		oss << e.what() << ":\"" << f << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss);
+	}
+	features = parser.getLocalFeatures();
+	// CERR_LINE;
+	// std::cerr << '@' << input << " => ";
+	// features->flatPrint(std::cerr);
+	// std::cerr << std::endl;
+	parser.addMacros(input, features);
+}
+
+/* **************************************************
+ * # form	pos	lemma	features
+ ************************************************** */
+void addMorpho(std::string line, std::string morphoFile, int lineno, Lexicon *morpho)
+{
+	auto pos1 = line.find('\t');
+	auto pos2 = line.find('\t', pos1 + 1);
+	auto pos3 = line.find('\t', pos2 + 1);
+	std::string form(line);
+	if (pos1 == std::string::npos)
+	{
+		std::ostringstream oss;
+		oss << "part of speach expected in \"" << line << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss.str());
+	}
+	form.resize(pos1);
+
+	if (pos2 == std::string::npos)
+	{
+		std::ostringstream oss;
+		oss << "lemma expected in \"" << line << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss.str());
+	}
+	std::string pos = line.substr(pos1 + 1, pos2 - pos1 - 1);
+
+	if (pos3 == std::string::npos)
+	{
+		std::ostringstream oss;
+		oss << "features expected in \"" << line << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss.str());
+	}
+	std::string lemma = line.substr(pos2 + 1, pos3 - pos2 - 1);
+	std::string features = line.substr(pos3 + 1, line.size() - 1);
+
+	// CERR_LINE;
+	// std::cerr << "/form:/" << form << '/' << std::endl;
+	// std::cerr << "/pos:/" << pos << '/' << std::endl;
+	// std::cerr << "/lemma:/" << lemma << '/' << std::endl;
+	// std::cerr << "/features:/" << features << '/' << std::endl;
+
+	std::string input = pos + '#' + lemma;
+	std::string output = form + '#' + features;
+	morpho->add(input, output);
+}
+
+/* **************************************************
+ * # lexeme	pos	lemma	features
+ ************************************************** */
+void addPattern(std::string line, std::string morphoFile, int lineno, Lexicon *pattern)
+{
+	auto pos1 = line.find('\t');
+	auto pos2 = line.find('\t', pos1 + 1);
+	auto pos3 = line.find('\t', pos2 + 1);
+	std::string lexeme(line);
+	if (pos1 == std::string::npos)
+	{
+		std::ostringstream oss;
+		oss << "part of speach expected in \"" << line << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss.str());
+	}
+	lexeme.resize(pos1);
+
+	if (pos2 == std::string::npos)
+	{
+		std::ostringstream oss;
+		oss << "lemma expected in \"" << line << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss.str());
+	}
+	std::string pos = line.substr(pos1 + 1, pos2 - pos1 - 1);
+
+	if (pos3 == std::string::npos)
+	{
+		std::ostringstream oss;
+		oss << "features expected in \"" << line << "\"";
+		oss << " " << morphoFile << " (line " << lineno << ")";
+		throw fatal_exception(oss.str());
+	}
+	std::string lemma = line.substr(pos2 + 1, pos3 - pos2 - 1);
+	std::string features = line.substr(pos3 + 1, line.size() - 1);
+	// CERR_LINE
+	// std::cerr << "/lexeme:/" << lexeme << '/' << std::endl;
+	// std::cerr << "/pos:/" << pos << '/' << std::endl;
+	// std::cerr << "/lemma:/" << lemma << '/' << std::endl;
+	// std::cerr << "/features:/" << features << '/' << std::endl;
+
+	std::string input = pos + '#' + lexeme;
+	std::string output = lemma + '#' + features;
+	pattern->add(input, output);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 int main(int argn, char **argv)
 {
 	try
 	{
-		CompactedLexicon *lex;
+		CompactedLexicon *compactedLexicon;
 		Buildlexicon::Choice mode = Buildlexicon::NONE;
 		std::string inputFileName = std::string();
 		std::string prefix;
 		std::string directory;
 		std::string patternFile = std::string();
 		std::string morphoFile = std::string();
-		class Lexicon morpho = Lexicon();
-		class Lexicon pattern = Lexicon();
+		Lexicon *morpho = nullptr;
+		Lexicon *pattern = nullptr;
 
 		if (argn <= 1)
 		{
@@ -170,200 +306,41 @@ int main(int argn, char **argv)
 
 		if (!morphoFile.empty())
 		{
+			morpho = new Lexicon(morphoFile);
 			std::ifstream inputFile;
 			inputFile.open(morphoFile.c_str());
-			char line[MAXSTRING];
+			std::string line;
 			int lineno = 1;
-			while (inputFile.getline(line, MAXSTRING))
+			while (std::getline(inputFile, line))
 			{
-				if ((line[0] != '#') && (line[0] != 0))
+				if (!line.empty() && line[0] != '#')
 				{
-					std::string input;
-					std::string output;
-
-					// Macro
-					// @f	gender:fem
 					if (line[0] == '@')
-					{
-						featuresPtr features;
-
-						char line2[MAXSTRING];
-						strcpy(line2, line);
-						char *form = strchr(line2, '@') + 1;
-						char *rhs = strchr(form, '\t');
-						if (!rhs)
-						{
-							std::ostringstream oss;
-							oss << "features expected in \"" << line << "\"";
-							oss << " " << morphoFile << " (line " << lineno << ")";
-							throw fatal_exception(oss);
-						}
-						*rhs = 0;
-
-						char line4[MAXSTRING];
-						strcpy(line4, line);
-						char *f = strchr(line4, '\t') + 1;
-
-						std::stringstream stream;
-						stream << form;
-						std::string input = stream.str();
-
-						stream.str("");
-						stream << '[' << f << ']';
-						std::string fsString = stream.str();
-						try
-						{
-							parser.parseBuffer("#(", ")", fsString, "morphology");
-						}
-						catch (parser_exception &e)
-						{
-							std::ostringstream oss;
-							oss << e.what() << ":\"" << f << "\"";
-							oss << " " << morphoFile << " (line " << lineno << ")";
-							throw fatal_exception(oss);
-						}
-						features = parser.getLocalFeatures();
-						parser.addMacros(input, features);
-					}
-
-					// ordinary entry
+						addMacro(line, morphoFile, lineno);
 					else
-					{
-						char form[MAXSTRING];
-						strcpy(form, line);
-						char *rhs = strchr(form, '\t');
-						if (!rhs)
-						{
-							std::ostringstream oss;
-							oss << "part of speach expected in \"" << line << "\"";
-							oss << " " << morphoFile << " (line " << lineno << ")";
-							throw fatal_exception(oss);
-						}
-						*rhs = 0;
-
-						char line2[MAXSTRING];
-						strcpy(line2, line);
-						char *pos = strchr(line2, '\t') + 1;
-						rhs = strchr(pos, '\t');
-						if (!rhs)
-						{
-							std::ostringstream oss;
-							oss << "lemma expected in \"" << line << "\"";
-							oss << " " << morphoFile << " (line " << lineno << ")";
-							throw fatal_exception(oss);
-						}
-						*rhs = 0;
-
-						char line3[MAXSTRING];
-						strcpy(line3, line);
-						char *lemma = strchr(line3, '\t') + 1;
-						lemma = strchr(lemma, '\t') + 1;
-						rhs = strchr(lemma, '\t');
-						if (!rhs)
-						{
-							std::ostringstream oss;
-							oss << "features expected in \"" << line << "\"";
-							oss << " " << morphoFile << " (line " << lineno << ")";
-							throw fatal_exception(oss);
-						}
-						*rhs = 0;
-
-						char line4[MAXSTRING];
-						strcpy(line4, line);
-						char *features = strchr(line4, '\t') + 1;
-						features = strchr(features, '\t') + 1;
-						features = strchr(features, '\t') + 1;
-
-						// std::cerr << "/form:/" << form << '/' << std::endl;
-						// std::cerr << "/pos:/" << pos << '/' << std::endl;
-						// std::cerr << "/lemma:/" << lemma << '/' << std::endl;
-						// std::cerr << "/features:/" << features << '/' << std::endl;
-
-						std::stringstream stream;
-						stream << pos << '#' << lemma;
-						std::string _input = stream.str();
-
-						stream.str("");
-						stream << form << '#' << features;
-						std::string _output = stream.str();
-						// std::cerr << "morpho/input:/" << _input << "/output:/" << _output << "/" << std::endl;
-						morpho.add(_input, _output);
-					}
+						addMorpho(line, morphoFile, lineno, morpho);
 				}
 				lineno++;
 			}
 			inputFile.close();
 		}
 
-		// parser.listMacros();
-
 		if (!patternFile.empty())
 		{
-			std::ifstream inputFile;
-			inputFile.open(patternFile.c_str());
-			char line[MAXSTRING];
+			pattern = new Lexicon(patternFile);
+			std::ifstream inputFile(patternFile);
+			std::string line;
 			int lineno = 1;
-			while (inputFile.getline(line, MAXSTRING))
+
+			while (std::getline(inputFile, line))
 			{
-				if ((line[0] != '#') && strchr(line, '\t'))
+				if (!line.empty() && line[0] != '#')
 				{
-
-					// std::cerr << line << std::endl;
-
-					char lexeme[MAXSTRING];
-					strcpy(lexeme, line);
-					char *rhs = strchr(lexeme, '\t');
-					*rhs = 0;
-
-					char line2[MAXSTRING];
-					strcpy(line2, line);
-					char *pos = strchr(line2, '\t') + 1;
-					rhs = strchr(pos, '\t');
-					if (!rhs)
-					{
-						std::ostringstream oss;
-						oss << "lemma expected in \"" << line << "\"";
-						oss << " " << patternFile << " (line " << lineno << ")";
-						throw fatal_exception(oss);
+					if (line[0] == '@')
+						addMacro(line, patternFile, lineno);
+					else {
+						addPattern(line, patternFile, lineno, pattern);
 					}
-					*rhs = 0;
-
-					char line3[MAXSTRING];
-					strcpy(line3, line);
-					char *lemma = strchr(line3, '\t') + 1;
-					lemma = strchr(lemma, '\t') + 1;
-					rhs = strchr(lemma, '\t');
-					if (!rhs)
-					{
-						std::ostringstream oss;
-						oss << "features expected in \"" << line << "\"";
-						oss << " " << patternFile << " (line " << lineno << ")";
-						throw fatal_exception(oss);
-					}
-					*rhs = 0;
-
-					char line4[MAXSTRING];
-					strcpy(line4, line);
-					char *features = strchr(line4, '\t') + 1;
-					features = strchr(features, '\t') + 1;
-					features = strchr(features, '\t') + 1;
-
-					// std::cerr << "/lexeme:/" << lexeme << '/' << std::endl;
-					// std::cerr << "/pos:/" << pos << '/' << std::endl;
-					// std::cerr << "/lemma:/" << lemma << '/' << std::endl;
-					// std::cerr << "/features:/" << features << '/' << std::endl;
-
-					std::stringstream stream;
-					stream << pos << '#' << lexeme;
-					std::string input = stream.str();
-
-					stream.str("");
-					stream << lemma << '#' << features;
-					std::string output = stream.str();
-
-					// std::cerr << "pattern/input:/" << input << '/' << "/output:/" << output << '/' << std::endl;
-
-					pattern.add(input, output);
 				}
 				lineno++;
 			}
@@ -375,33 +352,37 @@ int main(int argn, char **argv)
 
 		case Buildlexicon::BUILD:
 		{
-			lex = new CompactedLexicon(directory, prefix);
-			lex->openFiles("w");
-			lex->buildEntries(pattern, morpho);
-			lex->saveFsa();
-			lex->closeFiles();
+			compactedLexicon = new CompactedLexicon(directory, prefix);
+			compactedLexicon->openFiles("w");
+			if (!morpho)
+				throw usage_exception("morphoFile argument expected");
+			if (!pattern)
+				throw usage_exception("patternFile argument expected");
+			compactedLexicon->buildEntries(*pattern, *morpho);
+			compactedLexicon->saveFsa();
+			compactedLexicon->closeFiles();
 			return EXIT_SUCCESS;
 		}
 
 		case Buildlexicon::CONSULT:
 		{
-			lex = new CompactedLexicon(directory, prefix);
-			lex->openFiles("r");
-			lex->loadFsa();
-			lex->loadData();
-			lex->consult();
-			lex->closeFiles();
+			compactedLexicon = new CompactedLexicon(directory, prefix);
+			compactedLexicon->openFiles("r");
+			compactedLexicon->loadFsa();
+			compactedLexicon->loadData();
+			compactedLexicon->consult();
+			compactedLexicon->closeFiles();
 			return EXIT_SUCCESS;
 		}
 
 		case Buildlexicon::LIST:
 		{
-			lex = new CompactedLexicon(directory, prefix);
-			lex->openFiles("r");
-			lex->loadFsa();
-			lex->loadData();
-			lex->print(std::cout);
-			lex->closeFiles();
+			compactedLexicon = new CompactedLexicon(directory, prefix);
+			compactedLexicon->openFiles("r");
+			compactedLexicon->loadFsa();
+			compactedLexicon->loadData();
+			compactedLexicon->print(std::cout);
+			compactedLexicon->closeFiles();
 			return EXIT_SUCCESS;
 		}
 

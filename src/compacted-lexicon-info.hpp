@@ -20,27 +20,29 @@
 #ifndef COMPACTEDLEXICONINFO_H
 #define COMPACTEDLEXICONINFO_H
 
+#include <cstdint>
+
 class CompactedLexiconInfo
 {
 private:
     class CompactedLexiconInfo *next;
 
-    unsigned long int offset;
+    uint32_t offset;
 
-    unsigned long int address;
+    uint32_t address;
 
 public:
-    CompactedLexiconInfo(class CompactedLexiconInfo *next = nullptr, unsigned long int offset = 0);
+    CompactedLexiconInfo(class CompactedLexiconInfo *next = nullptr, uint32_t offset = 0);
 
     ~CompactedLexiconInfo();
 
     class CompactedLexiconInfo *getNext(void) const;
 
-    unsigned long int getOffset(void) const;
+    uint32_t getOffset(void) const;
 
-    unsigned long int getAddress(void) const;
+    uint32_t getAddress(void) const;
 
-    void setAddress(unsigned long int);
+    void setAddress(uint32_t);
 };
 
 #endif // COMPACTEDLEXICONINFO_H

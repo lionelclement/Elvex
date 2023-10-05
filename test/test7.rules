@@ -3,7 +3,7 @@
  ************************************************** */
 Axiom → Text_with_features strongPunct {
   printlnstderr __FILE__, "...";
-  //printlnstderr __FILE__, " will take a while due to the large number of possible combinations.";
+  printlnstderr __FILE__, " will take a while due to the large number of possible combinations.";
   ↓1 = ↑;
   [punct:$punc] ⊂ ⇓1;
   ↓2 = [punct:$punc];

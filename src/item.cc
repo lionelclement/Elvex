@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -42,9 +42,9 @@ uint8_t Item::NA = UCHAR_MAX;
 Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
 {
     NEW;
-    this->rule = /*std::move*/(rule);
+    this->rule = /*std::move*/ (rule);
     this->index = index;
-    this->statements = /*std::move*/(statements);
+    this->statements = /*std::move*/ (statements);
     this->environment = environmentPtr();
     this->inheritedFeatures = Features::NIL;
     this->synthesizedFeatures = Features::NIL;
@@ -56,7 +56,7 @@ Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
  *
  ************************************************** */
 Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements)
-    : Item(rule, index, /*std::move*/(statements))
+    : Item(rule, index, /*std::move*/ (statements))
 {
     std::vector<termsPtr> terms = rule->getRhs();
     unsigned j = 0;
@@ -76,7 +76,7 @@ Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr 
  *
  ************************************************** */
 Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements)
-    : Item(rule, index, /*std::move*/(statements))
+    : Item(rule, index, /*std::move*/ (statements))
 {
     this->indexTerms = indexTerms;
     std::vector<termsPtr> terms = rule->getRhs();
@@ -126,7 +126,7 @@ Item::~Item()
  ************************************************** */
 class Item *Item::create(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements)
 {
-    return new Item(rule, index, indexTerm, /*std::move*/(statements));
+    return new Item(rule, index, indexTerm, /*std::move*/ (statements));
 }
 
 /* **************************************************
@@ -135,7 +135,7 @@ class Item *Item::create(const rulePtr &rule, uint8_t index, uint8_t indexTerm, 
 class Item *
 Item::create(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements)
 {
-    return new Item(rule, index, indexTerms, /*std::move*/(statements));
+    return new Item(rule, index, indexTerms, /*std::move*/ (statements));
 }
 
 /* **************************************************
@@ -289,7 +289,7 @@ termsPtr Item::getCurrentTerms() const
  ************************************************** */
 void Item::setCurrentTerms(termsPtr terms)
 {
-    this->rule->getRhs()[this->index] = /*std::move*/(terms);
+    this->rule->getRhs()[this->index] = /*std::move*/ (terms);
 }
 
 /* **************************************************
@@ -430,7 +430,7 @@ std::vector<class ForestIdentifier *> &Item::getForestIdentifiers()
  ************************************************** */
 void Item::addForestIdentifiers(unsigned int key, class ForestIdentifier *forestIdentifier)
 {
-    forestIdentifiers[key] = /*std::move*/(forestIdentifier);
+    forestIdentifiers[key] = /*std::move*/ (forestIdentifier);
 }
 
 /* **************************************************
@@ -456,7 +456,7 @@ listFeaturesPtr Item::getSynthesizedSonFeatures()
 void Item::setSynthesizedSonFeatures(listFeaturesPtr _synthesizedSonFeatures)
 {
     this->synthesizedSonFeatures = _synthesizedSonFeatures;
-    //this->synthesizedSonFeatures = /*std::move*/(_synthesizedSonFeatures);
+    // this->synthesizedSonFeatures = /*std::move*/(_synthesizedSonFeatures);
 }
 
 /* **************************************************
@@ -472,7 +472,7 @@ listFeaturesPtr Item::getInheritedSonFeatures()
  ************************************************** */
 void Item::setInheritedSonFeatures(listFeaturesPtr _inheritedSonFeatures)
 {
-    this->inheritedSonFeatures = /*std::move*/(_inheritedSonFeatures);
+    this->inheritedSonFeatures = /*std::move*/ (_inheritedSonFeatures);
 }
 
 /* **************************************************
@@ -489,7 +489,7 @@ featuresPtr Item::getSynthesizedFeatures() const
 void Item::setSynthesizedFeatures(featuresPtr _synthesizedFeatures)
 {
     this->synthesizedFeatures = _synthesizedFeatures;
-    //this->synthesizedFeatures = /*std::move*/(_synthesizedFeatures);
+    // this->synthesizedFeatures = /*std::move*/(_synthesizedFeatures);
 }
 
 /* **************************************************
@@ -505,7 +505,7 @@ featuresPtr Item::getInheritedFeatures() const
  ************************************************** */
 void Item::setInheritedFeatures(featuresPtr _inheritedFeatures)
 {
-    this->inheritedFeatures = /*std::move*/(_inheritedFeatures);
+    this->inheritedFeatures = /*std::move*/ (_inheritedFeatures);
 }
 
 /* **************************************************
@@ -521,7 +521,7 @@ environmentPtr Item::getEnvironment() const
  ************************************************** */
 void Item::setEnvironment(environmentPtr _environment)
 {
-    this->environment = /*std::move*/(_environment);
+    this->environment = /*std::move*/ (_environment);
 }
 
 /* **************************************************
@@ -574,7 +574,7 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment)
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, /*std::move*/(_environment));
+    return this->environment->add(from, /*std::move*/ (_environment));
 }
 
 /* **************************************************
@@ -594,7 +594,7 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, enviro
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, /*std::move*/(_environment), /*std::move*/(where));
+    return this->environment->add(from, /*std::move*/ (_environment), /*std::move*/ (where));
 }
 
 /* **************************************************
@@ -922,50 +922,56 @@ void Item::apply(Parser &parser, Generator *synthesizer)
 void Item::makeSerialString()
 {
     std::ostringstream stream;
-    stream << std::hex << getRuleId() << '\x0' << index << '\x0';
+    stream << 'I' << std::hex << (int)getRuleId() << '_' << (int)index << '_';
     std::vector<uint8_t>::const_iterator ind = indexTerms.cbegin();
-    while (ind != indexTerms.cend()){
-        stream << std::hex << *(ind++) << '\x1';
-    }
-    stream << '\x0';
-    set_of_unsigned_int_const_iterator ref = refs.cbegin();
-    while (ref != refs.cend()){
-        stream << std::hex << *(ref++) << '\x1';
-    }
-
-    stream << '\x0';
-    std::vector<class ForestIdentifier *>::const_iterator fi = forestIdentifiers.cbegin();
-    while (fi != forestIdentifiers.cend())
+    while (ind != indexTerms.cend())
     {
-        if (*fi){
-            stream << (*fi)->peekSerialString() << '\x1';
+        stream << std::hex << (int)*(ind++) << '/';
+    }
+    stream << '_';
+    set_of_unsigned_int_const_iterator ref = refs.cbegin();
+    while (ref != refs.cend())
+    {
+        stream << std::hex << (int)*(ref++) << '/';
+    }
+    stream << '_';
+    for (std::vector<class ForestIdentifier *>::const_iterator fi = forestIdentifiers.cbegin();
+    fi != forestIdentifiers.cend();
+    ++fi)
+    {
+        if (*fi)
+        {
+            //stream << '/' << (*fi)->peekSerialString() << '/';
+            stream << '/' << (int)(*fi)->getCode() << '/' << (int)(*fi)->getFrom() << '/' << (int)(*fi)->getTo() << '/';
+            stream << (*fi)->getFeaturesSerialString() << '/';
         }
-        else{
-            stream << '\x1';
+        else
+        {
+            stream << '/' << '/';
         }
-        ++fi;
     }
 
-    stream << '\x0';
+    stream << '_';
     stream << inheritedFeatures->peekSerialString();
+    stream.flush();
     serialString = stream.str();
 }
 
 /* **************************************************
  *
  ************************************************** */
-size_t Item::hash::operator()(class Item *item) const
+size_t Item::Hash::operator()(class Item *item) const
 {
-    // defined in serialisable.hpp : std::hash<std::string>{}(serialString)
-    return item->hashCode();
+    // defined in serialisable.hpp
+    return item->hash();
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::equal_to::operator()(class Item *i1, class Item *i2) const
+bool Item::KeyEqual::operator()(class Item *item1, class Item *item2) const
 {
-    return i1->peekSerialString() == i2->peekSerialString();
+    return item1->peekSerialString() == item2->peekSerialString();
 }
 
 /* **************************************************

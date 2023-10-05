@@ -25,17 +25,17 @@
 struct CompactedLexiconBuffer
 {
 private:
-    unsigned long int next;
-    unsigned long int offset;
+    uint32_t next;
+    uint32_t offset;
 
 public:
-    CompactedLexiconBuffer(unsigned long int next, unsigned long int offset);
+    CompactedLexiconBuffer(uint32_t next, uint32_t offset);
 
     CompactedLexiconBuffer(void);
 
-    unsigned long int getOffset() const;
+    uint32_t getOffset() const;
 
-    unsigned long int getNext() const;
+    uint32_t getNext() const;
 
     bool isNext() const;
 

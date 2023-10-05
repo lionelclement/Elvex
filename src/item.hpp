@@ -201,12 +201,12 @@ public:
 
     class Item *clone(const std::bitset<FLAGS> &savedFlags);
 
-    struct hash
+    struct Hash
     {
         size_t operator()(class Item *) const;
     };
 
-    struct equal_to
+    struct KeyEqual
     {
         bool operator()(class Item *, class Item *) const;
     };

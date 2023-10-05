@@ -907,70 +907,70 @@ void Statement::makeSerialString()
     switch (this->op)
     {
     case ATTEST_STATEMENT:
-        serialString = '\x0' + lhs->peekSerialString();
+        serialString = 'A' + lhs->peekSerialString();
         break;
     case NIL_STATEMENT:
-        serialString = '\x1';
+        serialString = 'B';
         break;
     case ASSIGNMENT_STATEMENT:
-        serialString = '\x2' + lhs->peekSerialString() + rhs->peekSerialString();
+        serialString = 'C' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case SUBSUME_STATEMENT:
-        serialString = '\x3' + lhs->peekSerialString() + rhs->peekSerialString();
+        serialString = 'D' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case FUNCTION_STATEMENT:
         switch (this->getFct())
         {
         case NOP:
-            serialString = '\x4';
+            serialString = 'E';
             break;
         case NOT:
-            serialString = '\x5' + lhs->peekSerialString();
+            serialString = 'F' + lhs->peekSerialString();
             break;
         case AND:
-            serialString = '\x6' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'G' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case OR:
-            serialString = '\x7' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'H' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case DIFF:
-            serialString = '\x8' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'I' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case EQ:
-            serialString = '\x9' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'J' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case PLUS:
-            serialString = '\xA' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'K' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case MINUS:
-            serialString = '\xB' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'L' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case TIMES:
-            serialString = '\xC' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'M' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case DIVIDE:
-            serialString = '\xD' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'N' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case MODULO:
-            serialString = '\xE' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'O' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case LT:
-            serialString = '\xF' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'P' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case LE:
-            serialString = '\x10' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'Q' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case GT:
-            serialString = '\x11' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'R' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case GE:
-            serialString = '\x12' + lhs->peekSerialString() + rhs->peekSerialString();
+            serialString = 'S' + lhs->peekSerialString() + rhs->peekSerialString();
             break;
         case MINUS_U:
-            serialString = '\x13' + lhs->peekSerialString();
+            serialString = 'T' + lhs->peekSerialString();
             break;
         case RANDOM:
-            serialString = '\x14';
+            serialString = 'U';
             break;
         }
         break;
@@ -979,88 +979,88 @@ void Statement::makeSerialString()
         serialString = getBits()->peekSerialString();
         break;
     case ANONYMOUS_STATEMENT:
-        serialString = '\x15';
+        serialString = 'V';
         break;
     case PRINT_STATEMENT:
-        serialString = '\x16' + getStatements()->peekSerialString();
+        serialString = 'W' + getStatements()->peekSerialString();
         break;
     case PRINTLN_STATEMENT:
-        serialString = '\x17' + getStatements()->peekSerialString();
+        serialString = 'X' + getStatements()->peekSerialString();
         break;
     case PRINTSTDERR_STATEMENT:
-        serialString = '\x18' + getStatements()->peekSerialString();
+        serialString = 'Y' + getStatements()->peekSerialString();
         break;
     case PRINTLNSTDERR_STATEMENT:
-        serialString = '\x19' + getStatements()->peekSerialString();
+        serialString = 'Z' + getStatements()->peekSerialString();
         break;
     case FEATURES_STATEMENT:
-        serialString = '\x1A' + getFeatures()->peekSerialString();
+        serialString = '0' + getFeatures()->peekSerialString();
         break;
     case PAIRP_STATEMENT:
-        serialString = '\x1B' + getPairp()->peekSerialString();
+        serialString = '1' + getPairp()->peekSerialString();
         break;
     case GUARD_STATEMENT:
-        serialString = '\x1C' + getFeatures()->peekSerialString();
+        serialString = '2' + getFeatures()->peekSerialString();
         break;
     case UNIF_STATEMENT:
-        serialString = '\x1D' + lhs->peekSerialString() + rhs->peekSerialString();
+        serialString = '3' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case INHERITED_FEATURES_STATEMENT:
-        serialString = '\x1E';
+        serialString = '4';
         break;
     case SYNTHESIZED_FEATURES_STATEMENT:
-        serialString = '\x1F';
+        serialString = '5';
         break;
     case DASH_STATEMENT:
-        serialString = '\x20' + std::to_string(getFirst());
+        serialString = '6' + std::to_string(getFirst());
         if (getSecond() != UINT8_MAX)
-            serialString += '\x21' + std::to_string(getSecond());
+            serialString += '7' + std::to_string(getSecond());
         break;
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
-        serialString = '\x22' + std::to_string(getFirst() + 1);
+        serialString = '8' + std::to_string(getFirst() + 1);
         if (getSecond() != UINT8_MAX)
-            serialString += '\x23' + std::to_string(getSecond() + 1);
+            serialString += '9' + std::to_string(getSecond() + 1);
         break;
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
-        serialString = '\x24' + std::to_string(getFirst() + 1);
+        serialString = 'a' + std::to_string(getFirst() + 1);
         break;
     case IF_STATEMENT:
-        serialString = '\x25' + lhs->peekSerialString() + rhs->peekSerialString();
+        serialString = 'b' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case IF_CON_T_STATEMENT:
-        serialString = '\x26' + lhs->peekSerialString();
+        serialString = 'c' + lhs->peekSerialString();
         if (rhs)
         {
-            serialString += '\x27' + rhs->peekSerialString();
+            serialString += 'd' + rhs->peekSerialString();
         }
         break;
     case DEFERRED_STATEMENT:
-        serialString = '\x28' + lhs->peekSerialString() + rhs->peekSerialString();
+        serialString = 'e' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case FOREACH_STATEMENT:
-        serialString = '\x29' + lhs->peekSerialString() + rhs->peekSerialString();
+        serialString = 'f' + lhs->peekSerialString() + rhs->peekSerialString();
         break;
     case FOREACH_CON_T_STATEMENT:
-        serialString = '\x2A' + lhs->peekSerialString();
+        serialString = 'g' + lhs->peekSerialString();
         if (rhs)
         {
-            serialString += '\x2B' + rhs->peekSerialString();
+            serialString += 'h' + rhs->peekSerialString();
         }
         break;
     case STRING_STATEMENT:
-        serialString = '\x2C' + getString() + '\x2D';
+        serialString = '/' + getString() + '/';
         break;
     case STMS_STATEMENT:
-        serialString = '\x2E' + getStatements()->peekSerialString();
+        serialString = '{' + getStatements()->peekSerialString() + '}';
         break;
     case NUMBER_STATEMENT:
-        serialString = '\x2F' + getNumber();
+        serialString = 'i' + getNumber();
         break;
     case SEARCH_STATEMENT:
         if (getBits())
-            serialString = '\x30' + getBits()->peekSerialString() + '\x31' + lhs->peekSerialString();
+            serialString = 'j' + getBits()->peekSerialString() + 'k' + lhs->peekSerialString();
         else
-            serialString = '\x32' + lhs->peekSerialString();
+            serialString = 'l' + lhs->peekSerialString();
         break;
     }
 }

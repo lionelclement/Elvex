@@ -1,8 +1,10 @@
 import sys
 
-# Définir le préfixe et le nombre d'éléments à générer
-num_forms = 320
-num_lemmas = 31000
+#It will take a while !
+#num_forms = 320
+#num_lemmas = 31000
+num_forms = 32
+num_lemmas = 10000
 
 with open(sys.argv[1], "w") as morphoFile:
     k = 0

@@ -275,9 +275,11 @@ void Parser::parseString(std::string buffer) {
 /* **************************************************
  *
  ************************************************** */
-void Parser::listMacros() {
+void Parser::printMacros() {
     for (auto iterator : macros) {
-        std::cerr << "\"" << iterator.first << "\"" << std::endl;
+        std::cout << '@' << iterator.first << " => ";
+        iterator.second->flatPrint(std::cout);
+        std::cout << std::endl;
     }
 }
 

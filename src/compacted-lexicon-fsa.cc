@@ -24,8 +24,8 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconFsa::CompactedLexiconFsa(unsigned long int child, unsigned long int next,
-                                         unsigned long int info,
+CompactedLexiconFsa::CompactedLexiconFsa(uint32_t child, uint32_t next,
+                                         uint32_t info,
                                          char character)
 {
     this->child = child;
@@ -39,9 +39,9 @@ CompactedLexiconFsa::CompactedLexiconFsa(unsigned long int child, unsigned long 
  ************************************************** */
 CompactedLexiconFsa::CompactedLexiconFsa(void)
 {
-    this->child = (unsigned long int)~0UL;
-    this->next = (unsigned long int)~0UL;
-    this->info = (unsigned long int)~0UL;
+    this->child = (uint32_t)~0UL;
+    this->next = (uint32_t)~0UL;
+    this->info = (uint32_t)~0UL;
     this->character = (char)~0;
 }
 
@@ -59,7 +59,7 @@ void CompactedLexiconFsa::print(std::ostream &out) const
  ************************************************** */
 bool CompactedLexiconFsa::hasChild() const
 {
-    return child != (unsigned long int)(~0UL);
+    return child != (uint32_t)(~0UL);
 }
 
 /* **************************************************
@@ -67,7 +67,7 @@ bool CompactedLexiconFsa::hasChild() const
  ************************************************** */
 bool CompactedLexiconFsa::hasNext() const
 {
-    return next != (unsigned long int)(~0UL);
+    return next != (uint32_t)(~0UL);
 }
 
 /* **************************************************
@@ -75,13 +75,13 @@ bool CompactedLexiconFsa::hasNext() const
  ************************************************** */
 bool CompactedLexiconFsa::hasInfo() const
 {
-    return info != (unsigned long int)(~0UL);
+    return info != (uint32_t)(~0UL);
 }
 
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconFsa::getChild(void) const
+uint32_t CompactedLexiconFsa::getChild(void) const
 {
     return child;
 }
@@ -89,7 +89,7 @@ unsigned long int CompactedLexiconFsa::getChild(void) const
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconFsa::getNext() const
+uint32_t CompactedLexiconFsa::getNext() const
 {
     return next;
 }
@@ -97,7 +97,7 @@ unsigned long int CompactedLexiconFsa::getNext() const
 /* **************************************************
  *
  ************************************************** */
-unsigned long int CompactedLexiconFsa::getInfo(void) const
+uint32_t CompactedLexiconFsa::getInfo(void) const
 {
     return info;
 }

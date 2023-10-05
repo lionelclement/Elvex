@@ -25,13 +25,13 @@
 struct CompactedLexiconFsa
 {
 private:
-    unsigned long int child;
-    unsigned long int next;
-    unsigned long int info;
+    uint32_t child;
+    uint32_t next;
+    uint32_t info;
     char character;
 
 public:
-    CompactedLexiconFsa(unsigned long int, unsigned long int, unsigned long int, char);
+    CompactedLexiconFsa(uint32_t, uint32_t, uint32_t, char);
 
     CompactedLexiconFsa();
 
@@ -43,11 +43,11 @@ public:
 
     bool hasNext() const;
 
-    unsigned long int getChild(void) const;
+    uint32_t getChild(void) const;
 
-    unsigned long int getNext(void) const;
+    uint32_t getNext(void) const;
 
-    unsigned long int getInfo(void) const;
+    uint32_t getInfo(void) const;
 
     bool equalsThisChar(char character) const;
 

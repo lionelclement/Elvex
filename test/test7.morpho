@@ -41,13 +41,13 @@ appreciated	verb	TO_APPRECIATE	vtense:past_participle,tensed:false
 appreciating	verb	TO_APPRECIATE	vtense:present_participle,tensed:false
 appreciate	verb	TO_APPRECIATE	vtense:infinitive
 
-use	verb	TO_USE	vtense:present,SUBJECT:[@_12s]
-use	verb	TO_USE	vtense:present,SUBJECT:[@p]
-uses	verb	TO_USE	vtense:present,SUBJECT:[@_3s]
-used	verb	TO_USE	vtense:preterite
+use	verb	TO_USE	vtense:present,SUBJECT:[@_12s],tensed:true
+use	verb	TO_USE	vtense:present,SUBJECT:[@p],tensed:true
+uses	verb	TO_USE	vtense:present,SUBJECT:[@_3s],tensed:true
+used	verb	TO_USE	vtense:preterite,tensed:true
 used	verb	TO_USE	vtense:past_participle,tensed:false
 using	verb	TO_USE	vtense:present_participle,tensed:false
-use	verb	TO_USE	vtense:infinitive
+use	verb	TO_USE	vtense:infinitive,tensed:true
 
 accept	verb	TO_ACCEPT	vtense:present,SUBJECT:[@_12s]
 accept	verb	TO_ACCEPT	vtense:present,SUBJECT:[@p]
@@ -212,8 +212,6 @@ tables	common_noun	TABLE	@p
 
 student	common_noun	HUMAN	@s
 students	common_noun	HUMAN	@p
-professor	common_noun	HUMAN	@s
-professors	common_noun	HUMAN	@p
 
 # ***********************************************************
 #  Adjectives

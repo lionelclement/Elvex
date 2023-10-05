@@ -21,6 +21,7 @@
 #define ELVEX_NODE_H
 
 #include <vector>
+#include <forward_list>
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -40,8 +41,8 @@ public:
 
 private:
     vectorForests forests;
-    std::vector<std::string> output;
-    std::vector<std::string> outputRL;
+    //std::vector<std::string> output;
+    std::forward_list<std::string> output;
     bool withSpace;
     bool bidirectional;
     bool permutable;
@@ -69,13 +70,10 @@ public:
     
     void push_back(const forestPtr&);
     
-    size_t output_size(void) const;
+    const std::forward_list<std::string>::const_iterator output_cbegin(void) const;
 
-    const std::vector<std::string>::const_iterator output_cbegin(void) const;
+    const std::forward_list<std::string>::const_iterator output_cend(void) const;
 
-    const std::vector<std::string>::const_iterator output_cend(void) const;
-
-    
     bool getWithSpace() const;
 
 #ifdef OUTPUT_XML
@@ -83,7 +81,7 @@ public:
 #endif
 
     void generateLR(std::string &currentCombination, vectorForests::const_iterator forestIt);
-    void generateRL(std::string &currentCombination, vectorForests::const_iterator forestIt);
+    void generateRL(std::string currentCombination, vectorForests::const_iterator forestIt);
     void generatePermutations(vectorForests& forests, int start, int end);
     void generate(bool randomResult, bool singleResult);
 
