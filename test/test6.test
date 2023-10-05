@@ -34,9 +34,9 @@ $posSynthesized: pre
 $i: [HEAD:JAUNE]
 $lexiconHead: [HEAD:JAUNE, number:pl, pos:post, form:"jaunes"]
 $posSynthesized: post
-belles bagnoles jaunes
-belle bagnoles jaunes
-beaux véhicules jaunes
-belles voitures jaunes
-belle voitures jaunes
+belle voiture jaune
 beau véhicule jaune
+beaux véhicules jaunes
+belles bagnoles jaunes
+belles voitures jaunes
+belle bagnole jaune
