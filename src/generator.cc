@@ -35,7 +35,6 @@
 #include "node.hpp"
 #include "vartable.hpp"
 #include "parser_exception.hpp"
-#include "terminal.hpp"
 
 /* **************************************************
  *

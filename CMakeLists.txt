@@ -100,8 +100,8 @@ set(ELVEX_COMMON_SOURCES
         src/statement.hpp
         src/statements.cc
         src/statements.hpp
-        src/terminal.cc
-        src/terminal.hpp
+        #src/terminal.cc
+        #src/terminal.hpp
         src/terms.cc
         src/terms.hpp
         src/uniq-id.cc

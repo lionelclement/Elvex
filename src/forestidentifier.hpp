@@ -41,7 +41,7 @@ public:
     ~ForestIdentifier() override;
 
     static class ForestIdentifier* create(size_t code, uint8_t from, uint8_t to, 
-            const std::string featuresSerialString);
+            const std::string &featuresSerialString);
 
     void makeSerialString() override;
     
@@ -57,7 +57,7 @@ public:
         return code;
     };
 
-    std::string getFeaturesSerialString() {
+    std::string &getFeaturesSerialString() {
         return featuresSerialString;
     };
 

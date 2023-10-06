@@ -6,19 +6,13 @@
 Axiom → A B {
   printlnstderr __FILE__, "...";
   ↓1 = ↑;
-  [attrPattern:$attrPattern, attrMorpho:$attrMorpho] ⊂ ⇓1;
-  ↓2 = [attrPattern:$attrPattern, attrMorpho:$attrMorpho];
+  [attrPattern:$attrPattern, attrMorpho:$attrMorpho, attrInteger:$attrInteger, attrString:$attrString] ⊂ ⇓1;
+  ↓2 = [attrPattern:$attrPattern, attrMorpho:$attrMorpho, attrInteger:$attrInteger, attrString:$attrString];
 }
 
 /* **************************************************
  * 
  ************************************************** */
-@trace
-@withspaces
-A → POS_0 {
-  ↓1 = ↑;
-  ⇑ = ⇓1;
-}
 @trace
 @withspaces
 A → POS_0 {

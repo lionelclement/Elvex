@@ -22,7 +22,6 @@
 
 #include "forest.hpp"
 #include "messages.hpp"
-#include "terminal.hpp"
 #include "shared_ptr.hpp"
 #include "node.hpp"
 

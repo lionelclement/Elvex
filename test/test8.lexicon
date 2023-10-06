@@ -32,5 +32,5 @@ FORM form;
 /************************************************************
 *  Variable words
 ************************************************************/
-"[attrMorpho:$attrMorpho,attrPattern:$attrPattern]"	POS_2 [attrMorpho:$attrMorpho, attrPattern:$attrPattern];
+"[attrMorpho:$attrMorpho,attrPattern:$attrPattern,attrInteger:$attrInteger,attrString:$attrString]"	POS_2 [attrMorpho:$attrMorpho, attrPattern:$attrPattern,attrInteger:$attrInteger,attrString:$attrString];
 

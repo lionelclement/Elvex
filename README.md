@@ -90,8 +90,7 @@ Elvex formalism
 Citation
 -----------------
 
-*Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism* Lionel Clément 2023
-forthcoming from Springer Max Silberztein ed.
+*Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism*, by Lionel Clément, 2023, forthcoming in *Linguistic Resources for Natural Language Processing - On the Necessity of Using Linguistic Methods to Develop NLP Software*, edited by Max Silberztein, Springer.
 
 One of the most difficult stuff already done with Elvex
 =====

@@ -61,7 +61,7 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 %.output: %.input %.rules %.lexicon $(elvex)
 	@echo "build $@ from $^"
 	@if test -f $*.fromScratch; then \
-		make -f Makefile.test $*.pattern ; \
+		make -f Makefile.test $*.pattern $*.morpho ; \
 	fi
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \

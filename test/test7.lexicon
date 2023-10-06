@@ -44,24 +44,16 @@ Elvex	proper_noun [HEAD:ELVEX, @_3s];
 /************************************************************
 * Pronoms nominatifs
 ************************************************************/
-/*
 I	cln [HEAD:pro, @_1s, animate:true, @hum, case:nominative]
-	| cln [HEAD:EGO, @_1s, animate:true, @hum, case:nominative]
-	| cln [HEAD:HUMAN, @_1s, animate:true, @hum, case:nominative];
+	| cln [HEAD:EGO, @_1s, animate:true, @hum, case:nominative];
 you	cln [HEAD:pro, @_2s, animate:true, @hum, case:nominative]
 	| cln [HEAD:pro, @_2p, animate:true, @hum, case:nominative]
-	| cln [HEAD:YOU, @_2s, animate:true, @hum, case:nominative]
-	| cln [HEAD:HUMAN, @_2s, animate:true, @hum, case:nominative];
-he	cln [HEAD:pro, @_3ms, animate:true, @hum, case:nominative]
-	|cln [HEAD:HUMAN, @_3ms, animate:true, @hum, case:nominative];
-she	cln [HEAD:pro, @_3fs, animate:true, @hum, case:nominative]
-	|cln [HEAD:HUMAN, @_3fs, animate:true, @hum, case:nominative];
+	| cln [HEAD:YOU, @_2s, animate:true, @hum, case:nominative];
+he	cln [HEAD:pro, @_3ms, animate:true, @hum, case:nominative];
+she	cln [HEAD:pro, @_3fs, animate:true, @hum, case:nominative];
 it	cln [HEAD:pro, @_3fs, @nohum, case:nominative];
-we	cln [HEAD:pro, @_1p, animate:true, @hum, case:nominative]
-	|cln [HEAD:HUMAN, @_1p, animate:true, @hum, case:nominative];
-they	cln [HEAD:pro, @_3p, case:nominative]
-		|cln [HEAD:HUMAN, @_3p, case:nominative];
-*/
+we	cln [HEAD:pro, @_1p, animate:true, @hum, case:nominative];
+they	cln [HEAD:pro, @_3p, case:nominative];
 
 /************************************************************
 * Pronoms accusatifs

@@ -41,7 +41,6 @@ public:
 
 private:
     vectorForests forests;
-    //std::vector<std::string> output;
     std::forward_list<std::string> output;
     bool withSpace;
     bool bidirectional;
