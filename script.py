@@ -1,10 +1,10 @@
 import sys
 
-#It will take a while !
-#num_forms = 320
-#num_lemmas = 31000
 num_forms = 32
-num_lemmas = 100000
+num_lemmas = 10000
+#It will take a while !
+#num_forms = 32
+#num_lemmas = 100000
 
 with open(sys.argv[1], "w") as morphoFile:
     k = 0
