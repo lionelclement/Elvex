@@ -168,6 +168,7 @@ Continuous past & slang language
 Future
 ---
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:future]**
+
 *S'il pleuvait, tu prendrais un parapluie.*
 (If it were raining, you would take an umbrella.)
 
