@@ -64,19 +64,19 @@ Elvex algorithm
 
 Given a feature structure (FS) that represents the content to be expressed, **Elvex** constructs a tagged shared forest whose boundary is the generated texts. The shared forest (which actually is a context-free grammar) is tagged with synthesized and inherited FS on each node. The synthesized FS constrain rules based on local properties (typically lexical properties), while inherited FS constrain local structures based on their context (typically semantical properties).
 
-Some algorithms:
+Key Algorithms Used in Developing **Elvex**:
 
--Equations and inequalities on feature structures resolved through unification.
+-Equations and inequalities on FSs resolved through unification.
 
--Equivalence classes defined by an equivalence relation among items. This uses hash coding to build sets.
+-Equivalence classes defined by an equivalence relation among items (NLG stages). This uses hash coding to build sets and maps.
 
--Construction of a context-free grammar instance from a context-free grammar. Close to chart parsing algorithm.
+-New NLG algorithm close to dynamic chart parsing algorithms.
 
 -Dynamic programmation with memoization on serializable data.
 
 The **Elvex** algorithm is deterministic and monotonic (each rule adds something and never removes the effect of the other rules).
 
-The complexity of constructing the shared forest is $O(n^3)$, while the complexity of unifying and writing the boundaries becomes exponential due to combinatorial factors. This complexity can be reduced through a systematic approach to writing grammars.
+The complexity of constructing the shared forest is $O(n^3)$, while the complexity of unifying and writing the boundaries becomes exponential due to combinatorial factors. This complexity can be reduced through a systematic approach to writing grammars to avoid combinatorial explosion.
 
 Elvex formalism
 =====
