@@ -52,29 +52,31 @@ In other words
 - Modifications must be released under the same license when the software is distributed. A similar or a related license must be used
 - Changes made to the code must be documented
 
-The language of **Elvex** formalism is not under licence (it belongs to the public domain), so the data you will write (new grammars, new lexicons) are not part of **Elvex**, it is under another license.
+The language of **Elvex** formalism is not under licence (it belongs to the public domain), so the data you will write (new grammars, new lexicons) are not part of **Elvex software**.
 
 Elvex language
 =====
 
-The lexicons, grammatical rules, and the content to be expressed are all described using the **Elvex** language, which is detailed in the manual documentation.
+The lexicons, grammatical rules, and the content to be expressed are all described using the **Elvex language**, which is detailed in the manual documentation.
 
 Elvex algorithm
 =====
 
-I cannot elaborate on the algorithm here, but let's provide some elements to understand the mechanism in a general sense: 
-
 Given a feature structure (FS) that represents the content to be expressed, **Elvex** constructs a tagged shared forest whose boundary is the generated texts. The shared forest (which actually is a context-free grammar) is tagged with synthesized and inherited FS on each node. The synthesized FS constrain rules based on local properties (typically lexical properties), while inherited FS constrain local structures based on their context (typically semantical properties).
 
-The new algorithms used are
+Some algorithms:
 
 -Equations and inequalities on feature structures resolved through unification.
 
--Equivalence classes defined by an equivalence relation among items.
+-Equivalence classes defined by an equivalence relation among items. This uses hash coding to build sets.
 
--Construction of a context-free grammar instance from a context-free grammar.
+-Construction of a context-free grammar instance from a context-free grammar. Close to chart parsing algorithm.
 
-The **Elvex** algorithm is deterministic and monotonic (each rule adds something and never removes the effect of other rules).
+-Dynamic programmation with memoization on serializable data.
+
+The **Elvex** algorithm is deterministic and monotonic (each rule adds something and never removes the effect of the other rules).
+
+The complexity of constructing the shared forest is $O(n^3)$, while the complexity of unifying and writing the boundaries becomes exponential due to combinatorial factors. This complexity can be reduced through a systematic approach to writing grammars.
 
 Elvex formalism
 =====
