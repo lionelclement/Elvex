@@ -137,7 +137,7 @@ Slang language
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], language_register:slang]**
 
 *Il flotterait, tu prendrais un pépin.*
-(If it were raining, you would take a raincoat.)
+(If it were drizzling, you would take a brolly.)
 
 Continuous present
 ---
@@ -160,14 +160,14 @@ Past
 *S'il avait plu, tu aurais pris un parapluie.*
 (If it had rained, you would have taken an umbrella.)
 
-Past & slang language
+Past & informal language
 ---
-**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, language_register:slang]**
+**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, language_register:informal]**
 
 *Il aurait plu, tu aurais pris un parapluie.*
 (If it had been raining, you would have taken an umbrella.)
 
-Continuous past & slang language
+Continuous past
 ---
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, aspect:continuous]**
 
