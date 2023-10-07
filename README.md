@@ -110,7 +110,7 @@ One of the most difficult stuff already done with Elvex
 An example of a solution to a NLG problem solved with *Elvex*: Causal clauses in a little French Grammar
 -----------------------------------------------
 
-In French, the basis of verbal tense and the conclusion of a causal clause depend on the aspect, the tense and even on the differences in language registers of a sentence
+In French, the basis of verbal tense and the conclusion of a causal clause depend on the aspect, the tense and even on the differences in language registers of a sentence:
 
 - present:
 if present => future
@@ -122,6 +122,8 @@ if past => past conditional
 past conditional without "if" => past conditional
 - future:
  Imperfect => conditional
+
+We have authored French grammar rules to handle causality. Here are the generation results using **Elvex**; please note that the English translations are done manually and not automatically:
 
 Neutral
 ---
