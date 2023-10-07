@@ -126,42 +126,49 @@ past conditional without "if" => past conditional
 Neutral
 ---
 **text [HEAD:cause, i:[HEAD:to_rain], ii:[HEAD:umbrella, i:[HEAD:_you]]**
+
 *S'il pleut, tu prendras un parapluie.*
 (If it rains, you will take an umbrella.)
 
 Slang language
 ---
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], language_register:slang]**
+
 *Il flotterait, tu prendrais un pépin.*
 (If it were raining, you would take a raincoat.)
 
 Continuous present
 ---
 **text [HEAD:cause, i:[PRED:rain], ii:[PRED:umbrella, i:[HEAD:_you]], tense:present, aspect:continuous]**
+
 *S'il est en train de pleuvoir, tu prendras un parapluie.*
 (If it is raining, you will take an umbrella.)
 
 Question
 ---
 **text [HEAD:cause, i:[PRED:rain], ii:[PRED:umbrella, illocutionary:ask, i:[HEAD:_you]]**
+
 *S'il pleut, est-ce que tu prendras un parapluie ?*
 (If it rains, will you take an umbrella?)
 
 Past
 ---
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past]**
+
 *S'il avait plu, tu aurais pris un parapluie.*
 (If it had rained, you would have taken an umbrella.)
 
 Past & slang language
 ---
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, language_register:slang]**
+
 *Il aurait plu, tu aurais pris un parapluie.*
 (If it had been raining, you would have taken an umbrella.)
 
 Continuous past & slang language
 ---
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, aspect:continuous]**
+
 *S'il était en train de pleuvoir, tu aurais pris un parapluie.*
 (If it were raining, you would have taken an umbrella.)
 
@@ -175,5 +182,6 @@ Future
 Continuous future
 ---
 **text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:future, aspect:continuous]**
+
 *S'il était en train de pleuvoir, tu prendrais un parapluie.*
 (If it were raining, you would take an umbrella.)
