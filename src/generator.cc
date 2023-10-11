@@ -1222,6 +1222,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                             bool effect = false;
                                             it->getEnvironment()->replaceVariables(forest->getForm(), effect);
                                         }
+                                        //entry_copy->renameVariables(entry_copy->getId());
                                         // entry_copy->resetSerial();
                                         ForestIdentifier *forestIdentifier = ForestIdentifier::create(static_cast<size_t>(entry_copy->hash()),
                                                                                                       row - 1, row,
@@ -1317,8 +1318,9 @@ void Generator::generate(class Parser &parser)
         it = Item::create(*rule, Item::NA, Item::NA,
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRange(0);
-        it->setInheritedFeatures(parser.getStartFeatures());
-        //it->_renameVariables(it->getId());
+        featuresPtr startFeatures = parser.getStartFeatures();
+        startFeatures->renameVariables(it->getId());
+        it->setInheritedFeatures(startFeatures);
         if (traceInit || (trace && it->getRuleTrace()))
         {
             std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;

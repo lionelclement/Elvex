@@ -152,3 +152,11 @@ entryPtr Entry::clone() const
 {
     return create(std::string(form), features->clone());
 }
+
+/* **************************************************
+ *
+ ************************************************** */
+void Entry::renameVariables(uint32_t code)
+{
+    features->renameVariables(code);
+}
