@@ -36,7 +36,7 @@ private:
 private:
     unordered_map env;
 
-    bool add(statementPtr from, const std::string &, valuePtr = valuePtr());
+    bool add(statementPtr from, const std::string &, valuePtr, bool verbose);
 
     bool remove(const std::string &);
 
@@ -45,11 +45,11 @@ public:
 
     static environmentPtr create(void);
 
-    bool add(statementPtr from, const bitsetPtr &, valuePtr = valuePtr());
+    bool add(statementPtr from, const bitsetPtr &, valuePtr, bool verbose);
 
-    bool add(statementPtr from, const environmentPtr &);
+    bool add(statementPtr from, const environmentPtr &, bool verbose);
 
-    bool add(statementPtr from, const environmentPtr &, const environmentPtr &);
+    bool add(statementPtr from, const environmentPtr &, const environmentPtr &, bool verbose);
 
     bool remove(const bitsetPtr &);
 
@@ -61,7 +61,7 @@ public:
 
     void print(std::ostream &) const;
 
-    environmentPtr clone(statementPtr from) const;
+    environmentPtr clone(statementPtr from, bool verbose) const;
 
     valuePtr find(const bitsetPtr &) const;
 
@@ -69,7 +69,7 @@ public:
 
     void replaceVariables(const featuresPtr &, bool &);
 
-    void replaceVariables(const listFeaturesPtr &, bool &);
+    //void replaceVariables(const listFeaturesPtr &, bool &);
 
     void replaceVariables(const pairpPtr &, bool &);
 

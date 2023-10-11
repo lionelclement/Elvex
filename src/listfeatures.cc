@@ -175,12 +175,12 @@ void ListFeatures::flatPrint(std::ostream &outStream) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void ListFeatures::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
-                         bool &effect)
+void ListFeatures::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
+                         bool &effect, bool verbose)
 {
     for (auto &features : listFeatures)
     {
-        features->apply(from, item, parser, synthesizer, variable, statement->clone(0), effect);
+        features->apply(statementRoot, item, parser, synthesizer, variable, statement->clone(0), effect, verbose);
     }
 }
 

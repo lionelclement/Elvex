@@ -261,7 +261,7 @@ public:
 
     uint8_t getSecond() const;
 
-    std::string getString() const;
+    std::string &getString();
 
     pairpPtr getPairp() const;
 
@@ -277,45 +277,45 @@ public:
 
     void print(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, uint32_t color = 0x000000, uint32_t bgcolor = 0xFFFFFF) const;
 
-    featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool);
+    featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool replaceVariables, bool verbose);
 
-    pairpPtr evalPairp(class Item *, Parser &, Generator *, bool);
+    pairpPtr evalPairp(class Item *, Parser &, Generator *, bool, bool verbose);
 
-    valuePtr evalValue(class Item *, Parser &, Generator *, bool);
+    valuePtr evalValue(class Item *, Parser &, Generator *, bool, bool verbose);
 
-    static featuresPtr unif(statementPtr from, const featuresPtr &, const featuresPtr &, class Item *);
+    static featuresPtr unif(statementPtr statement, const featuresPtr &, const featuresPtr &, class Item *, bool verbose);
 
     statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
 
-    void buildInheritedSonFeatures(class Item *, Parser &, Generator *synthesizer);
+    void buildInheritedSonFeatures(class Item *item, Parser &parser, Generator *synthesizer, bool verbose);
 
-    void buildSynthesizedFeatures(class Item *, Parser &, Generator *synthesizer);
+    void buildSynthesizedFeatures(class Item *, Parser &, Generator *synthesizer, bool verbose);
 
-    void buildEnvironmentWithInherited(statementPtr from, class Item *, Parser &, Generator *synthesizer);
+    void buildEnvironmentWithInherited(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool verbose);
 
-    void buildEnvironmentWithSynthesize(statementPtr from, class Item *, Parser &, Generator *synthesizer);
+    void buildEnvironmentWithSynthesize(statementPtr statement, class Item *, Parser &, Generator *synthesizer, bool verbose);
 
-    void buildEnvironmentWithValue(statementPtr from, class Item *, Parser &, Generator *);
+    void buildEnvironmentWithValue(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool verbose);
 
-    void stmAttest(class Item *, class Parser &, class Generator *);
+    void stmAttest(class Item *item, Parser &parser, Generator *synthesizer, bool verbose);
 
-    void stmGuard(statementPtr from, class Item *);
+    void stmGuard(statementPtr statementRoot, class Item *item, bool verbose);
 
-    void stmForeach(statementPtr from, class Item *item, class Parser &, class Generator *, bool &);
+    void stmForeach(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
-    void stmIf(statementPtr from, class Item *item, class Parser &, class Generator *, bool &);
+    void stmIf(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
+    
+    void stmDeferred(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
-    void stmDeferred(statementPtr from, class Item *item, class Parser &, class Generator *, bool &);
+    void stmPrint(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
 
-    void stmPrint(class Item *, class Parser &, class Generator *, std::ostream &out);
-
-    void stmPrintln(class Item *, class Parser &, class Generator *, std::ostream &out);
+    void stmPrintln(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
 
     void renameVariables(uint32_t);
 
-    void toggleEnable(const statementPtr &, class Item *, class Generator *, bool &, bool);
+    void toggleEnable(statementPtr statementRoot, class Item *, class Generator *, bool &, bool);
 
-    void apply(statementPtr from, class Item *, class Parser &, class Generator *, bool &);
+    void apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 

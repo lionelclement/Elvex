@@ -300,7 +300,7 @@ void CompactedLexicon::closeFiles()
 /* **************************************************
  *
  ************************************************** */
-std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs2)
+std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs2, bool verbose)
 {
     extern Parser parser;
     std::stringstream stringStream;
@@ -358,7 +358,7 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
     featuresPtr unif;
     if (features1 && features2)
     {
-        unif = statement->unif(statement, features1, features2, nullptr);
+        unif = statement->unif(statement, features1, features2, nullptr, verbose);
     }
     else if (features1)
     {
@@ -404,7 +404,7 @@ void CompactedLexicon::addToData(const std::string &input, const std::string &fo
  ************************************************** */
 void CompactedLexicon::addForms(const std::string &input, std::string inputSearch,
                                 const std::string &features,
-                                Lexicon &morpho)
+                                Lexicon &morpho, bool verbose)
 {
     //CERR_LINE
     //std::cerr << "CompactedLexicon::addForms[input:" << input << ",inputSearch:" << inputSearch << ",features:" << features << ']' << std::endl;
@@ -421,7 +421,7 @@ void CompactedLexicon::addForms(const std::string &input, std::string inputSearc
         {
             std::string form2 = form.substr(0, rhsPos);
             std::string morphoFs = form.substr(rhsPos + 1);
-            addToData(input, form2, unif(features, morphoFs));
+            addToData(input, form2, unif(features, morphoFs, verbose));
         }
     }
 }
@@ -430,7 +430,7 @@ void CompactedLexicon::addForms(const std::string &input, std::string inputSearc
  *
  ************************************************** */
 void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &features,
-                                  const std::string &lemma, const std::string &pos)
+                                  const std::string &lemma, const std::string &pos, bool verbose)
 {
     //CERR_LINE;
     //std::cerr << "addPattern with " << "[input:" << input << ";features:\"" << features << "\";lemma:\"" << lemma << "\";pos:\"" << pos << "\"]" << std::endl;
@@ -440,7 +440,7 @@ void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::
     std::string inputSearch = std::string(stringStream.str());
     if (morpho.count(inputSearch))
     {
-        addForms(input, inputSearch, features, morpho);
+        addForms(input, inputSearch, features, morpho, verbose);
     }
     else if (pattern.count(inputSearch))
     {
@@ -456,7 +456,7 @@ void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::
                 {
                     //CERR_LINE;
                     //std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << features << '-' << features2 << ')' << std::endl;
-                    addPattern(pattern, morpho, input, unif(features, features2), patternLemma, pos);
+                    addPattern(pattern, morpho, input, unif(features, features2, verbose), patternLemma, pos, verbose);
                 }
             }
         }
@@ -466,7 +466,7 @@ void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho)
+void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho, bool verbose)
 {
     std::size_t size = pattern.size();
     std::size_t range = 0;
@@ -510,7 +510,7 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho)
             //void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &features,
             //                      const std::string &lemma, const std::string &pos)
 
-            addPattern(pattern, morpho, patternIt->first, features, lemma, pos);
+            addPattern(pattern, morpho, patternIt->first, features, lemma, pos, verbose);
         }
 
         if ((range++ % 1009) == 0)

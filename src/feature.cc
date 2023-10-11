@@ -320,7 +320,7 @@ void Feature::toXML(xmlNodePtr nodeRoot)
  ************************************************** */
 featurePtr Feature::clone() const
 {
-    //return create(type, attribute, (value) ? value->clone() : valuePtr());
+    // return create(type, attribute, (value) ? value->clone() : valuePtr());
     if (attribute)
         return create(type, attribute->clone(), (value) ? value->clone() : valuePtr());
     else
@@ -333,24 +333,19 @@ featurePtr Feature::clone() const
 bool Feature::renameVariables(uint32_t code)
 {
     bool effect = false;
-    switch (type)
+    if (type == Feature::_VARIABLE_)
     {
-    case Feature::_HEAD_:
-    case Feature::_LEMMA_:
-    case Feature::_CONSTANT_:
-        if (value)
-            if (value->renameVariables(code))
-                effect = true;
-        break;
-    case Feature::_FORM_:
-        break;
-    case Feature::_VARIABLE_:
-        attribute = Vartable::renameVariable(attribute->toString(), code);
-        if (value)
-            value->renameVariables(code);
+        attribute = Vartable::createVariable(attribute->toString(), code);
         resetSerial();
         effect = true;
-        break;
+    }
+    if (value)
+    {
+        if (value->renameVariables(code))
+        {
+            resetSerial();
+            effect = true;
+        }
     }
     return effect;
 }

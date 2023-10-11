@@ -21,6 +21,12 @@
 #include <map>
 #include <unordered_map>
 #include <utility>
+#include <regex>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <iterator>
+
 #include "vartable.hpp"
 #include "messages.hpp"
 
@@ -81,6 +87,16 @@ bitsetPtr Vartable::createVariable(const std::string &str)
 /* ************************************************************
  *
  ************************************************************ */
+bitsetPtr Vartable::createVariable(const std::string &name, uint32_t code)
+{
+    std::stringstream ss;
+    ss << name << '_' << std::hex << code;
+    return Vartable::createVariable(ss.str());
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
 uint16_t Vartable::nameToCode(const std::string &str)
 {
     uint16_t code;
@@ -101,10 +117,7 @@ uint16_t Vartable::nameToCode(const std::string &str)
  ************************************************************ */
 std::string &Vartable::codeToName(uint16_t i)
 {
-    //if (i != UINT16_MAX)
-        return codeToNameMap[i];
-    //else
-        //return "UINT_MAX";
+    return codeToNameMap[i];
 }
 
 /* ************************************************************
@@ -141,12 +154,41 @@ std::string &Vartable::bitToVariable(uint16_t key)
     return bitToNameMap[key];
 }
 
-/* ************************************************************
+/* **************************************************
  *
- ************************************************************ */
-bitsetPtr Vartable::renameVariable(const std::string &name, uint32_t code)
+ ************************************************** */
+void Vartable::renameVariables(std::string &data, uint32_t code)
 {
-    std::stringstream ss;
-    ss << name << '_' << std::hex << code;
-    return Vartable::createVariable(ss.str());
+
+    size_t found = data.find('$');
+
+    if (found != (std::string::npos))
+    {
+        std::string pattern =
+            std::string(
+                "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)*)");
+        std::cmatch match;
+
+        try
+        {
+            std::regex regexpression(pattern, std::regex_constants::ECMAScript);
+            if (std::regex_search(data.c_str(), match, regexpression))
+            {
+                auto match_begin = std::sregex_iterator(data.begin(), data.end(), regexpression);
+                auto match_end = std::sregex_iterator();
+                for (std::sregex_iterator i = match_begin; i != match_end; ++i)
+                {
+                    std::string match_str = i->str();
+                    std::ostringstream oss;
+                    oss << match_str << '_' << std::hex << (int)code;
+                    data = std::regex_replace(data, regexpression, oss.str(), std::regex_constants::format_first_only);
+                }
+            }
+        }
+        catch (const std::regex_error &e)
+        {
+            std::cout << "regex_error caught: " << e.what() << '(' << e.code() << ')' << std::regex_constants::error_brack
+                      << '\n';
+        }
+    }
 }

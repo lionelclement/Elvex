@@ -25,6 +25,8 @@
 #include "facade.hpp"
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
+#include "parser.hpp"
+#include "generator.hpp"
 
 class Statements : public Facade,
                    public Serializable,
@@ -69,7 +71,7 @@ public:
 
     void toggleEnable(class Item *item, class Generator *synthesizer, bool &effect, bool on);
 
-    void apply(class Item *item, class Parser &parser, class Generator *synthesizer, bool &effect);
+    void apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
 };
 

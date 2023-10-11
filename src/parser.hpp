@@ -42,7 +42,6 @@ public:
 
   // POS => (LEMMA => ENTRY)
   // i.e.: verb => (MANGER => (mangions[…], mange|mange[…]))
-  // typedef std::map<uint16_t, entries_map*> entries_map_map;
   typedef std::unordered_map<uint16_t, entries_map *> entries_map_map;
   typedef entries_map_map::const_iterator entries_map_map_const_iterator;
   typedef entries_map_map::iterator entries_map_map_iterator;

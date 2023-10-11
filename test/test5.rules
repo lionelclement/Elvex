@@ -4,6 +4,7 @@
 @trace
 S → NP dot tag {
   printlnstderr "test5...";
+  [attr4:value4];
   ↓1 = ↑;
   ↓2 = [];
   ↓3 = ↑;

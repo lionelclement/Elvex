@@ -298,7 +298,7 @@ std::string *Features::assignForm()
     {
         if (f->isForm())
         {
-            form = f->getValue()->getStr();
+            form = f->getValue()->getString();
             return &form;
         }
     }
@@ -356,12 +356,12 @@ valuePtr Features::find(const bitsetPtr &code) const
 /* **************************************************
  *
  ************************************************** */
-bool Features::buildEnvironment(statementPtr from, const environmentPtr &environment, const featuresPtr &_features, bool acceptToFilterNULLVariables
+bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const featuresPtr &other_features, bool acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
                                 ,
                                 bool root
 #endif
-)
+                                , bool verbose)
 {
     bool ret = true;
     //	if (environment){
@@ -380,8 +380,8 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
         std::cout << "<tr><td>";
         print(std::cout);
         std::cout << "</td><td>";
-        if (_features)
-            _features->print(std::cout);
+        if (other_features)
+            other_features->print(std::cout);
         else
             std::cout << "NULL";
         std::cout << "</td><td>";
@@ -391,23 +391,23 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
 #endif
 
     // Traite tous les attributs constants
-    for (const auto &i1 : features)
+    for (const auto &this_feature : features)
     {
-        if ((i1->isLemma()) || (i1->isHead()) || (i1->isConstant()))
+        if ((this_feature->isLemma()) || (this_feature->isHead()) || (this_feature->isConstant()))
         {
             bool stop = false;
-            for (auto &i2 : *_features)
+            for (auto &other_feature : *other_features)
             {
                 // Si deux constantes matchent
                 // ou deux HEAD matchent
-                if (((i2->isConstant()) && (i1->isConstant()) &&
-                     ((*i1->getAttribute() & *i2->getAttribute()).any())) ||
-                    ((i1->isHead()) && (i2->isHead())) || ((i1->isLemma()) && (i2->isLemma())))
+                if (((other_feature->isConstant()) && (this_feature->isConstant()) &&
+                     ((*this_feature->getAttribute() & *other_feature->getAttribute()).any())) ||
+                    ((this_feature->isHead()) && (other_feature->isHead())) || ((this_feature->isLemma()) && (other_feature->isLemma())))
                 {
-                    i2->addFlags(Flags::SEEN);
+                    other_feature->addFlags(Flags::SEEN);
 
                     // If both are NIL
-                    if ((i1->getValue()->isNil()) && (i2->getValue()->isNil()))
+                    if ((this_feature->getValue()->isNil()) && (other_feature->getValue()->isNil()))
                     {
                     }
                     // If both are TRUE
@@ -415,13 +415,13 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
                     //}
 
                     // If one is ANONYMOUS
-                    else if ((i1->getValue()->isAnonymous()) || (i2->getValue()->isAnonymous()))
+                    else if ((this_feature->getValue()->isAnonymous()) || (other_feature->getValue()->isAnonymous()))
                     {
                     }
 
                     // Else build environment with the two values
-                    else if (!i1->getValue()->buildEnvironment(from, environment, i2->getValue(),
-                                                               acceptToFilterNULLVariables, false))
+                    else if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, other_feature->getValue(),
+                                                               acceptToFilterNULLVariables, false, verbose))
                     {
                         ret = false;
                     }
@@ -429,28 +429,28 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
                     break;
                 }
             }
-            // Trait i1 inexistant
+            // Trait this_feature inexistant
             if (!stop)
             {
-                // i1: a = $X
-                if ((i1->isConstant()) || i1->isLemma() || i1->isHead())
+                // this_feature: a = $X
+                if ((this_feature->isConstant()) || this_feature->isLemma() || this_feature->isHead())
                 {
-                    if (i1->getValue()->isVariable())
+                    if (this_feature->getValue()->isVariable())
                     {
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->add(from, i1->getValue()->getBits(), Value::STATIC_ANONYMOUS);
+                            environment->add(statementRoot, this_feature->getValue()->getBits(), Value::STATIC_ANONYMOUS, verbose);
                         }
                         else
                         {
                             ret = false;
                         }
                     }
-                    else if (i1->getValue()->isNil())
+                    else if (this_feature->getValue()->isNil())
                     {
                     }
-                    // i1: a = ...
+                    // this_feature: a = ...
                     else
                     {
                         if (!acceptToFilterNULLVariables)
@@ -459,8 +459,8 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
                         }
                         else
                         {
-                            if (!i1->getValue()->buildEnvironment(from, environment, Value::STATIC_ANONYMOUS,
-                                                                  acceptToFilterNULLVariables, false))
+                            if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, Value::STATIC_ANONYMOUS,
+                                                                  acceptToFilterNULLVariables, false, verbose))
                             {
                                 ret = false;
                             }
@@ -472,32 +472,32 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
     }
 
     // traite les variables de structures
-    for (const auto &i1 : features)
+    for (const auto &this_feature : features)
     {
-        // i1: X
-        if (i1->isVariable())
+        // this_feature: X
+        if (this_feature->isVariable())
         {
-            if (i1->getValue())
+            if (this_feature->getValue())
             {
                 throw fatal_exception("A variable attribute is not allowed in this context: " +
-                                      i1->getAttribute()->toString());
+                                      this_feature->getAttribute()->toString());
             }
             else
             {
                 featuresPtr nFeatures = Features::create();
-                for (auto &i2 : *_features)
+                for (auto &other_feature : *other_features)
                 {
-                    if (i2->isUnsetFlags(Flags::SEEN))
+                    if (other_feature->isUnsetFlags(Flags::SEEN))
                     {
-                        i2->addFlags(Flags::SEEN);
-                        nFeatures->add(i2);
+                        other_feature->addFlags(Flags::SEEN);
+                        nFeatures->add(other_feature);
                     }
                 }
-                environment->add(from, i1->getAttribute(), Value::create(nFeatures));
+                environment->add(statementRoot, this_feature->getAttribute(), Value::create(nFeatures), verbose);
             }
         }
     }
-    _features->subFlags(Flags::SEEN);
+    other_features->subFlags(Flags::SEEN);
 
 #ifdef TRACE_BUILD_ENVIRONMENT
     if (root)
@@ -516,59 +516,63 @@ bool Features::buildEnvironment(statementPtr from, const environmentPtr &environ
  *true if this subsumes o
  *if it does, change variables in this
  ************************************************** */
-bool Features::subsumes(statementPtr from, const featuresPtr &o, const environmentPtr &environment)
+bool Features::subsumes(statementPtr statementRoot, const featuresPtr &other_features, const environmentPtr &environment, bool verbose)
 {
 #ifdef TRACE_FEATURES
     COUT_LINE;
     std::cout << "<DIV>";
-    std::cout << "Subsumes (" << this << ")";
+    std::cout << "Subsumes (";
+    this->flatPrint(std::cout);
     std::cout << "<TABLE border=\"1\"><TR><TH>this</TH><TH></TH><TH>other</TH><TH>env</TH></TR><TR>";
     std::cout << "<TD>";
     this->print(std::cout);
     std::cout << "</TD><TD>&lt;</TD><TD>";
-    o->print(std::cout);
+    other_features->print(std::cout);
     std::cout << "</TD>";
     std::cout << "<TD>";
     environment->print(std::cout);
     std::cout << "</TD>";
     std::cout << "</TR></TABLE>";
     std::cout << "</DIV>";
-#endif
+    std::flush(std::cout);
 
+#endif
+    
     bool ret = true;
     // NIL < NIL
-    if (isNil() && o->isNil())
+    if (isNil() && other_features->isNil())
     {
-        // OK
     }
 
     // NIL < […]
     // […] < NIL
-    else if (isNil() || o->isNil())
+    else if (isNil() || other_features->isNil())
     {
         ret = false;
     }
     // ⊥ < […]
     // […] < ⊥
-    else if (isBottom() || o->isBottom())
+    else if (isBottom() || other_features->isBottom())
     {
         ret = false;
     }
     else
     {
-        for (auto &i1 : features)
+        for (auto &feature : features)
         {
-            for (auto &i2 : o->features)
+            for (auto &other_feature : other_features->features)
             {
-                // [HEAD:X]  < [HEAD:Y]
-                // [LEMMA:X]  < [LEMMA:Y]
-                // [att:X] < [att:Y]
-                // X < Y
-                if (((i1->isLemma()) && (i2->isLemma())) || ((i1->isHead()) && (i2->isHead())) || ((i1->isConstant()) && (i2->isConstant()) && ((*i1->getAttribute() & *i2->getAttribute()).any())))
+                // [HEAD:X] << [HEAD:Y]
+                // [LEMMA:X] << [LEMMA:Y]
+                // [att:X] << [att:Y]
+                // X << Y
+                if (((feature->isLemma()) && (other_feature->isLemma())) 
+                    || ((feature->isHead()) && (other_feature->isHead())) 
+                    || ((feature->isConstant()) && (other_feature->isConstant()) && ((*feature->getAttribute() & *other_feature->getAttribute()).any())))
                 {
-                    valuePtr v1 = i1->getValue();
-                    valuePtr v2 = i2->getValue();
-                    if (!v1->subsumes(from, v2, environment))
+                    valuePtr v1 = feature->getValue();
+                    valuePtr v2 = other_feature->getValue();
+                    if (!v1->subsumes(statementRoot, v2, environment, verbose))
                     {
                         ret = false;
                     }
@@ -599,12 +603,12 @@ void Features::subFlags(const std::bitset<FLAGS> &flags)
 /* **************************************************
  *
  ************************************************** */
-bool Features::renameVariables(uint32_t i)
+bool Features::renameVariables(uint32_t code)
 {
     bool effect = false;
     for (auto &feature : features)
     {
-        if (feature->renameVariables(i))
+        if (feature->renameVariables(code))
             effect = true;
     }
     if (effect)
@@ -615,10 +619,10 @@ bool Features::renameVariables(uint32_t i)
 /* **************************************************
  *
  ************************************************** */
-void Features::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
+void Features::enable(statementPtr statementRoot, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     for (auto &feature : features)
-        feature->enable(root, item, synthesizer, effect, on);
+        feature->enable(statementRoot, item, synthesizer, effect, on);
 }
 
 /* **************************************************
@@ -732,13 +736,13 @@ void Features::setVariableFlag(enum VariableFlag::flagValues flag)
 /* **************************************************
  *
  ************************************************** */
-void Features::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
+void Features::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
                      const statementPtr &statement,
-                     bool &effect)
+                     bool &effect, bool verbose)
 {
-    item->getEnvironment()->add(from, variable->getBits(), Value::create(shared_from_this()));
+    item->getEnvironment()->add(statementRoot, variable->getBits(), Value::create(shared_from_this()), verbose);
     effect = true;
     statement->toggleEnable(statement, item, synthesizer, effect, false);
-    statement->apply(from, item, parser, synthesizer, effect);
+    statement->apply(statementRoot, item, parser, synthesizer, effect, verbose);
     item->getEnvironment()->remove(variable->getBits());
 }

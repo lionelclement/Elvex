@@ -184,8 +184,8 @@ statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags)
 {
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
-    for (list::const_iterator i = this->statements.cbegin(); i != this->statements.cend(); ++i)
-        _statements->addStatement((*i)->clone(protectedFlags));
+    for (list::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
+        _statements->addStatement((*statement)->clone(protectedFlags));
     _statements->addFlags(protectedFlags & this->getFlags());
     return _statements;
 }
@@ -193,12 +193,12 @@ statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags)
 /* **************************************************
  *
  ************************************************** */
-void Statements::renameVariables(uint32_t i)
+void Statements::renameVariables(uint32_t code)
 {
     if (guard)
-        guard->renameVariables(i);
-    for (list::const_iterator j = this->statements.cbegin(); j != this->statements.cend(); ++j)
-        (*j)->renameVariables(i);
+        guard->renameVariables(code);
+    for (list::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
+        (*statement)->renameVariables(code);
 }
 
 /* **************************************************
@@ -208,8 +208,8 @@ bool Statements::findVariable(const bitsetPtr &variable)
 {
     if (guard && guard->findVariable(variable))
         return true;
-    for (list::const_iterator j = this->statements.cbegin(); j != this->statements.cend(); ++j)
-        if ((*j)->findVariable(variable))
+    for (list::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
+        if ((*statement)->findVariable(variable))
             return true;
     return false;
 }
@@ -217,7 +217,7 @@ bool Statements::findVariable(const bitsetPtr &variable)
 /* **************************************************
  * Applique l'ensemble des instructions
  ************************************************** */
-void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect)
+void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose)
 {
     bool allSeen = true;
     if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
@@ -234,7 +234,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             item->print(std::cout);
             std::cout << std::endl;
         }
-        guard->apply(guard, item, parser, synthesizer, effect);
+        guard->apply(guard, item, parser, synthesizer, effect, verbose);
         guard->addFlags(Flags::SEEN);
         if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
@@ -299,7 +299,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
                 item->setEnvironment(environmentPtr());
             }
             effect = false;
-            (*statement)->apply((*statement), item, parser, synthesizer, effect);
+            (*statement)->apply((*statement), item, parser, synthesizer, effect, verbose);
             if ((*statement)->isSetFlags(Flags::BOTTOM))
             {
                 addFlags(Flags::BOTTOM);

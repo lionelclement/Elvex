@@ -148,32 +148,6 @@ void Entry::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-void Entry::renameVariables(uint32_t code)
-{
-
-    size_t found = form.find('$');
-
-    if (found != (std::string::npos))
-    {
-        std::string pattern =
-            std::string(
-                "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)+)");
-
-            std::regex regexpression(pattern, std::regex_constants::ECMAScript);
-            std::stringstream ss;
-            ss << "$_" << std::hex << code;
-            std::string target = std::regex_replace(form, regexpression, ss.str());
-            form = target;
-    } 
-
-    if (features)
-        features->renameVariables(code);
-    resetSerial();
-}
-
-/* **************************************************
- *
- ************************************************** */
 entryPtr Entry::clone() const
 {
     return create(std::string(form), features->clone());

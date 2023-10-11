@@ -103,7 +103,7 @@ public:
 
     void flatPrint(std::ostream &, bool) const;
 
-    bool buildEnvironment(statementPtr from, const environmentPtr &, const pairpPtr &, bool, bool);
+    bool buildEnvironment(statementPtr statement, const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root, bool verbose);
 
     void deleteVariables(void);
 
@@ -112,7 +112,7 @@ public:
     bool renameVariables(uint32_t);
 
     void apply(statementPtr from, class Item *, class Parser &, class Generator *, const statementPtr &, statementPtr,
-               bool &);
+               bool &, bool verbose);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
@@ -122,7 +122,7 @@ public:
 
     void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 
-    bool subsumes(statementPtr from, const pairpPtr &, const environmentPtr &);
+    bool subsumes(statementPtr from, const pairpPtr &, const environmentPtr &, bool verbose);
 
     pairpPtr pushFront(valuePtr);
 

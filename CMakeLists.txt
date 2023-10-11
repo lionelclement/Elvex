@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(elvex VERSION 2.23.1)
+project(elvex VERSION 2.24.0)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_COMPILER g++)
@@ -100,8 +100,6 @@ set(ELVEX_COMMON_SOURCES
         src/statement.hpp
         src/statements.cc
         src/statements.hpp
-        #src/terminal.cc
-        #src/terminal.hpp
         src/terms.cc
         src/terms.hpp
         src/uniq-id.cc
@@ -140,7 +138,6 @@ if (LibXml2_FOUND)
             #TRACE_BUILD_ENVIRONMENT
             #TRACE_ENABLE_STATEMENT
             #TRACE_APPLY_STATEMENT
-            #TRACE_EVAL
             #TRACE_FEATURES
             #TRACE_STEP
             #TRACE_PASS

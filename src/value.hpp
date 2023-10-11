@@ -45,7 +45,7 @@ public:
         ANONYMOUS_VALUE,
         IDENTIFIER_VALUE,
         FEATURES_VALUE,
-        LIST_FEATURES_VALUE,
+        //LIST_FEATURES_VALUE,
         PAIRP_VALUE,
         NUMBER_VALUE,
         FORM_VALUE
@@ -55,11 +55,11 @@ private:
     bitsetPtr bits;    // pour encoder les constantes et les variables
     uint16_t code; // pour encoder les identifiers
     pairpPtr pairp;
-    std::string str;
+    std::string string;
     double number;
     VariableFlag variableFlag;
     featuresPtr features; // pour encoder les SF
-    listFeaturesPtr listFeatures; // pour encoder les listes de SF
+    //listFeaturesPtr listFeatures; // pour encoder les listes de SF
 
 public:
     static valuePtr STATIC_NIL;
@@ -73,7 +73,7 @@ private:
     Value(const enum Type, const std::string &);
 
     Value(const enum Type, uint16_t = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
-          pairpPtr = pairpPtr(), listFeaturesPtr = listFeaturesPtr());
+          pairpPtr = pairpPtr()/*, listFeaturesPtr = listFeaturesPtr()*/);
 
     void makeSerialString(void);
 
@@ -82,7 +82,7 @@ public:
 
     static valuePtr create(const enum Type);
 
-    static valuePtr create(const enum Type, double);
+    static valuePtr create(const enum Type, double number);
 
     static valuePtr create(const enum Type, uint16_t);
 
@@ -92,9 +92,7 @@ public:
 
     static valuePtr create(featuresPtr);
 
-    static valuePtr create(listFeaturesPtr);
-
-    static valuePtr create(class Set *);
+    //static valuePtr create(listFeaturesPtr);
 
     static valuePtr create(pairpPtr);
 
@@ -106,11 +104,11 @@ public:
 
     featuresPtr getFeatures(void) const;
 
-    listFeaturesPtr getListFeatures(void) const;
+    //listFeaturesPtr getListFeatures(void) const;
 
     double getNumber(void) const;
 
-    std::string getStr(void) const;
+    std::string &getString(void) ;
 
     pairpPtr getPairp(void) const;
 
@@ -122,9 +120,9 @@ public:
     void toXML(xmlNodePtr) const;
 #endif
 
-    bool buildEnvironment(statementPtr from, const environmentPtr &, const valuePtr &, bool, bool);
+    bool buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root, bool verbose);
 
-    bool subsumes(statementPtr from, const valuePtr &, const environmentPtr &);
+    bool subsumes(statementPtr statementRoot, const valuePtr &, const environmentPtr &, bool verbose);
 
     valuePtr clone(void);
 
@@ -132,7 +130,7 @@ public:
 
     void deleteVariables(void);
 
-    bool renameVariables(u_int32_t);
+    bool renameVariables(uint32_t);
 
     bool isNil(void) const;
 
@@ -144,7 +142,7 @@ public:
 
     bool isNumber(void) const;
 
-    bool isForm(void) const;
+    bool isString(void) const;
 
     bool isVariable(void) const;
 
@@ -156,7 +154,7 @@ public:
 
     bool isPairp(void) const;
 
-    bool isListFeatures(void) const;
+    // bool isListFeatures(void) const;
 
     void enable(const statementPtr &root, class Item *item, class Generator *synthesizer, bool &effect, bool on);
 
@@ -166,8 +164,8 @@ public:
 
     bool findVariable(const bitsetPtr &) const;
 
-    void apply(statementPtr from, class Item *item, class Parser &parser, class Generator *synthesizer, const statementPtr &variable, const statementPtr &body,
-          bool &effect);
+    void apply(statementPtr statementRoot, class Item *item, class Parser &parser, class Generator *synthesizer, const statementPtr &variable, const statementPtr &body,
+          bool &effect, bool verbose);
 
     bool containsVariable(void);
 

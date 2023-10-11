@@ -527,7 +527,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 
                 (*actualItem)->addFlags(Flags::SEEN);
 
-                class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+                class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                 forestPtr forestFound = forestPtr();
                 class ForestIdentifier *fi = ForestIdentifier::create(static_cast<size_t>(it->getCurrentTerm()),
                                                                       row,
@@ -565,7 +565,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 {
                     insertItemMap(it);
                 }
-                it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+                it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                 it->setRule((*actualItem)->getRule()->clone());
                 it->setIndex((*actualItem)->getIndex());
                 if (it->getCurrentTerms()->size() == 1)
@@ -612,7 +612,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 termsPtr terms = (*actualItem)->getCurrentTerms();
                 for (uint8_t indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1)
                 {
-                    class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED);
+                    class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                     it->setRule((*actualItem)->getRule()->clone());
                     it->setIndex((*actualItem)->getIndex());
                     it->setCurrentTerms(Terms::create((*terms)[indexTerm1]));
@@ -649,7 +649,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                         (*actualItem)->print(std::cout);
                         std::cout << std::endl;
                     }
-                    (*actualItem)->apply(parser, this);
+                    (*actualItem)->apply(parser, this, verbose);
                     if (getTraceAction() || ((getTrace() && (*actualItem)->getRuleTrace())))
                     {
                         std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
@@ -702,6 +702,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                                                              : statementsPtr());
                                 it->addRange(row);
                                 it->setInheritedFeatures(inheritedSonFeatures->clone());
+                                //it->_renameVariables(it->getId());
 
                                 if (traceClose || (trace && it->getRuleTrace()))
                                 {
@@ -865,7 +866,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                             // New item build
                                             class Item *it = createItem(previousItem, row);
                                             it->setEnvironment(
-                                                previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr)
+                                                previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr, parser.getVerbose())
                                                                                : environmentPtr());
                                             it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
                                                                                  (*i)->getFeatures());
@@ -917,7 +918,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                     {
                                         class Item *it = createItem(previousItem, row);
                                         it->setEnvironment(
-                                            previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr)
+                                            previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr, verbose)
                                                                            : environmentPtr());
                                         it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
                                                                              (*actualItem)->getSynthesizedFeatures()->clone());
@@ -1163,13 +1164,14 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                                                                           : featuresPtr();
                                     statementsPtr entryStatements = statementsPtr();
                                     environmentPtr env = (*actualItem)->getEnvironment()
-                                                             ? (*actualItem)->getEnvironment()->clone(nullptr)
+                                                             ? (*actualItem)->getEnvironment()->clone(nullptr, verbose)
                                                              : Environment::create();
 
                                     // Filter !!
                                     // entryFeatures subsumes ↑
+                            
                                     if (stage == STAGE_FORM ||
-                                        (entryFeatures && entryFeatures->subsumes(nullptr, inheritedSonFeatures, env)))
+                                        (entryFeatures && entryFeatures->subsumes(nullptr, inheritedSonFeatures, env, verbose)))
                                     {
 
                                         // New item build
@@ -1203,8 +1205,9 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
 
                                         it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(),
                                                                              entryFeaturesCopy);
-                                        if (entryStatements)
+                                        if (entryStatements){
                                             entryStatements->renameVariables(entry_copy->getId());
+                                        }
                                         forestPtr forest;
                                         if (stage == STAGE_FORM)
                                         {
@@ -1315,7 +1318,7 @@ void Generator::generate(class Parser &parser)
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRange(0);
         it->setInheritedFeatures(parser.getStartFeatures());
-        // it->renameVariables(it->getId());
+        //it->_renameVariables(it->getId());
         if (traceInit || (trace && it->getRuleTrace()))
         {
             std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;
@@ -1354,8 +1357,9 @@ void Generator::generate(class Parser &parser)
 
     if (!nodeRoot->empty())
     {
-        for (auto forest = nodeRoot->cbegin(); forest != nodeRoot->cend(); ++forest)
+        for (auto forest = nodeRoot->cbegin(); forest != nodeRoot->cend(); ++forest){
             (*forest)->generate(this->getRandomResult(), this->getFirstResult());
+        }
     }
 
 #ifdef OUTPUT_XML

@@ -40,7 +40,7 @@ valuePtr Value::STATIC_ANONYMOUS = Value::create(Value::ANONYMOUS_VALUE);
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, const std::string &str)
+Value::Value(Value::Type const type, const std::string &string)
 {
     NEW;
     this->type = type;
@@ -48,11 +48,11 @@ Value::Value(Value::Type const type, const std::string &str)
     this->number = 0;
     if (type == IDENTIFIER_VALUE)
     {
-        this->code = Vartable::nameToCode(str);
+        this->code = Vartable::nameToCode(string);
     }
     else if (type == FORM_VALUE)
     {
-        this->str = str;
+        this->string = string;
     }
 }
 
@@ -60,7 +60,7 @@ Value::Value(Value::Type const type, const std::string &str)
  *
  ************************************************** */
 Value::Value(Value::Type const type, uint16_t code, double number, bitsetPtr _bits, featuresPtr _features,
-             pairpPtr _list, listFeaturesPtr _listFeatures)
+             pairpPtr _list/*, listFeaturesPtr _listFeatures*/)
 {
     NEW;
     this->type = type;
@@ -69,7 +69,7 @@ Value::Value(Value::Type const type, uint16_t code, double number, bitsetPtr _bi
     this->bits = _bits ? std::move(_bits) : bitsetPtr();
     this->features = _features ? std::move(_features) : featuresPtr();
     this->pairp = _list ? std::move(_list) : pairpPtr();
-    this->listFeatures = _listFeatures ? std::move(_listFeatures) : listFeaturesPtr();
+    //this->listFeatures = _listFeatures ? std::move(_listFeatures) : listFeaturesPtr();
 }
 
 /* **************************************************
@@ -134,13 +134,13 @@ valuePtr Value::create(featuresPtr features)
     return valuePtr(new Value(Value::FEATURES_VALUE, 0, 0, bitsetPtr(), std::move(features)));
 }
 
-/* **************************************************
- *
- ************************************************** */
-valuePtr Value::create(listFeaturesPtr listFeatures)
-{
-    return valuePtr(new Value(Value::LIST_FEATURES_VALUE, 0, 0, bitsetPtr(), featuresPtr(), pairpPtr(), std::move(listFeatures)));
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// valuePtr Value::create(listFeaturesPtr listFeatures)
+// {
+//     return valuePtr(new Value(Value::LIST_FEATURES_VALUE, 0, 0, bitsetPtr(), featuresPtr(), pairpPtr(), std::move(listFeatures)));
+// }
 
 /* **************************************************
  *
@@ -182,13 +182,13 @@ featuresPtr Value::getFeatures() const
     return features;
 }
 
-/* **************************************************
- *
- ************************************************** */
-listFeaturesPtr Value::getListFeatures() const
-{
-    return listFeatures;
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// listFeaturesPtr Value::getListFeatures() const
+// {
+//     return listFeatures;
+// }
 
 /* **************************************************
  *
@@ -201,9 +201,9 @@ double Value::getNumber() const
 /* **************************************************
  *
  ************************************************** */
-std::string Value::getStr() const
+std::string &Value::getString() 
 {
-    return str;
+    return string;
 }
 
 /* **************************************************
@@ -257,7 +257,7 @@ bool Value::isNumber() const
 /* **************************************************
  *
  ************************************************** */
-bool Value::isForm() const
+bool Value::isString() const
 {
     return type == FORM_VALUE;
 }
@@ -302,13 +302,13 @@ bool Value::isPairp() const
     return type == PAIRP_VALUE;
 }
 
-/* **************************************************
- *
- ************************************************** */
-bool Value::isListFeatures() const
-{
-    return type == LIST_FEATURES_VALUE;
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// bool Value::isListFeatures() const
+// {
+//     return type == LIST_FEATURES_VALUE;
+// }
 
 /* **************************************************
  *
@@ -342,14 +342,14 @@ void Value::print(std::ostream &outStream) const
         outStream << number;
         break;
     case FORM_VALUE:
-        outStream << getStr();
+        outStream << '"' << string << '"';
         break;
     case FEATURES_VALUE:
         getFeatures()->print(outStream);
         break;
-    case LIST_FEATURES_VALUE:
-        getListFeatures()->print(outStream);
-        break;
+    // case LIST_FEATURES_VALUE:
+    //     getListFeatures()->print(outStream);
+    //     break;
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
         break;
@@ -386,14 +386,14 @@ void Value::flatPrint(std::ostream &outStream) const
         outStream << number;
         break;
     case FORM_VALUE:
-        outStream << '"' << getStr() << '"';
+        outStream << '"' << string << '"';
         break;
     case FEATURES_VALUE:
         getFeatures()->flatPrint(outStream);
         break;
-    case LIST_FEATURES_VALUE:
-        getListFeatures()->flatPrint(outStream);
-        break;
+    // case LIST_FEATURES_VALUE:
+    //     getListFeatures()->flatPrint(outStream);
+    //     break;
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
         break;
@@ -432,14 +432,14 @@ void Value::makeSerialString()
         serialString = 'h' + std::to_string(number);
         break;
     case FORM_VALUE:
-        serialString = 'i' + str;
+        serialString = 'i' + string;
         break;
     case FEATURES_VALUE:
         serialString = 'j' + getFeatures()->peekSerialString();
         break;
-    case LIST_FEATURES_VALUE:
-        serialString = 'k' + getListFeatures()->peekSerialString();
-        break;
+    // case LIST_FEATURES_VALUE:
+    //     serialString = 'k' + getListFeatures()->peekSerialString();
+    //     break;
     case PAIRP_VALUE:
         serialString = 'l' + getPairp()->peekSerialString();
         break;
@@ -489,16 +489,16 @@ void Value::toXML(xmlNodePtr nodeRoot) const
         break;
     case FORM_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"form");
-        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)getStr().c_str());
+        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)string.c_str());
         break;
     case FEATURES_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"fs");
         getFeatures()->toXML(v);
         break;
-    case LIST_FEATURES_VALUE:
-        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"lfs");
-        getListFeatures()->toXML(v);
-        break;
+    // case LIST_FEATURES_VALUE:
+    //     xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"lfs");
+    //     getListFeatures()->toXML(v);
+    //     break;
     case PAIRP_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"list");
         getPairp()->toXML(v);
@@ -531,7 +531,7 @@ valuePtr Value::clone()
         break;
 
     case FORM_VALUE:
-        result = Value::create(FORM_VALUE, str);
+        result = Value::create(FORM_VALUE, string);
         break;
 
     case NUMBER_VALUE:
@@ -542,9 +542,9 @@ valuePtr Value::clone()
         result = Value::create(getFeatures()->clone());
         break;
 
-    case LIST_FEATURES_VALUE:
-        result = Value::create(getListFeatures()->clone());
-        break;
+    // case LIST_FEATURES_VALUE:
+    //     result = Value::create(getListFeatures()->clone());
+    //     break;
 
     case PAIRP_VALUE:
         result = Value::create(getPairp()->clone());
@@ -560,7 +560,7 @@ valuePtr Value::clone()
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::buildEnvironment(statementPtr from, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root)
+bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root, bool verbose)
 {
 #ifdef TRACE_BUILD_ENVIRONMENT
     COUT_LINE;
@@ -582,7 +582,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     switch (type)
     {
 
-    case LIST_FEATURES_VALUE:
+    // case LIST_FEATURES_VALUE:
     case TRUE_VALUE:
     case FALSE_VALUE:
         FATAL_ERROR_UNEXPECTED
@@ -590,7 +590,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case NIL_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(from, value->bits, shared_from_this());
+            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
         }
         else if (value->type == NIL_VALUE)
         {
@@ -607,28 +607,28 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case FEATURES_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(from, value->bits, shared_from_this());
+            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
         }
         else if (value->type == FEATURES_VALUE)
         {
-            if (!this->getFeatures()->buildEnvironment(from, environment, value->getFeatures(),
+            if (!this->getFeatures()->buildEnvironment(statementRoot, environment, value->getFeatures(),
                                                        acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
                                                        ,
                                                        true
 #endif
-                                                       ))
+                                                       , verbose))
                 ret = false;
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
-            if (!this->getFeatures()->buildEnvironment(from, environment, Features::create(),
+            if (!this->getFeatures()->buildEnvironment(statementRoot, environment, Features::create(),
                                                        acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
                                                        ,
                                                        root
 #endif
-                                                       ))
+                                                       , verbose))
                 ret = false;
         }
         else
@@ -640,7 +640,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case CONSTANT_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(from, value->bits, shared_from_this());
+            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -664,7 +664,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case IDENTIFIER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(from, value->bits, shared_from_this());
+            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -688,7 +688,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case NUMBER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(from, value->bits, shared_from_this());
+            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
         }
         else if (value->type == NUMBER_VALUE)
         {
@@ -709,11 +709,11 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case FORM_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(from, value->bits, shared_from_this());
+            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
         }
         else if (value->type == FORM_VALUE)
         {
-            if (getStr() != value->getStr())
+            if (string != value->string)
             {
                 ret = false;
             }
@@ -730,17 +730,21 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case PAIRP_VALUE:
         if (value->type == PAIRP_VALUE)
         {
-            if (!this->getPairp()->buildEnvironment(from, environment, value->getPairp(),
+            if (!pairp->buildEnvironment(statementRoot, environment, value->getPairp(),
                                                     acceptToFilterNULLVariables,
-                                                    root))
+                                                    root, verbose))
                 ret = false;
         }
         else if (value->type == VARIABLE_VALUE)
         {
-            environment->add(from, value->bits, shared_from_this());
+            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
+            if (!pairp->buildEnvironment(statementRoot, environment, Pairp::NIL,
+                                                    acceptToFilterNULLVariables,
+                                                    root, verbose))
+                ret = false;
         }
         else
         {
@@ -751,11 +755,11 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
     case VARIABLE_VALUE:
         if (!value)
         {
-            ret = environment->add(from, this->bits, STATIC_NIL);
+            ret = environment->add(statementRoot, this->bits, STATIC_NIL, verbose);
         }
         else
         {
-            ret = environment->add(from, this->bits, value);
+            ret = environment->add(statementRoot, this->bits, value, verbose);
         }
         break;
 
@@ -775,7 +779,7 @@ bool Value::buildEnvironment(statementPtr from, const environmentPtr &environmen
 /* ************************************************************
  * this ⊂ o
  ************************************************************ */
-bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr &environment)
+bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, const environmentPtr &environment, bool verbose)
 {
     bool ret = true;
 #ifdef TRACE_BUILD_ENVIRONMENT
@@ -786,22 +790,23 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
     std::cout << "<TD>";
     this->print(std::cout);
     std::cout << "</TD>&lt;<TD>";
-    o->print(std::cout);
+    other_value->print(std::cout);
     std::cout << "</TD>";
     std::cout << "</TR></TABLE>";
     std::cout << "</DIV>";
+    std::flush(std::cout);
 #endif
 
     // $X ⊂ …
     if (this->isVariable())
     {
-        environment->add(from, bits, o);
+        environment->add(statementRoot, bits, other_value, verbose);
     }
 
     // … ⊂ $X
-    else if (o->isVariable())
+    else if (other_value->isVariable())
     {
-        environment->add(from, o->bits, shared_from_this());
+        environment->add(statementRoot, other_value->bits, shared_from_this(), verbose);
     }
 
     // _ ⊂ …
@@ -810,7 +815,7 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
     }
 
     // … ⊂ _
-    else if (o->isAnonymous())
+    else if (other_value->isAnonymous())
     {
     }
 
@@ -837,7 +842,7 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
     //    ret = false;
     //}
 
-    else if ((type != o->type))
+    else if ((type != other_value->type))
     {
         // std::cout << type << " " << o->type << std::endl;
         // FATAL_ERROR_UNEXPECTED;
@@ -846,30 +851,30 @@ bool Value::subsumes(statementPtr from, const valuePtr &o, const environmentPtr 
 
     else
     {
-        switch (o->type)
+        switch (other_value->type)
         {
         // a ⊂ a
         case IDENTIFIER_VALUE:
-            if (code != o->getCode())
+            if (code != other_value->getCode())
                 ret = false;
             break;
         case NUMBER_VALUE:
-            if (number != o->number)
+            if (number != other_value->number)
                 ret = false;
             break;
         case CONSTANT_VALUE:
-            if ((*bits & *o->bits).none())
+            if ((*bits & *other_value->bits).none())
                 ret = false;
             break;
         case FORM_VALUE:
-            if (getStr() != o->getStr())
+            if (string != other_value->string)
                 ret = false;
             break;
         case FEATURES_VALUE:
-            ret = getFeatures()->subsumes(from, o->getFeatures(), environment);
+            ret = getFeatures()->subsumes(statementRoot, other_value->getFeatures(), environment, verbose);
             break;
         case PAIRP_VALUE:
-            ret = getPairp()->subsumes(from, o->getPairp(), environment);
+            ret = getPairp()->subsumes(statementRoot, other_value->getPairp(), environment, verbose);
             break;
 
         default:
@@ -916,7 +921,7 @@ bool Value::eq(valuePtr o) const
         switch (o->type)
         {
         case IDENTIFIER_VALUE:
-            if ((type == IDENTIFIER_VALUE) && ((code == o->getCode())))
+            if ((type == IDENTIFIER_VALUE) && ((code == o->code)))
                 ret = true;
             break;
         case CONSTANT_VALUE:
@@ -926,7 +931,7 @@ bool Value::eq(valuePtr o) const
                 ret = true;
             break;
         case FORM_VALUE:
-            if ((type == FORM_VALUE) && (getStr() == o->getStr()))
+            if ((type == FORM_VALUE) && (string == o->string))
                 ret = true;
             break;
         case NUMBER_VALUE:
@@ -990,7 +995,7 @@ void Value::deleteAnonymousVariables()
     case VARIABLE_VALUE:
     case ANONYMOUS_VALUE:
     case NUMBER_VALUE:
-    case LIST_FEATURES_VALUE:
+    //case LIST_FEATURES_VALUE:
         break;
     case FEATURES_VALUE:
         getFeatures()->deleteAnonymousVariables();
@@ -1017,7 +1022,7 @@ void Value::deleteVariables()
     case VARIABLE_VALUE:
     case ANONYMOUS_VALUE:
     case NUMBER_VALUE:
-    case LIST_FEATURES_VALUE:
+    //case LIST_FEATURES_VALUE:
         break;
     case FEATURES_VALUE:
         getFeatures()->deleteVariables();
@@ -1031,7 +1036,7 @@ void Value::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Value::renameVariables(u_int32_t code)
+bool Value::renameVariables(uint32_t code)
 {
     bool effect = false;
     switch (type)
@@ -1041,13 +1046,17 @@ bool Value::renameVariables(u_int32_t code)
     case FALSE_VALUE:
     case CONSTANT_VALUE:
     case IDENTIFIER_VALUE:
-    case FORM_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    case LIST_FEATURES_VALUE:
+    //case LIST_FEATURES_VALUE:
+        break;
+    case FORM_VALUE:
+        Vartable::renameVariables(string, code);
+        resetSerial();
+        effect = true;
         break;
     case VARIABLE_VALUE:
-        bits = Vartable::renameVariable(bits->toString(), code);
+        bits = Vartable::createVariable(bits->toString(), code);
         resetSerial();
         effect = true;
         break;
@@ -1080,7 +1089,7 @@ void Value::enable(const statementPtr &root, class Item *item, Generator *synthe
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    case LIST_FEATURES_VALUE:
+    //case LIST_FEATURES_VALUE:
         break;
     case VARIABLE_VALUE:
         if (on)
@@ -1121,7 +1130,7 @@ bool Value::findVariable(const bitsetPtr &variable) const
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    case LIST_FEATURES_VALUE:
+    //case LIST_FEATURES_VALUE:
         break;
     case VARIABLE_VALUE:
         if (*bits == *variable)
@@ -1142,9 +1151,9 @@ bool Value::findVariable(const bitsetPtr &variable) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
+void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
                   const statementPtr &statement,
-                  bool &effect)
+                  bool &effect, bool verbose)
 {
 #ifdef TRACE_BUILD_ENVIRONMENT
     COUT_LINE;
@@ -1166,10 +1175,10 @@ void Value::apply(statementPtr from, class Item *item, Parser &parser, Generator
         {
             item->setEnvironment(Environment::create());
         }
-        item->getEnvironment()->add(from, variable->getBits(), shared_from_this());
+        item->getEnvironment()->add(statementRoot, variable->getBits(), shared_from_this(), verbose);
         bool b = false;
         statement->toggleEnable(statement, item, synthesizer, b, false);
-        statement->apply(from, item, parser, synthesizer, effect);
+        statement->apply(statementRoot, item, parser, synthesizer, effect, verbose);
         item->getEnvironment()->remove(variable->getBits());
     }
     break;
@@ -1196,7 +1205,7 @@ bool Value::containsVariable()
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    case LIST_FEATURES_VALUE:
+    //case LIST_FEATURES_VALUE:
         break;
     case VARIABLE_VALUE:
         result = true;

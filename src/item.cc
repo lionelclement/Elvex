@@ -338,7 +338,7 @@ void Item::setRefs(set_of_uint32_t &_refs)
 /* **************************************************
  *
  ************************************************** */
-void Item::addRef(u_int32_t ref)
+void Item::addRef(uint32_t ref)
 {
     this->refs.insert(ref);
 }
@@ -560,7 +560,7 @@ bool Item::isCompleted()
 /* **************************************************
  *
  ************************************************** */
-bool Item::addEnvironment(statementPtr from, environmentPtr _environment)
+bool Item::addEnvironment(statementPtr from, environmentPtr _environment, bool verbose)
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
@@ -574,13 +574,13 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment)
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, /*std::move*/ (_environment));
+    return this->environment->add(from, /*std::move*/ (_environment), verbose);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::addEnvironment(statementPtr from, environmentPtr _environment, environmentPtr where)
+bool Item::addEnvironment(statementPtr from, environmentPtr _environment, environmentPtr where, bool verbose)
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
@@ -594,7 +594,7 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, enviro
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, /*std::move*/ (_environment), /*std::move*/ (where));
+    return this->environment->add(from, /*std::move*/ (_environment), /*std::move*/ (where), verbose);
 }
 
 /* **************************************************
@@ -851,11 +851,11 @@ void Item::print(std::ostream &out) const
 /* **************************************************
  *
  ************************************************** */
-class Item *Item::clone(const std::bitset<FLAGS> &protectedFlags)
+class Item *Item::clone(const std::bitset<FLAGS> &protectedFlags, bool verbose)
 {
     class Item *it = Item::create(this->rule, this->index, this->indexTerms,
                                   this->statements ? this->statements->clone(protectedFlags) : statementsPtr());
-    it->environment = (this->environment) ? this->environment->clone(nullptr) : environmentPtr();
+    it->environment = (this->environment) ? this->environment->clone(nullptr, verbose) : environmentPtr();
     it->addRanges(this->ranges);
     it->addForestIdentifiers(this->forestIdentifiers);
     it->refs = this->refs;
@@ -908,10 +908,10 @@ void Item::step(bool &effect)
 /* **************************************************
  *
  ************************************************** */
-void Item::apply(Parser &parser, Generator *synthesizer)
+void Item::apply(Parser &parser, Generator *generator, bool verbose)
 {
     bool effect = false;
-    statements->apply(this, parser, synthesizer, effect);
+    statements->apply(this, parser, generator, effect, verbose);
     if (statements->isSetFlags(Flags::BOTTOM))
         addFlags(Flags::BOTTOM);
 }
@@ -977,7 +977,8 @@ bool Item::KeyEqual::operator()(class Item *item1, class Item *item2) const
 /* **************************************************
  *
  ************************************************** */
-void Item::renameVariables(uint32_t k)
+void Item::renameVariables(uint32_t code)
 {
-    this->statements->renameVariables(k);
+    this->inheritedFeatures->renameVariables(code);
+    this->statements->renameVariables(code);
 }

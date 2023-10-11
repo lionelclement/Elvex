@@ -27,6 +27,8 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
+#include "parser.hpp"
+#include "generator.hpp"
 
 class Item : public Facade,
              public Serializable
@@ -179,9 +181,9 @@ public:
 
     void buildInheritedSonFeatures(statementPtr from, class Generator *);
 
-    bool addEnvironment(statementPtr from, environmentPtr);
+    bool addEnvironment(statementPtr from, environmentPtr, bool verbose);
 
-    bool addEnvironment(statementPtr from, environmentPtr, environmentPtr);
+    bool addEnvironment(statementPtr from, environmentPtr, environmentPtr, bool verbose);
 
     void addStatements(const statementsPtr &);
 
@@ -197,9 +199,9 @@ public:
 
     void defaultInheritedSonFeatures(void);
 
-    void apply(class Parser &parser, class Generator *synthesizer);
+    void apply(Parser &parser, Generator *generator, bool verbose);
 
-    class Item *clone(const std::bitset<FLAGS> &savedFlags);
+    class Item *clone(const std::bitset<FLAGS> &savedFlags, bool verbose);
 
     struct Hash
     {

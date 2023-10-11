@@ -66,6 +66,8 @@ public:
 
     static bitsetPtr createVariable(const std::string &); // variable -> bitset
 
+    static bitsetPtr createVariable(const std::string &name, uint32_t code);
+
     static uint16_t nameToCode(const std::string &); // identifier -> code
 
     static std::string &codeToName(uint16_t); // code -> identifier
@@ -78,7 +80,7 @@ public:
 
     static uint16_t_to_string_const_iterator bitMapcEnd(void);
 
-    static bitsetPtr renameVariable(const std::string &name, uint32_t code);
+    static void renameVariables(std::string &data, uint32_t code);
 
 };
 

@@ -1,2 +1,2 @@
-a a;
-b b;
+a a[HEAD:X];
+"b-$xxx" b[HEAD:X, xxx:$xxx];

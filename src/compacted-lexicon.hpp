@@ -71,16 +71,16 @@ public:
 
     void closeFiles();
 
-    static std::string unif(const std::string &fs1, const std::string &fs2);
+    static std::string unif(const std::string &fs1, const std::string &fs2, bool verbose);
 
     void addToData(const std::string &entry, const std::string &form, const std::string &features);
 
     void addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &fs, const std::string &lemma,
-                    const std::string &pos);
+                    const std::string &pos, bool verbose);
 
-    void addForms(const std::string &input, std::string inputSearch, const std::string &features, Lexicon &morpho);
+    void addForms(const std::string &input, std::string inputSearch, const std::string &features, Lexicon &morpho, bool verbose);
 
-    void buildEntries(class Lexicon &pattern, class Lexicon &morpho);
+    void buildEntries(class Lexicon &pattern, class Lexicon &morpho, bool verbose);
 
     void loadData();
 

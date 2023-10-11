@@ -21,7 +21,7 @@ git clone https://github.com/lionelclement/Elvex.git
 To compile **Elvex**, follow these commands from the Elvex directory:
 
 1. Run: `cmake .`
-2. Run: `make`
+2. Run: `make -j 7`
 3. Run: `sudo make install`
 
 ## Testing

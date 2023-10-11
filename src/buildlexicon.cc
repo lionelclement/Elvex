@@ -202,6 +202,7 @@ int main(int argn, char **argv)
 		std::string morphoFile = std::string();
 		Lexicon *morpho = nullptr;
 		Lexicon *pattern = nullptr;
+		bool verbose = false;
 
 		if (argn <= 1)
 		{
@@ -213,6 +214,10 @@ int main(int argn, char **argv)
 			if (argv[arg][0] == '-')
 			{
 
+				if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose"))
+				{
+					verbose = true;
+				}
 				if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version"))
 				{
 					std::cout << ELVEX_VERSION << std::endl;
@@ -338,7 +343,8 @@ int main(int argn, char **argv)
 				{
 					if (line[0] == '@')
 						addMacro(line, patternFile, lineno);
-					else {
+					else
+					{
 						addPattern(line, patternFile, lineno, pattern);
 					}
 				}
@@ -358,7 +364,7 @@ int main(int argn, char **argv)
 				throw usage_exception("morphoFile argument expected");
 			if (!pattern)
 				throw usage_exception("patternFile argument expected");
-			compactedLexicon->buildEntries(*pattern, *morpho);
+			compactedLexicon->buildEntries(*pattern, *morpho, verbose);
 			compactedLexicon->saveFsa();
 			compactedLexicon->closeFiles();
 			return EXIT_SUCCESS;

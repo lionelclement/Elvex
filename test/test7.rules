@@ -547,7 +547,6 @@ VN → VERB {
 // will he [not] feel good
 // was he [not] feeling good
 // had he [not] felt good
-@trace
 @withspaces
 VERB → [not] verb {
   [verbal_constr:$verbal_constr, aux_form:none, $Rest] ⊂ ↑;
@@ -565,7 +564,6 @@ VERB → [not] verb {
 // will he [not] have felt good
 // has he [not] been feeling good
 // had he [not] been feeling good
-@trace
 @withspaces
 VERB → [not] have|be|been|have_been verb {
   [aux_form:have|be|been|have_been];
@@ -597,7 +595,6 @@ VERB → [not] have|be|been|have_been verb {
 // he will feel good
 
 // he will have [not] felt good
-@trace
 @withspaces
 VERB → aux [not] [have|be|been|have_been] verb {
   ↓1 = ↑;
@@ -626,6 +623,7 @@ VERB → aux [not] [have|be|been|have_been] verb {
 /* **************************************************
  * Adjective phrase
  ************************************************** */
+@trace
 @withspaces
 AP → [adv] adj {
   ↓2 = ↑;

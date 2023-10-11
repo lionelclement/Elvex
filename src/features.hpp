@@ -94,12 +94,12 @@ public:
 
     valuePtr find(const bitsetPtr &) const;
 
-    bool buildEnvironment(statementPtr from, const environmentPtr &, const featuresPtr &, bool
+    bool buildEnvironment(statementPtr statementRoot, const environmentPtr &, const featuresPtr &, bool
 #ifdef TRACE_BUILD_ENVIRONMENT
                           ,
                           bool
 #endif
-    );
+                            , bool verbose);
 
     void subFlags(const std::bitset<FLAGS> &);
 
@@ -107,15 +107,15 @@ public:
 
     std::string *assignForm();
 
-    bool renameVariables(u_int32_t);
+    bool renameVariables(uint32_t);
 
     bool isNil() const;
 
     bool isBottom() const;
 
-    void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
+    void enable(statementPtr statementRoot, class Item *, class Generator *synthesizer, bool &, bool);
 
-    bool subsumes(statementPtr from, const featuresPtr &, const environmentPtr &);
+    bool subsumes(statementPtr statementRoot, const featuresPtr &, const environmentPtr &, bool verbose);
 
     void deleteAnonymousVariables();
 
@@ -127,9 +127,9 @@ public:
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 
-    void apply(statementPtr from, class Item *item, class Parser &parser, Generator *synthesizer, const statementPtr &variable,
+    void apply(statementPtr statementRoot, class Item *item, class Parser &parser, Generator *synthesizer, const statementPtr &variable,
                const statementPtr &body,
-               bool &effect);
+               bool &effect, bool verbose);
 };
 
 #endif // ELVEX_FEATURES_H

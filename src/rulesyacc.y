@@ -124,7 +124,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 //TOKEN_INSET 
 
  // LITERALS
-%token<string_slot> TOKEN_IDENTIFIER TOKEN_STRING
+%token<string_slot> TOKEN_IDENTIFIER TOKEN_STRING 
 
 %token<integer_slot> TOKEN_INTEGER
 
@@ -134,7 +134,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %token<string_slot> TOKEN_VARIABLE
 %token TOKEN_ANONYMOUS
 
-%type<string_slot> stringOrIdentifier
+%type<string_slot> identifier identifierOrString strings
 %type<integer_slot> term
 %type<terms_slot> terms terms_disj
 %type<vector_terms_slot> terms_vector
@@ -143,7 +143,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 
 %type<features_slot> features features_composite
 %type<feature_slot> feature features_composite_tail
-%type<bits_slot> variable identifier constant
+%type<bits_slot> variable symbol symbols
 %type<value_slot> feature_value
 %type<pairp_slot> pairp pairp_elements pairp_element
 
@@ -180,7 +180,7 @@ begin:
 	|TOKEN_INPUT TOKEN_LPAR term features TOKEN_RPAR {
 	  DBUGPRT("begin input");
 	  parser.setStartTerm($3);
-	  (*$4)->renameVariables((*$4)->getId());
+	  //(*$4)->renameVariables((*$4)->getId());
 	  parser.setStartFeatures(*$4);
 	  free($4);
 	}
@@ -267,7 +267,7 @@ dictionary_line:
 	}
 
 	//
-	|stringOrIdentifier lexical_entries TOKEN_SEMI
+	|identifierOrString lexical_entries TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
 	  for (auto entries_map = (*$2).cbegin() ; entries_map != (*$2).cend() ; ++entries_map) {
@@ -298,7 +298,6 @@ dictionary_line:
 	    }
 	    entries->add(Entry::create(*$1, features));
 	  }
-	  free($1);
 	  free($2);
 	}
 
@@ -315,23 +314,6 @@ dictionary_line:
 	{
 	  DBUGPRT("dictionary_line");
 	};
-
-stringOrIdentifier:
-	TOKEN_IDENTIFIER {
-	  DBUGPRT("stringOrIdentifier");
-	  $$ = $1;
-	}
-
-	|TOKEN_STRING {
-	  DBUGPRT("stringOrIdentifier");
-	  $$ = $1;
-	 }
-
-	|stringOrIdentifier TOKEN_PLUS TOKEN_STRING {
-	  DBUGPRT("string");
-	  $$ = $1;
-	  *$$ += *$3;
-	 };
 
 lexical_entries:
 	lexical_entry TOKEN_PIPE lexical_entries
@@ -1021,7 +1003,7 @@ expression_statement:
 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::NIL_STATEMENT, false));
 	}
 
-	|constant {
+	|symbols {
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::CONSTANT_STATEMENT, false, *$1));
 	  free($1);
@@ -1185,7 +1167,7 @@ features_composite:
 	  free($1);
 	}
 
-	//…, @identifier
+	//…, @symbol
 	|features_composite TOKEN_COMMA TOKEN_AROBASE TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("features_composite");
@@ -1200,7 +1182,7 @@ features_composite:
 	  free($4);
 	}
 
-	//@identifier
+	//@symbol
 	|TOKEN_AROBASE TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("features_composite");
@@ -1217,7 +1199,7 @@ features_composite:
 
 feature:
 	// LEMMA: lemma
-	TOKEN_LEMMA TOKEN_COLON stringOrIdentifier
+	TOKEN_LEMMA TOKEN_COLON identifier
 	{
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::_LEMMA_, bitsetPtr(), Value::create(Value::IDENTIFIER_VALUE, *$3)));
@@ -1231,7 +1213,7 @@ feature:
 	}
 
 	// HEAD: headicate
-	|TOKEN_HEAD TOKEN_COLON stringOrIdentifier
+	|TOKEN_HEAD TOKEN_COLON identifier
 	{
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::IDENTIFIER_VALUE, *$3)));
@@ -1260,13 +1242,13 @@ feature:
 	  free($3);
 	}
 
-	|TOKEN_FORM TOKEN_COLON stringOrIdentifier
+	|TOKEN_FORM TOKEN_COLON strings
 	{
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::_FORM_, bitsetPtr(), Value::create(Value::FORM_VALUE, *$3)));
 	}
 
-	|identifier TOKEN_COLON feature_value
+	|symbol TOKEN_COLON feature_value
 	{
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::_CONSTANT_, *$1, *$3));
@@ -1274,7 +1256,7 @@ feature:
 	  free($3);
 	}
 
-	|identifier TOKEN_COLON TOKEN_STRING
+	|symbol TOKEN_COLON strings
 	{
 	  DBUGPRT("feature");
 	  $$ = new featurePtr(Feature::create(Feature::_CONSTANT_, *$1, Value::create(Value::FORM_VALUE, *$3)));
@@ -1298,7 +1280,7 @@ feature_value:
 	  free($1);
 	}
 
-	|constant
+	|symbols
 	{
 	  DBUGPRT("feature_value");
 	  $$ = new valuePtr(Value::create(Value::CONSTANT_VALUE, *$1));
@@ -1343,24 +1325,24 @@ feature_value:
 	  $$ = new valuePtr(Value::STATIC_ANONYMOUS);
 	};
 
-constant:
-	identifier
+symbols:
+	symbol
 	{
-	  DBUGPRT("constants");
+	  DBUGPRT("symbols");
 	  $$=$1;
 	}
 
-	| identifier TOKEN_PIPE constant
+	| symbol TOKEN_PIPE symbols
 	{
-	  DBUGPRT("constants");
+	  DBUGPRT("symbols");
 	  $$=$1;
 	  (**$$) |= (**$3);
 	};
 
-identifier:
+symbol:
 	TOKEN_IDENTIFIER
 	{
-	  DBUGPRT("identifier");
+	  DBUGPRT("symbol");
  	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(*$1)));
  	  free($1);
 	};
@@ -1369,12 +1351,43 @@ variable:
 	TOKEN_VARIABLE
 	{
 	  DBUGPRT("variable");
-	  std::ostringstream oss;
-	  oss << *$1;
-  	  std::string str = oss.str();
-	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(str)));
-	  free($1);
+ 	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(*$1)));
+ 	  free($1);
+	  //std::ostringstream oss;
+	  //oss << *$1;
+  	  //std::string str = oss.str();
+	  //$$ = new bitsetPtr(Bitset::create(Vartable::createVariable(str)));
+	  //free($1);
 	};
+
+identifier:
+	TOKEN_IDENTIFIER {
+	  DBUGPRT("identifier");
+	  $$ = $1;
+	};
+
+identifierOrString:
+	TOKEN_IDENTIFIER {
+	  DBUGPRT("identifierOrString");
+	  $$ = $1;
+	}
+
+	|TOKEN_STRING {
+		DBUGPRT("identifierOrString");
+	  	$$ = $1;
+	};
+
+strings:
+	TOKEN_STRING {
+		DBUGPRT("identifierOrString");
+	  	$$ = $1;
+	}
+	
+	|strings TOKEN_PLUS TOKEN_STRING {
+	  DBUGPRT("string");
+	  $$ = $1;
+	  *$$ += *$3;
+	 };
 
 pairp:
 	TOKEN_LT pairp_elements TOKEN_GT
@@ -1448,7 +1461,7 @@ pairp_element:
 	  $$ = new pairpPtr(Pairp::create(Value::create(Value::NUMBER_VALUE, (double)$1)));
 	}
 
-	|constant
+	|symbols
 	{
 	  DBUGPRT("pairp_element");
 	  $$ = new pairpPtr(Pairp::create(Value::create(Value::CONSTANT_VALUE, *$1)));
