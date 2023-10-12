@@ -97,7 +97,7 @@ Citation
 One of the most difficult stuff already done with Elvex
 =====
 
-- Adjective order in English (-big yellow squared stuff-, -not squared yellow big stuff-)
+- Adjective order in English (--big yellow squared stuff--, not --squared yellow big stuff--)
 - Anaphora resolution process between sentences with pronouns, synonyms and hypernyms
 - Complex idiomatic phrases (not always contiguous)
 - Past participle aggrement in French with transitive verbs
