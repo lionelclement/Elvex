@@ -11,19 +11,17 @@ Write automatically and quickly relevant and adequate texts in natural language,
 In practical terms, how can you use Elvex to build a Text Generator for an application (such as a Chatbot, Letter-writer, etc)?
 --------------------
 
-To use **Elvex** software on your application, you first need to create a **lexicon** and a **grammar** by using the **Elvex language** and adhering to the **Elvex formalism**.
+To use **Elvex** software on your application, you first need to create a **lexicon** and **grammatical rules** by using the **Elvex language** and adhering to the **Elvex formalism**.
 
-The inputs will depend on the **Elvex** grammar built for your application, encompassing both the meaning and the enunciative intent.
-
-The Elvex software can be compiled on any platform and launched from an application or operating system.
+The inputs will depend on the grammar built for your application, encompassing both the meaning and the enunciative intent.
 
 a) The **lexicon**
 
-Each time you want to use a word, it needs to be thoroughly defined in the lexicon, which can vary depending on the specific domain. This entails describing every word you intend to generate. Writing entries for all the basic words, compounds, and idiomatic phrases can be a time-consuming and expensive endeavor (taking several months for one person or several weeks within a narrow domain).
+Each time you want to use a word, it needs to be thoroughly defined in the lexicon, which can vary depending on the specific domain. This entails describing every word you intend to generate. Writing entries for all the basic words, compounds, and idiomatic phrases can be a time-consuming and expensive endeavor. Typically, this process takes several weeks to several months for one person in a specific domain.
 
 **Elvex** is designed to compute huge lexicons (with hundreds of thousands of forms, tens of thousands of lemmas and lexemes, and hundreds of parts of speech) by distinguishing morphological forms from lemmas and lexemes.
 
-b) The **grammar**
+b) The **grammatical rules**
 
 In addition to the lexicon, you will also need to create a natural language grammar. This grammar serves as the language model for the NLG.
 
@@ -38,7 +36,7 @@ It is written by Lionel Clément at Bordeaux University - France and released by
 
 In the end, **Elvex** generates texts in Natural Language that accurately mirrors the input while adhering to the grammar's syntactic and lexical rules.
 
-Although it is an Artificial Intelligence program, **Elvex** doesn't rely on massive training data in neural networks.
+While **Elvex** is an Artificial Intelligence program, it operates without the need for extensive neural network training data, and its processes are fully deterministic, devoid of any randomness.
 
 License
 -------
