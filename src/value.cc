@@ -69,7 +69,7 @@ Value::Value(Value::Type const type, uint16_t code, double number, bitsetPtr _bi
     this->bits = _bits ? std::move(_bits) : bitsetPtr();
     this->features = _features ? std::move(_features) : featuresPtr();
     this->pairp = _list ? std::move(_list) : pairpPtr();
-    //this->listFeatures = _listFeatures ? std::move(_listFeatures) : listFeaturesPtr();
+    ////this->listFeatures = _listFeatures ? std::move(_listFeatures) : listFeaturesPtr();
 }
 
 /* **************************************************
