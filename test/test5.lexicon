@@ -39,9 +39,9 @@ poulet noun[HEAD:POULE,@ms];
 poules noun[HEAD:POULE,@fp];
 poulets noun[HEAD:POULE,@mp];
 renard noun[HEAD:RENARD, @ms];
-//renarde noun[HEAD:RENARD, @fs];
-//renards noun[HEAD:RENARD, @mp];
-//renardes noun[HEAD:RENARD, @fp];
+renarde noun[HEAD:RENARD, @fs];
+renards noun[HEAD:RENARD, @mp];
+renardes noun[HEAD:RENARD, @fp];
 souris noun[HEAD:SOURIS, @f];
 
 "chauve souris (in cache lexicon)" noun[HEAD:CHAUVE_SOURIS, cache:true, @fs];
