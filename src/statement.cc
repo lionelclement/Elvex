@@ -40,6 +40,7 @@
 #include "parser.hpp"
 #include "bitset.hpp"
 #include "vartable.hpp"
+#include "flags.hpp"
 
 /* **************************************************
  *
@@ -1068,7 +1069,7 @@ void Statement::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-statementPtr Statement::clone(const std::bitset<FLAGS> &protectedFlags)
+statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
 {
     statementPtr statement = shared_from_this();
     switch (this->op)

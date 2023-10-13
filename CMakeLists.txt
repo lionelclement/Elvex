@@ -128,6 +128,7 @@ target_compile_options(elvex PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-
 find_package(LibXml2 REQUIRED)
 if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
+            MAXFLAGS=16
             OUTPUT_XML
             MAXBITS=512
             MAXLENGTH=12000

@@ -63,9 +63,9 @@ public:
 
     uint32_t search(uint32_t index, const std::string &) const;
 
-    void saveFsa();
+    void saveFsa(bool verbose);
 
-    void loadFsa();
+    void loadFsa(bool verbose);
 
     void openFiles(const std::string &mode);
 
@@ -82,7 +82,7 @@ public:
 
     void buildEntries(class Lexicon &pattern, class Lexicon &morpho, bool verbose);
 
-    void loadData();
+    void loadData(bool verbose);
 
     void consult();
 

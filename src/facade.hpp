@@ -38,19 +38,19 @@ private:
     Flags flags;
 
 public:
-    Facade(std::size_t id = 0, const std::bitset<FLAGS> &flags = 0);
+    Facade(std::size_t id = 0, const std::bitset<MAX_FLAGS> &flags = 0);
 
     ~Facade();
 
-    std::bitset<FLAGS> &getFlags();
+    std::bitset<MAX_FLAGS> &getFlags();
 
-    bool isSetFlags(const std::bitset<FLAGS> &cmp) const;
+    bool isSetFlags(const std::bitset<MAX_FLAGS> &cmp) const;
 
-    bool isUnsetFlags(const std::bitset<FLAGS> &cmp) const;
+    bool isUnsetFlags(const std::bitset<MAX_FLAGS> &cmp) const;
 
-    void addFlags(const std::bitset<FLAGS> &f);
+    void addFlags(const std::bitset<MAX_FLAGS> &f);
 
-    void subFlags(const std::bitset<FLAGS> &f);
+    void subFlags(const std::bitset<MAX_FLAGS> &f);
 
     void printFlags(std::ostream &) const;
 

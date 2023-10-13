@@ -67,7 +67,7 @@ public:
 
     void print(std::ostream &outStream, uint8_t tabulationLenght, uint8_t tabulation, uint32_t color, uint32_t bgcolor, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
 
-    statementsPtr clone(const std::bitset<FLAGS> &savedFlags);
+    statementsPtr clone(const std::bitset<MAX_FLAGS> &savedFlags);
 
     void toggleEnable(class Item *item, class Generator *synthesizer, bool &effect, bool on);
 

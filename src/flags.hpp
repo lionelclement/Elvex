@@ -22,38 +22,38 @@
 
 #include <bitset>
 
-#define FLAGS 16
+#define MAX_FLAGS 8
 
 class Flags
 {
 
 public:
-    static const std::bitset<FLAGS> SEEN;
-    static const std::bitset<FLAGS> XML;
-    static const std::bitset<FLAGS> GENERATED;
-    static const std::bitset<FLAGS> DISABLED;
-    static const std::bitset<FLAGS> NIL;
-    static const std::bitset<FLAGS> BOTTOM;
-    static const std::bitset<FLAGS> REJECTED;
-    static const std::bitset<FLAGS> CHOOSEN;
+    static const std::bitset<MAX_FLAGS> SEEN;
+    static const std::bitset<MAX_FLAGS> XML;
+    static const std::bitset<MAX_FLAGS> GENERATED;
+    static const std::bitset<MAX_FLAGS> DISABLED;
+    static const std::bitset<MAX_FLAGS> NIL;
+    static const std::bitset<MAX_FLAGS> BOTTOM;
+    static const std::bitset<MAX_FLAGS> REJECTED;
+    static const std::bitset<MAX_FLAGS> CHOOSEN;
 
 private:
-    std::bitset<FLAGS> flags;
+    std::bitset<MAX_FLAGS> flags;
 
 public:
     Flags();
 
-    explicit Flags(const std::bitset<FLAGS> &flags);
+    explicit Flags(const std::bitset<MAX_FLAGS> &flags);
 
-    std::bitset<FLAGS> &getFlags();
+    std::bitset<MAX_FLAGS> &getFlags();
 
-    bool isSet(const std::bitset<FLAGS> &cmp) const;
+    bool isSet(const std::bitset<MAX_FLAGS> &cmp) const;
 
-    bool isUnset(const std::bitset<FLAGS> &cmp) const;
+    bool isUnset(const std::bitset<MAX_FLAGS> &cmp) const;
 
-    void add(const std::bitset<FLAGS> &f);
+    void add(const std::bitset<MAX_FLAGS> &f);
 
-    void sub(const std::bitset<FLAGS> &f);
+    void sub(const std::bitset<MAX_FLAGS> &f);
 
     void print(std::ostream &) const;
 };

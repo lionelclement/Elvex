@@ -132,10 +132,11 @@ uint32_t CompactedLexicon::search(uint32_t index, const std::string &s) const
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::saveFsa()
+void CompactedLexicon::saveFsa(bool verbose)
 {
     int nbrBytes = sizeof(uint32_t);
-    std::cerr << "*** Writing Finite State Automata " << std::endl;
+    if (verbose)
+        std::cout << "*** writing Finite State Automata " << std::endl;
     // encodage des offsets (16 ou 32 bits)
     if (!fwrite(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED
@@ -181,7 +182,8 @@ void CompactedLexicon::saveFsa()
     std::cout << "---Info---" << std::endl;
 #endif // TRACE_DIFF
     lexiconInit->printStaticInfo(fsaFile);
-    std::cerr << "*** Writing Data" << std::endl;
+    if (verbose)
+        std::cout << "*** writing Data" << std::endl;
     // table
     fflush(fsaFile);
     if (!fwrite(&init, sizeof(init), 1, fsaFile))
@@ -194,9 +196,10 @@ void CompactedLexicon::saveFsa()
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::loadFsa()
+void CompactedLexicon::loadFsa(bool verbose)
 {
-    std::cerr << "*** Loading Finite State Automata" << std::endl;
+    if (verbose)
+        std::cout << "*** loading Finite State Automata" << std::endl;
     int nbrBytes;
     if (!fread(&nbrBytes, sizeof(nbrBytes), 1, fsaFile))
         FATAL_ERROR_UNEXPECTED;
@@ -536,9 +539,10 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho, bool verb
 /* **************************************************
  *
  ************************************************** */
-void CompactedLexicon::loadData()
+void CompactedLexicon::loadData(bool verbose)
 {
-    std::cerr << "*** Loading Data" << std::endl;
+    if (verbose)
+        std::cout << "*** loading Data" << std::endl;
     struct stat *statbuf;
     statbuf = (struct stat *)malloc(sizeof(struct stat));
     stat(dataFileName.c_str(), statbuf);

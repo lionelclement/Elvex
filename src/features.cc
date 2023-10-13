@@ -594,7 +594,7 @@ bool Features::subsumes(statementPtr statementRoot, const featuresPtr &other_fea
 /* **************************************************
  *
  ************************************************** */
-void Features::subFlags(const std::bitset<FLAGS> &flags)
+void Features::subFlags(const std::bitset<MAX_FLAGS> &flags)
 {
     for (auto &i : features)
         i->subFlags(flags);

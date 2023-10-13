@@ -851,7 +851,7 @@ void Item::print(std::ostream &out) const
 /* **************************************************
  *
  ************************************************** */
-class Item *Item::clone(const std::bitset<FLAGS> &protectedFlags, bool verbose)
+class Item *Item::clone(const std::bitset<MAX_FLAGS> &protectedFlags, bool verbose)
 {
     class Item *it = Item::create(this->rule, this->index, this->indexTerms,
                                   this->statements ? this->statements->clone(protectedFlags) : statementsPtr());

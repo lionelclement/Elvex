@@ -285,7 +285,7 @@ public:
 
     static featuresPtr unif(statementPtr statement, const featuresPtr &, const featuresPtr &, class Item *, bool verbose);
 
-    statementPtr clone(const std::bitset<FLAGS> &savedFlags = std::bitset<FLAGS>());
+    statementPtr clone(const std::bitset<MAX_FLAGS> &savedFlags = std::bitset<MAX_FLAGS>());
 
     void buildInheritedSonFeatures(class Item *item, Parser &parser, Generator *synthesizer, bool verbose);
 

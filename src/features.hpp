@@ -101,7 +101,7 @@ public:
 #endif
                             , bool verbose);
 
-    void subFlags(const std::bitset<FLAGS> &);
+    void subFlags(const std::bitset<MAX_FLAGS> &);
 
     uint16_t assignHead();
 

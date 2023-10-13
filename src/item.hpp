@@ -201,7 +201,7 @@ public:
 
     void apply(Parser &parser, Generator *generator, bool verbose);
 
-    class Item *clone(const std::bitset<FLAGS> &savedFlags, bool verbose);
+    class Item *clone(const std::bitset<MAX_FLAGS> &savedFlags, bool verbose);
 
     struct Hash
     {

@@ -113,7 +113,7 @@ downDoubleArrow "⇓"
 	  parser.pushLineno(ruleslineno);
 	  ruleslineno = 1;
 	  if (parser.getVerbose()) {
-	    std::cerr << "open " << yytext << std::endl;
+	    std::cout << "*** open " << yytext << std::endl;
 	  }
 	  yyin = fopen( yytext, "r" );
 	  if ( ! yyin ){
@@ -156,7 +156,7 @@ downDoubleArrow "⇓"
   }
   else {
     if (parser.getVerbose()) {
-      std::cerr << "close " << parser.getTopBufferName() << std::endl;
+      std::cout << "*** close " << parser.getTopBufferName() << std::endl;
     }
     parser.popBufferName();
     ruleslineno = parser.popLineno();

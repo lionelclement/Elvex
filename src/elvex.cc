@@ -402,8 +402,8 @@ int main(int argn, char **argv)
                 std::string fileStr = std::string(file);
                 auto *lex = new CompactedLexicon(dirStr, fileStr);
                 lex->openFiles("r");
-                lex->loadFsa();
-                lex->loadData();
+                lex->loadFsa(generator.getVerbose());
+                lex->loadData(generator.getVerbose());
                 lex->closeFiles();
                 generator.setCompactedLexicon(lex);
             }

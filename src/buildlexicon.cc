@@ -365,7 +365,7 @@ int main(int argn, char **argv)
 			if (!pattern)
 				throw usage_exception("patternFile argument expected");
 			compactedLexicon->buildEntries(*pattern, *morpho, verbose);
-			compactedLexicon->saveFsa();
+			compactedLexicon->saveFsa(verbose);
 			compactedLexicon->closeFiles();
 			return EXIT_SUCCESS;
 		}
@@ -374,8 +374,8 @@ int main(int argn, char **argv)
 		{
 			compactedLexicon = new CompactedLexicon(directory, prefix);
 			compactedLexicon->openFiles("r");
-			compactedLexicon->loadFsa();
-			compactedLexicon->loadData();
+			compactedLexicon->loadFsa(verbose);
+			compactedLexicon->loadData(verbose);
 			compactedLexicon->consult();
 			compactedLexicon->closeFiles();
 			return EXIT_SUCCESS;
@@ -385,8 +385,8 @@ int main(int argn, char **argv)
 		{
 			compactedLexicon = new CompactedLexicon(directory, prefix);
 			compactedLexicon->openFiles("r");
-			compactedLexicon->loadFsa();
-			compactedLexicon->loadData();
+			compactedLexicon->loadFsa(verbose);
+			compactedLexicon->loadData(verbose);
 			compactedLexicon->print(std::cout);
 			compactedLexicon->closeFiles();
 			return EXIT_SUCCESS;

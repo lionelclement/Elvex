@@ -180,7 +180,7 @@ void Statements::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-statementsPtr Statements::clone(const std::bitset<FLAGS> &protectedFlags)
+statementsPtr Statements::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
 {
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();

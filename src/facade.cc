@@ -23,7 +23,7 @@
 /* **************************************************
  *
  ************************************************** */
-Facade::Facade(std::size_t id, const std::bitset<FLAGS> &args)
+Facade::Facade(std::size_t id, const std::bitset<MAX_FLAGS> &args)
 {
     NEW;
     uniqId = UniqId(id);
@@ -41,7 +41,7 @@ Facade::~Facade()
 /* **************************************************
  *
  ************************************************** */
-std::bitset<FLAGS> &Facade::getFlags()
+std::bitset<MAX_FLAGS> &Facade::getFlags()
 {
     return flags.getFlags();
 }
@@ -49,7 +49,7 @@ std::bitset<FLAGS> &Facade::getFlags()
 /* **************************************************
  *
  ************************************************** */
-bool Facade::isSetFlags(const std::bitset<FLAGS> &cmp) const
+bool Facade::isSetFlags(const std::bitset<MAX_FLAGS> &cmp) const
 {
     return flags.isSet(cmp);
 }
@@ -57,7 +57,7 @@ bool Facade::isSetFlags(const std::bitset<FLAGS> &cmp) const
 /* **************************************************
  *
  ************************************************** */
-bool Facade::isUnsetFlags(const std::bitset<FLAGS> &cmp) const
+bool Facade::isUnsetFlags(const std::bitset<MAX_FLAGS> &cmp) const
 {
     return flags.isUnset(cmp);
 }
@@ -65,7 +65,7 @@ bool Facade::isUnsetFlags(const std::bitset<FLAGS> &cmp) const
 /* **************************************************
  *
  ************************************************** */
-void Facade::addFlags(const std::bitset<FLAGS> &f)
+void Facade::addFlags(const std::bitset<MAX_FLAGS> &f)
 {
     flags.add(f);
 }
@@ -73,7 +73,7 @@ void Facade::addFlags(const std::bitset<FLAGS> &f)
 /* **************************************************
  *
  ************************************************** */
-void Facade::subFlags(const std::bitset<FLAGS> &f)
+void Facade::subFlags(const std::bitset<MAX_FLAGS> &f)
 {
     flags.sub(f);
 }
