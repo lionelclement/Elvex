@@ -90,24 +90,6 @@ public:
     static valuePtr createFeatures(featuresPtr features);
     static valuePtr createPairp(pairpPtr pairp);
 
-/*
-    static valuePtr create(const enum Type);
-
-    static valuePtr create(const enum Type, double number);
-
-    static valuePtr create(const enum Type, uint16_t);
-
-    static valuePtr create(const enum Type, const std::string &);
-
-    static valuePtr create(const enum Type, bitsetPtr);
-
-    static valuePtr create(featuresPtr);
-
-    //static valuePtr create(listFeaturesPtr);
-
-    static valuePtr create(pairpPtr);
-*/
-
     enum Type getType(void) const;
 
     bitsetPtr getBitset(void) const;

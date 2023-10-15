@@ -76,13 +76,13 @@ public:
 
     std::vector<termsPtr> &getRhs(void);
 
-    uint16_t getCurrentTerm(void) const;
+    //uint16_t getCurrentTerm(void) const;
 
-    termsPtr getCurrentTerms() const;
+    //termsPtr getCurrentTerms() const;
 
     termsPtr getTerms(size_t) const;
 
-    void setCurrentTerms(termsPtr);
+    //void setCurrentTerms(termsPtr);
 
     statementsPtr getStatements(void) const;
 

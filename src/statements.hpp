@@ -61,7 +61,7 @@ public:
 
     void addStatement(const statementPtr &);
 
-    void renameVariables(uint16_t);
+    void renameVariables(uint16_t code);
 
     bool findVariable(uint16_t code);
 

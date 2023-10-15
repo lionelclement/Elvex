@@ -34,7 +34,6 @@
 #define MAXBITS 512
 #endif
 
-//template<size_t N>
 class Bitset : public std::bitset<MAXBITS>,
                public Serializable,
                public std::enable_shared_from_this<Bitset>

@@ -111,8 +111,8 @@ public:
 
     bool renameVariables(uint16_t);
 
-    void apply(statementPtr from, class Item *, class Parser &, class Generator *, uint16_t code, statementPtr,
-               bool &, bool verbose);
+    void apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint16_t code, statementPtr statement,
+                  bool &effect, bool verbose);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
@@ -120,7 +120,7 @@ public:
 
     pairpPtr clone(void) const;
 
-    void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
+    void enable(const statementPtr &, class Item *, class Generator *generator, bool &, bool);
 
     bool subsumes(statementPtr from, const pairpPtr &, const environmentPtr &, bool verbose);
 

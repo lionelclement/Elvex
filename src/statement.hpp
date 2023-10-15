@@ -135,10 +135,7 @@ private:
 
     statementPtr lhs;
     statementPtr rhs;
-    //uint8_t first;
-    //uint8_t second;
     uint16_t code;
-    //uint8_t second;
     featuresPtr features;
     valuePtr value;
     bitsetPtr bitset;

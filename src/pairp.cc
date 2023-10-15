@@ -634,20 +634,20 @@ pairpPtr Pairp::pushBack(valuePtr _value)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
+void Pairp::enable(const statementPtr &root, class Item *item, Generator *generator, bool &effect, bool on)
 {
     switch (type)
     {
     case _NIL_:
         break;
     case _ATOM_:
-        value->enable(root, item, synthesizer, effect, on);
+        value->enable(root, item, generator, effect, on);
         break;
     case _PAIRP_:
         if (pairp.car)
-            pairp.car->enable(root, item, synthesizer, effect, on);
+            pairp.car->enable(root, item, generator, effect, on);
         if (pairp.cdr)
-            pairp.cdr->enable(root, item, synthesizer, effect, on);
+            pairp.cdr->enable(root, item, generator, effect, on);
         break;
     }
 }
@@ -678,7 +678,7 @@ bool Pairp::findVariable(uint16_t key) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, uint16_t code, statementPtr statement,
+void Pairp::apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint16_t code, statementPtr statement,
                   bool &effect, bool verbose)
 {
     switch (type)
@@ -689,16 +689,16 @@ void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Generator
     {
         environmentPtr save = item->getEnvironment();
         item->setEnvironment(item->getEnvironment() ? item->getEnvironment()->clone(nullptr, verbose) : environmentPtr());
-        value->apply(from, item, parser, synthesizer, code, statement->clone(0), effect, verbose);
+        value->apply(from, item, parser, generator, code, statement->clone(0), effect, verbose);
         item->getEnvironment().reset();
         item->setEnvironment(save);
     }
     break;
     case _PAIRP_:
         if (pairp.car)
-            pairp.car->apply(from, item, parser, synthesizer, code, statement, effect, verbose);
+            pairp.car->apply(from, item, parser, generator, code, statement, effect, verbose);
         if (pairp.cdr)
-            pairp.cdr->apply(from, item, parser, synthesizer, code, statement, effect, verbose);
+            pairp.cdr->apply(from, item, parser, generator, code, statement, effect, verbose);
         break;
     }
 }
