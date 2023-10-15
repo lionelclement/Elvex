@@ -574,7 +574,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 }
                 else
                 {
-                    it->getIndexTerms()[(*actualItem)->getIndex()] = Item::NA - 1;
+                    it->getIndexTerms()[(*actualItem)->getIndex()] = Item::INDEX_NA - 1;
                 }
                 it->getCurrentTerms()->unsetOptional();
                 it->resetSerial();
@@ -598,8 +598,10 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
             }
 
             // X -> alpha • Y1|Y2 beta
-            else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
-                     !(*actualItem)->getCurrentTerms()->isOptional() && (*actualItem)->getCurrentTerms()->size() > 1)
+            else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() &&
+                     !(*actualItem)->isCompleted() &&
+                     !(*actualItem)->getCurrentTerms()->isOptional() &&
+                     (*actualItem)->getCurrentTerms()->size() > 1)
             {
 
 #ifdef TRACE_UNFOLD
@@ -666,8 +668,12 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 }
 
                 // X -> alpha • Y gamma
-                else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
-                         !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] && (*actualItem)->getCurrentTerms()->size() == 1 && !(*actualItem)->getCurrentTerms()->isOptional() && parser.getRules().isNonTerminal((*actualItem)->getCurrentTerm()) &&
+                else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() &&
+                         !(*actualItem)->isCompleted() &&
+                         !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
+                         (*actualItem)->getCurrentTerms()->size() == 1 &&
+                         !(*actualItem)->getCurrentTerms()->isOptional() &&
+                         parser.getRules().isNonTerminal((*actualItem)->getCurrentTerm()) &&
                          !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil())
                 {
 
@@ -683,7 +689,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                     featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
                     if (!inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom())
                     {
-                        if ((*actualItem)->getEnvironment() && (*actualItem)->getEnvironment()->size() > 0)
+                        if ((*actualItem)->getEnvironment() && !(*actualItem)->getEnvironment()->empty())
                         {
                             bool effect = false;
                             (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
@@ -697,18 +703,19 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 
                                 class Item *it;
                                 iterRules->incUsages(this);
-                                it = Item::create(iterRules->clone(), 0, Item::NA,
+                                it = Item::create(iterRules->clone(), 0, Item::INDEX_NA,
                                                   iterRules->getStatements() ? iterRules->getStatements()->clone(0)
                                                                              : statementsPtr());
                                 it->addRange(row);
                                 it->setInheritedFeatures(inheritedSonFeatures->clone());
-                                //it->_renameVariables(it->getId());
+                                // it->_renameVariables(it->getId());
 
                                 if (traceClose || (trace && it->getRuleTrace()))
                                 {
                                     std::cout << "<H3>####################### CLOSE CON'T (Y -> • γ) #######################</H3>" << std::endl;
                                     it->print(std::cout);
                                     std::cout << std::endl;
+                                    std::flush(std::cout);
                                 }
 
                                 // record the item
@@ -779,7 +786,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                     std::cout << std::endl;
                                 }
 
-                                if ((*actualItem)->getEnvironment() && (*actualItem)->getEnvironment()->size() > 0)
+                                if ((*actualItem)->getEnvironment() && !(*actualItem)->getEnvironment()->empty())
                                 {
                                     bool effect = false;
                                     (*actualItem)->getEnvironment()->replaceVariables((*actualItem)->getSynthesizedFeatures(), effect);
@@ -874,7 +881,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                             featuresPtr inheritedFeatures = it->getInheritedFeatures();
                                             if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom())
                                             {
-                                                if (it->getEnvironment() && it->getEnvironment()->size() > 0)
+                                                if (it->getEnvironment() && !it->getEnvironment()->empty())
                                                 {
                                                     bool effect = false;
                                                     it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
@@ -927,7 +934,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                         featuresPtr inheritedFeatures = it->getInheritedFeatures();
                                         if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom())
                                         {
-                                            if (it->getEnvironment() && it->getEnvironment()->size() > 0)
+                                            if (it->getEnvironment() && !it->getEnvironment()->empty())
                                             {
                                                 bool effect = false;
                                                 it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
@@ -1007,8 +1014,12 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 }
 
                 // X -> alpha • t beta
-                else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
-                         !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] && (*actualItem)->getCurrentTerms()->size() == 1 && !(*actualItem)->getCurrentTerms()->isOptional() && parser.getRules().isTerminal((*actualItem)->getCurrentTerm()) &&
+                else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() &&
+                         !(*actualItem)->isCompleted() &&
+                         !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
+                         (*actualItem)->getCurrentTerms()->size() == 1 &&
+                         !(*actualItem)->getCurrentTerms()->isOptional() &&
+                         parser.getRules().isTerminal((*actualItem)->getCurrentTerm()) &&
                          !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil())
                 {
                     // shift the next time
@@ -1053,8 +1064,13 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
             if ((*actualItem)->getCurrentTerms())
             {
                 featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
+
                 if (!(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
-                    !(*actualItem)->getCurrentTerms()->isOptional() && (*actualItem)->getCurrentTerm() != Item::NA && !inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom() && parser.getRules().getTerminals().find((*actualItem)->getCurrentTerm()) != parser.getRules().getTerminals().end())
+                    !(*actualItem)->getCurrentTerms()->isOptional() &&
+                    (*actualItem)->getCurrentTerm() != Item::TERM_NA &&
+                    !inheritedSonFeatures->isNil() &&
+                    !inheritedSonFeatures->isBottom() &&
+                    parser.getRules().isTerminal((*actualItem)->getCurrentTerm()))
                 {
 
                     if (traceShift || (trace && (*actualItem)->getRuleTrace()))
@@ -1064,7 +1080,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                         std::cout << std::endl;
                     }
 
-                    if ((*actualItem)->getEnvironment() && (*actualItem)->getEnvironment()->size() > 0)
+                    if ((*actualItem)->getEnvironment() && !(*actualItem)->getEnvironment()->empty())
                     {
                         bool effect = false;
                         (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
@@ -1097,10 +1113,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                      std::cout << std::endl;
                      std::cout << "head:" << head << std::endl;
                      std::cout << "form:" << form << std::endl;
-                     std::cout << "pos : " << Vartable::codeToString((*actualItem)->getCurrentTerm()) << std::endl;
+                     std::cout << "pos : " << Vartable::codeToName((*actualItem)->getCurrentTerm()) << std::endl;
                     */
-                    // COUT_LINE;
-                    // parser.printCacheLexicon(std::cout);
 
                     auto foundpos = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
                     if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
@@ -1148,7 +1162,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                     {
                                         if (tryRandom++ > randomAttemps)
                                         {
-                                            //WARNING("too much random trial");
+                                            // WARNING("too much random trial");
                                             break;
                                         }
                                         size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
@@ -1169,7 +1183,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
 
                                     // Filter !!
                                     // entryFeatures subsumes ↑
-                            
+
                                     if (stage == STAGE_FORM ||
                                         (entryFeatures && entryFeatures->subsumes(nullptr, inheritedSonFeatures, env, verbose)))
                                     {
@@ -1195,7 +1209,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
 
                                         if (resultFeatures)
                                         {
-                                            if (it->getEnvironment() && (it->getEnvironment()->size() > 0))
+                                            if (it->getEnvironment() && !(it->getEnvironment()->empty()))
                                             {
                                                 bool effect = false;
                                                 it->getEnvironment()->replaceVariables(resultFeatures, effect);
@@ -1205,7 +1219,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
 
                                         it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(),
                                                                              entryFeaturesCopy);
-                                        if (entryStatements){
+                                        if (entryStatements)
+                                        {
                                             entryStatements->renameVariables(entry_copy->getId());
                                         }
                                         forestPtr forest;
@@ -1222,8 +1237,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                             bool effect = false;
                                             it->getEnvironment()->replaceVariables(forest->getForm(), effect);
                                         }
-                                        //entry_copy->renameVariables(entry_copy->getId());
-                                        // entry_copy->resetSerial();
+                                        // entry_copy->renameVariables(entry_copy->getId());
+                                        //  entry_copy->resetSerial();
                                         ForestIdentifier *forestIdentifier = ForestIdentifier::create(static_cast<size_t>(entry_copy->hash()),
                                                                                                       row - 1, row,
                                                                                                       resultFeatures->peekSerialString());
@@ -1234,9 +1249,9 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                             it->addForestIdentifiers((*actualItem)->getIndex(),
                                                                      (*forestMapIt).first);
                                             free(forestIdentifier);
-                                            // std::cerr << "stage : " << stage! << "<BR>" << std::endl;
-                                            // std::cerr << "head : " << Vartable::codeToString(head) << "<BR>" << std::endl;
-                                            // std::cout << "form : " << form << "<BR>" << std::endl;
+                                            //std::cout << "stage : " << stage << "<BR>" << std::endl;
+                                            //std::cout << "head : " << Vartable::codeToName(head) << "<BR>" << std::endl;
+                                            //std::cout << "form : " << form << "<BR>" << std::endl;
                                         }
                                         else
                                         {
@@ -1315,7 +1330,7 @@ void Generator::generate(class Parser &parser)
     for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule)
     {
         (*rule)->incUsages(this);
-        it = Item::create(*rule, Item::NA, Item::NA,
+        it = Item::create(*rule, Item::INDEX_NA, Item::INDEX_NA,
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRange(0);
         featuresPtr startFeatures = parser.getStartFeatures();
@@ -1359,7 +1374,8 @@ void Generator::generate(class Parser &parser)
 
     if (!nodeRoot->empty())
     {
-        for (auto forest = nodeRoot->cbegin(); forest != nodeRoot->cend(); ++forest){
+        for (auto forest = nodeRoot->cbegin(); forest != nodeRoot->cend(); ++forest)
+        {
             (*forest)->generate(this->getRandomResult(), this->getFirstResult());
         }
     }
@@ -1519,19 +1535,19 @@ entriesPtr Generator::findCompactedLexicon(Parser &parser, const uint16_t pos, c
                 parser.parseBuffer("#(", ")", features, "features");
                 if (parser.getLocalFeatures())
                 {
-                    //entryPtr localEntry = Entry::create(form, parser.getLocalFeatures())->clone();
+                    // entryPtr localEntry = Entry::create(form, parser.getLocalFeatures())->clone();
                     entryPtr localEntry = Entry::create(form, parser.getLocalFeatures());
 
                     std::string localEntrySerialString = localEntry->peekSerialString();
                     auto found = parser.findMapLocalEntry(localEntrySerialString);
                     if (found != parser.cendMapLocalEntry())
                     {
-                        //entries->add(found->second->clone());
+                        // entries->add(found->second->clone());
                         entries->add(found->second);
                     }
                     else
                     {
-                        //entries->add(localEntry->clone());
+                        // entries->add(localEntry->clone());
                         entries->add(localEntry);
                     }
                 }

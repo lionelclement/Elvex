@@ -48,9 +48,9 @@ Vartable::Vartable()
 {
     codeMapIndex = 0;
     variableMapIndex = 1;
-    createVariable("CONTAINS_A_FORM");
+    createSymbol("CONTAINS_A_FORM");
     IS_A_FORM = nameToCode("CONTAINS_A_FORM");
-    createVariable("DOES_NOT_CONTAIN_A_HEAD");
+    createSymbol("DOES_NOT_CONTAIN_A_HEAD");
     DOES_NOT_CONTAIN_A_HEAD = nameToCode("DOES_NOT_CONTAIN_A_HEAD");
 }
 
@@ -60,22 +60,22 @@ Vartable::Vartable()
  * bitMap[poids] := str
  * variableMap[str] := bitset
  ************************************************************ */
-bitsetPtr Vartable::createVariable(const std::string &str)
+bitsetPtr Vartable::createSymbol(const std::string &name)
 {
     bitsetPtr result = bitsetPtr();
     string_to_bitset_const_iterator varTableIt;
-    varTableIt = nameToBitsetMap.find(str);
+    varTableIt = nameToBitsetMap.find(name);
     if (varTableIt == nameToBitsetMap.end())
     {
         result = Bitset::create(variableMapIndex);
-        nameToBitsetMap.insert(std::make_pair(str, result));
+        nameToBitsetMap.insert(std::make_pair(name, result));
         size_t i = 0;
         while ((i < variableMapIndex.size()) && !variableMapIndex.test(i))
             ++i;
-        Vartable::bitToNameMap[i] = str;
+        Vartable::bitToNameMap[i] = name;
         variableMapIndex <<= 1;
         if (variableMapIndex.none())
-            throw fatal_exception("Too much values to create a new variable (" + str + " not created)");
+            throw fatal_exception("Too much values to create a new variable (" + name + " not created)");
     }
     else
     {
@@ -87,29 +87,39 @@ bitsetPtr Vartable::createVariable(const std::string &str)
 /* ************************************************************
  *
  ************************************************************ */
-bitsetPtr Vartable::createVariable(const std::string &name, uint32_t code)
+bitsetPtr Vartable::createSymbol(const std::string &name, uint16_t key)
 {
     std::stringstream ss;
-    ss << name << '_' << std::hex << code;
-    return Vartable::createVariable(ss.str());
+    ss << name << '_' << std::hex << key;
+    return Vartable::createSymbol(ss.str());
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-uint16_t Vartable::nameToCode(const std::string &str)
+uint16_t Vartable::nameToCode(const std::string &name)
 {
     uint16_t code;
-    string_to_uint16_t_iterator it(nameToCodeMap.find(str));
+    string_to_uint16_t_iterator it(nameToCodeMap.find(name));
     if (it == nameToCodeMap.end())
     {
         code = codeMapIndex;
-        nameToCodeMap.insert(std::make_pair(str, codeMapIndex));
-        codeToNameMap.insert(std::make_pair(codeMapIndex++, str));
+        nameToCodeMap.insert(std::make_pair(name, codeMapIndex));
+        codeToNameMap.insert(std::make_pair(codeMapIndex++, name));
     }
     else
         code = it->second;
     return code;
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+uint16_t Vartable::nameToCode(const std::string &name, uint16_t key)
+{
+    std::stringstream ss;
+    ss << name << '_' << std::hex << key;
+    return Vartable::nameToCode(ss.str());
 }
 
 /* ************************************************************
@@ -149,7 +159,7 @@ Vartable::uint16_t_to_string_const_iterator Vartable::bitMapcEnd()
 /* ************************************************************
  *
  ************************************************************ */
-std::string &Vartable::bitToVariable(uint16_t key)
+std::string &Vartable::bitToName(uint16_t key)
 {
     return bitToNameMap[key];
 }
@@ -157,7 +167,7 @@ std::string &Vartable::bitToVariable(uint16_t key)
 /* **************************************************
  *
  ************************************************** */
-void Vartable::renameVariables(std::string &data, uint32_t code)
+void Vartable::renameVariables(std::string &data, uint16_t key)
 {
 
     size_t found = data.find('$');
@@ -180,7 +190,7 @@ void Vartable::renameVariables(std::string &data, uint32_t code)
                 {
                     std::string match_str = i->str();
                     std::ostringstream oss;
-                    oss << match_str << '_' << std::hex << (int)code;
+                    oss << match_str << '_' << std::hex << (int)key;
                     data = std::regex_replace(data, regexpression, oss.str(), std::regex_constants::format_first_only);
                 }
             }

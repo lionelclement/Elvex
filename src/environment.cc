@@ -87,7 +87,7 @@ bool Environment::add(statementPtr statementRoot, const std::string &key, valueP
             {
                 if (statementRoot)
                 {
-                    WARNING("assign " << key << " with variable " << statementRoot->getBufferName() << " (line " << std::dec << statementRoot->getLineno() << ")");
+                    WARNING("assign " << key << " with variable " << statementRoot->_getBufferName() << " (line " << std::dec << statementRoot->_getLineno() << ")");
                 }
                 else
                 {
@@ -102,7 +102,7 @@ bool Environment::add(statementPtr statementRoot, const std::string &key, valueP
             {
                 if (statementRoot)
                 {
-                    WARNING("override previous value of " << key << "  " << statementRoot->getBufferName() << " (line " << std::dec << statementRoot->getLineno() << ")");
+                    WARNING("override previous value of " << key << "  " << statementRoot->_getBufferName() << " (line " << std::dec << statementRoot->_getLineno() << ")");
                 }
                 else
                 {
@@ -126,11 +126,10 @@ bool Environment::remove(const std::string &key)
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(statementPtr statement, const bitsetPtr &attr, valuePtr value, bool verbose)
+bool Environment::add(statementPtr statement, uint32_t code, valuePtr value, bool verbose)
 {
-    const std::string key = attr->toString();
+    const std::string key = Vartable::codeToName(code);
     return add(statement, key, value, verbose);
-    // return add(statement, key, std::move(value));
 }
 
 /* **************************************************
@@ -160,9 +159,9 @@ bool Environment::add(statementPtr statement, const environmentPtr &e, const env
 /* **************************************************
  *
  ************************************************** */
-bool Environment::remove(const bitsetPtr &attr)
+bool Environment::remove(uint32_t code)
 {
-    const std::string key = attr->toString();
+    const std::string key = Vartable::codeToName(code);
     return remove(key);
 }
 
@@ -185,17 +184,17 @@ Environment::unordered_map::const_iterator Environment::end() const
 /* **************************************************
  *
  ************************************************** */
-size_t Environment::size() const
+bool Environment::empty() const
 {
-    return env.size();
+    return env.size() == 0;
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Environment::find(const bitsetPtr &attr) const
+valuePtr Environment::find(const uint32_t code) const
 {
-    const std::string key = attr->toString();
+    const std::string key = Vartable::codeToName(code);
     auto it = env.find(key);
     if (it != env.end())
         return it->second;
@@ -216,7 +215,7 @@ void Environment::print(std::ostream &out) const
             first = false;
         else
             out << "</TR><TR>";
-        out << "<TD>" << i.first;
+        out << "<TD>" << '$' << i.first;
         if (i.second)
         {
             out << "</TD><TD>⇒</TD><TD>";
@@ -242,7 +241,12 @@ void Environment::replaceVariables(const featuresPtr &features, bool &effect)
     std::cout << "</td></tr></table>";
 #endif
     if (!features->containsVariable())
+    {
+#ifdef TRACE_ENVIRONMENT
+        std::cout << "<H4>Environment::replaceVariables(features) NOTHING TO DO</H4>" << std::endl;
+#endif
         return;
+    }
 
 redo:
     for (auto it = features->begin(); it != features->end(); ++it)
@@ -267,7 +271,7 @@ redo:
                 replaceVariables(feature->getValue(), effect);
             }
 
-            valuePtr value = find(feature->getAttribute());
+            valuePtr value = find(feature->getCode());
             if (!value)
             {
                 /* do nothing */
@@ -289,7 +293,7 @@ redo:
             else if (value->isConstant())
             {
                 feature->setType(Feature::_CONSTANT_);
-                feature->setAttribute(value->getBits());
+                feature->setAttribute(value->getBitset());
             }
             else if (value->isAnonymous())
             {
@@ -351,6 +355,9 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
 #endif
     if (!value->containsVariable())
     {
+#ifdef TRACE_ENVIRONMENT
+        std::cout << "<H4>Environment::replaceVariables(value) NOTHING TO DO</H4>" << std::endl;
+#endif
         return;
     }
     if (!value->isNil() && !value->isAnonymous())
@@ -379,7 +386,7 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
             break;
         case Value::VARIABLE_VALUE:
         {
-            valuePtr val = find(value->getBits());
+            valuePtr val = find(value->getCode());
             if (val && (val != value))
             {
                 effect = true;
@@ -417,13 +424,18 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
     std::cout << "</	td></tr></table>";
 #endif
     if (!pairp->containsVariable())
+    {
+#ifdef TRACE_ENVIRONMENT
+        std::cout << "<H4>Environment::replaceVariables(pairp) NOTHING TO DO</H4>" << std::endl;
+#endif
         return;
+    }
     switch (pairp->getType())
     {
     case Pairp::_ATOM_:
         if (pairp->isVariable())
         {
-            valuePtr value = this->find(pairp->getValue()->getBits());
+            valuePtr value = this->find(pairp->getValue()->getCode());
             if (value->isPairp())
             {
                 *pairp = *(value->getPairp());
@@ -438,7 +450,6 @@ void Environment::replaceVariables(const pairpPtr &pairp, bool &effect)
             }
         }
         else
-            // if (list->containsVariable())
             replaceVariables(pairp->getValue(), effect);
         break;
 
@@ -482,6 +493,13 @@ void Environment::replaceVariables(std::string &data, bool &effect)
     this->print(std::cout);
     std::cout << "</td></tr></table>";
 #endif
+    if (data.find('$') == std::string::npos)
+    {
+#ifdef TRACE_ENVIRONMENT
+        std::cout << "<H4>Environment::replaceVariables(str) NOTHING TO DO</H4>" << std::endl;
+#endif
+        return;
+    }
     std::string pattern =
         std::string(
             "(\\$([a-zA-Z_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)([a-zA-Z0-9_]|à|á|â|ã|ä|å|æ|ç|è|é|ê|ë|ì|í|î|ï|ð|ñ|ò|ó|ô|õ|ö|ø|ù|ú|û|ü|ý|ÿ|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ|ß)*)");
@@ -493,10 +511,9 @@ void Environment::replaceVariables(std::string &data, bool &effect)
         while (std::regex_search(data.c_str(), match, regexpression, std::regex_constants::format_first_only))
         {
             const std::string key = match[1];
-            auto i = this->env.find(key);
+            auto i = this->env.find(key.substr(1));
             if (i == this->env.end())
             {
-                // std::cout << "*** error variable " << match[1] << " not found" << std::endl;
                 std::string s = "?";
                 data = std::regex_replace(data, regexpression, s, std::regex_constants::format_first_only);
             }

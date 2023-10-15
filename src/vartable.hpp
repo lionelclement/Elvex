@@ -36,7 +36,7 @@ public:
     static uint16_t DOES_NOT_CONTAIN_A_HEAD;
 
 
-    // variable => bitset
+    // symbol => bitset
     // i.e. subject => 36 (MAXBITS values)
     typedef std::unordered_map<std::string, bitsetPtr> string_to_bitset;
     typedef string_to_bitset::iterator string_to_bitset_iterator;
@@ -64,15 +64,17 @@ private:
 public:
     Vartable();
 
-    static bitsetPtr createVariable(const std::string &); // variable -> bitset
+    static bitsetPtr createSymbol(const std::string &); // variable -> bitset
 
-    static bitsetPtr createVariable(const std::string &name, uint32_t code);
+    static bitsetPtr createSymbol(const std::string &name, uint16_t code);
 
     static uint16_t nameToCode(const std::string &); // identifier -> code
 
+    static uint16_t nameToCode(const std::string &, uint16_t code); // identifier -> code
+
     static std::string &codeToName(uint16_t); // code -> identifier
 
-    static std::string &bitToVariable(uint16_t); // bit weight -> identifier 
+    static std::string &bitToName(uint16_t); // bit weight -> identifier 
 
     static void insertCodeMap(const uint16_t, const std::string &);
 
@@ -80,7 +82,7 @@ public:
 
     static uint16_t_to_string_const_iterator bitMapcEnd(void);
 
-    static void renameVariables(std::string &data, uint32_t code);
+    static void renameVariables(std::string &data, uint16_t code);
 
 };
 

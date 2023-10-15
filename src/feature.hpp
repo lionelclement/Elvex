@@ -52,9 +52,13 @@ private:
 
     bitsetPtr attribute;
 
+    uint16_t code;
+
     valuePtr value;
 
     Feature(Type, bitsetPtr, valuePtr);
+
+    Feature(Type, uint16_t, valuePtr);
 
     void makeSerialString(void);
 
@@ -63,9 +67,21 @@ private:
 public:
     ~Feature();
 
-    static featurePtr create(enum Type type = _CONSTANT_, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
+    static featurePtr _create(enum Type type, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
+
+    static featurePtr createConstant(bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
+
+    static featurePtr createHead(valuePtr value);
+
+    static featurePtr createForm(valuePtr value);
+
+    static featurePtr createLemma(valuePtr value);
+
+    static featurePtr createVariable(uint16_t code, valuePtr value = valuePtr());
 
     bitsetPtr getAttribute(void) const;
+
+    uint16_t getCode(void) const;
 
     void setAttribute(const bitsetPtr);
 
@@ -99,15 +115,14 @@ public:
     void toXML(xmlNodePtr nodeRoot);
 #endif
 
-    bool renameVariables(uint32_t);
+    bool renameVariables(uint16_t);
 
     void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 
-    bool findVariable(const bitsetPtr) const;
+    bool findVariable(uint16_t key) const;
 
     bool containsVariable(void);
 
-    bool findVariable(const bitsetPtr &);
 };
 
 #endif // ELVEX_FEATURE_H

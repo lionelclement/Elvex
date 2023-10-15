@@ -32,10 +32,10 @@
 #include "generator.hpp"
 #include "vartable.hpp"
 
-valuePtr Value::STATIC_NIL = Value::create(Value::NIL_VALUE);
-valuePtr Value::STATIC_TRUE = Value::create(Value::TRUE_VALUE);
-valuePtr Value::STATIC_FALSE = Value::create(Value::FALSE_VALUE);
-valuePtr Value::STATIC_ANONYMOUS = Value::create(Value::ANONYMOUS_VALUE);
+valuePtr Value::STATIC_NIL = Value::createEmpty(Value::NIL_VALUE);
+valuePtr Value::STATIC_TRUE = Value::createEmpty(Value::TRUE_VALUE);
+valuePtr Value::STATIC_FALSE = Value::createEmpty(Value::FALSE_VALUE);
+valuePtr Value::STATIC_ANONYMOUS = Value::createEmpty(Value::ANONYMOUS_VALUE);
 
 /* **************************************************
  *
@@ -66,7 +66,7 @@ Value::Value(Value::Type const type, uint16_t code, double number, bitsetPtr _bi
     this->type = type;
     this->code = code;
     this->number = number;
-    this->bits = _bits ? std::move(_bits) : bitsetPtr();
+    this->bitset = _bits ? std::move(_bits) : bitsetPtr();
     this->features = _features ? std::move(_features) : featuresPtr();
     this->pairp = _list ? std::move(_list) : pairpPtr();
     ////this->listFeatures = _listFeatures ? std::move(_listFeatures) : listFeaturesPtr();
@@ -78,8 +78,8 @@ Value::Value(Value::Type const type, uint16_t code, double number, bitsetPtr _bi
 Value::~Value()
 {
     DELETE;
-    if (bits)
-        bits.reset();
+    if (bitset)
+        bitset.reset();
     if (features)
         features.reset();
     if (pairp)
@@ -89,7 +89,7 @@ Value::~Value()
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type)
+valuePtr Value::createEmpty(const enum Type type)
 {
     return valuePtr(new Value(type));
 }
@@ -97,39 +97,55 @@ valuePtr Value::create(const enum Type type)
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, double number)
+valuePtr Value::createNumber(double number)
 {
-    return valuePtr(new Value(type, 0, number));
+    return valuePtr(new Value(NUMBER_VALUE, 0, number));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, uint16_t code)
+valuePtr Value::createVariable(uint16_t code)
 {
-    return valuePtr(new Value(type, code));
+    return valuePtr(new Value(VARIABLE_VALUE, code));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, const std::string &str)
+valuePtr Value::createIdentifier(uint16_t code)
 {
-    return valuePtr(new Value(type, str));
+    return valuePtr(new Value(IDENTIFIER_VALUE, code));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(const enum Type type, bitsetPtr bits)
+valuePtr Value::createIdentifier(const std::string &name)
 {
-    return valuePtr(new Value(type, 0, 0, std::move(bits)));
+    return valuePtr(new Value(IDENTIFIER_VALUE, Vartable::nameToCode(name)));
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(featuresPtr features)
+valuePtr Value::createForm(const std::string &str)
+{
+    return valuePtr(new Value(FORM_VALUE, str));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+valuePtr Value::createConstant(bitsetPtr bitset)
+{
+    return valuePtr(new Value(CONSTANT_VALUE, 0, 0, std::move(bitset)));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+valuePtr Value::createFeatures(featuresPtr features)
 {
     return valuePtr(new Value(Value::FEATURES_VALUE, 0, 0, bitsetPtr(), std::move(features)));
 }
@@ -145,7 +161,7 @@ valuePtr Value::create(featuresPtr features)
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::create(pairpPtr lst)
+valuePtr Value::createPairp(pairpPtr lst)
 {
     return valuePtr(new Value(Value::PAIRP_VALUE, 0, 0, bitsetPtr(), featuresPtr(), std::move(lst)));
 }
@@ -161,9 +177,9 @@ Value::Type Value::getType() const
 /* **************************************************
  *
  ************************************************** */
-bitsetPtr Value::getBits() const
+bitsetPtr Value::getBitset() const
 {
-    return bits;
+    return bitset;
 }
 
 /* **************************************************
@@ -327,10 +343,10 @@ void Value::print(std::ostream &outStream) const
         outStream << "FALSE";
         break;
     case CONSTANT_VALUE:
-        outStream << bits->toString();
+        outStream << bitset->toString();
         break;
     case VARIABLE_VALUE:
-        outStream << bits->toString();
+        outStream << '$' << Vartable::codeToName(code);
         break;
     case ANONYMOUS_VALUE:
         outStream << '_';
@@ -373,14 +389,16 @@ void Value::flatPrint(std::ostream &outStream) const
         outStream << "FALSE";
         break;
     case CONSTANT_VALUE:
-    case VARIABLE_VALUE:
-        outStream << bits->toString();
+        outStream << bitset->toString();
         break;
     case ANONYMOUS_VALUE:
         outStream << '_';
         break;
     case IDENTIFIER_VALUE:
         outStream << Vartable::codeToName(code);
+        break;
+    case VARIABLE_VALUE:
+        outStream << '$' << Vartable::codeToName(code);
         break;
     case NUMBER_VALUE:
         outStream << number;
@@ -420,10 +438,10 @@ void Value::makeSerialString()
         serialString = 'd';
         break;
     case CONSTANT_VALUE:
-        serialString = 'e' + bits->peekSerialString();
+        serialString = 'e' + bitset->peekSerialString();
         break;
     case VARIABLE_VALUE:
-        serialString = 'f' + bits->peekSerialString();
+        serialString = 'f' + std::to_string(code);
         break;
     case IDENTIFIER_VALUE:
         serialString = 'g' + std::to_string(code);
@@ -457,27 +475,23 @@ void Value::toXML(xmlNodePtr nodeRoot) const
     {
     case NIL_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"nil");
-        bits->toXML(v);
         break;
     case TRUE_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"true");
-        bits->toXML(v);
         break;
     case FALSE_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"false");
-        bits->toXML(v);
         break;
     case CONSTANT_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"constant");
-        bits->toXML(v);
+        bitset->toXML(v);
         break;
     case VARIABLE_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"variable");
-        bits->toXML(v);
+        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)Vartable::codeToName(getCode()).c_str());
         break;
     case ANONYMOUS_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"anonymous");
-        bits->toXML(v);
         break;
     case IDENTIFIER_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"identifier");
@@ -523,23 +537,23 @@ valuePtr Value::clone()
         break;
 
     case CONSTANT_VALUE:
-        result = Value::create(CONSTANT_VALUE, bits);
+        result = Value::createConstant(bitset);
         break;
 
     case IDENTIFIER_VALUE:
-        result = Value::create(IDENTIFIER_VALUE, code);
+        result = Value::createIdentifier(code);
         break;
 
     case FORM_VALUE:
-        result = Value::create(FORM_VALUE, string);
+        result = Value::createForm(string);
         break;
 
     case NUMBER_VALUE:
-        result = Value::create(NUMBER_VALUE, number);
+        result = Value::createNumber(number);
         break;
 
     case FEATURES_VALUE:
-        result = Value::create(getFeatures()->clone());
+        result = Value::createFeatures(getFeatures()->clone());
         break;
 
     // case LIST_FEATURES_VALUE:
@@ -547,11 +561,11 @@ valuePtr Value::clone()
     //     break;
 
     case PAIRP_VALUE:
-        result = Value::create(getPairp()->clone());
+        result = Value::createPairp(getPairp()->clone());
         break;
         
     case VARIABLE_VALUE:
-        result = Value::create(VARIABLE_VALUE, bits);
+        result = Value::createVariable(code);
         break;
     }
     return result;
@@ -590,7 +604,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case NIL_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
         else if (value->type == NIL_VALUE)
         {
@@ -607,7 +621,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case FEATURES_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
         else if (value->type == FEATURES_VALUE)
         {
@@ -640,16 +654,16 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case CONSTANT_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
         else if (value->type == CONSTANT_VALUE)
         {
-            if ((*bits & *value->bits).none())
+            if ((*bitset & *value->bitset).none())
                 ret = false;
         }
         else if (value->type == IDENTIFIER_VALUE)
         {
-            if (bits->toString() != Vartable::codeToName(value->getCode()))
+            if (bitset->toString() != Vartable::codeToName(value->getCode()))
                 ret = false;
         }
         else if (value->type == ANONYMOUS_VALUE)
@@ -664,11 +678,11 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case IDENTIFIER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
         else if (value->type == CONSTANT_VALUE)
         {
-            if (Vartable::codeToName(code) != value->bits->toString())
+            if (Vartable::codeToName(code) != value->bitset->toString())
                 ret = false;
         }
         else if (value->type == IDENTIFIER_VALUE)
@@ -688,7 +702,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case NUMBER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
         else if (value->type == NUMBER_VALUE)
         {
@@ -709,7 +723,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case FORM_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
         else if (value->type == FORM_VALUE)
         {
@@ -737,7 +751,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         }
         else if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->bits, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
         else if (value->type == ANONYMOUS_VALUE)
         {
@@ -755,11 +769,11 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case VARIABLE_VALUE:
         if (!value)
         {
-            ret = environment->add(statementRoot, this->bits, STATIC_NIL, verbose);
+            ret = environment->add(statementRoot, code, STATIC_NIL, verbose);
         }
         else
         {
-            ret = environment->add(statementRoot, this->bits, value, verbose);
+            ret = environment->add(statementRoot, code, value, verbose);
         }
         break;
 
@@ -800,13 +814,13 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
     // $X ⊂ …
     if (this->isVariable())
     {
-        environment->add(statementRoot, bits, other_value, verbose);
+        environment->add(statementRoot, code, other_value, verbose);
     }
 
     // … ⊂ $X
     else if (other_value->isVariable())
     {
-        environment->add(statementRoot, other_value->bits, shared_from_this(), verbose);
+        environment->add(statementRoot, other_value->code, shared_from_this(), verbose);
     }
 
     // _ ⊂ …
@@ -863,7 +877,7 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
                 ret = false;
             break;
         case CONSTANT_VALUE:
-            if ((*bits & *other_value->bits).none())
+            if ((*bitset & *other_value->bitset).none())
                 ret = false;
             break;
         case FORM_VALUE:
@@ -925,9 +939,9 @@ bool Value::eq(valuePtr o) const
                 ret = true;
             break;
         case CONSTANT_VALUE:
-            if ((type == CONSTANT_VALUE) && ((*bits & *o->bits).any()))
+            if ((type == CONSTANT_VALUE) && ((*bitset & *o->bitset).any()))
                 ret = true;
-            else if ((type == IDENTIFIER_VALUE) && (o->bits->toString() == Vartable::codeToName(code)))
+            else if ((type == IDENTIFIER_VALUE) && (o->bitset->toString() == Vartable::codeToName(code)))
                 ret = true;
             break;
         case FORM_VALUE:
@@ -962,7 +976,7 @@ bool Value::eq(valuePtr o) const
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::lt(const valuePtr &o) const
+bool Value::lessThan(const valuePtr &o) const
 {
     // bool ret = false;
     /***
@@ -1036,7 +1050,7 @@ void Value::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Value::renameVariables(uint32_t code)
+bool Value::renameVariables(uint16_t key)
 {
     bool effect = false;
     switch (type)
@@ -1051,23 +1065,23 @@ bool Value::renameVariables(uint32_t code)
     //case LIST_FEATURES_VALUE:
         break;
     case FORM_VALUE:
-        Vartable::renameVariables(string, code);
+        Vartable::renameVariables(string, key);
         resetSerial();
         effect = true;
         break;
     case VARIABLE_VALUE:
-        bits = Vartable::createVariable(bits->toString(), code);
+        code = Vartable::nameToCode(Vartable::codeToName(code), key);
         resetSerial();
         effect = true;
         break;
     case FEATURES_VALUE:
         if (getFeatures())
-            if (getFeatures()->renameVariables(code))
+            if (getFeatures()->renameVariables(key))
                 effect = true;
         break;
     case PAIRP_VALUE:
         if (getPairp())
-            if (getPairp()->renameVariables(code))
+            if (getPairp()->renameVariables(key))
                 effect = true;
         break;
     }
@@ -1094,7 +1108,7 @@ void Value::enable(const statementPtr &root, class Item *item, Generator *synthe
     case VARIABLE_VALUE:
         if (on)
         {
-            if ((!item->getEnvironment()) || (!item->getEnvironment()->find(bits)))
+            if ((!item->getEnvironment()) || (!item->getEnvironment()->find(code)))
             {
                 root->addFlags(Flags::DISABLED);
                 effect = true;
@@ -1118,7 +1132,7 @@ void Value::enable(const statementPtr &root, class Item *item, Generator *synthe
 /* **************************************************
  *
  ************************************************** */
-bool Value::findVariable(const bitsetPtr &variable) const
+bool Value::findVariable(uint16_t key) const
 {
     switch (type)
     {
@@ -1133,15 +1147,15 @@ bool Value::findVariable(const bitsetPtr &variable) const
     //case LIST_FEATURES_VALUE:
         break;
     case VARIABLE_VALUE:
-        if (*bits == *variable)
+        if (code == key)
             return true;
         break;
     case FEATURES_VALUE:
-        if (getFeatures()->findVariable(variable))
+        if (getFeatures()->findVariable(key))
             return true;
         break;
     case PAIRP_VALUE:
-        if (getPairp()->findVariable(variable))
+        if (getPairp()->findVariable(key))
             return true;
         break;
     }
@@ -1151,7 +1165,7 @@ bool Value::findVariable(const bitsetPtr &variable) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
+void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, uint16_t code,
                   const statementPtr &statement,
                   bool &effect, bool verbose)
 {
@@ -1175,11 +1189,11 @@ void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, 
         {
             item->setEnvironment(Environment::create());
         }
-        item->getEnvironment()->add(statementRoot, variable->getBits(), shared_from_this(), verbose);
+        item->getEnvironment()->add(statementRoot, code, shared_from_this(), verbose);
         bool b = false;
         statement->toggleEnable(statement, item, synthesizer, b, false);
         statement->apply(statementRoot, item, parser, synthesizer, effect, verbose);
-        item->getEnvironment()->remove(variable->getBits());
+        item->getEnvironment()->remove(code);
     }
     break;
     default:

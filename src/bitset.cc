@@ -96,7 +96,7 @@ std::string Bitset::toString() const
         if ((*this)[i])
         {
             --c;
-            s << Vartable::bitToVariable(i);
+            s << Vartable::bitToName(i);
             if (c > 0)
                 s << '|';
         }

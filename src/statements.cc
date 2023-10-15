@@ -193,7 +193,7 @@ statementsPtr Statements::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
 /* **************************************************
  *
  ************************************************** */
-void Statements::renameVariables(uint32_t code)
+void Statements::renameVariables(uint16_t code)
 {
     if (guard)
         guard->renameVariables(code);
@@ -204,12 +204,12 @@ void Statements::renameVariables(uint32_t code)
 /* **************************************************
  *
  ************************************************** */
-bool Statements::findVariable(const bitsetPtr &variable)
+bool Statements::findVariable(uint16_t code)
 {
-    if (guard && guard->findVariable(variable))
+    if (guard && guard->findVariable(code))
         return true;
     for (list::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
-        if ((*statement)->findVariable(variable))
+        if ((*statement)->findVariable(code))
             return true;
     return false;
 }
@@ -294,7 +294,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             {
                 continue;
             }
-            if (!item->getEnvironment() || item->getEnvironment()->size() == 0)
+            if (!item->getEnvironment() || item->getEnvironment()->empty())
             {
                 item->setEnvironment(environmentPtr());
             }

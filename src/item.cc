@@ -34,7 +34,8 @@
 #include "terms.hpp"
 #include "serializable.hpp"
 
-uint8_t Item::NA = UCHAR_MAX;
+uint16_t Item::TERM_NA = UINT16_MAX;
+uint8_t Item::INDEX_NA = UINT8_MAX;
 
 /* **************************************************
  *
@@ -62,13 +63,13 @@ Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr 
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
-        this->indexTerms.push_back(NA);
+        this->indexTerms.push_back(INDEX_NA);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedSonFeatures->push_back(Features::NIL);
         this->inheritedSonFeatures->push_back(Features::NIL);
     }
-    if ((terms.size() < index) && (index != NA))
+    if ((terms.size() < index) && (index != INDEX_NA))
         this->indexTerms[index] = indexTerm;
 }
 
@@ -279,7 +280,7 @@ termsPtr Item::getTerms(const uint16_t _index) const
  ************************************************** */
 termsPtr Item::getCurrentTerms() const
 {
-    if ((this->index == NA) || (this->index >= this->getRuleRhs().size()))
+    if ((this->index == INDEX_NA) || (this->index >= this->getRuleRhs().size()))
         return nullptr;
     return rule->getRhs()[this->index];
 }
@@ -724,7 +725,7 @@ void Item::print(std::ostream &out) const
     if (s_index)
     {
         out << "<td>";
-        if (index == NA)
+        if (index == INDEX_NA)
             out << "NA";
         else
             out << index;
@@ -830,12 +831,20 @@ void Item::print(std::ostream &out) const
     }
     if (s_statements)
     {
-        out << "<td bgcolor=\"white\">";
+        auto r = rand();
+        out << R"(
+        <td><table>
+        <tr><td><button onclick="toggleVisibility('cell_)" << std::hex << r << getId() << R"(') ">Toggle</button></td></tr>
+        <tr><td bgcolor="white">
+        <div class="hidden" id="cell_)" << std::hex << r << getId() << "\">";
         if (statements)
             statements->print(out, 5, 0, 0x000000u, 0xFFFFFFu, true, "{", "}", "");
         else
             out << "&nbsp;";
-        out << "</td>";
+        out << R"(
+        </div>
+        </td></tr>
+        </table></td>)";
     }
     if (s_environment && environment)
     {
@@ -891,11 +900,11 @@ void Item::step(bool &effect)
         }
     }
 
-    if (!effect && (index == NA) && isCompleted())
+    if (!effect && (index == INDEX_NA) && isCompleted())
     {
         this->index = this->getRuleRhs().size();
     }
-    if (this->index != NA)
+    if (this->index != INDEX_NA)
         this->setSeen(this->index, true);
 
 #ifdef TRACE_STEP

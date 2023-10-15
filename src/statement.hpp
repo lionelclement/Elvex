@@ -34,7 +34,7 @@
         std::ostringstream oss;                                                                          \
         if (statement)                                                                                   \
         {                                                                                                \
-            oss << "statement " << ' ' << statement->bufferName << '(' << statement->getLineno() << ')'; \
+            oss << "statement " << ' ' << statement->bufferName << '(' << statement->_getLineno() << ')'; \
         }                                                                                                \
         throw fatal_exception(oss);                                                                      \
     }
@@ -42,19 +42,19 @@
 #define FATAL_ERROR_MSG_STM(msg)                                      \
     {                                                                 \
         std::ostringstream oss;                                       \
-        oss << msg << ' ' << bufferName << '(' << getLineno() << ')'; \
+        oss << msg << ' ' << bufferName << '(' << _getLineno() << ')'; \
         throw fatal_exception(oss);                                   \
     }
 #define FATAL_ERROR_OS_MSG_STM(oss)                            \
     {                                                          \
-        oss << ' ' << bufferName << '(' << getLineno() << ')'; \
+        oss << ' ' << bufferName << '(' << _getLineno() << ')'; \
         throw fatal_exception(oss);                            \
     }
 #define WARNING_STM                                                              \
     {                                                                            \
         CERR_LINE;                                                               \
         std::ostringstream oss;                                                  \
-        oss << "*** warning " << ' ' << bufferName << '(' << getLineno() << ')'; \
+        oss << "*** warning " << ' ' << bufferName << '(' << _getLineno() << ')'; \
         std::cerr << oss.str() << std::endl;                                     \
     }
 
@@ -98,7 +98,7 @@ public:
         DEFERRED_STATEMENT
     };
 
-    enum arithmetic_op
+    enum function_type
     {
         NOP,
         NOT,
@@ -135,13 +135,15 @@ private:
 
     statementPtr lhs;
     statementPtr rhs;
-    uint8_t first;
-    uint8_t second;
+    //uint8_t first;
+    //uint8_t second;
+    uint16_t code;
+    //uint8_t second;
     featuresPtr features;
     valuePtr value;
     bitsetPtr bitset;
     std::string string;
-    arithmetic_op fct;
+    function_type function;
     pairpPtr pairp;
     statementsPtr statements;
     double number;
@@ -155,45 +157,51 @@ public:
     ~Statement();
 
     // NIL UP UP2
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp);
+    static statementPtr createEmpty(uint32_t lineno, std::string bufferName, type op, bool rootOp);
 
     // DOWN DOWN2 DASH
     static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second = UINT8_MAX);
 
     // STMS PRINT PRINTLN
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementsPtr);
+    static statementPtr createStatements(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementsPtr);
 
     // GUARD FEATURES
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, featuresPtr features);
+    static statementPtr createFeatures(uint32_t lineno, std::string bufferName, type op, bool rootOp, featuresPtr features);
 
     // ATTEST THEN
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
+    static statementPtr createLhs(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
 
-    // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH FOREACH_CON_T UNIF
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
+    // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH_CON_T UNIF
+    static statementPtr createLhsRhs(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
 
-    // VARIABLE CONSTANT
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, bitsetPtr bits);
+    // FOREACH
+    static statementPtr createForeach(uint32_t lineno, std::string bufferName, bool rootOp, uint16_t code, statementPtr lhs);
+
+    // SEARCH
+    static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint16_t code, statementPtr lhs);
+
+    // CONSTANT
+    static statementPtr createConstant(uint32_t lineno, std::string bufferName, bool rootOp, bitsetPtr bits);
+
+    // VARIABLE
+    static statementPtr createVariable(uint32_t lineno, std::string bufferName, bool rootOp, uint16_t code);
 
     // PAIRP
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, pairpPtr);
+    static statementPtr createPairp(uint32_t lineno, std::string bufferName, bool rootOp, pairpPtr);
 
     // FCT
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, arithmetic_op fct,
+    static statementPtr createFunction(uint32_t lineno, std::string bufferName, bool rootOp, function_type fct,
                                statementPtr lhs = statementPtr(),
                                statementPtr rhs = statementPtr());
 
     // NUMBER
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, double);
+    static statementPtr createNumber(uint32_t lineno, std::string bufferName, bool rootOp, double);
 
     // STRING
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, std::string str);
+    static statementPtr createString(uint32_t lineno, std::string bufferName, bool rootOp, std::string str);
 
     // ANONYMOUS
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, valuePtr &value);
-
-    // SEARCH
-    static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, uint8_t first);
+    static statementPtr createAnonymous(uint32_t lineno, std::string bufferName, bool rootOp);
 
     bool isAssignment() const;
 
@@ -247,31 +255,33 @@ public:
 
     bool containsDash() const;
 
-    arithmetic_op getFct() const;
+    function_type _getFct() const;
 
-    statementPtr getLhs() const;
+    statementPtr _getLhs() const;
 
-    statementPtr getRhs() const;
+    statementPtr _getRhs() const;
 
-    featuresPtr getFeatures() const;
+    featuresPtr _getFeatures() const;
 
-    bitsetPtr getBits() const;
+    bitsetPtr _getBitset() const;
+
+    uint16_t getCode() const;
 
     uint8_t getFirst() const;
 
     uint8_t getSecond() const;
 
-    std::string &getString();
+    std::string &_getString();
 
-    pairpPtr getPairp() const;
+    pairpPtr _getPairp() const;
 
-    statementsPtr getStatements() const;
+    statementsPtr _getStatements() const;
 
-    double getNumber() const;
+    double _getNumber() const;
 
-    uint32_t getLineno() const;
+    uint32_t _getLineno() const;
 
-    std::string getBufferName() const;
+    std::string _getBufferName() const;
 
     void brln(std::ostream &out, int tabulation) const;
 
@@ -311,7 +321,7 @@ public:
 
     void stmPrintln(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
 
-    void renameVariables(uint32_t);
+    void renameVariables(uint16_t);
 
     void toggleEnable(statementPtr statementRoot, class Item *, class Generator *, bool &, bool);
 
@@ -319,7 +329,7 @@ public:
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 
-    bool findVariable(const bitsetPtr &);
+    bool findVariable(const uint16_t);
 };
 
 #endif // ELVEX_STATEMENT_H

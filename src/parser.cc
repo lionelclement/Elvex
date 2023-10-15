@@ -124,8 +124,8 @@ void Parser::insertMapLocalEntry(std::pair<std::string, entryPtr> pair){
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::findCacheLexicon(uint16_t i) const {
-    return cacheLexicon.find(i);
+Parser::entries_map_map_const_iterator Parser::findCacheLexicon(uint16_t key) const {
+    return cacheLexicon.find(key);
 }
 
 /* **************************************************
@@ -209,18 +209,17 @@ void Parser::printCacheLexicon(std::ostream &out) const {
     out << "<ul>";
     for (entries_map_map_const_iterator i = cbeginCacheLexicon(); i != cendCacheLexicon(); ++i) {
         out << "<li>";
-        out << Vartable::codeToName((*i).first) << '(' << (*i).first << ')';
+        out << Vartable::codeToName((*i).first);
         out << "<ul>";
         for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
             out << "<li>";
-            out << Vartable::codeToName((*j).first) << '(' << (*j).first << ')' << " -&gt; ";
+            out << Vartable::codeToName((*j).first) << " -&gt; ";
             (*j).second->print(out);
             out << "</li>";
 
         }
         out << "</ul>";
         out << "</il>";
-
     }
     out << "</ul>";
 }

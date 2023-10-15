@@ -40,6 +40,18 @@ Feature::Feature(enum Feature::Type type, bitsetPtr _attribute, valuePtr _value)
 /* ************************************************************
  *
  ************************************************************ */
+Feature::Feature(enum Feature::Type type, uint16_t code, valuePtr _value)
+{
+    NEW;
+    this->type = type;
+    this->attribute = bitsetPtr();
+    this->code = code;
+    this->value = std::move(_value);
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
 Feature::~Feature()
 {
     DELETE;
@@ -52,9 +64,49 @@ Feature::~Feature()
 /* ************************************************************
  *
  ************************************************************ */
-featurePtr Feature::create(Feature::Type type, bitsetPtr _attribute, valuePtr _value)
+featurePtr Feature::_create(Feature::Type type, bitsetPtr _attribute, valuePtr _value)
 {
     return featurePtr(new Feature(type, std::move(_attribute), std::move(_value)));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+featurePtr Feature::createConstant(bitsetPtr _attribute, valuePtr _value)
+{
+    return featurePtr(new Feature(_CONSTANT_, std::move(_attribute), std::move(_value)));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+featurePtr Feature::createHead(valuePtr _value)
+{
+    return featurePtr(new Feature(_HEAD_, bitsetPtr(), std::move(_value)));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+featurePtr Feature::createForm(valuePtr _value)
+{
+    return featurePtr(new Feature(_FORM_, bitsetPtr(), std::move(_value)));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+featurePtr Feature::createLemma(valuePtr _value)
+{
+    return featurePtr(new Feature(_LEMMA_, bitsetPtr(), std::move(_value)));
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+featurePtr Feature::createVariable(uint16_t code, valuePtr _value)
+{
+    return featurePtr(new Feature(_VARIABLE_, code, std::move(_value)));
 }
 
 /* **************************************************
@@ -132,6 +184,14 @@ bitsetPtr Feature::getAttribute() const
 /* **************************************************
  *
  ************************************************** */
+uint16_t Feature::getCode() const
+{
+    return this->code;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 std::string Feature::attributeToString() const
 {
     return attribute->toString();
@@ -197,10 +257,10 @@ void Feature::print(std::ostream &outStream) const
         outStream << "</TD>";
         break;
     case Feature::_VARIABLE_:
-        outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD>";
+        outStream << "<TD ALIGN=\"LEFT\">$" << Vartable::codeToName(code) << "</TD>";
         if (value && !value->isNil())
         {
-            outStream << "<TD ALIGN=\"LEFT\">";
+            outStream << "<TD ALIGN=\"LEFT\">$";
             value->print(outStream);
             outStream << "</TD>";
         }
@@ -244,10 +304,10 @@ void Feature::flatPrint(std::ostream &outStream) const
             outStream << "NIL";
         break;
     case Feature::_VARIABLE_:
-        outStream << attributeToString();
+        outStream << '$' << Vartable::codeToName(code);
         if (value && !value->isNil())
         {
-            value->flatPrint(outStream);
+            //value->flatPrint(outStream);
         }
         break;
     }
@@ -273,7 +333,7 @@ void Feature::makeSerialString()
         serialString = 'C' + attribute->peekSerialString();
         break;
     case Feature::_VARIABLE_:
-        serialString = 'R' + attribute->peekSerialString();
+        serialString = 'R' + std::to_string(code);
         break;
     }
     if (value)
@@ -320,22 +380,21 @@ void Feature::toXML(xmlNodePtr nodeRoot)
  ************************************************** */
 featurePtr Feature::clone() const
 {
-    // return create(type, attribute, (value) ? value->clone() : valuePtr());
     if (attribute)
-        return create(type, attribute->clone(), (value) ? value->clone() : valuePtr());
+        return featurePtr(new Feature(type, attribute->clone(), (value) ? value->clone() : valuePtr()));
     else
-        return create(type, bitsetPtr(), (value) ? value->clone() : valuePtr());
+        return featurePtr(new Feature(type, code, (value) ? value->clone() : valuePtr()));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Feature::renameVariables(uint32_t code)
+bool Feature::renameVariables(uint16_t code)
 {
     bool effect = false;
     if (type == Feature::_VARIABLE_)
     {
-        attribute = Vartable::createVariable(attribute->toString(), code);
+        attribute = Vartable::createSymbol(attribute->toString(), code);
         resetSerial();
         effect = true;
     }
@@ -367,7 +426,7 @@ void Feature::enable(const statementPtr &root, class Item *item, Generator *synt
     case Feature::_VARIABLE_:
         if (on)
         {
-            if ((!item->getEnvironment()) || (!item->getEnvironment()->find(getAttribute())))
+            if ((!item->getEnvironment()) || (!item->getEnvironment()->find(getCode())))
             {
                 root->addFlags(Flags::DISABLED);
                 effect = true;
@@ -385,7 +444,7 @@ void Feature::enable(const statementPtr &root, class Item *item, Generator *synt
 /* **************************************************
  *
  ************************************************** */
-bool Feature::findVariable(const bitsetPtr &variable)
+bool Feature::findVariable(uint16_t key) const
 {
     switch (type)
     {
@@ -393,11 +452,12 @@ bool Feature::findVariable(const bitsetPtr &variable)
     case Feature::_LEMMA_:
     case Feature::_FORM_:
     case Feature::_CONSTANT_:
-        if (value && value->findVariable(variable))
+        if (value && value->findVariable(key))
             return true;
         break;
     case Feature::_VARIABLE_:
-        if (*getAttribute() == *variable)
+        if ((code == key)
+        && (!value || value->findVariable(key)))
             return true;
         break;
     }

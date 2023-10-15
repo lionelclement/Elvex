@@ -52,8 +52,8 @@ public:
     };
 
 private:
-    bitsetPtr bits;    // pour encoder les constantes et les variables
-    uint16_t code; // pour encoder les identifiers
+    bitsetPtr bitset;    // pour encoder les constantes
+    uint16_t code; // pour encoder les identifiers et les variables
     pairpPtr pairp;
     std::string string;
     double number;
@@ -80,6 +80,17 @@ private:
 public:
     ~Value();
 
+    static valuePtr createEmpty(const enum Type type);
+    static valuePtr createNumber(double number);
+    static valuePtr createVariable(uint16_t code);
+    static valuePtr createIdentifier(uint16_t code);
+    static valuePtr createIdentifier(const std::string &name);
+    static valuePtr createForm(const std::string &str);
+    static valuePtr createConstant(bitsetPtr bitset);
+    static valuePtr createFeatures(featuresPtr features);
+    static valuePtr createPairp(pairpPtr pairp);
+
+/*
     static valuePtr create(const enum Type);
 
     static valuePtr create(const enum Type, double number);
@@ -95,10 +106,11 @@ public:
     //static valuePtr create(listFeaturesPtr);
 
     static valuePtr create(pairpPtr);
+*/
 
     enum Type getType(void) const;
 
-    bitsetPtr getBits(void) const;
+    bitsetPtr getBitset(void) const;
 
     uint16_t getCode(void) const;
 
@@ -130,7 +142,7 @@ public:
 
     void deleteVariables(void);
 
-    bool renameVariables(uint32_t);
+    bool renameVariables(uint16_t);
 
     bool isNil(void) const;
 
@@ -160,11 +172,11 @@ public:
 
     bool eq(valuePtr) const;
 
-    bool lt(const valuePtr &) const;
+    bool lessThan(const valuePtr &) const;
 
-    bool findVariable(const bitsetPtr &) const;
+    bool findVariable(uint16_t key) const;
 
-    void apply(statementPtr statementRoot, class Item *item, class Parser &parser, class Generator *synthesizer, const statementPtr &variable, const statementPtr &body,
+    void apply(statementPtr statementRoot, class Item *item, class Parser &parser, class Generator *synthesizer, uint16_t variable, const statementPtr &body,
           bool &effect, bool verbose);
 
     bool containsVariable(void);

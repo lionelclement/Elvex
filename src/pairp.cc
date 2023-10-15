@@ -332,7 +332,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
         }
         else if ((otherPairp->isAtom()) && (otherPairp->value->isVariable()))
         {
-            environment->add(statement, otherPairp->value->getBits(), Value::STATIC_NIL, verbose);
+            environment->add(statement, otherPairp->value->getCode(), Value::STATIC_NIL, verbose);
         }
         else
         {
@@ -352,13 +352,13 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
                 switch (otherPairp->getType())
                 {
                 case _NIL_:
-                    environment->add(statement, this->value->getBits(), Value::STATIC_NIL, verbose);
+                    environment->add(statement, this->value->getCode(), Value::STATIC_NIL, verbose);
                     break;
                 case _ATOM_:
-                    environment->add(statement, this->value->getBits(), otherPairp->getValue(), verbose);
+                    environment->add(statement, this->value->getCode(), otherPairp->getValue(), verbose);
                     break;
                 case _PAIRP_:
-                    environment->add(statement, this->value->getBits(), Value::create(otherPairp), verbose);
+                    environment->add(statement, this->value->getCode(), Value::createPairp(otherPairp), verbose);
                     break;
                 }
             }
@@ -374,7 +374,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
         else if (otherPairp->isAtom())
         {
             if (otherPairp->value->isVariable())
-                environment->add(statement, otherPairp->value->getBits(), this->getValue(), verbose);
+                environment->add(statement, otherPairp->value->getCode(), this->getValue(), verbose);
             else if (!this->value->buildEnvironment(statement, environment, otherPairp->value, acceptToFilterNULLVariables,
                                                     root, verbose))
                 ret = false;
@@ -480,7 +480,7 @@ void Pairp::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Pairp::renameVariables(uint32_t code)
+bool Pairp::renameVariables(uint16_t code)
 {
     bool effect = false;
     switch (type)
@@ -655,20 +655,20 @@ void Pairp::enable(const statementPtr &root, class Item *item, Generator *synthe
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool Pairp::findVariable(const bitsetPtr &variable)
+bool Pairp::findVariable(uint16_t key) const
 {
     switch (type)
     {
     case _NIL_:
         break;
     case _ATOM_:
-        if (value->findVariable(variable))
+        if (value->findVariable(key))
             return true;
         break;
     case _PAIRP_:
-        if (pairp.car && pairp.car->findVariable(variable))
+        if (pairp.car && pairp.car->findVariable(key))
             return true;
-        if (pairp.cdr && pairp.cdr->findVariable(variable))
+        if (pairp.cdr && pairp.cdr->findVariable(key))
             return true;
         break;
     }
@@ -678,7 +678,7 @@ bool Pairp::findVariable(const bitsetPtr &variable)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
+void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Generator *synthesizer, uint16_t code, statementPtr statement,
                   bool &effect, bool verbose)
 {
     switch (type)
@@ -689,16 +689,16 @@ void Pairp::apply(statementPtr from, class Item *item, Parser &parser, Generator
     {
         environmentPtr save = item->getEnvironment();
         item->setEnvironment(item->getEnvironment() ? item->getEnvironment()->clone(nullptr, verbose) : environmentPtr());
-        value->apply(from, item, parser, synthesizer, variable, statement->clone(0), effect, verbose);
+        value->apply(from, item, parser, synthesizer, code, statement->clone(0), effect, verbose);
         item->getEnvironment().reset();
         item->setEnvironment(save);
     }
     break;
     case _PAIRP_:
         if (pairp.car)
-            pairp.car->apply(from, item, parser, synthesizer, variable, statement, effect, verbose);
+            pairp.car->apply(from, item, parser, synthesizer, code, statement, effect, verbose);
         if (pairp.cdr)
-            pairp.cdr->apply(from, item, parser, synthesizer, variable, statement, effect, verbose);
+            pairp.cdr->apply(from, item, parser, synthesizer, code, statement, effect, verbose);
         break;
     }
 }

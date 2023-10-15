@@ -440,7 +440,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->add(statementRoot, this_feature->getValue()->getBits(), Value::STATIC_ANONYMOUS, verbose);
+                            environment->add(statementRoot, this_feature->getValue()->getCode(), Value::STATIC_ANONYMOUS, verbose);
                         }
                         else
                         {
@@ -493,7 +493,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         nFeatures->add(other_feature);
                     }
                 }
-                environment->add(statementRoot, this_feature->getAttribute(), Value::create(nFeatures), verbose);
+                environment->add(statementRoot, this_feature->getCode(), Value::createFeatures(nFeatures), verbose);
             }
         }
     }
@@ -695,10 +695,10 @@ void Features::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Features::findVariable(const bitsetPtr &variable)
+bool Features::findVariable(uint32_t key) const
 {
     for (auto &iterator : features)
-        if (iterator->findVariable(variable))
+        if (iterator->findVariable(key))
             return true;
     return false;
 }
@@ -736,13 +736,14 @@ void Features::setVariableFlag(enum VariableFlag::flagValues flag)
 /* **************************************************
  *
  ************************************************** */
-void Features::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable,
+void Features::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, 
+                     const statementPtr &variable,
                      const statementPtr &statement,
                      bool &effect, bool verbose)
 {
-    item->getEnvironment()->add(statementRoot, variable->getBits(), Value::create(shared_from_this()), verbose);
+    item->getEnvironment()->add(statementRoot, variable->getCode(), Value::createFeatures(shared_from_this()), verbose);
     effect = true;
     statement->toggleEnable(statement, item, synthesizer, effect, false);
     statement->apply(statementRoot, item, parser, synthesizer, effect, verbose);
-    item->getEnvironment()->remove(variable->getBits());
+    item->getEnvironment()->remove(variable->getCode());
 }

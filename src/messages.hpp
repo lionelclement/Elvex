@@ -49,6 +49,7 @@
 #define COUT_LINE                                                                 \
     {                                                                             \
         std::cout << "<BR>" << __FILE__ << "(" << std::dec << __LINE__ << ")" << "<BR>" << std::endl; \
+        std::flush(std::cout); \
     }
 
 #define FATAL_ERROR_UNEXPECTED                   \

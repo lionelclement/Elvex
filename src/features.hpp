@@ -123,7 +123,7 @@ public:
 
     bool containsVariable();
 
-    bool findVariable(const bitsetPtr &);
+    bool findVariable(uint32_t key) const;
 
     void setVariableFlag(enum VariableFlag::flagValues flag);
 

@@ -45,25 +45,25 @@ public:
 
     static environmentPtr create(void);
 
-    bool add(statementPtr from, const bitsetPtr &, valuePtr, bool verbose);
+    bool add(statementPtr from, uint32_t, valuePtr, bool verbose);
 
     bool add(statementPtr from, const environmentPtr &, bool verbose);
 
     bool add(statementPtr from, const environmentPtr &, const environmentPtr &, bool verbose);
 
-    bool remove(const bitsetPtr &);
+    bool remove(uint32_t);
 
     unordered_map::const_iterator begin() const;
 
     unordered_map::const_iterator end() const;
 
-    size_t size() const;
+    bool empty() const;
 
     void print(std::ostream &) const;
 
     environmentPtr clone(statementPtr from, bool verbose) const;
 
-    valuePtr find(const bitsetPtr &) const;
+    valuePtr find(const uint32_t) const;
 
     void replaceVariables(const valuePtr &, bool &);
 

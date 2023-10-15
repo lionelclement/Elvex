@@ -37,7 +37,8 @@ class Item : public Facade,
 public:
     typedef std::unordered_set<uint32_t> set_of_uint32_t;
     typedef set_of_uint32_t::const_iterator set_of_unsigned_int_const_iterator;
-    static uint8_t NA;
+    static uint16_t TERM_NA;
+    static uint8_t INDEX_NA;
 
 private:
     rulePtr rule;                                            // the grammar rule
@@ -54,7 +55,7 @@ private:
     std::vector<class ForestIdentifier *> forestIdentifiers; // forest identifiers
     environmentPtr environment;                              // variable environment
 
-    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
+    bool s_id = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
          s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
          s_inheritedSonFeatures = true, s_synthesizedFeatures = true,
@@ -73,7 +74,7 @@ public:
 
     // static constructors
 
-    static class Item *create(const rulePtr &, uint8_t index = NA, uint8_t indexTerm = NA, statementsPtr = statementsPtr());
+    static class Item *create(const rulePtr &, uint8_t index = INDEX_NA, uint8_t indexTerm = INDEX_NA, statementsPtr = statementsPtr());
 
     static class Item *create(const rulePtr &, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr);
 

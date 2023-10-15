@@ -22,6 +22,7 @@
 #include <bitset>
 #include <string>
 #include <sstream>
+#include <inttypes.h>
 #include "parser.hpp"
 #include "rulesyacc.hpp"
 #include "messages.hpp"
@@ -521,7 +522,7 @@ downDoubleArrow "⇓"
   
   {variable} {
     DBUGPRTARG("TOKEN_VARIABLE ", yytext);
-    ruleslval.string_slot = new std::string(yytext);
+    ruleslval.string_slot = new std::string(yytext+1);
     return TOKEN_VARIABLE;
   }
   
@@ -532,7 +533,7 @@ downDoubleArrow "⇓"
   
   {integer} {
     DBUGPRTARG("TOKEN_INTEGER ", yytext);
-    sscanf(yytext, "%d", &ruleslval.integer_slot);
+    sscanf(yytext, "%" SCNu16, &ruleslval.integer_slot);
     return TOKEN_INTEGER;
   }
   

@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -423,7 +423,32 @@ int main(int argn, char **argv)
 
         if (trace)
         {
-            std::cout << "<html><head><title>Elvex</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" << std::endl;
+            std::cout <<
+                R"(
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Elvex</title>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Fonction pour basculer la visibilité du contenu
+        function toggleVisibility(id) {
+            var element = document.getElementById(id);
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+            } else {
+                element.classList.add('hidden');
+            }
+        }
+    </script>
+)";
         }
         srand(time(nullptr));
 
@@ -469,7 +494,12 @@ int main(int argn, char **argv)
     }
     if (trace)
     {
-        std::cout << "</body></html>" << std::endl;
+        std::cout <<
+            R"(
+
+</body>
+</html>
+)";
     }
     return EXIT_SUCCESS;
 }

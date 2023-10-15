@@ -71,7 +71,7 @@
   %}
 
 %union{
-  uint32_t integer_slot;
+  uint16_t integer_slot;
   double double_slot;
   termsPtr* terms_slot; //(A|B)
   std::vector< termsPtr >* vector_terms_slot; // X Y
@@ -135,7 +135,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %token TOKEN_ANONYMOUS
 
 %type<string_slot> identifier identifierOrString strings
-%type<integer_slot> term
+%type<integer_slot> term variable
 %type<terms_slot> terms terms_disj
 %type<vector_terms_slot> terms_vector
 %type<entries_slot> lexical_entries
@@ -143,7 +143,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 
 %type<features_slot> features features_composite
 %type<feature_slot> feature features_composite_tail
-%type<bits_slot> variable symbol symbols
+%type<bits_slot> constant constants
 %type<value_slot> feature_value
 %type<pairp_slot> pairp pairp_elements pairp_element
 
@@ -532,14 +532,14 @@ statements:
 	TOKEN_LBRACE list_statement TOKEN_RBRACE
 	{
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::STMS_STATEMENT, false, *$2));
+	  $$ = new statementPtr(Statement::createStatements(ruleslineno, parser.getTopBufferName(), Statement::STMS_STATEMENT, false, *$2));
 	  free($2);
 	}
 
 	|TOKEN_LBRACE TOKEN_RBRACE
 	{
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::STMS_STATEMENT, false, Statements::create()));
+	  $$ = new statementPtr(Statement::createStatements(ruleslineno, parser.getTopBufferName(), Statement::STMS_STATEMENT, false, Statements::create()));
 	};
 
 statement:
@@ -550,19 +550,19 @@ statement:
 
 	|features TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::GUARD_STATEMENT, true, *$1));
+	  $$ = new statementPtr(Statement::createFeatures(ruleslineno, parser.getTopBufferName(), Statement::GUARD_STATEMENT, true, *$1));
 	  free($1);
 	}
 
 	|TOKEN_ATTEST expression_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::ATTEST_STATEMENT, true, *$2));
+	  $$ = new statementPtr(Statement::createLhs(ruleslineno, parser.getTopBufferName(), Statement::ATTEST_STATEMENT, true, *$2));
 	  free($2);
 	}
 
 	|TOKEN_PRINT expression_statement_composite TOKEN_SEMI {
 	  DBUGPRT("statement");
-		$$ = new statementPtr(Statement::create(
+		$$ = new statementPtr(Statement::createStatements(
 			ruleslineno, 
 			parser.getTopBufferName(), 
 			Statement::PRINT_STATEMENT, 
@@ -573,7 +573,7 @@ statement:
 
 	|TOKEN_PRINTLN expression_statement_composite TOKEN_SEMI {
 	  	DBUGPRT("statement");
-		$$ = new statementPtr(Statement::create(
+		$$ = new statementPtr(Statement::createStatements(
 			ruleslineno, 
 			parser.getTopBufferName(), 
 			Statement::PRINTLN_STATEMENT, 
@@ -584,7 +584,7 @@ statement:
 
 	|TOKEN_PRINTSTDERR expression_statement_composite TOKEN_SEMI {
 	  DBUGPRT("statement");
-		$$ = new statementPtr(Statement::create(
+		$$ = new statementPtr(Statement::createStatements(
 			ruleslineno, 
 			parser.getTopBufferName(), 
 			Statement::PRINTSTDERR_STATEMENT, 
@@ -595,7 +595,7 @@ statement:
 
 	|TOKEN_PRINTLNSTDERR expression_statement_composite TOKEN_SEMI {
 	  	DBUGPRT("statement");
-		$$ = new statementPtr(Statement::create(
+		$$ = new statementPtr(Statement::createStatements(
 			ruleslineno, 
 			parser.getTopBufferName(), 
 			Statement::PRINTLNSTDERR_STATEMENT, 
@@ -606,7 +606,7 @@ statement:
 
 	|left_hand_side_assignment_statement TOKEN_ASSIGNMENT right_hand_side_assignment_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::ASSIGNMENT_STATEMENT, true, *$1, *$3));
+	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::ASSIGNMENT_STATEMENT, true, *$1, *$3));
 	  // <X, …> = <…>
 	  // <X, …> = $X
 	  // <X, …> = search 
@@ -669,7 +669,7 @@ statement:
 
 	|left_hand_side_subset_statement TOKEN_SUBSUME right_hand_side_subset_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::SUBSUME_STATEMENT, true, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::SUBSUME_STATEMENT, true, (*$1), (*$3)));
 	  // […] ⊂ ↑
 	  // […] ⊂ ⇓j
 	  // […] ⊂ $X
@@ -686,24 +686,24 @@ statement:
 
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement %prec TOKEN_NOELSE {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno,
+	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno,
 						parser.getTopBufferName(), 
 						Statement::IF_STATEMENT,
 						  true, 
 						  *$3,
-						  Statement::create(ruleslineno, parser.getTopBufferName(), Statement::IF_CON_T_STATEMENT, false, *$5, statementPtr())));
+						  Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::IF_CON_T_STATEMENT, false, *$5, statementPtr())));
 	  free($3);
 	  free($5);
 	}
 
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement TOKEN_ELSE statement {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno,
+	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno,
 						  parser.getTopBufferName(),
 						  Statement::IF_STATEMENT,
 						  true, 
 						  (*$3),
-						  Statement::create(ruleslineno, parser.getTopBufferName(), Statement::IF_CON_T_STATEMENT, false, *$5, *$7)));
+						  Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::IF_CON_T_STATEMENT, false, *$5, *$7)));
 	  free($3);
 	  free($5);
 	  free($7);
@@ -711,7 +711,7 @@ statement:
 
 	|TOKEN_DEFERRED TOKEN_LPAR expression_statement TOKEN_RPAR statement {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno,
+	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno,
 						parser.getTopBufferName(), 
 						Statement::DEFERRED_STATEMENT,
 						true, 
@@ -723,13 +723,11 @@ statement:
 
 	|TOKEN_FOREACH variable TOKEN_IN expression_statement statement {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno,
+	  $$ = new statementPtr(Statement::createForeach(ruleslineno,
 						  parser.getTopBufferName(),
-						  Statement::FOREACH_STATEMENT,
 						  true, 
-						  Statement::create(ruleslineno, parser.getTopBufferName(), Statement::VARIABLE_STATEMENT, false, (*$2)),
-						  Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FOREACH_CON_T_STATEMENT, false, (*$4), *$5)));
-	  free($2);
+						  $2,
+						  Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::FOREACH_CON_T_STATEMENT, false, (*$4), *$5)));
 	  free($4);
 	  free($5);
 	};
@@ -737,15 +735,14 @@ statement:
 left_hand_side_subset_statement:
 	features {
 	  DBUGPRT("left_hand_side_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FEATURES_STATEMENT, false, *$1));
+	  $$ = new statementPtr(Statement::createFeatures(ruleslineno, parser.getTopBufferName(), Statement::FEATURES_STATEMENT, false, *$1));
 	  free($1);
 	};
 
 right_hand_side_subset_statement:
 	variable {
 	  DBUGPRT("right_hand_side_subset_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::VARIABLE_STATEMENT, false, *$1));
-	  free($1);
+	  $$ = new statementPtr(Statement::createVariable(ruleslineno, parser.getTopBufferName(), false, $1));
 	}
 
 	|up {
@@ -760,7 +757,7 @@ right_hand_side_subset_statement:
 
 	|features {
 	  DBUGPRT("right_hand_side_subset_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FEATURES_STATEMENT, false, *$1));
+	  $$ = new statementPtr(Statement::createFeatures(ruleslineno, parser.getTopBufferName(), Statement::FEATURES_STATEMENT, false, *$1));
 	  free($1);
 	}
 	;
@@ -778,18 +775,15 @@ left_hand_side_assignment_statement:
 
 	|variable {
 	  DBUGPRT("left_hand_side_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::VARIABLE_STATEMENT, false, *$1));
-	  free($1);
+	  $$ = new statementPtr(Statement::createVariable(ruleslineno, parser.getTopBufferName(), false, $1));
 	 }
 
 	|TOKEN_LT variable TOKEN_CONS variable TOKEN_GT
 	{
 	  DBUGPRT("left_hand_side_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::PAIRP_STATEMENT, false, 
-						Pairp::create(Pairp::create(Value::create(Value::VARIABLE_VALUE, *$2)),
-							     Pairp::create(Value::create(Value::VARIABLE_VALUE, *$4)))));
-	  free($2);
-	  free($4);
+	  $$ = new statementPtr(Statement::createPairp(ruleslineno, parser.getTopBufferName(), false, 
+						Pairp::create(Pairp::create(Value::createVariable($2)),
+							     Pairp::create(Value::createVariable($4)))));
 	};
 
 right_hand_side_assignment_statement:
@@ -804,82 +798,82 @@ expression_statement:
 	//////////////////////////////////////////////////
 	expression_statement TOKEN_OR expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::OR, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::OR, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_AND expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::AND, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::AND, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_IMPLICATION expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::OR, Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::NOT, (*$1)), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::OR, Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::NOT, (*$1)), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_EQUIV expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::AND,
-						                    Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::OR,
-								                Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::NOT, (*$1)),
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::AND,
+						                    Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::OR,
+								                Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::NOT, (*$1)),
 								                (*$3)),
-						                    Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::OR,
+						                    Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::OR,
 								                (*$1),
-								                Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::NOT, (*$3)))));
+								                Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::NOT, (*$3)))));
 	  free($1);
 	  free($3);
 	}
 
 	|TOKEN_NOT expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::NOT, (*$2)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::NOT, (*$2)));
 	  free($2);
 	}
 
 	|expression_statement TOKEN_EQUAL expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::EQ, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::EQ, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_DIFF expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::DIFF, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::DIFF, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_LT expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::LT, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::LT, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_LE expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::LE, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::LE, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_GT expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::GT, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::GT, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
 	|expression_statement TOKEN_GE expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::GE, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::GE, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -890,7 +884,7 @@ expression_statement:
 	|expression_statement TOKEN_PLUS expression_statement
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::PLUS, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::PLUS, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -898,7 +892,7 @@ expression_statement:
 	|expression_statement TOKEN_MINUS expression_statement
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::MINUS, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MINUS, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -906,7 +900,7 @@ expression_statement:
 	|expression_statement TOKEN_TIMES expression_statement
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::TIMES, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::TIMES, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -914,7 +908,7 @@ expression_statement:
 	|expression_statement TOKEN_DIVIDE expression_statement
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::DIVIDE, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::DIVIDE, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -922,7 +916,7 @@ expression_statement:
 	|expression_statement TOKEN_MODULO expression_statement
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::MODULO, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MODULO, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -930,32 +924,32 @@ expression_statement:
 	|TOKEN_MINUS expression_statement %prec TOKEN_MINUS_U
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::MINUS_U, (*$2), statementPtr()));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MINUS_U, (*$2), statementPtr()));
 	  free($2);
 	}
 
 	|TOKEN_RAND TOKEN_LPAR TOKEN_RPAR
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FUNCTION_STATEMENT, false, Statement::RANDOM));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::RANDOM));
 	}
 
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::NUMBER_STATEMENT, false, $1));
+	  $$ = new statementPtr(Statement::createNumber(ruleslineno, parser.getTopBufferName(), false, $1));
 	}
 
 	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
- 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::NUMBER_STATEMENT, false, (double)$1));
+ 	  $$ = new statementPtr(Statement::createNumber(ruleslineno, parser.getTopBufferName(), false, (double)$1));
 	}
 
 	|TOKEN_STRING
 	{
 	  DBUGPRT("expression_statement");
- 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::STRING_STATEMENT, false, *$1));
+ 	  $$ = new statementPtr(Statement::createString(ruleslineno, parser.getTopBufferName(), false, *$1));
 	}
 
 	//////////////////////////////////////////////////
@@ -963,7 +957,7 @@ expression_statement:
 	//////////////////////////////////////////////////
 	|expression_statement TOKEN_UNIFY expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::UNIF_STATEMENT, false, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::UNIF_STATEMENT, false, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -990,7 +984,7 @@ expression_statement:
 
 	|features {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::FEATURES_STATEMENT, false, *$1));
+	  $$ = new statementPtr(Statement::createFeatures(ruleslineno, parser.getTopBufferName(), Statement::FEATURES_STATEMENT, false, *$1));
 	  free($1);
 	}
 
@@ -1000,12 +994,12 @@ expression_statement:
 	|TOKEN_NIL
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::NIL_STATEMENT, false));
+	  $$ = new statementPtr(Statement::createEmpty(ruleslineno, parser.getTopBufferName(), Statement::NIL_STATEMENT, false));
 	}
 
-	|symbols {
+	|constants {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::CONSTANT_STATEMENT, false, *$1));
+	  $$ = new statementPtr(Statement::createConstant(ruleslineno, parser.getTopBufferName(), false, *$1));
 	  free($1);
 	}
 
@@ -1015,13 +1009,12 @@ expression_statement:
 	|TOKEN_ANONYMOUS
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::ANONYMOUS_STATEMENT, false, Value::STATIC_ANONYMOUS));
+	  $$ = new statementPtr(Statement::createAnonymous(ruleslineno, parser.getTopBufferName(), false));
 	}
 
 	|variable {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::VARIABLE_STATEMENT, false, *$1));
-	  free($1);
+	  $$ = new statementPtr(Statement::createVariable(ruleslineno, parser.getTopBufferName(), false, $1));
 	}
 
 	|TOKEN_LPAR expression_statement TOKEN_RPAR {
@@ -1042,7 +1035,7 @@ expression_statement:
 	//////////////////////////////////////////////////
 	|pairp {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::PAIRP_STATEMENT, false, *$1));
+	  $$ = new statementPtr(Statement::createPairp(ruleslineno, parser.getTopBufferName(), false, *$1));
 	  free($1);
 	}
 
@@ -1051,12 +1044,11 @@ expression_statement:
 	//////////////////////////////////////////////////
 	|TOKEN_SEARCH expression_statement TOKEN_ON TOKEN_IDENTIFIER {
 	  	DBUGPRT("expression_statement");
-	  	$$ = new statementPtr(Statement::create(ruleslineno,
+	  	$$ = new statementPtr(Statement::createSearch(ruleslineno,
 						  parser.getTopBufferName(),
-						  Statement::SEARCH_STATEMENT,
 						  true,
-						  *$2,
-						  Vartable::nameToCode(*$4)));
+						  Vartable ::nameToCode(*$4),
+						  *$2));
 		free($2);
 	  	free($4);
 	 }
@@ -1083,13 +1075,13 @@ expression_statement_composite:
 up:
 	TOKEN_UPARROW {
 	  DBUGPRT("up");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::INHERITED_FEATURES_STATEMENT, false));
+	  $$ = new statementPtr(Statement::createEmpty(ruleslineno, parser.getTopBufferName(), Statement::INHERITED_FEATURES_STATEMENT, false));
 	};
 
 up2:
 	TOKEN_UP2ARROW {
 	  DBUGPRT("up2");
-	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::SYNTHESIZED_FEATURES_STATEMENT, false));
+	  $$ = new statementPtr(Statement::createEmpty(ruleslineno, parser.getTopBufferName(), Statement::SYNTHESIZED_FEATURES_STATEMENT, false));
 	};
 
 down:
@@ -1147,7 +1139,7 @@ features_composite_tail:
 
 	|TOKEN_COMMA variable
 	{
-        $$ = new featurePtr(Feature::create(Feature::_VARIABLE_, *$2, valuePtr()));
+        $$ = new featurePtr(Feature::createVariable($2, valuePtr()));
     };
 
 features_composite:
@@ -1167,7 +1159,7 @@ features_composite:
 	  free($1);
 	}
 
-	//…, @symbol
+	//…, @constant
 	|features_composite TOKEN_COMMA TOKEN_AROBASE TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("features_composite");
@@ -1182,7 +1174,7 @@ features_composite:
 	  free($4);
 	}
 
-	//@symbol
+	//@constant
 	|TOKEN_AROBASE TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("features_composite");
@@ -1202,72 +1194,69 @@ feature:
 	TOKEN_LEMMA TOKEN_COLON identifier
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_LEMMA_, bitsetPtr(), Value::create(Value::IDENTIFIER_VALUE, *$3)));
+	  $$ = new featurePtr(Feature::createLemma(Value::createIdentifier(*$3)));
 	}
 
 	// LEMMA: $X
 	|TOKEN_LEMMA TOKEN_COLON variable
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_LEMMA_, bitsetPtr(), Value::create(Value::VARIABLE_VALUE, *$3)));
+	  $$ = new featurePtr(Feature::createLemma(Value::createVariable($3)));
 	}
 
 	// HEAD: headicate
 	|TOKEN_HEAD TOKEN_COLON identifier
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::IDENTIFIER_VALUE, *$3)));
+	  $$ = new featurePtr(Feature::createHead(Value::createIdentifier(*$3)));
 	}
 
 	// HEAD: $X
 	|TOKEN_HEAD TOKEN_COLON variable
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::VARIABLE_VALUE, *$3)));
-	  free($3);
+	  $$ = new featurePtr(Feature::createHead(Value::createVariable($3)));
 	}
 
 	// HEAD: _
 	|TOKEN_HEAD TOKEN_COLON TOKEN_ANONYMOUS
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_HEAD_, bitsetPtr(), Value::create(Value::ANONYMOUS_VALUE)));
+	  $$ = new featurePtr(Feature::createHead(Value::createEmpty(Value::ANONYMOUS_VALUE)));
 	}
 
 	// FORM: $X
 	|TOKEN_FORM TOKEN_COLON variable
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_FORM_, bitsetPtr(), Value::create(Value::VARIABLE_VALUE, *$3)));
-	  free($3);
+	  $$ = new featurePtr(Feature::createForm(Value::createVariable($3)));
 	}
 
 	|TOKEN_FORM TOKEN_COLON strings
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_FORM_, bitsetPtr(), Value::create(Value::FORM_VALUE, *$3)));
+	  $$ = new featurePtr(Feature::createForm(Value::createForm(*$3)));
 	}
 
-	|symbol TOKEN_COLON feature_value
+	|constant TOKEN_COLON feature_value
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_CONSTANT_, *$1, *$3));
+	  $$ = new featurePtr(Feature::createConstant(*$1, *$3));
 	  free($1);
 	  free($3);
 	}
 
-	|symbol TOKEN_COLON strings
+	|constant TOKEN_COLON strings
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_CONSTANT_, *$1, Value::create(Value::FORM_VALUE, *$3)));
+	  $$ = new featurePtr(Feature::createConstant(*$1, Value::createForm(*$3)));
 	  free($1);
 	}
 
 	|variable TOKEN_COLON feature_value
 	{
 	  DBUGPRT("feature");
-	  $$ = new featurePtr(Feature::create(Feature::_VARIABLE_, *$1, *$3));
-	  free($1);
+	  $$ = new featurePtr(Feature::createVariable($1, *$3));
 	  free($3);
 	}
 	;
@@ -1276,40 +1265,39 @@ feature_value:
 	variable
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::VARIABLE_VALUE, *$1));
-	  free($1);
+	  $$ = new valuePtr(Value::createVariable($1));
 	}
 
-	|symbols
+	|constants
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(Value::CONSTANT_VALUE, *$1));
+	  $$ = new valuePtr(Value::createConstant(*$1));
 	  free($1);
 	}
 
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new valuePtr(Value::create(Value::NUMBER_VALUE, $1));
+	  $$ = new valuePtr(Value::createNumber($1));
 	}
 
 	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new valuePtr(Value::create(Value::NUMBER_VALUE, (double)$1));
+	  $$ = new valuePtr(Value::createNumber((double)$1));
 	}
 
 	|pairp
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(*$1));
+	  $$ = new valuePtr(Value::createPairp(*$1));
 	  free($1);
 	}
 
 	|features
 	{
 	  DBUGPRT("feature_value");
-	  $$ = new valuePtr(Value::create(*$1));
+	  $$ = new valuePtr(Value::createFeatures(*$1));
 	  free($1);
 	}
 
@@ -1325,25 +1313,25 @@ feature_value:
 	  $$ = new valuePtr(Value::STATIC_ANONYMOUS);
 	};
 
-symbols:
-	symbol
+constants:
+	constant
 	{
-	  DBUGPRT("symbols");
+	  DBUGPRT("constants");
 	  $$=$1;
 	}
 
-	| symbol TOKEN_PIPE symbols
+	| constant TOKEN_PIPE constants
 	{
-	  DBUGPRT("symbols");
+	  DBUGPRT("constants");
 	  $$=$1;
 	  (**$$) |= (**$3);
 	};
 
-symbol:
+constant:
 	TOKEN_IDENTIFIER
 	{
-	  DBUGPRT("symbol");
- 	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(*$1)));
+	  DBUGPRT("constant");
+ 	  $$ = new bitsetPtr(Bitset::create(Vartable::createSymbol(*$1)));
  	  free($1);
 	};
 
@@ -1351,13 +1339,7 @@ variable:
 	TOKEN_VARIABLE
 	{
 	  DBUGPRT("variable");
- 	  $$ = new bitsetPtr(Bitset::create(Vartable::createVariable(*$1)));
- 	  free($1);
-	  //std::ostringstream oss;
-	  //oss << *$1;
-  	  //std::string str = oss.str();
-	  //$$ = new bitsetPtr(Bitset::create(Vartable::createVariable(str)));
-	  //free($1);
+	  $$ = Vartable::nameToCode(*$1);
 	};
 
 identifier:
@@ -1445,33 +1427,32 @@ pairp_element:
 	variable
 	{
 	  DBUGPRT("pairp_element");
-	  $$ = new pairpPtr(Pairp::create(Value::create(Value::VARIABLE_VALUE, *$1)));
-	  free($1);
+	  $$ = new pairpPtr(Pairp::create(Value::createVariable($1)));
 	}
 
 	|TOKEN_DOUBLE
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new pairpPtr(Pairp::create(Value::create(Value::NUMBER_VALUE, $1)));
+	  $$ = new pairpPtr(Pairp::create(Value::createNumber($1)));
 	}
 
  	|TOKEN_INTEGER
 	{
 	  DBUGPRT("expression_statement");
-	  $$ = new pairpPtr(Pairp::create(Value::create(Value::NUMBER_VALUE, (double)$1)));
+	  $$ = new pairpPtr(Pairp::create(Value::createNumber((double)$1)));
 	}
 
-	|symbols
+	|constants
 	{
 	  DBUGPRT("pairp_element");
-	  $$ = new pairpPtr(Pairp::create(Value::create(Value::CONSTANT_VALUE, *$1)));
+	  $$ = new pairpPtr(Pairp::create(Value::createConstant(*$1)));
 	  free($1);
 	}
 
 	|features
 	{
 	  DBUGPRT("pairp_element");
-	  $$ = new pairpPtr(Pairp::create(Value::create(*$1)));
+	  $$ = new pairpPtr(Pairp::create(Value::createFeatures(*$1)));
 	  free($1);
 	}
 

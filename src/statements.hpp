@@ -61,9 +61,9 @@ public:
 
     void addStatement(const statementPtr &);
 
-    void renameVariables(uint32_t);
+    void renameVariables(uint16_t);
 
-    bool findVariable(const bitsetPtr &variable);
+    bool findVariable(uint16_t code);
 
     void print(std::ostream &outStream, uint8_t tabulationLenght, uint8_t tabulation, uint32_t color, uint32_t bgcolor, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
 
