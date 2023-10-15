@@ -193,7 +193,7 @@ statementsPtr Statements::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
 /* **************************************************
  *
  ************************************************** */
-void Statements::renameVariables(uint16_t code)
+void Statements::renameVariables(uint32_t code)
 {
     if (guard)
         guard->renameVariables(code);
@@ -204,7 +204,7 @@ void Statements::renameVariables(uint16_t code)
 /* **************************************************
  *
  ************************************************** */
-bool Statements::findVariable(uint16_t code)
+bool Statements::findVariable(uint32_t code)
 {
     if (guard && guard->findVariable(code))
         return true;

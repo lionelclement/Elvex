@@ -34,7 +34,7 @@
 #include "terms.hpp"
 #include "serializable.hpp"
 
-uint16_t Item::TERM_NA = UINT16_MAX;
+uint32_t Item::TERM_NA = UINT16_MAX;
 uint8_t Item::INDEX_NA = UINT8_MAX;
 
 /* **************************************************
@@ -270,7 +270,7 @@ statementsPtr Item::getStatements()
 /* **************************************************
  *
  ************************************************** */
-termsPtr Item::getTerms(const uint16_t _index) const
+termsPtr Item::getTerms(const uint32_t _index) const
 {
     return rule->getRhs()[_index];
 }
@@ -296,7 +296,7 @@ void Item::setCurrentTerms(termsPtr terms)
 /* **************************************************
  *
  ************************************************** */
-uint16_t Item::getCurrentTerm() const
+uint32_t Item::getCurrentTerm() const
 {
     termsPtr terms = getCurrentTerms();
     if ((terms == nullptr) || (terms->size() == 0))
@@ -307,7 +307,7 @@ uint16_t Item::getCurrentTerm() const
 /* **************************************************
  *
  ************************************************** */
-uint16_t Item::getRuleLhs() const
+uint32_t Item::getRuleLhs() const
 {
     return rule->getLhs();
 }

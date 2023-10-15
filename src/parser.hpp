@@ -36,13 +36,13 @@ public:
   typedef entry_map::const_iterator entry_map_const_iterator;
   typedef entry_map::iterator entry_map_iterator;
 
-  typedef std::unordered_map<uint16_t, entriesPtr> entries_map;
+  typedef std::unordered_map<uint32_t, entriesPtr> entries_map;
   typedef entries_map::const_iterator entries_map_const_iterator;
   typedef entries_map::iterator entries_map_iterator;
 
   // POS => (LEMMA => ENTRY)
   // i.e.: verb => (MANGER => (mangions[…], mange|mange[…]))
-  typedef std::unordered_map<uint16_t, entries_map *> entries_map_map;
+  typedef std::unordered_map<uint32_t, entries_map *> entries_map_map;
   typedef entries_map_map::const_iterator entries_map_map_const_iterator;
   typedef entries_map_map::iterator entries_map_map_iterator;
 
@@ -56,7 +56,7 @@ private:
   entry_map mapLocalEntry;
   macro_map macros;
   featuresPtr startFeatures;
-  uint16_t startTerm;
+  uint32_t startTerm;
   bool verbose;
   featuresPtr localFeatures;
   std::deque<std::string> bufferNames;
@@ -81,9 +81,9 @@ public:
 
   std::string getTopBufferName();
 
-  uint16_t getStartTerm() const;
+  uint32_t getStartTerm() const;
 
-  void setStartTerm(uint16_t);
+  void setStartTerm(uint32_t);
 
   void setStartFeatures(featuresPtr);
 
@@ -93,9 +93,9 @@ public:
 
   void setLocalFeatures(featuresPtr);
 
-  void _insertCacheLexicon(std::pair<uint16_t, entries_map *>);
+  void _insertCacheLexicon(std::pair<uint32_t, entries_map *>);
 
-  entries_map_map_const_iterator findCacheLexicon(uint16_t) const;
+  entries_map_map_const_iterator findCacheLexicon(uint32_t) const;
 
   entries_map_map_const_iterator cbeginCacheLexicon() const;
 

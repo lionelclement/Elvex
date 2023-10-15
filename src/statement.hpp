@@ -30,7 +30,6 @@
 
 #define FATAL_ERROR_STM(statement)                                                                       \
     {                                                                                                    \
-        CERR_LINE;                                                                                       \
         std::ostringstream oss;                                                                          \
         if (statement)                                                                                   \
         {                                                                                                \
@@ -39,22 +38,35 @@
         throw fatal_exception(oss);                                                                      \
     }
 
-#define FATAL_ERROR_MSG_STM(msg)                                      \
+#define FATAL_ERROR_OSS_MSG_STM(statement, oss)                            \
+    {                                                          \
+        oss << ' ' << statement->bufferName << '(' << statement->_getLineno() << ')'; \
+        throw fatal_exception(oss);                            \
+    }
+
+#define FATAL_ERROR_MSG(msg)                                      \
     {                                                                 \
         std::ostringstream oss;                                       \
         oss << msg << ' ' << bufferName << '(' << _getLineno() << ')'; \
         throw fatal_exception(oss);                                   \
     }
-#define FATAL_ERROR_OS_MSG_STM(oss)                            \
+
+#define FATAL_ERROR_OSS_MSG(oss)                            \
     {                                                          \
         oss << ' ' << bufferName << '(' << _getLineno() << ')'; \
         throw fatal_exception(oss);                            \
     }
+
 #define WARNING_STM                                                              \
     {                                                                            \
-        CERR_LINE;                                                               \
         std::ostringstream oss;                                                  \
         oss << "*** warning " << ' ' << bufferName << '(' << _getLineno() << ')'; \
+        std::cerr << oss.str() << std::endl;                                     \
+    }
+
+#define WARNING_STM_OSS(oss)                                                              \
+    {                                                                            \
+        oss << ' ' << bufferName << '(' << _getLineno() << ')'; \
         std::cerr << oss.str() << std::endl;                                     \
     }
 
@@ -135,7 +147,7 @@ private:
 
     statementPtr lhs;
     statementPtr rhs;
-    uint16_t code;
+    uint32_t code;
     featuresPtr features;
     valuePtr value;
     bitsetPtr bitset;
@@ -172,16 +184,16 @@ public:
     static statementPtr createLhsRhs(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
 
     // FOREACH
-    static statementPtr createForeach(uint32_t lineno, std::string bufferName, bool rootOp, uint16_t code, statementPtr lhs);
+    static statementPtr createForeach(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr lhs);
 
     // SEARCH
-    static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint16_t code, statementPtr lhs);
+    static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr lhs);
 
     // CONSTANT
     static statementPtr createConstant(uint32_t lineno, std::string bufferName, bool rootOp, bitsetPtr bits);
 
     // VARIABLE
-    static statementPtr createVariable(uint32_t lineno, std::string bufferName, bool rootOp, uint16_t code);
+    static statementPtr createVariable(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code);
 
     // PAIRP
     static statementPtr createPairp(uint32_t lineno, std::string bufferName, bool rootOp, pairpPtr);
@@ -262,7 +274,7 @@ public:
 
     bitsetPtr _getBitset() const;
 
-    uint16_t getCode() const;
+    uint32_t getCode() const;
 
     uint8_t getFirst() const;
 
@@ -318,7 +330,7 @@ public:
 
     void stmPrintln(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
 
-    void renameVariables(uint16_t);
+    void renameVariables(uint32_t);
 
     void toggleEnable(statementPtr statementRoot, class Item *, class Generator *, bool &, bool);
 
@@ -326,7 +338,7 @@ public:
 
     void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
 
-    bool findVariable(const uint16_t);
+    bool findVariable(const uint32_t);
 };
 
 #endif // ELVEX_STATEMENT_H

@@ -75,14 +75,14 @@ featuresPtr Parser::getStartFeatures() const {
 /* **************************************************
  *
  ************************************************** */
-uint16_t Parser::getStartTerm() const {
+uint32_t Parser::getStartTerm() const {
     return startTerm;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Parser::setStartTerm(uint16_t _startTerm) {
+void Parser::setStartTerm(uint32_t _startTerm) {
     this->startTerm = _startTerm;
 }
 
@@ -124,7 +124,7 @@ void Parser::insertMapLocalEntry(std::pair<std::string, entryPtr> pair){
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::findCacheLexicon(uint16_t key) const {
+Parser::entries_map_map_const_iterator Parser::findCacheLexicon(uint32_t key) const {
     return cacheLexicon.find(key);
 }
 
@@ -285,6 +285,6 @@ void Parser::printMacros() {
 /* **************************************************
  *
  ************************************************** */
-void Parser::_insertCacheLexicon(std::pair<uint16_t, entries_map*> pair){
+void Parser::_insertCacheLexicon(std::pair<uint32_t, entries_map*> pair){
   cacheLexicon.insert(pair);
 }

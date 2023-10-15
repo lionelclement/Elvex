@@ -197,7 +197,7 @@ public:
 
     void generate(class Parser &);
 
-    entriesPtr findCompactedLexicon(class Parser &parser, uint16_t pos, uint16_t head);
+    entriesPtr findCompactedLexicon(class Parser &parser, uint32_t pos, uint32_t head);
 
     std::string keyMemoization(class Item *, class Item *);
 
@@ -205,9 +205,9 @@ public:
 
     bool getVerbose();
 
-    entriesPtr findByHead(Parser::entries_map *map, uint16_t head);
+    entriesPtr findByHead(Parser::entries_map *map, uint32_t head);
 
-    entriesPtr findByHeadThenCompactedLexicon(Parser &parser, Parser::entries_map *map, uint16_t pos, uint16_t head);
+    entriesPtr findByHeadThenCompactedLexicon(Parser &parser, Parser::entries_map *map, uint32_t pos, uint32_t head);
 
     entriesPtr findMain(Parser::entries_map *map);
 

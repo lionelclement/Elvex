@@ -59,7 +59,7 @@ Value::Value(Value::Type const type, const std::string &string)
 /* **************************************************
  *
  ************************************************** */
-Value::Value(Value::Type const type, uint16_t code, double number, bitsetPtr _bits, featuresPtr _features,
+Value::Value(Value::Type const type, uint32_t code, double number, bitsetPtr _bits, featuresPtr _features,
              pairpPtr _list/*, listFeaturesPtr _listFeatures*/)
 {
     NEW;
@@ -105,7 +105,7 @@ valuePtr Value::createNumber(double number)
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::createVariable(uint16_t code)
+valuePtr Value::createVariable(uint32_t code)
 {
     return valuePtr(new Value(VARIABLE_VALUE, code));
 }
@@ -113,7 +113,7 @@ valuePtr Value::createVariable(uint16_t code)
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::createIdentifier(uint16_t code)
+valuePtr Value::createIdentifier(uint32_t code)
 {
     return valuePtr(new Value(IDENTIFIER_VALUE, code));
 }
@@ -185,7 +185,7 @@ bitsetPtr Value::getBitset() const
 /* **************************************************
  *
  ************************************************** */
-uint16_t Value::getCode() const
+uint32_t Value::getCode() const
 {
     return code;
 }
@@ -1050,7 +1050,7 @@ void Value::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Value::renameVariables(uint16_t key)
+bool Value::renameVariables(uint32_t key)
 {
     bool effect = false;
     switch (type)
@@ -1132,7 +1132,7 @@ void Value::enable(const statementPtr &root, class Item *item, Generator *synthe
 /* **************************************************
  *
  ************************************************** */
-bool Value::findVariable(uint16_t key) const
+bool Value::findVariable(uint32_t key) const
 {
     switch (type)
     {
@@ -1165,7 +1165,7 @@ bool Value::findVariable(uint16_t key) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, uint16_t code,
+void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, uint32_t code,
                   const statementPtr &statement,
                   bool &effect, bool verbose)
 {

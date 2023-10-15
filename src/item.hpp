@@ -37,7 +37,7 @@ class Item : public Facade,
 public:
     typedef std::unordered_set<uint32_t> set_of_uint32_t;
     typedef set_of_uint32_t::const_iterator set_of_unsigned_int_const_iterator;
-    static uint16_t TERM_NA;
+    static uint32_t TERM_NA;
     static uint8_t INDEX_NA;
 
 private:
@@ -78,7 +78,7 @@ public:
 
     static class Item *create(const rulePtr &, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr);
 
-    uint16_t getCurrentTerm(void) const;
+    uint32_t getCurrentTerm(void) const;
 
     // getters
 
@@ -90,7 +90,7 @@ public:
 
     std::vector<uint8_t> &getIndexTerms(void);
 
-    uint16_t getRuleLhs(void) const;
+    uint32_t getRuleLhs(void) const;
 
     std::vector<termsPtr> &getRuleRhs(void) const;
 
@@ -156,7 +156,7 @@ public:
 
     bool getPermutable() const;
 
-    termsPtr getTerms(uint16_t) const;
+    termsPtr getTerms(uint32_t) const;
 
     void addRef(uint32_t);
 

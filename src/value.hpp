@@ -53,7 +53,7 @@ public:
 
 private:
     bitsetPtr bitset;    // pour encoder les constantes
-    uint16_t code; // pour encoder les identifiers et les variables
+    uint32_t code; // pour encoder les identifiers et les variables
     pairpPtr pairp;
     std::string string;
     double number;
@@ -72,7 +72,7 @@ public:
 private:
     Value(const enum Type, const std::string &);
 
-    Value(const enum Type, uint16_t = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
+    Value(const enum Type, uint32_t = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
           pairpPtr = pairpPtr()/*, listFeaturesPtr = listFeaturesPtr()*/);
 
     void makeSerialString(void);
@@ -82,8 +82,8 @@ public:
 
     static valuePtr createEmpty(const enum Type type);
     static valuePtr createNumber(double number);
-    static valuePtr createVariable(uint16_t code);
-    static valuePtr createIdentifier(uint16_t code);
+    static valuePtr createVariable(uint32_t code);
+    static valuePtr createIdentifier(uint32_t code);
     static valuePtr createIdentifier(const std::string &name);
     static valuePtr createForm(const std::string &str);
     static valuePtr createConstant(bitsetPtr bitset);
@@ -94,7 +94,7 @@ public:
 
     bitsetPtr getBitset(void) const;
 
-    uint16_t getCode(void) const;
+    uint32_t getCode(void) const;
 
     featuresPtr getFeatures(void) const;
 
@@ -124,7 +124,7 @@ public:
 
     void deleteVariables(void);
 
-    bool renameVariables(uint16_t);
+    bool renameVariables(uint32_t);
 
     bool isNil(void) const;
 
@@ -156,9 +156,9 @@ public:
 
     bool lessThan(const valuePtr &) const;
 
-    bool findVariable(uint16_t key) const;
+    bool findVariable(uint32_t key) const;
 
-    void apply(statementPtr statementRoot, class Item *item, class Parser &parser, class Generator *synthesizer, uint16_t variable, const statementPtr &body,
+    void apply(statementPtr statementRoot, class Item *item, class Parser &parser, class Generator *synthesizer, uint32_t variable, const statementPtr &body,
           bool &effect, bool verbose);
 
     bool containsVariable(void);

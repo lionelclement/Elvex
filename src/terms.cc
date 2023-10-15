@@ -25,7 +25,7 @@
 /* **************************************************
  *
  ************************************************** */
-Terms::Terms(std::vector<uint16_t> &terms, bool optional)
+Terms::Terms(std::vector<uint32_t> &terms, bool optional)
 {
     this->terms = terms;
     this->optional = optional;
@@ -35,7 +35,7 @@ Terms::Terms(std::vector<uint16_t> &terms, bool optional)
 /* **************************************************
  *
  ************************************************** */
-Terms::Terms(uint16_t term, bool optional)
+Terms::Terms(uint32_t term, bool optional)
 {
     this->terms.push_back(term);
     this->optional = optional;
@@ -62,7 +62,7 @@ Terms::~Terms()
 /* **************************************************
  *
  ************************************************** */
-termsPtr Terms::create(std::vector<uint16_t> &terms, bool optional)
+termsPtr Terms::create(std::vector<uint32_t> &terms, bool optional)
 {
     return termsPtr(new Terms(terms, optional));
 }
@@ -70,7 +70,7 @@ termsPtr Terms::create(std::vector<uint16_t> &terms, bool optional)
 /* **************************************************
  *
  ************************************************** */
-termsPtr Terms::create(uint16_t term, bool optional)
+termsPtr Terms::create(uint32_t term, bool optional)
 {
     return termsPtr(new Terms(term, optional));
 }
@@ -118,7 +118,7 @@ size_t Terms::size(void) const
 /* **************************************************
  *
  ************************************************** */
-std::vector<uint16_t>::const_iterator Terms::begin(void) const
+std::vector<uint32_t>::const_iterator Terms::begin(void) const
 {
     return terms.begin();
 }
@@ -126,7 +126,7 @@ std::vector<uint16_t>::const_iterator Terms::begin(void) const
 /* **************************************************
  *
  ************************************************** */
-std::vector<uint16_t>::const_iterator Terms::end(void) const
+std::vector<uint32_t>::const_iterator Terms::end(void) const
 {
     return terms.end();
 }
@@ -134,7 +134,7 @@ std::vector<uint16_t>::const_iterator Terms::end(void) const
 /* **************************************************
  *
  ************************************************** */
-void Terms::erase(std::vector<uint16_t>::iterator begin, std::vector<uint16_t>::iterator end)
+void Terms::erase(std::vector<uint32_t>::iterator begin, std::vector<uint32_t>::iterator end)
 {
     terms.erase(begin, end);
 }
@@ -142,7 +142,7 @@ void Terms::erase(std::vector<uint16_t>::iterator begin, std::vector<uint16_t>::
 /* **************************************************
  *
  ************************************************** */
-void Terms::push_back(uint16_t term)
+void Terms::push_back(uint32_t term)
 {
     terms.push_back(term);
 }
@@ -202,7 +202,7 @@ void Terms::print(std::ostream &outStream)
  ************************************************** */
 termsPtr Terms::clone(void) const
 {
-    std::vector<uint16_t> new_terms;
+    std::vector<uint32_t> new_terms;
     for (auto t = begin(); t != end(); ++t)
         new_terms.push_back((*t));
     return Terms::create(new_terms, optional);
@@ -211,7 +211,7 @@ termsPtr Terms::clone(void) const
 /* **************************************************
  *
  ************************************************** */
-uint16_t Terms::operator[](size_t i)
+uint32_t Terms::operator[](size_t i)
 {
     return terms[i];
 }

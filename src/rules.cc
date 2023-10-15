@@ -60,7 +60,7 @@ Rules::~Rules(void)
 /* **************************************************
  *
  ************************************************** */
-Rules::set_of_uint16_t &Rules::getTerminals(void)
+Rules::set_of_uint32_t &Rules::getTerminals(void)
 {
     return terminals;
 }
@@ -68,7 +68,7 @@ Rules::set_of_uint16_t &Rules::getTerminals(void)
 /* **************************************************
  *
  ************************************************** */
-Rules::set_of_uint16_t &Rules::getNonTerminals(void)
+Rules::set_of_uint32_t &Rules::getNonTerminals(void)
 {
     return nonTerminals;
 }
@@ -84,7 +84,7 @@ const Rules::list_of_rule &Rules::getRules(void) const
 /* **************************************************
  *
  ************************************************** */
-uint16_t Rules::getStartTerm(void) const
+uint32_t Rules::getStartTerm(void) const
 {
     return startTerm;
 }
@@ -108,7 +108,7 @@ const uint32_t *Rules::getRefIdMax(void) const
 /* **************************************************
  *
  ************************************************** */
-void Rules::setStartTerm(uint16_t _startTerm)
+void Rules::setStartTerm(uint32_t _startTerm)
 {
     this->startTerm = _startTerm;
 }
@@ -144,7 +144,7 @@ void Rules::print(std::ostream &outStream) const
 {
     outStream << "<table border=\"1\"><tr><td>";
     outStream << "Terminals</td><td>";
-    set_of_uint16_t::const_iterator iter;
+    set_of_uint32_t::const_iterator iter;
     bool first = true;
     for (iter = terminals.begin(); iter != terminals.end(); ++iter)
     {
@@ -186,7 +186,7 @@ void Rules::print(std::ostream &outStream) const
 /* **************************************************
  *
  ************************************************** */
-void Rules::addNonTerminal(uint16_t s)
+void Rules::addNonTerminal(uint32_t s)
 {
     nonTerminals.insert(s);
 }
@@ -194,7 +194,7 @@ void Rules::addNonTerminal(uint16_t s)
 /* **************************************************
  *
  ************************************************** */
-void Rules::addTerminal(uint16_t s)
+void Rules::addTerminal(uint32_t s)
 {
     terminals.insert(s);
 }
@@ -202,18 +202,18 @@ void Rules::addTerminal(uint16_t s)
 /* **************************************************
  *
  ************************************************** */
-bool Rules::isTerminal(uint16_t t) const
+bool Rules::isTerminal(uint32_t t) const
 {
-    set_of_uint16_t::const_iterator iter = terminals.find(t);
+    set_of_uint32_t::const_iterator iter = terminals.find(t);
     return (iter != terminals.end());
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Rules::isNonTerminal(uint16_t t) const
+bool Rules::isNonTerminal(uint32_t t) const
 {
-    set_of_uint16_t::const_iterator iter = nonTerminals.find(t);
+    set_of_uint32_t::const_iterator iter = nonTerminals.find(t);
     return (iter != nonTerminals.end());
 }
 
@@ -234,12 +234,12 @@ void Rules::analyseTerms(class Parser &parser)
         unsigned int i;
         for (i = 0; i < (*iterRules)->getRhs().size(); ++i)
         {
-            for (std::vector<uint16_t>::const_iterator term = (*iterRules)->getTerms(i)->begin();
+            for (std::vector<uint32_t>::const_iterator term = (*iterRules)->getTerms(i)->begin();
                  term != (*iterRules)->getTerms(i)->end(); ++term)
             {
                 if (nonTerminals.find(*term) == nonTerminals.end())
                 {
-                    uint16_t code = (*term);
+                    uint32_t code = (*term);
                     terminals.insert(code);
 
                     Parser::entries_map *headToEntries;
@@ -264,7 +264,7 @@ void Rules::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr g = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"GRAMMAR", NULL);
     xmlNodePtr t = xmlNewChild(g, NULL, (const xmlChar *)"TERMINALS", NULL);
-    set_of_uint16_t::const_iterator iter;
+    set_of_uint32_t::const_iterator iter;
     for (iter = terminals.begin(); iter != terminals.end(); ++iter)
     {
         xmlNewChild(t, NULL, (const xmlChar *)"TERM", (const xmlChar *)(Vartable::codeToName(*iter).c_str()));
@@ -286,7 +286,7 @@ void Rules::toXML(xmlNodePtr nodeRoot)
  *
  % ************************************************** */
 std::list<rulePtr> *
-Rules::findRules(uint16_t lhs)
+Rules::findRules(uint32_t lhs)
 {
     std::list<rulePtr> *result = new std::list<rulePtr>;
     list_of_rule::const_iterator iterRules;

@@ -45,7 +45,7 @@ public:
 
 private:
     list_of_feature features;
-    uint16_t head;
+    uint32_t head;
     std::string form;
     VariableFlag variableFlag;
 
@@ -103,7 +103,7 @@ public:
 
     void subFlags(const std::bitset<MAX_FLAGS> &);
 
-    uint16_t assignHead();
+    uint32_t assignHead();
 
     std::string *assignForm();
 

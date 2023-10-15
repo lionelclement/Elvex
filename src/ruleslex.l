@@ -533,7 +533,7 @@ downDoubleArrow "⇓"
   
   {integer} {
     DBUGPRTARG("TOKEN_INTEGER ", yytext);
-    sscanf(yytext, "%" SCNu16, &ruleslval.integer_slot);
+    sscanf(yytext, "%" SCNu32, &ruleslval.integer_slot);
     return TOKEN_INTEGER;
   }
   

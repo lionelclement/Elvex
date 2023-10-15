@@ -30,10 +30,10 @@
 #include "compacted-lexicon-fsa.hpp"
 #include "compacted-lexicon-buffer.hpp"
 #include "messages.hpp"
-#include "vartable.hpp"
-#include "entries.hpp"
-#include "entry.hpp"
-#include "lexicon.hpp"
+// #include "vartable.hpp"
+// #include "entries.hpp"
+// #include "entry.hpp"
+// #include "lexicon.hpp"
 #include "parser.hpp"
 #include "statement.hpp"
 #include "parser_exception.hpp"
@@ -310,8 +310,8 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
     featuresPtr features1;
     if (!fs1.empty())
     {
-        //CERR_LINE;
-        //std::cerr << fs1 << std::endl;
+        // CERR_LINE;
+        // std::cerr << fs1 << std::endl;
         stringStream.str("");
         stringStream << '[' << fs1 << ']';
         std::string fsString = stringStream.str();
@@ -327,16 +327,17 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
         }
         features1 = parser.getLocalFeatures();
     }
-    else{
-        //CERR_LINE;
+    else
+    {
+        // CERR_LINE;
         features1 = featuresPtr();
     }
 
     featuresPtr features2;
     if (!fs2.empty())
     {
-        //CERR_LINE;
-        //std::cerr << fs2 << std::endl;
+        // CERR_LINE;
+        // std::cerr << fs2 << std::endl;
         stringStream.str("");
         stringStream << '[' << fs2 << ']';
         std::string fsString = stringStream.str();
@@ -352,8 +353,9 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
         }
         features2 = parser.getLocalFeatures();
     }
-    else{
-        //CERR_LINE;
+    else
+    {
+        // CERR_LINE;
         features2 = featuresPtr();
     }
 
@@ -374,8 +376,8 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
     stringStream.str("");
     if (unif && !unif->isBottom())
     {
-        //CERR_LINE;
-        //unif->flatPrint(std::cerr, false);
+        // CERR_LINE;
+        // unif->flatPrint(std::cerr, false);
 
         unif->flatPrint(stringStream, false);
     }
@@ -390,7 +392,9 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
  ************************************************** */
 void CompactedLexicon::addToData(const std::string &input, const std::string &form, const std::string &features)
 {
-    //std::cerr << "CompactedLexicon::addToData:" << "[input:" << input << ",form:" << form << ",features:" << features << std::endl;
+    //CERR_LINE;
+    //std::cerr << "CompactedLexicon::addToData:"
+    //          << "[input:" << input << ",form:" << form << ",features:" << features << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
     stringStream << form << '#' << '[' << features << ']';
@@ -409,16 +413,15 @@ void CompactedLexicon::addForms(const std::string &input, std::string inputSearc
                                 const std::string &features,
                                 Lexicon &morpho, bool verbose)
 {
-    //CERR_LINE
-    //std::cerr << "CompactedLexicon::addForms[input:" << input << ",inputSearch:" << inputSearch << ",features:" << features << ']' << std::endl;
-
+    // CERR_LINE
+    // std::cerr << "CompactedLexicon::addForms[input:" << input << ",inputSearch:" << inputSearch << ",features:" << features << ']' << std::endl;
     std::vector<std::string> o = morpho.find(std::move(inputSearch));
     for (std::vector<std::string>::const_iterator it = o.cbegin(); it != o.cend(); ++it)
     {
 
         std::string form = *it;
-        //CERR_LINE
-        //std::cerr << "form found: [" << form << "]" << std::endl;
+        // CERR_LINE
+        // std::cerr << "form found: [" << form << "]" << std::endl;
         auto rhsPos = form.find('#');
         if (rhsPos != std::string::npos)
         {
@@ -435,8 +438,8 @@ void CompactedLexicon::addForms(const std::string &input, std::string inputSearc
 void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &features,
                                   const std::string &lemma, const std::string &pos, bool verbose)
 {
-    //CERR_LINE;
-    //std::cerr << "addPattern with " << "[input:" << input << ";features:\"" << features << "\";lemma:\"" << lemma << "\";pos:\"" << pos << "\"]" << std::endl;
+    // CERR_LINE;
+    // std::cerr << "addPattern with " << "[input:" << input << ";features:\"" << features << "\";lemma:\"" << lemma << "\";pos:\"" << pos << "\"]" << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
     stringStream << pos << '#' << lemma;
@@ -457,8 +460,8 @@ void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::
                 std::string features2 = patternLemma.substr(rhsPos + 1);
                 if (features != features2)
                 {
-                    //CERR_LINE;
-                    //std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << features << '-' << features2 << ')' << std::endl;
+                    // CERR_LINE;
+                    // std::cerr << "addPattern with " << inputSearch << '(' << input << ',' << patternLemma << ',' << pos << ',' << features << '-' << features2 << ')' << std::endl;
                     addPattern(pattern, morpho, input, unif(features, features2, verbose), patternLemma, pos, verbose);
                 }
             }
@@ -476,8 +479,8 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho, bool verb
 
     for (auto patternIt = pattern.cbegin(); patternIt != pattern.cend(); ++patternIt)
     {
-        //CERR_LINE;
-        //std::cerr << patternIt->first << std::endl;
+        // CERR_LINE;
+        // std::cerr << patternIt->first << std::endl;
 
         // Extraire la partie "pos" de la clé
         std::string pos = patternIt->first;
@@ -487,8 +490,8 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho, bool verb
             pos.resize(rhsPos); // Tronquer la chaîne à la position de '#'
         }
 
-        //CERR_LINE;
-        //std::cerr << '[' << pos << ']' << std::endl;
+        // CERR_LINE;
+        // std::cerr << '[' << pos << ']' << std::endl;
         for (const auto &it2 : patternIt->second)
         {
             // Extraire la partie "lemma" de la valeur
@@ -499,19 +502,19 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho, bool verb
                 lemma.resize(lemmaPos); // Tronquer la chaîne à la position de '#'
             }
 
-            //CERR_LINE;
-            //std::cerr << '[' << lemma << ']' << std::endl;
-            // Extraire la partie "features" de la valeur
+            // CERR_LINE;
+            // std::cerr << '[' << lemma << ']' << std::endl;
+            //  Extraire la partie "features" de la valeur
             std::string features;
             if (lemmaPos != std::string::npos)
             {
                 features = it2.substr(lemmaPos + 1); // Prendre tout après '#'
             }
 
-            //CERR_LINE;
-            //std::cerr << '[' << features << ']' << std::endl;
-            //void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &features,
-            //                      const std::string &lemma, const std::string &pos)
+            // CERR_LINE;
+            // std::cerr << '[' << features << ']' << std::endl;
+            // void CompactedLexicon::addPattern(Lexicon &pattern, Lexicon &morpho, const std::string &input, const std::string &features,
+            //                       const std::string &lemma, const std::string &pos)
 
             addPattern(pattern, morpho, patternIt->first, features, lemma, pos, verbose);
         }

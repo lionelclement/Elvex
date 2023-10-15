@@ -272,7 +272,7 @@ void Features::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-uint16_t Features::assignHead()
+uint32_t Features::assignHead()
 {
     if (this->head)
         return this->head;

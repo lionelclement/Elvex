@@ -52,13 +52,13 @@ private:
 
     bitsetPtr attribute;
 
-    uint16_t code;
+    uint32_t code;
 
     valuePtr value;
 
     Feature(Type, bitsetPtr, valuePtr);
 
-    Feature(Type, uint16_t, valuePtr);
+    Feature(Type, uint32_t, valuePtr);
 
     void makeSerialString(void);
 
@@ -77,11 +77,11 @@ public:
 
     static featurePtr createLemma(valuePtr value);
 
-    static featurePtr createVariable(uint16_t code, valuePtr value = valuePtr());
+    static featurePtr createVariable(uint32_t code, valuePtr value = valuePtr());
 
     bitsetPtr getAttribute(void) const;
 
-    uint16_t getCode(void) const;
+    uint32_t getCode(void) const;
 
     void setAttribute(const bitsetPtr);
 
@@ -115,11 +115,11 @@ public:
     void toXML(xmlNodePtr nodeRoot);
 #endif
 
-    bool renameVariables(uint16_t);
+    bool renameVariables(uint32_t);
 
     void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 
-    bool findVariable(uint16_t key) const;
+    bool findVariable(uint32_t key) const;
 
     bool containsVariable(void);
 

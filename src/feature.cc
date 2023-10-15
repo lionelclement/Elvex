@@ -40,7 +40,7 @@ Feature::Feature(enum Feature::Type type, bitsetPtr _attribute, valuePtr _value)
 /* ************************************************************
  *
  ************************************************************ */
-Feature::Feature(enum Feature::Type type, uint16_t code, valuePtr _value)
+Feature::Feature(enum Feature::Type type, uint32_t code, valuePtr _value)
 {
     NEW;
     this->type = type;
@@ -104,7 +104,7 @@ featurePtr Feature::createLemma(valuePtr _value)
 /* ************************************************************
  *
  ************************************************************ */
-featurePtr Feature::createVariable(uint16_t code, valuePtr _value)
+featurePtr Feature::createVariable(uint32_t code, valuePtr _value)
 {
     return featurePtr(new Feature(_VARIABLE_, code, std::move(_value)));
 }
@@ -184,7 +184,7 @@ bitsetPtr Feature::getAttribute() const
 /* **************************************************
  *
  ************************************************** */
-uint16_t Feature::getCode() const
+uint32_t Feature::getCode() const
 {
     return this->code;
 }
@@ -389,7 +389,7 @@ featurePtr Feature::clone() const
 /* **************************************************
  *
  ************************************************** */
-bool Feature::renameVariables(uint16_t code)
+bool Feature::renameVariables(uint32_t code)
 {
     bool effect = false;
     if (type == Feature::_VARIABLE_)
@@ -444,7 +444,7 @@ void Feature::enable(const statementPtr &root, class Item *item, Generator *synt
 /* **************************************************
  *
  ************************************************** */
-bool Feature::findVariable(uint16_t key) const
+bool Feature::findVariable(uint32_t key) const
 {
     switch (type)
     {

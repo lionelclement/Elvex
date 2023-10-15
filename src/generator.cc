@@ -1088,7 +1088,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                     }
 
                     std::string *form = nullptr;
-                    uint16_t head = inheritedSonFeatures->assignHead();
+                    uint32_t head = inheritedSonFeatures->assignHead();
                     Stage stage;
                     if (head != Vartable::DOES_NOT_CONTAIN_A_HEAD)
                     {
@@ -1407,7 +1407,7 @@ bool Generator::getVerbose()
 /* **************************************************
  *
  ************************************************** */
-entriesPtr Generator::findByHead(Parser::entries_map *listHead, uint16_t head)
+entriesPtr Generator::findByHead(Parser::entries_map *listHead, uint32_t head)
 {
     entriesPtr entries = entriesPtr();
     auto found = listHead->find(head);
@@ -1436,7 +1436,7 @@ entriesPtr Generator::findMain(Parser::entries_map *map)
  *
  ************************************************** */
 entriesPtr Generator::findByHeadThenCompactedLexicon(Parser &parser, Parser::entries_map *map,
-                                                     uint16_t pos, uint16_t head)
+                                                     uint32_t pos, uint32_t head)
 {
 
     entriesPtr entries = findByHead(map, head);
@@ -1484,9 +1484,9 @@ entriesPtr Generator::findByForm(Parser::entries_map *map)
  * |str(pos)#_
  *
  * returns entries= (entry1, entry2, ...)
- * where entryi= (uint16_t pos, uint16_t head, std::string form, featuresPtr features)
+ * where entryi= (uint32_t pos, uint32_t head, std::string form, featuresPtr features)
  ************************************************** */
-entriesPtr Generator::findCompactedLexicon(Parser &parser, const uint16_t pos, const uint16_t head)
+entriesPtr Generator::findCompactedLexicon(Parser &parser, const uint32_t pos, const uint32_t head)
 {
     uint32_t info = (uint32_t)~0UL;
     std::string str;

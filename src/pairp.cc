@@ -480,7 +480,7 @@ void Pairp::deleteVariables()
 /* **************************************************
  *
  ************************************************** */
-bool Pairp::renameVariables(uint16_t code)
+bool Pairp::renameVariables(uint32_t code)
 {
     bool effect = false;
     switch (type)
@@ -655,7 +655,7 @@ void Pairp::enable(const statementPtr &root, class Item *item, Generator *genera
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bool Pairp::findVariable(uint16_t key) const
+bool Pairp::findVariable(uint32_t key) const
 {
     switch (type)
     {
@@ -678,7 +678,7 @@ bool Pairp::findVariable(uint16_t key) const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint16_t code, statementPtr statement,
+void Pairp::apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint32_t code, statementPtr statement,
                   bool &effect, bool verbose)
 {
     switch (type)

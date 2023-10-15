@@ -71,13 +71,13 @@
   %}
 
 %union{
-  uint16_t integer_slot;
+  uint32_t integer_slot;
   double double_slot;
   termsPtr* terms_slot; //(A|B)
   std::vector< termsPtr >* vector_terms_slot; // X Y
   std::string* string_slot;
-  std::pair<uint16_t, featuresPtr >* entry_slot;
-  std::vector<std::pair<uint16_t, featuresPtr> >* entries_slot;
+  std::pair<uint32_t, featuresPtr >* entry_slot;
+  std::vector<std::pair<uint32_t, featuresPtr> >* entries_slot;
   bitsetPtr* bits_slot;
   valuePtr* value_slot;
   featurePtr* feature_slot;
@@ -218,7 +218,7 @@ dictionary_line:
 	TOKEN_FORM TOKEN_IDENTIFIER TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  uint16_t code = Vartable::nameToCode(*$2);
+	  uint32_t code = Vartable::nameToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
 	  auto foundCode = parser.findCacheLexicon(code);
@@ -243,7 +243,7 @@ dictionary_line:
 	|TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
 	{
 	  DBUGPRT("dictionary_line");
-	  uint16_t code = Vartable::nameToCode(*$2);
+	  uint32_t code = Vartable::nameToCode(*$2);
 	  free($2);
 	  // constantNoun => (0 => args)
 	  auto foundCode = parser.findCacheLexicon(code);
@@ -271,9 +271,9 @@ dictionary_line:
 	{
 	  DBUGPRT("dictionary_line");
 	  for (auto entries_map = (*$2).cbegin() ; entries_map != (*$2).cend() ; ++entries_map) {
-		uint16_t pos = entries_map->first;
+		uint32_t pos = entries_map->first;
 		featuresPtr features = entries_map->second;
-		uint16_t head = features->assignHead();
+		uint32_t head = features->assignHead();
 		
 		//std::cerr << Vartable::codeToName(pos) << std::endl;
 		//features->flatPrint(std::cerr);
@@ -327,7 +327,7 @@ lexical_entries:
 
 	|lexical_entry {
 	  DBUGPRT("lexical_entries");
-	  $$ = new std::vector<std::pair<uint16_t, featuresPtr> >;
+	  $$ = new std::vector<std::pair<uint32_t, featuresPtr> >;
 	  $$->push_back(*$1);
 	  free($1);
 	 };
@@ -337,7 +337,7 @@ lexical_entry:
 	TOKEN_IDENTIFIER features
 	{
 	  DBUGPRT("lexical_entry");
-	  $$ = new std::pair<uint16_t, featuresPtr>(std::make_pair(Vartable::nameToCode(*$1), *$2));
+	  $$ = new std::pair<uint32_t, featuresPtr>(std::make_pair(Vartable::nameToCode(*$1), *$2));
 	  free($1);
 	  free($2);
 	}
@@ -346,7 +346,7 @@ lexical_entry:
 	|TOKEN_IDENTIFIER
 	{
 	  DBUGPRT("lexical_entry");
-	  $$ = new std::pair<uint16_t, featuresPtr>(std::make_pair(Vartable::nameToCode(*$1), Features::create()));
+	  $$ = new std::pair<uint32_t, featuresPtr>(std::make_pair(Vartable::nameToCode(*$1), Features::create()));
 	  free($1);
 	};
 

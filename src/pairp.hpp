@@ -109,9 +109,9 @@ public:
 
     void deleteAnonymousVariables(void);
 
-    bool renameVariables(uint16_t);
+    bool renameVariables(uint32_t);
 
-    void apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint16_t code, statementPtr statement,
+    void apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint32_t code, statementPtr statement,
                   bool &effect, bool verbose);
 
 #ifdef OUTPUT_XML
@@ -130,7 +130,7 @@ public:
 
     bool containsVariable(void);
 
-    bool findVariable(uint16_t key) const;
+    bool findVariable(uint32_t key) const;
 
     void setVariableFlag(enum VariableFlag::flagValues);
 };

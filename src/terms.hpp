@@ -33,21 +33,21 @@ class Terms : public std::enable_shared_from_this<class Terms>
 {
 
 private:
-    std::vector<uint16_t> terms;
+    std::vector<uint32_t> terms;
     bool optional;
 
-    Terms(std::vector<uint16_t> &, bool optional);
+    Terms(std::vector<uint32_t> &, bool optional);
 
-    Terms(uint16_t, bool optional);
+    Terms(uint32_t, bool optional);
 
     Terms(void);
 
 public:
     ~Terms();
 
-    static termsPtr create(std::vector<uint16_t> &, bool optional = false);
+    static termsPtr create(std::vector<uint32_t> &, bool optional = false);
 
-    static termsPtr create(uint16_t, bool optional = false);
+    static termsPtr create(uint32_t, bool optional = false);
 
     static termsPtr create(void);
 
@@ -59,13 +59,13 @@ public:
 
     size_t size(void) const;
 
-    std::vector<uint16_t>::const_iterator begin(void) const;
+    std::vector<uint32_t>::const_iterator begin(void) const;
 
-    std::vector<uint16_t>::const_iterator end(void) const;
+    std::vector<uint32_t>::const_iterator end(void) const;
 
-    void erase(std::vector<uint16_t>::iterator begin, std::vector<uint16_t>::iterator end);
+    void erase(std::vector<uint32_t>::iterator begin, std::vector<uint32_t>::iterator end);
 
-    void push_back(uint16_t term);
+    void push_back(uint32_t term);
 
     void print(std::ostream &outStream = std::cout);
 
@@ -81,7 +81,7 @@ public:
         bool operator()(const termsPtr t1, const termsPtr t2) const;
     };
 
-    uint16_t operator[](size_t);
+    uint32_t operator[](size_t);
 };
 
 #endif // ELVEX_TERMS_H

@@ -30,14 +30,14 @@
 #include "vartable.hpp"
 #include "messages.hpp"
 
-uint16_t Vartable::codeMapIndex;
+uint32_t Vartable::codeMapIndex;
 std::bitset<MAXBITS> Vartable::variableMapIndex;
 Vartable::string_to_bitset Vartable::nameToBitsetMap;
-Vartable::uint16_t_to_string Vartable::codeToNameMap;
-Vartable::string_to_uint16_t Vartable::nameToCodeMap;
-Vartable::uint16_t_to_string Vartable::bitToNameMap;
-uint16_t Vartable::IS_A_FORM;
-uint16_t Vartable::DOES_NOT_CONTAIN_A_HEAD;
+Vartable::uint32_t_to_string Vartable::codeToNameMap;
+Vartable::string_to_uint32_t Vartable::nameToCodeMap;
+Vartable::uint32_t_to_string Vartable::bitToNameMap;
+uint32_t Vartable::IS_A_FORM;
+uint32_t Vartable::DOES_NOT_CONTAIN_A_HEAD;
 
 Vartable vartable;
 
@@ -87,7 +87,7 @@ bitsetPtr Vartable::createSymbol(const std::string &name)
 /* ************************************************************
  *
  ************************************************************ */
-bitsetPtr Vartable::createSymbol(const std::string &name, uint16_t key)
+bitsetPtr Vartable::createSymbol(const std::string &name, uint32_t key)
 {
     std::stringstream ss;
     ss << name << '_' << std::hex << key;
@@ -97,10 +97,10 @@ bitsetPtr Vartable::createSymbol(const std::string &name, uint16_t key)
 /* ************************************************************
  *
  ************************************************************ */
-uint16_t Vartable::nameToCode(const std::string &name)
+uint32_t Vartable::nameToCode(const std::string &name)
 {
-    uint16_t code;
-    string_to_uint16_t_iterator it(nameToCodeMap.find(name));
+    uint32_t code;
+    string_to_uint32_t_iterator it(nameToCodeMap.find(name));
     if (it == nameToCodeMap.end())
     {
         code = codeMapIndex;
@@ -115,7 +115,7 @@ uint16_t Vartable::nameToCode(const std::string &name)
 /* ************************************************************
  *
  ************************************************************ */
-uint16_t Vartable::nameToCode(const std::string &name, uint16_t key)
+uint32_t Vartable::nameToCode(const std::string &name, uint32_t key)
 {
     std::stringstream ss;
     ss << name << '_' << std::hex << key;
@@ -125,7 +125,7 @@ uint16_t Vartable::nameToCode(const std::string &name, uint16_t key)
 /* ************************************************************
  *
  ************************************************************ */
-std::string &Vartable::codeToName(uint16_t i)
+std::string &Vartable::codeToName(uint32_t i)
 {
     return codeToNameMap[i];
 }
@@ -133,7 +133,7 @@ std::string &Vartable::codeToName(uint16_t i)
 /* ************************************************************
  *
  ************************************************************ */
-void Vartable::insertCodeMap(const uint16_t key, const std::string &value)
+void Vartable::insertCodeMap(const uint32_t key, const std::string &value)
 {
     codeToNameMap[key] = std::move(value);
     if (codeMapIndex <= key)
@@ -143,7 +143,7 @@ void Vartable::insertCodeMap(const uint16_t key, const std::string &value)
 /* ************************************************************
  *
  ************************************************************ */
-Vartable::uint16_t_to_string_iterator Vartable::bitMapFind(uint16_t key)
+Vartable::uint32_t_to_string_iterator Vartable::bitMapFind(uint32_t key)
 {
     return bitToNameMap.find(key);
 }
@@ -151,7 +151,7 @@ Vartable::uint16_t_to_string_iterator Vartable::bitMapFind(uint16_t key)
 /* ************************************************************
  *
  ************************************************************ */
-Vartable::uint16_t_to_string_const_iterator Vartable::bitMapcEnd()
+Vartable::uint32_t_to_string_const_iterator Vartable::bitMapcEnd()
 {
     return bitToNameMap.cend();
 }
@@ -159,7 +159,7 @@ Vartable::uint16_t_to_string_const_iterator Vartable::bitMapcEnd()
 /* ************************************************************
  *
  ************************************************************ */
-std::string &Vartable::bitToName(uint16_t key)
+std::string &Vartable::bitToName(uint32_t key)
 {
     return bitToNameMap[key];
 }
@@ -167,7 +167,7 @@ std::string &Vartable::bitToName(uint16_t key)
 /* **************************************************
  *
  ************************************************** */
-void Vartable::renameVariables(std::string &data, uint16_t key)
+void Vartable::renameVariables(std::string &data, uint32_t key)
 {
 
     size_t found = data.find('$');
