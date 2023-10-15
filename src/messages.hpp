@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -24,21 +24,25 @@
 #include "fatal_exception.hpp"
 
 #ifdef TRACE_MALLOC
+
 #define NEW                                               \
     {                                                     \
         std::cerr << "$$$ New " << __FILE__ << std::endl; \
     }
+
 #define DELETE                                               \
     {                                                        \
         std::cerr << "$$$ Delete " << __FILE__ << std::endl; \
     }
 #else
+
 #define NEW \
     {       \
     }
 #define DELETE \
     {          \
     }
+
 #endif
 
 #define CERR_LINE                                                   \
@@ -46,20 +50,23 @@
         std::cerr << __FILE__ << "(" << std::dec << __LINE__ << ")" \
                   << "<br>" << std::endl;                           \
     }
-#define COUT_LINE                                                                 \
-    {                                                                             \
-        std::cout << "<BR>" << __FILE__ << "(" << std::dec << __LINE__ << ")" << "<BR>" << std::endl; \
-        std::flush(std::cout); \
+
+#define COUT_LINE                                                             \
+    {                                                                         \
+        std::cout << "<BR>" << __FILE__ << "(" << std::dec << __LINE__ << ")" \
+                  << "<BR>" << std::endl;                                     \
+        std::flush(std::cout);                                                \
     }
 
 #define FATAL_ERROR_UNEXPECTED                   \
     {                                            \
-        COUT_LINE;                               \
+        CERR_LINE;                               \
         throw fatal_exception("*** unexpected"); \
     }
+
 #define WARNING(msg)                                      \
     {                                                     \
-        std::cout << "*** warning: " << msg << std::endl; \
+        std::cerr << "*** warning: " << msg << std::endl; \
     }
 
 // #define _BUG_ {CERR_LINE; std::cerr << "*** Will cause a memory access error (segmentation fault)" << std::endl; int *x = NULL; *x = 36;}

@@ -1272,8 +1272,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         {
                                             // synomym and homonym
                                             // i.e. two different forms
-                                            // FATAL_ERROR_UNEXPECTED
-                                            WARNING("The same word is defined twice");
+                                            //WARNING("The same word is defined twice");
                                         }
                                         else
                                         {
