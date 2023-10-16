@@ -34,10 +34,10 @@ private:
     std::string featuresSerialString;
     
 
+public:
     ForestIdentifier(size_t code, uint8_t from, uint8_t to, 
             const std::string& featuresSerialString);
 
-public:
     ~ForestIdentifier() override;
 
     static class ForestIdentifier* create(size_t code, uint8_t from, uint8_t to, 

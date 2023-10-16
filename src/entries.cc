@@ -66,7 +66,7 @@ Entries::~Entries()
  ************************************************** */
 entriesPtr Entries::create()
 {
-    return entriesPtr(new Entries());
+    return std::make_shared<Entries>();
 }
 
 /* **************************************************
@@ -74,7 +74,7 @@ entriesPtr Entries::create()
  ************************************************** */
 entriesPtr Entries::create(const entryPtr &entry)
 {
-    return entriesPtr(new Entries(entry));
+    return std::make_shared<Entries>(entry);
 }
 
 /* **************************************************
@@ -82,7 +82,7 @@ entriesPtr Entries::create(const entryPtr &entry)
  ************************************************** */
 entriesPtr Entries::create(const std::vector<entryPtr> &entries)
 {
-    return entriesPtr(new Entries(entries));
+    return std::make_shared<Entries>(entries);
 }
 
 /* **************************************************

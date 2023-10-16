@@ -86,7 +86,7 @@ Rule::Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirect
 rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
-    return rulePtr(new Rule(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements));
+    return std::make_shared<Rule>(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements);
 }
 
 /* ************************************************************
@@ -94,7 +94,7 @@ rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool wi
  ************************************************************ */
 rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements)
 {
-    return rulePtr(new Rule(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements));
+    return std::make_shared<Rule>(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements);
 }
 
 /* ************************************************************
@@ -103,7 +103,7 @@ rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool wi
 rulePtr Rule::create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
-    return rulePtr(new Rule(lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements));
+    return std::make_shared<Rule>(lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements);
 }
 
 /* ************************************************************
@@ -111,7 +111,7 @@ rulePtr Rule::create(uint32_t lineno, std::string filename, bool withSpaces, boo
  ************************************************************ */
 rulePtr Rule::create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements)
 {
-    return rulePtr(new Rule(lineno, filename, withSpaces, bidirectional, permutable, lhs, statements));
+    return std::make_shared<Rule>(lineno, filename, withSpaces, bidirectional, permutable, lhs, statements);
 }
 
 /* ************************************************************

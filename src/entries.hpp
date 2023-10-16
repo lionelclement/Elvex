@@ -33,13 +33,13 @@ class Entries : public std::enable_shared_from_this<class Entries>
 private:
     std::vector<entryPtr> entries;
 
+public:
     Entries();
 
     Entries(const entryPtr &);
 
     Entries(const std::vector<entryPtr> &);
 
-public:
     ~Entries();
 
     static entriesPtr create();

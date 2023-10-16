@@ -47,16 +47,6 @@ private:
     bool bidirectional;
     bool permutable;
 
-    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements = statementsPtr());
-
-    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements = statementsPtr());
-
-    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
-         statementsPtr statements = statementsPtr());
-
-    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
-         statementsPtr statements = statementsPtr());
-
 public:
     static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs,
                           statementsPtr statements = statementsPtr());
@@ -69,6 +59,16 @@ public:
 
     static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
+
+    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements = statementsPtr());
+
+    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements = statementsPtr());
+
+    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+         statementsPtr statements = statementsPtr());
+
+    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+         statementsPtr statements = statementsPtr());
 
     ~Rule();
 

@@ -67,7 +67,7 @@ Entry::~Entry()
  ************************************************** */
 entryPtr Entry::create(const std::string &form, featuresPtr features)
 {
-    return entryPtr(new Entry(form, features));
+    return std::make_shared<Entry>(form, features);
 }
 
 /* **************************************************
@@ -75,7 +75,7 @@ entryPtr Entry::create(const std::string &form, featuresPtr features)
  ************************************************** */
 entryPtr Entry::create(featuresPtr features)
 {
-    return entryPtr(new Entry(features));
+    return std::make_shared<Entry>(features);
 }
 
 /* **************************************************

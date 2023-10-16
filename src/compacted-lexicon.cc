@@ -43,8 +43,8 @@
  ************************************************** */
 CompactedLexicon::CompactedLexicon(std::string &directoryName, std::string &fileName)
 {
-    this->directoryName = std::move(directoryName);
-    this->fileName = std::move(fileName);
+    this->directoryName = directoryName;
+    this->fileName = fileName;
     this->dataFile = nullptr;
     this->fsaFile = nullptr;
     this->buffer = nullptr;

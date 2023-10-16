@@ -56,15 +56,15 @@ private:
 
     valuePtr value;
 
-    Feature(Type, bitsetPtr, valuePtr);
-
-    Feature(Type, uint32_t, valuePtr);
-
     void makeSerialString(void);
 
     VariableFlag variableFlag;
 
 public:
+    Feature(Type, bitsetPtr, valuePtr);
+
+    Feature(Type, uint32_t, valuePtr);
+
     ~Feature();
 
     static featurePtr _create(enum Type type, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());

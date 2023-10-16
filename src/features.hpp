@@ -45,11 +45,12 @@ public:
 
 private:
     list_of_feature features;
-    uint32_t head;
-    std::string form;
-    VariableFlag variableFlag;
 
-    Features(const featurePtr &);
+    uint32_t head;
+
+    std::string form;
+
+    VariableFlag variableFlag;
 
     static featuresPtr createBottom();
 
@@ -58,6 +59,8 @@ private:
     void makeSerialString();
 
 public:
+    Features(const featurePtr &);
+
     ~Features();
 
     static featuresPtr create(const featurePtr & = featurePtr());

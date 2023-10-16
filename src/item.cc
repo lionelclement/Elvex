@@ -43,9 +43,9 @@ uint8_t Item::INDEX_NA = UINT8_MAX;
 Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
 {
     NEW;
-    this->rule = /*std::move*/ (rule);
+    this->rule = rule;
     this->index = index;
-    this->statements = /*std::move*/ (statements);
+    this->statements = statements;
     this->environment = environmentPtr();
     this->inheritedFeatures = Features::NIL;
     this->synthesizedFeatures = Features::NIL;
@@ -57,7 +57,7 @@ Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
  *
  ************************************************** */
 Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements)
-    : Item(rule, index, /*std::move*/ (statements))
+    : Item(rule, index, statements)
 {
     std::vector<termsPtr> terms = rule->getRhs();
     unsigned j = 0;
@@ -77,7 +77,7 @@ Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr 
  *
  ************************************************** */
 Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements)
-    : Item(rule, index, /*std::move*/ (statements))
+    : Item(rule, index, statements)
 {
     this->indexTerms = indexTerms;
     std::vector<termsPtr> terms = rule->getRhs();
@@ -127,7 +127,7 @@ Item::~Item()
  ************************************************** */
 class Item *Item::create(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements)
 {
-    return new Item(rule, index, indexTerm, /*std::move*/ (statements));
+    return new Item(rule, index, indexTerm, statements);
 }
 
 /* **************************************************
@@ -136,7 +136,7 @@ class Item *Item::create(const rulePtr &rule, uint8_t index, uint8_t indexTerm, 
 class Item *
 Item::create(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements)
 {
-    return new Item(rule, index, indexTerms, /*std::move*/ (statements));
+    return new Item(rule, index, indexTerms, statements);
 }
 
 /* **************************************************
@@ -290,7 +290,7 @@ termsPtr Item::getCurrentTerms() const
  ************************************************** */
 void Item::setCurrentTerms(termsPtr terms)
 {
-    this->rule->getRhs()[this->index] = /*std::move*/ (terms);
+    this->rule->getRhs()[this->index] = (terms);
 }
 
 /* **************************************************
@@ -431,7 +431,7 @@ std::vector<class ForestIdentifier *> &Item::getForestIdentifiers()
  ************************************************** */
 void Item::addForestIdentifiers(unsigned int key, class ForestIdentifier *forestIdentifier)
 {
-    forestIdentifiers[key] = /*std::move*/ (forestIdentifier);
+    forestIdentifiers[key] = (forestIdentifier);
 }
 
 /* **************************************************
@@ -473,7 +473,7 @@ listFeaturesPtr Item::getInheritedSonFeatures()
  ************************************************** */
 void Item::setInheritedSonFeatures(listFeaturesPtr _inheritedSonFeatures)
 {
-    this->inheritedSonFeatures = /*std::move*/ (_inheritedSonFeatures);
+    this->inheritedSonFeatures = (_inheritedSonFeatures);
 }
 
 /* **************************************************
@@ -506,7 +506,7 @@ featuresPtr Item::getInheritedFeatures() const
  ************************************************** */
 void Item::setInheritedFeatures(featuresPtr _inheritedFeatures)
 {
-    this->inheritedFeatures = /*std::move*/ (_inheritedFeatures);
+    this->inheritedFeatures = (_inheritedFeatures);
 }
 
 /* **************************************************
@@ -522,7 +522,7 @@ environmentPtr Item::getEnvironment() const
  ************************************************** */
 void Item::setEnvironment(environmentPtr _environment)
 {
-    this->environment = /*std::move*/ (_environment);
+    this->environment = (_environment);
 }
 
 /* **************************************************
@@ -575,7 +575,7 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, bool v
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, /*std::move*/ (_environment), verbose);
+    return this->environment->add(from, (_environment), verbose);
 }
 
 /* **************************************************
@@ -595,7 +595,7 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, enviro
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, /*std::move*/ (_environment), /*std::move*/ (where), verbose);
+    return this->environment->add(from, _environment, where, verbose);
 }
 
 /* **************************************************

@@ -46,9 +46,9 @@ private:
     bool bidirectional;
     bool permutable;
 
+public:
     Node(bool withSpace, bool bidirectional, bool permutable);
 
-public:
     ~Node(void);
 
     static nodePtr create(bool withSpace, bool bidirectional, bool permutable);

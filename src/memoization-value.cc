@@ -28,7 +28,7 @@
 MemoizationValue::MemoizationValue(featuresPtr features, class ForestIdentifier *forestIdentifier)
 {
     NEW;
-    this->features = std::move(features);
+    this->features = features;
     this->forestIdentifier = std::move(forestIdentifier);
 }
 
@@ -45,7 +45,7 @@ MemoizationValue::~MemoizationValue()
  ************************************************************ */
 class MemoizationValue *MemoizationValue::create(featuresPtr features, class ForestIdentifier *forestIdentifier)
 {
-    return new MemoizationValue(std::move(features), std::move(forestIdentifier));
+    return new MemoizationValue(features, std::move(forestIdentifier));
 }
 
 /* ************************************************************

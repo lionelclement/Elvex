@@ -47,7 +47,7 @@ ListFeatures::~ListFeatures()
  ************************************************** */
 listFeaturesPtr ListFeatures::create()
 {
-    return listFeaturesPtr(new ListFeatures());
+    return std::make_shared<ListFeatures>();
 }
 
 /* **************************************************

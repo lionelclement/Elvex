@@ -33,8 +33,8 @@ Feature::Feature(enum Feature::Type type, bitsetPtr _attribute, valuePtr _value)
 {
     NEW;
     this->type = type;
-    this->attribute = std::move(_attribute);
-    this->value = std::move(_value);
+    this->attribute = _attribute;
+    this->value = _value;
 }
 
 /* ************************************************************
@@ -46,7 +46,7 @@ Feature::Feature(enum Feature::Type type, uint32_t code, valuePtr _value)
     this->type = type;
     this->attribute = bitsetPtr();
     this->code = code;
-    this->value = std::move(_value);
+    this->value = _value;
 }
 
 /* ************************************************************
@@ -66,7 +66,7 @@ Feature::~Feature()
  ************************************************************ */
 featurePtr Feature::_create(Feature::Type type, bitsetPtr _attribute, valuePtr _value)
 {
-    return featurePtr(new Feature(type, std::move(_attribute), std::move(_value)));
+    return std::make_shared<Feature>(type, _attribute, _value);
 }
 
 /* ************************************************************
@@ -74,7 +74,7 @@ featurePtr Feature::_create(Feature::Type type, bitsetPtr _attribute, valuePtr _
  ************************************************************ */
 featurePtr Feature::createConstant(bitsetPtr _attribute, valuePtr _value)
 {
-    return featurePtr(new Feature(_CONSTANT_, std::move(_attribute), std::move(_value)));
+    return featurePtr(new Feature(_CONSTANT_, _attribute, _value));
 }
 
 /* ************************************************************
@@ -82,7 +82,7 @@ featurePtr Feature::createConstant(bitsetPtr _attribute, valuePtr _value)
  ************************************************************ */
 featurePtr Feature::createHead(valuePtr _value)
 {
-    return featurePtr(new Feature(_HEAD_, bitsetPtr(), std::move(_value)));
+    return featurePtr(new Feature(_HEAD_, bitsetPtr(), _value));
 }
 
 /* ************************************************************
@@ -90,7 +90,7 @@ featurePtr Feature::createHead(valuePtr _value)
  ************************************************************ */
 featurePtr Feature::createForm(valuePtr _value)
 {
-    return featurePtr(new Feature(_FORM_, bitsetPtr(), std::move(_value)));
+    return featurePtr(new Feature(_FORM_, bitsetPtr(), _value));
 }
 
 /* ************************************************************
@@ -98,7 +98,7 @@ featurePtr Feature::createForm(valuePtr _value)
  ************************************************************ */
 featurePtr Feature::createLemma(valuePtr _value)
 {
-    return featurePtr(new Feature(_LEMMA_, bitsetPtr(), std::move(_value)));
+    return featurePtr(new Feature(_LEMMA_, bitsetPtr(), _value));
 }
 
 /* ************************************************************
@@ -106,7 +106,7 @@ featurePtr Feature::createLemma(valuePtr _value)
  ************************************************************ */
 featurePtr Feature::createVariable(uint32_t code, valuePtr _value)
 {
-    return featurePtr(new Feature(_VARIABLE_, code, std::move(_value)));
+    return featurePtr(new Feature(_VARIABLE_, code, _value));
 }
 
 /* **************************************************
@@ -202,7 +202,7 @@ std::string Feature::attributeToString() const
  ************************************************** */
 void Feature::setAttribute(bitsetPtr _attribute)
 {
-    this->attribute = std::move(_attribute);
+    this->attribute = _attribute;
 }
 
 /* **************************************************
@@ -210,7 +210,7 @@ void Feature::setAttribute(bitsetPtr _attribute)
  ************************************************** */
 void Feature::setValue(valuePtr _value)
 {
-    this->value = std::move(_value);
+    this->value = _value;
 }
 
 /* **************************************************

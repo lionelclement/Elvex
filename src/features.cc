@@ -66,7 +66,7 @@ Features::~Features()
  ************************************************************ */
 featuresPtr Features::create(const featurePtr &feature)
 {
-    return featuresPtr(new Features(feature));
+    return std::make_shared<Features>(feature);
 }
 
 /* ************************************************************

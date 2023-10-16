@@ -62,7 +62,7 @@ Environment::~Environment()
  ************************************************** */
 environmentPtr Environment::create()
 {
-    return environmentPtr(new Environment());
+    return std::make_shared<Environment>();
 }
 
 /* **************************************************

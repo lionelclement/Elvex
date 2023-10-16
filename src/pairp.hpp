@@ -52,8 +52,6 @@ private:
         pairpPtr cdr;
     } pairp;
 
-    Pairp(enum Type, valuePtr = valuePtr(), pairpPtr = pairpPtr(), pairpPtr = pairpPtr());
-
     void makeSerialString(void);
 
     VariableFlag variableFlag;
@@ -61,6 +59,8 @@ private:
     static pairpPtr create(void);
 
 public:
+    Pairp(enum Type, valuePtr = valuePtr(), pairpPtr = pairpPtr(), pairpPtr = pairpPtr());
+
     ~Pairp();
 
     static pairpPtr create(valuePtr);

@@ -40,15 +40,15 @@ class Bitset : public std::bitset<MAXBITS>,
 {
 
 private:
+    void makeSerialString() override;
+
+public:
     explicit Bitset(unsigned int = 0);
 
     explicit Bitset(const std::bitset<MAXBITS> &);
 
     explicit Bitset(const bitsetPtr &);
 
-    void makeSerialString() override;
-
-public:
     ~Bitset() override;
 
     static bitsetPtr create(unsigned int = 0);

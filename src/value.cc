@@ -66,10 +66,10 @@ Value::Value(Value::Type const type, uint32_t code, double number, bitsetPtr _bi
     this->type = type;
     this->code = code;
     this->number = number;
-    this->bitset = _bits ? std::move(_bits) : bitsetPtr();
-    this->features = _features ? std::move(_features) : featuresPtr();
-    this->pairp = _list ? std::move(_list) : pairpPtr();
-    ////this->listFeatures = _listFeatures ? std::move(_listFeatures) : listFeaturesPtr();
+    this->bitset = _bits ? _bits : bitsetPtr();
+    this->features = _features ? _features : featuresPtr();
+    this->pairp = _list ? _list : pairpPtr();
+    ////this->listFeatures = _listFeatures ? _listFeatures : listFeaturesPtr();
 }
 
 /* **************************************************
@@ -139,7 +139,7 @@ valuePtr Value::createForm(const std::string &str)
  ************************************************** */
 valuePtr Value::createConstant(bitsetPtr bitset)
 {
-    return valuePtr(new Value(CONSTANT_VALUE, 0, 0, std::move(bitset)));
+    return valuePtr(new Value(CONSTANT_VALUE, 0, 0, bitset));
 }
 
 /* **************************************************
@@ -147,23 +147,15 @@ valuePtr Value::createConstant(bitsetPtr bitset)
  ************************************************** */
 valuePtr Value::createFeatures(featuresPtr features)
 {
-    return valuePtr(new Value(Value::FEATURES_VALUE, 0, 0, bitsetPtr(), std::move(features)));
+    return valuePtr(new Value(Value::FEATURES_VALUE, 0, 0, bitsetPtr(), features));
 }
-
-// /* **************************************************
-//  *
-//  ************************************************** */
-// valuePtr Value::create(listFeaturesPtr listFeatures)
-// {
-//     return valuePtr(new Value(Value::LIST_FEATURES_VALUE, 0, 0, bitsetPtr(), featuresPtr(), pairpPtr(), std::move(listFeatures)));
-// }
 
 /* **************************************************
  *
  ************************************************** */
 valuePtr Value::createPairp(pairpPtr lst)
 {
-    return valuePtr(new Value(Value::PAIRP_VALUE, 0, 0, bitsetPtr(), featuresPtr(), std::move(lst)));
+    return valuePtr(new Value(Value::PAIRP_VALUE, 0, 0, bitsetPtr(), featuresPtr(), lst));
 }
 
 /* **************************************************

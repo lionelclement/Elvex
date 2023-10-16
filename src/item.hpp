@@ -61,15 +61,15 @@ private:
          s_inheritedSonFeatures = true, s_synthesizedFeatures = true,
          s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
 
+    void makeSerialString(void);
+
+public:
     Item(rulePtr rule, uint8_t index, statementsPtr statements);
 
     Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements);
 
     Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr statements);
 
-    void makeSerialString(void);
-
-public:
     ~Item();
 
     // static constructors

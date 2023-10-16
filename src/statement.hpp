@@ -157,12 +157,12 @@ private:
     statementsPtr statements;
     double number;
 
-public:
-    Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);
-
+private:
     void makeSerialString();
 
 public:
+    Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);
+
     ~Statement();
 
     // NIL UP UP2

@@ -48,7 +48,7 @@ Node::~Node()
  ************************************************************ */
 nodePtr Node::create(bool withSpace, bool bidirectional, bool permutable)
 {
-   return nodePtr(new Node(withSpace, bidirectional, permutable));
+   return std::make_shared<Node>(withSpace, bidirectional, permutable);
 }
 
 /* ************************************************************

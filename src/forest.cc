@@ -47,7 +47,7 @@ Forest::Forest(uint8_t from, uint8_t to, std::string &form)
  ************************************************** */
 forestPtr Forest::create(uint8_t from, uint8_t to, std::string &form)
 {
-    return forestPtr(new Forest(from, to, form));
+    return std::make_shared<Forest>(from, to, form);
 }
 
 /* **************************************************

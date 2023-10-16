@@ -64,7 +64,7 @@ Bitset::~Bitset()
  ************************************************************ */
 bitsetPtr Bitset::create(unsigned int data)
 {
-    return bitsetPtr(new Bitset(data));
+    return std::make_shared<Bitset>(data);
 }
 
 /* ************************************************************
@@ -72,15 +72,15 @@ bitsetPtr Bitset::create(unsigned int data)
  ************************************************************ */
 bitsetPtr Bitset::create(std::bitset<MAXBITS> data)
 {
-    return bitsetPtr(new Bitset(data));
+    return std::make_shared<Bitset>(data);
 }
 
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-bitsetPtr Bitset::create(const bitsetPtr &bs)
+bitsetPtr Bitset::create(const bitsetPtr &data)
 {
-    return bitsetPtr(new Bitset(bs));
+    return std::make_shared<Bitset>(data);
 }
 
 /* ************************************************************

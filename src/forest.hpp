@@ -46,9 +46,9 @@ private:
     bool empty;
     std::forward_list<std::string> output;
     std::string form;
-    Forest(uint8_t from, uint8_t to, std::string &form);
 
 public:
+    Forest(uint8_t from, uint8_t to, std::string &form);
     ~Forest();
 
     static forestPtr create(uint8_t from, uint8_t to, std::string &form = EMPTY_FORM);

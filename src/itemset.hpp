@@ -45,9 +45,9 @@ private:
     unsigned int id;
     set_of_item items;
 
+public:
     ItemSet(unsigned int);
 
-public:
     ~ItemSet();
 
     static class ItemSet *create(unsigned int);

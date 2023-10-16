@@ -36,15 +36,16 @@ class Entry : public Facade,
 private:
 
     std::string form;
+
     featuresPtr features;
-
-    Entry(const std::string &form, featuresPtr features);
-
-    Entry(featuresPtr features);
 
     void makeSerialString(void);
 
 public:
+    Entry(const std::string &form, featuresPtr features);
+
+    Entry(featuresPtr features);
+
     ~Entry();
 
     static entryPtr create(const std::string &form, featuresPtr features);

@@ -135,7 +135,7 @@ std::string &Vartable::codeToName(uint32_t i)
  ************************************************************ */
 void Vartable::insertCodeMap(const uint32_t key, const std::string &value)
 {
-    codeToNameMap[key] = std::move(value);
+    codeToNameMap[key] = value;
     if (codeMapIndex <= key)
         codeMapIndex = key + 1;
 }

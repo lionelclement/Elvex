@@ -32,11 +32,11 @@ class ListFeatures : public Facade,
 private:
     std::vector<featuresPtr> listFeatures;
 
-    ListFeatures(void);
-
     void makeSerialString();
 
 public:
+    ListFeatures(void);
+
     ~ListFeatures();
 
     static listFeaturesPtr create(void);

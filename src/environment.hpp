@@ -31,9 +31,6 @@ public:
     typedef std::unordered_map<std::string, valuePtr> unordered_map;
 
 private:
-    Environment();
-
-private:
     unordered_map env;
 
     bool add(statementPtr from, const std::string &, valuePtr, bool verbose);
@@ -41,6 +38,8 @@ private:
     bool remove(const std::string &);
 
 public:
+    Environment();
+
     ~Environment();
 
     static environmentPtr create(void);

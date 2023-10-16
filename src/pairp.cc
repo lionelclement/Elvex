@@ -36,9 +36,9 @@ Pairp::Pairp(enum Pairp::Type type, valuePtr _value, pairpPtr _car, pairpPtr _cd
 {
     NEW;
     this->type = type;
-    this->value = std::move(_value);
-    this->pairp.car = std::move(_car);
-    this->pairp.cdr = std::move(_cdr);
+    this->value = _value;
+    this->pairp.car = _car;
+    this->pairp.cdr = _cdr;
 }
 
 /* **************************************************
@@ -58,7 +58,7 @@ Pairp::~Pairp()
  ************************************************** */
 pairpPtr Pairp::create()
 {
-    return pairpPtr(new Pairp(Pairp::_NIL_));
+    return std::make_shared<Pairp>(Pairp::_NIL_);
 }
 
 /* **************************************************
@@ -66,7 +66,7 @@ pairpPtr Pairp::create()
  ************************************************** */
 pairpPtr Pairp::create(valuePtr value)
 {
-    return pairpPtr(new Pairp(Pairp::_ATOM_, std::move(value)));
+    return std::make_shared<Pairp>(Pairp::_ATOM_, value);
 }
 
 /* **************************************************
@@ -74,7 +74,7 @@ pairpPtr Pairp::create(valuePtr value)
  ************************************************** */
 pairpPtr Pairp::create(pairpPtr car, pairpPtr cdr)
 {
-    return pairpPtr(new Pairp(Pairp::_PAIRP_, valuePtr(), std::move(car), std::move(cdr)));
+    return std::make_shared<Pairp>(Pairp::_PAIRP_, valuePtr(), car, cdr);
 }
 
 /* ************************************************************
@@ -122,7 +122,7 @@ pairpPtr Pairp::getCar() const
  ************************************************************ */
 void Pairp::setCar(pairpPtr car)
 {
-    this->pairp.car = std::move(car);
+    this->pairp.car = car;
 }
 
 /* ************************************************************
@@ -138,7 +138,7 @@ pairpPtr Pairp::getCdr() const
  ************************************************************ */
 void Pairp::setCdr(pairpPtr cdr)
 {
-    this->pairp.cdr = std::move(cdr);
+    this->pairp.cdr = cdr;
 }
 
 /* ************************************************************

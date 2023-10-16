@@ -97,7 +97,7 @@ statementPtr Statement::createStatements(uint32_t lineno, std::string bufferName
 statementPtr Statement::createFeatures(uint32_t lineno, std::string bufferName, type op, bool rootOp, featuresPtr features)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
-    statement->features = std::move(features);
+    statement->features = features;
     return statementPtr(statement);
 }
 
@@ -107,7 +107,7 @@ statementPtr Statement::createFeatures(uint32_t lineno, std::string bufferName, 
 statementPtr Statement::createLhs(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
-    statement->lhs = std::move(lhs);
+    statement->lhs = lhs;
     return statementPtr(statement);
 }
 
@@ -117,8 +117,8 @@ statementPtr Statement::createLhs(uint32_t lineno, std::string bufferName, type 
 statementPtr Statement::createLhsRhs(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs)
 {
     Statement *statement = new Statement(lineno, bufferName, op, rootOp);
-    statement->lhs = std::move(lhs);
-    statement->rhs = std::move(rhs);
+    statement->lhs = lhs;
+    statement->rhs = rhs;
     return statementPtr(statement);
 }
 
@@ -129,7 +129,7 @@ statementPtr Statement::createForeach(uint32_t lineno, std::string bufferName, b
 {
     Statement *statement = new Statement(lineno, bufferName, FOREACH_STATEMENT, rootOp);
     statement->code = code;
-    statement->lhs = std::move(lhs);
+    statement->lhs = lhs;
     return statementPtr(statement);
 }
 
@@ -140,7 +140,7 @@ statementPtr Statement::createSearch(uint32_t lineno, std::string bufferName, bo
 {
     Statement *statement = new Statement(lineno, bufferName, SEARCH_STATEMENT, rootOp);
     statement->code = code;
-    statement->lhs = std::move(lhs);
+    statement->lhs = lhs;
     return statementPtr(statement);
 }
 
@@ -150,7 +150,7 @@ statementPtr Statement::createSearch(uint32_t lineno, std::string bufferName, bo
 statementPtr Statement::createConstant(uint32_t lineno, std::string bufferName, bool rootOp, bitsetPtr bitset)
 {
     Statement *statement = new Statement(lineno, bufferName, CONSTANT_STATEMENT, rootOp);
-    statement->bitset = std::move(bitset);
+    statement->bitset = bitset;
     return statementPtr(statement);
 }
 
@@ -170,7 +170,7 @@ statementPtr Statement::createVariable(uint32_t lineno, std::string bufferName, 
 statementPtr Statement::createPairp(uint32_t lineno, std::string bufferName, bool rootOp, pairpPtr pairp)
 {
     Statement *statement = new Statement(lineno, bufferName, PAIRP_STATEMENT, rootOp);
-    statement->pairp = std::move(pairp);
+    statement->pairp = pairp;
     return statementPtr(statement);
 }
 
@@ -182,8 +182,8 @@ statementPtr Statement::createFunction(uint32_t lineno, std::string bufferName, 
 {
     Statement *statement = new Statement(lineno, bufferName, FUNCTION_STATEMENT, rootOp);
     statement->function = function;
-    statement->lhs = lhs ? std::move(lhs) : statementPtr();
-    statement->rhs = rhs ? std::move(rhs) : statementPtr();
+    statement->lhs = lhs ? lhs : statementPtr();
+    statement->rhs = rhs ? rhs : statementPtr();
     return statementPtr(statement);
 }
 
