@@ -102,7 +102,7 @@
 %token TOKEN_SEMI TOKEN_DOT TOKEN_COLON TOKEN_CONS TOKEN_COMMA
 
 // KEYWORDS
-%token TOKEN_RULES TOKEN_INPUT TOKEN_LEXICON
+%token TOKEN_MACROS TOKEN_RULES TOKEN_INPUT TOKEN_LEXICON
 %token TOKEN_LEMMA TOKEN_HEAD TOKEN_FORM
 %token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN TOKEN_PRINTSTDERR TOKEN_PRINTLNSTDERR
 %token TOKEN_IF TOKEN_ELSE
@@ -173,14 +173,17 @@ axiom:
 	};
 
 begin:
-	TOKEN_RULES TOKEN_LPAR rules TOKEN_RPAR{
+	TOKEN_MACROS TOKEN_LPAR macros TOKEN_RPAR{
+	  DBUGPRT("begin grammar");
+	}
+
+	|TOKEN_RULES TOKEN_LPAR rules TOKEN_RPAR{
 	  DBUGPRT("begin grammar");
 	}
 
 	|TOKEN_INPUT TOKEN_LPAR term features TOKEN_RPAR {
 	  DBUGPRT("begin input");
 	  parser.setStartTerm($3);
-	  //(*$4)->renameVariables((*$4)->getId());
 	  parser.setStartFeatures(*$4);
 	  free($4);
 	}
@@ -202,6 +205,25 @@ begin:
 	  DBUGPRT("begin features");
 	  parser.setLocalFeatures(*$3);
 	  free($3);
+	};
+
+macros:
+	macro_line macros {
+	  DBUGPRT("macros");
+	}
+
+	|macro_line {
+	  DBUGPRT("macros");
+	 };
+
+macro_line:
+	//
+	TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_ASSIGNMENT features TOKEN_SEMI
+	{
+	  DBUGPRT("dictionary_line");
+	  parser.addMacros(*$2, *$4);
+	  free($2);
+	  free($4);
 	};
 
 dictionary:
@@ -299,15 +321,6 @@ dictionary_line:
 	    entries->add(Entry::create(*$1, features));
 	  }
 	  free($2);
-	}
-
-	//
-	|TOKEN_AROBASE TOKEN_IDENTIFIER TOKEN_ASSIGNMENT features TOKEN_SEMI
-	{
-	  DBUGPRT("dictionary_line");
-	  parser.addMacros(*$2, *$4);
-	  free($2);
-	  free($4);
 	}
 
 	|TOKEN_SEMI

@@ -70,6 +70,8 @@ private:
     unsigned int maxLength;
     unsigned int maxUsages;
     unsigned int maxItems;
+    unsigned int maxAttemps;
+    std::string macrosFileName;
     std::string lexiconFileName;
     std::string rulesFileName;
     std::string inputFileName;
@@ -82,7 +84,6 @@ private:
     bool warning;
     bool randomResult;
     bool firstResult;
-    int randomAttemps;
 
     MemoizationMap memoizedMap;
 
@@ -112,6 +113,8 @@ public:
 
     void setInputFileName(char *);
 
+    void setMacrosFileName(char *);
+
     void setLexiconFileName(char *);
 
     void setRulesFileName(char *);
@@ -123,6 +126,8 @@ public:
     std::string getInputFileName() const;
 
     std::string getLexiconFileName() const;
+
+    std::string getMacrosFileName() const;
 
     std::string getCompactedLexiconFileName() const;
 
@@ -137,6 +142,8 @@ public:
     unsigned int getMaxUsages() const;
 
     void setMaxItems(unsigned int);
+
+    void setMaxAttemps(unsigned int);
 
     unsigned int getMaxItems() const;
 

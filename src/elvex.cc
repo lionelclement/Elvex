@@ -71,6 +71,8 @@ options\n\
 \t-maxUsages <number>                         max number of rule usage\n\
 \t-maxItems <number>                          max number of items per set\n\
 \t-maxTime <seconds>                          max time in seconds\n\
+\t-maxAttemps <number>                        max attemps for a random choice\n\
+\t-macrosFile <file>                          the macros\n\
 \t-rulesFile <file>                           the rules\n\
 \t-lexiconFile <file>                         the lexicon\n\
 \t-inputFile <file>                           the input\n\
@@ -250,6 +252,15 @@ int main(int argn, char **argv)
                         generator.setTraceAction(true);
                     }
 
+                    else if (!strcmp(argv[arg] + 1, "macrosFile"))
+                    {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                            generator.setMacrosFileName(argv[++arg]);
+                        else
+                        {
+                            throw usage_exception("bad macrosFile argument");
+                        }
+                    }
                     else if (!strcmp(argv[arg] + 1, "lexiconFile"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
@@ -317,6 +328,15 @@ int main(int argn, char **argv)
                             throw usage_exception("bad maxTime argument");
                         }
                     }
+                    else if (!strcmp(argv[arg] + 1, "maxAttemps"))
+                    {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                            generator.setMaxAttemps(atoi(argv[++arg]));
+                        else
+                        {
+                            throw usage_exception("bad maxAttemps argument");
+                        }
+                    }
                     else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
@@ -381,9 +401,10 @@ int main(int argn, char **argv)
                 }
             }
 
-            if (generator.getLexiconFileName().length() > 0)
+            if (generator.getMacrosFileName().length() > 0)
             {
-                parser.parseFile("@lexicon (", ")", generator.getLexiconFileName());
+                parser.parseFile("@macros (", ")", generator.getMacrosFileName());
+                parser.getRules().analyseTerms(parser);
             }
 
             if (generator.getRulesFileName().length() > 0)
@@ -391,21 +412,36 @@ int main(int argn, char **argv)
                 parser.parseFile("@rules (", ")", generator.getRulesFileName());
                 parser.getRules().analyseTerms(parser);
             }
-
-            if (generator.getCompactedLexiconFileName().length() > 0)
+            else
             {
-                char *dir = strdup((generator.getCompactedDirectoryName().length() > 0)
-                                       ? generator.getCompactedDirectoryName().c_str()
-                                       : ".");
-                char *file = strdup(generator.getCompactedLexiconFileName().c_str());
-                std::string dirStr = std::string(dir);
-                std::string fileStr = std::string(file);
-                auto *lex = new CompactedLexicon(dirStr, fileStr);
-                lex->openFiles("r");
-                lex->loadFsa(generator.getVerbose());
-                lex->loadData(generator.getVerbose());
-                lex->closeFiles();
-                generator.setCompactedLexicon(lex);
+                throw usage_exception("Rules file not found");
+            }
+
+            if ((generator.getLexiconFileName().length() == 0) && (generator.getCompactedLexiconFileName().length() == 0))
+            {
+                throw usage_exception("Lexicon not found");
+            }
+            else
+            {
+                if (generator.getLexiconFileName().length() > 0)
+                {
+                    parser.parseFile("@lexicon (", ")", generator.getLexiconFileName());
+                }
+                if (generator.getCompactedLexiconFileName().length() > 0)
+                {
+                    char *dir = strdup((generator.getCompactedDirectoryName().length() > 0)
+                                           ? generator.getCompactedDirectoryName().c_str()
+                                           : ".");
+                    char *file = strdup(generator.getCompactedLexiconFileName().c_str());
+                    std::string dirStr = std::string(dir);
+                    std::string fileStr = std::string(file);
+                    auto *lex = new CompactedLexicon(dirStr, fileStr);
+                    lex->openFiles("r");
+                    lex->loadFsa(generator.getVerbose());
+                    lex->loadData(generator.getVerbose());
+                    lex->closeFiles();
+                    generator.setCompactedLexicon(lex);
+                }
             }
 
 #ifdef OUTPUT_XML
@@ -458,11 +494,18 @@ int main(int argn, char **argv)
             generate(trace);
         }
 
-        for (std::list<std::string>::const_iterator i = generator.getInputs().begin();
-             i != generator.getInputs().end(); ++i)
+        else if (!generator.getInputs().empty())
         {
-            parser.parseBuffer("@input (", ")", *i, "input");
-            generate(trace);
+            for (std::list<std::string>::const_iterator i = generator.getInputs().begin();
+                 i != generator.getInputs().end(); ++i)
+            {
+                parser.parseBuffer("@input (", ")", *i, "input");
+                generate(trace);
+            }
+        }
+        else
+        {
+            throw usage_exception("Input not found");
         }
 
 #ifdef OUTPUT_XML

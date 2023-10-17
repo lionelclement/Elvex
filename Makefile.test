@@ -35,7 +35,7 @@ xslfile = xsl/xml2CS-dot-graph.xsl
 test_dir = test
 
 # List of all *.input files
-input_files := $(wildcard $(test_dir)/*.input)
+input_files = $(wildcard $(test_dir)/*.input)
 
 # Specific targets to generate all *.output files
 all_output: $(patsubst $(test_dir)/%.input,$(test_dir)/%.output,$(input_files))
@@ -65,9 +65,13 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	fi
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
+		$(if $(wildcard $*.macros), \
+			$(elvex) -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
+			$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
 	else \
-		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@; \
+		$(if $(wildcard $*.macros),\
+		 	$(elvex) -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
+		 	$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
 	fi
 
 # Rule to generate an *.output file from an *.input file
@@ -75,18 +79,26 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	@echo "build $@ from $^"
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) --trace -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(if $(wildcard $*.macros), \
+			$(elvex) --trace -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
+			$(elvex) --trace -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
 	else \
-		$(elvex) --trace -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< 2> $*.err > $@; \
+		$(if $(wildcard $*.macros),\
+		 	$(elvex) --trace -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
+		 	$(elvex) --trace -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
 	@echo "build $@ from $^"
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
-		$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -xml $*.xml -inputFile $< > /dev/null 2>&1; \
+		$(if $(wildcard $*.macros), \
+			$(elvex) -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1, \
+			$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1); \
 	else \
-		$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -xml $*.xml -inputFile $< > /dev/null 2>&1; \
+		$(if $(wildcard $*.macros),\
+		 	$(elvex) -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1, \
+		 	$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1); \
 	fi
 
 # Check the existence of xsltproc
@@ -109,7 +121,10 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 
 %.fsa: %.tmp-morpho %.tmp-pattern
 	@echo "build $@ from $^"
-	@$(elvexbuildlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build> /dev/null
+	@$(if $(wildcard $*.macros), \
+			$(elvexbuildlexicon) -cld . -clf $* -macrosFile $*.macros -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build, \
+			$(elvexbuildlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build ); \
+	
 
 %.tmp-morpho: %.tmp-form %.tmp-pos %.tmp-lemma %.tmp-features
 	@echo "build $@ from $^"

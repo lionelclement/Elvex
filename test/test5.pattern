@@ -1,6 +1,6 @@
-# lexeme	pos	lemma	features
+// lexeme	pos	lemma	features
 
-CHAUVE_SOURIS	noun	CHAUVE_SOURIS	@f
+CHAUVE_SOURIS	noun	CHAUVE_SOURIS	[@f]
 
-#  end
+//  end
 

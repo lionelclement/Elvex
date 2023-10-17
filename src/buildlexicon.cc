@@ -45,50 +45,10 @@ void usage()
 \t-v|--version                                  print version\n\
 \t-compactedLexiconDirectory/-cld <directory>   the directory which contains the compacted lexicon\n\
 \t-compactedLexiconFile/-clf <file>             the compacted lexicon prefix name\n\
+\t-macrosFile <file>                            the macros\n\
 \t-patternFile <file>                           the pattern file\n\
 \t-morphoFile <file>                            the morpho file"
 			  << std::endl;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void addMacro(std::string line, std::string morphoFile, int lineno)
-{
-	// Macro
-	// @f	gender:fem
-	featuresPtr features;
-
-	auto pos1 = line.find('@');
-	auto pos2 = line.find('\t');
-	if (pos2 == std::string::npos)
-	{
-		std::ostringstream oss;
-		oss << "No '\\t' found in line: \"" << line << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss.str());
-	}
-
-	std::string input = line.substr(pos1 + 1, pos2 - 1);
-	std::string f = "[" + line.substr(pos2 + 1, line.size() - 1) + "]";
-	try
-	{
-		parser.parseBuffer("#(", ")", f, "morphology");
-	}
-	catch (parser_exception &e)
-	{
-
-		std::ostringstream oss;
-		oss << e.what() << ":\"" << f << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss);
-	}
-	features = parser.getLocalFeatures();
-	// CERR_LINE;
-	// std::cerr << '@' << input << " => ";
-	// features->flatPrint(std::cerr);
-	// std::cerr << std::endl;
-	parser.addMacros(input, features);
 }
 
 /* **************************************************
@@ -196,8 +156,9 @@ int main(int argn, char **argv)
 		CompactedLexicon *compactedLexicon;
 		Buildlexicon::Choice mode = Buildlexicon::NONE;
 		std::string inputFileName = std::string();
-		std::string prefix;
-		std::string directory;
+		std::string compactedLexiconFileName = std::string();
+		std::string compactedDirectoryName = std::string();
+		std::string macrosFileName = std::string();
 		std::string patternFile = std::string();
 		std::string morphoFile = std::string();
 		Lexicon *morpho = nullptr;
@@ -228,11 +189,20 @@ int main(int argn, char **argv)
 					usage();
 					return EXIT_SUCCESS;
 				}
+				else if (!strcmp(argv[arg] + 1, "macrosFile"))
+				{
+					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+						macrosFileName = std::string(argv[++arg]);
+					else
+					{
+						throw usage_exception("bad macrosFile argument");
+					}
+				}
 				else if (!strcmp(argv[arg] + 1, "compactedLexiconFile"))
 				{
 					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
 					{
-						prefix = std::string(argv[++arg]);
+						compactedLexiconFileName = std::string(argv[++arg]);
 					}
 					else
 					{
@@ -243,7 +213,7 @@ int main(int argn, char **argv)
 				{
 					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
 					{
-						prefix = std::string(argv[++arg]);
+						compactedLexiconFileName = std::string(argv[++arg]);
 					}
 					else
 					{
@@ -254,7 +224,7 @@ int main(int argn, char **argv)
 				{
 					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
 					{
-						directory = std::string(argv[++arg]);
+						compactedDirectoryName = std::string(argv[++arg]);
 					}
 					else
 					{
@@ -265,7 +235,7 @@ int main(int argn, char **argv)
 				{
 					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
 					{
-						directory = std::string(argv[++arg]);
+						compactedDirectoryName = std::string(argv[++arg]);
 					}
 					else
 					{
@@ -309,6 +279,12 @@ int main(int argn, char **argv)
 			}
 		}
 
+		if (macrosFileName.length() > 0)
+		{
+			parser.parseFile("@macros (", ")", macrosFileName);
+			parser.getRules().analyseTerms(parser);
+		}
+
 		if (!morphoFile.empty())
 		{
 			morpho = new Lexicon(morphoFile);
@@ -318,13 +294,13 @@ int main(int argn, char **argv)
 			int lineno = 1;
 			while (std::getline(inputFile, line))
 			{
-				if (!line.empty() && line[0] != '#')
+				size_t commentPos = line.find("//");
+				if (commentPos != std::string::npos)
 				{
-					if (line[0] == '@')
-						addMacro(line, morphoFile, lineno);
-					else
-						addMorpho(line, morphoFile, lineno, morpho);
+					line = line.substr(0, commentPos);
 				}
+				if (!line.empty())
+					addMorpho(line, morphoFile, lineno, morpho);
 				lineno++;
 			}
 			inputFile.close();
@@ -339,15 +315,13 @@ int main(int argn, char **argv)
 
 			while (std::getline(inputFile, line))
 			{
-				if (!line.empty() && line[0] != '#')
+				size_t commentPos = line.find("//");
+				if (commentPos != std::string::npos)
 				{
-					if (line[0] == '@')
-						addMacro(line, patternFile, lineno);
-					else
-					{
-						addPattern(line, patternFile, lineno, pattern);
-					}
+					line = line.substr(0, commentPos);
 				}
+				if (!line.empty())
+					addPattern(line, patternFile, lineno, pattern);
 				lineno++;
 			}
 			inputFile.close();
@@ -358,7 +332,7 @@ int main(int argn, char **argv)
 
 		case Buildlexicon::BUILD:
 		{
-			compactedLexicon = new CompactedLexicon(directory, prefix);
+			compactedLexicon = new CompactedLexicon(compactedDirectoryName, compactedLexiconFileName);
 			compactedLexicon->openFiles("w");
 			if (!morpho)
 				throw usage_exception("morphoFile argument expected");
@@ -372,7 +346,7 @@ int main(int argn, char **argv)
 
 		case Buildlexicon::CONSULT:
 		{
-			compactedLexicon = new CompactedLexicon(directory, prefix);
+			compactedLexicon = new CompactedLexicon(compactedDirectoryName, compactedLexiconFileName);
 			compactedLexicon->openFiles("r");
 			compactedLexicon->loadFsa(verbose);
 			compactedLexicon->loadData(verbose);
@@ -383,7 +357,7 @@ int main(int argn, char **argv)
 
 		case Buildlexicon::LIST:
 		{
-			compactedLexicon = new CompactedLexicon(directory, prefix);
+			compactedLexicon = new CompactedLexicon(compactedDirectoryName, compactedLexiconFileName);
 			compactedLexicon->openFiles("r");
 			compactedLexicon->loadFsa(verbose);
 			compactedLexicon->loadData(verbose);

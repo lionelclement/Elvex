@@ -1,8 +1,3 @@
-@size = [type:size] ;
-@color= [type:color];
-@shape= [type:shape] ;
-@material= [type:material] ;
-
 big	adj [HEAD:big, @size];
 large adj [HEAD:large, @size];
 

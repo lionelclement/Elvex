@@ -316,6 +316,11 @@ downDoubleArrow "⇓"
     return TOKEN_AROBASE;
   }
   
+  "@macros" {
+    DBUGPRT("TOKEN_MACROS");
+    return TOKEN_MACROS;
+  }
+  
   "@input" {
     DBUGPRT("TOKEN_INPUT");
     return TOKEN_INPUT;

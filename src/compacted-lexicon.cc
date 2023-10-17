@@ -275,7 +275,7 @@ void CompactedLexicon::openFiles(const std::string &mode)
     if (dataFile == nullptr)
     {
         std::ostringstream oss;
-        oss << "Unable to open file " << dataFileName << " for writing";
+        oss << "Unable to open file " << dataFileName;
         throw fatal_exception(oss);
     }
 
@@ -286,7 +286,7 @@ void CompactedLexicon::openFiles(const std::string &mode)
     if (fsaFile == nullptr)
     {
         std::ostringstream oss;
-        oss << "Unable to open file " << fsaFileName << " for writing";
+        oss << "Unable to open file " << fsaFileName;
         throw fatal_exception(oss);
     }
 }
@@ -303,52 +303,41 @@ void CompactedLexicon::closeFiles()
 /* **************************************************
  *
  ************************************************** */
-std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs2, bool verbose)
+std::string CompactedLexicon::unif(const std::string &featuresString1, const std::string &featuresString2, bool verbose)
 {
     extern Parser parser;
     std::stringstream stringStream;
     featuresPtr features1;
-    if (!fs1.empty())
+    if (!featuresString1.empty())
     {
-        // CERR_LINE;
-        // std::cerr << fs1 << std::endl;
-        stringStream.str("");
-        stringStream << '[' << fs1 << ']';
-        std::string fsString = stringStream.str();
         try
         {
-            parser.parseBuffer("#(", ")", fsString, "morphology");
+            parser.parseBuffer("#(", ")", featuresString1, "morphology");
         }
         catch (parser_exception &e)
         {
             std::ostringstream oss;
-            oss << e.what() << ":\"" << fs1 << "\"";
+            oss << e.what() << ":\"" << featuresString1 << "\"";
             throw fatal_exception(oss);
         }
         features1 = parser.getLocalFeatures();
     }
     else
     {
-        // CERR_LINE;
         features1 = featuresPtr();
     }
 
     featuresPtr features2;
-    if (!fs2.empty())
+    if (!featuresString2.empty())
     {
-        // CERR_LINE;
-        // std::cerr << fs2 << std::endl;
-        stringStream.str("");
-        stringStream << '[' << fs2 << ']';
-        std::string fsString = stringStream.str();
         try
         {
-            parser.parseBuffer("#(", ")", fsString, "morphology");
+            parser.parseBuffer("#(", ")", featuresString2, "morphology");
         }
         catch (parser_exception &e)
         {
             std::ostringstream oss;
-            oss << e.what() << ":\"" << fs2 << "\"";
+            oss << e.what() << ":\"" << featuresString2 << "\"";
             throw fatal_exception(oss);
         }
         features2 = parser.getLocalFeatures();
@@ -376,9 +365,6 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
     stringStream.str("");
     if (unif && !unif->isBottom())
     {
-        // CERR_LINE;
-        // unif->flatPrint(std::cerr, false);
-
         unif->flatPrint(stringStream, false);
     }
     features1.reset();
@@ -392,9 +378,9 @@ std::string CompactedLexicon::unif(const std::string &fs1, const std::string &fs
  ************************************************** */
 void CompactedLexicon::addToData(const std::string &input, const std::string &form, const std::string &features)
 {
-    //CERR_LINE;
-    //std::cerr << "CompactedLexicon::addToData:"
-    //          << "[input:" << input << ",form:" << form << ",features:" << features << std::endl;
+    // CERR_LINE;
+    // std::cerr << "CompactedLexicon::addToData:"
+    //           << "[input:" << input << ",form:" << form << ",features:" << features << std::endl;
     std::stringstream stringStream;
     stringStream.str("");
     stringStream << form << '#' << '[' << features << ']';
@@ -562,13 +548,13 @@ void CompactedLexicon::loadData(bool verbose)
  ************************************************** */
 void CompactedLexicon::consult()
 {
-    uint32_t _info;
+    uint32_t info;
     std::string str;
     while (!this->inputStream->eof())
     {
         *this->inputStream >> str;
-        _info = search(init, str);
-        printResults(std::cout, _info, true);
+        info = search(init, str);
+        printResults(std::cout, info, true);
         fflush(stdout);
     }
 }

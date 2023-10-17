@@ -46,6 +46,7 @@ Generator::Generator()
     this->maxLength = MAXLENGTH;
     this->maxUsages = MAXUSAGES;
     this->maxItems = MAXITEMS;
+    this->maxAttemps = MAXATTEMPTS;
     this->nodeRoot = nodePtr();
     this->lexiconFileName = "";
     this->rulesFileName = "";
@@ -57,7 +58,6 @@ Generator::Generator()
     this->warning = false;
     this->randomResult = false;
     this->firstResult = false;
-    this->randomAttemps = MAXATTEMPTS; // attemps to find a local random result
     this->trace = false;
     this->verbose = false;
 }
@@ -129,6 +129,14 @@ void Generator::setLexiconFileName(char *name)
 /* **************************************************
  *
  ************************************************** */
+void Generator::setMacrosFileName(char *name)
+{
+    macrosFileName = name;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 void Generator::setCompactedLexiconFileName(char *bufferName)
 {
     compactedLexiconFileName = bufferName;
@@ -156,6 +164,14 @@ void Generator::setRulesFileName(char *name)
 std::string Generator::getInputFileName() const
 {
     return inputFileName;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+std::string Generator::getMacrosFileName() const
+{
+    return macrosFileName;
 }
 
 /* **************************************************
@@ -212,6 +228,14 @@ void Generator::setMaxUsages(unsigned int _maxUsages)
 void Generator::setMaxItems(unsigned int _maxItems)
 {
     this->maxItems = _maxItems;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Generator::setMaxAttemps(unsigned int _maxAttemps)
+{
+    this->maxAttemps = _maxAttemps;
 }
 
 /* **************************************************
@@ -1158,11 +1182,11 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                 {
                                     entryPtr entry = *entryIt;
 
-                                    if (this->getRandomResult())
+                                    if (this->randomResult)
                                     {
-                                        if (tryRandom++ > randomAttemps)
+                                        if (tryRandom++ > maxAttemps)
                                         {
-                                            // WARNING("too much random trial");
+                                            WARNING("too many random attempts");
                                             break;
                                         }
                                         size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());

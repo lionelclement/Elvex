@@ -3,15 +3,6 @@
 FORM adjForm [att1:val1, att2: val2];
 FORM nounForm [att3:val3, att4: val4];
 
-@m = [gender:masc];
-@f = [gender:fem];
-@s = [number:singular];
-@p = [number:plural];
-@ms = [@m, @s];
-@mp = [@m, @p];
-@fs = [@f, @s];
-@fp = [@f, @p];
-
 le det[@ms];
 la det[@fs];
 les det[@p];
