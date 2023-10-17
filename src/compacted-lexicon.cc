@@ -505,7 +505,7 @@ void CompactedLexicon::buildEntries(Lexicon &pattern, Lexicon &morpho, bool verb
             addPattern(pattern, morpho, patternIt->first, features, lemma, pos, verbose);
         }
 
-        if ((range++ % 1009) == 0)
+        if ((range++ % 151) == 0)
         {
             unsigned int k = 40 * range / size;
             std::cerr << " " << round(2.5 * k) << "%[";
