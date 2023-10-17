@@ -103,14 +103,14 @@ bool Parser::getVerbose() const {
 /* **************************************************
  *
  ************************************************** */
-Parser::entry_map_const_iterator Parser::findMapLocalEntry(std::string& key) const {
+Parser::entry_map::const_iterator Parser::findMapLocalEntry(std::string& key) const {
         return mapLocalEntry.find(key);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entry_map_const_iterator Parser::cendMapLocalEntry() const {
+Parser::entry_map::const_iterator Parser::cendMapLocalEntry() const {
     return mapLocalEntry.cend();
 }
 
@@ -124,21 +124,21 @@ void Parser::insertMapLocalEntry(std::pair<std::string, entryPtr> pair){
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::findCacheLexicon(uint32_t key) const {
+Parser::entries_map_map::const_iterator Parser::findCacheLexicon(uint32_t key) const {
     return cacheLexicon.find(key);
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::cbeginCacheLexicon() const {
+Parser::entries_map_map::const_iterator Parser::cbeginCacheLexicon() const {
     return cacheLexicon.cbegin();
 }
 
 /* **************************************************
  *
  ************************************************** */
-Parser::entries_map_map_const_iterator Parser::cendCacheLexicon() const {
+Parser::entries_map_map::const_iterator Parser::cendCacheLexicon() const {
     return cacheLexicon.cend();
 }
 
@@ -207,7 +207,7 @@ uint32_t Parser::getTopLineno() {
  ************************************************** */
 void Parser::printCacheLexicon(std::ostream &out) const {
     out << "<ul>";
-    for (entries_map_map_const_iterator i = cbeginCacheLexicon(); i != cendCacheLexicon(); ++i) {
+    for (entries_map_map::const_iterator i = cbeginCacheLexicon(); i != cendCacheLexicon(); ++i) {
         out << "<li>";
         out << Vartable::codeToName((*i).first);
         out << "<ul>";
@@ -236,7 +236,7 @@ void Parser::addMacros(std::string key, featuresPtr features) {
  ************************************************************ */
 featuresPtr Parser::findMacros(const std::string& str) {
     //std::cerr << "find @" << str << ":";
-    macro_map_const_iterator found;
+    macro_map::const_iterator found;
     found = macros.find(str);
     if (found == macros.end()) {
         return featuresPtr();
@@ -285,6 +285,6 @@ void Parser::printMacros() {
 /* **************************************************
  *
  ************************************************** */
-void Parser::_insertCacheLexicon(std::pair<uint32_t, entries_map*> pair){
+void Parser::insertCacheLexicon(std::pair<uint32_t, entries_map*> pair){
   cacheLexicon.insert(pair);
 }

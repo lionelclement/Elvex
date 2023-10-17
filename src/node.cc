@@ -62,7 +62,7 @@ bool Node::empty() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::vectorForests_iterator Node::begin()
+Node::vectorForests::iterator Node::begin()
 {
    return forests.begin();
 }
@@ -70,7 +70,7 @@ Node::vectorForests_iterator Node::begin()
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::vectorForests_iterator Node::end()
+Node::vectorForests::iterator Node::end()
 {
    return forests.end();
 }
@@ -78,7 +78,7 @@ Node::vectorForests_iterator Node::end()
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::vectorForests_const_iterator Node::cbegin() const
+Node::vectorForests::const_iterator Node::cbegin() const
 {
    return forests.cbegin();
 }
@@ -86,7 +86,7 @@ Node::vectorForests_const_iterator Node::cbegin() const
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::vectorForests_const_iterator Node::cend() const
+Node::vectorForests::const_iterator Node::cend() const
 {
    return forests.cend();
 }

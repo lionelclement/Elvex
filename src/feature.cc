@@ -64,14 +64,6 @@ Feature::~Feature()
 /* ************************************************************
  *
  ************************************************************ */
-featurePtr Feature::_create(Feature::Type type, bitsetPtr _attribute, valuePtr _value)
-{
-    return std::make_shared<Feature>(type, _attribute, _value);
-}
-
-/* ************************************************************
- *
- ************************************************************ */
 featurePtr Feature::createConstant(bitsetPtr _attribute, valuePtr _value)
 {
     return featurePtr(new Feature(_CONSTANT_, _attribute, _value));

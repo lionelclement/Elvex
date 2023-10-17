@@ -69,6 +69,4 @@
         std::cerr << "*** warning: " << msg << std::endl; \
     }
 
-// #define _BUG_ {CERR_LINE; std::cerr << "*** Will cause a memory access error (segmentation fault)" << std::endl; int *x = NULL; *x = 36;}
-
 #endif // ELVEX_MESSAGES_H

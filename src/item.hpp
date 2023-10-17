@@ -36,7 +36,6 @@ class Item : public Facade,
 
 public:
     typedef std::unordered_set<uint32_t> set_of_uint32_t;
-    typedef set_of_uint32_t::const_iterator set_of_unsigned_int_const_iterator;
     static uint32_t TERM_NA;
     static uint8_t INDEX_NA;
 

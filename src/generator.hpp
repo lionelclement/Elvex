@@ -56,7 +56,6 @@ public:
 
     typedef std::unordered_map<uint32_t, class Item *> item_map;
     typedef std::unordered_map<uint32_t, class ItemSet *> itemSet_map;
-    typedef itemSet_map::const_iterator itemSet_map_const_iterator;
 
 private:
     itemSet_map states;
@@ -103,9 +102,9 @@ public:
 
     ~Generator();
 
-    itemSet_map_const_iterator cbegin() const;
+    itemSet_map::const_iterator cbegin() const;
 
-    itemSet_map_const_iterator cend() const;
+    itemSet_map::const_iterator cend() const;
 
     size_t size() const;
 

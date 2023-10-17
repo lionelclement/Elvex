@@ -27,6 +27,7 @@ class MemoizationValue
 
 private:
     featuresPtr features;
+
     class ForestIdentifier *forestIdentifier;
 
     MemoizationValue(featuresPtr, class ForestIdentifier *);

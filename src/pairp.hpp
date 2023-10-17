@@ -77,19 +77,7 @@ public:
 
     pairpPtr getCar(void) const;
 
-    void setCar(pairpPtr);
-
     pairpPtr getCdr(void) const;
-
-    void setCdr(pairpPtr);
-
-    pairpPtr getCadr(void) const;
-
-    pairpPtr getCddr(void) const;
-
-    pairpPtr getCaar(void) const;
-
-    pairpPtr getCdar(void) const;
 
     bool isNil(void) const;
 

@@ -84,7 +84,6 @@ Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms,
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
-        // this->indexTerms.push_back(UINT_MAX);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedSonFeatures->push_back(Features::NIL);
@@ -735,8 +734,8 @@ void Item::print(std::ostream &out) const
     {
         out << "<td>";
         for (uint8_t indexTerm : indexTerms)
-            if (indexTerm == UINT8_MAX)
-                out << "UINT8_MAX"
+            if (indexTerm == INDEX_NA)
+                out << "INDEX_NA"
                     << "&nbsp;";
             else
                 out << indexTerm << "&nbsp;";
@@ -755,11 +754,11 @@ void Item::print(std::ostream &out) const
     if (s_ranges)
     {
         out << "<td>"; //<center>Ranges</center><br>";
-        uint8_t old = UINT8_MAX;
+        uint8_t old = INDEX_NA;
         bool first = true;
         for (uint8_t range : ranges)
         {
-            if (old != UINT8_MAX)
+            if (old != INDEX_NA)
             {
                 if (first)
                     first = false;
@@ -938,7 +937,7 @@ void Item::makeSerialString()
         stream << std::hex << (int)*(ind++) << '/';
     }
     stream << '_';
-    set_of_unsigned_int_const_iterator ref = refs.cbegin();
+    set_of_uint32_t::const_iterator ref = refs.cbegin();
     while (ref != refs.cend())
     {
         stream << std::hex << (int)*(ref++) << '/';

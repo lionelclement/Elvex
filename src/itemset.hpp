@@ -43,6 +43,7 @@ public:
 
 private:
     unsigned int id;
+
     set_of_item items;
 
 public:

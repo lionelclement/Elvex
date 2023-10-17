@@ -67,8 +67,6 @@ public:
 
     ~Feature();
 
-    static featurePtr _create(enum Type type, bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
-
     static featurePtr createConstant(bitsetPtr attribute = bitsetPtr(), valuePtr value = valuePtr());
 
     static featurePtr createHead(valuePtr value);

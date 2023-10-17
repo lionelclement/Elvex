@@ -49,6 +49,7 @@ private:
 
 public:
     Forest(uint8_t from, uint8_t to, std::string &form);
+
     ~Forest();
 
     static forestPtr create(uint8_t from, uint8_t to, std::string &form = EMPTY_FORM);

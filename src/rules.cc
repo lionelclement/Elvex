@@ -243,12 +243,12 @@ void Rules::analyseTerms(class Parser &parser)
                     terminals.insert(code);
 
                     Parser::entries_map *headToEntries;
-                    Parser::entries_map_map_const_iterator foundCode = parser.findCacheLexicon(code);
+                    Parser::entries_map_map::const_iterator foundCode = parser.findCacheLexicon(code);
                     if (foundCode == parser.cendCacheLexicon())
                     {
                         headToEntries = new Parser::entries_map;
                         headToEntries->insert(std::make_pair(code, Entries::create()));
-                        parser._insertCacheLexicon(std::make_pair(code, headToEntries));
+                        parser.insertCacheLexicon(std::make_pair(code, headToEntries));
                     }
                 }
             }

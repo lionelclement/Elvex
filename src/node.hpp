@@ -36,8 +36,6 @@ class Node :
 
 public:
     typedef std::vector<forestPtr> vectorForests;
-    typedef vectorForests::iterator vectorForests_iterator;
-    typedef vectorForests::const_iterator vectorForests_const_iterator;
 
 private:
     vectorForests forests;
@@ -55,13 +53,13 @@ public:
 
     bool empty() const;
 
-    vectorForests_iterator begin();
+    vectorForests::iterator begin();
 
-    vectorForests_iterator end();
+    vectorForests::iterator end();
 
-    vectorForests_const_iterator cbegin() const;
+    vectorForests::const_iterator cbegin() const;
 
-    vectorForests_const_iterator cend() const;
+    vectorForests::const_iterator cend() const;
 
     size_t size() const;
 

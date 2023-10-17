@@ -89,7 +89,7 @@ void Generator::setTrace(bool _trace)
 /* **************************************************
  *
  ************************************************** */
-Generator::itemSet_map_const_iterator Generator::cbegin() const
+Generator::itemSet_map::const_iterator Generator::cbegin() const
 {
     return states.cbegin();
 }
@@ -97,7 +97,7 @@ Generator::itemSet_map_const_iterator Generator::cbegin() const
 /* **************************************************
  *
  ************************************************** */
-Generator::itemSet_map_const_iterator Generator::cend() const
+Generator::itemSet_map::const_iterator Generator::cend() const
 {
     return states.cend();
 }

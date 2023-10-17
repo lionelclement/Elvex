@@ -227,7 +227,7 @@ dictionary_line:
 	    formToEntries = foundCode->second;
 	  } else {
 	    formToEntries = new Parser::entries_map();
-	    parser._insertCacheLexicon(std::make_pair(code, formToEntries));
+	    parser.insertCacheLexicon(std::make_pair(code, formToEntries));
 	  }
 	  auto foundHead = formToEntries->find(Vartable::IS_A_FORM);
 	  entriesPtr entries;
@@ -252,7 +252,7 @@ dictionary_line:
 	    formToEntries = foundCode->second;
 	  } else {
 	    formToEntries = new Parser::entries_map;
-	    parser._insertCacheLexicon(std::make_pair(code, formToEntries));
+	    parser.insertCacheLexicon(std::make_pair(code, formToEntries));
 	  }
 	  auto foundHead = formToEntries->find(Vartable::IS_A_FORM);
 	  entriesPtr entries;
@@ -287,9 +287,9 @@ dictionary_line:
 	      headToEntries = foundCode->second;
 	    } else {
 	      headToEntries = new Parser::entries_map;
-	      parser._insertCacheLexicon(std::make_pair(pos, headToEntries));
+	      parser.insertCacheLexicon(std::make_pair(pos, headToEntries));
 	    }
-	    Parser::entries_map_iterator foundHead = headToEntries->find(head);
+	    Parser::entries_map::iterator foundHead = headToEntries->find(head);
 	    if (foundHead != headToEntries->cend()){
 	      entries = foundHead->second;
 	    } else {
