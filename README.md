@@ -1,4 +1,6 @@
-# Elvex: <small>a Rule-Based NLG System</small>
+# Elvex:
+a Rule-Based NLG System
+---
 
 1. No Need for Large Training Corpus: **Elvex** does not rely on vast text corpora for training, reducing storage and computational requirements.
 
