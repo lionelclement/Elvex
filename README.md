@@ -1,7 +1,7 @@
 Elvex 
 =====
 
-1. No Need for Large Training Corpus: Elvex does not rely on vast text corpora for training, reducing storage and computational requirements.
+1. No Need for Large Training Corpus: **Elvex** does not rely on vast text corpora for training, reducing storage and computational requirements.
 
 2. Deterministic Responses: It generates deterministic responses, ensuring consistent results for a given input.
 
