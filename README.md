@@ -24,7 +24,7 @@ Write automatically and quickly relevant and adequate texts in natural language,
 In practical terms, how can you use Elvex to build a Text Generator for an application (such as a Chatbot, Letter-writer, etc)?
 --------------------
 
-To use **Elvex** software on your application, you first need to create a **lexicon** and **grammatical rules** by using the **Elvex language** and adhering to the **Elvex formalism**.
+To use **Elvex** software for your purpose, you first need to create a **lexicon** and **grammatical rules** by using the **Elvex language** and adhering to the **Elvex formalism**.
 
 The inputs will depend on the grammar built for your application, encompassing both the meaning and the enunciative intent.
 
