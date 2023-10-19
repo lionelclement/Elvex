@@ -1,15 +1,15 @@
 Elvex 
 =====
 
-    1. No Need for Large Training Corpus: Elvex does not rely on vast text corpora for training, reducing storage and computational requirements.
+1. No Need for Large Training Corpus: Elvex does not rely on vast text corpora for training, reducing storage and computational requirements.
 
-    2. Deterministic Responses: It generates deterministic responses, ensuring consistent results for a given input.
+2. Deterministic Responses: It generates deterministic responses, ensuring consistent results for a given input.
 
-    3. No Unexpected Answers: **Elvex** avoids generating unexpected or incorrect responses based on probabilistic statistics, enhancing reliability.
+3. No Unexpected Answers: **Elvex** avoids generating unexpected or incorrect responses based on probabilistic statistics, enhancing reliability.
 
-    4. Explicit Input: The system operates based on explicit input, reducing the chance of ambiguous or misinterpreted responses.
+4. Explicit Input: The system operates based on explicit input, reducing the chance of ambiguous or misinterpreted responses.
 
-    5. Motivated by General Linguistics: **Elvex**'s approach is rooted in principles of general linguistics.
+5. Motivated by General Linguistics: **Elvex**'s approach is rooted in principles of general linguistics.
 
 Elvex Project
 =====
