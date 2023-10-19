@@ -1,5 +1,4 @@
-Elvex: <small>A Rule-Based NLG System</small>
-=====
+# Elvex: <small>a Rule-Based NLG System</small>
 
 1. No Need for Large Training Corpus: **Elvex** does not rely on vast text corpora for training, reducing storage and computational requirements.
 
@@ -11,8 +10,7 @@ Elvex: <small>A Rule-Based NLG System</small>
 
 5. Motivated by General Linguistics: **Elvex**'s approach is rooted in principles of general linguistics.
 
-Elvex Project
-=====
+#Elvex Project
 
 The name **Elvex** encompasses the name of a **software**, the name of a natural text generation (NLG) **algorithm**, the name of the **language** used to write natural language grammars and the name of a **linguistic formalism** for NLG.
 
