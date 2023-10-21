@@ -107,16 +107,67 @@ Citation
 
 *Linguistic Resources for the Automatic Generation of Texts in Natural Language: The Elvex Formalism*, by Lionel Clément, 2023, forthcoming in *Linguistic Resources for Natural Language Processing - On the Necessity of Using Linguistic Methods to Develop NLP Software*, edited by Max Silberztein, Springer.
 
-One of the most difficult stuff already done with Elvex
+Some of the most difficult stuff already done with Elvex
 =====
 
-- Adjective order in English (*big yellow squared stuff*, not *squared yellow big stuff*)
-- Anaphora resolution process between sentences with pronouns, synonyms and hypernyms
-- Complex idiomatic phrases (not always contiguous)
-- Past participle aggrement in French with transitive verbs
-- Lexical functions (based on Mel'čuk theory)
-- Coordinations with Right-Node Raising and Gapping
+- **Adjective order in English**
+
+    *big yellow squared stuff*\
+    **squared yellow big stuff*
+
+- **French slang language**
+
+    text [HEAD\:SEL, 
+        i:[HEAD\:HUMAN, number\:sg, gender\:fm], 
+        ii:[HEAD:IMPORTUN, number\:sg, gender\:ms, lexical_function\:magn], 
+        iii:[HEAD\:CAR, number\:sg, mod:<[HEAD:BROKEN]>],
+    language\_register\:slang]
+
+	=>
+"*La nana a fourgué une chiotte ruinée à un grand casse-burnes.*"\
+"*La gosse a bicravé une chiotte naze à un putain d'emmerdeur.*"\
+"*La nana a bicravé une tire explosée à un sale chieur.*"\
+"*La nana a bicravé une tire fusillée à un grand casse-burnes.*"\
+"*La gosse a bicravé une bagnole en bouillie à un gros boulet.*"\
+"*La donzelle a bicravé une chiotte explosée à un grand casse-couilles.*"\
+"*La meuf a bicravé une bagnole fusillée à un gros boulet.*"\
+"*La gonzesse a camelotté une bagnole rétamée à un putain d'emmerdeur.*"\
+"*La moukère a camelotté une bagnole ruinée à un grand casse-couilles.*"\
+"*La meuf a bicravé une chignole en bouillie à un sale chieur.*"\
+"*La gonzesse a bicravé une caisse en bouillie à un grand
+casse-bonbons.*"
+
+	(something like "*The girl peddled a shot-up car to a major pain in the neck.*")
+
+- **Anaphora resolution process between sentences with pronouns, synonyms and hypernyms**
+	
+	*Le garagiste a réparé ma voiture, on pourra récupérer **le véhicule** dans **son** garage demain.* (The mechanic has repaired my car, and we'll be able to pick it up from his garage to)
+
+- **Complex idiomatic phrases**
+
+	*They had **to bite the bullet** and face the overwhelming tasks ahead.*
+
+- **Past participle aggrement in French with transitive verbs**
+
+	*La lettre qu'a écrit Paul* (Paul's letter)\
+	*La lettre que Paul a écrit**e*** (The letter Paul wrote)\
+	*Paul a écrit la lettre* (Paul wrote the letter)
+
+- **Lexical functions (based on Mel'čuk theory)**
+
+	*Un **gros** fumeur* (A ++ smoker)\
+	*Un **grand** admirateur* (A ++ fan)\
+	*Un argument **solide*** (A ++ argument)
+
+- **Coordinations with Right-Node Raising and Gapping**
+	
+	*Les étudiants empruntent des livres sur 15 jours, alors que les enseignants sur 3 semaines.* (Students borrow books for 15 days, while teachers borrow them for 3 weeks.)
+
 - Morphology in standard Breton
+
+	text [HEAD\:HOUSE] =>\
+	*tier / kalz a dier / un ti / an ti / hon tier / da dier / hon ti / ho ti / ma zi / o zi / ho tier / o zier / da di / ma zier / he zier / e tier / he zi / e ti*
+
 
 An example of a solution to a NLG problem solved with *Elvex*: Causal clauses in a little French Grammar
 -----------------------------------------------
