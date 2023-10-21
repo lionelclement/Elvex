@@ -1,1 +1,1 @@
-Axiom [HEAD:EUPHORIC, i:[HEAD:HUMAN, ID:1], ii:[HEAD:TO_USE, i:[HEAD:YOU], ii:[HEAD:ELVEX]], verbal_constr:neg|no_int, vtense:$t]
+Axiom [HEAD:EUPHORIC, i:[HEAD:STUDENT, ID:1], ii:[HEAD:TO_USE, i:[ID:1], ii:[HEAD:ELVEX]], verbal_constr:no_neg|neg|no_int, vtense:$vtense]
