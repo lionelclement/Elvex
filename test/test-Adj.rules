@@ -1,0 +1,45 @@
+@trace
+@withspaces
+S → [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ]
+{
+  printlnstderr __FILE__, "...";
+  [mod:$modifiers];
+  foreach $modifier in $modifiers {
+    $entries = search $modifier on adj;
+    foreach $entry in $entries {
+      [type:$type] ⊂ $entry;
+      if ($type == size) {
+        ↓1 = $modifier;
+      } else if ($type == age) {
+        ↓2 = $modifier;
+      } else if ($type == shape) {
+        ↓3 = $modifier;
+      } else if ($type == color) {
+        ↓4 = $modifier;
+      } else if ($type == origin) {
+        ↓5 = $modifier;
+      } else if ($type == material) {
+        ↓6 = $modifier;
+      } else if ($type == purpose) {
+        ↓7 = $modifier;
+      } else {
+        ↓8 = $modifier;
+      }
+    }
+  }
+  attest (↓1 => #1);
+  attest (↓2 => #2);
+  attest (↓3 => #3);
+  attest (↓4 => #4);
+  attest (↓5 => #5);
+  attest (↓6 => #6);
+  attest (↓7 => #7);
+  attest (↓8 => #8);
+}
+
+@trace
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

@@ -1,0 +1,5 @@
+@size = [type:size] ;
+@color= [type:color];
+@shape= [type:shape] ;
+@material= [type:material] ;
+

@@ -1,0 +1,18 @@
+@trace
+@withspaces
+S → A A
+{
+  printlnstderr __FILE__, "...";
+  [a:$x];
+  ↓1 = ↑;
+  ↓2 = ⇓1 U [b:$x];
+}
+
+@trace
+A → a 
+{
+  [b:$x] ⊂ ↑;
+  ↓1 = ↑ U [c:$x];
+  ⇑ = ⇓1;
+}
+
