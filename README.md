@@ -163,7 +163,7 @@ casse-bonbons.*"
 	
 	*Les étudiants empruntent des livres sur 15 jours, alors que les enseignants sur 3 semaines.* (Students borrow books for 15 days, while teachers borrow them for 3 weeks.)
 
-- Morphology in standard Breton
+- **Morphology in standard Breton**
 
 	text [HEAD\:HOUSE] =>\
 	*tier / kalz a dier / un ti / an ti / hon tier / da dier / hon ti / ho ti / ma zi / o zi / ho tier / o zier / da di / ma zier / he zier / e tier / he zi / e ti*
