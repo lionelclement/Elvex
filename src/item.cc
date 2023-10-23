@@ -34,8 +34,10 @@
 #include "terms.hpp"
 #include "serializable.hpp"
 
-uint32_t Item::TERM_NA = UINT16_MAX;
+uint32_t Item::TERM_NA = UINT32_MAX;
 uint8_t Item::INDEX_NA = UINT8_MAX;
+uint8_t Item::POSTERM_NA = UINT8_MAX;
+uint8_t Item::POSTERMS_NA = UINT8_MAX - 1;
 
 /* **************************************************
  *
@@ -63,7 +65,7 @@ Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr 
     unsigned j = 0;
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
-        this->indexTerms.push_back(INDEX_NA);
+        this->indexTerms.push_back(POSTERM_NA);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedSonFeatures->push_back(Features::NIL);
@@ -619,7 +621,7 @@ void Item::defaultInheritedSonFeatures()
 /* **************************************************
  *
  ************************************************** */
-void Item::print(std::ostream &out) const
+void Item::print(std::ostream &out) /*const*/
 {
     out << "<table border=\"1\" style=\"color:black; ";
     if (isSetFlags(Flags::BOTTOM))
@@ -670,7 +672,8 @@ void Item::print(std::ostream &out) const
     if (s_id)
     {
         out << "<td>";
-        out << '#' << std::hex << getId();
+        //out << '#' << std::hex << getId();
+        out << peekSerialString();
         out << "</td>";
     }
     if (s_ruleId)
@@ -727,15 +730,15 @@ void Item::print(std::ostream &out) const
         if (index == INDEX_NA)
             out << "NA";
         else
-            out << index;
+            out << '#' << (int)index;
         out << "</td>";
     }
     if (s_indexTerms)
     {
         out << "<td>";
         for (uint8_t indexTerm : indexTerms)
-            if (indexTerm == INDEX_NA)
-                out << "INDEX_NA"
+            if (indexTerm == POSTERM_NA)
+                out << "NA"
                     << "&nbsp;";
             else
                 out << indexTerm << "&nbsp;";
@@ -754,11 +757,11 @@ void Item::print(std::ostream &out) const
     if (s_ranges)
     {
         out << "<td>"; //<center>Ranges</center><br>";
-        uint8_t old = INDEX_NA;
+        uint8_t old = INT8_MAX;
         bool first = true;
         for (uint8_t range : ranges)
         {
-            if (old != INDEX_NA)
+            if (old != INT8_MAX)
             {
                 if (first)
                     first = false;
@@ -833,9 +836,11 @@ void Item::print(std::ostream &out) const
         auto r = rand();
         out << R"(
         <td><table>
-        <tr><td><button onclick="toggleVisibility('cell_)" << std::hex << r << getId() << R"(') ">Toggle</button></td></tr>
+        <tr><td><button onclick="toggleVisibility('cell_)"
+            << std::hex << r << getId() << R"(') ">Toggle</button></td></tr>
         <tr><td bgcolor="white">
-        <div class="hidden" id="cell_)" << std::hex << r << getId() << "\">";
+        <div class="hidden" id="cell_)"
+            << std::hex << r << getId() << "\">";
         if (statements)
             statements->print(out, 5, 0, 0x000000u, 0xFFFFFFu, true, "{", "}", "");
         else
@@ -930,39 +935,33 @@ void Item::apply(Parser &parser, Generator *generator, bool verbose)
 void Item::makeSerialString()
 {
     std::ostringstream stream;
-    stream << 'I' << std::hex << (int)getRuleId() << '_' << (int)index << '_';
-    std::vector<uint8_t>::const_iterator ind = indexTerms.cbegin();
-    while (ind != indexTerms.cend())
+    stream << std::hex << (int)getRuleId() << '#' << (int)index << '#';
+    for (auto ind = indexTerms.cbegin(); ind != indexTerms.cend(); ++ind)
     {
-        stream << std::hex << (int)*(ind++) << '/';
+        stream << std::hex << (int)*ind << '/';
     }
-    stream << '_';
-    set_of_uint32_t::const_iterator ref = refs.cbegin();
-    while (ref != refs.cend())
+    stream << '#';
+    for (auto ref = refs.cbegin(); ref != refs.cend(); ++ref)
     {
-        stream << std::hex << (int)*(ref++) << '/';
+        stream << std::hex << (int)*ref << '/';
     }
-    stream << '_';
-    for (std::vector<class ForestIdentifier *>::const_iterator fi = forestIdentifiers.cbegin();
-    fi != forestIdentifiers.cend();
-    ++fi)
+    stream << '#';
+    for (auto fi = forestIdentifiers.cbegin();
+         fi != forestIdentifiers.cend();
+         ++fi)
     {
-        if (*fi)
-        {
-            //stream << '/' << (*fi)->peekSerialString() << '/';
-            stream << '/' << (int)(*fi)->getCode() << '/' << (int)(*fi)->getFrom() << '/' << (int)(*fi)->getTo() << '/';
-            stream << (*fi)->getFeaturesSerialString() << '/';
-        }
-        else
-        {
-            stream << '/' << '/';
-        }
+            stream << '/' << ((*fi) ? (*fi)->peekSerialString() : "0") << '/';
     }
 
-    stream << '_';
+    stream << '#';
     stream << inheritedFeatures->peekSerialString();
+
+    //stream << '#';
+    //stream << (statements) ? statements->peekSerialString() : std::string("0");
+    
     stream.flush();
     serialString = stream.str();
+
 }
 
 /* **************************************************

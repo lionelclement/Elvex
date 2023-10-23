@@ -152,9 +152,9 @@ else()
     message("libxml2 not found")
 endif()
 
-add_executable(elvexbuildlexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
-target_compile_options(elvexbuildlexicon PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
-target_compile_definitions(elvexbuildlexicon PUBLIC
+add_executable(elvexlexicon ${ELVEX_COMMON_SOURCES} src/buildlexicon.cc)
+target_compile_options(elvexlexicon PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
+target_compile_definitions(elvexlexicon PUBLIC
         #TRACE_DIFF
 )
 
@@ -166,6 +166,6 @@ FLEX_TARGET(postedition_fr src/postedition_fr.l ${CMAKE_CURRENT_BINARY_DIR}/src/
 add_executable(elvexpostedition_fr ${FLEX_postedition_fr_OUTPUTS})
 target_compile_options(elvexpostedition_fr PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare  -Wno-missing-field-initializers)
 
-install(TARGETS elvex elvexbuildlexicon elvexpostedition_en elvexpostedition_fr
+install(TARGETS elvex elvexlexicon elvexpostedition_en elvexpostedition_fr
         RUNTIME DESTINATION bin)
 

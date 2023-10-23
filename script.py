@@ -1,7 +1,7 @@
 import sys
 
 num_forms = 32
-num_lemmas = 10000
+num_lemmas = 1000
 #It will take a while !
 #num_forms = 32
 #num_lemmas = 100

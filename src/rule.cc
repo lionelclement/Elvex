@@ -242,8 +242,10 @@ void Rule::setTrace(bool _trace)
 rulePtr Rule::clone() const
 {
     std::vector<termsPtr> rhsCopy;
-    for (size_t i = 0; i < rhs.size(); ++i)
+    for (size_t i = 0; i < rhs.size(); ++i){
         rhsCopy.push_back(rhs[i]->clone());
+        //rhsCopy.push_back(rhs[i]);
+    }
     rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, this->withSpaces, this->bidirectional, this->permutable, lhs, rhsCopy, statements);
     rule->usages = usages;
     rule->trace = trace;
@@ -300,6 +302,32 @@ void Rule::print(std::ostream &outStream, uint8_t index, bool withSemantic, bool
             stms->print(outStream, 5, 0, 0x000000u, 0xFFFFFFu, true, "{", "}", "");
         outStream << (html ? "<BR>" : "\n");
     }
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+void Rule::makeSerialString() 
+{
+    std::ostringstream stream;
+    stream << std::hex << (int)lhs << ' ' ;
+    for (size_t i = 0; i < rhs.size(); ++i){
+        termsPtr terms = rhs[i];
+        if (terms->isOptional())
+            stream << '[';
+        for (auto term = terms->begin(); term != terms->end(); ++term){
+            stream << '|' << std::hex << (int)*term;
+        }
+    }
+    // statementsPtr stms = getStatements();
+    // if (stms){
+    //     stream << stms->peekSerialString();
+    // } else {
+    //     stream << '#';
+    // }
+    // stream.flush();
+    serialString = stream.str();
+    
 }
 
 /* **************************************************

@@ -19,14 +19,15 @@
 
 #include <iostream>
 #include "serializable.hpp"
+#include "messages.hpp"
 
 /* **************************************************
  *
  ************************************************** */
 Serializable::Serializable()
 {
+    serialString = std::string();
     serialHashCode = 0;
-    serialString = "";
 }
 
 /* **************************************************
@@ -41,9 +42,13 @@ Serializable::~Serializable()
  ************************************************** */
 std::string Serializable::peekSerialString()
 {
-    if (!serialHashCode)
+    if (serialHashCode == 0)
     {
+        std::string old = serialString;
         makeSerialString();
+        if (!old.empty() && old != serialString){
+            std::cerr << old << " != " << serialString << std::endl;
+        }
         serialHashCode = std::hash<std::string>{}(serialString);
     }
     return serialString;
@@ -54,8 +59,7 @@ std::string Serializable::peekSerialString()
  ************************************************** */
 void Serializable::resetSerial()
  {
-     serialHashCode = 0;
-     serialString = "";
+    serialHashCode = 0;
  }
 
 /* **************************************************
@@ -63,11 +67,10 @@ void Serializable::resetSerial()
  ************************************************** */
 size_t Serializable::hash()
 {
-    if (!serialHashCode)
+    if (serialHashCode == 0)
     {
         makeSerialString();
         return serialHashCode = std::hash<std::string>{}(serialString);
     }
     return serialHashCode;
 }
-

@@ -32,6 +32,7 @@
 #include "shared_ptr.hpp"
 
 class Rule : public Facade,
+             public Serializable,
              public std::enable_shared_from_this<class Rule>
 {
 
@@ -46,6 +47,8 @@ private:
     bool withSpaces;
     bool bidirectional;
     bool permutable;
+
+    void makeSerialString(void);
 
 public:
     static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs,

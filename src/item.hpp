@@ -38,6 +38,8 @@ public:
     typedef std::unordered_set<uint32_t> set_of_uint32_t;
     static uint32_t TERM_NA;
     static uint8_t INDEX_NA;
+    static uint8_t POSTERM_NA;
+    static uint8_t POSTERMS_NA;
 
 private:
     rulePtr rule;                                            // the grammar rule
@@ -61,6 +63,7 @@ private:
          s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
 
     void makeSerialString(void);
+    std::string makeSerialString2(void);
 
 public:
     Item(rulePtr rule, uint8_t index, statementsPtr statements);
@@ -73,7 +76,7 @@ public:
 
     // static constructors
 
-    static class Item *create(const rulePtr &, uint8_t index = INDEX_NA, uint8_t indexTerm = INDEX_NA, statementsPtr = statementsPtr());
+    static class Item *create(const rulePtr &, uint8_t index = INDEX_NA, uint8_t indexTerm = POSTERM_NA, statementsPtr = statementsPtr());
 
     static class Item *create(const rulePtr &, uint8_t index, std::vector<uint8_t> &indexTerms, statementsPtr);
 
@@ -187,7 +190,7 @@ public:
 
     void addStatements(const statementsPtr &);
 
-    void print(std::ostream &) const;
+    void print(std::ostream &) /*const*/;
 
     void renameVariables(uint32_t);
 

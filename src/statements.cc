@@ -66,7 +66,7 @@ size_t Statements::size()
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::begin()
+Statements::list_statement::const_iterator Statements::begin()
 {
     return this->statements.begin();
 }
@@ -74,7 +74,7 @@ Statements::list::const_iterator Statements::begin()
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::end()
+Statements::list_statement::const_iterator Statements::end()
 {
     return this->statements.end();
 }
@@ -82,7 +82,7 @@ Statements::list::const_iterator Statements::end()
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::cbegin() const
+Statements::list_statement::const_iterator Statements::cbegin() const
 {
     return this->statements.cbegin();
 }
@@ -90,7 +90,7 @@ Statements::list::const_iterator Statements::cbegin() const
 /* **************************************************
  *
  ************************************************** */
-Statements::list::const_iterator Statements::cend() const
+Statements::list_statement::const_iterator Statements::cend() const
 {
     return this->statements.cend();
 }
@@ -137,7 +137,7 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         guard->print(out, tabulationLenght, tabulation, color, bgcolor);
     }
     bool first = true;
-    for (list::const_iterator statement = statements.cbegin(); statement != statements.cend(); ++statement)
+    for (list_statement::const_iterator statement = statements.cbegin(); statement != statements.cend(); ++statement)
     {
         if (first)
             first = false;
@@ -164,18 +164,29 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
     }
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Statements::makeSerialString()
-{
-    serialString = '/';
-    if (guard)
-        serialString += '-' + guard->peekSerialString() + '/';
-    for (auto i : statements)
-        serialString += '_' + i->peekSerialString() + '_';
-    serialString += '$';
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// void Statements::makeSerialString()
+// {
+//     std::ostringstream stream;
+    
+//     stream << '#';
+//     if (guard)
+//         stream << '-' + guard->peekSerialString() + '/';
+//     if (!statements.empty()){
+//         for (auto statement : statements){
+//             //stream << '_' + (statement ? statement->peekSerialString() : "0") + '_';
+//             //stream << '_' + (statement ? statement->peekSerialString() : "0") + '_';
+//         }
+//     } else {
+//         stream << '0';
+//     }
+//     stream << '#';
+
+//     stream.flush();
+//     serialString = stream.str();
+// }
 
 /* **************************************************
  *
@@ -184,7 +195,7 @@ statementsPtr Statements::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
 {
     statementsPtr _statements = Statements::create();
     _statements->guard = (guard) ? guard->clone(protectedFlags) : statementPtr();
-    for (list::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
+    for (list_statement::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
         _statements->addStatement((*statement)->clone(protectedFlags));
     _statements->addFlags(protectedFlags & this->getFlags());
     return _statements;
@@ -197,7 +208,7 @@ void Statements::renameVariables(uint32_t code)
 {
     if (guard)
         guard->renameVariables(code);
-    for (list::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
+    for (list_statement::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
         (*statement)->renameVariables(code);
 }
 
@@ -208,7 +219,7 @@ bool Statements::findVariable(uint32_t code)
 {
     if (guard && guard->findVariable(code))
         return true;
-    for (list::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
+    for (list_statement::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
         if ((*statement)->findVariable(code))
             return true;
     return false;
@@ -260,7 +271,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             item->print(std::cout);
             std::cout << std::endl;
         }
-        for (list::const_iterator statement = statements.cbegin();
+        for (list_statement::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
         {
@@ -282,7 +293,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             std::cout << std::endl;
         }
 
-        for (list::const_iterator statement = statements.cbegin();
+        for (list_statement::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
         {
@@ -312,7 +323,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             }
         }
     }
-    for (list::const_iterator statement = statements.cbegin();
+    for (list_statement::const_iterator statement = statements.cbegin();
          statement != statements.cend();
          ++statement)
     {

@@ -28,20 +28,17 @@ class ForestIdentifier :
 
 private:
 
-    size_t code;
+    uint32_t code;
     uint8_t from;
     uint8_t to;
-    std::string featuresSerialString;
     
 
 public:
-    ForestIdentifier(size_t code, uint8_t from, uint8_t to, 
-            const std::string& featuresSerialString);
+    ForestIdentifier(uint32_t code, uint8_t from, uint8_t to);
 
     ~ForestIdentifier() override;
 
-    static class ForestIdentifier* create(size_t code, uint8_t from, uint8_t to, 
-            const std::string &featuresSerialString);
+    static class ForestIdentifier* create(uint32_t code, uint8_t from, uint8_t to);
 
     void makeSerialString() override;
     
@@ -53,12 +50,8 @@ public:
         return to;
     };
 
-    size_t getCode() const {
+    uint32_t getCode() const {
         return code;
-    };
-
-    std::string &getFeaturesSerialString() {
-        return featuresSerialString;
     };
 
     struct Hash {

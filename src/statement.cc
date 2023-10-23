@@ -930,170 +930,173 @@ void Statement::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabul
     }
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Statement::makeSerialString()
-{
-    serialString = std::string();
-    switch (op)
-    {
-    case ATTEST_STATEMENT:
-        serialString = 'A' + lhs->peekSerialString();
-        break;
-    case NIL_STATEMENT:
-        serialString = 'B';
-        break;
-    case ASSIGNMENT_STATEMENT:
-        serialString = 'C' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case SUBSUME_STATEMENT:
-        serialString = 'D' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case FUNCTION_STATEMENT:
-        switch (function)
-        {
-        case NOP:
-            serialString = 'E';
-            break;
-        case NOT:
-            serialString = 'F' + lhs->peekSerialString();
-            break;
-        case AND:
-            serialString = 'G' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case OR:
-            serialString = 'H' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case DIFF:
-            serialString = 'I' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case EQ:
-            serialString = 'J' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case PLUS:
-            serialString = 'K' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case MINUS:
-            serialString = 'L' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case TIMES:
-            serialString = 'M' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case DIVIDE:
-            serialString = 'N' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case MODULO:
-            serialString = 'O' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case LT:
-            serialString = 'P' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case LE:
-            serialString = 'Q' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case GT:
-            serialString = 'R' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case GE:
-            serialString = 'S' + lhs->peekSerialString() + rhs->peekSerialString();
-            break;
-        case MINUS_U:
-            serialString = 'T' + lhs->peekSerialString();
-            break;
-        case RANDOM:
-            serialString = 'U';
-            break;
-        }
-        break;
-    case CONSTANT_STATEMENT:
-        serialString = bitset->peekSerialString();
-        break;
-    case VARIABLE_STATEMENT:
-        serialString = 'V' + std::to_string(code);
-        break;
-    case ANONYMOUS_STATEMENT:
-        serialString = 'W';
-        break;
-    case PRINT_STATEMENT:
-        serialString = 'X' + statements->peekSerialString();
-        break;
-    case PRINTLN_STATEMENT:
-        serialString = 'Y' + statements->peekSerialString();
-        break;
-    case PRINTSTDERR_STATEMENT:
-        serialString = 'Z' + statements->peekSerialString();
-        break;
-    case PRINTLNSTDERR_STATEMENT:
-        serialString = 'z' + statements->peekSerialString();
-        break;
-    case FEATURES_STATEMENT:
-        serialString = 'y' + features->peekSerialString();
-        break;
-    case PAIRP_STATEMENT:
-        serialString = 'x' + pairp->peekSerialString();
-        break;
-    case GUARD_STATEMENT:
-        serialString = 'w' + features->peekSerialString();
-        break;
-    case UNIF_STATEMENT:
-        serialString = 'v' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case INHERITED_FEATURES_STATEMENT:
-        serialString = 'u';
-        break;
-    case SYNTHESIZED_FEATURES_STATEMENT:
-        serialString = 't';
-        break;
-    case DASH_STATEMENT:
-        serialString = 's' + std::to_string(code);
-        break;
-    case INHERITED_CHILDREN_FEATURES_STATEMENT:
-        serialString = 'q' + std::to_string(code);
-        break;
-    case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
-        serialString = 'o' + std::to_string(code);
-        break;
-    case IF_STATEMENT:
-        serialString = 'n' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case IF_CON_T_STATEMENT:
-        serialString = 'm' + lhs->peekSerialString();
-        if (rhs)
-        {
-            serialString += 'l' + rhs->peekSerialString();
-        }
-        break;
-    case DEFERRED_STATEMENT:
-        serialString = 'k' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case FOREACH_STATEMENT:
-        serialString = 'j' + lhs->peekSerialString() + rhs->peekSerialString();
-        break;
-    case FOREACH_CON_T_STATEMENT:
-        serialString = 'i' + lhs->peekSerialString();
-        if (rhs)
-        {
-            serialString += 'h' + rhs->peekSerialString();
-        }
-        break;
-    case STRING_STATEMENT:
-        serialString = '/' + string + '/';
-        break;
-    case STMS_STATEMENT:
-        serialString = '{' + statements->peekSerialString() + '}';
-        break;
-    case NUMBER_STATEMENT:
-        serialString = 'g' + number;
-        break;
-    case SEARCH_STATEMENT:
-        if (bitset)
-            serialString = 'f' + bitset->peekSerialString() + 'e' + lhs->peekSerialString();
-        else
-            serialString = 'd' + lhs->peekSerialString();
-        break;
-    }
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// void Statement::makeSerialString()
+// {
+//     switch (op)
+//     {
+//     case ATTEST_STATEMENT:
+//         serialString = 'A' + lhs->peekSerialString();
+//         break;
+//     case NIL_STATEMENT:
+//         serialString = 'B';
+//         break;
+//     case ASSIGNMENT_STATEMENT:
+//         serialString = 'C' + lhs->peekSerialString() + rhs->peekSerialString();
+//         break;
+//     case SUBSUME_STATEMENT:
+//         serialString = 'D' + lhs->peekSerialString() + rhs->peekSerialString();
+//         break;
+//     case FUNCTION_STATEMENT:
+//         switch (function)
+//         {
+//         case NOP:
+//             serialString = 'E';
+//             break;
+//         case NOT:
+//             serialString = 'F' + lhs->peekSerialString();
+//             break;
+//         case AND:
+//             serialString = 'G' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case OR:
+//             serialString = 'H' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case DIFF:
+//             serialString = 'I' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case EQ:
+//             serialString = 'J' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case PLUS:
+//             serialString = 'K' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case MINUS:
+//             serialString = 'L' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case TIMES:
+//             serialString = 'M' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case DIVIDE:
+//             serialString = 'N' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case MODULO:
+//             serialString = 'O' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case LT:
+//             serialString = 'P' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case LE:
+//             serialString = 'Q' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case GT:
+//             serialString = 'R' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case GE:
+//             serialString = 'S' + lhs->peekSerialString() + rhs->peekSerialString();
+//             break;
+//         case MINUS_U:
+//             serialString = 'T' + lhs->peekSerialString();
+//             break;
+//         case RANDOM:
+//             serialString = 'U';
+//             break;
+//         default:
+//             serialString = std::string();
+//         }
+//         break;
+//     case CONSTANT_STATEMENT:
+//         serialString = bitset->peekSerialString();
+//         break;
+//     case VARIABLE_STATEMENT:
+//         serialString = 'V' + std::to_string(code);
+//         break;
+//     case ANONYMOUS_STATEMENT:
+//         serialString = 'W';
+//         break;
+//     case PRINT_STATEMENT:
+//         serialString = 'X' + statements->peekSerialString();
+//         break;
+//     case PRINTLN_STATEMENT:
+//         serialString = 'Y' + statements->peekSerialString();
+//         break;
+//     case PRINTSTDERR_STATEMENT:
+//         serialString = 'Z' + statements->peekSerialString();
+//         break;
+//     case PRINTLNSTDERR_STATEMENT:
+//         serialString = 'z' + statements->peekSerialString();
+//         break;
+//     case FEATURES_STATEMENT:
+//         serialString = 'y' + features->peekSerialString();
+//         break;
+//     case PAIRP_STATEMENT:
+//         serialString = 'x' + pairp->peekSerialString();
+//         break;
+//     case GUARD_STATEMENT:
+//         serialString = 'w' + features->peekSerialString();
+//         break;
+//     case UNIF_STATEMENT:
+//         serialString = 'v' + lhs->peekSerialString() + rhs->peekSerialString();
+//         break;
+//     case INHERITED_FEATURES_STATEMENT:
+//         serialString = 'u';
+//         break;
+//     case SYNTHESIZED_FEATURES_STATEMENT:
+//         serialString = 't';
+//         break;
+//     case DASH_STATEMENT:
+//         serialString = 's' + std::to_string(code);
+//         break;
+//     case INHERITED_CHILDREN_FEATURES_STATEMENT:
+//         serialString = 'q' + std::to_string(code);
+//         break;
+//     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
+//         serialString = 'o' + std::to_string(code);
+//         break;
+//     case IF_STATEMENT:
+//         serialString = 'n' + lhs->peekSerialString() + rhs->peekSerialString();
+//         break;
+//     case IF_CON_T_STATEMENT:
+//         serialString = 'm' + lhs->peekSerialString();
+//         if (rhs)
+//         {
+//             serialString += 'l' + rhs->peekSerialString();
+//         }
+//         break;
+//     case DEFERRED_STATEMENT:
+//         serialString = 'k' + lhs->peekSerialString() + rhs->peekSerialString();
+//         break;
+//     case FOREACH_STATEMENT:
+//         serialString = 'j' + lhs->peekSerialString() + rhs->peekSerialString();
+//         break;
+//     case FOREACH_CON_T_STATEMENT:
+//         serialString = 'i' + lhs->peekSerialString();
+//         if (rhs)
+//         {
+//             serialString += 'h' + rhs->peekSerialString();
+//         }
+//         break;
+//     case STRING_STATEMENT:
+//         serialString = '/' + string + '/';
+//         break;
+//     case STMS_STATEMENT:
+//         serialString = '{' + statements->peekSerialString() + '}';
+//         break;
+//     case NUMBER_STATEMENT:
+//         serialString = 'g' + number;
+//         break;
+//     case SEARCH_STATEMENT:
+//         if (bitset)
+//             serialString = 'f' + bitset->peekSerialString() + 'e' + lhs->peekSerialString();
+//         else
+//             serialString = 'd' + lhs->peekSerialString();
+//         break;
+//     default:
+//         serialString = std::string();
+//     }
+// }
 
 /* **************************************************
  *
@@ -2997,7 +3000,7 @@ void Statement::renameVariables(uint32_t key)
     {
     case VARIABLE_STATEMENT:
         code = Vartable::nameToCode(Vartable::codeToName(code), key);
-        resetSerial();
+        //resetSerial();
         break;
     case CONSTANT_STATEMENT:
     case ANONYMOUS_STATEMENT:
@@ -3086,7 +3089,7 @@ void Statement::toggleEnable(statementPtr statementRoot, class Item *item, Gener
     case DASH_STATEMENT:
         if (on)
         {
-            if (item->getIndexTerms()[getFirst()] == Item::INDEX_NA)
+            if (item->getIndexTerms()[getFirst()] == Item::POSTERM_NA)
             //|| ((getSecond() != UINT8_MAX) && (item->getIndexTerms()[getFirst()] != getSecond())))
             {
                 statementRoot->addFlags(Flags::DISABLED);

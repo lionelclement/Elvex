@@ -24,7 +24,7 @@
 
 # Name of the Elvex program
 elvex = bin/elvex
-elvexbuildlexicon = bin/elvexbuildlexicon
+elvexlexicon = bin/elvexlexicon
 # Check the existence of dot (Graphviz)
 DOT = $(shell command -v dot 2> /dev/null)
 # Check the existence of xsltproc
@@ -122,10 +122,9 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 %.fsa: %.tmp-morpho %.tmp-pattern
 	@echo "build $@ from $^"
 	@$(if $(wildcard $*.macros), \
-			$(elvexbuildlexicon) -cld . -clf $* -macrosFile $*.macros -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build, \
-			$(elvexbuildlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build ); \
+			$(elvexlexicon) -cld . -clf $* -macrosFile $*.macros -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build, \
+			$(elvexlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build ); \
 	
-
 %.tmp-morpho: %.tmp-form %.tmp-pos %.tmp-lemma %.tmp-features
 	@echo "build $@ from $^"
 	@paste $*.tmp-form $*.tmp-pos $*.tmp-lemma $*.tmp-features > $@

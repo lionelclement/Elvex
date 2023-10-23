@@ -71,7 +71,7 @@
     }
 
 class Statement : public Facade,
-                  public Serializable,
+                  //public Serializable,
                   public std::enable_shared_from_this<class Statement>
 {
 
@@ -157,8 +157,8 @@ private:
     statementsPtr statements;
     double number;
 
-private:
-    void makeSerialString();
+//private:
+    //void makeSerialString();
 
 public:
     Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);

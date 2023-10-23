@@ -24,14 +24,14 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-ForestIdentifier::ForestIdentifier(size_t code, uint8_t from, uint8_t to,
-                                   const std::string &featuresSerialString)
+ForestIdentifier::ForestIdentifier(uint32_t code, uint8_t from, uint8_t to/*,
+                                   const std::string &featuresSerialString*/)
 {
     NEW;
     this->code = code;
-    this->featuresSerialString = featuresSerialString;
     this->from = from;
     this->to = to;
+    //this->featuresSerialString = featuresSerialString;
 }
 
 /* **************************************************
@@ -46,12 +46,11 @@ ForestIdentifier::~ForestIdentifier()
  *                                                            *
  ************************************************************ */
 class ForestIdentifier *
-ForestIdentifier::create(size_t code,
+ForestIdentifier::create(uint32_t code,
                          uint8_t from,
-                         uint8_t to,
-                         const std::string &featuresSerialString)
+                         uint8_t to)
 {
-    return new ForestIdentifier(code, from, to, featuresSerialString);
+    return new ForestIdentifier(code, from, to);
 }
 
 /* **************************************************
@@ -61,8 +60,7 @@ void ForestIdentifier::makeSerialString()
 {
     std::ostringstream stream;
     uint64_t encode = static_cast<uint64_t>(code) << 32 | static_cast<uint64_t>(from) << 8 | static_cast<uint64_t>(to);
-    stream << std::hex << encode << '-' << featuresSerialString;
-    //stream << std::hex << code << '-' << from << '-' << to << '-' << featuresSerialString;
+    stream << '#' << std::hex << encode;
     stream.flush();
     serialString = stream.str();
 }

@@ -75,7 +75,7 @@ bitsetPtr Vartable::createSymbol(const std::string &name)
         Vartable::bitToNameMap[i] = name;
         variableMapIndex <<= 1;
         if (variableMapIndex.none())
-            throw fatal_exception("Too much values to create a new variable (" + name + " not created)");
+            throw fatal_exception("Too much values to create a new symbol (" + name + " not created)");
     }
     else
     {
@@ -105,7 +105,11 @@ uint32_t Vartable::nameToCode(const std::string &name)
     {
         code = codeMapIndex;
         nameToCodeMap.insert(std::make_pair(name, codeMapIndex));
-        codeToNameMap.insert(std::make_pair(codeMapIndex++, name));
+        codeToNameMap.insert(std::make_pair(codeMapIndex, name));
+        if (code == UINT32_MAX){
+            throw fatal_exception("Too much values to create a new variable (" + name + " not created)");
+        }
+        codeMapIndex++;
     }
     else
         code = it->second;

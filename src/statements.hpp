@@ -29,20 +29,20 @@
 #include "generator.hpp"
 
 class Statements : public Facade,
-                   public Serializable,
+                   //public Serializable,
                    public std::enable_shared_from_this<class Statements>
 {
 
 public:
-    typedef std::list<statementPtr> list;
+    typedef std::list<statementPtr> list_statement;
 
 private:
     statementPtr guard;
-    list statements;
+    list_statement statements;
 
     Statements(const statementPtr &);
 
-    void makeSerialString(void);
+    //void makeSerialString(void);
 
 public:
     ~Statements();
@@ -51,13 +51,13 @@ public:
 
     size_t size(void);
 
-    list::const_iterator begin(void);
+    list_statement::const_iterator begin(void);
 
-    list::const_iterator end(void);
+    list_statement::const_iterator end(void);
 
-    list::const_iterator cbegin(void) const;
+    list_statement::const_iterator cbegin(void) const;
 
-    list::const_iterator cend(void) const;
+    list_statement::const_iterator cend(void) const;
 
     void addStatement(const statementPtr &);
 

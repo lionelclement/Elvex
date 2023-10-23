@@ -27,9 +27,12 @@
 #include <libxml/tree.h>
 #endif
 
+#include "facade.hpp"
 #include "shared_ptr.hpp"
 
-class Terms : public std::enable_shared_from_this<class Terms>
+class Terms : 
+        public Facade,
+        public std::enable_shared_from_this<class Terms>
 {
 
 private:

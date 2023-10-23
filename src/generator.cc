@@ -553,10 +553,9 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 
                 class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                 forestPtr forestFound = forestPtr();
-                class ForestIdentifier *fi = ForestIdentifier::create(static_cast<size_t>(it->getCurrentTerm()),
-                                                                      row,
-                                                                      row,
-                                                                      "");
+                class ForestIdentifier *fi = ForestIdentifier::create(it->getCurrentTerms()->getId(),
+                                                                       row,
+                                                                       row);
                 auto forestMapIt = forestMap.find(fi);
                 if (forestMapIt != forestMap.cend())
                 {
@@ -567,7 +566,6 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 else
                 {
                     forestFound = Forest::create(row, row);
-
                     forestMap.insert(fi, forestFound);
                     it->addForestIdentifiers(it->getIndex(), fi);
                 }
@@ -582,8 +580,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 #endif
                 if (!state->insert(it, this))
                 {
-                    // FATAL_ERROR_UNEXPECTED
-                    CERR_LINE;
+                    FATAL_ERROR_UNEXPECTED;
                 }
                 else
                 {
@@ -598,7 +595,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                 }
                 else
                 {
-                    it->getIndexTerms()[(*actualItem)->getIndex()] = Item::INDEX_NA - 1;
+                    it->getIndexTerms()[(*actualItem)->getIndex()] = Item::POSTERMS_NA;
                 }
                 it->getCurrentTerms()->unsetOptional();
                 it->resetSerial();
@@ -609,8 +606,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 #endif
                 if (!state->insert(it, this))
                 {
-                    CERR_LINE;
-                    // FATAL_ERROR_UNEXPECTED;
+                    FATAL_ERROR_UNEXPECTED;
                 }
                 else
                 {
@@ -651,8 +647,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 #endif
                     if (!state->insert(it, this))
                     {
-                        CERR_LINE;
-                        // FATAL_ERROR_UNEXPECTED;
+                        FATAL_ERROR_UNEXPECTED;
                     }
                     else
                     {
@@ -727,7 +722,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 
                                 class Item *it;
                                 iterRules->incUsages(this);
-                                it = Item::create(iterRules->clone(), 0, Item::INDEX_NA,
+                                it = Item::create(iterRules->clone(), 0, Item::POSTERM_NA,
                                                   iterRules->getStatements() ? iterRules->getStatements()->clone(0)
                                                                              : statementsPtr());
                                 it->addRange(row);
@@ -816,24 +811,15 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                     (*actualItem)->getEnvironment()->replaceVariables((*actualItem)->getSynthesizedFeatures(), effect);
                                     if (effect)
                                     {
-                                        if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
-                                        {
-                                            std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
-                                            (*actualItem)->print(std::cout);
-                                            std::cout << std::endl;
-                                        }
-                                        FATAL_ERROR_UNEXPECTED
+                                        FATAL_ERROR_UNEXPECTED;
                                     }
                                     (*actualItem)->getSynthesizedFeatures()->deleteAnonymousVariables();
                                 }
 
                                 forestPtr forestFound = forestPtr();
-                                class ForestIdentifier *fi = ForestIdentifier::create(static_cast<size_t>((*actualItem)->getRuleLhs()),
-                                                                                      (*actualItem)->getRanges()[0],
-                                                                                      row,
-                                                                                      ((*actualItem)->getSynthesizedFeatures()
-                                                                                           ? (*actualItem)->getSynthesizedFeatures()->peekSerialString()
-                                                                                           : ""));
+                                class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
+                                                                                       (*actualItem)->getRanges()[0],
+                                                                                       row);
                                 auto forestMapIt = forestMap.find(fi);
                                 if (forestMapIt != forestMap.cend())
                                 {
@@ -872,7 +858,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                 class Item *previousItem = getItemMap(ref);
                                 if (!previousItem)
                                 {
-                                    FATAL_ERROR_UNEXPECTED
+                                    // No item for this reference
+                                    FATAL_ERROR_UNEXPECTED;
                                 }
                                 else
                                 {
@@ -980,10 +967,9 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                                                 node->push_back(forest);
                                         }
                                         forestPtr forestFound = forestPtr();
-                                        class ForestIdentifier *fi = ForestIdentifier::create(static_cast<size_t>((*actualItem)->getId()),
-                                                                                              (*actualItem)->getRanges()[0],
-                                                                                              row,
-                                                                                              "");
+                                        class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getId(),
+                                                                                               (*actualItem)->getRanges()[0],
+                                                                                               row);
                                         auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
                                         {
@@ -1263,9 +1249,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         }
                                         // entry_copy->renameVariables(entry_copy->getId());
                                         //  entry_copy->resetSerial();
-                                        ForestIdentifier *forestIdentifier = ForestIdentifier::create(static_cast<size_t>(entry_copy->hash()),
-                                                                                                      row - 1, row,
-                                                                                                      resultFeatures->peekSerialString());
+                                        ForestIdentifier *forestIdentifier = ForestIdentifier::create(entry_copy->getId(),
+                                                                                                       row - 1, row);
 
                                         auto forestMapIt = forestMap.find(forestIdentifier);
                                         if (forestMapIt != forestMap.cend())
@@ -1273,9 +1258,9 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                             it->addForestIdentifiers((*actualItem)->getIndex(),
                                                                      (*forestMapIt).first);
                                             free(forestIdentifier);
-                                            //std::cout << "stage : " << stage << "<BR>" << std::endl;
-                                            //std::cout << "head : " << Vartable::codeToName(head) << "<BR>" << std::endl;
-                                            //std::cout << "form : " << form << "<BR>" << std::endl;
+                                            // std::cout << "stage : " << stage << "<BR>" << std::endl;
+                                            // std::cout << "head : " << Vartable::codeToName(head) << "<BR>" << std::endl;
+                                            // std::cout << "form : " << form << "<BR>" << std::endl;
                                         }
                                         else
                                         {
@@ -1296,7 +1281,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
                                         {
                                             // synomym and homonym
                                             // i.e. two different forms
-                                            //WARNING("The same word is defined twice");
+                                            // WARNING("The same word is defined twice");
                                         }
                                         else
                                         {
@@ -1353,7 +1338,7 @@ void Generator::generate(class Parser &parser)
     for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule)
     {
         (*rule)->incUsages(this);
-        it = Item::create(*rule, Item::INDEX_NA, Item::INDEX_NA,
+        it = Item::create(*rule, Item::INDEX_NA, Item::POSTERM_NA,
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRange(0);
         featuresPtr startFeatures = parser.getStartFeatures();
