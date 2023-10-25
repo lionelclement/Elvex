@@ -167,7 +167,7 @@ bool Item::getRuleTrace() const
 /* **************************************************
  *
  ************************************************** */
-unsigned int Item::getRuleLineno() const
+uint32_t Item::getRuleLineno() const
 {
     return rule->getLineno();
 }
@@ -389,7 +389,7 @@ void Item::setSeen(uint8_t _index, bool b)
 /* **************************************************
  *
  ************************************************** */
-void Item::addItem(std::unordered_map<unsigned int, class Item *> &table, unsigned int key, class Item *item)
+void Item::addItem(std::unordered_map<uint32_t, class Item *> &table, unsigned int key, class Item *item)
 {
     table.insert(std::make_pair(key, item));
 }
@@ -397,7 +397,7 @@ void Item::addItem(std::unordered_map<unsigned int, class Item *> &table, unsign
 /* **************************************************
  *
  ************************************************** */
-std::vector<uint8_t> &Item::getRanges()
+std::vector<uint32_t> &Item::getRanges()
 {
     return ranges;
 }
@@ -405,7 +405,7 @@ std::vector<uint8_t> &Item::getRanges()
 /* **************************************************
  *
  ************************************************** */
-void Item::addRange(uint8_t range)
+void Item::addRange(uint32_t range)
 {
     ranges.push_back(range);
 }
@@ -413,9 +413,9 @@ void Item::addRange(uint8_t range)
 /* **************************************************
  *
  ************************************************** */
-void Item::addRanges(std::vector<uint8_t> &ranges)
+void Item::addRanges(std::vector<uint32_t> &ranges)
 {
-    for (std::vector<uint8_t>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
+    for (std::vector<uint32_t>::const_iterator i = ranges.begin(); i != ranges.end(); ++i)
         addRange(*i);
 }
 

@@ -20,7 +20,7 @@
 # Phony targets to avoid conflicts with files of the same name
 .PHONY: test all_pdf clean
 
-.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa .html .morpho .pattern .fromScratch
+.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa .html .morpho .pattern .fromScratch .stdin
 
 # Name of the Elvex program
 elvex = bin/elvex
@@ -34,16 +34,18 @@ xslfile = xsl/xml2CS-dot-graph.xsl
 # Directory where test files are located
 test_dir = test
 
-# List of all *.input files
+# List of all input files
 input_files = $(wildcard $(test_dir)/*.input)
+stdin_files = $(wildcard $(test_dir)/*.stdin)
 
 # Specific targets to generate all *.output files
-all_output: $(patsubst $(test_dir)/%.input,$(test_dir)/%.output,$(input_files))
+output_files = $(patsubst $(test_dir)/%.input,$(test_dir)/%.output,$(input_files)) 
+output_files += $(patsubst $(test_dir)/%.stdin,$(test_dir)/%.output,$(stdin_files)) 
 
 # Target to run tests
-test: all_output
-	@for file in $(input_files); do \
-		base=$$(basename $$file .input); \
+test: $(output_files)
+	@for file in $(output_files); do \
+		base=$$(basename $$file .output); \
 		sort $(test_dir)/$$base.output > $(test_dir)/$$base.output.sorted; \
 		sort $(test_dir)/$$base.test > $(test_dir)/$$base.test.sorted; \
 		if diff $(test_dir)/$$base.output.sorted $(test_dir)/$$base.test.sorted> /dev/null 2>&1; then \
@@ -72,6 +74,23 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 		$(if $(wildcard $*.macros),\
 		 	$(elvex) -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
 		 	$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
+	fi
+
+# Rule to generate an *.output file from an *.input file
+%.output: %.rules %.lexicon %.stdin $(elvex)
+	@echo "build $@ from $^"
+	@if test -f $*.fromScratch; then \
+		make -f Makefile.test $*.pattern $*.morpho < $*.stdin ; \
+	fi
+	@if test -f $*.pattern; then \
+		make -f Makefile.test $*.fsa ; \
+		$(if $(wildcard $*.macros), \
+			$(elvex) -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@, \
+			$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@); \
+	else \
+		$(if $(wildcard $*.macros),\
+		 	$(elvex) -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@, \
+		 	$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@); \
 	fi
 
 # Rule to generate an *.output file from an *.input file

@@ -30,7 +30,7 @@ std::string Forest::EMPTY_FORM = "";
 /* **************************************************
  *
  ************************************************** */
-Forest::Forest(uint8_t from, uint8_t to, std::string &form)
+Forest::Forest(uint32_t from, uint32_t to, std::string &form)
 {
     NEW;
     this->from = from;
@@ -45,7 +45,7 @@ Forest::Forest(uint8_t from, uint8_t to, std::string &form)
 /* **************************************************
  *
  ************************************************** */
-forestPtr Forest::create(uint8_t from, uint8_t to, std::string &form)
+forestPtr Forest::create(uint32_t from, uint32_t to, std::string &form)
 {
     return std::make_shared<Forest>(from, to, form);
 }
@@ -66,7 +66,7 @@ Forest::~Forest()
 /* **************************************************
  *
  ************************************************** */
-uint8_t Forest::getFrom() const
+uint32_t Forest::getFrom() const
 {
     return from;
 }
@@ -74,7 +74,7 @@ uint8_t Forest::getFrom() const
 /* **************************************************
  *
  ************************************************** */
-uint8_t Forest::getTo() const
+uint32_t Forest::getTo() const
 {
     return to;
 }

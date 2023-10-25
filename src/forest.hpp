@@ -40,23 +40,23 @@ public:
 
 private:
     static std::string EMPTY_FORM;
-    uint8_t from;
-    uint8_t to;
+    uint32_t from;
+    uint32_t to;
     vectorNodes nodes;
     bool empty;
     std::forward_list<std::string> output;
     std::string form;
 
 public:
-    Forest(uint8_t from, uint8_t to, std::string &form);
+    Forest(uint32_t from, uint32_t to, std::string &form);
 
     ~Forest();
 
-    static forestPtr create(uint8_t from, uint8_t to, std::string &form = EMPTY_FORM);
+    static forestPtr create(uint32_t from, uint32_t to, std::string &form = EMPTY_FORM);
 
-    uint8_t getFrom(void) const;
+    uint32_t getFrom(void) const;
 
-    uint8_t getTo(void) const;
+    uint32_t getTo(void) const;
 
     bool output_empty(void) const;
 

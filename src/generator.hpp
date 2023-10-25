@@ -103,13 +103,19 @@ public:
 
     ~Generator();
 
-    itemSet_map::const_iterator cbegin() const;
+    itemSet_map::const_iterator cbeginStates() const;
 
-    itemSet_map::const_iterator cend() const;
+    itemSet_map::const_iterator cendStates() const;
 
-    size_t size() const;
+    size_t sizeStates() const;
 
-    std::list<std::string> &getInputs();
+    bool emptyInputs(void);
+    
+    std::list<std::string>::const_iterator cbeginInputs(void);
+
+    std::list<std::string>::const_iterator cendInputs(void);
+
+    void addInput (const std::string &input);
 
     void setInputFileName(char *);
 
@@ -148,8 +154,6 @@ public:
     unsigned int getMaxItems() const;
 
     void setCompactedLexicon(class CompactedLexicon *);
-
-    void addInput(const std::string &);
 
 #ifdef OUTPUT_XML
     void setOutXML(char *);
@@ -193,13 +197,13 @@ public:
 
     void printState(std::ostream &, class ItemSet *);
 
-    void close(class Parser &, class ItemSet *, uint8_t);
+    void close(class Parser &, class ItemSet *, uint32_t);
 
-    bool shift(class Parser &, class ItemSet *, uint8_t);
+    bool shift(class Parser &, class ItemSet *, uint32_t);
 
     void clear();
 
-    static class Item *createItem(class Item *, uint8_t);
+    static class Item *createItem(class Item *, uint32_t);
 
     void generate(class Parser &);
 

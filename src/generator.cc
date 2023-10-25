@@ -89,7 +89,7 @@ void Generator::setTrace(bool _trace)
 /* **************************************************
  *
  ************************************************** */
-Generator::itemSet_map::const_iterator Generator::cbegin() const
+Generator::itemSet_map::const_iterator Generator::cbeginStates() const
 {
     return states.cbegin();
 }
@@ -97,7 +97,7 @@ Generator::itemSet_map::const_iterator Generator::cbegin() const
 /* **************************************************
  *
  ************************************************** */
-Generator::itemSet_map::const_iterator Generator::cend() const
+Generator::itemSet_map::const_iterator Generator::cendStates() const
 {
     return states.cend();
 }
@@ -105,7 +105,7 @@ Generator::itemSet_map::const_iterator Generator::cend() const
 /* **************************************************
  *
  ************************************************** */
-size_t Generator::size() const
+size_t Generator::sizeStates() const
 {
     return states.size();
 }
@@ -422,9 +422,33 @@ bool Generator::getTraceAction(void)
 /* **************************************************
  *
  ************************************************** */
-std::list<std::string> &Generator::getInputs()
+bool Generator::emptyInputs()
 {
-    return this->inputs;
+    return inputs.empty();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Generator::addInput(const std::string &input)
+{
+    inputs.push_back(input);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+std::list<std::string>::const_iterator Generator::cbeginInputs()
+{
+    return inputs.cbegin();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+std::list<std::string>::const_iterator Generator::cendInputs()
+{
+    return inputs.cend();
 }
 
 /* **************************************************
@@ -438,7 +462,7 @@ bool Generator::insertItemMap(class Item *item)
 /* **************************************************
  *
  ************************************************** */
-void Generator::eraseItemMap(const unsigned int id)
+void Generator::eraseItemMap(uint32_t id)
 {
     this->itemMap.erase(id);
 }
@@ -446,7 +470,7 @@ void Generator::eraseItemMap(const unsigned int id)
 /* **************************************************
  *
  ************************************************** */
-class Item *Generator::getItemMap(const unsigned int id)
+class Item *Generator::getItemMap(uint32_t id)
 {
     return this->itemMap[id];
 }
@@ -462,14 +486,6 @@ nodePtr Generator::getNodeRoot()
 /* **************************************************
  *
  ************************************************** */
-void Generator::addInput(const std::string &input)
-{
-    return this->inputs.push_back(input);
-}
-
-/* **************************************************
- *
- ************************************************** */
 void Generator::printState(std::ostream &outStream, class ItemSet *state)
 {
     outStream << "Q" << state->getId();
@@ -479,7 +495,7 @@ void Generator::printState(std::ostream &outStream, class ItemSet *state)
 /* **************************************************
  *
  ************************************************** */
-class Item *Generator::createItem(class Item *item, uint8_t row)
+class Item *Generator::createItem(class Item *item, uint32_t row)
 {
     class Item *it = Item::create(item->getRule(), item->getIndex() + 1, item->getIndexTerms(),
                                   item->getStatements() ? item->getStatements()->clone(
@@ -522,7 +538,7 @@ void Generator::clear()
 /* **************************************************
  *
  ************************************************** */
-void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
+void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 {
     bool modification;
     do
@@ -798,6 +814,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
                             // If Axiom reduced or debug Transients
                             if (reduceAll || (*actualItem)->getRefs().empty())
                             {
+
                                 if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                                 {
                                     std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
@@ -1055,7 +1072,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint8_t row)
 /* **************************************************
  *
  ************************************************** */
-bool Generator::shift(class Parser &parser, class ItemSet *state, uint8_t row)
+bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
 {
     bool modificationOnce = false;
     bool modification;
@@ -1357,7 +1374,7 @@ void Generator::generate(class Parser &parser)
     states.insert(std::make_pair(0, initState));
     close(parser, initState, 0);
 
-    int i = 0;
+    uint32_t i = 0;
     while (i <= maxLength)
     {
         class ItemSet *actualState = ItemSet::create(++i);

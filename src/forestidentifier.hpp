@@ -29,24 +29,24 @@ class ForestIdentifier :
 private:
 
     uint32_t code;
-    uint8_t from;
-    uint8_t to;
+    uint32_t from;
+    uint32_t to;
     
 
 public:
-    ForestIdentifier(uint32_t code, uint8_t from, uint8_t to);
+    ForestIdentifier(uint32_t code, uint32_t from, uint32_t to);
 
     ~ForestIdentifier() override;
 
-    static class ForestIdentifier* create(uint32_t code, uint8_t from, uint8_t to);
+    static class ForestIdentifier* create(uint32_t code, uint32_t from, uint32_t to);
 
     void makeSerialString() override;
     
-    uint8_t getFrom() const {
+    uint32_t getFrom() const {
         return from;
     };
 
-    uint8_t getTo() const {
+    uint32_t getTo() const {
         return to;
     };
 

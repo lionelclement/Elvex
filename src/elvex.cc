@@ -494,19 +494,27 @@ int main(int argn, char **argv)
             generate(trace);
         }
 
-        else if (!generator.getInputs().empty())
+        else
         {
-            for (std::list<std::string>::const_iterator i = generator.getInputs().begin();
-                 i != generator.getInputs().end(); ++i)
+            std::string line;
+            while (std::getline(std::cin, line)) {
+                generator.addInput(line); // Ajoutez chaque ligne à la liste
+            }
+            //throw usage_exception("Input not found");
+        }
+
+        if (!generator.emptyInputs())
+        {
+            for (std::list<std::string>::const_iterator i = generator.cbeginInputs();
+                 i != generator.cendInputs(); ++i)
             {
                 parser.parseBuffer("@input (", ")", *i, "input");
                 generate(trace);
             }
         }
-        else
-        {
-            throw usage_exception("Input not found");
-        }
+
+
+            
 
 #ifdef OUTPUT_XML
         if (generator.getOutXML())

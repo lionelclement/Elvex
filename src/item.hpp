@@ -48,7 +48,7 @@ private:
     statementsPtr statements;                                // the semantics
     set_of_uint32_t refs;                                    // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
-    std::vector<uint8_t> ranges;                             // ranges
+    std::vector<uint32_t> ranges;                             // ranges
     featuresPtr inheritedFeatures;                           // ↑
     listFeaturesPtr inheritedSonFeatures;                    // ↓
     featuresPtr synthesizedFeatures;                         // ⇑
@@ -61,7 +61,7 @@ private:
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
          s_inheritedSonFeatures = true, s_synthesizedFeatures = true,
          s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
-
+    
     void makeSerialString(void);
     std::string makeSerialString2(void);
 
@@ -168,11 +168,11 @@ public:
 
     void addItem(std::unordered_map<uint32_t, class Item *> &, unsigned int, class Item *);
 
-    std::vector<uint8_t> &getRanges(void);
+    std::vector<uint32_t> &getRanges(void);
 
-    void addRange(uint8_t);
+    void addRange(uint32_t);
 
-    void addRanges(std::vector<uint8_t> &);
+    void addRanges(std::vector<uint32_t> &);
 
     std::vector<class ForestIdentifier *> &getForestIdentifiers(void);
 

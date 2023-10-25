@@ -24,11 +24,24 @@ Text_with_features → VTENSE S_tense {
   if (¬ $verbal_constr)
     $verbal_constr = no_int | no_neg;
   [vtense:$vtenseSth] ⊂ ⇓2;
-  //println "[", $vtenseSth, "]";
   attest($vtenseSth != infinitive);
   ↓1 = [vtense:$vtenseSth];
   ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
   ⇑ = ⇓2;
+}
+
+S_tense → S_tense form S_tense {
+  [HEAD:succ, i:$i, ii:$ii, lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  if (¬ $tense)
+    $tense = present;
+  if (¬ $verbal_constr)
+    $verbal_constr = no_int | no_neg;
+  ↓1 = $i ∪ [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
+  ↓2 = [FORM:", "];
+  ↓3 = $ii ∪ [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
+  ⇑ = ⇓3;
 }
 
 Text → S_tense strongPunct {
@@ -623,7 +636,6 @@ VERB → aux [not] [have|be|been|have_been] verb {
 /* **************************************************
  * Adjective phrase
  ************************************************** */
-@trace
 @withspaces
 AP → [adv] adj {
   ↓2 = ↑;

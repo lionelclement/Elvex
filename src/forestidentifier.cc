@@ -24,8 +24,7 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-ForestIdentifier::ForestIdentifier(uint32_t code, uint8_t from, uint8_t to/*,
-                                   const std::string &featuresSerialString*/)
+ForestIdentifier::ForestIdentifier(uint32_t code, uint32_t from, uint32_t to)
 {
     NEW;
     this->code = code;
@@ -47,8 +46,8 @@ ForestIdentifier::~ForestIdentifier()
  ************************************************************ */
 class ForestIdentifier *
 ForestIdentifier::create(uint32_t code,
-                         uint8_t from,
-                         uint8_t to)
+                         uint32_t from,
+                         uint32_t to)
 {
     return new ForestIdentifier(code, from, to);
 }
@@ -59,8 +58,7 @@ ForestIdentifier::create(uint32_t code,
 void ForestIdentifier::makeSerialString()
 {
     std::ostringstream stream;
-    uint64_t encode = static_cast<uint64_t>(code) << 32 | static_cast<uint64_t>(from) << 8 | static_cast<uint64_t>(to);
-    stream << '#' << std::hex << encode;
+    stream << '#' << std::hex << code << '#' << from << '#' << to;
     stream.flush();
     serialString = stream.str();
 }
