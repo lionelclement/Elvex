@@ -124,6 +124,7 @@ Some of the most difficult stuff already done with Elvex
     language\_register\:slang]
 
 	=>
+(vulgar language)
 "*La nana a fourgué une chiotte ruinée à un grand casse-burnes.*"\
 "*La gosse a bicravé une chiotte naze à un putain d'emmerdeur.*"\
 "*La nana a bicravé une tire explosée à un sale chieur.*"\
