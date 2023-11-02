@@ -119,7 +119,7 @@ Some of the most difficult stuff already done with Elvex
 
     text [HEAD\:SEL, 
         i:[HEAD\:HUMAN, number\:sg, gender\:fm], 
-        ii:[HEAD:IMPORTUN, number\:sg, gender\:ms, lexical_function\:magn], 
+        ii:[HEAD:TROUBLESOME, number\:sg, gender\:ms, lexical_function\:magn], 
         iii:[HEAD\:CAR, number\:sg, mod:<[HEAD:BROKEN]>],
     language\_register\:slang]
 
