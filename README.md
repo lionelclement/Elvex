@@ -141,7 +141,7 @@ Some of the most difficult stuff already done with Elvex
 "*La gonzesse a bicravé une caisse en bouillie à un grand
 casse-bonbons.*"
 
-	(something like "*The girl peddled a shot-up car to a major pain in the neck.*")
+(something like "*The girl peddled a shot-up car to a major pain in the neck.*")
 
 - **Anaphora resolution process between sentences with pronouns, synonyms and hypernyms**
 	
