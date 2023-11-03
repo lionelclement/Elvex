@@ -112,8 +112,8 @@ Some of the most difficult stuff already done with Elvex
 
 - **Adjective order in English**
 
-<tab>*big yellow squared stuff*\
-<tab>**squared yellow big stuff*
+	*big yellow squared stuff*\
+\t	**squared yellow big stuff*
 
 - **French slang language**
 
