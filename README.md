@@ -148,14 +148,17 @@ casse-bonbons.*"
 ```
 text [HEAD:TO_CAUSE, // Something(i) causes an effect(ii)
     i:[HEAD:TO_REPAIR, // Someone(i) repairs something(ii)
-        i:[HEAD:MECHANIC, ID:1, number:sg, gender:ms, def:yes], // "1" is the identifier for the mechanic. We will now use 'ID:1' to refer to this entity.
-        ii:[HEAD:CAR, number:sg, GEN:[HEAD:EGO], ID:3], // The genitive relationship of CAR is with EGO. "3" is the identifier for CAR.
+        i:[HEAD:MECHANIC, ID:1, number:sg, gender:ms, def:yes], // "1" is the identifier for the mechanic.
+                   //We will now use 'ID:1' to refer to this entity.
+        ii:[HEAD:CAR, number:sg, GEN:[HEAD:EGO], ID:3], // The genitive relationship of CAR is with EGO.
+                   //"3" is the identifier for CAR.
         time:past // The repair action is in the past.
     ],
     ii:[HEAD:TO_PICK_UP, // Someone(i) picks up something(ii) somewhere(iii)
         i:_, // We don't create an entity for (i).
         ii:[ID:3], // (ii) co-refers to CAR.
-        iii:[HEAD:GARAGE, GEN:[ID:1]], // The genitive relationship of GARAGE is with the mechanic.
+        iii:[HEAD:GARAGE, GEN:[ID:1]], // The genitive relationship of GARAGE is with an element that
+                    //co-refers to 'mechanic.'".
         modality:can|might, // Modality: can or might.
         time:tomorrow // The pick-up action will occur tomorrow.
     ]
