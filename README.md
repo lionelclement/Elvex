@@ -143,7 +143,7 @@ casse-bonbons.*"
 
 (something like "*The girl peddled a shot-up car to a major pain in the neck.*")
 
-- **Anaphora resolution process between sentences with pronouns, synonyms and hypernyms**
+- **Anaphora resolution process between sentences with pronouns, synonyms and hypernyms, and more things in this more comprehensive example**
 	
 ```
 text [HEAD:TO_CAUSE, // Something(i) causes an effect(ii)
