@@ -126,7 +126,7 @@ Some of the most difficult stuff already done with Elvex
 ```
 
 =>
-(vulgar language)
+(Warning: This is explicit content)
 
 "*La nana a fourgué une chiotte ruinée à un grand casse-burnes.*"\
 "*La gosse a bicravé une chiotte naze à un putain d'emmerdeur.*"\
@@ -160,7 +160,9 @@ text [HEAD:CAUSE,
 ]
 ```
 
- *Le garagiste a réparé ma voiture, on pourra récupérer **le véhicule** dans **son** garage demain.* (The mechanic has repaired my car, and we'll be able to pick it up from his garage to)
+=>
+
+*Le garagiste a réparé ma voiture, on pourra récupérer **le véhicule** dans **son** garage demain.* (The mechanic has repaired my car, and we'll be able to pick it up from his garage to)
 
 - **Complex idiomatic phrases**
 
