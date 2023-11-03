@@ -143,6 +143,7 @@ casse-bonbons.*"
 
 - **Anaphora resolution process between sentences with pronouns, synonyms and hypernyms**
 	
+```python
 text [HEAD:CAUSE,
     i:[HEAD:REPAIR,
         i:[HEAD:MECHANIC, ID:1, number:sg, gender:ms, def:yes],
