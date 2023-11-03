@@ -122,7 +122,7 @@ Some of the most difficult stuff already done with Elvex
        i:[HEAD:HUMAN, number:sg, gender:fm],  
        ii:[HEAD:TROUBLESOME, number:sg, gender:ms, lexical_function:magn],  
        iii:[HEAD:CAR, number:sg, mod:<[HEAD:BROKEN]>],  
-       language_register:slang]  
+       language_register:slang]```  
 
 =>
 (vulgar language)
@@ -156,8 +156,7 @@ text [HEAD:CAUSE,
         MOD:<[LOC:[HEAD:GARAGE, GEN:[ID:1]]]>,
         time:tomorrow
     ]
-]
-```
+]```
 
  *Le garagiste a réparé ma voiture, on pourra récupérer **le véhicule** dans **son** garage demain.* (The mechanic has repaired my car, and we'll be able to pick it up from his garage to)
 
