@@ -113,15 +113,15 @@ Some of the most difficult stuff already done with Elvex
 - **Adjective order in English**
 
 	*big yellow squared stuff*\
-\t	**squared yellow big stuff*
+  	**squared yellow big stuff*
 
 - **French slang language**
-
-    text [HEAD\:TO_SELL,  
-        i:[HEAD\:HUMAN, number\:sg, gender\:fm],  
-        ii:[HEAD:TROUBLESOME, number\:sg, gender\:ms, lexical_function\:magn],  
-        iii:[HEAD\:CAR, number\:sg, mod:<[HEAD:BROKEN]>],  
-    language\_register\:slang]
+	
+	text [HEAD\:TO_SELL,\
+		i:[HEAD\:HUMAN, number\:sg, gender\:fm],\
+  		ii:[HEAD:TROUBLESOME, number\:sg, gender\:ms, lexical_function\:magn],\
+  		iii:[HEAD\:CAR, number\:sg, mod:<[HEAD:BROKEN]>],\
+  		language\_register\:slang]
 
 	=>
 (vulgar language)
