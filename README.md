@@ -123,9 +123,8 @@ Some of the most difficult stuff already done with Elvex
        ii:[HEAD:TROUBLESOME, number:sg, gender:ms, lexical_function:magn],  
        iii:[HEAD:CAR, number:sg, mod:<[HEAD:BROKEN]>],  
        language_register:slang]  
-```
 
-	=>
+=>
 (vulgar language)
 
 "*La nana a fourgué une chiotte ruinée à un grand casse-burnes.*"\
