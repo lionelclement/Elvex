@@ -156,6 +156,7 @@ text [HEAD:TO_CAUSE, // Something(i) causes an effect(ii)
         i:_, // We don't create an entity for (i).
         ii:[ID:3], // (ii) co-refers to CAR.
         iii:[HEAD:GARAGE, GEN:[ID:1]], // The genitive relationship of GARAGE is with the mechanic.
+        modality:can|might, // Modality: can or might.
         time:tomorrow // The pick-up action will occur tomorrow.
     ]
 ]
