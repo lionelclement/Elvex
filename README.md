@@ -145,7 +145,7 @@ casse-bonbons.*"
 
 - **Anaphora resolution process between sentences with pronouns, synonyms and hypernyms**
 	
-```python
+```
 text [HEAD:TO_CAUSE, // Something(i) causes an effect(ii)
     i:[HEAD:TO_REPAIR, // Someone(i) repairs something(ii)
         i:[HEAD:MECHANIC, ID:1, number:sg, gender:ms, def:yes], // "1" is the identifier for the mechanic. We will now use 'ID:1' to refer to this entity.
