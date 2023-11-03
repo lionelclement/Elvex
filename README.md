@@ -144,8 +144,8 @@ casse-bonbons.*"
 - **Anaphora resolution process between sentences with pronouns, synonyms and hypernyms**
 	
 text [HEAD:CAUSE,  
-   i:[HEAD:REPAIR,  
-      i:[HEAD:MECANIC, ID:1, number:sg, gender:ms, def:yes],  
+	i:[HEAD:REPAIR,  
+		i:[HEAD:MECANIC, ID:1, number:sg, gender:ms, def:yes],  
       ii:[HEAD:CAR, number:sg, GEN:[HEAD:EGO], ID:3],  
       time:past],  
    ii:[HEAD:TO_PICK_UP,  
