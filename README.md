@@ -14,7 +14,7 @@ Elvex: A Rule-Based NLG System
 Elvex Project
 ===
 
-The name **Elvex** encompasses the name of a **software**, the name of a natural text generation (NLG) **algorithm**, the name of the **language** used to write natural language grammars and the name of a **linguistic formalism** for NLG.
+The name **Elvex** encompasses the name of a **software**, the name of a Natural Text Generation (NLG) **algorithm**, the name of the **language** used to write natural language grammars and the name of a **linguistic formalism** for NLG.
 
 What can you do with Elvex software?
 -----------------------------
@@ -125,6 +125,7 @@ Some of the most difficult stuff already done with Elvex
 
 	=>
 (vulgar language)
+
 "*La nana a fourgué une chiotte ruinée à un grand casse-burnes.*"\
 "*La gosse a bicravé une chiotte naze à un putain d'emmerdeur.*"\
 "*La nana a bicravé une tire explosée à un sale chieur.*"\
@@ -170,18 +171,18 @@ casse-bonbons.*"
 	*tier / kalz a dier / un ti / an ti / hon tier / da dier / hon ti / ho ti / ma zi / o zi / ho tier / o zier / da di / ma zier / he zier / e tier / he zi / e ti*
 
 
-An example of a solution to a NLG problem solved with *Elvex*: Causal clauses in a little French Grammar
+A NLG problem solved with *Elvex*: Causal clauses in a little French Grammar
 -----------------------------------------------
 
 In French, the basis of verbal tense and the conclusion of a causal clause depend on the aspect, the tense and even on the differences in language registers of a sentence:
 
 - present:
 if present => future
-- present or future in slang language:
+- colloquial French for the present or future:
 conditional without "if" => conditional
 - past:
 if past => past conditional
-- past in slang language:
+- colloquial French for the past:
 past conditional without "if" => past conditional
 - future:
  Imperfect => conditional
@@ -197,21 +198,21 @@ Neutral
 
 Slang language
 ---
-**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], language_register:slang]**
+**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], language_register:slang_language]**
 
 *Il flotterait, tu prendrais un pépin.*
 (If it were drizzling, you would take a brolly.)
 
 Continuous present
 ---
-**text [HEAD:cause, i:[PRED:rain], ii:[PRED:umbrella, i:[HEAD:_you]], tense:present, aspect:continuous]**
+**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:present, aspect:continuous]**
 
 *S'il est en train de pleuvoir, tu prendras un parapluie.*
 (If it is raining, you will take an umbrella.)
 
 Question
 ---
-**text [HEAD:cause, i:[PRED:rain], ii:[PRED:umbrella, illocutionary:ask, i:[HEAD:_you]]**
+**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, illocutionary:ask, i:[HEAD:_you]]**
 
 *S'il pleut, est-ce que tu prendras un parapluie ?*
 (If it rains, will you take an umbrella?)
@@ -223,9 +224,9 @@ Past
 *S'il avait plu, tu aurais pris un parapluie.*
 (If it had rained, you would have taken an umbrella.)
 
-Past & informal language
+Past & colloquial language
 ---
-**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, language_register:informal]**
+**text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]], tense:past, language_register:colloquial]**
 
 *Il aurait plu, tu aurais pris un parapluie.*
 (If it had been raining, you would have taken an umbrella.)
