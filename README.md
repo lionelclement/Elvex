@@ -117,11 +117,11 @@ Some of the most difficult stuff already done with Elvex
 
 - **French slang language**
 	
-	text [HEAD\:TO_SELL,  
-	    i:[HEAD\:HUMAN, number\:sg, gender\:fm],  
-	    ii:[HEAD:TROUBLESOME, number\:sg, gender\:ms, lexical_function\:magn],  
-	    iii:[HEAD\:CAR, number\:sg, mod:<[HEAD:BROKEN]>],  
-	    language_register\:slang]  
+   text [HEAD\:TO_SELL,  
+       i:[HEAD\:HUMAN, number\:sg, gender\:fm],  
+       ii:[HEAD:TROUBLESOME, number\:sg, gender\:ms, lexical_function\:magn],  
+       iii:[HEAD\:CAR, number\:sg, mod:<[HEAD:BROKEN]>],  
+       language_register\:slang]  
 
 	=>
 (vulgar language)
