@@ -153,8 +153,9 @@ text [HEAD:CAUSE,
         time:past
     ],
     ii:[HEAD:TO_PICK_UP,
+        i:_,
         ii:[ID:3],
-        MOD:<[LOC:[HEAD:GARAGE, GEN:[ID:1]]]>,
+        iii:[HEAD:GARAGE, GEN:[ID:1]],
         time:tomorrow
     ]
 ]
