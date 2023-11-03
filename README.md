@@ -181,9 +181,9 @@ text [HEAD:TO_CAUSE, // Something(i) causes an effect(ii)
 
 - **Lexical functions (based on Mel'čuk theory)**
 
-	*Un **gros** fumeur* (A ++ smoker)\
-	*Un **grand** admirateur* (A ++ fan)\
-	*Un argument **solide*** (A ++ argument)
+	*Un **gros** fumeur* (A ++ smoker, litteraly **big** smoker)\
+	*Un **grand** admirateur* (A ++ fan, litteraly **tail** fan)\
+	*Un argument **solide*** (A ++ argument, litteraly **strong** argument)
 
 - **Coordinations with Right-Node Raising and Gapping**
 	
