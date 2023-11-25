@@ -19,14 +19,11 @@ The name **Elvex** encompasses the name of a **software**, the name of a Natural
 What can you do with Elvex software?
 -----------------------------
 
-Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data. Migrate this solution to an embedded system with limited resources and no connection to a massive data server.
+- **Write relevant and adequate texts**: Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. 
 
-What you cannot do with Elvex software?
------------------------------
+- **Avoid any misunderstanding**: Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data. 
 
-Write coherent and contextually relevant text based on input prompts
-
-Create a meaning from a context
+- **Efficient Resource Utilization**: Migrate this solution to an embedded system with limited resources and no connection to a massive data server.
 
 What you cannot do with Elvex software?
 -----------------------------
