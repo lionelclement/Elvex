@@ -21,6 +21,22 @@ What can you do with Elvex software?
 
 Write automatically and quickly relevant and adequate texts in natural language, given a meaning and elements of speech. Rest assured that **Elvex** avoids any misunderstanding, and it achieves this without the need for any training data. Migrate this solution to an embedded system with limited resources and no connection to a massive data server.
 
+What you cannot do with Elvex software?
+-----------------------------
+
+Write coherent and contextually relevant text based on input prompts
+
+Create a meaning from a context
+
+What you cannot do with Elvex software?
+-----------------------------
+
+- **Contextual Adaptability**: Elvex, being a rule-based generator, may not adapt well to contexts that significantly deviate from its predefined rules. It lacks the ability to understand and adapt to nuanced or unprecedented situations that fall outside its programmed parameters.
+
+- **Learning from Data**: Unlike AI-driven models, Elvex does not learn from data over time. It cannot evolve or improve its outputs based on new information unless manually updated or reprogrammed with new rules.
+
+- **Creativity and Innovation**: The software's capacity for creativity is limited to the boundaries of its rules. It cannot generate truly novel ideas or creative outputs that require 'thinking outside the box'.
+
 In practical terms, how can you use Elvex to build a Text Generator for an application (such as a Chatbot, Letter-writer, etc)?
 --------------------
 
