@@ -28,7 +28,7 @@ What can you do with Elvex software?
 What you cannot do with Elvex software?
 -----------------------------
 
-- **Contextual Adaptability**: Elvex, being a rule-based generator, may not adapt well to contexts that significantly deviate from its predefined rules. It lacks the ability to understand and adapt to nuanced or unprecedented situations that fall outside its programmed parameters.
+- **Contextual Adaptability**: Contextual Adaptability: Elvex, as a rule-based generator, is not designed for completing texts or deriving meaning from existing text. Instead, its strength lies in producing structured text based on provided meanings and enunciative situations. It operates within the confines of its predefined rules and may not perform well in situations requiring interpretation or adaptation beyond these rules. Its capabilities are centered around generating text from clear, specified contexts rather than inferring or adding context to partial or ambiguous inputs.
 
 - **Learning from Data**: Unlike AI-driven models, Elvex does not learn from data over time. It cannot evolve or improve its outputs based on new information unless manually updated or reprogrammed with new rules.
 
