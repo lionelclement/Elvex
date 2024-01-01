@@ -34,6 +34,19 @@ What you cannot do with Elvex software?
 
 - **Creativity and Innovation**: The software's capacity for creativity is limited to the boundaries of its rules. It cannot generate truly novel ideas or creative outputs that require 'thinking outside the box'.
 
+--------------------
+Comparison with genarative AI LLM
+
+| **Elvex**                               | **AI Generative LLM**                         |
+|-----------------------------------------|-----------------------------------------------|
+| - No Bias                                | - Potential biases in training data            |
+| - Effective Input Context Handling       | - Limited contextual understanding            |
+| - Cost Efficiency                        | - High development costs                      |
+| - Environmental Sustainability           | - Significant environmental impact            |
+| - Complex Grammar                        | - Lack of structured grammar                  |
+| - Extensive Vocabulary                    | - Limited or no defined vocabulary             |
+
+
 In practical terms, how can you use Elvex to build a Text Generator for an application (such as a Chatbot, Letter-writer, etc)?
 --------------------
 
