@@ -34,8 +34,8 @@ What you cannot do with Elvex software?
 
 - **Creativity and Innovation**: The software's capacity for creativity is limited to the boundaries of its rules. It cannot generate truly novel ideas or creative outputs that require 'thinking outside the box'.
 
---------------------
-Comparison with genarative AI LLM
+Generative AI Language Model Comparison
+-----------------------------
 
 | **Elvex**                               | **Generative AI Language Model**                   |
 |-----------------------------------------|-----------------------------------------------|
