@@ -3,13 +3,13 @@ Elvex: A Rule-Based NLG System
 
 1. No Need for Large Training Corpus: **Elvex** does not rely on vast text corpora for training, reducing storage and computational requirements.
 
-2. Deterministic Responses: It generates deterministic responses, ensuring consistent results for a given input.
+2. Deterministic Responses: **Elvex** generates deterministic responses, ensuring consistent and predictable outcomes for a given input. This reliability is a fundamental strength, particularly in applications where consistency is paramount.
 
-3. No Unexpected Answers: **Elvex** avoids generating unexpected or incorrect responses based on probabilistic statistics, enhancing reliability.
+4. **Elvex** actively avoids generating unexpected or incorrect responses, steering clear of probabilistic pitfalls.
 
-4. Explicit Input: The system operates based on explicit input, reducing the chance of ambiguous or misinterpreted responses.
+5. **Elvex** operates based on explicit input, significantly reducing the likelihood of ambiguous or misinterpreted responses. This intentional design choice adds a layer of precision to the text generation process.
 
-5. Motivated by General Linguistics: **Elvex**'s approach is rooted in principles of general linguistics.
+7. Motivated by General Linguistics: **Elvex**'s approach is rooted in principles of general linguistics.
 
 Elvex Project
 ===
