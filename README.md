@@ -37,7 +37,7 @@ What you cannot do with Elvex software?
 --------------------
 Comparison with genarative AI LLM
 
-| **Elvex**                               | **AI Generative LLM**                         |
+| **Elvex**                               | **Generative AI Language Model**                   |
 |-----------------------------------------|-----------------------------------------------|
 | - No Bias                                | - Potential biases in training data            |
 | - Effective Input Context Handling       | - Limited contextual understanding            |
