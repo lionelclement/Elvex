@@ -11,6 +11,20 @@ Elvex: A Rule-Based NLG System
 
 7. Motivated by General Linguistics: **Elvex**'s approach is rooted in principles of general linguistics.
 
+Generative AI Language Model Comparison
+-----------------------------
+
+| **Elvex Generative AI** | **Generative AI Large Language Model** |
+|-----------------------------------------|-----------------------------------------------|
+| + No Bias                                | - Potential biases in training data            |
+| + Effective Input Context Handling       | - Limited contextual understanding            |
+| + Cost Efficiency                        | - High development costs                      |
+| + Environmental Sustainability           | - Significant environmental impact            |
+| - Complex Grammar                        | + Lack of structured grammar                  |
+| - Extensive Vocabulary                    | + Limited or no defined vocabulary             |
+| + High precision | - Low precision |
+| - Low recall | + High recall |
+
 Elvex Project
 ===
 
@@ -33,20 +47,6 @@ What you cannot do with Elvex software?
 - **Learning from Data**: Unlike AI-driven models, Elvex does not learn from data over time. It cannot evolve or improve its outputs based on new information unless manually updated or reprogrammed with new rules.
 
 - **Creativity and Innovation**: The software's capacity for creativity is limited to the boundaries of its rules. It cannot generate truly novel ideas or creative outputs that require 'thinking outside the box'.
-
-Generative AI Language Model Comparison
------------------------------
-
-| **Elvex Generative AI** | **Generative AI Large Language Model** |
-|-----------------------------------------|-----------------------------------------------|
-| + No Bias                                | - Potential biases in training data            |
-| + Effective Input Context Handling       | - Limited contextual understanding            |
-| + Cost Efficiency                        | - High development costs                      |
-| + Environmental Sustainability           | - Significant environmental impact            |
-| - Complex Grammar                        | + Lack of structured grammar                  |
-| - Extensive Vocabulary                    | + Limited or no defined vocabulary             |
-| + Very High precision | - Low precision |
-| - Low recall | + High recall |
 
 
 In practical terms, how can you use Elvex to build a Text Generator for an application (such as a Chatbot, Letter-writer, etc)?
