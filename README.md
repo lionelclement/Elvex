@@ -37,14 +37,16 @@ What you cannot do with Elvex software?
 Generative AI Language Model Comparison
 -----------------------------
 
-| **Elvex**                               | **Generative AI Language Model**                   |
+| **Elvex Generative AI** | **Generative AI Large Language Model** |
 |-----------------------------------------|-----------------------------------------------|
-| - No Bias                                | - Potential biases in training data            |
-| - Effective Input Context Handling       | - Limited contextual understanding            |
-| - Cost Efficiency                        | - High development costs                      |
-| - Environmental Sustainability           | - Significant environmental impact            |
-| - Complex Grammar                        | - Lack of structured grammar                  |
-| - Extensive Vocabulary                    | - Limited or no defined vocabulary             |
+| + No Bias                                | - Potential biases in training data            |
+| + Effective Input Context Handling       | - Limited contextual understanding            |
+| + Cost Efficiency                        | - High development costs                      |
+| + Environmental Sustainability           | - Significant environmental impact            |
+| - Complex Grammar                        | + Lack of structured grammar                  |
+| - Extensive Vocabulary                    | + Limited or no defined vocabulary             |
+| + Very High precision | - Low precision |
+| - Low recall | + High recall |
 
 
 In practical terms, how can you use Elvex to build a Text Generator for an application (such as a Chatbot, Letter-writer, etc)?
