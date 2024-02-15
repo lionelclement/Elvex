@@ -31,3 +31,10 @@ After you have successfully compiled **Elvex**, execute the following command:
 ```shell
 make -s -f Makefile.test test
 ```
+
+To create your own projects, add your files to the 'test' directory with the correct file extensions and execute
+
+```shell
+make -s -f Makefile.test test/<my project>.output
+```
+ 
