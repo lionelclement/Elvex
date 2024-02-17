@@ -1,19 +1,23 @@
+@withoutSpaces
 S → [A | B] C
 {
   ↓1 = [];
   ↓2 = [];
 }
 
+@withoutSpaces
 A → a 
 {
   ↓1 = [];
 }
 
+@withoutSpaces
 B → b 
 {
   ↓1 = [];
 }
 
+@withoutSpaces
 C → c 
 {
   ↓1 = [];

@@ -40,16 +40,16 @@ public:
 private:
     vectorForests forests;
     std::forward_list<std::string> output;
-    bool withSpace;
+    bool withSpaces;
     bool bidirectional;
     bool permutable;
 
 public:
-    Node(bool withSpace, bool bidirectional, bool permutable);
+    Node(bool withSpaces, bool bidirectional, bool permutable);
 
     ~Node(void);
 
-    static nodePtr create(bool withSpace, bool bidirectional, bool permutable);
+    static nodePtr create(bool withSpaces, bool bidirectional, bool permutable);
 
     bool empty() const;
 

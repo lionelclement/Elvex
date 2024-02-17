@@ -4,7 +4,6 @@
 // ***********************************************************
 // Macros
 // ***********************************************************/
-TO_CHASE	verb	TO_CHASE	[iiReal:OBJECT]
 
 EUPHORIC	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[FORM:"over the moon"]]
 EUPHORIC	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[HEAD:HAPPY,MOD:<[HEAD:EXTREMELY]>]]
@@ -17,6 +16,7 @@ PRIVILEGE	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[HEAD:BLESSED]]
 PRIVILEGE	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[FORM:"in a position"]]
 PRIVILEGE	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP,PRED_ADJ:[FORM:"able"]]
 
+TO_CHASE	verb	TO_CHASE	[iiReal:OBJECT]
 TO_FIND_OUT	verb	TO_FIND	[particule:_out_,iiReal:SCOMP,compl:_that_]
 TO_STUDY	verb	TO_STUDY	[SUBJECT:[@hum],iiReal:OBJECT]
 TO_MEOW	verb	TO_MEOW	[]

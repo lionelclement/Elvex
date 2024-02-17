@@ -30,6 +30,7 @@ DOT = $(shell command -v dot 2> /dev/null)
 # Check the existence of xsltproc
 XSLTPROC = $(shell command -v xsltproc 2> /dev/null)
 xslfile = xsl/xml2CS-dot-graph.xsl
+python = python3
 
 # Directory where test files are located
 test_dir = test
@@ -175,13 +176,13 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 %.morpho:
 	@echo "build $@"
 	@if [ -e $*.fromScratch ]; then \
-		python script.py $@ $*.pattern; \
+		$(python) script.py $@ $*.pattern; \
 	fi
 
 %.pattern:
 	@echo "build $@"
 	@if [ -e $*.fromScratch ]; then \
-		python script.py $@ $*.pattern; \
+		$(python) script.py $@ $*.pattern; \
 	fi
 
 # Cleaning generated files

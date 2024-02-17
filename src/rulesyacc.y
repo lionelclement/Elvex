@@ -51,7 +51,11 @@
  extern unsigned int ruleslex();
  extern Parser parser;
  uint32_t headLineno;
- bool headTrace;
+// bool prefTrace;
+// bool prefWithSpaces;
+// bool prefBidirectional;
+// bool prefPermutable;
+ bool trace;
  bool withSpaces;
  bool bidirectional;
  bool permutable;
@@ -111,10 +115,8 @@
 %token TOKEN_FOREACH TOKEN_IN
 %token TOKEN_SEARCH TOKEN_ON
 %token TOKEN_RAND
-%token TOKEN_TRACE
-%token TOKEN_WITH_SPACES
-%token TOKEN_BIDIRECTIONAL
-%token TOKEN_PERMUTABLE
+%token TOKEN_TRACE TOKEN_WITH_SPACES TOKEN_WITHOUT_SPACES 
+%token TOKEN_BIDIRECTIONAL TOKEN_PERMUTABLE
 
 // OPERATORS
 %token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT 
@@ -381,13 +383,24 @@ pref_rule:
 	 pref_rule TOKEN_TRACE
 	{
 	  DBUGPRT("pref_rule");
-	  headTrace = true;
+	  if (trace)
+		yyerror((char*)"@trace already done");
+	  trace = true;
 	}
 
 	|pref_rule TOKEN_WITH_SPACES 
 	{
 	  DBUGPRT("pref_rule");
+	  if (withSpaces)
+		yyerror((char*)"@withSpaces already done");
 	  withSpaces = true;
+	}
+
+	|pref_rule TOKEN_WITHOUT_SPACES 
+	{
+	  DBUGPRT("pref_rule");
+	  if (withSpaces)
+		withSpaces = false;
 	}
 
 	|pref_rule TOKEN_BIDIRECTIONAL 
@@ -404,8 +417,14 @@ pref_rule:
 
 	| /* empty */ {
 	  DBUGPRT("pref_rule");
-	  headTrace = false;
-	  withSpaces = false;
+	  // initialization
+	  //prefTrace = false;
+	  //prefWithSpaces = false;
+	  //prefBidirectional = false;
+	  //prefPermutable = false;
+	  // defaults
+	  trace = false;
+	  withSpaces = true;
 	  bidirectional = false;
 	  permutable = false;
 	};
@@ -415,15 +434,15 @@ rule:
 	{
 	  DBUGPRT("rule");
 	  if (bidirectional && permutable){
-		yyerror((char*)"This rule is both permutable and bidirectional");
+		yyerror((char*)"This rule is both bidirectional and permutable");
 
 	  }
 	  if (permutable && $4->size() <= 2){
-		yyerror((char*)"This rule with fewer than 3 terms must be bidirectional, not permutable");
+		yyerror((char*)"This rule with fewer than 3 terms must not be permutable");
 
 	  }
 	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, *$4, $5 ? *$5 : statementsPtr());
-	  rule->setTrace(headTrace);
+	  rule->setTrace(trace);
 	  parser.getRules().addRule(rule);
 	  if (!parser.getRules().getStartTerm()){
 	    parser.getRules().setStartTerm($2);
@@ -437,7 +456,7 @@ rule:
 	{
 	  DBUGPRT("Rule");
 	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, $4 ? *$4 : statementsPtr());
-	  rule->setTrace(headTrace);
+	  rule->setTrace(trace);
 	  parser.getRules().addRule(rule);
 	  if (!parser.getRules().getStartTerm()){
 	    parser.getRules().setStartTerm($2);

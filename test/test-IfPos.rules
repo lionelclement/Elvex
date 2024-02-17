@@ -1,4 +1,3 @@
-@withspaces
 S → [A|B] C D
 {
   printlnstderr __FILE__, "...";

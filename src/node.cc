@@ -27,10 +27,10 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::Node(bool withSpace, bool bidirectional, bool permutable)
+Node::Node(bool withSpaces, bool bidirectional, bool permutable)
 {
    NEW;
-   this->withSpace = withSpace;
+   this->withSpaces = withSpaces;
    this->bidirectional = bidirectional;
    this->permutable = permutable;
 }
@@ -46,9 +46,9 @@ Node::~Node()
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-nodePtr Node::create(bool withSpace, bool bidirectional, bool permutable)
+nodePtr Node::create(bool withSpaces, bool bidirectional, bool permutable)
 {
-   return std::make_shared<Node>(withSpace, bidirectional, permutable);
+   return std::make_shared<Node>(withSpaces, bidirectional, permutable);
 }
 
 /* ************************************************************
@@ -136,7 +136,7 @@ const std::forward_list<std::string>::const_iterator Node::output_cend(void) con
  ************************************************** */
 bool Node::getWithSpace() const
 {
-   return this->withSpace;
+   return this->withSpaces;
 }
 
 #ifdef OUTPUT_XML
@@ -187,13 +187,20 @@ void Node::generateLR(std::string &currentCombination, vectorForests::const_iter
       {
          for (std::forward_list<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
          {
-            if (withSpace && !currentCombination.empty())
+            if (withSpaces && !currentCombination.empty())
             {
-               if (forestIt + 1 == cend())
-                  output.push_front(currentCombination + ' ' + *item);
-               else
-
-                  stack.push({currentCombination + ' ' + *item, forestIt + 1});
+               if (forestIt + 1 == cend()){
+                  if (withSpaces)
+                     output.push_front(currentCombination + ' ' + *item);
+                  else
+                     output.push_front(currentCombination + *item);
+               }
+               else {
+                  if (withSpaces)
+                     stack.push({currentCombination + ' ' + *item, forestIt + 1});
+                  else
+                     stack.push({currentCombination + *item, forestIt + 1});
+               }
             }
             else
             {
@@ -238,7 +245,7 @@ void Node::generateRL(std::string currentCombination, vectorForests::const_itera
          {
             for (std::forward_list<std::string>::const_iterator item = (*forestIt)->output_cbegin(); item != (*forestIt)->output_cend(); ++item)
             {
-               if (withSpace && !currentCombination.empty())
+               if (withSpaces && !currentCombination.empty())
                {
                   stack.push({currentCombination + ' ' + *item, forestIt - 1});
                }

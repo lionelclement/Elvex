@@ -1,5 +1,4 @@
 @trace
-@withspaces
 S → A A
 {
   printlnstderr __FILE__, "...";

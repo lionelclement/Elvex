@@ -11,7 +11,6 @@ S → NP dot tag {
 }
 
 @trace
-@withspaces
 NP → det N {
   ↓2 = ↑;
   ↓1 = ⇓2;
@@ -19,7 +18,6 @@ NP → det N {
 }
 
 @trace
-@withspaces
 N → adj|adjForm N {
   [mod:<$Head::$Tail>, $Rest];
   [number:$inhNb, gender:$inhGd] ⊂ ↑;
@@ -30,7 +28,6 @@ N → adj|adjForm N {
 }
 
 @trace
-@withspaces
 N → noun {
   [mod:NIL];
   ↓1 = ↑;

@@ -341,9 +341,14 @@ downDoubleArrow "⇓"
     return TOKEN_TRACE;
   }
   
-  "@withspaces" {
+  @with[sS]paces {
     DBUGPRT("TOKEN_WITH_SPACES");
     return TOKEN_WITH_SPACES;
+  }
+  
+  @without[sS]paces {
+    DBUGPRT("TOKEN_WITHOUT_SPACES");
+    return TOKEN_WITHOUT_SPACES;
   }
   
   "@bidirectional" {
@@ -381,17 +386,17 @@ downDoubleArrow "⇓"
     return TOKEN_PRINT;
   }
   
-  "println" {
+print[lL]n {
     DBUGPRT("TOKEN_PRINTLN");
     return TOKEN_PRINTLN;
   }
   
-  "printstderr" {
+print[sS]tderr {
     DBUGPRT("TOKEN_PRINTSTDERR");
     return TOKEN_PRINTSTDERR;
   }
   
-  "printlnstderr" {
+print[lL]n[Ss]tderr {
     DBUGPRT("TOKEN_PRINTLNSTDERR");
     return TOKEN_PRINTLNSTDERR;
   }

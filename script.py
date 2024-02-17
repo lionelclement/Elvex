@@ -26,3 +26,4 @@ with open(sys.argv[2], "w") as patternFile:
         features = f"attrPattern:_{i%13}"
         line = f"{lexeme}\t{pos}\t{lemma}\t[{features}]\n"
         patternFile.write(line)
+

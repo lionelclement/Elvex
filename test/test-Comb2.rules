@@ -1,7 +1,6 @@
 /* **************************************************
  * Start
  ************************************************** */
-@withspaces
 S → [A | B] C
 {
   printlnstderr __FILE__, "...";
@@ -9,7 +8,6 @@ S → [A | B] C
   ↓2 = [];
 }
 
-@withspaces
 @permutable
 A → [aa] ab [ac] ad [ae|af] 
 {
@@ -20,7 +18,6 @@ A → [aa] ab [ac] ad [ae|af]
   ↓5 = [];
 }
 
-@withspaces
 @bidirectional
 B → [ba|bb] bc|bd [be|bf] 
 {

@@ -12,7 +12,6 @@ Axiom → Text_with_features strongPunct {
 /* **************************************************
  * 
  ************************************************** */
-@withspaces
 Text_with_features → VTENSE S_tense {
   [vtense:$vtense] ⊂ ⇓2;
   [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
@@ -146,7 +145,6 @@ S_anaphoric → S_mod {
 /* **************************************************
  * Sentence modifiers
  ************************************************** */
-@withspaces
 S_mod → S_mod form {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
@@ -154,7 +152,6 @@ S_mod → S_mod form {
   ⇑ = ⇓1;
 }
 
-@withspaces
 S_mod → S_mod advs {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
@@ -171,7 +168,6 @@ S_mod → S {
 /* **************************************************
  * Cause : conclusion when premise
  ************************************************** */
-@withspaces
 S → S_anaphoric form S_anaphoric {
   [HEAD:CAUSE, i:$premise, ii:$conclusion, $Rest];
 
@@ -271,7 +267,6 @@ S → S {
 /* **************************************************
  * Affirmative Sentence
  ************************************************** */
-@withspaces
 S → [NP|cln] VP {
   [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   [verbal_constr:$verbal_constr] ⊂ ↑;
@@ -307,7 +302,6 @@ S → VP {
 /* **************************************************
  * Interrogative Sentence
  ************************************************** */
-@withspaces
 ___S → aux NP|cln VP strongPunct {
   [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   [verbal_constr:$verbal_constr] ⊂ ↑;
@@ -324,7 +318,6 @@ ___S → aux NP|cln VP strongPunct {
 /* **************************************************
  * Noun phrase
  ************************************************** */
-@withspaces
 NP → det N1 {
   [def:$def, number:$number, $Rest] ⊂ ⇓2;
   deferred(⇓2) {
@@ -338,7 +331,6 @@ NP → det N1 {
   ⇑ = ⇓1 ∪ ⇓2 ∪ [def:$def, @_3];
 }
 
-@withspaces
 NP → proper_noun {
   ↓1 = ↑;
   ⇑ = ⇓1;
@@ -355,7 +347,6 @@ N1 → N {
   ⇑ = ⇓1;
 }
 
-@withspaces
 N1 → [adjQuality] N2 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -380,7 +371,6 @@ N2 → [adjSize] N3 {
   ⇑ = ⇓2;
 }
 
-@withspaces
 N3 → [adjAge] N4 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -393,7 +383,6 @@ N3 → [adjAge] N4 {
   ⇑ = ⇓2;
 }
 
-@withspaces
 N4 → [adjShape] N5 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -406,7 +395,6 @@ N4 → [adjShape] N5 {
   ⇑ = ⇓2;
 }
 
-@withspaces
 N5 → [adjColor] N6 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -419,7 +407,6 @@ N5 → [adjColor] N6 {
   ⇑ = ⇓2;
 }
 
-@withspaces
 N6 → [adjOrigin] N7 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -432,7 +419,6 @@ N6 → [adjOrigin] N7 {
   ⇑ = ⇓2;
 }
 
-@withspaces
 N7 → [adjMaterial] N8 {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -445,7 +431,6 @@ N7 → [adjMaterial] N8 {
   ⇑ = ⇓2;
 }
 
-@withspaces
 N8 → [adjPurpose] N {
   [MOD:$List, $Rest];
   foreach $Adj in $List {
@@ -467,7 +452,6 @@ N → common_noun {
 /* **************************************************
  * Verb and its complements
  ************************************************** */
-@withspaces
 VP → VN [NP] [part] [NP] [AP|form] [PP] [SCOMP|VCOMP] {
   // Given Arguments
   [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;
@@ -560,7 +544,6 @@ VN → VERB {
 // will he [not] feel good
 // was he [not] feeling good
 // had he [not] felt good
-@withspaces
 VERB → [not] verb {
   [verbal_constr:$verbal_constr, aux_form:none, $Rest] ⊂ ↑;
   if (#1) {
@@ -577,7 +560,6 @@ VERB → [not] verb {
 // will he [not] have felt good
 // has he [not] been feeling good
 // had he [not] been feeling good
-@withspaces
 VERB → [not] have|be|been|have_been verb {
   [aux_form:have|be|been|have_been];
   [aux_form:_, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
@@ -608,7 +590,6 @@ VERB → [not] have|be|been|have_been verb {
 // he will feel good
 
 // he will have [not] felt good
-@withspaces
 VERB → aux [not] [have|be|been|have_been] verb {
   ↓1 = ↑;
   [verbal_constr:$verbal_constr, aux_form:$aux_form] ⊂ ↑;
@@ -636,7 +617,6 @@ VERB → aux [not] [have|be|been|have_been] verb {
 /* **************************************************
  * Adjective phrase
  ************************************************** */
-@withspaces
 AP → [adv] adj {
   ↓2 = ↑;
   [MOD:<$MOD>] ⊂ ↑;
@@ -663,7 +643,6 @@ AP → [adv] adj {
 /* **************************************************
  * Prep phrase
  ************************************************** */
-@withspaces
 PP → prep NP {
   ↓1 = ↑;
   ↓2 = ↑;
@@ -673,7 +652,6 @@ PP → prep NP {
 /* **************************************************
  * 
  ************************************************** */
-@withspaces
 SCOMP → csu S_tense {
   ↓1 = ↑;
   [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
@@ -690,7 +668,6 @@ SCOMP → csu S_tense {
 /* **************************************************
  * 
  ************************************************** */
-@withspaces
 VCOMP → to S {
   ↓1 = [];
   [lexical_function:$lexical_function, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;

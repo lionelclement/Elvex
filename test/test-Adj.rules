@@ -1,5 +1,4 @@
 @trace
-@withspaces
 S → [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ] [ADJ]
 {
   printlnstderr __FILE__, "...";

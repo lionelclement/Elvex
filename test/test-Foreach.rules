@@ -2,7 +2,6 @@
  * Start
  ************************************************** */
 @trace
-@withspaces
 S → adj n adj
 {
   printlnstderr __FILE__, "...";
