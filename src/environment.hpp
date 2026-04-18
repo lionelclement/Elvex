@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -22,9 +22,11 @@
 
 #include <string>
 #include <unordered_map>
+#include "serializable.hpp"
 #include "shared_ptr.hpp"
 
-class Environment : public std::enable_shared_from_this<class Environment>
+class Environment : public Serializable,
+                    public std::enable_shared_from_this<class Environment>
 {
 
 public:
@@ -58,21 +60,22 @@ public:
 
     bool empty() const;
 
-    void print(std::ostream &) const;
+    void toHTML(std::ostream &) const;
 
     environmentPtr clone(statementPtr from, bool verbose) const;
 
-    valuePtr find(const uint32_t) const;
+    valuePtr get(const uint32_t) const;
 
     void replaceVariables(const valuePtr &, bool &);
 
     void replaceVariables(const featuresPtr &, bool &);
 
-    //void replaceVariables(const listFeaturesPtr &, bool &);
-
     void replaceVariables(const pairpPtr &, bool &);
 
     void replaceVariables(std::string &, bool &);
+
+protected:
+    void makeCoreSerialString() override;
 };
 
 #endif // ELVEX_ENVIRONMENT_H

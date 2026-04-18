@@ -104,6 +104,7 @@ void Statements::addStatement(const statementPtr &statement)
         this->guard = statement;
     else
         this->statements.push_back(statement);
+    // resetSerial();
 }
 
 /* **************************************************
@@ -134,7 +135,7 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
             for (uint8_t j = 1; j <= tabulation; ++j)
                 out << "&nbsp;";
         }
-        guard->print(out, tabulationLenght, tabulation, color, bgcolor);
+        guard->toHTML(out, tabulationLenght, tabulation, color, bgcolor);
     }
     bool first = true;
     for (list_statement::const_iterator statement = statements.cbegin(); statement != statements.cend(); ++statement)
@@ -148,7 +149,7 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
             for (uint8_t j = 1; j <= tabulation; ++j)
                 out << "&nbsp;";
         }
-        (*statement)->print(out, tabulationLenght, tabulation, color, bgcolor);
+        (*statement)->toHTML(out, tabulationLenght, tabulation, color, bgcolor);
     }
     tabulation -= tabulationLenght;
     if (ln)
@@ -170,7 +171,7 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
 // void Statements::makeSerialString()
 // {
 //     std::ostringstream stream;
-    
+
 //     stream << '#';
 //     if (guard)
 //         stream << '-' + guard->peekSerialString() + '/';
@@ -206,10 +207,22 @@ statementsPtr Statements::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
  ************************************************** */
 void Statements::renameVariables(uint32_t code)
 {
+    //bool effect = false;
+
     if (guard)
-        guard->renameVariables(code);
-    for (list_statement::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
-        (*statement)->renameVariables(code);
+    {
+        guard->renameVariable(code);
+        //effect = true;
+    }
+
+    for (auto statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
+    {
+        (*statement)->renameVariable(code);
+        //effect = true;
+    }
+
+    //if (effect)
+    //    resetSerial();
 }
 
 /* **************************************************
@@ -217,10 +230,10 @@ void Statements::renameVariables(uint32_t code)
  ************************************************** */
 bool Statements::findVariable(uint32_t code)
 {
-    if (guard && guard->findVariable(code))
+    if (guard && guard->containsVariable(code))
         return true;
     for (list_statement::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
-        if ((*statement)->findVariable(code))
+        if ((*statement)->containsVariable(code))
             return true;
     return false;
 }
@@ -237,20 +250,21 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
     }
 
     bool localEffect;
+
     if (guard && guard->isUnsetFlags(Flags::SEEN))
     {
         if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
             std::cout << "<H3>####################### APPLY (before gard) #######################</H3>" << std::endl;
-            item->print(std::cout);
+            item->toHTML(std::cout);
             std::cout << std::endl;
         }
-        guard->apply(guard, item, parser, synthesizer, effect, verbose);
+        guard->apply(guard, item, parser, synthesizer, effect, true, verbose);
         guard->addFlags(Flags::SEEN);
         if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
         {
             std::cout << "<H3>####################### APPLY CON'T (after gard) #######################</H3>" << std::endl;
-            item->print(std::cout);
+            item->toHTML(std::cout);
             std::cout << std::endl;
         }
         if (guard->isSetFlags(Flags::BOTTOM))
@@ -265,12 +279,6 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
     {
         localEffect = false;
 
-        if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
-        {
-            std::cout << "<H3>####################### APPLY CON'T (before toggle enable) #######################</H3>" << std::endl;
-            item->print(std::cout);
-            std::cout << std::endl;
-        }
         for (list_statement::const_iterator statement = statements.cbegin();
              statement != statements.cend();
              ++statement)
@@ -278,19 +286,12 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             if ((*statement)->isUnsetFlags(Flags::SEEN))
             {
                 bool enableResult = false;
-                (*statement)->toggleEnable(*statement, item, synthesizer, enableResult, false);
+                (*statement)->testEnable(*statement, item, synthesizer, enableResult, false);
                 if (enableResult)
                 {
-                    (*statement)->toggleEnable(*statement, item, synthesizer, enableResult, true);
+                    (*statement)->testEnable(*statement, item, synthesizer, enableResult, true);
                 }
             }
-        }
-
-        if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
-        {
-            std::cout << "<H3>####################### APPLY CON'T (after toggle enable and before apply) #######################</H3>" << std::endl;
-            item->print(std::cout);
-            std::cout << std::endl;
         }
 
         for (list_statement::const_iterator statement = statements.cbegin();
@@ -305,12 +306,8 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             {
                 continue;
             }
-            if (!item->getEnvironment() || item->getEnvironment()->empty())
-            {
-                item->setEnvironment(environmentPtr());
-            }
             effect = false;
-            (*statement)->apply((*statement), item, parser, synthesizer, effect, verbose);
+            (*statement)->apply((*statement), item, parser, synthesizer, effect, true, verbose);
             if ((*statement)->isSetFlags(Flags::BOTTOM))
             {
                 addFlags(Flags::BOTTOM);
@@ -323,6 +320,7 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
             }
         }
     }
+
     for (list_statement::const_iterator statement = statements.cbegin();
          statement != statements.cend();
          ++statement)
@@ -346,7 +344,7 @@ exitApply:
     if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
     {
         std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
-        item->print(std::cout);
+        item->toHTML(std::cout);
         std::cout << std::endl;
     }
 }
@@ -354,12 +352,60 @@ exitApply:
 /* **************************************************
  *
  ************************************************** */
-void Statements::toggleEnable(class Item *item, Generator *synthesizer, bool &effect, bool on)
+void Statements::testEnable(class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     if (guard)
-        guard->toggleEnable(guard, item, synthesizer, effect, on);
+        guard->testEnable(guard, item, synthesizer, effect, on);
     for (auto statement = statements.cbegin(); statement != statements.cend(); ++statement)
     {
-        (*statement)->toggleEnable(*statement, item, synthesizer, effect, on);
+        (*statement)->testEnable(*statement, item, synthesizer, effect, on);
     }
 }
+
+/* **************************************************
+ *
+ ************************************************** */
+/*
+void Statements::makeSerialString()
+{
+    std::ostringstream stream;
+
+    stream << '{';
+
+    if (guard)
+    {
+        stream << "G:";
+        stream << guard->peekSerialString();
+        stream << ';';
+    }
+    else
+    {
+        stream << "G:0;";
+    }
+
+    stream << "S:";
+    if (statements.empty())
+    {
+        stream << '0';
+    }
+    else
+    {
+        bool first = true;
+        for (const auto &statement : statements)
+        {
+            if (!first)
+                stream << '|';
+            first = false;
+
+            if (statement)
+                stream << statement->peekSerialString();
+            else
+                stream << '0';
+        }
+    }
+
+    stream << '}';
+
+    serialString = stream.str();
+}
+*/

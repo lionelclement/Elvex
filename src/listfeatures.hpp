@@ -32,7 +32,7 @@ class ListFeatures : public Facade,
 private:
     std::vector<featuresPtr> listFeatures;
 
-    void makeSerialString();
+    void makeCoreSerialString();
 
 public:
     ListFeatures(void);
@@ -63,7 +63,7 @@ public:
 
     featuresPtr operator[](unsigned int);
 
-    void print(std::ostream &) const;
+    void toHTML(std::ostream &) const;
 
     void flatPrint(std::ostream &) const;
 

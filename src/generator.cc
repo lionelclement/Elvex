@@ -56,7 +56,7 @@ Generator::Generator()
 #endif
     this->reduceAll = false;
     this->warning = false;
-    this->randomResult = false;
+    // this->randomResult = false;
     this->firstResult = false;
     this->trace = false;
     this->verbose = false;
@@ -486,10 +486,10 @@ nodePtr Generator::getNodeRoot()
 /* **************************************************
  *
  ************************************************** */
-void Generator::printState(std::ostream &outStream, class ItemSet *state)
+void Generator::toHTMLState(std::ostream &outStream, class ItemSet *state)
 {
     outStream << "Q" << state->getId();
-    state->print(outStream);
+    state->toHTML(outStream);
 }
 
 /* **************************************************
@@ -505,9 +505,9 @@ class Item *Generator::createItem(class Item *item, uint32_t row)
     it->addRange(row);
     it->addForestIdentifiers(item->getForestIdentifiers());
     it->setInheritedFeatures(item->getInheritedFeatures()->clone());
-    it->setInheritedSonFeatures(item->getInheritedSonFeatures()->clone());
+    it->setInheritedChildFeatures(item->getInheritedChildFeatures()->clone());
     it->setSynthesizedFeatures(item->getSynthesizedFeatures()->clone());
-    it->setSynthesizedSonFeatures(item->getSynthesizedSonFeatures()->clone());
+    it->setSynthesizedChildFeatures(item->getSynthesizedChildFeatures()->clone());
     it->setSeen(item->getSeen());
     return it;
 }
@@ -515,12 +515,25 @@ class Item *Generator::createItem(class Item *item, uint32_t row)
 /* **************************************************
  *
  ************************************************** */
+/*
 std::string
 Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
 {
 
     std::stringstream ss;
-    ss << std::hex << actualItem->getId() << '\x0' << previousItem->getCurrentTerm() << '\x0' << std::dec << actualItem->getSynthesizedFeatures()->peekSerialString();
+    ss << std::hex << actualItem->getId() << '\x0' << previousItem->getCurrentTerm() << '\x0' << std::dec << actualItem->getSynthesizedFeatures()->peekCoreSerialString();
+    return ss.str();
+}
+*/
+std::string
+Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
+{
+    std::stringstream ss;
+
+    ss << actualItem->peekCoreSerialString();
+    ss << '\x0';
+    ss << previousItem->peekCoreSerialString();
+  
     return ss.str();
 }
 
@@ -533,6 +546,39 @@ void Generator::clear()
     forestMap.clear();
     itemMap.clear();
     memoizedMap.clear();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+static bool sameNode(const nodePtr &a, const nodePtr &b)
+{
+    if (a->getWithSpace() != b->getWithSpace())
+        return false;
+
+    if (a->size() != b->size())
+        return false;
+
+    for (size_t i = 0; i < a->size(); ++i)
+    {
+        if (a->at(i)->getId() != b->at(i)->getId())
+            return false;
+    }
+
+    return true;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+static bool containsEquivalentNode(const forestPtr &forest, const nodePtr &node)
+{
+    for (auto it = forest->cbegin(); it != forest->cend(); ++it)
+    {
+        if (sameNode(*it, node))
+            return true;
+    }
+    return false;
 }
 
 /* **************************************************
@@ -561,7 +607,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
 #ifdef TRACE_PASS
                 std::cout << "<H3>####################### PASS #######################</H3>" << std::endl;
-                (*actualItem)->print(std::cout);
+                (*actualItem)->toHTML(std::cout);
                 std::cout << std::endl;
 #endif
 
@@ -570,8 +616,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                 forestPtr forestFound = forestPtr();
                 class ForestIdentifier *fi = ForestIdentifier::create(it->getCurrentTerms()->getId(),
-                                                                       row,
-                                                                       row);
+                                                                      row,
+                                                                      row);
                 auto forestMapIt = forestMap.find(fi);
                 if (forestMapIt != forestMap.cend())
                 {
@@ -588,10 +634,10 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 it->setIndex((*actualItem)->getIndex() + 1);
                 it->getIndexTerms()[(*actualItem)->getIndex()] = 0;
                 it->addRange(row);
-                it->resetSerial();
+                it->resetCoreSerial();
 #ifdef TRACE_PASS
                 std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
-                it->print(std::cout);
+                it->toHTML(std::cout);
                 std::cout << std::endl;
 #endif
                 if (!state->insert(it, this))
@@ -614,15 +660,15 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                     it->getIndexTerms()[(*actualItem)->getIndex()] = Item::POSTERMS_NA;
                 }
                 it->getCurrentTerms()->unsetOptional();
-                it->resetSerial();
+                it->resetCoreSerial();
 #ifdef TRACE_PASS
                 std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
-                it->print(std::cout);
+                it->toHTML(std::cout);
                 std::cout << std::endl;
 #endif
                 if (!state->insert(it, this))
                 {
-                    FATAL_ERROR_UNEXPECTED;
+                    //FATAL_ERROR_UNEXPECTED;
                 }
                 else
                 {
@@ -642,7 +688,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
 #ifdef TRACE_UNFOLD
                 std::cout << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
-                (*actualItem)->print(std::cout);
+                (*actualItem)->toHTML(std::cout);
                 std::cout << std::endl;
 #endif
 
@@ -658,12 +704,12 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
 #ifdef TRACE_UNFOLD
                     std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
-                    it->print(std::cout);
+                    it->toHTML(std::cout);
                     std::cout << std::endl;
 #endif
                     if (!state->insert(it, this))
                     {
-                        FATAL_ERROR_UNEXPECTED;
+                        //FATAL_ERROR_UNEXPECTED;
                     }
                     else
                     {
@@ -683,14 +729,20 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                     if (getTraceAction() || ((getTrace() && (*actualItem)->getRuleTrace())))
                     {
                         std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
-                        (*actualItem)->print(std::cout);
+                        (*actualItem)->toHTML(std::cout);
                         std::cout << std::endl;
                     }
+
+                    if (!(*actualItem)->_getEnvironment())
+                    {
+                        (*actualItem)->_setEnvironment(Environment::create());
+                    }
+
                     (*actualItem)->apply(parser, this, verbose);
                     if (getTraceAction() || ((getTrace() && (*actualItem)->getRuleTrace())))
                     {
                         std::cout << "<H3>####################### ACTION DONE #######################</H3>" << std::endl;
-                        (*actualItem)->print(std::cout);
+                        (*actualItem)->toHTML(std::cout);
                         std::cout << std::endl;
                     }
                 }
@@ -709,26 +761,27 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                          (*actualItem)->getCurrentTerms()->size() == 1 &&
                          !(*actualItem)->getCurrentTerms()->isOptional() &&
                          parser.getRules().isNonTerminal((*actualItem)->getCurrentTerm()) &&
-                         !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil())
+                         !(*(*actualItem)->getInheritedChildFeatures())[(*actualItem)->getIndex()]->isNil())
                 {
 
                     if (traceClose || (trace && (*actualItem)->getRuleTrace()))
                     {
                         std::cout << "<H3>####################### CLOSE (X -> α • Y β) #######################</H3>" << std::endl;
-                        (*actualItem)->print(std::cout);
+                        (*actualItem)->toHTML(std::cout);
                         std::cout << std::endl;
                     }
 
                     (*actualItem)->addFlags(Flags::SEEN);
 
-                    featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
-                    if (!inheritedSonFeatures->isNil() && !inheritedSonFeatures->isBottom())
+                    featuresPtr inheritedChildFeatures = (*(*actualItem)->getInheritedChildFeatures())[(*actualItem)->getIndex()];
+                    if (!inheritedChildFeatures->isNil() && !inheritedChildFeatures->isBottom())
                     {
-                        if ((*actualItem)->getEnvironment() && !(*actualItem)->getEnvironment()->empty())
+                        if (!(*actualItem)->environmentIsEmpty())
                         {
-                            bool effect = false;
-                            (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
-                            inheritedSonFeatures->deleteAnonymousVariables();
+                            // replace ?
+                            // bool effect = false;
+                            //(*actualItem)->getEnvironment()->replaceVariables(inheritedChildFeatures, effect);
+                            inheritedChildFeatures->deleteAnonymousVariables();
                         }
 
                         for (const auto &iterRules : parser.getRules().getRules())
@@ -742,13 +795,13 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                                   iterRules->getStatements() ? iterRules->getStatements()->clone(0)
                                                                              : statementsPtr());
                                 it->addRange(row);
-                                it->setInheritedFeatures(inheritedSonFeatures->clone());
-                                // it->_renameVariables(it->getId());
+                                it->setInheritedFeatures(inheritedChildFeatures->clone());
+                                // it->renameVariables(it->getId());
 
                                 if (traceClose || (trace && it->getRuleTrace()))
                                 {
                                     std::cout << "<H3>####################### CLOSE CON'T (Y -> • γ) #######################</H3>" << std::endl;
-                                    it->print(std::cout);
+                                    it->toHTML(std::cout);
                                     std::cout << std::endl;
                                     std::flush(std::cout);
                                 }
@@ -758,6 +811,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                 if (found != state->cend())
                                 {
                                     (*found)->addRef((*actualItem)->getId());
+
                                     free(it);
                                 }
                                 else
@@ -786,7 +840,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                     if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                     {
                         std::cout << "<H3>####################### REDUCE Y -> γ • (actual) #######################</H3>" << std::endl;
-                        (*actualItem)->print(std::cout);
+                        (*actualItem)->toHTML(std::cout);
                         std::cout << std::endl;
                     }
 
@@ -818,25 +872,26 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                 if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                                 {
                                     std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
-                                    (*actualItem)->print(std::cout);
+                                    (*actualItem)->toHTML(std::cout);
                                     std::cout << std::endl;
                                 }
 
-                                if ((*actualItem)->getEnvironment() && !(*actualItem)->getEnvironment()->empty())
+                                if (!(*actualItem)->environmentIsEmpty())
                                 {
-                                    bool effect = false;
-                                    (*actualItem)->getEnvironment()->replaceVariables((*actualItem)->getSynthesizedFeatures(), effect);
-                                    if (effect)
-                                    {
-                                        FATAL_ERROR_UNEXPECTED;
-                                    }
+                                    // replace ?
+                                    // bool effect = false;
+                                    //(*actualItem)->getEnvironment()->replaceVariables((*actualItem)->getSynthesizedFeatures(), effect);
+                                    // if (effect)
+                                    //{
+                                    //    FATAL_ERROR_UNEXPECTED;
+                                    //}
                                     (*actualItem)->getSynthesizedFeatures()->deleteAnonymousVariables();
                                 }
 
                                 forestPtr forestFound = forestPtr();
                                 class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getRuleLhs(),
-                                                                                       (*actualItem)->getRanges()[0],
-                                                                                       row);
+                                                                                      (*actualItem)->getRanges()[0],
+                                                                                      row);
                                 auto forestMapIt = forestMap.find(fi);
                                 if (forestMapIt != forestMap.cend())
                                 {
@@ -847,14 +902,14 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                 {
                                     forestFound = Forest::create((*actualItem)->getRanges()[0], row);
                                     forestMap.insert(fi, forestFound);
-                                    nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
+                                    nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
                                     if (forestFound->getFrom() != forestFound->getTo())
                                     {
                                         node->push_back(forestFound);
                                         nodeRoot->push_back(forestFound);
                                     }
                                 }
-                                nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
+                                nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
                                 for (auto forestIdentifier : (*actualItem)->getForestIdentifiers())
                                 {
                                     auto _forestMapIt = forestMap.find(forestIdentifier);
@@ -868,7 +923,10 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                         }
                                     }
                                 }
-                                forestFound->push_node(node);
+                                //insEquivalentNode(forestFound, node))
+                                {
+                                    forestFound->push_node(node);
+                                }
                             }
                             for (auto ref : (*actualItem)->getRefs())
                             {
@@ -884,7 +942,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     if (traceReduce || (trace && previousItem->getRuleTrace()))
                                     {
                                         std::cout << "<H3>####################### REDUCE CON'T (X -> α • Y β) #######################</H3>" << std::endl;
-                                        previousItem->print(std::cout);
+                                        previousItem->toHTML(std::cout);
                                         std::cout << std::endl;
                                     }
 
@@ -893,35 +951,36 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     // Is this already done ?
                                     if (memItem != memoizedMap.cend())
                                     {
+
                                         std::vector<class MemoizationValue *> result = memItem->second;
-                                        for (std::vector<class MemoizationValue *>::const_iterator i = result.cbegin();
-                                             i != result.cend();
-                                             ++i)
+                                        for (std::vector<class MemoizationValue *>::const_iterator memoizationValue = result.cbegin();
+                                             memoizationValue != result.cend();
+                                             ++memoizationValue)
                                         {
+
+                                            //(*memoizationValue)->getItem()->addRef(previousItem->getId());
+
                                             // New item build
                                             class Item *it = createItem(previousItem, row);
-                                            it->setEnvironment(
-                                                previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr, parser.getVerbose())
-                                                                               : environmentPtr());
-                                            it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
-                                                                                 (*i)->getFeatures());
+                                            it->cloneEnvironment(previousItem);
                                             //...
                                             featuresPtr inheritedFeatures = it->getInheritedFeatures();
                                             if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom())
                                             {
-                                                if (it->getEnvironment() && !it->getEnvironment()->empty())
+                                                if (!it->environmentIsEmpty())
                                                 {
-                                                    bool effect = false;
-                                                    it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
+                                                    // replace ?
+                                                    // bool effect = false;
+                                                    // it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
                                                     inheritedFeatures->deleteAnonymousVariables();
                                                 }
                                             }
 
-                                            it->addForestIdentifiers(previousItem->getIndex(), (*i)->getForestIdentifier());
+                                            it->addForestIdentifiers(previousItem->getIndex(), (*memoizationValue)->getForestIdentifier());
 
 #ifdef TRACE_MEMOIZATION
                                             std::cout << "<H3>####################### MEMOIZED REDUCE (X -> α Y • β) #######################</H3>" << std::endl;
-                                            it->print(std::cout);
+                                            it->toHTML(std::cout);
                                             std::cout << std::endl;
 #endif
                                             it->setRefs(previousItem->getRefs());
@@ -931,6 +990,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             {
                                                 (*found)->addRefs(previousItem->getRefs());
                                                 free(it);
+                                                modification = true;
                                             }
                                             else
                                             {
@@ -952,26 +1012,25 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     else
                                     {
                                         class Item *it = createItem(previousItem, row);
-                                        it->setEnvironment(
-                                            previousItem->getEnvironment() ? previousItem->getEnvironment()->clone(nullptr, verbose)
-                                                                           : environmentPtr());
-                                        it->getSynthesizedSonFeatures()->add(previousItem->getIndex(),
-                                                                             (*actualItem)->getSynthesizedFeatures()->clone());
+                                        it->cloneEnvironment(previousItem);
+                                        it->getSynthesizedChildFeatures()->add(previousItem->getIndex(),
+                                                                               (*actualItem)->getSynthesizedFeatures()->clone());
 
                                         //...
                                         featuresPtr inheritedFeatures = it->getInheritedFeatures();
                                         if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom())
                                         {
-                                            if (it->getEnvironment() && !it->getEnvironment()->empty())
+                                            if (!it->environmentIsEmpty())
                                             {
-                                                bool effect = false;
-                                                it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
+                                                // replace ?
+                                                // bool effect = false;
+                                                // it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
                                                 inheritedFeatures->deleteAnonymousVariables();
                                             }
                                         }
 
                                         // On transmet le contexte de previousItem
-                                        nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getBidirectional(), (*actualItem)->getPermutable());
+                                        nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
                                         for (auto forestIdentifier : (*actualItem)->getForestIdentifiers())
                                         {
                                             auto forestMapIt = forestMap.find(forestIdentifier);
@@ -985,8 +1044,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                         }
                                         forestPtr forestFound = forestPtr();
                                         class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getId(),
-                                                                                               (*actualItem)->getRanges()[0],
-                                                                                               row);
+                                                                                              (*actualItem)->getRanges()[0],
+                                                                                              row);
                                         auto forestMapIt = forestMap.find(fi);
                                         if (forestMapIt != forestMap.cend())
                                         {
@@ -1000,26 +1059,32 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             forestMap.insert(fi, forestFound);
                                             it->addForestIdentifiers(previousItem->getIndex(), fi);
                                         }
-                                        forestFound->push_node(node);
+                                        if (!containsEquivalentNode(forestFound, node))
+                                        {   
+                                            forestFound->push_node(node);
+                                        }
                                         if (traceReduce || (trace && it->getRuleTrace()))
                                         {
                                             std::cout << "<H3>####################### REDUCE CON'T (X -> α Y • β) #######################</H3>" << std::endl;
-                                            it->print(std::cout);
+                                            it->toHTML(std::cout);
                                             std::cout << std::endl;
                                         }
                                         auto found = states[row]->find(it);
                                         if (found != states[row]->cend())
                                         {
                                             (*found)->addRefs(previousItem->getRefs());
+                                            modification = true;
                                             free(it);
                                         }
                                         else
                                         {
 
                                             // tabulates this result
+                                            int index = it->getIndex() - 1;
                                             memoizedMap.insert(key,
-                                                               (*it->getSynthesizedSonFeatures())[it->getIndex() - 1],
-                                                               it->getForestIdentifiers()[it->getIndex() - 1]);
+                                                               it->getSynthesizedChildFeatures()->get(index),
+                                                               it->getForestIdentifiers()[index],
+                                                               it);
                                             // record the item
                                             it->setRefs(previousItem->getRefs());
                                             if (!states[row]->insert(it, this))
@@ -1047,7 +1112,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                          (*actualItem)->getCurrentTerms()->size() == 1 &&
                          !(*actualItem)->getCurrentTerms()->isOptional() &&
                          parser.getRules().isTerminal((*actualItem)->getCurrentTerm()) &&
-                         !(*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()]->isNil())
+                         !(*(*actualItem)->getInheritedChildFeatures())[(*actualItem)->getIndex()]->isNil())
                 {
                     // shift the next time
                 }
@@ -1064,7 +1129,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
     if (traceStage)
     {
         std::cout << "<H3>####################### STAGE " << state->getId() << " #######################</H3>" << std::endl;
-        state->print(std::cout);
+        state->toHTML(std::cout);
         std::cout << std::endl;
     }
 }
@@ -1090,40 +1155,33 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                 continue;
             if ((*actualItem)->getCurrentTerms())
             {
-                featuresPtr inheritedSonFeatures = (*(*actualItem)->getInheritedSonFeatures())[(*actualItem)->getIndex()];
+                featuresPtr inheritedChildFeatures = (*(*actualItem)->getInheritedChildFeatures())[(*actualItem)->getIndex()];
 
                 if (!(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
                     !(*actualItem)->getCurrentTerms()->isOptional() &&
                     (*actualItem)->getCurrentTerm() != Item::TERM_NA &&
-                    !inheritedSonFeatures->isNil() &&
-                    !inheritedSonFeatures->isBottom() &&
+                    !inheritedChildFeatures->isNil() &&
+                    !inheritedChildFeatures->isBottom() &&
                     parser.getRules().isTerminal((*actualItem)->getCurrentTerm()))
                 {
 
                     if (traceShift || (trace && (*actualItem)->getRuleTrace()))
                     {
                         std::cout << "<H3>####################### SHIFT (X -> α • ω β) where ω ∈ ℒ #######################</H3>" << std::endl;
-                        (*actualItem)->print(std::cout);
+                        (*actualItem)->toHTML(std::cout);
                         std::cout << std::endl;
                     }
 
-                    if ((*actualItem)->getEnvironment() && !(*actualItem)->getEnvironment()->empty())
-                    {
-                        bool effect = false;
-                        (*actualItem)->getEnvironment()->replaceVariables(inheritedSonFeatures, effect);
-                        inheritedSonFeatures->deleteAnonymousVariables();
-                    }
-
                     std::string *form = nullptr;
-                    uint32_t head = inheritedSonFeatures->assignHead();
+                    uint32_t head = inheritedChildFeatures->assignHead();
                     Stage stage;
-                    if (head != Vartable::DOES_NOT_CONTAIN_A_HEAD)
+                    if (head != Vartable::code_for_DOES_NOT_CONTAIN_A_HEAD)
                     {
                         stage = STAGE_HEAD;
                     }
                     else
                     {
-                        form = inheritedSonFeatures->assignForm();
+                        form = inheritedChildFeatures->assignForm();
                         if (!form)
                         {
                             stage = STAGE_MAIN;
@@ -1135,35 +1193,45 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                     }
 
                     /*
-                     std::cout << "inheritedSonFeatures : ";
-                     inheritedSonFeatures->print(std::cout);
+                     std::cout << "<p>";
+                     std::cout << "inheritedChildFeatures : ";
+                     inheritedChildFeatures->toHTML(std::cout);
                      std::cout << std::endl;
+                     std::cout << "stage:" << (stage == STAGE_HEAD ? "STAGE_HEAD" : (stage == STAGE_FORM ? "STAGE_FORM" : "STAGE_MAIN")) << std::endl;
                      std::cout << "head:" << head << std::endl;
                      std::cout << "form:" << form << std::endl;
                      std::cout << "pos : " << Vartable::codeToName((*actualItem)->getCurrentTerm()) << std::endl;
+                     std::cout << "</p>";
                     */
 
                     auto foundpos = parser.findCacheLexicon((*actualItem)->getCurrentTerm());
+                    // std::cout << "foundpos : " << (foundpos != parser.cendCacheLexicon() ? "yes" : "no") << std::endl;
+
                     if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
                     {
                         Parser::entries_map *entriesMap = foundpos->second;
+                        // std::cout << "entriesMap : " << (entriesMap ? "yes" : "no") << std::endl;
+
                         if (entriesMap)
                         {
                             Parser::entries_map::const_iterator found;
                             entriesPtr entries = entriesPtr();
 
-                            /* *****
+                            /*
                             COUT_LINE;
                             std::cout << "stage : " << (stage == STAGE_HEAD ? "STAGE_HEAD" : (stage == STAGE_FORM ? "STAGE_FORM" : "STAGE_MAIN")) << std::endl;
                             std::cout << "head : " << Vartable::codeToName(head) << std::endl;
                             std::cout << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
-                            ***** */
+                            */
 
                             switch (stage)
                             {
 
                             case STAGE_HEAD:
                                 entries = findByHeadThenCompactedLexicon(parser, entriesMap, (*actualItem)->getCurrentTerm(), head);
+                                /*
+                                std::cout << "entries found by head : " << (entries ? entries->size() : 0) << std::endl;
+                                */
                                 break;
 
                             case STAGE_MAIN:
@@ -1176,7 +1244,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                             }
 
                             // Found !
-                            if (entries)
+                            if (entries && entries->size() > 0)
                             {
                                 // cont = false;
                                 auto entryIt = entries->begin();
@@ -1200,28 +1268,47 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                         entry = *entryIt;
                                         ++entryIt;
                                     }
+                                    /*
+                                    std::cout << "entry : " << entry->getId() << std::endl;
+                                    std::cout << "<BR>" << std::endl;
+                                    entry->print(std::cout);
+                                    std::cout << "<BR>" << std::endl;
+                                    */
+
                                     entryPtr entry_copy = entry->clone();
                                     featuresPtr entryFeatures = entry_copy->getFeatures() ? entry_copy->getFeatures()
                                                                                           : featuresPtr();
                                     statementsPtr entryStatements = statementsPtr();
-                                    environmentPtr env = (*actualItem)->getEnvironment()
-                                                             ? (*actualItem)->getEnvironment()->clone(nullptr, verbose)
+                                    environmentPtr env = (*actualItem)->_getEnvironment()
+                                                             ? (*actualItem)->_getEnvironment()->clone(nullptr, verbose)
                                                              : Environment::create();
+
+                                    /*
+                                    std::cout << "entry_copy : " << entry_copy->getId() << std::endl;
+                                    std::cout << "<BR>" << std::endl;
+                                    entry_copy->print(std::cout);
+                                    std::cout << "<BR>" << std::endl;
+                                    entryFeatures->toHTML(std::cout);
+                                    std::cout << "<BR>" << std::endl;
+                                    bool subsumes = entryFeatures->subsumes(nullptr, inheritedChildFeatures, env, verbose);
+                                    std::cout << "subsumes: " << subsumes << std::endl;
+                                    std::cout << "<BR>" << std::endl;
+                                    */
 
                                     // Filter !!
                                     // entryFeatures subsumes ↑
 
                                     if (stage == STAGE_FORM ||
-                                        (entryFeatures && entryFeatures->subsumes(nullptr, inheritedSonFeatures, env, verbose)))
+                                        (entryFeatures && entryFeatures->subsumes(nullptr, inheritedChildFeatures, env, verbose)))
                                     {
 
                                         // New item build
                                         class Item *it = createItem(*actualItem, row);
 
-                                        it->setEnvironment(env);
+                                        it->_setEnvironment(env);
 
                                         featuresPtr resultFeatures = featuresPtr();
-                                        featuresPtr inheritedSonFeaturesCopy = inheritedSonFeatures->clone();
+                                        featuresPtr inheritedChildFeaturesCopy = inheritedChildFeatures->clone();
                                         featuresPtr entryFeaturesCopy = entryFeatures->clone();
 
                                         if (entryFeatures)
@@ -1231,21 +1318,22 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                         else
                                         {
 
-                                            resultFeatures = inheritedSonFeaturesCopy;
+                                            resultFeatures = inheritedChildFeaturesCopy;
                                         }
 
                                         if (resultFeatures)
                                         {
-                                            if (it->getEnvironment() && !(it->getEnvironment()->empty()))
+                                            if (!it->environmentIsEmpty())
                                             {
-                                                bool effect = false;
-                                                it->getEnvironment()->replaceVariables(resultFeatures, effect);
+                                                // replace ?
+                                                // bool effect = false;
+                                                // it->getEnvironment()->replaceVariables(resultFeatures, effect);
                                             }
                                             resultFeatures->renameVariables(entry_copy->getId());
                                         }
 
-                                        it->getSynthesizedSonFeatures()->add((*actualItem)->getIndex(),
-                                                                             entryFeaturesCopy);
+                                        it->getSynthesizedChildFeatures()->add((*actualItem)->getIndex(),
+                                                                               entryFeaturesCopy);
                                         if (entryStatements)
                                         {
                                             entryStatements->renameVariables(entry_copy->getId());
@@ -1261,13 +1349,12 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                         }
                                         if (forest->getForm().find('$') != std::string::npos)
                                         {
+                                            //
                                             bool effect = false;
-                                            it->getEnvironment()->replaceVariables(forest->getForm(), effect);
+                                            it->environmentReplaceVariables(forest->getForm(), effect);
                                         }
-                                        // entry_copy->renameVariables(entry_copy->getId());
-                                        //  entry_copy->resetSerial();
                                         ForestIdentifier *forestIdentifier = ForestIdentifier::create(entry_copy->getId(),
-                                                                                                       row - 1, row);
+                                                                                                      row - 1, row);
 
                                         auto forestMapIt = forestMap.find(forestIdentifier);
                                         if (forestMapIt != forestMap.cend())
@@ -1289,7 +1376,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                         if (traceShift || (trace && it->getRuleTrace()))
                                         {
                                             std::cout << "<H3>####################### SHIFT CON'T (X -> α ω • β) #######################</H3>" << std::endl;
-                                            it->print(std::cout);
+                                            it->toHTML(std::cout);
                                             std::cout << std::endl;
                                         }
 
@@ -1348,7 +1435,7 @@ void Generator::generate(class Parser &parser)
     }
 
     std::ofstream outfile;
-    nodeRoot = Node::create(false, false, false);
+    nodeRoot = Node::create(false, false);
     class ItemSet *initState = ItemSet::create(0);
     std::list<rulePtr> *rules = parser.getRules().findRules(parser.getStartTerm());
     class Item *it;
@@ -1359,12 +1446,14 @@ void Generator::generate(class Parser &parser)
                           (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
         it->addRange(0);
         featuresPtr startFeatures = parser.getStartFeatures();
-        startFeatures->renameVariables(it->getId());
         it->setInheritedFeatures(startFeatures);
+        // inutile
+        ////it->renameVariables(it->getId());
+
         if (traceInit || (trace && it->getRuleTrace()))
         {
             std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;
-            it->print(std::cout);
+            it->toHTML(std::cout);
             std::cout << std::endl;
         }
         insertItemMap(it);
@@ -1449,7 +1538,7 @@ entriesPtr Generator::findByHead(Parser::entries_map *listHead, uint32_t head)
 entriesPtr Generator::findMain(Parser::entries_map *map)
 {
     entriesPtr entries = entriesPtr();
-    auto found = map->find(Vartable::DOES_NOT_CONTAIN_A_HEAD);
+    auto found = map->find(Vartable::code_for_DOES_NOT_CONTAIN_A_HEAD);
     if (found != map->end())
     {
         entries = found->second;
@@ -1497,7 +1586,7 @@ entriesPtr Generator::findByHeadThenCompactedLexicon(Parser &parser, Parser::ent
 entriesPtr Generator::findByForm(Parser::entries_map *map)
 {
     entriesPtr entries = entriesPtr();
-    auto found = map->find(Vartable::IS_A_FORM);
+    auto found = map->find(Vartable::code_for_IS_A_FORM);
     if (found != map->end())
         entries = found->second;
     return entries;
@@ -1542,7 +1631,7 @@ entriesPtr Generator::findCompactedLexicon(Parser &parser, const uint32_t pos, c
     std::cout << "<H3>####################### FIND IN THE COMPACT LEXICON #######################</H3>" << std::endl;
     std::cout << "<DIV>" << std::endl;
     std::cout << str << " => ";
-    compactedLexicon->printResults(std::cout, info, 1);
+    compactedLexicon->toHTMLResults(std::cout, info, 1);
     std::cout << "</DIV>" << std::endl;
     std::cout << std::endl;
 #endif
@@ -1563,8 +1652,8 @@ entriesPtr Generator::findCompactedLexicon(Parser &parser, const uint32_t pos, c
                     // entryPtr localEntry = Entry::create(form, parser.getLocalFeatures())->clone();
                     entryPtr localEntry = Entry::create(form, parser.getLocalFeatures());
 
-                    std::string localEntrySerialString = localEntry->peekSerialString();
-                    auto found = parser.findMapLocalEntry(localEntrySerialString);
+                    std::string localEntryCoreSerialString = localEntry->peekCoreSerialString();
+                    auto found = parser.findMapLocalEntry(localEntryCoreSerialString);
                     if (found != parser.cendMapLocalEntry())
                     {
                         // entries->add(found->second->clone());

@@ -29,15 +29,14 @@
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
            statementsPtr statements)
     : Facade(id)
 {
     this->lineno = lineno;
     this->filename = filename;
     this->withSpaces = withSpaces;
-    this->bidirectional = bidirectional;
-    this->permutable = permutable;
+    this->unordered = unordered;
     this->lhs = lhs;
     this->rhs = rhs;
     this->statements = statements;
@@ -49,14 +48,13 @@ Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements)
+Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements)
     : Facade(id)
 {
     this->lineno = lineno;
     this->filename = filename;
     this->withSpaces = withSpaces;
-    this->bidirectional = bidirectional;
-    this->permutable = permutable;
+    this->unordered = unordered;
     this->lhs = lhs;
     this->statements = statements;
     this->usages = 0;
@@ -67,51 +65,51 @@ Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
-    : Rule(0, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements)
+Rule::Rule(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs, statementsPtr statements)
+    : Rule(0, lineno, filename, withSpaces, unordered, lhs, rhs, statements)
 {
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-Rule::Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements)
-    : Rule(0, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements)
+Rule::Rule(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements)
+    : Rule(0, lineno, filename, withSpaces, unordered, lhs, statements)
 {
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
-    return std::make_shared<Rule>(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements);
+    return std::make_shared<Rule>(id, lineno, filename, withSpaces, unordered, lhs, rhs, statements);
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements)
+rulePtr Rule::create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements)
 {
-    return std::make_shared<Rule>(id, lineno, filename, withSpaces, bidirectional, permutable, lhs, statements);
+    return std::make_shared<Rule>(id, lineno, filename, withSpaces, unordered, lhs, statements);
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+rulePtr Rule::create(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
                      statementsPtr statements)
 {
-    return std::make_shared<Rule>(lineno, filename, withSpaces, bidirectional, permutable, lhs, rhs, statements);
+    return std::make_shared<Rule>(lineno, filename, withSpaces, unordered, lhs, rhs, statements);
 }
 
 /* ************************************************************
  *
  ************************************************************ */
-rulePtr Rule::create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements)
+rulePtr Rule::create(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements)
 {
-    return std::make_shared<Rule>(lineno, filename, withSpaces, bidirectional, permutable, lhs, statements);
+    return std::make_shared<Rule>(lineno, filename, withSpaces, unordered, lhs, statements);
 }
 
 /* ************************************************************
@@ -172,17 +170,9 @@ bool Rule::getWithSpaces(void) const
 /* ************************************************************
  *
  ************************************************************ */
-bool Rule::getBidirectional(void) const
+bool Rule::getUnordered(void) const
 {
-    return bidirectional;
-}
-
-/* ************************************************************
- *
- ************************************************************ */
-bool Rule::getPermutable(void) const
-{
-    return permutable;
+    return unordered;
 }
 
 /* ************************************************************
@@ -246,7 +236,7 @@ rulePtr Rule::clone() const
         rhsCopy.push_back(rhs[i]->clone());
         //rhsCopy.push_back(rhs[i]);
     }
-    rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, this->withSpaces, this->bidirectional, this->permutable, lhs, rhsCopy, statements);
+    rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, this->withSpaces, this->unordered, lhs, rhsCopy, statements);
     rule->usages = usages;
     rule->trace = trace;
     return rule;
@@ -307,7 +297,7 @@ void Rule::print(std::ostream &outStream, uint8_t index, bool withSemantic, bool
 /* ************************************************************
  *
  ************************************************************ */
-void Rule::makeSerialString() 
+void Rule::makeCoreSerialString() 
 {
     std::ostringstream stream;
     stream << std::hex << (int)lhs << ' ' ;
@@ -321,12 +311,12 @@ void Rule::makeSerialString()
     }
     // statementsPtr stms = getStatements();
     // if (stms){
-    //     stream << stms->peekSerialString();
+    //     stream << stms->peekCoreSerialString();
     // } else {
     //     stream << '#';
     // }
     // stream.flush();
-    serialString = stream.str();
+    coreSerialString = stream.str();
     
 }
 

@@ -94,11 +94,12 @@ public:
         GUARD_STATEMENT,
         PRINT_STATEMENT,
         PRINTLN_STATEMENT,
-        PRINTSTDERR_STATEMENT,
-        PRINTLNSTDERR_STATEMENT,
+        EPRINT_STATEMENT,
+        EPRINTLN_STATEMENT,
         ATTEST_STATEMENT,
         IF_STATEMENT,
-        IF_CON_T_STATEMENT,
+        THEN_STATEMENT,
+        THEN_ELSE_STATEMENT,
         FOREACH_STATEMENT,
         FOREACH_CON_T_STATEMENT,
         STMS_STATEMENT,
@@ -117,7 +118,7 @@ public:
         AND,
         OR,
         DIFF,
-        EQ,
+        EQUAL,
         LT,
         LE,
         GT,
@@ -145,8 +146,8 @@ private:
     enum type op;
     bool rootOp;
 
-    statementPtr lhs;
-    statementPtr rhs;
+    statementPtr first;
+    statementPtr second;
     uint32_t code;
     featuresPtr features;
     valuePtr value;
@@ -156,9 +157,6 @@ private:
     pairpPtr pairp;
     statementsPtr statements;
     double number;
-
-//private:
-    //void makeSerialString();
 
 public:
     Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);
@@ -178,16 +176,19 @@ public:
     static statementPtr createFeatures(uint32_t lineno, std::string bufferName, type op, bool rootOp, featuresPtr features);
 
     // ATTEST THEN
-    static statementPtr createLhs(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs);
+    static statementPtr createFirst(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr first);
 
     // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH_CON_T UNIF
-    static statementPtr createLhsRhs(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr lhs, statementPtr rhs);
+    static statementPtr createFirstSecond(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr first, statementPtr second);
+
+    // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH_CON_T UNIF
+    static statementPtr createFirstSecondThird(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr first, statementPtr second);
 
     // FOREACH
-    static statementPtr createForeach(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr lhs);
+    static statementPtr createForeach(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first);
 
     // SEARCH
-    static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr lhs);
+    static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first);
 
     // CONSTANT
     static statementPtr createConstant(uint32_t lineno, std::string bufferName, bool rootOp, bitsetPtr bits);
@@ -200,8 +201,8 @@ public:
 
     // FCT
     static statementPtr createFunction(uint32_t lineno, std::string bufferName, bool rootOp, function_type fct,
-                               statementPtr lhs = statementPtr(),
-                               statementPtr rhs = statementPtr());
+                               statementPtr first = statementPtr(),
+                               statementPtr second = statementPtr());
 
     // NUMBER
     static statementPtr createNumber(uint32_t lineno, std::string bufferName, bool rootOp, double);
@@ -238,9 +239,9 @@ public:
 
     bool isPrintln() const;
 
-    bool isPrintstderr() const;
+    bool isEprint() const;
 
-    bool isPrintlnstderr() const;
+    bool isEprintln() const;
 
     bool isAttest() const;
 
@@ -266,9 +267,9 @@ public:
 
     function_type _getFct() const;
 
-    statementPtr _getLhs() const;
+    statementPtr _getFirst() const;
 
-    statementPtr _getRhs() const;
+    statementPtr _getSecond() const;
 
     featuresPtr _getFeatures() const;
 
@@ -294,7 +295,7 @@ public:
 
     void brln(std::ostream &out, int tabulation) const;
 
-    void print(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, uint32_t color = 0x000000, uint32_t bgcolor = 0xFFFFFF) const;
+    void toHTML(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, uint32_t color = 0x000000, uint32_t bgcolor = 0xFFFFFF) const;
 
     featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool replaceVariables, bool verbose);
 
@@ -306,7 +307,7 @@ public:
 
     statementPtr clone(const std::bitset<MAX_FLAGS> &savedFlags = std::bitset<MAX_FLAGS>());
 
-    void buildInheritedSonFeatures(class Item *item, Parser &parser, Generator *synthesizer, bool verbose);
+    void buildInheritedChildFeatures(class Item *item, Parser &parser, Generator *synthesizer, bool replaceVariables, bool verbose);
 
     void buildSynthesizedFeatures(class Item *, Parser &, Generator *synthesizer, bool verbose);
 
@@ -322,23 +323,26 @@ public:
 
     void stmForeach(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
-    void stmIf(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
+    void stmIf(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool replaceVariables, bool verbose);
     
-    void stmDeferred(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
+    void stmDeferred(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool replaceVariables, bool verbose);
 
     void stmPrint(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
 
     void stmPrintln(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
 
-    void renameVariables(uint32_t);
+    void testEnable(statementPtr statementRoot, class Item *, class Generator *, bool &, bool);
 
-    void toggleEnable(statementPtr statementRoot, class Item *, class Generator *, bool &, bool);
+    void apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool replaceVariables, bool verbose);
 
-    void apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
+    void lookingForAssignedInheritedChildFeatures(std::vector<bool> &);
 
-    void lookingForAssignedInheritedSonFeatures(std::vector<bool> &);
+    void renameVariable(uint32_t);
 
-    bool findVariable(const uint32_t);
+    bool containsVariable(const uint32_t);
+
+//protected:
+//    void makeSerialString() override;
 };
 
 #endif // ELVEX_STATEMENT_H

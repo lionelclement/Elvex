@@ -29,6 +29,10 @@ const std::bitset<MAX_FLAGS> Flags::NIL = std::bitset<MAX_FLAGS>(1ul << 5u);
 const std::bitset<MAX_FLAGS> Flags::BOTTOM = std::bitset<MAX_FLAGS>(1ul << 6u);
 const std::bitset<MAX_FLAGS> Flags::CHOOSEN = std::bitset<MAX_FLAGS>(1ul << 7u);
 const std::bitset<MAX_FLAGS> Flags::REJECTED = std::bitset<MAX_FLAGS>(1ul << 8u);
+const std::bitset<MAX_FLAGS> Flags::CONTAINS_VARIABLE = std::bitset<MAX_FLAGS>(1ul << 9u);
+const std::bitset<MAX_FLAGS> Flags::DOES_NOT_CONTAIN_VARIABLE = std::bitset<MAX_FLAGS>(1ul << 10u);
+const std::bitset<MAX_FLAGS> Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES = std::bitset<MAX_FLAGS>(1ul << 11u);
+const std::bitset<MAX_FLAGS> Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES = std::bitset<MAX_FLAGS>(1ul << 12u);
 
 /* **************************************************
  *
@@ -57,7 +61,7 @@ std::bitset<MAX_FLAGS> &Flags::getFlags()
 /* **************************************************
  *
  ************************************************** */
-bool Flags::isSet(const std::bitset<MAX_FLAGS> &cmp) const
+bool Flags::contains(const std::bitset<MAX_FLAGS> &cmp) const
 {
     return (this->flags & cmp).any();
 }
@@ -65,7 +69,7 @@ bool Flags::isSet(const std::bitset<MAX_FLAGS> &cmp) const
 /* **************************************************
  *
  ************************************************** */
-bool Flags::isUnset(const std::bitset<MAX_FLAGS> &cmp) const
+bool Flags::doesNotContain(const std::bitset<MAX_FLAGS> &cmp) const
 {
     return (this->flags & cmp).none();
 }
@@ -73,7 +77,7 @@ bool Flags::isUnset(const std::bitset<MAX_FLAGS> &cmp) const
 /* **************************************************
  *
  ************************************************** */
-void Flags::add(const std::bitset<MAX_FLAGS> &_flags)
+void Flags::set(const std::bitset<MAX_FLAGS> &_flags)
 {
     this->flags |= _flags;
 }
@@ -81,7 +85,7 @@ void Flags::add(const std::bitset<MAX_FLAGS> &_flags)
 /* **************************************************
  *
  ************************************************** */
-void Flags::sub(const std::bitset<MAX_FLAGS> &_flags)
+void Flags::clear(const std::bitset<MAX_FLAGS> &_flags)
 {
     this->flags &= ~_flags;
 }
@@ -91,20 +95,28 @@ void Flags::sub(const std::bitset<MAX_FLAGS> &_flags)
  ************************************************** */
 void Flags::print(std::ostream &outStream) const
 {
-    if (isSet(Flags::SEEN))
+    if (contains(Flags::SEEN))
         outStream << "SEEN ";
-    if (isSet(XML))
+    if (contains(XML))
         outStream << "XML ";
-    if (isSet(GENERATED))
+    if (contains(GENERATED))
         outStream << "GENERATED ";
-    if (isSet(DISABLED))
+    if (contains(DISABLED))
         outStream << "DISABLED ";
-    if (isSet(NIL))
+    if (contains(NIL))
         outStream << "NIL ";
-    if (isSet(BOTTOM))
+    if (contains(BOTTOM))
         outStream << "BOTTOM ";
-    if (isSet(CHOOSEN))
+    if (contains(CHOOSEN))
         outStream << "CHOOSEN ";
-    if (isSet(REJECTED))
+    if (contains(REJECTED))
         outStream << "REJECTED ";
+    if (contains(CONTAINS_VARIABLE))
+        outStream << "CONTAINS_VARIABLE ";
+    if (contains(DOES_NOT_CONTAIN_VARIABLE))
+        outStream << "DOES_NOT_CONTAIN_VARIABLE ";
+    if (contains(CONTAINS_SYNTHESIZED_CHILD_FEATURES))
+        outStream << "CONTAINS_SYNTHESIZED_CHILD_FEATURES ";
+    if (contains(DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES))
+        outStream << "DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES ";
 }

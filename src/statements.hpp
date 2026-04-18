@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -29,7 +29,7 @@
 #include "generator.hpp"
 
 class Statements : public Facade,
-                   //public Serializable,
+                   // public Serializable,
                    public std::enable_shared_from_this<class Statements>
 {
 
@@ -38,11 +38,10 @@ public:
 
 private:
     statementPtr guard;
+
     list_statement statements;
 
     Statements(const statementPtr &);
-
-    //void makeSerialString(void);
 
 public:
     ~Statements();
@@ -69,10 +68,12 @@ public:
 
     statementsPtr clone(const std::bitset<MAX_FLAGS> &savedFlags);
 
-    void toggleEnable(class Item *item, class Generator *synthesizer, bool &effect, bool on);
+    void testEnable(class Item *item, class Generator *synthesizer, bool &effect, bool on);
 
     void apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
+    //    protected:
+    //        void makeSerialString() override;
 };
 
 #endif // ELVEX_STATEMENTS_H

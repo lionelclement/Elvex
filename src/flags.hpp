@@ -22,7 +22,7 @@
 
 #include <bitset>
 
-#define MAX_FLAGS 8
+#define MAX_FLAGS 12
 
 class Flags
 {
@@ -36,6 +36,10 @@ public:
     static const std::bitset<MAX_FLAGS> BOTTOM;
     static const std::bitset<MAX_FLAGS> REJECTED;
     static const std::bitset<MAX_FLAGS> CHOOSEN;
+    static const std::bitset<MAX_FLAGS> CONTAINS_VARIABLE;
+    static const std::bitset<MAX_FLAGS> DOES_NOT_CONTAIN_VARIABLE;
+    static const std::bitset<MAX_FLAGS> CONTAINS_SYNTHESIZED_CHILD_FEATURES;
+    static const std::bitset<MAX_FLAGS> DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES;
 
 private:
     std::bitset<MAX_FLAGS> flags;
@@ -47,13 +51,13 @@ public:
 
     std::bitset<MAX_FLAGS> &getFlags();
 
-    bool isSet(const std::bitset<MAX_FLAGS> &cmp) const;
+    bool contains(const std::bitset<MAX_FLAGS> &cmp) const;
 
-    bool isUnset(const std::bitset<MAX_FLAGS> &cmp) const;
+    bool doesNotContain(const std::bitset<MAX_FLAGS> &cmp) const;
 
-    void add(const std::bitset<MAX_FLAGS> &f);
+    void set(const std::bitset<MAX_FLAGS> &f);
 
-    void sub(const std::bitset<MAX_FLAGS> &f);
+    void clear(const std::bitset<MAX_FLAGS> &f);
 
     void print(std::ostream &) const;
 };

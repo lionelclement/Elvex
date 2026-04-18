@@ -51,7 +51,7 @@ std::bitset<MAX_FLAGS> &Facade::getFlags()
  ************************************************** */
 bool Facade::isSetFlags(const std::bitset<MAX_FLAGS> &cmp) const
 {
-    return flags.isSet(cmp);
+    return flags.contains(cmp);
 }
 
 /* **************************************************
@@ -59,7 +59,7 @@ bool Facade::isSetFlags(const std::bitset<MAX_FLAGS> &cmp) const
  ************************************************** */
 bool Facade::isUnsetFlags(const std::bitset<MAX_FLAGS> &cmp) const
 {
-    return flags.isUnset(cmp);
+    return flags.doesNotContain(cmp);
 }
 
 /* **************************************************
@@ -67,7 +67,7 @@ bool Facade::isUnsetFlags(const std::bitset<MAX_FLAGS> &cmp) const
  ************************************************** */
 void Facade::addFlags(const std::bitset<MAX_FLAGS> &f)
 {
-    flags.add(f);
+    flags.set(f);
 }
 
 /* **************************************************
@@ -75,7 +75,7 @@ void Facade::addFlags(const std::bitset<MAX_FLAGS> &f)
  ************************************************** */
 void Facade::subFlags(const std::bitset<MAX_FLAGS> &f)
 {
-    flags.sub(f);
+    flags.clear(f);
 }
 
 /* **************************************************

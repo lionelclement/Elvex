@@ -23,7 +23,6 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
-#include "variableflag.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -56,9 +55,7 @@ private:
 
     valuePtr value;
 
-    void makeSerialString(void);
-
-    VariableFlag variableFlag;
+    void makeCoreSerialString(void);
 
 public:
     Feature(Type, bitsetPtr, valuePtr);
@@ -105,7 +102,7 @@ public:
 
     featurePtr clone(void) const;
 
-    void print(std::ostream &) const;
+    void toHTML(std::ostream &) const;
 
     void flatPrint(std::ostream &) const;
 
@@ -115,11 +112,13 @@ public:
 
     bool renameVariables(uint32_t);
 
-    void enable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
+    void testEnable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 
     bool findVariable(uint32_t key) const;
 
     bool containsVariable(void);
+
+    bool containsSynthesizedChildFeatures(void);
 
 };
 

@@ -195,7 +195,7 @@ public:
 
     bool getFirstResult(void) const;
 
-    void printState(std::ostream &, class ItemSet *);
+    void toHTMLState(std::ostream &, class ItemSet *);
 
     void close(class Parser &, class ItemSet *, uint32_t);
 

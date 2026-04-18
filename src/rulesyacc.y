@@ -51,14 +51,9 @@
  extern unsigned int ruleslex();
  extern Parser parser;
  uint32_t headLineno;
-// bool prefTrace;
-// bool prefWithSpaces;
-// bool prefBidirectional;
-// bool prefPermutable;
- bool trace;
- bool withSpaces;
- bool bidirectional;
- bool permutable;
+ bool pref_trace;
+ bool pref_withSpaces;
+ bool pref_unordered;
 
   void ruleserror(const char* str) {
       std::ostringstream oss;
@@ -108,7 +103,7 @@
 // KEYWORDS
 %token TOKEN_MACROS TOKEN_RULES TOKEN_INPUT TOKEN_LEXICON
 %token TOKEN_LEMMA TOKEN_HEAD TOKEN_FORM
-%token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN TOKEN_PRINTSTDERR TOKEN_PRINTLNSTDERR
+%token TOKEN_ATTEST TOKEN_PRINT TOKEN_PRINTLN TOKEN_EPRINT TOKEN_EPRINTLN
 %token TOKEN_IF TOKEN_ELSE
 %token TOKEN_DEFERRED
 %token TOKEN_NIL TOKEN_TRUE TOKEN_FALSE
@@ -116,7 +111,7 @@
 %token TOKEN_SEARCH TOKEN_ON
 %token TOKEN_RAND
 %token TOKEN_TRACE TOKEN_WITH_SPACES TOKEN_WITHOUT_SPACES 
-%token TOKEN_BIDIRECTIONAL TOKEN_PERMUTABLE
+%token TOKEN_UNORDERED
 
 // OPERATORS
 %token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT 
@@ -150,7 +145,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<pairp_slot> pairp pairp_elements pairp_element
 
 %type<statements_slot> structure_statement list_statement expression_statement_composite
-%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_assignment_statement right_hand_side_assignment_statement up down up2 down2 dash_statement
+%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_assignment_statement right_hand_side_assignment_statement up_statement down_statement up2_statement down2_statement dash_statement
 %type<statement_slot> expression_statement
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
@@ -253,15 +248,15 @@ dictionary_line:
 	    formToEntries = new Parser::entries_map();
 	    parser.insertCacheLexicon(std::make_pair(code, formToEntries));
 	  }
-	  auto foundHead = formToEntries->find(Vartable::IS_A_FORM);
+	  auto foundHead = formToEntries->find(Vartable::code_for_IS_A_FORM);
 	  entriesPtr entries;
 	  if (foundHead != formToEntries->cend()){
 	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
-	    formToEntries->insert(std::make_pair(Vartable::IS_A_FORM, entries));
+	    formToEntries->insert(std::make_pair(Vartable::code_for_IS_A_FORM, entries));
 	  }
-	  entries->add(Entry::create(/*code, */Features::create()));
+	  entries->add(Entry::create(Features::create()));
 	}
 
 	|TOKEN_FORM TOKEN_IDENTIFIER features TOKEN_SEMI
@@ -278,13 +273,13 @@ dictionary_line:
 	    formToEntries = new Parser::entries_map;
 	    parser.insertCacheLexicon(std::make_pair(code, formToEntries));
 	  }
-	  auto foundHead = formToEntries->find(Vartable::IS_A_FORM);
+	  auto foundHead = formToEntries->find(Vartable::code_for_IS_A_FORM);
 	  entriesPtr entries;
 	  if (foundHead != formToEntries->cend()){
 	    entries = foundHead->second;
 	  } else {
 	    entries = Entries::create();
-	    formToEntries->insert(std::make_pair(Vartable::IS_A_FORM, entries));
+	    formToEntries->insert(std::make_pair(Vartable::code_for_IS_A_FORM, entries));
 	  }
 	  entries->add(Entry::create(/*code, */*$3));
 	  free($3);
@@ -383,66 +378,50 @@ pref_rule:
 	 pref_rule TOKEN_TRACE
 	{
 	  DBUGPRT("pref_rule");
-	  if (trace)
+	  if (pref_trace)
 		yyerror((char*)"@trace already done");
-	  trace = true;
+	  pref_trace = true;
 	}
 
 	|pref_rule TOKEN_WITH_SPACES 
 	{
 	  DBUGPRT("pref_rule");
-	  if (withSpaces)
+	  if (pref_withSpaces)
 		yyerror((char*)"@withSpaces already done");
-	  withSpaces = true;
+	  pref_withSpaces = true;
 	}
 
 	|pref_rule TOKEN_WITHOUT_SPACES 
 	{
 	  DBUGPRT("pref_rule");
-	  if (withSpaces)
-		withSpaces = false;
+	  if (pref_withSpaces)
+		pref_withSpaces = false;
 	}
 
-	|pref_rule TOKEN_BIDIRECTIONAL 
+	|pref_rule TOKEN_UNORDERED 
 	{
 	  DBUGPRT("pref_rule");
-	  bidirectional = true;
-	}
-
-	|pref_rule TOKEN_PERMUTABLE 
-	{
-	  DBUGPRT("pref_rule");
-	  permutable = true;
+	  pref_unordered = true;
 	}
 
 	| /* empty */ {
 	  DBUGPRT("pref_rule");
 	  // initialization
-	  //prefTrace = false;
-	  //prefWithSpaces = false;
-	  //prefBidirectional = false;
-	  //prefPermutable = false;
-	  // defaults
-	  trace = false;
-	  withSpaces = true;
-	  bidirectional = false;
-	  permutable = false;
+	  pref_trace = false;
+	  pref_withSpaces = true;
+	  pref_unordered = false;
 	};
 
 rule:
 	pref_rule term TOKEN_RIGHTARROW terms_vector structure_statement
 	{
 	  DBUGPRT("rule");
-	  if (bidirectional && permutable){
-		yyerror((char*)"This rule is both bidirectional and permutable");
+	  if (pref_unordered && $4->size() <= 1){
+		yyerror((char*)"This rule with fewer than 2 terms must not be unordered");
 
 	  }
-	  if (permutable && $4->size() <= 2){
-		yyerror((char*)"This rule with fewer than 3 terms must not be permutable");
-
-	  }
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, *$4, $5 ? *$5 : statementsPtr());
-	  rule->setTrace(trace);
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), pref_withSpaces, pref_unordered, $2, *$4, $5 ? *$5 : statementsPtr());
+	  rule->setTrace(pref_trace);
 	  parser.getRules().addRule(rule);
 	  if (!parser.getRules().getStartTerm()){
 	    parser.getRules().setStartTerm($2);
@@ -455,8 +434,8 @@ rule:
 	|pref_rule term TOKEN_RIGHTARROW structure_statement
 	{
 	  DBUGPRT("Rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), withSpaces, bidirectional, permutable, $2, $4 ? *$4 : statementsPtr());
-	  rule->setTrace(trace);
+	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), pref_withSpaces, pref_unordered, $2, $4 ? *$4 : statementsPtr());
+	  rule->setTrace(pref_trace);
 	  parser.getRules().addRule(rule);
 	  if (!parser.getRules().getStartTerm()){
 	    parser.getRules().setStartTerm($2);
@@ -484,7 +463,7 @@ terms:
 	  $$=$1;
 	}
 
-	|TOKEN_LBRACKET terms_disj TOKEN_RBRACKET {
+	|TOKEN_LPAR terms_disj TOKEN_RPAR {
 	  DBUGPRT("term");
 	  $$ = $2;
 	  (*$$)->setOptional();
@@ -588,7 +567,7 @@ statement:
 
 	|TOKEN_ATTEST expression_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::createLhs(ruleslineno, parser.getTopBufferName(), Statement::ATTEST_STATEMENT, true, *$2));
+	  $$ = new statementPtr(Statement::createFirst(ruleslineno, parser.getTopBufferName(), Statement::ATTEST_STATEMENT, true, *$2));
 	  free($2);
 	}
 
@@ -614,23 +593,23 @@ statement:
 	  free($2);
 	}
 
-	|TOKEN_PRINTSTDERR expression_statement_composite TOKEN_SEMI {
+	|TOKEN_EPRINT expression_statement_composite TOKEN_SEMI {
 	  DBUGPRT("statement");
 		$$ = new statementPtr(Statement::createStatements(
 			ruleslineno, 
 			parser.getTopBufferName(), 
-			Statement::PRINTSTDERR_STATEMENT, 
+			Statement::EPRINT_STATEMENT, 
 			true, 
 			*$2));
 	  free($2);
 	}
 
-	|TOKEN_PRINTLNSTDERR expression_statement_composite TOKEN_SEMI {
+	|TOKEN_EPRINTLN expression_statement_composite TOKEN_SEMI {
 	  	DBUGPRT("statement");
 		$$ = new statementPtr(Statement::createStatements(
 			ruleslineno, 
 			parser.getTopBufferName(), 
-			Statement::PRINTLNSTDERR_STATEMENT, 
+			Statement::EPRINTLN_STATEMENT, 
 			true, 
 			*$2));
 	  free($2);
@@ -638,7 +617,7 @@ statement:
 
 	|left_hand_side_assignment_statement TOKEN_ASSIGNMENT right_hand_side_assignment_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::ASSIGNMENT_STATEMENT, true, *$1, *$3));
+	  $$ = new statementPtr(Statement::createFirstSecond(ruleslineno, parser.getTopBufferName(), Statement::ASSIGNMENT_STATEMENT, true, *$1, *$3));
 	  // <X, …> = <…>
 	  // <X, …> = $X
 	  // <X, …> = search 
@@ -701,7 +680,7 @@ statement:
 
 	|left_hand_side_subset_statement TOKEN_SUBSUME right_hand_side_subset_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::SUBSUME_STATEMENT, true, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFirstSecond(ruleslineno, parser.getTopBufferName(), Statement::SUBSUME_STATEMENT, true, (*$1), (*$3)));
 	  // […] ⊂ ↑
 	  // […] ⊂ ⇓j
 	  // […] ⊂ $X
@@ -718,24 +697,24 @@ statement:
 
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement %prec TOKEN_NOELSE {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno,
+	  $$ = new statementPtr(Statement::createFirstSecond(ruleslineno,
 						parser.getTopBufferName(), 
 						Statement::IF_STATEMENT,
 						  true, 
 						  *$3,
-						  Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::IF_CON_T_STATEMENT, false, *$5, statementPtr())));
+						  Statement::createFirst(ruleslineno, parser.getTopBufferName(), Statement::THEN_STATEMENT, false, *$5)));
 	  free($3);
 	  free($5);
 	}
 
 	|TOKEN_IF TOKEN_LPAR expression_statement TOKEN_RPAR statement TOKEN_ELSE statement {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno,
+	  $$ = new statementPtr(Statement::createFirstSecond(ruleslineno,
 						  parser.getTopBufferName(),
 						  Statement::IF_STATEMENT,
 						  true, 
 						  (*$3),
-						  Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::IF_CON_T_STATEMENT, false, *$5, *$7)));
+						  Statement::createFirstSecond(ruleslineno, parser.getTopBufferName(), Statement::THEN_ELSE_STATEMENT, false, *$5, *$7)));
 	  free($3);
 	  free($5);
 	  free($7);
@@ -743,7 +722,7 @@ statement:
 
 	|TOKEN_DEFERRED TOKEN_LPAR expression_statement TOKEN_RPAR statement {
 	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno,
+	  $$ = new statementPtr(Statement::createFirstSecond(ruleslineno,
 						parser.getTopBufferName(), 
 						Statement::DEFERRED_STATEMENT,
 						true, 
@@ -759,7 +738,7 @@ statement:
 						  parser.getTopBufferName(),
 						  true, 
 						  $2,
-						  Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::FOREACH_CON_T_STATEMENT, false, (*$4), *$5)));
+						  Statement::createFirstSecond(ruleslineno, parser.getTopBufferName(), Statement::FOREACH_CON_T_STATEMENT, false, (*$4), *$5)));
 	  free($4);
 	  free($5);
 	};
@@ -777,12 +756,12 @@ right_hand_side_subset_statement:
 	  $$ = new statementPtr(Statement::createVariable(ruleslineno, parser.getTopBufferName(), false, $1));
 	}
 
-	|up {
+	|up_statement {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  $$=$1;
 	}
 
-	|down2 {
+	|down2_statement {
 	  DBUGPRT("right_hand_side_subset_statement");
 	  $$=$1;
 	}
@@ -795,12 +774,12 @@ right_hand_side_subset_statement:
 	;
 
 left_hand_side_assignment_statement:
-	up2 {
+	up2_statement {
 	  DBUGPRT("left_hand_side_statement");
 	  $$=$1;
 	}
 
-	|down {
+	|down_statement {
 	  DBUGPRT("left_hand_side_statement");
 	  $$=$1;
 	}
@@ -870,7 +849,7 @@ expression_statement:
 
 	|expression_statement TOKEN_EQUAL expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::EQ, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::EQUAL, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
@@ -989,27 +968,27 @@ expression_statement:
 	//////////////////////////////////////////////////
 	|expression_statement TOKEN_UNIFY expression_statement {
 	  DBUGPRT("expression_statement");
-	  $$ = new statementPtr(Statement::createLhsRhs(ruleslineno, parser.getTopBufferName(), Statement::UNIF_STATEMENT, false, (*$1), (*$3)));
+	  $$ = new statementPtr(Statement::createFirstSecond(ruleslineno, parser.getTopBufferName(), Statement::UNIF_STATEMENT, false, (*$1), (*$3)));
 	  free($1);
 	  free($3);
 	}
 
-	|up {
+	|up_statement {
 	  DBUGPRT("expression_statement");
 	  $$=$1;
 	}
 
-	|up2 {
+	|up2_statement {
 	  DBUGPRT("expression_statement");
 	  $$=$1;
 	}
 
-	|down {
+	|down_statement {
 	  DBUGPRT("expression_statement");
 	  $$=$1;
 	}
 
-	|down2 {
+	|down2_statement {
 	  DBUGPRT("expression_statement");
 	  $$=$1;
 	}
@@ -1104,26 +1083,26 @@ expression_statement_composite:
 	}
 	;
 
-up:
+up_statement:
 	TOKEN_UPARROW {
 	  DBUGPRT("up");
 	  $$ = new statementPtr(Statement::createEmpty(ruleslineno, parser.getTopBufferName(), Statement::INHERITED_FEATURES_STATEMENT, false));
 	};
 
-up2:
+up2_statement:
 	TOKEN_UP2ARROW {
-	  DBUGPRT("up2");
+	  DBUGPRT("up2_statement");
 	  $$ = new statementPtr(Statement::createEmpty(ruleslineno, parser.getTopBufferName(), Statement::SYNTHESIZED_FEATURES_STATEMENT, false));
 	};
 
-down:
+down_statement:
 	TOKEN_DOWNARROW TOKEN_INTEGER
 	{
-	  DBUGPRT("down");
+	  DBUGPRT("down_statement");
 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::INHERITED_CHILDREN_FEATURES_STATEMENT, false, static_cast<uint8_t>($2-1)));
 	};
 
-down2:
+down2_statement:
 	TOKEN_DOWN2ARROW TOKEN_INTEGER
 	{
 	  DBUGPRT("down2");
@@ -1343,7 +1322,13 @@ feature_value:
 	{
 	  DBUGPRT("feature_value");
 	  $$ = new valuePtr(Value::STATIC_ANONYMOUS);
-	};
+	}
+	
+	|TOKEN_DOWN2ARROW TOKEN_INTEGER {
+	  DBUGPRT("down2_value");
+	  $$ = new valuePtr(Value::createDown2(static_cast<uint8_t>($2-1)));
+	}
+	;
 
 constants:
 	constant

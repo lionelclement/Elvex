@@ -27,19 +27,21 @@ class MemoizationValue
 
 private:
     featuresPtr features;
-
     class ForestIdentifier *forestIdentifier;
+    class Item *item;
 
-    MemoizationValue(featuresPtr, class ForestIdentifier *);
+    MemoizationValue(featuresPtr, class ForestIdentifier *, class Item *);
 
 public:
     ~MemoizationValue();
 
-    static class MemoizationValue *create(featuresPtr, class ForestIdentifier *);
+    static class MemoizationValue *create(featuresPtr, class ForestIdentifier *, class Item *);
 
     featuresPtr getFeatures(void) const;
 
     class ForestIdentifier *getForestIdentifier(void) const;
+
+    class Item *getItem(void) const;
 };
 
 #endif // ELVEX_MEMOIZATIONVALUE_H

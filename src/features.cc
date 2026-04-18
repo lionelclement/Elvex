@@ -181,7 +181,7 @@ bool Features::isBottom() const
 /* **************************************************
  *
  ************************************************** */
-void Features::print(std::ostream &outStream) const
+void Features::toHTML(std::ostream &outStream) const
 {
     if (isNil())
         outStream << "NIL";
@@ -200,7 +200,7 @@ void Features::print(std::ostream &outStream) const
                     if (feature->getType() == t)
                     {
                         outStream << "<TR>";
-                        feature->print(outStream);
+                        feature->toHTML(outStream);
                         outStream << "</TR>";
                     }
                 }
@@ -251,7 +251,7 @@ void Features::flatPrint(std::ostream &outStream, bool par) const
 /* **************************************************
  *
  ************************************************** */
-void Features::makeSerialString()
+void Features::makeCoreSerialString()
 {
     std::ostringstream stream;
     stream.clear();
@@ -263,10 +263,10 @@ void Features::makeSerialString()
     {
         for (const auto &feature : features)
         {
-            stream << '_' << feature->peekSerialString();
+            stream << '_' << feature->peekCoreSerialString();
         }
     }
-    serialString = stream.str();
+    coreSerialString = stream.str();
 }
 
 /* **************************************************
@@ -284,7 +284,7 @@ uint32_t Features::assignHead()
             return this->head = f->getValue()->getCode();
         }
     }
-    return this->head = Vartable::DOES_NOT_CONTAIN_A_HEAD;
+    return this->head = Vartable::code_for_DOES_NOT_CONTAIN_A_HEAD;
 }
 
 /* **************************************************
@@ -378,14 +378,14 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
         std::cout << "<H4>Features::buildEnvironment</H4>" << std::endl;
         std::cout << "<table border = \"1\"><tr><th>this</th><th>features</th><th>Environment</th></tr>";
         std::cout << "<tr><td>";
-        print(std::cout);
+        toHTML(std::cout);
         std::cout << "</td><td>";
         if (other_features)
-            other_features->print(std::cout);
+            other_features->toHTML(std::cout);
         else
             std::cout << "NULL";
         std::cout << "</td><td>";
-        environment->print(std::cout);
+        environment->toHTML(std::cout);
         std::cout << "</td></tr></table>";
     }
 #endif
@@ -505,7 +505,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
         std::cout << "<H4>Result Features::buildEnvironment</H4>" << std::endl;
         std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
         std::cout << "<tr><td>" << (ret ? "TRUE" : "FALSE") << "</td><td>";
-        environment->print(std::cout);
+        environment->toHTML(std::cout);
         std::cout << "</td></tr></table>";
     }
 #endif
@@ -525,12 +525,12 @@ bool Features::subsumes(statementPtr statementRoot, const featuresPtr &other_fea
     this->flatPrint(std::cout);
     std::cout << "<TABLE border=\"1\"><TR><TH>this</TH><TH></TH><TH>other</TH><TH>env</TH></TR><TR>";
     std::cout << "<TD>";
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << "</TD><TD>&lt;</TD><TD>";
-    other_features->print(std::cout);
+    other_features->toHTML(std::cout);
     std::cout << "</TD>";
     std::cout << "<TD>";
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</TD>";
     std::cout << "</TR></TABLE>";
     std::cout << "</DIV>";
@@ -585,7 +585,7 @@ bool Features::subsumes(statementPtr statementRoot, const featuresPtr &other_fea
     std::cout << "<DIV>";
     std::cout << "result: (" << shared_from_this() << ")";
     std::cout << (ret ? "true" : "false") << std::endl;
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</DIV>";
 #endif
     return ret;
@@ -603,26 +603,26 @@ void Features::subFlags(const std::bitset<MAX_FLAGS> &flags)
 /* **************************************************
  *
  ************************************************** */
-bool Features::renameVariables(uint32_t code)
+bool Features::renameVariables(uint32_t key)
 {
     bool effect = false;
     for (auto &feature : features)
     {
-        if (feature->renameVariables(code))
-            effect = true;
+        if (feature->renameVariables(key))
+                effect = true;
     }
     if (effect)
-        resetSerial();
+        resetCoreSerial();
     return effect;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Features::enable(statementPtr statementRoot, class Item *item, Generator *synthesizer, bool &effect, bool on)
+void Features::testEnable(statementPtr statementRoot, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     for (auto &feature : features)
-        feature->enable(statementRoot, item, synthesizer, effect, on);
+        feature->testEnable(statementRoot, item, synthesizer, effect, on);
 }
 
 /* **************************************************
@@ -709,8 +709,10 @@ bool Features::findVariable(uint32_t key) const
 bool Features::containsVariable()
 {
     bool result = false;
-    if (variableFlag.containsVariable())
+    if (isSetFlags(Flags::CONTAINS_VARIABLE))
         return true;
+        if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
+        return false;
     for (auto &iterator : features)
     {
         if (iterator->containsVariable())
@@ -719,18 +721,34 @@ bool Features::containsVariable()
         }
     }
     if (result)
-        variableFlag.setFlag(VariableFlag::CONTAINS);
+        addFlags(Flags::CONTAINS_VARIABLE);
     else
-        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+        addFlags(Flags::DOES_NOT_CONTAIN_VARIABLE);
     return result;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Features::setVariableFlag(enum VariableFlag::flagValues flag)
+bool Features::containsSynthesizedChildFeatures()
 {
-    this->variableFlag.setFlag(flag);
+    bool result = false;
+    if (isSetFlags(Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES))
+        return true;
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES))
+        return false;
+    for (auto &iterator : features)
+    {
+        if (iterator->containsSynthesizedChildFeatures())
+        {
+            result = true;
+        }
+    }
+    if (result)
+        addFlags(Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES);
+    else
+        addFlags(Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES);
+    return result;
 }
 
 /* **************************************************
@@ -741,9 +759,10 @@ void Features::apply(statementPtr statementRoot, class Item *item, Parser &parse
                      const statementPtr &statement,
                      bool &effect, bool verbose)
 {
-    item->getEnvironment()->add(statementRoot, variable->getCode(), Value::createFeatures(shared_from_this()), verbose);
+    item->environmentAdd(statementRoot, variable->getCode(), Value::createFeatures(shared_from_this()), verbose);
     effect = true;
-    statement->toggleEnable(statement, item, synthesizer, effect, false);
-    statement->apply(statementRoot, item, parser, synthesizer, effect, verbose);
-    item->getEnvironment()->remove(variable->getCode());
+    statement->testEnable(statement, item, synthesizer, effect, false);
+    statement->apply(statementRoot, item, parser, synthesizer, effect, true, verbose);
+    item->environmentRemove(variable->getCode());
 }
+

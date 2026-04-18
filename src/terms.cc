@@ -176,7 +176,7 @@ bool Terms::Less::operator()(const termsPtr t1, const termsPtr t2) const
 void Terms::print(std::ostream &outStream)
 {
     if (optional)
-        outStream << '[';
+        outStream << '(';
     if (size() > 1)
     {
         bool first = true;
@@ -194,7 +194,7 @@ void Terms::print(std::ostream &outStream)
         outStream << Vartable::codeToName(terms[0]);
     }
     if (optional)
-        outStream << ']';
+        outStream << ')';
 }
 
 /* **************************************************

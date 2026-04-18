@@ -41,7 +41,7 @@ public:
 
     map::const_iterator find(const std::string &) const;
 
-    void insert(const std::string &, featuresPtr, class ForestIdentifier *);
+    void insert(const std::string &, featuresPtr, class ForestIdentifier *, class Item *);
 };
 
 #endif // ELVEX_MEMOIZATIONMAP_H

@@ -211,8 +211,9 @@ void Forest::generate(bool randomResult, bool singleResult)
                 {
                     output.push_front(*s);
                 }
-                if (randomResult || singleResult)
+                if (randomResult || singleResult){
                     break;
+                }
                 ++nodeIt;
             }
         }

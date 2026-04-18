@@ -25,11 +25,12 @@
 /* ************************************************************
  *
  ************************************************************ */
-MemoizationValue::MemoizationValue(featuresPtr features, class ForestIdentifier *forestIdentifier)
+MemoizationValue::MemoizationValue(featuresPtr features, class ForestIdentifier *forestIdentifier, class Item *item)
 {
     NEW;
     this->features = features;
     this->forestIdentifier = std::move(forestIdentifier);
+    this->item = item;
 }
 
 /* ************************************************************
@@ -43,9 +44,9 @@ MemoizationValue::~MemoizationValue()
 /* ************************************************************
  *
  ************************************************************ */
-class MemoizationValue *MemoizationValue::create(featuresPtr features, class ForestIdentifier *forestIdentifier)
+class MemoizationValue *MemoizationValue::create(featuresPtr features, class ForestIdentifier *forestIdentifier, class Item *item)
 {
-    return new MemoizationValue(features, std::move(forestIdentifier));
+    return new MemoizationValue(features, std::move(forestIdentifier), item);
 }
 
 /* ************************************************************
@@ -63,3 +64,12 @@ class ForestIdentifier *MemoizationValue::getForestIdentifier() const
 {
     return this->forestIdentifier;
 }
+
+/* ************************************************************
+ *
+ ************************************************************ */
+class Item *MemoizationValue::getItem() const
+{
+    return this->item;
+}
+

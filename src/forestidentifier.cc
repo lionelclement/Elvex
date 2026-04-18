@@ -55,12 +55,12 @@ ForestIdentifier::create(uint32_t code,
 /* **************************************************
  *
  ************************************************** */
-void ForestIdentifier::makeSerialString()
+void ForestIdentifier::makeCoreSerialString()
 {
     std::ostringstream stream;
     stream << '#' << std::hex << code << '#' << from << '#' << to;
     stream.flush();
-    serialString = stream.str();
+    coreSerialString = stream.str();
 }
 
 /* **************************************************
@@ -68,7 +68,7 @@ void ForestIdentifier::makeSerialString()
  ************************************************** */
 size_t ForestIdentifier::Hash::operator()(ForestIdentifier *forestIdentifier) const
 {
-    return forestIdentifier->hash();
+    return forestIdentifier->coreHash();
 }
 
 /* **************************************************
@@ -76,5 +76,5 @@ size_t ForestIdentifier::Hash::operator()(ForestIdentifier *forestIdentifier) co
  ************************************************** */
 bool ForestIdentifier::KeyEqual::operator()(ForestIdentifier *forestIdentifier1, ForestIdentifier *forestIdentifier2) const
 {
-    return forestIdentifier1->peekSerialString() == forestIdentifier2->peekSerialString();
+    return forestIdentifier1->peekCoreSerialString() == forestIdentifier2->peekCoreSerialString();
 }

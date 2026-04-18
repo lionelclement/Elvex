@@ -41,15 +41,14 @@ private:
     vectorForests forests;
     std::forward_list<std::string> output;
     bool withSpaces;
-    bool bidirectional;
-    bool permutable;
+    bool unordered;
 
 public:
-    Node(bool withSpaces, bool bidirectional, bool permutable);
+    Node(bool withSpaces, bool unordered);
 
     ~Node(void);
 
-    static nodePtr create(bool withSpaces, bool bidirectional, bool permutable);
+    static nodePtr create(bool withSpaces, bool unordered);
 
     bool empty() const;
 
@@ -73,12 +72,14 @@ public:
 
     bool getWithSpace() const;
 
+    //bool getRandom() const;
+
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
 
     void generateLR(std::string &currentCombination, vectorForests::const_iterator forestIt);
-    void generateRL(std::string currentCombination, vectorForests::const_iterator forestIt);
+    //void generateRL(std::string currentCombination, vectorForests::const_iterator forestIt);
     void generatePermutations(vectorForests& forests, int start, int end);
     void generate(bool randomResult, bool singleResult);
 

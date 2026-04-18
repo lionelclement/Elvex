@@ -39,7 +39,7 @@ private:
 
     featuresPtr features;
 
-    void makeSerialString(void);
+    void makeCoreSerialString(void);
 
 public:
     Entry(const std::string &form, featuresPtr features);

@@ -31,6 +31,7 @@
 #include "shared_ptr.hpp"
 #include "generator.hpp"
 #include "vartable.hpp"
+#include "item.hpp"
 
 valuePtr Value::STATIC_NIL = Value::createEmpty(Value::NIL_VALUE);
 valuePtr Value::STATIC_TRUE = Value::createEmpty(Value::TRUE_VALUE);
@@ -60,7 +61,7 @@ Value::Value(Value::Type const type, const std::string &string)
  *
  ************************************************** */
 Value::Value(Value::Type const type, uint32_t code, double number, bitsetPtr _bits, featuresPtr _features,
-             pairpPtr _list/*, listFeaturesPtr _listFeatures*/)
+             pairpPtr _list /*, listFeaturesPtr _listFeatures*/)
 {
     NEW;
     this->type = type;
@@ -69,7 +70,6 @@ Value::Value(Value::Type const type, uint32_t code, double number, bitsetPtr _bi
     this->bitset = _bits ? _bits : bitsetPtr();
     this->features = _features ? _features : featuresPtr();
     this->pairp = _list ? _list : pairpPtr();
-    ////this->listFeatures = _listFeatures ? _listFeatures : listFeaturesPtr();
 }
 
 /* **************************************************
@@ -161,6 +161,14 @@ valuePtr Value::createPairp(pairpPtr lst)
 /* **************************************************
  *
  ************************************************** */
+valuePtr Value::createDown2(uint32_t code)
+{
+    return valuePtr(new Value(Value::SYNTHESIZED_CHILD_FEATURES_VALUE, code));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 Value::Type Value::getType() const
 {
     return type;
@@ -190,14 +198,6 @@ featuresPtr Value::getFeatures() const
     return features;
 }
 
-// /* **************************************************
-//  *
-//  ************************************************** */
-// listFeaturesPtr Value::getListFeatures() const
-// {
-//     return listFeatures;
-// }
-
 /* **************************************************
  *
  ************************************************** */
@@ -209,7 +209,7 @@ double Value::getNumber() const
 /* **************************************************
  *
  ************************************************** */
-std::string &Value::getString() 
+std::string &Value::getString()
 {
     return string;
 }
@@ -310,18 +310,18 @@ bool Value::isPairp() const
     return type == PAIRP_VALUE;
 }
 
-// /* **************************************************
-//  *
-//  ************************************************** */
-// bool Value::isListFeatures() const
-// {
-//     return type == LIST_FEATURES_VALUE;
-// }
+/* **************************************************
+ *
+ ************************************************** */
+bool Value::isSynthesizedChildFeatures() const
+{
+    return type == SYNTHESIZED_CHILD_FEATURES_VALUE;
+}
 
 /* **************************************************
  *
  ************************************************** */
-void Value::print(std::ostream &outStream) const
+void Value::toHTML(std::ostream &outStream) const
 {
     switch (type)
     {
@@ -353,13 +353,13 @@ void Value::print(std::ostream &outStream) const
         outStream << string;
         break;
     case FEATURES_VALUE:
-        getFeatures()->print(outStream);
+        getFeatures()->toHTML(outStream);
         break;
-    // case LIST_FEATURES_VALUE:
-    //     getListFeatures()->print(outStream);
-    //     break;
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
+        break;
+    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+        outStream << "⇓" << code + 1;
         break;
     }
 }
@@ -401,11 +401,11 @@ void Value::flatPrint(std::ostream &outStream) const
     case FEATURES_VALUE:
         getFeatures()->flatPrint(outStream);
         break;
-    // case LIST_FEATURES_VALUE:
-    //     getListFeatures()->flatPrint(outStream);
-    //     break;
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
+        break;
+    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+        outStream << "⇓" << code + 1;
         break;
     }
 }
@@ -413,45 +413,45 @@ void Value::flatPrint(std::ostream &outStream) const
 /* **************************************************
  *
  ************************************************** */
-void Value::makeSerialString()
+void Value::makeCoreSerialString()
 {
     switch (type)
     {
     case NIL_VALUE:
-        serialString = 'a';
+        coreSerialString = 'a';
         break;
     case TRUE_VALUE:
-        serialString = 'b';
+        coreSerialString = 'b';
         break;
     case FALSE_VALUE:
-        serialString = 'c';
+        coreSerialString = 'c';
         break;
     case ANONYMOUS_VALUE:
-        serialString = 'd';
+        coreSerialString = 'd';
         break;
     case CONSTANT_VALUE:
-        serialString = 'e' + bitset->peekSerialString();
+        coreSerialString = 'e' + bitset->peekCoreSerialString();
         break;
     case VARIABLE_VALUE:
-        serialString = 'f' + std::to_string(code);
+        coreSerialString = 'f' + std::to_string(code);
         break;
     case IDENTIFIER_VALUE:
-        serialString = 'g' + std::to_string(code);
+        coreSerialString = 'g' + std::to_string(code);
         break;
     case NUMBER_VALUE:
-        serialString = 'h' + std::to_string(number);
+        coreSerialString = 'h' + std::to_string(number);
         break;
     case FORM_VALUE:
-        serialString = 'i' + string;
+        coreSerialString = 'i' + string;
         break;
     case FEATURES_VALUE:
-        serialString = 'j' + getFeatures()->peekSerialString();
+        coreSerialString = 'j' + getFeatures()->peekCoreSerialString();
         break;
-    // case LIST_FEATURES_VALUE:
-    //     serialString = 'k' + getListFeatures()->peekSerialString();
-    //     break;
     case PAIRP_VALUE:
-        serialString = 'l' + getPairp()->peekSerialString();
+        coreSerialString = 'l' + getPairp()->peekCoreSerialString();
+        break;
+    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+        coreSerialString = 'n' + std::to_string(code);
         break;
     }
 }
@@ -501,13 +501,13 @@ void Value::toXML(xmlNodePtr nodeRoot) const
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"fs");
         getFeatures()->toXML(v);
         break;
-    // case LIST_FEATURES_VALUE:
-    //     xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"lfs");
-    //     getListFeatures()->toXML(v);
-    //     break;
     case PAIRP_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"list");
         getPairp()->toXML(v);
+        break;
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"down2");
+        xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)Vartable::codeToName(getCode()).c_str());
         break;
     }
 }
@@ -548,16 +548,16 @@ valuePtr Value::clone()
         result = Value::createFeatures(getFeatures()->clone());
         break;
 
-    // case LIST_FEATURES_VALUE:
-    //     result = Value::create(getListFeatures()->clone());
-    //     break;
-
     case PAIRP_VALUE:
         result = Value::createPairp(getPairp()->clone());
         break;
-        
+
     case VARIABLE_VALUE:
         result = Value::createVariable(code);
+        break;
+
+    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+        result = Value::createDown2(code);
         break;
     }
     return result;
@@ -573,14 +573,14 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     std::cout << "<H4>Value::buildEnvironment</H4>" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>this</th><th>value</th><th>Environment</th></tr>";
     std::cout << "<tr><td>";
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << "</td><td>";
     if (value)
-        value->print(std::cout);
+        value->toHTML(std::cout);
     else
         std::cout << "NULL";
     std::cout << "</td><td>";
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</td></tr></table>";
 #endif
 
@@ -588,9 +588,9 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     switch (type)
     {
 
-    // case LIST_FEATURES_VALUE:
     case TRUE_VALUE:
     case FALSE_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         FATAL_ERROR_UNEXPECTED
 
     case NIL_VALUE:
@@ -623,7 +623,8 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
                                                        ,
                                                        true
 #endif
-                                                       , verbose))
+                                                       ,
+                                                       verbose))
                 ret = false;
         }
         else if (value->type == ANONYMOUS_VALUE)
@@ -634,7 +635,8 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
                                                        ,
                                                        root
 #endif
-                                                       , verbose))
+                                                       ,
+                                                       verbose))
                 ret = false;
         }
         else
@@ -737,8 +739,8 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         if (value->type == PAIRP_VALUE)
         {
             if (!pairp->buildEnvironment(statementRoot, environment, value->getPairp(),
-                                                    acceptToFilterNULLVariables,
-                                                    root, verbose))
+                                         acceptToFilterNULLVariables,
+                                         root, verbose))
                 ret = false;
         }
         else if (value->type == VARIABLE_VALUE)
@@ -748,8 +750,8 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         else if (value->type == ANONYMOUS_VALUE)
         {
             if (!pairp->buildEnvironment(statementRoot, environment, Pairp::NIL,
-                                                    acceptToFilterNULLVariables,
-                                                    root, verbose))
+                                         acceptToFilterNULLVariables,
+                                         root, verbose))
                 ret = false;
         }
         else
@@ -776,7 +778,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     std::cout << "<H4>Result Value::buildEnvironment</H4>" << std::endl;
     std::cout << "<table border=\"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
     std::cout << "<tr><td>" << (ret ? "TRUE" : "FALSE") << "</td><td>";
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</td></tr></table>";
 #endif
     return ret;
@@ -794,9 +796,9 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
     std::cout << "Value::subsumes (" << this << ")";
     std::cout << "<TABLE><TR>";
     std::cout << "<TD>";
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << "</TD>&lt;<TD>";
-    other_value->print(std::cout);
+    other_value->toHTML(std::cout);
     std::cout << "</TD>";
     std::cout << "</TR></TABLE>";
     std::cout << "</DIV>";
@@ -824,29 +826,6 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
     else if (other_value->isAnonymous())
     {
     }
-
-    // NIL ⊂ NIL
-    // else if (isNil() && o->isNil())
-    //{
-    //}
-
-    // NIL ⊂ …
-    // … ⊂ NIL
-    // else if (isNil() || o->isNil())
-    //{
-    //}
-
-    // TRUE ⊂ TRUE
-    // else if (isTrue() && o->isTrue())
-    //{
-    //}
-
-    // TRUE ⊂ …
-    // … ⊂ TRUE
-    // else if (isTrue() || o->isTrue())
-    //{
-    //    ret = false;
-    //}
 
     else if ((type != other_value->type))
     {
@@ -898,7 +877,7 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::eq(valuePtr o) const
+bool Value::equal(valuePtr o) const
 {
     /* **
         CERR_LINE;
@@ -916,11 +895,8 @@ bool Value::eq(valuePtr o) const
     else if (o->isNil() || this->isNil())
         ret = false;
 
-    else if (o->isAnonymous() && this->isAnonymous())
-        ret = true;
-
     else if (o->isAnonymous() || this->isAnonymous())
-        ret = false;
+        ret = true;
 
     else
     {
@@ -946,12 +922,12 @@ bool Value::eq(valuePtr o) const
             break;
         case FEATURES_VALUE:
             if ((type == FEATURES_VALUE) &&
-                (getFeatures()->peekSerialString() == o->getFeatures()->peekSerialString()))
+                (getFeatures()->peekCoreSerialString() == o->getFeatures()->peekCoreSerialString()))
                 ret = true;
             break;
         case PAIRP_VALUE:
             if ((type == PAIRP_VALUE) &&
-                (getPairp()->peekSerialString() == o->getPairp()->peekSerialString()))
+                (getPairp()->peekCoreSerialString() == o->getPairp()->peekCoreSerialString()))
                 ret = true;
             break;
         default:
@@ -973,9 +949,9 @@ bool Value::lessThan(const valuePtr &o) const
     // bool ret = false;
     /***
         STD::CERR_LINE;
-        this->print(std::cerr);
+        this->toHTML(std::cerr);
         std::cerr << " < ";
-        o->print(std::cerr);
+        o->toHTML(std::cerr);
         std::cerr << std::endl;
     ***/
     if (isNumber() && o->isNumber())
@@ -1001,7 +977,7 @@ void Value::deleteAnonymousVariables()
     case VARIABLE_VALUE:
     case ANONYMOUS_VALUE:
     case NUMBER_VALUE:
-    //case LIST_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         break;
     case FEATURES_VALUE:
         getFeatures()->deleteAnonymousVariables();
@@ -1028,7 +1004,7 @@ void Value::deleteVariables()
     case VARIABLE_VALUE:
     case ANONYMOUS_VALUE:
     case NUMBER_VALUE:
-    //case LIST_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         break;
     case FEATURES_VALUE:
         getFeatures()->deleteVariables();
@@ -1054,27 +1030,31 @@ bool Value::renameVariables(uint32_t key)
     case IDENTIFIER_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    //case LIST_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         break;
     case FORM_VALUE:
         Vartable::renameVariables(string, key);
-        resetSerial();
+        resetCoreSerial();
         effect = true;
         break;
     case VARIABLE_VALUE:
         code = Vartable::nameToCode(Vartable::codeToName(code), key);
-        resetSerial();
+        resetCoreSerial();
         effect = true;
         break;
     case FEATURES_VALUE:
         if (getFeatures())
-            if (getFeatures()->renameVariables(key))
+            if (getFeatures()->renameVariables(key)){
+                resetCoreSerial();
                 effect = true;
+            }
         break;
     case PAIRP_VALUE:
         if (getPairp())
-            if (getPairp()->renameVariables(key))
+            if (getPairp()->renameVariables(key)){
+                resetCoreSerial();
                 effect = true;
+            }
         break;
     }
     return effect;
@@ -1083,7 +1063,7 @@ bool Value::renameVariables(uint32_t key)
 /* **************************************************
  *
  ************************************************** */
-void Value::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
+void Value::testEnable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     switch (type)
     {
@@ -1095,12 +1075,11 @@ void Value::enable(const statementPtr &root, class Item *item, Generator *synthe
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    //case LIST_FEATURES_VALUE:
         break;
     case VARIABLE_VALUE:
         if (on)
         {
-            if ((!item->getEnvironment()) || (!item->getEnvironment()->find(code)))
+            if (!item->environmentGet(code))
             {
                 root->addFlags(Flags::DISABLED);
                 effect = true;
@@ -1113,18 +1092,32 @@ void Value::enable(const statementPtr &root, class Item *item, Generator *synthe
         }
         break;
     case FEATURES_VALUE:
-        getFeatures()->enable(root, item, synthesizer, effect, on);
+        getFeatures()->testEnable(root, item, synthesizer, effect, on);
         break;
     case PAIRP_VALUE:
-        getPairp()->enable(root, item, synthesizer, effect, on);
+        getPairp()->testEnable(root, item, synthesizer, effect, on);
         break;
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
+        if (on)
+        {
+            if ((*item->getSynthesizedChildFeatures())[code] == Features::NIL)
+            {
+                root->addFlags(Flags::DISABLED);
+                effect = true;
+            }
+        }
+        else
+        {
+            root->subFlags(Flags::DISABLED);
+            effect = true;
+        }
     }
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::findVariable(uint32_t key) const
+bool Value::containsVariable(uint32_t key) const
 {
     switch (type)
     {
@@ -1136,7 +1129,8 @@ bool Value::findVariable(uint32_t key) const
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    //case LIST_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
+
         break;
     case VARIABLE_VALUE:
         if (code == key)
@@ -1167,7 +1161,7 @@ void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, 
     std::cout << "Value::apply ()";
     std::cout << "<TABLE><TR>";
     std::cout << "<TD>";
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << "</TD>";
     std::cout << "</TR></TABLE>";
     std::cout << "</DIV>";
@@ -1177,15 +1171,11 @@ void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, 
     {
     case FEATURES_VALUE:
     {
-        if (!item->getEnvironment())
-        {
-            item->setEnvironment(Environment::create());
-        }
-        item->getEnvironment()->add(statementRoot, code, shared_from_this(), verbose);
+        item->environmentAdd(statementRoot, code, shared_from_this(), verbose);
         bool b = false;
-        statement->toggleEnable(statement, item, synthesizer, b, false);
-        statement->apply(statementRoot, item, parser, synthesizer, effect, verbose);
-        item->getEnvironment()->remove(code);
+        statement->testEnable(statement, item, synthesizer, b, false);
+        statement->apply(statementRoot, item, parser, synthesizer, effect, true, verbose);
+        item->environmentRemove(code);
     }
     break;
     default:
@@ -1199,8 +1189,10 @@ void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, 
 bool Value::containsVariable()
 {
     bool result = false;
-    if (variableFlag.containsVariable())
+    if (isSetFlags(Flags::CONTAINS_VARIABLE))
         return true;
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
+        return false;
     switch (type)
     {
     case NIL_VALUE:
@@ -1211,7 +1203,7 @@ bool Value::containsVariable()
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
     case ANONYMOUS_VALUE:
-    //case LIST_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         break;
     case VARIABLE_VALUE:
         result = true;
@@ -1230,16 +1222,9 @@ bool Value::containsVariable()
         break;
     }
     if (result)
-        this->variableFlag.setFlag(VariableFlag::CONTAINS);
+        addFlags(Flags::CONTAINS_VARIABLE);
     else
-        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+        addFlags(Flags::DOES_NOT_CONTAIN_VARIABLE);       
     return result;
 }
 
-/* **************************************************
- *
- ************************************************** */
-void Value::setVariableFlag(enum VariableFlag::flagValues flag)
-{
-    this->variableFlag.setFlag(flag);
-}

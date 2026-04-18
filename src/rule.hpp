@@ -45,32 +45,31 @@ private:
     uint32_t lineno;
     bool trace;
     bool withSpaces;
-    bool bidirectional;
-    bool permutable;
+    bool unordered;
 
-    void makeSerialString(void);
+    void makeCoreSerialString(void);
 
 public:
-    static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs,
+    static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs,
                           statementsPtr statements = statementsPtr());
 
     static rulePtr
-    create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements = statementsPtr());
+    create(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements = statementsPtr());
 
-    static rulePtr create(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
-    static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+    static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
                           statementsPtr statements = statementsPtr());
 
-    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements = statementsPtr());
+    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements = statementsPtr());
 
-    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, statementsPtr statements = statementsPtr());
+    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements = statementsPtr());
 
-    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+    Rule(uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
-    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool bidirectional, bool permutable, uint32_t lhs, std::vector<termsPtr> &rhs,
+    Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
          statementsPtr statements = statementsPtr());
 
     ~Rule();
@@ -79,13 +78,7 @@ public:
 
     std::vector<termsPtr> &getRhs(void);
 
-    //uint32_t getCurrentTerm(void) const;
-
-    //termsPtr getCurrentTerms() const;
-
     termsPtr getTerms(size_t) const;
-
-    //void setCurrentTerms(termsPtr);
 
     statementsPtr getStatements(void) const;
 
@@ -97,9 +90,7 @@ public:
 
     bool getWithSpaces(void) const;
 
-    bool getBidirectional(void) const;
-
-    bool getPermutable(void) const;
+    bool getUnordered(void) const;
 
     const std::string &getFilename(void) const;
 

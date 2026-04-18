@@ -21,28 +21,31 @@
 #define ELVEX_SERIALIZABLE_H
 
 #include <string>
+#include <cstddef>
 
 class Serializable
 {
-
 private:
-    size_t serialHashCode;
+    size_t coreSerialHashCode;
 
-    virtual void makeSerialString() = 0;
+    virtual void makeCoreSerialString() = 0;
 
 protected:
-    std::string serialString;
+    std::string coreSerialString;
 
 public:
     explicit Serializable();
 
     virtual ~Serializable();
 
-    std::string peekSerialString();
+    // Sérialisation d'identité logique (clé des sets/maps)
+    std::string peekCoreSerialString();
 
-    size_t hash();
+    // Hash logique
+    size_t coreHash();
 
-    void resetSerial();
+    // Invalide uniquement la sérialisation logique
+    void resetCoreSerial();
 };
 
 #endif // ELVEX_SERIALIZABLE_H

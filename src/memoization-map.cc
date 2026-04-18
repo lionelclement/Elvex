@@ -34,7 +34,7 @@ MemoizationMap::map::const_iterator MemoizationMap::find(std::string const &key)
 #ifdef TRACE_MEMOIZATION
     if (memItem != memoizationMap.end())
     {
-        std::cout << "<H3>####################### RECORDED SHIFT FOUND #######################</H3>" << std::endl;
+        std::cout << "<H3>####################### RECORDED FOUND #######################</H3>" << std::endl;
         std::cout << "<BR>";
         std::cout << std::endl;
     }
@@ -53,14 +53,14 @@ MemoizationMap::map::const_iterator MemoizationMap::cend() const
 /* ************************************************************
  *
  ************************************************************ */
-void MemoizationMap::insert(std::string const &key, featuresPtr features, class ForestIdentifier *forestIdentifier)
+void MemoizationMap::insert(std::string const &key, featuresPtr features, class ForestIdentifier *forestIdentifier, class Item *item)
 {
 #ifdef TRACE_MEMOIZATION
-    std::cout << "<H3>####################### RECORD SHIFT #######################</H3>" << std::endl;
+    std::cout << "<H3>####################### RECORD #######################</H3>" << std::endl;
     std::cout << "<BR>";
     std::cout << std::endl;
 #endif
-    class MemoizationValue *value = MemoizationValue::create(std::move(features), std::move(forestIdentifier));
+    class MemoizationValue *value = MemoizationValue::create(std::move(features), std::move(forestIdentifier), item);
     auto memItem = memoizationMap.find(key);
     if (memItem != memoizationMap.end())
     {

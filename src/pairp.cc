@@ -160,30 +160,30 @@ bool Pairp::isPairp() const
 /* **************************************************
  *
  ************************************************** */
-void Pairp::makeSerialString()
+void Pairp::makeCoreSerialString()
 {
     switch (type)
     {
     case _NIL_:
-        serialString = '-';
+        coreSerialString = '-';
         break;
     case _ATOM_:
-        serialString = value->peekSerialString();
+        coreSerialString = value->peekCoreSerialString();
         break;
     case _PAIRP_:
-        serialString = '-' + pairp.car->peekSerialString();
+        coreSerialString = '-' + pairp.car->peekCoreSerialString();
         if (pairp.cdr->isAtom())
         {
-            serialString += '-' + pairp.cdr->peekSerialString();
+            coreSerialString += '-' + pairp.cdr->peekCoreSerialString();
         }
         else if (pairp.cdr->isNil())
         {
         }
         else
         {
-            serialString += '-' + pairp.cdr->peekSerialString();
+            coreSerialString += '-' + pairp.cdr->peekCoreSerialString();
         }
-        serialString += '-';
+        coreSerialString += '-';
         break;
     }
 }
@@ -191,7 +191,7 @@ void Pairp::makeSerialString()
 /* **************************************************
  *
  ************************************************** */
-void Pairp::print(std::ostream &outStream) const
+void Pairp::toHTML(std::ostream &outStream) const
 {
     switch (type)
     {
@@ -199,18 +199,18 @@ void Pairp::print(std::ostream &outStream) const
         outStream << "<>";
         break;
     case _ATOM_:
-        value->print(outStream);
+        value->toHTML(outStream);
         break;
     case _PAIRP_:
-        pairp.car->print(outStream);
+        pairp.car->toHTML(outStream);
         if (pairp.cdr->isAtom())
         {
             outStream << "::";
-            pairp.cdr->print(outStream);
+            pairp.cdr->toHTML(outStream);
         }
         else if (!pairp.cdr->isNil())
         {
-            pairp.cdr->print(outStream);
+            pairp.cdr->toHTML(outStream);
         }
         break;
     }
@@ -270,7 +270,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
     std::cout << "</td><td>";
     otherPairp->flatPrint(std::cout, true);
     std::cout << "</td><td>";
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</td></tr></table>";
 #endif
 
@@ -383,7 +383,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
     std::cout << "<H4>Result Pairp::buildEnvironment</H4>" << std::endl;
     std::cout << "<table border = \"1\"><tr><th>R&eacute;sultat</th><th>Environment</th></tr>";
     std::cout << "<tr><td>" << (ret ? "TRUE" : "FALSE") << "</td><td>";
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</td></tr></table>";
 #endif
     return ret;
@@ -451,7 +451,7 @@ bool Pairp::renameVariables(uint32_t code)
             effect = true;
         break;
     }
-    resetSerial();
+    resetCoreSerial();
     return effect;
 }
 
@@ -503,9 +503,9 @@ bool Pairp::subsumes(statementPtr from, const pairpPtr &o, const environmentPtr 
 {
     /***
      COUT_LINE;
-     this->print(std::cout);
+     this->toHTML(std::cout);
      std::cout << " ";
-     o->print(std::cout);
+     o->toHTML(std::cout);
      std::cout << std::endl;
      ***/
     switch (type)
@@ -586,20 +586,20 @@ pairpPtr Pairp::pushBack(valuePtr _value)
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-void Pairp::enable(const statementPtr &root, class Item *item, Generator *generator, bool &effect, bool on)
+void Pairp::testEnable(const statementPtr &root, class Item *item, Generator *generator, bool &effect, bool on)
 {
     switch (type)
     {
     case _NIL_:
         break;
     case _ATOM_:
-        value->enable(root, item, generator, effect, on);
+        value->testEnable(root, item, generator, effect, on);
         break;
     case _PAIRP_:
         if (pairp.car)
-            pairp.car->enable(root, item, generator, effect, on);
+            pairp.car->testEnable(root, item, generator, effect, on);
         if (pairp.cdr)
-            pairp.cdr->enable(root, item, generator, effect, on);
+            pairp.cdr->testEnable(root, item, generator, effect, on);
         break;
     }
 }
@@ -614,7 +614,7 @@ bool Pairp::findVariable(uint32_t key) const
     case _NIL_:
         break;
     case _ATOM_:
-        if (value->findVariable(key))
+        if (value->containsVariable(key))
             return true;
         break;
     case _PAIRP_:
@@ -639,11 +639,11 @@ void Pairp::apply(statementPtr from, class Item *item, class Parser &parser, cla
         break;
     case _ATOM_:
     {
-        environmentPtr save = item->getEnvironment();
-        item->setEnvironment(item->getEnvironment() ? item->getEnvironment()->clone(nullptr, verbose) : environmentPtr());
+        //environmentPtr save = item->_getEnvironment();
+        //item->cloneEnvironment(item);
         value->apply(from, item, parser, generator, code, statement->clone(0), effect, verbose);
-        item->getEnvironment().reset();
-        item->setEnvironment(save);
+        //item->_getEnvironment().reset();
+        //item->setEnvironment(save);
     }
     break;
     case _PAIRP_:
@@ -668,9 +668,11 @@ bool Pairp::containsVariable()
      std::cout << "</td><td>";
      std::cout << "</td></tr></table>";
      ***/
-    if (this->variableFlag.containsVariable())
-        return true;
     bool result = false;
+    if (isSetFlags(Flags::CONTAINS_VARIABLE))
+        return true;
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
+        return false;
     switch (type)
     {
     case _NIL_:
@@ -702,20 +704,64 @@ bool Pairp::containsVariable()
         break;
     }
     if (result)
-        this->variableFlag.setFlag(VariableFlag::CONTAINS);
+        this->addFlags(Flags::CONTAINS_VARIABLE);
     else
-        this->variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
-    /***
-     std::cout << "<H4>Pairp::containsVariable done</H4>" << std::endl;
-     std::cout << (result ? "TRUE" : "FALSE");
-     ***/
+        this->addFlags(Flags::DOES_NOT_CONTAIN_VARIABLE);
     return result;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Pairp::setVariableFlag(enum VariableFlag::flagValues flag)
+bool Pairp::containsSynthesizedChildFeatures()
 {
-    this->variableFlag.setFlag(flag);
+    /***
+     std::cout << "<H4>Pairp::containsVariable</H4>" << std::endl;
+     std::cout << "<table border = \"1\"><tr><th>this</th></tr>";
+     std::cout << "<tr><td>";
+     this->flatPrint(std::cout, true);
+     std::cout << "</td><td>";
+     std::cout << "</td></tr></table>";
+     ***/
+    bool result = false;
+    if (isSetFlags(Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES))
+        return true;
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES))
+        return false;
+    switch (type)
+    {
+    case _NIL_:
+        result = false;
+        break;
+    case _ATOM_:
+        if (isVariable())
+        {
+            result = true;
+        }
+        else if (this->getValue()->getFeatures()->containsSynthesizedChildFeatures())
+        {
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+        break;
+    case _PAIRP_:
+        if (pairp.car->containsSynthesizedChildFeatures() || pairp.cdr->containsSynthesizedChildFeatures())
+        {
+            result = true;
+        }
+        else
+        {
+            result = false;
+        }
+        break;
+    }
+    if (result)
+        this->addFlags(Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES);
+    else
+        this->addFlags(Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES); 
+    return result;
 }
+

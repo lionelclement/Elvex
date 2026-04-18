@@ -70,6 +70,15 @@ public:
 
     std::string &getForm(void);
 
+    std::vector<nodePtr>::iterator begin() { return nodes.begin(); }
+    std::vector<nodePtr>::iterator end() { return nodes.end(); }
+
+    std::vector<nodePtr>::const_iterator begin() const { return nodes.begin(); }
+    std::vector<nodePtr>::const_iterator end() const { return nodes.end(); }
+
+    std::vector<nodePtr>::const_iterator cbegin() const { return nodes.cbegin(); }
+    std::vector<nodePtr>::const_iterator cend() const { return nodes.cend(); }
+
 
 #ifdef OUTPUT_XML
     void toXML(const xmlNodePtr, bool);

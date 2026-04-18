@@ -144,12 +144,12 @@ listFeaturesPtr ListFeatures::clone()
 /* **************************************************
  *
  ************************************************** */
-void ListFeatures::print(std::ostream &outStream) const
+void ListFeatures::toHTML(std::ostream &outStream) const
 {
     outStream << R"(<TABLE border = "1">)";
     outStream << R"(<TBODY align = "left"><TR>)";
     for (auto &listFeature : listFeatures)
-        listFeature->print(outStream);
+        listFeature->toHTML(outStream);
     outStream << "</TR></TBODY>";
     outStream << "</TABLE>";
 }
@@ -187,15 +187,15 @@ void ListFeatures::apply(statementPtr statementRoot, class Item *item, Parser &p
 /* **************************************************
  *
  ************************************************** */
-void ListFeatures::makeSerialString()
+void ListFeatures::makeCoreSerialString()
 {
     std::ostringstream stream;
     stream << '-';
     for (auto &features : listFeatures)
     {
-        stream << features->peekSerialString() << '-';
+        stream << features->peekCoreSerialString() << '-';
     }
-    serialString = stream.str();
+    coreSerialString = stream.str();
 }
 
 #ifdef OUTPUT_XML

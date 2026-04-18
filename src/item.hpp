@@ -50,20 +50,20 @@ private:
     std::vector<bool> seen;                                  // seen flags
     std::vector<uint32_t> ranges;                             // ranges
     featuresPtr inheritedFeatures;                           // ↑
-    listFeaturesPtr inheritedSonFeatures;                    // ↓
+    listFeaturesPtr inheritedChildFeatures;                    // ↓
     featuresPtr synthesizedFeatures;                         // ⇑
-    listFeaturesPtr synthesizedSonFeatures;                  // ⇓
+    listFeaturesPtr synthesizedChildFeatures;                  // ⇓
     std::vector<class ForestIdentifier *> forestIdentifiers; // forest identifiers
     environmentPtr environment;                              // variable environment
 
-    bool s_id = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
+    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = true,
          s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
-         s_inheritedSonFeatures = true, s_synthesizedFeatures = true,
-         s_synthesizedSonFeatures = true, s_statements = true, s_environment = true;
+         s_inheritedChildFeatures = true, s_synthesizedFeatures = true,
+         s_synthesizedChildFeatures = true, s_statements = true, s_environment = true;
     
     void makeSerialString(void);
-    std::string makeSerialString2(void);
+    void makeCoreSerialString(void);
 
 public:
     Item(rulePtr rule, uint8_t index, statementsPtr statements);
@@ -100,15 +100,15 @@ public:
 
     set_of_uint32_t &getRefs(void);
 
-    listFeaturesPtr getSynthesizedSonFeatures(void);
+    listFeaturesPtr getSynthesizedChildFeatures(void) const;
 
-    listFeaturesPtr getInheritedSonFeatures(void);
+    listFeaturesPtr getInheritedChildFeatures(void);
 
     featuresPtr getSynthesizedFeatures() const;
 
     featuresPtr getInheritedFeatures(void) const;
 
-    environmentPtr getEnvironment() const;
+    environmentPtr _getEnvironment() const;
 
     uint32_t getRuleId(void) const;
 
@@ -128,17 +128,17 @@ public:
 
     void setIndex(uint8_t);
 
-    void setRefs(set_of_uint32_t &);
+    void setRefs(const set_of_uint32_t &);
 
-    void setSynthesizedSonFeatures(listFeaturesPtr);
+    void setSynthesizedChildFeatures(listFeaturesPtr);
 
-    void setInheritedSonFeatures(listFeaturesPtr);
+    void setInheritedChildFeatures(listFeaturesPtr);
 
     void setSynthesizedFeatures(featuresPtr);
 
     void setInheritedFeatures(featuresPtr);
 
-    void setEnvironment(environmentPtr);
+    void _setEnvironment(environmentPtr);
 
     void setSeen(std::vector<bool> &);
 
@@ -146,7 +146,7 @@ public:
 
     // rule methods
 
-    void rulePrint(std::ostream &, uint8_t index = UINT8_MAX, bool withSemantic = false, bool html = true) const;
+    void printRule(std::ostream &, uint8_t index = UINT8_MAX, bool withSemantic = false, bool html = true) const;
 
     void ruleResetUsages(void);
 
@@ -154,15 +154,13 @@ public:
 
     bool getWithSpaces() const;
 
-    bool getBidirectional() const;
-
-    bool getPermutable() const;
+    bool getUnordered() const;
 
     termsPtr getTerms(uint32_t) const;
 
-    void addRef(uint32_t);
+    void addRef(const uint32_t);
 
-    void addRefs(set_of_uint32_t &);
+    void addRefs(const set_of_uint32_t &);
 
     bool isSeen(uint8_t) const;
 
@@ -182,7 +180,7 @@ public:
 
     void buildSynthesizedFeatures(statementPtr from, class Generator *);
 
-    void buildInheritedSonFeatures(statementPtr from, class Generator *);
+    void buildInheritedChildFeatures(statementPtr from, class Generator *);
 
     bool addEnvironment(statementPtr from, environmentPtr, bool verbose);
 
@@ -190,7 +188,7 @@ public:
 
     void addStatements(const statementsPtr &);
 
-    void print(std::ostream &) /*const*/;
+    void toHTML(std::ostream &) /*const*/;
 
     void renameVariables(uint32_t);
 
@@ -200,11 +198,33 @@ public:
 
     void step(bool &);
 
-    void defaultInheritedSonFeatures(void);
+    void environmentReplaceVariables(const featuresPtr &, bool &);
+
+    void environmentReplaceVariables(const valuePtr &, bool &);
+
+    void environmentReplaceVariables(const pairpPtr &, bool &);
+
+    void environmentReplaceVariables(std::string &, bool &);
+
+    valuePtr environmentGet(uint32_t code) ;
+
+    bool environmentIsEmpty(void) ;
+
+    void environmentAdd(statementPtr from, uint32_t code, valuePtr value, bool verbose);
+
+    void environmentRemove(uint32_t code);
+
+    void defaultInheritedChildFeatures(void);
 
     void apply(Parser &parser, Generator *generator, bool verbose);
 
+    void replaceSynthesizedChildFeaturesValue(featuresPtr features);
+
+    void replaceSynthesizedChildFeaturesValue(valuePtr value);
+
     class Item *clone(const std::bitset<MAX_FLAGS> &savedFlags, bool verbose);
+
+    void cloneEnvironment(const class Item *from);
 
     struct Hash
     {

@@ -134,8 +134,8 @@ std::string replaceZeroSequences(const std::string& input) {
  * template<size_t N>
  * serialString = std::hex numbers from right to left
  ************************************************************ */
-void Bitset::makeSerialString(){
-   serialString = replaceZeroSequences(this->to_string()); 
+void Bitset::makeCoreSerialString(){
+   coreSerialString = replaceZeroSequences(this->to_string()); 
 }
 
 #ifdef OUTPUT_XML

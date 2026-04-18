@@ -27,12 +27,11 @@
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-Node::Node(bool withSpaces, bool bidirectional, bool permutable)
+Node::Node(bool withSpaces, bool unordered)
 {
    NEW;
    this->withSpaces = withSpaces;
-   this->bidirectional = bidirectional;
-   this->permutable = permutable;
+   this->unordered = unordered;
 }
 
 /* ************************************************************
@@ -46,9 +45,9 @@ Node::~Node()
 /* ************************************************************
  *                                                            *
  ************************************************************ */
-nodePtr Node::create(bool withSpaces, bool bidirectional, bool permutable)
+nodePtr Node::create(bool withSpaces, bool unordered)
 {
-   return std::make_shared<Node>(withSpaces, bidirectional, permutable);
+   return std::make_shared<Node>(withSpaces, unordered);
 }
 
 /* ************************************************************
@@ -168,6 +167,7 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 #endif
 
 #include <stack>
+#include "rule.hpp"
 
 /* ************************************************************
  *                                                            *
@@ -224,6 +224,7 @@ void Node::generateLR(std::string &currentCombination, vectorForests::const_iter
 /* ************************************************************
  *                                                            *
  ************************************************************ */
+/***
 void Node::generateRL(std::string currentCombination, vectorForests::const_iterator forestIt)
 {
    std::stack<std::pair<std::string, vectorForests::const_iterator>> stack;
@@ -262,6 +263,7 @@ void Node::generateRL(std::string currentCombination, vectorForests::const_itera
       }
    }
 }
+***/
 
 /* **************************************************
  *
@@ -298,10 +300,11 @@ void Node::generate(bool randomResult, bool singleResult)
             if ((*forest)->isUnsetFlags(Flags::GENERATED))
                (*forest)->generate(randomResult, singleResult);
       }
-      if (permutable)
+      if (unordered)
       {
          generatePermutations(forests, 0, forests.size() - 1);
       }
+      /*
       else if (bidirectional)
       {
          std::string currentCombination = "";
@@ -309,7 +312,8 @@ void Node::generate(bool randomResult, bool singleResult)
          currentCombination = "";
          generateRL(currentCombination, forests.cend() - 1);
       }
-      else
+      */
+     else
       {
          std::string currentCombination = "";
          generateLR(currentCombination, forests.cbegin());

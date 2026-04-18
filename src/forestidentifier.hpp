@@ -40,7 +40,7 @@ public:
 
     static class ForestIdentifier* create(uint32_t code, uint32_t from, uint32_t to);
 
-    void makeSerialString() override;
+    void makeCoreSerialString() override;
     
     uint32_t getFrom() const {
         return from;

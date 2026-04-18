@@ -351,14 +351,9 @@ downDoubleArrow "⇓"
     return TOKEN_WITHOUT_SPACES;
   }
   
-  "@bidirectional" {
-    DBUGPRT("TOKEN_BIDIRECTIONAL");
-    return TOKEN_BIDIRECTIONAL;
-  }
-  
-  "@permutable" {
-    DBUGPRT("TOKEN_PERMUTABLE");
-    return TOKEN_PERMUTABLE;
+  "@unordered" {
+    DBUGPRT("TOKEN_UNORDERED");
+    return TOKEN_UNORDERED;
   }
   
   "attest" {
@@ -386,19 +381,19 @@ downDoubleArrow "⇓"
     return TOKEN_PRINT;
   }
   
-print[lL]n {
+  print[lL]n {
     DBUGPRT("TOKEN_PRINTLN");
     return TOKEN_PRINTLN;
   }
   
-print[sS]tderr {
-    DBUGPRT("TOKEN_PRINTSTDERR");
-    return TOKEN_PRINTSTDERR;
+  eprint {
+    DBUGPRT("TOKEN_EPRINT");
+    return TOKEN_EPRINT;
   }
   
-print[lL]n[Ss]tderr {
-    DBUGPRT("TOKEN_PRINTLNSTDERR");
-    return TOKEN_PRINTLNSTDERR;
+  eprint[lL]n {
+    DBUGPRT("TOKEN_EPRINTLN");
+    return TOKEN_EPRINTLN;
   }
   
   "search" {

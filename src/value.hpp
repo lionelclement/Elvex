@@ -23,7 +23,6 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
-#include "variableflag.hpp"
 
 #ifdef OUTPUT_XML
 #include <libxml/tree.h>
@@ -42,10 +41,10 @@ public:
         FALSE_VALUE,
         CONSTANT_VALUE,
         VARIABLE_VALUE,
+        SYNTHESIZED_CHILD_FEATURES_VALUE,
         ANONYMOUS_VALUE,
         IDENTIFIER_VALUE,
         FEATURES_VALUE,
-        //LIST_FEATURES_VALUE,
         PAIRP_VALUE,
         NUMBER_VALUE,
         FORM_VALUE
@@ -57,16 +56,13 @@ private:
     pairpPtr pairp;
     std::string string;
     double number;
-    VariableFlag variableFlag;
     featuresPtr features; // pour encoder les SF
-    //listFeaturesPtr listFeatures; // pour encoder les listes de SF
 
 public:
     static valuePtr STATIC_NIL;
     static valuePtr STATIC_TRUE;
     static valuePtr STATIC_FALSE;
     static valuePtr STATIC_ANONYMOUS;
-
     Type type;
 
 private:
@@ -75,7 +71,7 @@ private:
     Value(const enum Type, uint32_t = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
           pairpPtr = pairpPtr()/*, listFeaturesPtr = listFeaturesPtr()*/);
 
-    void makeSerialString(void);
+    void makeCoreSerialString(void);
 
 public:
     ~Value();
@@ -89,6 +85,7 @@ public:
     static valuePtr createConstant(bitsetPtr bitset);
     static valuePtr createFeatures(featuresPtr features);
     static valuePtr createPairp(pairpPtr pairp);
+    static valuePtr createDown2(uint32_t code);
 
     enum Type getType(void) const;
 
@@ -98,15 +95,13 @@ public:
 
     featuresPtr getFeatures(void) const;
 
-    //listFeaturesPtr getListFeatures(void) const;
-
     double getNumber(void) const;
 
     std::string &getString(void) ;
 
     pairpPtr getPairp(void) const;
 
-    void print(std::ostream &) const;
+    void toHTML(std::ostream &) const;
 
     void flatPrint(std::ostream &) const;
 
@@ -148,22 +143,21 @@ public:
 
     bool isPairp(void) const;
 
-    // bool isListFeatures(void) const;
+    bool isSynthesizedChildFeatures(void) const;
 
-    void enable(const statementPtr &root, class Item *item, class Generator *synthesizer, bool &effect, bool on);
+    void testEnable(const statementPtr &root, class Item *item, class Generator *synthesizer, bool &effect, bool on);
 
-    bool eq(valuePtr) const;
+    bool equal(valuePtr) const;
 
     bool lessThan(const valuePtr &) const;
 
-    bool findVariable(uint32_t key) const;
+    bool containsVariable(uint32_t key) const;
 
     void apply(statementPtr statementRoot, class Item *item, class Parser &parser, class Generator *synthesizer, uint32_t variable, const statementPtr &body,
           bool &effect, bool verbose);
 
     bool containsVariable(void);
 
-    void setVariableFlag(enum VariableFlag::flagValues flag);
 };
 
 #endif // ELVEX_VALUE_H

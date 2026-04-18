@@ -119,14 +119,34 @@ bool ItemSet::insert(class Item *item, Generator *synthesizer)
     {
         std::ostringstream oss;
         oss << "too much items build : " << items.size() << " (" << synthesizer->getMaxItems() << " Max)";
+            this->toHTML(std::cout);
+            std::cout << std::endl;
         throw fatal_exception(oss);
     }
 #ifdef TRACE_INSERT
     std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
-    item->print(std::cout);
+    item->toHTML(std::cout);
     std::cout << std::endl;
 #endif
-    return items.insert(item).second;
+    bool inserted = items.insert(item).second;
+    if (!inserted)
+    {
+#ifdef TRACE_INSERT
+            std::cout << "<H3>####################### DUPLICATE " << item->getId() << " #######################</H3>" << std::endl;
+            item->toHTML(std::cout);
+            std::cout << std::endl;
+#endif
+    }
+    else {
+#ifdef TRACE_INSERT
+            std::cout << "<H3>####################### RESULT INSERTED " << item->getId() << " #######################</H3>" << std::endl;
+            //item->toHTML(std::cout);
+
+            this->toHTML(std::cout);
+            std::cout << std::endl;
+#endif
+}
+    return inserted;
 }
 
 /* **************************************************
@@ -159,14 +179,14 @@ void ItemSet::resetUsages()
 /* **************************************************
  *
  ************************************************** */
-void ItemSet::print(std::ostream &oss)
+void ItemSet::toHTML(std::ostream &oss)
 {
     oss << "<TABLE border=\"0\">";
     for (const auto &item : items)
     {
         oss << "<TR>";
         oss << "<TD align=\"LEFT\">";
-        item->print(oss);
+        item->toHTML(oss);
         oss << "</TD>";
         oss << "</TR>";
     }
@@ -188,7 +208,7 @@ void ItemSet::toXML(xmlNodePtr node)
     oss << "<TR><TD><FONT COLOR=\"BLUE\" FACE=\"Times-Roman\" POINT-SIZE=\"16\">Q" << id << "</FONT></TD></TR>";
     oss << "<TR>";
     oss << "<TD ALIGN=\"LEFT\">";
-    print(oss);
+    toHTML(oss);
     oss << "</TD>";
     oss << "</TR>";
     oss << "</TABLE>";

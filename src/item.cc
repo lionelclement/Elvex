@@ -20,6 +20,10 @@
 #include <climits>
 #include <utility>
 #include "item.hpp"
+#include "item.hpp"
+#include "feature.hpp"
+#include "features.hpp"
+#include "value.hpp"
 #include "environment.hpp"
 #include "messages.hpp"
 #include "forest.hpp"
@@ -51,8 +55,8 @@ Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
     this->environment = environmentPtr();
     this->inheritedFeatures = Features::NIL;
     this->synthesizedFeatures = Features::NIL;
-    this->synthesizedSonFeatures = ListFeatures::create();
-    this->inheritedSonFeatures = ListFeatures::create();
+    this->synthesizedChildFeatures = ListFeatures::create();
+    this->inheritedChildFeatures = ListFeatures::create();
 }
 
 /* **************************************************
@@ -68,8 +72,8 @@ Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr 
         this->indexTerms.push_back(POSTERM_NA);
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
-        this->synthesizedSonFeatures->push_back(Features::NIL);
-        this->inheritedSonFeatures->push_back(Features::NIL);
+        this->synthesizedChildFeatures->push_back(Features::NIL);
+        this->inheritedChildFeatures->push_back(Features::NIL);
     }
     if ((terms.size() < index) && (index != INDEX_NA))
         this->indexTerms[index] = indexTerm;
@@ -88,8 +92,8 @@ Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms,
     {
         this->seen.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
-        this->synthesizedSonFeatures->push_back(Features::NIL);
-        this->inheritedSonFeatures->push_back(Features::NIL);
+        this->synthesizedChildFeatures->push_back(Features::NIL);
+        this->inheritedChildFeatures->push_back(Features::NIL);
     }
 }
 
@@ -104,12 +108,12 @@ Item::~Item()
     ranges.clear();
     if (inheritedFeatures)
         inheritedFeatures.reset();
-    if (inheritedSonFeatures)
-        inheritedSonFeatures.reset();
+    if (inheritedChildFeatures)
+        inheritedChildFeatures.reset();
     if (synthesizedFeatures)
         synthesizedFeatures.reset();
-    if (synthesizedSonFeatures)
-        synthesizedSonFeatures.reset();
+    if (synthesizedChildFeatures)
+        synthesizedChildFeatures.reset();
     for (auto it : forestIdentifiers)
     {
         class ForestIdentifier *tmp = it;
@@ -119,8 +123,8 @@ Item::~Item()
     forestIdentifiers.clear();
     if (statements)
         statements.reset();
-    if (environment)
-        environment.reset();
+    // if (environment)
+    //     environment.reset();
 }
 
 /* **************************************************
@@ -175,7 +179,7 @@ uint32_t Item::getRuleLineno() const
 /* **************************************************
  *
  ************************************************** */
-void Item::rulePrint(std::ostream &os, uint8_t index, bool withSemantic, bool html) const
+void Item::printRule(std::ostream &os, uint8_t index, bool withSemantic, bool html) const
 {
     rule->print(os, index, withSemantic, html);
 }
@@ -207,17 +211,9 @@ bool Item::getWithSpaces() const
 /* **************************************************
  *
  ************************************************** */
-bool Item::getBidirectional() const
+bool Item::getUnordered() const
 {
-    return rule->getBidirectional();
-}
-
-/* **************************************************
- *
- ************************************************** */
-bool Item::getPermutable() const
-{
-    return rule->getPermutable();
+    return rule->getUnordered();
 }
 
 /* **************************************************
@@ -332,7 +328,7 @@ Item::set_of_uint32_t &Item::getRefs()
 /* **************************************************
  *
  ************************************************** */
-void Item::setRefs(set_of_uint32_t &_refs)
+void Item::setRefs(const set_of_uint32_t &_refs)
 {
     this->refs = _refs;
 }
@@ -340,7 +336,7 @@ void Item::setRefs(set_of_uint32_t &_refs)
 /* **************************************************
  *
  ************************************************** */
-void Item::addRef(uint32_t ref)
+void Item::addRef(const uint32_t ref)
 {
     this->refs.insert(ref);
 }
@@ -348,7 +344,7 @@ void Item::addRef(uint32_t ref)
 /* **************************************************
  *
  ************************************************** */
-void Item::addRefs(set_of_uint32_t &_refs)
+void Item::addRefs(const set_of_uint32_t &_refs)
 {
     for (auto _ref : _refs)
         addRef(_ref);
@@ -447,34 +443,34 @@ void Item::addForestIdentifiers(std::vector<class ForestIdentifier *> &_forestId
 /* **************************************************
  *
  ************************************************** */
-listFeaturesPtr Item::getSynthesizedSonFeatures()
+listFeaturesPtr Item::getSynthesizedChildFeatures() const
 {
-    return synthesizedSonFeatures;
+    return synthesizedChildFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setSynthesizedSonFeatures(listFeaturesPtr _synthesizedSonFeatures)
+void Item::setSynthesizedChildFeatures(listFeaturesPtr _synthesizedChildFeatures)
 {
-    this->synthesizedSonFeatures = _synthesizedSonFeatures;
-    // this->synthesizedSonFeatures = /*std::move*/(_synthesizedSonFeatures);
+    this->synthesizedChildFeatures = _synthesizedChildFeatures;
+    // this->synthesizedChildFeatures = /*std::move*/(_synthesizedChildFeatures);
 }
 
 /* **************************************************
  *
  ************************************************** */
-listFeaturesPtr Item::getInheritedSonFeatures()
+listFeaturesPtr Item::getInheritedChildFeatures()
 {
-    return inheritedSonFeatures;
+    return inheritedChildFeatures;
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setInheritedSonFeatures(listFeaturesPtr _inheritedSonFeatures)
+void Item::setInheritedChildFeatures(listFeaturesPtr _inheritedChildFeatures)
 {
-    this->inheritedSonFeatures = (_inheritedSonFeatures);
+    this->inheritedChildFeatures = (_inheritedChildFeatures);
 }
 
 /* **************************************************
@@ -513,17 +509,10 @@ void Item::setInheritedFeatures(featuresPtr _inheritedFeatures)
 /* **************************************************
  *
  ************************************************** */
-environmentPtr Item::getEnvironment() const
+void Item::_setEnvironment(environmentPtr environment)
 {
-    return this->environment;
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Item::setEnvironment(environmentPtr _environment)
-{
-    this->environment = (_environment);
+    this->environment = environment;
+    // resetSerial();
 }
 
 /* **************************************************
@@ -569,9 +558,9 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, bool v
     std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
     std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
     std::cout << "<tr><td>";
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << "</td><td>";
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</td></tr></table>";
 #endif
     if (!this->environment)
@@ -589,9 +578,9 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, enviro
     std::cout << "<H4>Item::addEnvironment</H4>" << std::endl;
     std::cout << "<table border = \"1\"><tr><th>this</th><th>Environment</th></tr>";
     std::cout << "<tr><td>";
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << "</td><td>";
-    environment->print(std::cout);
+    environment->toHTML(std::cout);
     std::cout << "</td></tr></table>";
 #endif
     if (!this->environment)
@@ -602,26 +591,26 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, enviro
 /* **************************************************
  *
  ************************************************** */
-void Item::defaultInheritedSonFeatures()
+void Item::defaultInheritedChildFeatures()
 {
     std::vector<termsPtr> terms = this->getRuleRhs();
-    std::vector<bool> assignedInheritedSonFeatures;
+    std::vector<bool> assignedInheritedChildFeatures;
     for (std::vector<termsPtr>::const_iterator it = terms.begin(); it != terms.end(); ++it)
-        assignedInheritedSonFeatures.push_back(false);
+        assignedInheritedChildFeatures.push_back(false);
     if (statements)
         for (const auto &statement : *this->statements)
-            statement->lookingForAssignedInheritedSonFeatures(assignedInheritedSonFeatures);
+            statement->lookingForAssignedInheritedChildFeatures(assignedInheritedChildFeatures);
     unsigned int j = 0;
-    for (std::vector<bool>::const_iterator it = assignedInheritedSonFeatures.begin();
-         it != assignedInheritedSonFeatures.end(); ++it, ++j)
+    for (std::vector<bool>::const_iterator it = assignedInheritedChildFeatures.begin();
+         it != assignedInheritedChildFeatures.end(); ++it, ++j)
         if (!(*it))
-            (*inheritedSonFeatures).add(j, Features::create());
+            (*inheritedChildFeatures).add(j, Features::create());
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::print(std::ostream &out) /*const*/
+void Item::toHTML(std::ostream &out) /*const*/
 {
     out << "<table border=\"1\" style=\"color:black; ";
     if (isSetFlags(Flags::BOTTOM))
@@ -658,22 +647,22 @@ void Item::print(std::ostream &out) /*const*/
         out << "<th>ForestIdentifiers</th>";
     if (s_inheritedFeatures)
         out << "<th bgcolor=\"lightyellow\"><center>↑</center></th>";
-    if (s_inheritedSonFeatures)
+    if (s_inheritedChildFeatures)
         out << "<th bgcolor=\"lightyellow\"><center>↓i</center></th>";
     if (s_synthesizedFeatures)
         out << "<th bgcolor=\"lightcyan\"><center>⇑</center></th>";
-    if (s_synthesizedSonFeatures)
+    if (s_synthesizedChildFeatures)
         out << "<th bgcolor=\"lightcyan\"><center>⇓i</center></th>";
     if (s_statements)
         out << "<th bgcolor=\"white\"><center>Statements</center></th>";
     if (s_environment && environment)
         out << "<th align = center>Environment</th>";
-    out << "<tr>";
+    out << "</tr><tr>";
     if (s_id)
     {
         out << "<td>";
-        //out << '#' << std::hex << getId();
-        out << peekSerialString();
+        out << '#' << std::hex << getId();
+        // out << peekSerialString();
         out << "</td>";
     }
     if (s_ruleId)
@@ -685,7 +674,7 @@ void Item::print(std::ostream &out) /*const*/
     if (s_rule)
     {
         out << "<td>";
-        this->rulePrint(out);
+        printRule(out);
         out << "</td>";
     }
     if (s_flags)
@@ -780,7 +769,7 @@ void Item::print(std::ostream &out) /*const*/
              i != forestIdentifiers.end();)
         {
             if (*i)
-                out << (*i)->peekSerialString();
+                out << (*i)->peekCoreSerialString();
             else
                 out << "null";
             if (++i != forestIdentifiers.end())
@@ -793,18 +782,18 @@ void Item::print(std::ostream &out) /*const*/
     if (s_inheritedFeatures)
     {
         out << "<td bgcolor=\"lightyellow\">"; //<center>↑</center><br>";
-        inheritedFeatures->print(out);
+        inheritedFeatures->toHTML(out);
         out << "</td>";
     }
-    if (s_inheritedSonFeatures)
+    if (s_inheritedChildFeatures)
     {
         out << "<td bgcolor=\"lightyellow\"><table>"; //<center>↓i</center><br>";
         int k = 1;
-        for (const auto &i : *inheritedSonFeatures)
+        for (const auto &i : *inheritedChildFeatures)
         {
             out << "<tr><td>" << k++ << "</td><td>";
             if (i)
-                i->print(out);
+                i->toHTML(out);
             out << "</td></tr>";
         }
         out << "</table></td>";
@@ -814,19 +803,19 @@ void Item::print(std::ostream &out) /*const*/
         out << "<td bgcolor=\"lightcyan\">"; //<center>⇑</center><br>";
         if (synthesizedFeatures)
         {
-            synthesizedFeatures->print(out);
+            synthesizedFeatures->toHTML(out);
         }
         out << "</td>";
     }
-    if (s_synthesizedSonFeatures)
+    if (s_synthesizedChildFeatures)
     {
         out << "<td bgcolor=\"lightcyan\"><table>"; //<center>⇓i</center><br>";
         int k = 1;
-        for (const auto &i : *synthesizedSonFeatures)
+        for (const auto &i : *synthesizedChildFeatures)
         {
             out << "<tr><td>" << k++ << "</td><td>";
             if (i)
-                i->print(out);
+                i->toHTML(out);
             out << "</td></tr>";
         }
         out << "</table></td>";
@@ -853,8 +842,7 @@ void Item::print(std::ostream &out) /*const*/
     if (s_environment && environment)
     {
         out << "<td align=\"center\">";
-        if (environment)
-            environment->print(out);
+        environment->toHTML(out);
         out << "</td>";
     }
     out << "</tr></table>";
@@ -874,8 +862,8 @@ class Item *Item::clone(const std::bitset<MAX_FLAGS> &protectedFlags, bool verbo
     it->refs = this->refs;
     it->seen = this->seen;
     it->inheritedFeatures = this->inheritedFeatures->clone();
-    it->inheritedSonFeatures = this->inheritedSonFeatures->clone();
-    it->synthesizedSonFeatures = this->synthesizedSonFeatures->clone();
+    it->inheritedChildFeatures = this->inheritedChildFeatures->clone();
+    it->synthesizedChildFeatures = this->synthesizedChildFeatures->clone();
     it->synthesizedFeatures = this->synthesizedFeatures->clone();
     return it;
 }
@@ -887,12 +875,12 @@ void Item::step(bool &effect)
 {
 #ifdef TRACE_STEP
     std::cout << "<H3>####################### STEP #######################</H3>" << std::endl;
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << std::endl;
 #endif
     for (uint8_t i = 0; i < this->getRuleRhs().size(); ++i)
     {
-        if ((i == index) || ((*this->inheritedSonFeatures)[i]->isNil() && !this->getTerms(i)->isOptional() &&
+        if ((i == index) || ((*this->inheritedChildFeatures)[i]->isNil() && !this->getTerms(i)->isOptional() &&
                              this->getTerms(i)->size() == 1))
             continue;
         if (!this->forestIdentifiers[i])
@@ -913,7 +901,7 @@ void Item::step(bool &effect)
 
 #ifdef TRACE_STEP
     std::cout << "<H3>####################### STEP DONE #######################</H3>" << std::endl;
-    this->print(std::cout);
+    this->toHTML(std::cout);
     std::cout << std::endl;
 #endif
 }
@@ -932,36 +920,35 @@ void Item::apply(Parser &parser, Generator *generator, bool verbose)
 /* **************************************************
  *
  ************************************************** */
-void Item::makeSerialString()
+void Item::makeCoreSerialString()
 {
     std::ostringstream stream;
     stream << std::hex << (int)getRuleId() << '#' << (int)index << '#';
+
     for (auto ind = indexTerms.cbegin(); ind != indexTerms.cend(); ++ind)
     {
         stream << std::hex << (int)*ind << '/';
     }
+
     stream << '#';
     for (auto ref = refs.cbegin(); ref != refs.cend(); ++ref)
     {
         stream << std::hex << (int)*ref << '/';
     }
+    
     stream << '#';
     for (auto fi = forestIdentifiers.cbegin();
          fi != forestIdentifiers.cend();
          ++fi)
     {
-            stream << '/' << ((*fi) ? (*fi)->peekSerialString() : "0") << '/';
+        stream << '/' << ((*fi) ? (*fi)->peekCoreSerialString() : "0") << '/';
     }
-
-    stream << '#';
-    stream << inheritedFeatures->peekSerialString();
-
-    //stream << '#';
-    //stream << (statements) ? statements->peekSerialString() : std::string("0");
     
-    stream.flush();
-    serialString = stream.str();
+    stream << '#';
+    stream << (inheritedFeatures ? inheritedFeatures->peekCoreSerialString() : "0");
 
+    stream.flush();
+    coreSerialString = stream.str();
 }
 
 /* **************************************************
@@ -970,7 +957,7 @@ void Item::makeSerialString()
 size_t Item::Hash::operator()(class Item *item) const
 {
     // defined in serialisable.hpp
-    return item->hash();
+    return item->coreHash();
 }
 
 /* **************************************************
@@ -978,7 +965,7 @@ size_t Item::Hash::operator()(class Item *item) const
  ************************************************** */
 bool Item::KeyEqual::operator()(class Item *item1, class Item *item2) const
 {
-    return item1->peekSerialString() == item2->peekSerialString();
+    return item1->peekCoreSerialString() == item2->peekCoreSerialString();
 }
 
 /* **************************************************
@@ -986,6 +973,154 @@ bool Item::KeyEqual::operator()(class Item *item1, class Item *item2) const
  ************************************************** */
 void Item::renameVariables(uint32_t code)
 {
-    this->inheritedFeatures->renameVariables(code);
-    this->statements->renameVariables(code);
+    if (inheritedFeatures)
+        inheritedFeatures->renameVariables(code);
+    if (statements)
+        statements->renameVariables(code);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::replaceSynthesizedChildFeaturesValue(featuresPtr features)
+{
+    for (auto it = features->begin(); it != features->end(); ++it)
+    {
+        featurePtr feature = *it;
+        switch (feature->getType())
+        {
+        case Feature::_VARIABLE_:
+            break;
+        case Feature::_HEAD_:
+        case Feature::_LEMMA_:
+        case Feature::_FORM_:
+        case Feature::_CONSTANT_:
+            if (feature->getValue() && (feature->getValue()->isSynthesizedChildFeatures()))
+                replaceSynthesizedChildFeaturesValue(feature->getValue());
+            break;
+        }
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::replaceSynthesizedChildFeaturesValue(valuePtr value)
+{
+    if (!value->isNil() && !value->isAnonymous())
+    {
+        switch (value->getType())
+        {
+        case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+        {
+            featuresPtr features = synthesizedChildFeatures->get(value->getCode());
+
+            if (features)
+            {
+                *value = *Value::createFeatures(features);
+            }
+        }
+        break;
+        default:
+            break;
+        }
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::environmentAdd(statementPtr statementRoot, uint32_t code, valuePtr value, bool verbose)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    environment->add(statementRoot, code, value, verbose);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::environmentRemove(uint32_t code)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    environment->remove(code);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+valuePtr Item::environmentGet(uint32_t code)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    return environment->get(code);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Item::environmentIsEmpty()
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    return environment->empty();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::environmentReplaceVariables(const valuePtr &value, bool &effect)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    environment->replaceVariables(value, effect);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::environmentReplaceVariables(const pairpPtr &pair, bool &effect)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    environment->replaceVariables(pair, effect);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::environmentReplaceVariables(const featuresPtr &features, bool &effect)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    environment->replaceVariables(features, effect);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::environmentReplaceVariables(std::string &str, bool &effect)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    environment->replaceVariables(str, effect);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::cloneEnvironment(const class Item *from)
+{
+    if (!from->environment)
+        FATAL_ERROR_UNEXPECTED;
+    this->environment = from->environment->clone(nullptr, false);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+environmentPtr Item::_getEnvironment() const
+{
+    return environment;
 }

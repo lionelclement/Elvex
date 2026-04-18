@@ -208,52 +208,48 @@ void Feature::setValue(valuePtr _value)
 /* **************************************************
  *
  ************************************************** */
-void Feature::print(std::ostream &outStream) const
+void Feature::toHTML(std::ostream &outStream) const
 {
     switch (type)
     {
     case Feature::_HEAD_:
         outStream << R"(<TD ALIGN="LEFT">HEAD</TD><TD ALIGN="LEFT">)";
         if (value)
-            value->print(outStream);
+            value->toHTML(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_LEMMA_:
         outStream << R"(<TD ALIGN="LEFT">LEMMA</TD><TD ALIGN="LEFT">)";
         if (value)
-            value->print(outStream);
+            value->toHTML(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_FORM_:
         outStream << R"(<TD ALIGN="LEFT">FORM</TD><TD ALIGN="LEFT">)";
         if (value)
-            value->print(outStream);
+            value->toHTML(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_CONSTANT_:
         outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD><TD ALIGN=\"LEFT\">";
         if (value)
-            value->print(outStream);
+            value->toHTML(outStream);
         else
             FATAL_ERROR_UNEXPECTED;
-        // outStream << "nullptr";
         outStream << "</TD>";
         break;
     case Feature::_VARIABLE_:
         outStream << "<TD ALIGN=\"LEFT\">$" << Vartable::codeToName(code) << "</TD>";
         if (value && !value->isNil())
         {
-            outStream << "<TD ALIGN=\"LEFT\">$";
-            value->print(outStream);
+            outStream << "<TD ALIGN=\"LEFT\">";
+            value->toHTML(outStream);
             outStream << "</TD>";
         }
         break;
@@ -297,9 +293,10 @@ void Feature::flatPrint(std::ostream &outStream) const
         break;
     case Feature::_VARIABLE_:
         outStream << '$' << Vartable::codeToName(code);
-        if (value && !value->isNil())
+        if (value)
         {
-            //value->flatPrint(outStream);
+            outStream << ':';
+            value->flatPrint(outStream);
         }
         break;
     }
@@ -308,30 +305,30 @@ void Feature::flatPrint(std::ostream &outStream) const
 /* **************************************************
  *
  ************************************************** */
-void Feature::makeSerialString()
+void Feature::makeCoreSerialString()
 {
     switch (type)
     {
     case Feature::_HEAD_:
-        serialString = 'H';
+        coreSerialString = 'H';
         break;
     case Feature::_LEMMA_:
-        serialString = 'L';
+        coreSerialString = 'L';
         break;
     case Feature::_FORM_:
-        serialString = 'F';
+        coreSerialString = 'F';
         break;
     case Feature::_CONSTANT_:
-        serialString = 'C' + attribute->peekSerialString();
+        coreSerialString = 'C' + attribute->peekCoreSerialString();
         break;
     case Feature::_VARIABLE_:
-        serialString = 'R' + std::to_string(code);
+        coreSerialString = 'R' + std::to_string(code);
         break;
     }
     if (value)
-        serialString += 'V' + value->peekSerialString();
+        coreSerialString += 'V' + value->peekCoreSerialString();
     else
-        serialString += 'N';
+        coreSerialString += 'N';
 }
 
 #ifdef OUTPUT_XML
@@ -381,20 +378,20 @@ featurePtr Feature::clone() const
 /* **************************************************
  *
  ************************************************** */
-bool Feature::renameVariables(uint32_t code)
+bool Feature::renameVariables(uint32_t key)
 {
     bool effect = false;
     if (type == Feature::_VARIABLE_)
     {
-        attribute = Vartable::createSymbol(attribute->toString(), code);
-        resetSerial();
+        code = Vartable::nameToCode(Vartable::codeToName(code), key);
+        resetCoreSerial();
         effect = true;
     }
     if (value)
     {
-        if (value->renameVariables(code))
+        if (value->renameVariables(key))
         {
-            resetSerial();
+            resetCoreSerial();
             effect = true;
         }
     }
@@ -404,7 +401,7 @@ bool Feature::renameVariables(uint32_t code)
 /* **************************************************
  *
  ************************************************** */
-void Feature::enable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
+void Feature::testEnable(const statementPtr &root, class Item *item, Generator *synthesizer, bool &effect, bool on)
 {
     switch (type)
     {
@@ -413,12 +410,12 @@ void Feature::enable(const statementPtr &root, class Item *item, Generator *synt
     case Feature::_FORM_:
     case Feature::_CONSTANT_:
         if (value)
-            value->enable(root, item, synthesizer, effect, on);
+            value->testEnable(root, item, synthesizer, effect, on);
         break;
     case Feature::_VARIABLE_:
         if (on)
         {
-            if ((!item->getEnvironment()) || (!item->getEnvironment()->find(getCode())))
+            if (!item->environmentGet(getCode()))
             {
                 root->addFlags(Flags::DISABLED);
                 effect = true;
@@ -444,12 +441,11 @@ bool Feature::findVariable(uint32_t key) const
     case Feature::_LEMMA_:
     case Feature::_FORM_:
     case Feature::_CONSTANT_:
-        if (value && value->findVariable(key))
+        if (value && value->containsVariable(key))
             return true;
         break;
     case Feature::_VARIABLE_:
-        if ((code == key)
-        && (!value || value->findVariable(key)))
+        if ((code == key) && (!value || value->containsVariable(key)))
             return true;
         break;
     }
@@ -462,8 +458,10 @@ bool Feature::findVariable(uint32_t key) const
 bool Feature::containsVariable()
 {
     bool result = false;
-    if (variableFlag.containsVariable())
+    if (isSetFlags(Flags::CONTAINS_VARIABLE))
         return true;
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
+        return false;
     switch (type)
     {
     case Feature::_HEAD_:
@@ -480,8 +478,36 @@ bool Feature::containsVariable()
         break;
     }
     if (result)
-        variableFlag.setFlag(VariableFlag::CONTAINS);
+        addFlags(Flags::CONTAINS_VARIABLE);
     else
-        variableFlag.setFlag(VariableFlag::DOES_NOT_CONTAIN);
+        addFlags(Flags::DOES_NOT_CONTAIN_VARIABLE);
+    return result;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Feature::containsSynthesizedChildFeatures()
+{
+    bool result = false;
+    if (isSetFlags(Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES))
+        return true;
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES))
+        return false;
+    switch (type)
+    {
+    case Feature::_CONSTANT_:
+        if (value && value->isSynthesizedChildFeatures())
+        {
+            result = true;
+        }
+        break;
+    default:
+        break;
+    }
+    if (result)
+        addFlags(Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES);
+    else
+        addFlags(Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES);
     return result;
 }

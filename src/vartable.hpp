@@ -1,88 +1,70 @@
-/* **************************************************
- *
- * ELVEX
- *
- * Copyright 2014-2023 LABRI,
- * CNRS (UMR 5800), the University of Bordeaux,
- * and the Bordeaux INP
- *
- * Author:
- * Lionel Clément
- * LaBRI - Université Bordeaux 
- * 351, cours de la Libération
- * 33405 Talence Cedex - France
- * lionel.clement@u-bordeaux.fr
- *
- * This file is part of ELVEX.
- *
- ************************************************** */
-
 #ifndef ELVEX_VARTABLE_H
 #define ELVEX_VARTABLE_H
 
-#include <string>
 #include <bitset>
+#include <cstdint>
+#include <string>
 #include <unordered_map>
-#include <map>
+
 #include "bitset.hpp"
 #include "shared_ptr.hpp"
 
+#define CONTAINS_A_FORM "CONTAINS_A_FORM"
+#define DOES_NOT_CONTAIN_A_HEAD "DOES_NOT_CONTAIN_A_HEAD"
+
 class Vartable
 {
+public:
+    using string_to_bitset = std::unordered_map<std::string, bitsetPtr>;
+    using string_to_bitset_iterator = string_to_bitset::iterator;
+    using string_to_bitset_const_iterator = string_to_bitset::const_iterator;
+
+    using uint32_t_to_string = std::unordered_map<uint32_t, std::string>;
+    using uint32_t_to_string_iterator = uint32_t_to_string::iterator;
+    using uint32_t_to_string_const_iterator = uint32_t_to_string::const_iterator;
+
+    using string_to_uint32_t = std::unordered_map<std::string, uint32_t>;
+    using string_to_uint32_t_iterator = string_to_uint32_t::iterator;
+    using string_to_uint32_t_const_iterator = string_to_uint32_t::const_iterator;
 
 public:
-    static uint32_t IS_A_FORM;
-    static uint32_t DOES_NOT_CONTAIN_A_HEAD;
-
-
-    // symbol => bitset
-    // i.e. subject => 36 (MAXBITS values)
-    typedef std::unordered_map<std::string, bitsetPtr> string_to_bitset;
-    typedef string_to_bitset::iterator string_to_bitset_iterator;
-    typedef string_to_bitset::const_iterator string_to_bitset_const_iterator;
-
-    // int => variable
-    typedef std::unordered_map<uint32_t, std::string> uint32_t_to_string;
-    typedef uint32_t_to_string::iterator uint32_t_to_string_iterator;
-    typedef uint32_t_to_string::const_iterator uint32_t_to_string_const_iterator;
-
-    // string => int
-    // i.e. "TO_SAY" => 89 (MAX_UINT values)
-    typedef std::unordered_map<std::string, uint32_t> string_to_uint32_t;
-    typedef string_to_uint32_t::iterator string_to_uint32_t_iterator;
-    typedef string_to_uint32_t::const_iterator string_to_uint32_t_const_iterator;
-
-private:
-    static std::bitset<MAXBITS> variableMapIndex;
-    static uint32_t codeMapIndex;
-    static string_to_bitset nameToBitsetMap;
-    static uint32_t_to_string codeToNameMap;
-    static string_to_uint32_t nameToCodeMap;
-    static uint32_t_to_string bitToNameMap;
+    static uint32_t code_for_IS_A_FORM;
+    static uint32_t code_for_DOES_NOT_CONTAIN_A_HEAD;
 
 public:
     Vartable();
 
-    static bitsetPtr createSymbol(const std::string &); // variable -> bitset
+    static bitsetPtr createSymbol(const std::string& name);
+    static bitsetPtr createSymbol(const std::string& name, uint32_t key);
 
-    static bitsetPtr createSymbol(const std::string &name, uint32_t code);
+    static uint32_t nameToCode(const std::string& name);
+    static uint32_t nameToCode(const std::string& name, uint32_t key);
 
-    static uint32_t nameToCode(const std::string &); // identifier -> code
+    static const std::string& codeToName(uint32_t code);
+    static const std::string& bitToName(uint32_t bit);
 
-    static uint32_t nameToCode(const std::string &, uint32_t code); // identifier -> code
+    static void insertCodeMap(uint32_t key, const std::string& value);
 
-    static std::string &codeToName(uint32_t); // code -> identifier
+    static uint32_t_to_string_iterator bitMapFind(uint32_t key);
+    static uint32_t_to_string_const_iterator bitMapcEnd();
 
-    static std::string &bitToName(uint32_t); // bit weight -> identifier 
+    static void renameVariables(std::string& data, uint32_t key);
 
-    static void insertCodeMap(const uint32_t, const std::string &);
+private:
+    static std::string makeScopedName(const std::string& name, uint32_t key);
+    static std::string makeHexSuffix(uint32_t key);
 
-    static uint32_t_to_string_iterator bitMapFind(uint32_t);
+    static bool isVariableStart(unsigned char c);
+    static bool isVariableChar(unsigned char c);
 
-    static uint32_t_to_string_const_iterator bitMapcEnd(void);
+private:
+    static std::bitset<MAXBITS> variableMapIndex;
+    static uint32_t codeMapIndex;
 
-    static void renameVariables(std::string &data, uint32_t code);
-
+    static string_to_bitset nameToBitsetMap;
+    static uint32_t_to_string codeToNameMap;
+    static string_to_uint32_t nameToCodeMap;
+    static uint32_t_to_string bitToNameMap;
 };
 
 #endif // ELVEX_VARTABLE_H

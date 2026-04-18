@@ -22,7 +22,6 @@
 
 #include "facade.hpp"
 #include "serializable.hpp"
-#include "variableflag.hpp"
 #include "shared_ptr.hpp"
 
 #ifdef OUTPUT_XML
@@ -52,9 +51,7 @@ private:
         pairpPtr cdr;
     } pairp;
 
-    void makeSerialString(void);
-
-    VariableFlag variableFlag;
+    void makeCoreSerialString(void);
 
     static pairpPtr create(void);
 
@@ -87,7 +84,7 @@ public:
 
     bool isPairp(void) const;
 
-    void print(std::ostream &) const;
+    void toHTML(std::ostream &) const;
 
     void flatPrint(std::ostream &, bool) const;
 
@@ -108,7 +105,7 @@ public:
 
     pairpPtr clone(void) const;
 
-    void enable(const statementPtr &, class Item *, class Generator *generator, bool &, bool);
+    void testEnable(const statementPtr &, class Item *, class Generator *generator, bool &, bool);
 
     bool subsumes(statementPtr from, const pairpPtr &, const environmentPtr &, bool verbose);
 
@@ -118,9 +115,10 @@ public:
 
     bool containsVariable(void);
 
+    bool containsSynthesizedChildFeatures(void);
+
     bool findVariable(uint32_t key) const;
 
-    void setVariableFlag(enum VariableFlag::flagValues);
 };
 
 #endif // ELVEX_PAIRP_H

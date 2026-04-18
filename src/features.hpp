@@ -29,7 +29,6 @@
 #include "facade.hpp"
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
-#include "variableflag.hpp"
 
 class Features : public Facade,
                  public Serializable,
@@ -50,13 +49,11 @@ private:
 
     std::string form;
 
-    VariableFlag variableFlag;
-
     static featuresPtr createBottom();
 
     static featuresPtr createNil();
 
-    void makeSerialString();
+    void makeCoreSerialString();
 
 public:
     Features(const featurePtr &);
@@ -85,7 +82,7 @@ public:
 
     featurePtr front() const;
 
-    void print(std::ostream &) const;
+    void toHTML(std::ostream &) const;
 
     void flatPrint(std::ostream &, bool par = true) const;
 
@@ -116,7 +113,7 @@ public:
 
     bool isBottom() const;
 
-    void enable(statementPtr statementRoot, class Item *, class Generator *synthesizer, bool &, bool);
+    void testEnable(statementPtr statementRoot, class Item *, class Generator *synthesizer, bool &, bool);
 
     bool subsumes(statementPtr statementRoot, const featuresPtr &, const environmentPtr &, bool verbose);
 
@@ -126,13 +123,14 @@ public:
 
     bool containsVariable();
 
-    bool findVariable(uint32_t key) const;
+    bool containsSynthesizedChildFeatures();
 
-    void setVariableFlag(enum VariableFlag::flagValues flag);
+    bool findVariable(uint32_t key) const;
 
     void apply(statementPtr statementRoot, class Item *item, class Parser &parser, Generator *synthesizer, const statementPtr &variable,
                const statementPtr &body,
                bool &effect, bool verbose);
+
 };
 
 #endif // ELVEX_FEATURES_H

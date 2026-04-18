@@ -2,7 +2,7 @@
  *
  * ELVEX
  *
- * Copyright 2014-2023 LABRI,
+ * Copyright 2014-2026 LABRI,
  * CNRS (UMR 5800), the University of Bordeaux,
  * and the Bordeaux INP
  *
@@ -40,7 +40,7 @@ class Bitset : public std::bitset<MAXBITS>,
 {
 
 private:
-    void makeSerialString() override;
+    void makeCoreSerialString() override;
 
 public:
     explicit Bitset(unsigned int = 0);

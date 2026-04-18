@@ -75,7 +75,7 @@ public:
 
     void resetUsages(void);
 
-    void print(std::ostream &);
+    void toHTML(std::ostream &);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
