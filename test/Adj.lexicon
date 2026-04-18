@@ -1,0 +1,17 @@
+big	adj [HEAD:big, @size];
+large adj [HEAD:large, @size];
+
+yellow	adj [HEAD:yellow, @color];
+red	adj [HEAD:red, @color];
+pink	 adj [HEAD:pink, @color];
+black	 adj [HEAD:black, @color];
+
+square	adj [HEAD:square, @shape];
+"square-section"	adj [HEAD:square_section, @shape];
+
+iron adj [HEAD:iron, @material];
+
+ring		noun [HEAD:ring, number:sg];
+cat		noun [HEAD:cat, number:sg];
+
+

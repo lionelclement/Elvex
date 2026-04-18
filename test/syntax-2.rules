@@ -1,0 +1,342 @@
+/* **************************************************
+ * Start
+ ************************************************** */
+
+@trace
+S → S
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:$i, ii:NIL, iii:NIL, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V, subj:$i, $rest];
+  ⇑ = [];
+}
+
+@trace
+S → S
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:$i, ii:$ii, iii:NIL, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V_OBJ, subj:$i, obj:$ii, $rest];
+  ⇑ = [];
+}
+
+@trace
+S → S
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:$i, ii:$ii, iii:NIL, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V_àOBJ, subj:$i, obl:[pcas:à, $ii], $rest];
+  ⇑ = [];
+}
+
+@trace
+S → S
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:$i, ii:$ii, iii:$iii, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V_deOBJ_àOBJ, subj:$i, obl:[pcas:de, $ii], obl2:[pcas:à, $iii], $rest];
+  ⇑ = [];
+}
+
+@trace
+S → S
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:$i, ii:$ii, iii:$iii, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V_OBJ_àOBJ, subj:$i, obj:$ii, obl2:[pcas:à, $iii], $rest];
+  ⇑ = [];
+}
+
+@trace
+S → VP
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:NIL, ii:NIL, iii:NIL, $rest];
+  ↓1 = [HEAD:VERB_SUBJ, subj:[HEAD:PRO], $rest];
+  ⇑ = [];
+}
+
+@trace
+S → VP
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:NIL, ii:$ii, iii:NIL, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V_OBJ, subj:[HEAD:PRO], obj:$ii, $rest];
+  ⇑ = [];
+}
+
+@trace
+S → VP
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:NIL, ii:$ii, iii:$iii, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V_deOBJ_àOBJ, subj:[HEAD:PRO], obl:[pcas:de, $ii], obl2:[pcas:à, $ii], $rest];
+  ⇑ = [];
+}
+
+@trace
+S → VP
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:predicate, i:NIL, ii:$ii, iii:$iii, $rest];
+  ↓1 = [HEAD:VERB_SUBJ_V_OBJ_àOBJ, subj:[HEAD:PRO], obj:$ii, obl2:[pcas:à, $ii], $rest];
+  ⇑ = [];
+}
+
+@trace
+S → NP|CLN VP
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [subj:$subj, $rest];
+  ↓1 = $subj;
+  [number:$numberSynth, gender:$genderSynth, person:$personSynth, human:$humanSynth, anim:$animSynth] ⊂ ⇓1;
+  ↓2 = [subj:[number:$numberSynth, gender:$genderSynth, person:$personSynth, human:$humanSynth, anim:$animSynth], vform:tensed, $rest];         
+  ⇑ = [];
+}
+
+@trace
+CLN → cln
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+NP → pn
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1 ∪ [person:three];
+}
+
+@trace
+NP → pro
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+NP → det N
+{
+  //println __FILE__, "(", __LINE__, ")";
+  ↓2 = ↑;
+  [number:$numberSynth, gender:$genderSynth, anim:$animSynth, human:$humanSynth] ⊂ ⇓2;
+  ↓1 = ↑ ∪ [number:$numberSynth, gender:$genderSynth];
+  if (!$animSynth) {
+    $animSynth = false;
+  }
+  if (!$humanSynth)
+    $humanSynth = false;
+  else if ($humanSynth == true) {
+    $animSynth = true;
+    $actionSynth = false;
+    $factSynth = false;
+  }
+  ⇑ = ⇓2 ∪ [anim:$animSynth, human:$humanSynth, action:$actionSynth, fact:$factSynth];
+}
+
+// Place les relatives après les adjectifs
+@trace
+N2 → N {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<[HEAD:ADJ]::<[HEAD:predicate]::$x>>];
+  [mod:<$car::<$cadr::$cddr>>, $rest] ⊂ ↑;
+  ↓1 = [mod:<$cadr::<$car::$cddr>>, $rest];
+  ⇑ = ⇓1;
+}
+
+@trace
+N2 → N {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<[HEAD:ADJ]::$x>];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+N2 → N {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<[HEAD:predicate]::$x>];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+N2 → N {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+N → noun
+{
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1 ∪ [person:three];
+}
+
+@trace
+N → AP N {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<$Head::$Tail>, $Rest];
+  [number:$number, gender:$gender] ⊂ ↑;
+  ↓1 = [number:$number, gender:$gender, $Head];
+  [number:$numberSynth, gender:$genderSynth, anim:$animSynth, human:$humanSynth, pos:$Pos] ⊂ ⇓1;
+  attest ($Pos) ∧ ($Pos == pre);
+  ↓2 = [mod:$Tail, number:$numberSynth, gender:$genderSynth, anim:$animSynth, human:$humanSynth, $Rest];
+  ⇑ = ⇓2 ∪ [qual:true];
+}
+
+@trace
+N → N AP {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<$Head::$Tail>, $Rest];
+  [number:$number, gender:$gender] ⊂ ↑;
+  ↓2 = [number:$number, gender:$gender, $Head];
+  [number:$numberSynth, gender:$genderSynth, anim:$animSynth, human:$humanSynth, pos:$Pos] ⊂ ⇓2;
+  attest ¬$Pos ∨ ($Pos == post);
+  ↓1 = [mod:$Tail,number:$numberSynth, gender:$genderSynth, anim:$animSynth, human:$humanSynth, $Rest];
+  ⇑ = ⇓1;
+}
+
+@trace
+N → N PP {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<$Head::$Tail>, $Rest];
+  ↓2 = $Head ∪ [pcas:de];
+  ↓1 = [mod:$Tail, $Rest];
+  ⇑ = ⇓1;
+}
+
+@trace
+N → N REL {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<$Head :: $Tail>, $Rest];
+  [HEAD:$pred] ⊂ $Head;
+  attest ($pred == NIL);
+  ↓1 = [mod:$Tail, $Rest];
+  [number:$numberSynth, gender:$genderSynth, person:$personSynth] ⊂ ⇓1;
+  ↓2 = $Head ∪ [number:$numberSynth, gender:$genderSynth, person:$personSynth];
+  ⇑ = ⇓1;
+}
+
+@trace
+REL → prel S {
+  //println __FILE__, "(", __LINE__, ")";
+  [i:$i];
+  ↓1 = ↑ ∪ [fct:obj];
+  ↓2 = ↑ ∪ [ii:[HEAD:PRO]];
+  ⇑ = ⇓2;
+}
+
+@trace
+REL → prel S {
+  //println __FILE__, "(", __LINE__, ")";
+  [number:$number, gender:$gender, person:$person, $rest];
+  ↓1 = ↑ ∪ [fct:subj];
+  ↓2 = [i:[HEAD:PRO, number:$number, gender:$gender, person:$person], $rest];
+  ⇑ = ⇓2;
+}
+
+@trace
+AP → adv AP {
+  //println __FILE__, "(", __LINE__, ")";
+  [mod:<$Head::$Tail>, $Rest];
+  ↓1 = $Head;
+  ↓2 = [mod:$Tail, $Rest];
+  ⇑ = ⇓2;
+}
+
+@trace
+AP → adj {
+  //println __FILE__, "(", __LINE__, ")";
+  //[mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+// Verbe simple
+@trace
+VP → V {
+  //println __FILE__, "(", __LINE__, ")";
+  [obj:NIL, obl:NIL, obl2:NIL, scomp:NIL, vcomp:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+// Objet
+@trace
+VP → VP NP {
+  //println __FILE__, "(", __LINE__, ")";
+  [obj:$obj, $rest];
+  ↓1 = $rest;
+  [obj:$objSynth] ⊂ ⇓1;
+  ↓2 = $obj ∪ $objSynth;
+  ⇑ = ⇓1;
+}
+
+// Oblique
+@trace
+VP → VP PP {
+  //println __FILE__, "(", __LINE__, ")";
+  [obl:$obl, $rest];
+  ↓1 = $rest;
+  [obl:$oblSynth] ⊂ ⇓1;
+  ↓2 = $obl ∪ $oblSynth;
+  ⇑ = ⇓1;
+}
+
+// Oblique 2
+@trace
+VP → VP PP {
+  //println __FILE__, "(", __LINE__, ")";
+  [obl2:$obl2, $rest];
+  ↓1 = $rest;
+  [obl2:$obl2Synth] ⊂ ⇓1;
+  ↓2 = $obl2 ∪ $obl2Synth;
+  ⇑ = ⇓1;
+}
+
+// Verbe sans auxiliaire
+@trace
+V → (clneg) (advneg) verb (advneg) {
+  //println __FILE__, "(", __LINE__, ")";
+  attest (#2 ∨ #4) ⇔ #1;
+  attest ¬(#2 ∧ #4);
+  [neg:$neg, $rest] ⊂ ↑;
+  ↓3 = ↑;
+  if (#2) {
+    ↓1 = [];
+    ↓2 = [];
+    attest ($neg == true);
+    [vform:infinitive] ⊂ ↑;
+  }
+  else if (#4) {
+    ↓1 = [];
+    ↓4 = [];
+    attest ($neg == true);
+    [vform:tensed] ⊂ ↑;
+  } 
+  else {
+    attest ($neg != true);
+  }
+  ⇑ = ⇓3;
+}
+
+@trace
+PP → prep NP {
+  //println __FILE__, "(", __LINE__, ")";
+  [HEAD:$HEAD, $REST];
+  ↓1 = $REST;
+  ↓2 = ↑;
+  ⇑ = ⇓2;
+}

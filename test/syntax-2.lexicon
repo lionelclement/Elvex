@@ -1,0 +1,51 @@
+le det[gender:ms, number:sg, def:true];
+//la det[gender:fm, number:sg, def:true];
+//les det[number:pl, def:true];
+//un det[gender:ms, number:sg, def:false];
+//une det[gender:fm, number:sg, def:false];
+//des det[number:pl, def:false];
+//ce det[gender:ms, number:sg, def:true, dem:true];
+//cette det[gender:fm, number:sg, def:true, dem:true];
+//ces det[number:pl, def:true, dem:true];
+
+//je cln[HEAD:SUBST, number:sg, person:one, anim:true, hum:true];
+//tu cln[HEAD:SUBST, number:sg, person:two, anim:true, hum:true];
+//il cln[HEAD:SUBST, gender:ms, number:sg, person:three, anim:true, hum:true];
+//elle cln[HEAD:SUBST, gender:fm, number:sg, person:three, anim:true, hum:true];
+//"on" cln[HEAD:SUBST, number:sg, person:three, anim:true, hum:true];
+//nous cln[HEAD:SUBST, number:pl, person:one, anim:true, hum:true];
+//vous cln[HEAD:SUBST, number:pl, person:two, anim:true, hum:true];
+//ils cln[HEAD:SUBST, gender:ms, number:pl, person:three, anim:true, hum:true];
+//elles cln[HEAD:SUBST, gender:fm, number:pl, person:three, anim:true, hum:true];
+
+à prep[pcas:à];
+de prep[pcas:de];
+dans prep[pcas:dans];
+par prep[pcas:par];
+pour prep[pcas:pour];
+envers prep[pcas:envers];
+avec prep[pcas:avec];
+sur prep[pcas:sur];
+devant prep[pcas:devant];
+pendant prep[pcas:pendant];
+
+très	advneg [HEAD:très];
+particulierement	adv [HEAD:particulièrement];
+
+ne clneg [];
+pas advneg [neg:true];
+
+que prel [fct:obj];
+qui prel [fct:subj];
+
+"." dot[];
+
+"" pro [HEAD:PRO];
+
+/*
+lui pro[HEAD:SUBST, gender:ms, number:sg, hum:true];
+elle pro[HEAD:SUBST, gender:fm, number:sg, hum:true];
+eux pro[HEAD:SUBST, gender:ms, number:pl, hum:true];
+elles pro[HEAD:SUBST, gender:fm, number:pl, hum:true];
+*/
+

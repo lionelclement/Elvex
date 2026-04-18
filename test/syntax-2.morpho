@@ -1,0 +1,68 @@
+marche	verb	MARCHER	[@P1s]
+marches	verb	MARCHER	[@P2s]
+marche	verb	MARCHER	[@P3s]
+marchons	verb	MARCHER	[@P1p]
+marchez	verb	MARCHER	[@P2p]
+marchent	verb	MARCHER	[@P3p]
+
+saute	verb	SAUTER	[@P1s]
+sautes	verb	SAUTER	[@P2s]
+saute	verb	SAUTER	[@P3s]
+sautons	verb	SAUTER	[@P1p]
+sautez	verb	SAUTER	[@P2p]
+sautent	verb	SAUTER	[@P3p]
+
+tombe	verb	TOMBER	[@P1s]
+tombes	verb	TOMBER	[@P2s]
+tombe	verb	TOMBER	[@P3s]
+tombons	verb	TOMBER	[@P1p]
+tombez	verb	TOMBER	[@P2p]
+tombent	verb	TOMBER	[@P3p]
+
+mens	verb	MENTIR	[@P1s]
+mens	verb	MENTIR	[@P2s]
+ment	verb	MENTIR	[@P3s]
+mentons	verb	MENTIR	[@P1p]
+mentez	verb	MENTIR	[@P2p]
+mentent	verb	MENTIR	[@P3p]
+
+applaudis	verb	APPLAUDIR	[@P1s]
+applaudis	verb	APPLAUDIR	[@P2s]
+applaudit	verb	APPLAUDIR	[@P3s]
+applaudissons	verb	APPLAUDIR	[@P1p]
+applaudissez	verb	APPLAUDIR	[@P2p]
+applaudissent	verb	APPLAUDIR	[@P3p]
+
+regrette	verb	REGRETTER	[@P1s]
+regrettes	verb	REGRETTER	[@P2s]
+regrette	verb	REGRETTER	[@P3s]
+regrettons	verb	REGRETTER	[@P1p]
+regrettez	verb	REGRETTER	[@P2p]
+regrettent	verb	REGRETTER	[@P3p]
+
+étudiant	noun	ÉTUDIANT	[@ms]
+étudiante	noun	ÉTUDIANT	[@fs]
+étudiants	noun	ÉTUDIANT	[@mp]
+étudiantes	noun	ÉTUDIANT	[@fp]
+
+opposant	noun	OPPOSANT	[@ms]
+opposante	noun	OPPOSANT	[@fs]
+opposants	noun	OPPOSANT	[@mp]
+opposantes	noun	OPPOSANT	[@fp]
+
+président	noun	PRESIDENT	[@ms]
+présidente	noun	PRESIDENT	[@fs]
+présidents	noun	PRESIDENT	[@mp]
+présidentes	noun	PRESIDENT	[@fp]
+
+construction	noun	CONSTRUCTION	[@fs]
+constructions	noun	CONSTRUCTION	[@fp]
+
+cheval	noun	CHEVAL	[@ms]
+chevaux	noun	CHEVAL	[@mp]
+
+table	noun	TABLE	[@fs]
+tables	noun	TABLE	[@fp]
+
+Luc	pn	LUC	[]
+Marie	pn	MARIE	[]

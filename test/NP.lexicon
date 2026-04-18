@@ -1,0 +1,4 @@
+"une" det[number:singular];
+"des" det[number:plural];
+"pomme" noun[HEAD:pomme, number:singular];
+"pommes" noun[HEAD:pomme, number:plural];

@@ -1,0 +1,2 @@
+a a[HEAD:X, a:x];
+"b-$xxx" b[HEAD:Y, i:[a:$xxx]];
