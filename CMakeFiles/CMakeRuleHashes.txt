@@ -1,5 +1,0 @@
-# Hashes of file build rules.
-f7d5f0b8a1b7fd65d059b68839d85094 src/postedition_en.cc
-ea8980f991bb22a0ab73675d1fc715ff src/postedition_fr.cc
-491358ea5785563650fea488965c9865 src/ruleslex.cc
-f7b1cf3a40581f9c799083f0b8707a49 src/rulesyacc.cc
