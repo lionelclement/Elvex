@@ -361,7 +361,8 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                                 ,
                                 bool root
 #endif
-                                , bool verbose)
+                                ,
+                                bool verbose)
 {
     bool ret = true;
     //	if (environment){
@@ -421,7 +422,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
 
                     // Else build environment with the two values
                     else if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, other_feature->getValue(),
-                                                               acceptToFilterNULLVariables, false, verbose))
+                                                                         acceptToFilterNULLVariables, false, verbose))
                     {
                         ret = false;
                     }
@@ -460,7 +461,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         else
                         {
                             if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, Value::STATIC_ANONYMOUS,
-                                                                  acceptToFilterNULLVariables, false, verbose))
+                                                                            acceptToFilterNULLVariables, false, verbose))
                             {
                                 ret = false;
                             }
@@ -537,7 +538,7 @@ bool Features::subsumes(statementPtr statementRoot, const featuresPtr &other_fea
     std::flush(std::cout);
 
 #endif
-    
+
     bool ret = true;
     // NIL < NIL
     if (isNil() && other_features->isNil())
@@ -566,9 +567,7 @@ bool Features::subsumes(statementPtr statementRoot, const featuresPtr &other_fea
                 // [LEMMA:X] << [LEMMA:Y]
                 // [att:X] << [att:Y]
                 // X << Y
-                if (((feature->isLemma()) && (other_feature->isLemma())) 
-                    || ((feature->isHead()) && (other_feature->isHead())) 
-                    || ((feature->isConstant()) && (other_feature->isConstant()) && ((*feature->getAttribute() & *other_feature->getAttribute()).any())))
+                if (((feature->isLemma()) && (other_feature->isLemma())) || ((feature->isHead()) && (other_feature->isHead())) || ((feature->isConstant()) && (other_feature->isConstant()) && ((*feature->getAttribute() & *other_feature->getAttribute()).any())))
                 {
                     valuePtr v1 = feature->getValue();
                     valuePtr v2 = other_feature->getValue();
@@ -609,7 +608,7 @@ bool Features::renameVariables(uint32_t key)
     for (auto &feature : features)
     {
         if (feature->renameVariables(key))
-                effect = true;
+            effect = true;
     }
     if (effect)
         resetCoreSerial();
@@ -710,9 +709,13 @@ bool Features::containsVariable()
 {
     bool result = false;
     if (isSetFlags(Flags::CONTAINS_VARIABLE))
+    {
         return true;
-        if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
+    }
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
+    {
         return false;
+    }
     for (auto &iterator : features)
     {
         if (iterator->containsVariable())
@@ -734,9 +737,13 @@ bool Features::containsSynthesizedChildFeatures()
 {
     bool result = false;
     if (isSetFlags(Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES))
+    {
         return true;
+    }
     if (isSetFlags(Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES))
+    {
         return false;
+    }
     for (auto &iterator : features)
     {
         if (iterator->containsSynthesizedChildFeatures())
@@ -754,7 +761,7 @@ bool Features::containsSynthesizedChildFeatures()
 /* **************************************************
  *
  ************************************************** */
-void Features::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, 
+void Features::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer,
                      const statementPtr &variable,
                      const statementPtr &statement,
                      bool &effect, bool verbose)
@@ -765,4 +772,3 @@ void Features::apply(statementPtr statementRoot, class Item *item, Parser &parse
     statement->apply(statementRoot, item, parser, synthesizer, effect, true, verbose);
     item->environmentRemove(variable->getCode());
 }
-
