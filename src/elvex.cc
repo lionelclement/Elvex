@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
+#include <algorithm>
 
 #include "compacted-lexicon.hpp"
 #include "parser.hpp"
