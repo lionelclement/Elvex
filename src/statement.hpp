@@ -71,7 +71,6 @@
     }
 
 class Statement : public Facade,
-                  //public Serializable,
                   public std::enable_shared_from_this<class Statement>
 {
 

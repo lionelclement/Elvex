@@ -2773,13 +2773,10 @@ void Statement::stmPrintln(class Item *item, Parser &parser, Generator *generato
  ************************************************************ */
 void Statement::renameVariable(uint32_t key)
 {
-    //bool effect = false;
-
     switch (op)
     {
     case VARIABLE_STATEMENT:
         code = Vartable::nameToCode(Vartable::codeToName(code), key);
-        //effect = true;
         break;
 
     case CONSTANT_STATEMENT:
@@ -2796,7 +2793,6 @@ void Statement::renameVariable(uint32_t key)
 
     case STRING_STATEMENT:
         Vartable::renameVariables(string, key);
-        //effect = true;
         break;
 
     case ASSIGNMENT_STATEMENT:
@@ -2813,12 +2809,10 @@ void Statement::renameVariable(uint32_t key)
         if (first)
         {
             first->renameVariable(key);
-            //effect = true;
         }
         if (second)
         {
             second->renameVariable(key);
-            //effect = true;
         }
         break;
 
@@ -2826,18 +2820,14 @@ void Statement::renameVariable(uint32_t key)
     case GUARD_STATEMENT:
         if (features)
         {
-            if (features->renameVariables(key))
-                ;
-                //effect = true;
+            features->renameVariables(key);
         }
         break;
 
     case PAIRP_STATEMENT:
         if (pairp)
         {
-            if (pairp->renameVariables(key))
-                ;
-                //effect = true;
+            pairp->renameVariables(key);
         }
         break;
 
@@ -2849,13 +2839,10 @@ void Statement::renameVariable(uint32_t key)
         if (statements)
         {
             statements->renameVariables(key);
-            //effect = true;
         }
         break;
     }
 
-    //if (effect)
-    //    resetSerial();
 }
 
 /* ************************************************************
