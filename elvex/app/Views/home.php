@@ -74,8 +74,7 @@ $baseIndexUrl = e(url_path(''));
                 <div class="row">
                     <label>Project Name</label>
                     <input type="text" name="name"
-                        value="<?= e($selectedProject['name'] ?? '') ?>"
-                        <?= !is_logged_in() ? 'readonly' : '' ?>>
+                       value="<?= e($selectedProject['name'] ?? '') ?>">
                 </div>
 
                 <div class="actions">
@@ -149,14 +148,13 @@ $baseIndexUrl = e(url_path(''));
                     <?php
                 }
 
-                $ro = !is_logged_in();
-                editor('macros', $selectedProject['macros'] ?? '', $ro);
-                editor('rules', $selectedProject['rules'] ?? '', $ro);
-                editor('lexicon', $selectedProject['lexicon'] ?? '', $ro);
-                editor('pattern', $selectedProject['pattern'] ?? '', $ro);
-                editor('morpho', $selectedProject['morpho'] ?? '', $ro);
-                editor('post', $selectedProject['post_morpho'] ?? '', $ro);
-                editor('input', $selectedProject['input_text'] ?? '', $ro);
+                editor('macros', $selectedProject['macros'] ?? '', false);
+                editor('rules', $selectedProject['rules'] ?? '', false);
+                editor('lexicon', $selectedProject['lexicon'] ?? '', false);
+                editor('pattern', $selectedProject['pattern'] ?? '', false);
+                editor('morpho', $selectedProject['morpho'] ?? '', false);
+                editor('post', $selectedProject['post_morpho'] ?? '', false);
+                editor('input', $selectedProject['input_text'] ?? '', false);
                 ?>
 
                 <div class="tab-panel" data-tab="output">
