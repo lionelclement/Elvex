@@ -87,7 +87,7 @@ dog    noun    DOG    [HEAD:DOG, @ms, selectional_restriction:[@anim]]
 
 ---
 
-### 4. Pattern
+### 4. Lexicon Patterns
 
 Used to generate a lexicon automatically.
 
@@ -103,7 +103,7 @@ DOG	noun	CHIOT	[selectional_restriction:[@anim, domestic:yes, sound:japper]]
 
 ---
 
-### 5. Morpho
+### 5. Morphology
 
 Used to generate a lexicon automatically.
 
@@ -127,7 +127,7 @@ chiots	noun	CHIOT	[@mp]
 
 ---
 
-### 6. PostMorpho
+### 6. Orthographic Rules
 
 Applied after morphology.
 
@@ -187,6 +187,8 @@ This input is interpreted by the grammar to produce a phrase or a sentence.
 
 * Detailed execution trace (if enabled)
 * Useful for debugging grammar or lexicon issues
+  
+Use @trace on each rule you want to see detailed on the log 
 
 ---
 
