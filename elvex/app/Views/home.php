@@ -108,7 +108,7 @@ $baseIndexUrl = e(url_path(''));
                 <?php
                 function editor($name, $value, $readonly = false) {
                     $commonToolbar = [
-                        ['label' => 'Tab', 'insert' => "\t"],
+                        ['label' => '⇥', 'insert' => "\t"],
                     ];
 
                     $toolbars = [
