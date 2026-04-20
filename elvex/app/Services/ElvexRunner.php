@@ -447,7 +447,7 @@ class ElvexRunner
                 $output = self::applyPostTransformations($output, $post);
             } else {
                 $traceCmd = implode(' ', $cmdParts)
-                    . ' --traceStage'
+                    . ' --traceAll'
                     . ' > ' . escapeshellarg($traceFile)
                     . ' 2> /dev/null';
 
