@@ -97,9 +97,9 @@ $baseIndexUrl = e(url_path(''));
                     <button type="button" class="tab-btn active" data-tab="macros">Macros</button>
                     <button type="button" class="tab-btn" data-tab="rules">Rules</button>
                     <button type="button" class="tab-btn" data-tab="lexicon">Lexicon</button>
-                    <button type="button" class="tab-btn" data-tab="pattern">Pattern</button>
-                    <button type="button" class="tab-btn" data-tab="morpho">Morpho</button>
-                    <button type="button" class="tab-btn" data-tab="post">PostMorpho</button>
+                    <button type="button" class="tab-btn" data-tab="pattern">Lexicon Patterns</button>
+                    <button type="button" class="tab-btn" data-tab="morpho">Morphology</button>
+                    <button type="button" class="tab-btn" data-tab="post">Orthographic Rules</button>
                     <button type="button" class="tab-btn" data-tab="input">Input</button>
                     <button type="button" class="tab-btn" data-tab="output">Output</button>
                     <button type="button" class="tab-btn" data-tab="log">Log</button>
