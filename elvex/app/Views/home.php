@@ -2,59 +2,6 @@
 $baseIndexUrl = e(url_path(''));
 ?>
 
-<style>
-.editor-wrap.show-invisibles {
-    position: relative;
-}
-
-.editor-wrap.show-invisibles .editor-ghost,
-.editor-wrap.show-invisibles textarea {
-    font: inherit;
-    line-height: inherit;
-    letter-spacing: inherit;
-    tab-size: 4;
-    -moz-tab-size: 4;
-    white-space: pre;
-    word-wrap: normal;
-    overflow: auto;
-    box-sizing: border-box;
-}
-
-.editor-wrap.show-invisibles .editor-ghost {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    color: #94a3b8;
-    background: transparent;
-    margin: 0;
-    padding: inherit;
-    border: 0;
-}
-
-.editor-wrap.show-invisibles textarea {
-    position: relative;
-    z-index: 2;
-    background: transparent;
-    color: transparent;
-    caret-color: #111827;
-}
-
-.editor-wrap.show-invisibles textarea::selection {
-    background: rgba(59, 130, 246, 0.25);
-}
-
-.editor-wrap.show-invisibles textarea::-moz-selection {
-    background: rgba(59, 130, 246, 0.25);
-}
-
-.editor-wrap.show-invisibles .ch-tab,
-.editor-wrap.show-invisibles .ch-space,
-.editor-wrap.show-invisibles .ch-eol {
-    color: #94a3b8;
-}
-</style>
-
 <div class="page-grid">
     <aside>
         <?php
@@ -161,7 +108,7 @@ $baseIndexUrl = e(url_path(''));
                 <?php
                 function editor($name, $value, $readonly = false) {
                     $commonToolbar = [
-                        ['label' => '⇥', 'insert' => "\t"],
+                        ['label' => 'Tab', 'insert' => "\t"],
                     ];
 
                     $toolbars = [
@@ -184,7 +131,6 @@ $baseIndexUrl = e(url_path(''));
                         'morpho' => $commonToolbar,
                     ];
 
-                    $showInvisibles = in_array($name, ['pattern', 'morpho'], true);
                     $toolbarButtons = $toolbars[$name] ?? [];
                     ?>
                     <div class="tab-panel <?= $name === 'macros' ? 'active' : '' ?>" data-tab="<?= $name ?>">
@@ -199,16 +145,9 @@ $baseIndexUrl = e(url_path(''));
                                     <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
-                            <div class="editor-wrap <?= $showInvisibles ? 'show-invisibles' : '' ?>" data-editor>
+                            <div class="editor-wrap" data-editor>
                                 <div class="line-numbers"></div>
-                                <?php if ($showInvisibles): ?>
-                                    <pre class="editor-ghost" aria-hidden="true"></pre>
-                                <?php endif; ?>
-                                <textarea
-                                    name="<?= $name ?>"
-                                    <?= $readonly ? 'readonly' : '' ?>
-                                    <?= $showInvisibles ? 'data-show-invisibles="1"' : '' ?>
-                                ><?= e($value ?? '') ?></textarea>
+                                <textarea name="<?= $name ?>" <?= $readonly ? 'readonly' : '' ?>><?= e($value ?? '') ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -282,18 +221,11 @@ $baseIndexUrl = e(url_path(''));
     var logFrame = document.getElementById('elvex-log-frame');
 
     function activateTab(tabName) {
-        document.querySelectorAll('.tab-btn').forEach(function (b) {
-            b.classList.remove('active');
-        });
-        document.querySelectorAll('.tab-panel').forEach(function (p) {
-            p.classList.remove('active');
-        });
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
 
-        var btn = document.querySelector('[data-tab="' + tabName + '"].tab-btn');
-        var panel = document.querySelector('[data-tab="' + tabName + '"].tab-panel');
-
-        if (btn) btn.classList.add('active');
-        if (panel) panel.classList.add('active');
+        document.querySelector('[data-tab="' + tabName + '"].tab-btn').classList.add('active');
+        document.querySelector('[data-tab="' + tabName + '"].tab-panel').classList.add('active');
     }
 
     async function loadLog(url) {
@@ -305,66 +237,6 @@ $baseIndexUrl = e(url_path(''));
             logFrame.innerHTML = '<pre>' + e.message + '</pre>';
         }
     }
-
-    function escapeHtml(s) {
-        return s
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-    }
-
-    function renderVisibleChars(text) {
-        var escaped = escapeHtml(text);
-        escaped = escaped.replace(/\t/g, '<span class="ch-tab">⇥</span>');
-        escaped = escaped.replace(/ /g, '<span class="ch-space">·</span>');
-        escaped = escaped.replace(/\n/g, '<span class="ch-eol">¶</span>\n');
-
-        if (escaped.endsWith('\n')) {
-            return escaped + ' ';
-        }
-
-        return escaped;
-    }
-
-    function syncGhost(wrap) {
-        var textarea = wrap.querySelector('textarea[data-show-invisibles="1"]');
-        var ghost = wrap.querySelector('.editor-ghost');
-
-        if (!textarea || !ghost) return;
-
-        ghost.innerHTML = renderVisibleChars(textarea.value);
-        ghost.scrollTop = textarea.scrollTop;
-        ghost.scrollLeft = textarea.scrollLeft;
-
-        var style = window.getComputedStyle(textarea);
-        ghost.style.paddingTop = style.paddingTop;
-        ghost.style.paddingRight = style.paddingRight;
-        ghost.style.paddingBottom = style.paddingBottom;
-        ghost.style.paddingLeft = style.paddingLeft;
-        ghost.style.font = style.font;
-        ghost.style.lineHeight = style.lineHeight;
-        ghost.style.letterSpacing = style.letterSpacing;
-        ghost.style.borderRadius = style.borderRadius;
-    }
-
-    document.querySelectorAll('.editor-wrap.show-invisibles').forEach(function (wrap) {
-        var textarea = wrap.querySelector('textarea[data-show-invisibles="1"]');
-        if (!textarea) return;
-
-        syncGhost(wrap);
-
-        textarea.addEventListener('input', function () {
-            syncGhost(wrap);
-        });
-
-        textarea.addEventListener('scroll', function () {
-            syncGhost(wrap);
-        });
-
-        window.addEventListener('resize', function () {
-            syncGhost(wrap);
-        });
-    });
 
     runBtn.addEventListener('click', async function () {
         runBtn.disabled = true;
