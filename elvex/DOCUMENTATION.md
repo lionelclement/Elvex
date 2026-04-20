@@ -75,14 +75,15 @@ Defines all words used by the system.
 
 Each entry includes:
 
-* lemma
+* morphological form
 * part of speech
 * morphological features
+* comma
 
 Example:
 
 ```
-dog    noun    DOG    [HEAD:DOG, @ms, selectional_restriction:[@anim]]
+"dog"    noun [HEAD:DOG, @ms, selectional_restriction:[@anim]];
 ```
 
 ---
@@ -93,6 +94,13 @@ Used to generate a lexicon automatically.
 
 * High-level description of lexical entries
 * Compiled using `elvexlexicon`
+
+Each entry contains the following elements, separated by tabs
+
+* lexeme
+* part of speech
+* lemma
+* features
 
 Example:
 
@@ -114,6 +122,13 @@ Defines morphological transformations.
 
 * Morphological variants of words
 
+Each entry contains the following elements, separated by tabs
+
+* morphological form
+* part of speech
+* lemma
+* features
+
 Example:
 
 ```
@@ -134,6 +149,8 @@ Applied after morphology.
 * Final adjustments
 * Cleanup rules
 * Orthographic corrections
+
+Each line contains a regular expression, followed by "=>", and a replacement string
 
 Example:
 
@@ -164,15 +181,16 @@ Example:
 
 Defines the meaning to express.
 
-This is a **feature structure (FS)**.
+Each line consists of a symbol and an associated feature structure.
 
 Example:
 
 ```
 S [HEAD:TO_BARK, i:[HEAD:DOG]]
+S [HEAD:TO_MEOW, i:[HEAD:CAT]]
 ```
 
-This input is interpreted by the grammar to produce a phrase or a sentence.
+This symbol is interpreted by the grammar to produce a complete text (i.e., an article, a paragraph, a sentence, or a phrase).
 
 ---
 
