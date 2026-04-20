@@ -835,7 +835,7 @@ void Item::toHTML(std::ostream &out) /*const*/
        out << R"(
         <td><table>
         <tr><td bgcolor="white">
-        <div class="hidden" id="cell_)"
+        <div class="text" id="cell_)"
             << std::hex << r << getId() << "\">";
         if (statements)
             statements->print(out, 5, 0, 0x000000u, 0xFFFFFFu, true, "{", "}", "");
