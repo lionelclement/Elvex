@@ -261,10 +261,10 @@ EOT,
 @_3fs=	[@_3, @f, @s];
 @_3mp=	[@_3, @m, @p];
 @_3fp=	[@_3, @f, @p];
-@indicatif_present=	[tense:indicatif, mood:present];
-@indicatif_imparfait=	[tense:indicatif, mood:imparfait];
-@indicatif_passe_simple=	[tense:indicatif, mood:passe_simple];
-@indicatif_futur_simple=	[tense:indicatif, mood:futur_simple];
+@indicatif_present=	[MOOD:indicatif, TENSE:present];
+@indicatif_imparfait=	[MOOD:indicatif, TENSE:imparfait];
+@indicatif_passe_simple=	[MOOD:indicatif, TENSE:passe_simple];
+@indicatif_futur_simple=	[MOOD:indicatif, TENSE:futur_simple];
 @def=    [definite:yes];
 @no_def=    [definite:no];
 EOT,
