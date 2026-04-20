@@ -823,10 +823,17 @@ void Item::toHTML(std::ostream &out) /*const*/
     if (s_statements)
     {
         auto r = rand();
+        /*
         out << R"(
         <td><table>
         <tr><td><button onclick="toggleVisibility('cell_)"
             << std::hex << r << getId() << R"(') ">Toggle</button></td></tr>
+        <tr><td bgcolor="white">
+        <div class="hidden" id="cell_)"
+            << std::hex << r << getId() << "\">";
+        */
+       out << R"(
+        <td><table>
         <tr><td bgcolor="white">
         <div class="hidden" id="cell_)"
             << std::hex << r << getId() << "\">";
