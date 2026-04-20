@@ -107,9 +107,12 @@ $baseIndexUrl = e(url_path(''));
 
                 <?php
                 function editor($name, $value, $readonly = false) {
+                    $commonToolbar = [
+                        ['label' => 'Tab', 'insert' => "\t"],
+                    ];
+
                     $toolbars = [
-                        'rules' => [
-                            ['label' => 'Tab', 'insert' => "\t"],
+                        'rules' => array_merge($commonToolbar, [
                             ['label' => '→', 'insert' => '→'],
                             ['label' => '↑', 'insert' => '↑'],
                             ['label' => '↓', 'insert' => '↓'],
@@ -123,8 +126,11 @@ $baseIndexUrl = e(url_path(''));
                             ['label' => '≠', 'insert' => '≠'],
                             ['label' => '⇔', 'insert' => '⇔'],
                             ['label' => '¬', 'insert' => '¬'],
-                        ],
+                        ]),
+                        'pattern' => $commonToolbar,
+                        'morpho' => $commonToolbar,
                     ];
+
                     $toolbarButtons = $toolbars[$name] ?? [];
                     ?>
                     <div class="tab-panel <?= $name === 'macros' ? 'active' : '' ?>" data-tab="<?= $name ?>">
