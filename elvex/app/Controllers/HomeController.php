@@ -381,6 +381,23 @@ ANIMAL	noun	CANARD	[selectional_restriction:[animate:yes, animal:yes, domestic:y
 ANIMAL	noun	HAMSTER	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
 ANIMAL	noun	LAPIN	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
 //
+ANIMAL	noun	COCHON	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:grogner]]
+ANIMAL	noun	TRUIE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:grogner]]
+ANIMAL	noun	PORCELET	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+//
+ANIMAL	noun	CABRI	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:beler]]
+//
+ANIMAL	noun	PIGEON	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:roucouler]]
+ANIMAL	noun	TOURTERELLE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:roucouler]]
+//
+ANIMAL	noun	PERROQUET	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:jaser | piauler]]
+ANIMAL	noun	PERROQUETTE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:jaser | piauler]]
+ANIMAL	noun	CANARI	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:chanter | gazouiller]]
+//
+ANIMAL	noun	COBAYE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+ANIMAL	noun	GERBILLE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+ANIMAL	noun	FURET	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner | siffler]]
+//
 // ==========================
 // WILD ANIMALS
 // ==========================
@@ -423,6 +440,40 @@ ANIMAL	noun	SOURIS	[selectional_restriction:[animate:yes, animal:yes, wild:yes, 
 ANIMAL	noun	RAT	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:couiner]]
 //
 //
+ANIMAL	noun	ELEPHANT	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:barrir]]
+//
+ANIMAL	noun	SINGE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier | hurler]]
+ANIMAL	noun	GORILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hurler]]
+ANIMAL	noun	CHIMPANZE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+//
+ANIMAL	noun	HYENE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:rire | grogner]]
+//
+ANIMAL	noun	PHOQUE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hurler]]
+ANIMAL	noun	DAUPHIN	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler]]
+BALEINE	noun	BALEINE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+ANIMAL	noun	BALEINE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+//
+ANIMAL	noun	AIGLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+ANIMAL	noun	FAUCON	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+ANIMAL	noun	MOUETTE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+ANIMAL	noun	MERLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler | chanter]]
+ANIMAL	noun	ROSSIGNOL	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+ANIMAL	noun	COUCOU	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+//
+ANIMAL	noun	CIGALE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+ANIMAL	noun	GRILLON	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+//
+ANIMAL	noun	ABEILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+ANIMAL	noun	GUEPE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+ANIMAL	noun	MOUCHE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+ANIMAL	noun	MOUSTIQUE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+//
+ANIMAL	noun	CORNEILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:croasser]]
+ANIMAL	noun	CRAPAUD	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:coasser]]
+ANIMAL	noun	CIGOGNE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:claqueter]]
+ANIMAL	noun	CYGNE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler]]
+//
+//
 CRIER	verb	ABOYER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:aboyer]]]
 ABOYER	verb	ABOYER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:aboyer]]]
 //
@@ -453,6 +504,12 @@ CRIER	verb	CROASSER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sou
 CRIER	verb	COASSER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:coasser]]]
 CRIER	verb	GAZOUILLER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:gazouiller]]]
 //
+CRIER	verb	ROUCOULER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:roucouler]]]
+CRIER	verb	JASER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:jaser]]]
+CRIER	verb	BARRIR	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:barrir]]]
+CRIER	verb	RIRE	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:rire]]]
+CRIER	verb	BOURDONNER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:bourdonner]]]
+CRIER	verb	CLAQUETER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:claqueter]]]
 EOT,
                 'morpho' => <<<'EOT'
 // FORM    POS	LEMMA	FEATURES
@@ -610,6 +667,124 @@ lapins	noun	LAPIN	[@mp]
 //
 chauve-souris	noun	CHAUVE_SOURIS	[@fs]
 chauves-souris	noun	CHAUVE_SOURIS	[@fp]
+//
+//
+// COCHON
+//
+cochon	noun	COCHON	[@ms]
+cochons	noun	COCHON	[@mp]
+truie	noun	COCHON	[@fs]
+truies	noun	COCHON	[@fp]
+porcelet	noun	PORCELET	[@ms]
+porcelets	noun	PORCELET	[@mp]
+//
+// CABRI
+//
+cabri	noun	CABRI	[@ms]
+cabris	noun	CABRI	[@mp]
+//
+// PIGEON / TOURTERELLE
+//
+pigeon	noun	PIGEON	[@ms]
+pigeons	noun	PIGEON	[@mp]
+tourterelle	noun	TOURTERELLE	[@fs]
+tourterelles	noun	TOURTERELLE	[@fp]
+//
+// PERROQUET / CANARI
+//
+perroquet	noun	PERROQUET	[@ms]
+perroquets	noun	PERROQUET	[@mp]
+canari	noun	CANARI	[@ms]
+canaris	noun	CANARI	[@mp]
+//
+// COBAYE / GERBILLE / FURET
+//
+cobaye	noun	COBAYE	[@ms]
+cobayes	noun	COBAYE	[@mp]
+gerbille	noun	GERBILLE	[@fs]
+gerbilles	noun	GERBILLE	[@fp]
+furet	noun	FURET	[@ms]
+furets	noun	FURET	[@mp]
+furette	noun	FURET	[@fs]
+furettes	noun	FURET	[@fp]
+//
+// ELEPHANT
+//
+éléphant	noun	ELEPHANT	[@ms]
+éléphants	noun	ELEPHANT	[@mp]
+elephant	noun	ELEPHANT	[@ms]
+elephants	noun	ELEPHANT	[@mp]
+//
+// SINGE / GORILLE / CHIMPANZE
+//
+singe	noun	SINGE	[@ms]
+singes	noun	SINGE	[@mp]
+gorille	noun	GORILLE	[@ms]
+gorilles	noun	GORILLE	[@mp]
+chimpanzé	noun	CHIMPANZE	[@ms]
+chimpanzés	noun	CHIMPANZE	[@mp]
+chimpanze	noun	CHIMPANZE	[@ms]
+chimpanzes	noun	CHIMPANZE	[@mp]
+//
+// HYENE
+//
+hyène	noun	HYENE	[@fs]
+hyènes	noun	HYENE	[@fp]
+hyene	noun	HYENE	[@fs]
+hyenes	noun	HYENE	[@fp]
+//
+// PHOQUE / DAUPHIN / BALEINE
+//
+phoque	noun	PHOQUE	[@ms]
+phoques	noun	PHOQUE	[@mp]
+dauphin	noun	DAUPHIN	[@ms]
+dauphins	noun	DAUPHIN	[@mp]
+baleine	noun	BALEINE	[@fs]
+baleines	noun	BALEINE	[@fp]
+//
+// AIGLE / FAUCON / MOUETTE / MERLE / ROSSIGNOL / COUCOU
+//
+aigle	noun	AIGLE	[@ms]
+aigles	noun	AIGLE	[@mp]
+faucon	noun	FAUCON	[@ms]
+faucons	noun	FAUCON	[@mp]
+mouette	noun	MOUETTE	[@fs]
+mouettes	noun	MOUETTE	[@fp]
+merle	noun	MERLE	[@ms]
+merles	noun	MERLE	[@mp]
+rossignol	noun	ROSSIGNOL	[@ms]
+rossignols	noun	ROSSIGNOL	[@mp]
+coucou	noun	COUCOU	[@ms]
+coucous	noun	COUCOU	[@mp]
+//
+// CIGALE / GRILLON
+//
+cigale	noun	CIGALE	[@fs]
+cigales	noun	CIGALE	[@fp]
+grillon	noun	GRILLON	[@ms]
+grillons	noun	GRILLON	[@mp]
+//
+// ABEILLE / GUEPE / MOUCHE / MOUSTIQUE
+//
+abeille	noun	ABEILLE	[@fs]
+abeilles	noun	ABEILLE	[@fp]
+guêpe	noun	GUEPE	[@fs]
+guêpes	noun	GUEPE	[@fp]
+guepe	noun	GUEPE	[@fs]
+guepes	noun	GUEPE	[@fp]
+mouche	noun	MOUCHE	[@fs]
+mouches	noun	MOUCHE	[@fp]
+moustique	noun	MOUSTIQUE	[@ms]
+moustiques	noun	MOUSTIQUE	[@mp]
+//
+// CRAPAUD / CIGOGNE / CYGNE
+//
+crapaud	noun	CRAPAUD	[@ms]
+crapauds	noun	CRAPAUD	[@mp]
+cigogne	noun	CIGOGNE	[@fs]
+cigognes	noun	CIGOGNE	[@fp]
+cygne	noun	CYGNE	[@ms]
+cygnes	noun	CYGNE	[@mp]
 //
 // ***********************************************************
 //  Verbs by lemma
@@ -1419,6 +1594,161 @@ meuglera	verb	MEUGLER	[SUBJ:[@_3s], @indicatif_futur_simple]
 meuglerons	verb	MEUGLER	[SUBJ:[@_1p], @indicatif_futur_simple]
 meuglerez	verb	MEUGLER	[SUBJ:[@_2p], @indicatif_futur_simple]
 meugleront	verb	MEUGLER	[SUBJ:[@_3p], @indicatif_futur_simple]
+//
+//
+// ROUCOULER
+//
+roucoule	verb	ROUCOULER	[SUBJ:[@_1s], @indicatif_present]
+roucoules	verb	ROUCOULER	[SUBJ:[@_2s], @indicatif_present]
+roucoule	verb	ROUCOULER	[SUBJ:[@_3s], @indicatif_present]
+roucoulons	verb	ROUCOULER	[SUBJ:[@_1p], @indicatif_present]
+roucoulez	verb	ROUCOULER	[SUBJ:[@_2p], @indicatif_present]
+roucoulent	verb	ROUCOULER	[SUBJ:[@_3p], @indicatif_present]
+//
+roucoulais	verb	ROUCOULER	[SUBJ:[@_1s], @indicatif_imparfait]
+roucoulais	verb	ROUCOULER	[SUBJ:[@_2s], @indicatif_imparfait]
+roucoulait	verb	ROUCOULER	[SUBJ:[@_3s], @indicatif_imparfait]
+roucoulions	verb	ROUCOULER	[SUBJ:[@_1p], @indicatif_imparfait]
+roucouliez	verb	ROUCOULER	[SUBJ:[@_2p], @indicatif_imparfait]
+roucoulaient	verb	ROUCOULER	[SUBJ:[@_3p], @indicatif_imparfait]
+//
+roucoulai	verb	ROUCOULER	[SUBJ:[@_1s], @indicatif_passe_simple]
+roucoulas	verb	ROUCOULER	[SUBJ:[@_2s], @indicatif_passe_simple]
+roucoula	verb	ROUCOULER	[SUBJ:[@_3s], @indicatif_passe_simple]
+roucoulâmes	verb	ROUCOULER	[SUBJ:[@_1p], @indicatif_passe_simple]
+roucoulâtes	verb	ROUCOULER	[SUBJ:[@_2p], @indicatif_passe_simple]
+roucoulèrent	verb	ROUCOULER	[SUBJ:[@_3p], @indicatif_passe_simple]
+//
+roucoulerai	verb	ROUCOULER	[SUBJ:[@_1s], @indicatif_futur_simple]
+roucouleras	verb	ROUCOULER	[SUBJ:[@_2s], @indicatif_futur_simple]
+roucoulera	verb	ROUCOULER	[SUBJ:[@_3s], @indicatif_futur_simple]
+roucoulerons	verb	ROUCOULER	[SUBJ:[@_1p], @indicatif_futur_simple]
+roucoulerez	verb	ROUCOULER	[SUBJ:[@_2p], @indicatif_futur_simple]
+roucouleront	verb	ROUCOULER	[SUBJ:[@_3p], @indicatif_futur_simple]
+//
+//
+// JASER
+//
+jase	verb	JASER	[SUBJ:[@_1s], @indicatif_present]
+jases	verb	JASER	[SUBJ:[@_2s], @indicatif_present]
+jase	verb	JASER	[SUBJ:[@_3s], @indicatif_present]
+jasons	verb	JASER	[SUBJ:[@_1p], @indicatif_present]
+jasez	verb	JASER	[SUBJ:[@_2p], @indicatif_present]
+jasent	verb	JASER	[SUBJ:[@_3p], @indicatif_present]
+//
+jasais	verb	JASER	[SUBJ:[@_1s], @indicatif_imparfait]
+jasais	verb	JASER	[SUBJ:[@_2s], @indicatif_imparfait]
+jasait	verb	JASER	[SUBJ:[@_3s], @indicatif_imparfait]
+jacions	verb	JASER	[SUBJ:[@_1p], @indicatif_imparfait]
+jasiez	verb	JASER	[SUBJ:[@_2p], @indicatif_imparfait]
+jasaient	verb	JASER	[SUBJ:[@_3p], @indicatif_imparfait]
+//
+jasai	verb	JASER	[SUBJ:[@_1s], @indicatif_passe_simple]
+jasas	verb	JASER	[SUBJ:[@_2s], @indicatif_passe_simple]
+jasa	verb	JASER	[SUBJ:[@_3s], @indicatif_passe_simple]
+jasâmes	verb	JASER	[SUBJ:[@_1p], @indicatif_passe_simple]
+jasâtes	verb	JASER	[SUBJ:[@_2p], @indicatif_passe_simple]
+jasèrent	verb	JASER	[SUBJ:[@_3p], @indicatif_passe_simple]
+//
+jaserai	verb	JASER	[SUBJ:[@_1s], @indicatif_futur_simple]
+jaseras	verb	JASER	[SUBJ:[@_2s], @indicatif_futur_simple]
+jasera	verb	JASER	[SUBJ:[@_3s], @indicatif_futur_simple]
+jaserons	verb	JASER	[SUBJ:[@_1p], @indicatif_futur_simple]
+jaserez	verb	JASER	[SUBJ:[@_2p], @indicatif_futur_simple]
+jaseront	verb	JASER	[SUBJ:[@_3p], @indicatif_futur_simple]
+//
+//
+// BARRIR
+//
+barris	verb	BARRIR	[SUBJ:[@_1s], @indicatif_present]
+barris	verb	BARRIR	[SUBJ:[@_2s], @indicatif_present]
+barrit	verb	BARRIR	[SUBJ:[@_3s], @indicatif_present]
+barrissons	verb	BARRIR	[SUBJ:[@_1p], @indicatif_present]
+barrissez	verb	BARRIR	[SUBJ:[@_2p], @indicatif_present]
+barrissent	verb	BARRIR	[SUBJ:[@_3p], @indicatif_present]
+//
+barrissais	verb	BARRIR	[SUBJ:[@_1s], @indicatif_imparfait]
+barrissais	verb	BARRIR	[SUBJ:[@_2s], @indicatif_imparfait]
+barrissait	verb	BARRIR	[SUBJ:[@_3s], @indicatif_imparfait]
+barrissions	verb	BARRIR	[SUBJ:[@_1p], @indicatif_imparfait]
+barrissiez	verb	BARRIR	[SUBJ:[@_2p], @indicatif_imparfait]
+barrissaient	verb	BARRIR	[SUBJ:[@_3p], @indicatif_imparfait]
+//
+barris	verb	BARRIR	[SUBJ:[@_1s], @indicatif_passe_simple]
+barris	verb	BARRIR	[SUBJ:[@_2s], @indicatif_passe_simple]
+barrit	verb	BARRIR	[SUBJ:[@_3s], @indicatif_passe_simple]
+barrîmes	verb	BARRIR	[SUBJ:[@_1p], @indicatif_passe_simple]
+barrîtes	verb	BARRIR	[SUBJ:[@_2p], @indicatif_passe_simple]
+barrirent	verb	BARRIR	[SUBJ:[@_3p], @indicatif_passe_simple]
+//
+barrirai	verb	BARRIR	[SUBJ:[@_1s], @indicatif_futur_simple]
+barriras	verb	BARRIR	[SUBJ:[@_2s], @indicatif_futur_simple]
+barrira	verb	BARRIR	[SUBJ:[@_3s], @indicatif_futur_simple]
+barrirons	verb	BARRIR	[SUBJ:[@_1p], @indicatif_futur_simple]
+barrirez	verb	BARRIR	[SUBJ:[@_2p], @indicatif_futur_simple]
+barriront	verb	BARRIR	[SUBJ:[@_3p], @indicatif_futur_simple]
+//
+//
+// BOURDONNER
+//
+bourdonne	verb	BOURDONNER	[SUBJ:[@_1s], @indicatif_present]
+bourdonnes	verb	BOURDONNER	[SUBJ:[@_2s], @indicatif_present]
+bourdonne	verb	BOURDONNER	[SUBJ:[@_3s], @indicatif_present]
+bourdonnons	verb	BOURDONNER	[SUBJ:[@_1p], @indicatif_present]
+bourdonnez	verb	BOURDONNER	[SUBJ:[@_2p], @indicatif_present]
+bourdonnent	verb	BOURDONNER	[SUBJ:[@_3p], @indicatif_present]
+//
+bourdonnais	verb	BOURDONNER	[SUBJ:[@_1s], @indicatif_imparfait]
+bourdonnais	verb	BOURDONNER	[SUBJ:[@_2s], @indicatif_imparfait]
+bourdonnait	verb	BOURDONNER	[SUBJ:[@_3s], @indicatif_imparfait]
+bourdonnions	verb	BOURDONNER	[SUBJ:[@_1p], @indicatif_imparfait]
+bourdonniez	verb	BOURDONNER	[SUBJ:[@_2p], @indicatif_imparfait]
+bourdonnaient	verb	BOURDONNER	[SUBJ:[@_3p], @indicatif_imparfait]
+//
+bourdonnai	verb	BOURDONNER	[SUBJ:[@_1s], @indicatif_passe_simple]
+bourdonnas	verb	BOURDONNER	[SUBJ:[@_2s], @indicatif_passe_simple]
+bourdonna	verb	BOURDONNER	[SUBJ:[@_3s], @indicatif_passe_simple]
+bourdonnâmes	verb	BOURDONNER	[SUBJ:[@_1p], @indicatif_passe_simple]
+bourdonnâtes	verb	BOURDONNER	[SUBJ:[@_2p], @indicatif_passe_simple]
+bourdonnèrent	verb	BOURDONNER	[SUBJ:[@_3p], @indicatif_passe_simple]
+//
+bourdonnerai	verb	BOURDONNER	[SUBJ:[@_1s], @indicatif_futur_simple]
+bourdonneras	verb	BOURDONNER	[SUBJ:[@_2s], @indicatif_futur_simple]
+bourdonnera	verb	BOURDONNER	[SUBJ:[@_3s], @indicatif_futur_simple]
+bourdonnerons	verb	BOURDONNER	[SUBJ:[@_1p], @indicatif_futur_simple]
+bourdonnerez	verb	BOURDONNER	[SUBJ:[@_2p], @indicatif_futur_simple]
+bourdonneront	verb	BOURDONNER	[SUBJ:[@_3p], @indicatif_futur_simple]
+//
+//
+// CLAQUETER
+//
+claquette	verb	CLAQUETER	[SUBJ:[@_1s], @indicatif_present]
+claquettes	verb	CLAQUETER	[SUBJ:[@_2s], @indicatif_present]
+claquette	verb	CLAQUETER	[SUBJ:[@_3s], @indicatif_present]
+claquetons	verb	CLAQUETER	[SUBJ:[@_1p], @indicatif_present]
+claquetez	verb	CLAQUETER	[SUBJ:[@_2p], @indicatif_present]
+claquettent	verb	CLAQUETER	[SUBJ:[@_3p], @indicatif_present]
+//
+claquetais	verb	CLAQUETER	[SUBJ:[@_1s], @indicatif_imparfait]
+claquetais	verb	CLAQUETER	[SUBJ:[@_2s], @indicatif_imparfait]
+claquetait	verb	CLAQUETER	[SUBJ:[@_3s], @indicatif_imparfait]
+claquetions	verb	CLAQUETER	[SUBJ:[@_1p], @indicatif_imparfait]
+claquetiez	verb	CLAQUETER	[SUBJ:[@_2p], @indicatif_imparfait]
+claquetaient	verb	CLAQUETER	[SUBJ:[@_3p], @indicatif_imparfait]
+//
+claquetai	verb	CLAQUETER	[SUBJ:[@_1s], @indicatif_passe_simple]
+claquetas	verb	CLAQUETER	[SUBJ:[@_2s], @indicatif_passe_simple]
+claqueta	verb	CLAQUETER	[SUBJ:[@_3s], @indicatif_passe_simple]
+claquetâmes	verb	CLAQUETER	[SUBJ:[@_1p], @indicatif_passe_simple]
+claquetâtes	verb	CLAQUETER	[SUBJ:[@_2p], @indicatif_passe_simple]
+claquetèrent	verb	CLAQUETER	[SUBJ:[@_3p], @indicatif_passe_simple]
+//
+claquèterai	verb	CLAQUETER	[SUBJ:[@_1s], @indicatif_futur_simple]
+claquèteras	verb	CLAQUETER	[SUBJ:[@_2s], @indicatif_futur_simple]
+claquètera	verb	CLAQUETER	[SUBJ:[@_3s], @indicatif_futur_simple]
+claquèterons	verb	CLAQUETER	[SUBJ:[@_1p], @indicatif_futur_simple]
+claquèterez	verb	CLAQUETER	[SUBJ:[@_2p], @indicatif_futur_simple]
+claquèteront	verb	CLAQUETER	[SUBJ:[@_3p], @indicatif_futur_simple]
 // end
 EOT,
                 'post_morpho' => <<<'EOT'
