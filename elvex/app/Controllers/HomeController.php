@@ -1447,7 +1447,7 @@ EOT,
 EOT,
                 'input_text' => <<<'EOT'
 // SYMBOL	FEATURES
-S [HEAD:CRIER, i:[HEAD:ANIMAL, @s]]
+S [HEAD:CRIER, i:[HEAD:ANIMAL, @s, @def]]
 EOT, 
                'is_example' => true,
             ],
