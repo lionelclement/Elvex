@@ -580,8 +580,6 @@ oiseau	noun	OISEAU	[@ms]
 oiseaux	noun	OISEAU	[@mp]
 moineau	noun	MOINEAU	[@ms]
 moineaux	noun	MOINEAU	[@mp]
-mesange	noun	MESANGE	[@fs]
-mesanges	noun	MESANGE	[@fp]
 mésange	noun	MESANGE	[@fs]
 mésanges	noun	MESANGE	[@fp]
 //
@@ -712,8 +710,6 @@ furettes	noun	FURET	[@fp]
 //
 éléphant	noun	ELEPHANT	[@ms]
 éléphants	noun	ELEPHANT	[@mp]
-elephant	noun	ELEPHANT	[@ms]
-elephants	noun	ELEPHANT	[@mp]
 //
 // SINGE / GORILLE / CHIMPANZE
 //
@@ -723,15 +719,11 @@ gorille	noun	GORILLE	[@ms]
 gorilles	noun	GORILLE	[@mp]
 chimpanzé	noun	CHIMPANZE	[@ms]
 chimpanzés	noun	CHIMPANZE	[@mp]
-chimpanze	noun	CHIMPANZE	[@ms]
-chimpanzes	noun	CHIMPANZE	[@mp]
 //
 // HYENE
 //
 hyène	noun	HYENE	[@fs]
 hyènes	noun	HYENE	[@fp]
-hyene	noun	HYENE	[@fs]
-hyenes	noun	HYENE	[@fp]
 //
 // PHOQUE / DAUPHIN / BALEINE
 //
@@ -770,8 +762,6 @@ abeille	noun	ABEILLE	[@fs]
 abeilles	noun	ABEILLE	[@fp]
 guêpe	noun	GUEPE	[@fs]
 guêpes	noun	GUEPE	[@fp]
-guepe	noun	GUEPE	[@fs]
-guepes	noun	GUEPE	[@fp]
 mouche	noun	MOUCHE	[@fs]
 mouches	noun	MOUCHE	[@fp]
 moustique	noun	MOUSTIQUE	[@ms]
