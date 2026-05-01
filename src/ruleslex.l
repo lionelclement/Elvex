@@ -71,7 +71,7 @@ alphaNum [[:digit:]]|{alpha}|_
 identifier {alpha}{alphaNum}*|[_]{alphaNum}+
 variable "$"{identifier}
 anonymous "_"
-integer ([1-9][0-9]*)|0
+integer ([+-]?[1-9][0-9]*)|0
 double [+-]?{integer}(\.{integer})?([Ee][+-]?{integer})?
 string \"([^\n\"]|\\\")*\"
 blanks [[:blank:]\15]+
