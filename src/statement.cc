@@ -1524,6 +1524,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
 
             else
             {
+                std::cout << this->lineno << ": Warning: plus operator applied to non numbers or non strings: ";
                 v1->flatPrint(std::cout);
                 std::cout << " + ";
                 v2->flatPrint(std::cout);
