@@ -1750,6 +1750,23 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         }
         break;
 
+        case FLOOR:
+        {
+            valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
+            if (!v1)
+            {
+                FATAL_ERROR_MSG("Value not available");
+                FATAL_ERROR_UNEXPECTED;
+                resultValue = valuePtr();
+            }
+            else if ((v1->isNumber()))
+                resultValue = Value::createNumber(floor(v1->getNumber()));
+            else
+                resultValue = valuePtr();
+            goto valueBuilt;
+        }
+        break;
+
         case RANDOM:
             resultValue = Value::createNumber((double)rand());
             goto valueBuilt;

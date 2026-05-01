@@ -117,6 +117,7 @@
 %token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT 
 TOKEN_OR TOKEN_AND TOKEN_IMPLICATION TOKEN_EQUIV
 TOKEN_PLUS TOKEN_MINUS TOKEN_TIMES TOKEN_DIVIDE TOKEN_MODULO
+TOKEN_FLOOR
 TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 //TOKEN_INSET 
 
@@ -937,6 +938,13 @@ expression_statement:
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MINUS_U, (*$2), statementPtr()));
 	  free($2);
+	}
+
+	|TOKEN_FLOOR TOKEN_LPAR expression_statement TOKEN_RPAR
+	{
+	  DBUGPRT("expression_statement");
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::FLOOR, (*$3), statementPtr()));
+	  free($3);
 	}
 
 	|TOKEN_RAND TOKEN_LPAR TOKEN_RPAR

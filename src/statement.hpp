@@ -128,6 +128,7 @@ public:
         DIVIDE,
         MODULO,
         MINUS_U,
+        FLOOR,
         RANDOM
     };
 

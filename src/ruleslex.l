@@ -381,6 +381,11 @@ downDoubleArrow "⇓"
     return TOKEN_PRINT;
   }
   
+  "floor" {
+    DBUGPRT("TOKEN_FLOOR");
+    return TOKEN_FLOOR;
+  }
+  
   print[lL]n {
     DBUGPRT("TOKEN_PRINTLN");
     return TOKEN_PRINTLN;
