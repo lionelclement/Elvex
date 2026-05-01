@@ -1422,7 +1422,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if (!v1)
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                // FATAL_ERROR_UNEXPECTED;
+                FATAL_ERROR_UNEXPECTED;
             }
             else if (v1->isFalse())
             {
@@ -1510,8 +1510,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
+                throw fatal_exception("Value not available");
             }
 
             else if ((v1->isNumber()) && (v2->isNumber()))
@@ -1530,7 +1529,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 v1->flatPrint(std::cout);
                 std::cout << " + ";
                 v2->flatPrint(std::cout);
-                FATAL_ERROR_UNEXPECTED
+                throw fatal_exception("Incompatible types for addition");
             }
             goto valueBuilt;
         }
@@ -1543,8 +1542,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
+                throw fatal_exception("Value not available");
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
             {
@@ -1556,7 +1554,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 v1->flatPrint(std::cout);
                 std::cout << " - ";
                 v2->flatPrint(std::cout);
-                FATAL_ERROR_UNEXPECTED
+                throw fatal_exception("Incompatible types for subtraction");
             }
             goto valueBuilt;
         }
@@ -1569,8 +1567,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
+                throw fatal_exception("Value not available");
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
             {
@@ -1582,7 +1579,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 v1->flatPrint(std::cout);
                 std::cout << " * ";
                 v2->flatPrint(std::cout);
-                FATAL_ERROR_UNEXPECTED;
+                throw fatal_exception("Incompatible types for multiplication");
             }
             goto valueBuilt;
         }
@@ -1595,8 +1592,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
+                throw fatal_exception("Value not available");
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
             {
@@ -1608,7 +1604,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 v1->flatPrint(std::cout);
                 std::cout << " / ";
                 v2->flatPrint(std::cout);
-                FATAL_ERROR_UNEXPECTED;
+                throw fatal_exception("Incompatible types for division");
             }
             goto valueBuilt;
         }
@@ -1621,8 +1617,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
+                throw fatal_exception("Value not available");
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
             {
@@ -1634,7 +1629,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 v1->flatPrint(std::cout);
                 std::cout << " % ";
                 v2->flatPrint(std::cout);
-                FATAL_ERROR_UNEXPECTED;
+                throw fatal_exception("Incompatible types for modulo");
             }
             goto valueBuilt;
         }
@@ -1646,8 +1641,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if (!v1)
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
+                throw fatal_exception("Value not available");
             }
             else if ((v1->isNumber()))
             {
@@ -1658,7 +1652,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 std::cout << "Error line " << this->lineno << ": minus operator applied to non numbers: ";
                 std::cout << " - ";
                 v1->flatPrint(std::cout);
-                FATAL_ERROR_UNEXPECTED;
+                throw fatal_exception("Incompatible types for unary minus");
             }
             goto valueBuilt;
         }
@@ -1670,8 +1664,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if (!v1)
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
+                throw fatal_exception("Value not available");
             }
             else if ((v1->isNumber()))
             {
@@ -1682,7 +1675,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 std::cout << "Error line " << this->lineno << ": floor operator applied to non numbers: ";
                 std::cout << " floor ";
                 v1->flatPrint(std::cout);
-                FATAL_ERROR_UNEXPECTED;
+                throw fatal_exception("Incompatible types for floor");
             }
             goto valueBuilt;
         }
@@ -1695,16 +1688,12 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) && (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
-                // resultValue = Value::STATIC_TRUE;
+                throw fatal_exception("Value not available");
             }
             else if (!v1 || !v2)
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                resultValue = valuePtr();
-                FATAL_ERROR_UNEXPECTED;
-                // resultValue = Value::STATIC_FALSE;
+                throw fatal_exception("Value not available");
             }
 
             else if (v1->equal(v2))
@@ -1727,8 +1716,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             else if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = Value::STATIC_TRUE;
+                throw fatal_exception("Value not available");
             }
 
             else if (v1->equal(v2))
@@ -1749,8 +1737,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = Value::STATIC_NIL;
+                throw fatal_exception("Value not available");
             }
             else if (v1->lessThan(v2))
                 resultValue = Value::STATIC_TRUE;
@@ -1768,8 +1755,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = Value::STATIC_NIL;
+                throw fatal_exception("Value not available");
             }
             else if ((v1->lessThan(v2)) || (v1->equal(v2)))
                 resultValue = Value::STATIC_TRUE;
@@ -1787,8 +1773,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = Value::STATIC_NIL;
+                throw fatal_exception("Value not available");
             }
             else if (!(v1->lessThan(v2)) && (!(v1->equal(v2))))
                 resultValue = Value::STATIC_TRUE;
@@ -1806,8 +1791,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             if ((!v1) || (!v2))
             {
                 std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = Value::STATIC_NIL;
+                throw fatal_exception("Value not available");
             }
             else if (!(v1->lessThan(v2)))
                 resultValue = Value::STATIC_TRUE;
