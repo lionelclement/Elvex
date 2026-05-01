@@ -1172,26 +1172,26 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
         break;
 
     case VARIABLE_STATEMENT:
+    {
+        valuePtr _value = item->environmentGet(code);
+        if (!_value)
         {
-            valuePtr _value = item->environmentGet(code);
-            if (!_value)
-            {
-                FATAL_ERROR_STM(shared_from_this());
-            }
-            else if (_value->isNil())
-                resultPairp = Pairp::NIL;
-            else if (_value->isPairp())
-                resultPairp = _value->getPairp()->clone();
-            else
-            {
-                std::ostringstream oss1, oss2;
-                this->toHTML(oss1);
-                item->printRule(oss2, -1, true);
-                WARNING_STM;
-                "<P>Variable " + oss1.str() + " not initialized in</P>" + oss2.str();
-            }
+            FATAL_ERROR_STM(shared_from_this());
         }
-        break;
+        else if (_value->isNil())
+            resultPairp = Pairp::NIL;
+        else if (_value->isPairp())
+            resultPairp = _value->getPairp()->clone();
+        else
+        {
+            std::ostringstream oss1, oss2;
+            this->toHTML(oss1);
+            item->printRule(oss2, -1, true);
+            WARNING_STM;
+            "<P>Variable " + oss1.str() + " not initialized in</P>" + oss2.str();
+        }
+    }
+    break;
 
     case SEARCH_STATEMENT:
     {
@@ -1418,7 +1418,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if (!v1)
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 // FATAL_ERROR_UNEXPECTED;
             }
             else if (v1->isFalse())
@@ -1437,7 +1437,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if (!v1 || !v2)
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
@@ -1459,7 +1459,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
@@ -1506,25 +1506,24 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
 
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
+
             else if ((v1->isNumber()) && (v2->isNumber()))
-                resultValue = Value::createNumber(/*Value::NUMBER_VALUE, */ v1->getNumber() + v2->getNumber());
+            {
+                resultValue = Value::createNumber(v1->getNumber() + v2->getNumber());
+            }
 
             else if (isv1astring && isv2astring)
-                resultValue = Value::createForm(v1str + v2str);
-
-            else if ((v1->isPairp()) && (v2->isPairp()))
             {
-                WARNING_STM;
-                resultValue = valuePtr();
+                resultValue = Value::createForm(v1str + v2str);
             }
 
             else
             {
-                std::cout << this->lineno << ": Warning: plus operator applied to non numbers or non strings: ";
+                std::cout << "Error line " << this->lineno << ": plus operator applied to non numbers or non strings: ";
                 v1->flatPrint(std::cout);
                 std::cout << " + ";
                 v2->flatPrint(std::cout);
@@ -1540,14 +1539,22 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
+            {
                 resultValue = Value::createNumber(v1->getNumber() - v2->getNumber());
+            }
             else
-                resultValue = valuePtr();
+            {
+                std::cout << "Error line " << this->lineno << ": minus operator applied to non numbers: ";
+                v1->flatPrint(std::cout);
+                std::cout << " - ";
+                v2->flatPrint(std::cout);
+                FATAL_ERROR_UNEXPECTED
+            }
             goto valueBuilt;
         }
         break;
@@ -1558,14 +1565,22 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
+            {
                 resultValue = Value::createNumber(v1->getNumber() * v2->getNumber());
+            }
             else
-                resultValue = valuePtr();
+            {
+                std::cout << "Error line " << this->lineno << ": times operator applied to non numbers: ";
+                v1->flatPrint(std::cout);
+                std::cout << " * ";
+                v2->flatPrint(std::cout);
+                FATAL_ERROR_UNEXPECTED;
+            }
             goto valueBuilt;
         }
         break;
@@ -1576,14 +1591,22 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
+            {
                 resultValue = Value::createNumber(v1->getNumber() / v2->getNumber());
+            }
             else
-                resultValue = valuePtr();
+            {
+                std::cout << "Error line " << this->lineno << ": divide operator applied to non numbers: ";
+                v1->flatPrint(std::cout);
+                std::cout << " / ";
+                v2->flatPrint(std::cout);
+                FATAL_ERROR_UNEXPECTED;
+            }
             goto valueBuilt;
         }
         break;
@@ -1594,14 +1617,22 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
             else if ((v1->isNumber()) && (v2->isNumber()))
+            {
                 resultValue = Value::createNumber(fmod(v1->getNumber(), v2->getNumber()));
+            }
             else
-                resultValue = valuePtr();
+            {
+                std::cout << "Error line " << this->lineno << ": modulo operator applied to non numbers: ";
+                v1->flatPrint(std::cout);
+                std::cout << " % ";
+                v2->flatPrint(std::cout);
+                FATAL_ERROR_UNEXPECTED;
+            }
             goto valueBuilt;
         }
         break;
@@ -1611,14 +1642,45 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if (!v1)
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
             }
             else if ((v1->isNumber()))
+            {
                 resultValue = Value::createNumber(-v1->getNumber());
+            }
             else
+            {
+                std::cout << "Error line " << this->lineno << ": minus operator applied to non numbers: ";
+                std::cout << " - ";
+                v1->flatPrint(std::cout);
+                FATAL_ERROR_UNEXPECTED;
+            }
+            goto valueBuilt;
+        }
+        break;
+
+        case FLOOR:
+        {
+            valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
+            if (!v1)
+            {
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
+                FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
+            }
+            else if ((v1->isNumber()))
+            {
+                resultValue = Value::createNumber(floor(v1->getNumber()));
+            }
+            else
+            {
+                std::cout << "Error line " << this->lineno << ": floor operator applied to non numbers: ";
+                std::cout << " floor ";
+                v1->flatPrint(std::cout);
+                FATAL_ERROR_UNEXPECTED;
+            }
             goto valueBuilt;
         }
         break;
@@ -1629,14 +1691,14 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
             if ((!v1) && (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = valuePtr();
                 // resultValue = Value::STATIC_TRUE;
             }
             else if (!v1 || !v2)
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 resultValue = valuePtr();
                 FATAL_ERROR_UNEXPECTED;
                 // resultValue = Value::STATIC_FALSE;
@@ -1661,7 +1723,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
 
             else if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_TRUE;
             }
@@ -1683,7 +1745,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             // si l'une est nulle
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
@@ -1702,7 +1764,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             // si l'une est variable libre
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
@@ -1721,7 +1783,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             // si l'une est variable libre
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
@@ -1740,7 +1802,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             // si l'une est variable libre
             if ((!v1) || (!v2))
             {
-                FATAL_ERROR_MSG("Value not available");
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
                 FATAL_ERROR_UNEXPECTED;
                 resultValue = Value::STATIC_NIL;
             }
@@ -1748,23 +1810,6 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
                 resultValue = Value::STATIC_TRUE;
             else
                 resultValue = Value::STATIC_NIL;
-            goto valueBuilt;
-        }
-        break;
-
-        case FLOOR:
-        {
-            valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
-            if (!v1)
-            {
-                FATAL_ERROR_MSG("Value not available");
-                FATAL_ERROR_UNEXPECTED;
-                resultValue = valuePtr();
-            }
-            else if ((v1->isNumber()))
-                resultValue = Value::createNumber(floor(v1->getNumber()));
-            else
-                resultValue = valuePtr();
             goto valueBuilt;
         }
         break;
@@ -2419,7 +2464,7 @@ void Statement::buildEnvironmentWithInherited(statementPtr statementRoot, class 
             }
             else
             {
-                
+
                 if (!left->buildEnvironment(statementRoot, item->_getEnvironment(), right, true
 #ifdef TRACE_BUILD_ENVIRONMENT
                                             ,
@@ -2513,7 +2558,7 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
                 }
                 else
                 {
-                    
+
                     if (!left->buildEnvironment(statementRoot, item->_getEnvironment(), right, true, true, verbose))
                     {
                         addFlags(Flags::BOTTOM);
@@ -2540,7 +2585,7 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
             featuresPtr left = first->evalFeatures(item, parser, synthesizer, false, verbose);
             if (left)
             {
-                                if (!left->buildEnvironment(statementRoot,  item->_getEnvironment(), right, true
+                if (!left->buildEnvironment(statementRoot, item->_getEnvironment(), right, true
 #ifdef TRACE_BUILD_ENVIRONMENT
                                             ,
                                             true
@@ -2861,7 +2906,6 @@ void Statement::renameVariable(uint32_t key)
         }
         break;
     }
-
 }
 
 /* ************************************************************
