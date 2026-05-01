@@ -71,8 +71,10 @@ alphaNum [[:digit:]]|{alpha}|_
 identifier {alpha}{alphaNum}*|[_]{alphaNum}+
 variable "$"{identifier}
 anonymous "_"
-integer ([+-]?[1-9][0-9]*)|0
-double [+-]?{integer}(\.{integer})?([Ee][+-]?{integer})?
+digit      [0-9]
+digits     [0-9]+
+integer    [+-]?{digits}
+double     [+-]?{digits}(\.{digits})?([Ee][+-]?{digits})?
 string \"([^\n\"]|\\\")*\"
 blanks [[:blank:]\15]+
 rightArrow "→"|"->"
@@ -543,16 +545,16 @@ downDoubleArrow "⇓"
   
   {integer} {
     DBUGPRTARG("TOKEN_INTEGER ", yytext);
-    sscanf(yytext, "%" SCNu32, &ruleslval.integer_slot);
+    sscanf(yytext, "%" SCNd64, &ruleslval.integer_slot);
     return TOKEN_INTEGER;
   }
-  
+
   d{double} {
     DBUGPRTARG("TOKEN_DOUBLE ", yytext);
-    sscanf(yytext+1, "%lf", &ruleslval.double_slot);
+    sscanf(yytext + 1, "%lf", &ruleslval.double_slot);
     return TOKEN_DOUBLE;
   }
-  
+
   {blanks} {}
   
   \n {}

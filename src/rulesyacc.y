@@ -70,7 +70,7 @@
   %}
 
 %union{
-  uint32_t integer_slot;
+  int64_t integer_slot;
   double double_slot;
   termsPtr* terms_slot; //(A|B)
   std::vector< termsPtr >* vector_terms_slot; // X Y
