@@ -904,6 +904,11 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
             second->toHTML(out);
             out << ")&nbsp;";
             break;
+        case FLOOR:
+            out << "&nbsp;floor(";
+            first->toHTML(out);
+            out << ")&nbsp;";
+            break;
         case EQUAL:
             out << "&nbsp;(";
             first->toHTML(out);
@@ -953,8 +958,6 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         case RANDOM:
             out << "rand()";
             break;
-        default:
-            FATAL_ERROR_UNEXPECTED;
         }
     }
 }
