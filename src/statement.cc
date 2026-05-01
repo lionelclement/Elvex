@@ -1525,6 +1525,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
             else
             {
                 v1->flatPrint(std::cout);
+                std::cout << " + ";
                 v2->flatPrint(std::cout);
                 FATAL_ERROR_UNEXPECTED
             }
