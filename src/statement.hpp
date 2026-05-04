@@ -107,7 +107,8 @@ public:
         NUMBER_STATEMENT,
         FUNCTION_STATEMENT,
         SEARCH_STATEMENT,
-        DEFERRED_STATEMENT
+        DEFERRED_STATEMENT,
+        FIELD_ACCESS_STATEMENT
     };
 
     enum function_type
@@ -190,7 +191,17 @@ public:
     // SEARCH
     static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first);
 
-    // CONSTANT
+// FIELD_ACCESS_STATEMENT
+// ↑.attr or ⇓i.attr
+static statementPtr createFieldAccess(
+    uint32_t lineno,
+    std::string bufferName,
+    bool rootOp,
+    statementPtr base,
+    bitsetPtr attribute
+);
+
+// CONSTANT
     static statementPtr createConstant(uint32_t lineno, std::string bufferName, bool rootOp, bitsetPtr bits);
 
     // VARIABLE
@@ -263,7 +274,9 @@ public:
 
     bool isSearch() const;
 
-    bool containsDash() const;
+bool isFieldAccess() const;
+
+bool containsDash() const;
 
     function_type _getFct() const;
 

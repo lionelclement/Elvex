@@ -145,6 +145,23 @@ statementPtr Statement::createSearch(uint32_t lineno, std::string bufferName, bo
 }
 
 /* **************************************************
+ * FIELD ACCESS: ↑.attr or ⇓i.attr
+ ************************************************** */
+statementPtr Statement::createFieldAccess(
+    uint32_t lineno,
+    std::string bufferName,
+    bool rootOp,
+    statementPtr base,
+    bitsetPtr attribute
+)
+{
+    Statement *statement = new Statement(lineno, bufferName, FIELD_ACCESS_STATEMENT, rootOp);
+    statement->first = base;
+    statement->bitset = attribute;
+    return statementPtr(statement);
+}
+
+/* **************************************************
  * CONSTANT
  ************************************************** */
 statementPtr Statement::createConstant(uint32_t lineno, std::string bufferName, bool rootOp, bitsetPtr bitset)
@@ -263,6 +280,14 @@ bool Statement::isDown() const
 bool Statement::isSearch() const
 {
     return op == SEARCH_STATEMENT;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Statement::isFieldAccess() const
+{
+    return op == FIELD_ACCESS_STATEMENT;
 }
 
 /* **************************************************
@@ -820,6 +845,12 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         out << "⇑";
         break;
 
+case FIELD_ACCESS_STATEMENT:
+    if (first)
+        first->toHTML(out);
+    out << "." << bitset->toString();
+    break;
+    
     case DASH_STATEMENT:
         out << '#' << std::to_string(getFirst() + 1);
         if (getSecond() != UINT8_MAX)
@@ -1031,6 +1062,15 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
         statement = Statement::createSearch(this->lineno, this->bufferName, this->rootOp,
                                             code, first ? first->clone(protectedFlags) : statementPtr());
         break;
+case FIELD_ACCESS_STATEMENT:
+    statement = Statement::createFieldAccess(
+        this->lineno,
+        this->bufferName,
+        this->rootOp,
+        first ? first->clone(protectedFlags) : statementPtr(),
+        bitset ? bitset->clone() : bitsetPtr()
+    );
+    break;
     }
     statement->addFlags(protectedFlags & this->getFlags());
     return statement;
@@ -1372,7 +1412,26 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         resultFeatures = (*item->getInheritedChildFeatures())[getFirst()];
         break;
 
-    case UNIF_STATEMENT:
+case FIELD_ACCESS_STATEMENT:
+{
+    featuresPtr fs = first->evalFeatures(
+        item,
+        parser,
+        synthesizer,
+        replaceVariables,
+        verbose
+    );
+
+    resultValue = fs ? fs->find(bitset) : valuePtr();
+
+    if (!resultValue)
+        resultValue = Value::STATIC_NIL;
+
+    goto valueBuilt;
+}
+break;
+
+case UNIF_STATEMENT:
     {
         featuresPtr fs1 = first->evalFeatures(item, parser, synthesizer, replaceVariables, verbose);
         if (!fs1)
@@ -1801,10 +1860,18 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         }
         break;
 
-        case RANDOM:
-            resultValue = Value::createNumber((double)rand());
-            goto valueBuilt;
-            break;
+case RANDOM:
+{
+    if (!synthesizer)
+    {
+        throw fatal_exception("rand() used without generator");
+    }
+
+    resultValue = Value::createNumber((double)synthesizer->randomUInt());
+    goto valueBuilt;
+}
+break;
+
         }
         break;
 
@@ -2892,6 +2959,10 @@ void Statement::renameVariable(uint32_t key)
             statements->renameVariables(key);
         }
         break;
+case FIELD_ACCESS_STATEMENT:
+    if (first)
+        first->renameVariable(key);
+    break;
     }
 }
 
@@ -3118,6 +3189,11 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
             first->testEnable(statementRoot, item, synthesizer, result, on);
         break;
 
+case FIELD_ACCESS_STATEMENT:
+    if (first)
+        first->testEnable(statementRoot, item, synthesizer, result, on);
+    break;
+    
     default:
         COUT_LINE;
         std::cout << op;
@@ -3414,6 +3490,11 @@ bool Statement::containsVariable(const uint32_t key)
             return true;
         break;
 
+case FIELD_ACCESS_STATEMENT:
+    if (first && first->containsVariable(key))
+        return true;
+    break;
+    
     default:
         FATAL_ERROR_UNEXPECTED
         break;

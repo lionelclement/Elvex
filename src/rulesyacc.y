@@ -146,7 +146,7 @@ TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
 %type<pairp_slot> pairp pairp_elements pairp_element
 
 %type<statements_slot> structure_statement list_statement expression_statement_composite
-%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_assignment_statement right_hand_side_assignment_statement up_statement down_statement up2_statement down2_statement dash_statement
+%type<statement_slot> statement statements left_hand_side_subset_statement right_hand_side_subset_statement left_hand_side_assignment_statement right_hand_side_assignment_statement up_statement down_statement up2_statement down2_statement dash_statement field_access_statement
 %type<statement_slot> expression_statement
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
@@ -1001,6 +1001,11 @@ expression_statement:
 	  $$=$1;
 	}
 
+	|field_access_statement {
+  	  DBUGPRT("expression_statement");
+	  $$=$1;
+	}
+
 	|features {
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::createFeatures(ruleslineno, parser.getTopBufferName(), Statement::FEATURES_STATEMENT, false, *$1));
@@ -1116,6 +1121,59 @@ down2_statement:
 	  DBUGPRT("down2");
 	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::SYNTHESIZED_CHILDREN_FEATURES_STATEMENT, false, static_cast<uint8_t>($2-1)));
 	};
+
+field_access_statement:
+    TOKEN_UPARROW TOKEN_DOT TOKEN_IDENTIFIER
+    {
+      DBUGPRT("field_access_statement");
+
+      statementPtr base =
+        Statement::createEmpty(
+          ruleslineno,
+          parser.getTopBufferName(),
+          Statement::INHERITED_FEATURES_STATEMENT,
+          false
+        );
+
+      $$ = new statementPtr(
+        Statement::createFieldAccess(
+          ruleslineno,
+          parser.getTopBufferName(),
+          false,
+          base,
+          Bitset::create(Vartable::createSymbol(*$3))
+        )
+      );
+
+      free($3);
+    }
+
+    |TOKEN_DOWN2ARROW TOKEN_INTEGER TOKEN_DOT TOKEN_IDENTIFIER
+    {
+      DBUGPRT("field_access_statement");
+
+      statementPtr base =
+        Statement::create(
+          ruleslineno,
+          parser.getTopBufferName(),
+          Statement::SYNTHESIZED_CHILDREN_FEATURES_STATEMENT,
+          false,
+          static_cast<uint8_t>($2 - 1)
+        );
+
+      $$ = new statementPtr(
+        Statement::createFieldAccess(
+          ruleslineno,
+          parser.getTopBufferName(),
+          false,
+          base,
+          Bitset::create(Vartable::createSymbol(*$4))
+        )
+      );
+
+      free($4);
+    }
+;
 
 dash_statement:
 	TOKEN_DASH TOKEN_INTEGER TOKEN_DOT TOKEN_INTEGER
