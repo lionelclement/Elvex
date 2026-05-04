@@ -30,6 +30,8 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 
+class Generator;
+
 class Node :
         public Facade, 
         public std::enable_shared_from_this<class Node> {
@@ -81,7 +83,8 @@ public:
     void generateLR(std::string &currentCombination, vectorForests::const_iterator forestIt);
     //void generateRL(std::string currentCombination, vectorForests::const_iterator forestIt);
     void generatePermutations(vectorForests& forests, int start, int end);
-    void generate(bool randomResult, bool singleResult);
+
+    void generate(class Generator *generator, bool randomResult, bool singleResult);
 
 };
 

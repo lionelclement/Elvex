@@ -21,6 +21,9 @@
 #define ELVEX_GENERATOR_H
 
 #include <unordered_map>
+#include <string>
+#include <random>
+#include <cstdint>
 
 #include "shared_ptr.hpp"
 #include "forestmap.hpp"
@@ -47,6 +50,13 @@ class Generator
 {
 
 public:
+    enum Strategy
+    {
+        STRATEGY_EXHAUSTIVE,
+        STRATEGY_SAMPLE,
+        STRATEGY_BEAM
+    };
+
     enum Stage
     {
         STAGE_MAIN,
@@ -84,6 +94,13 @@ private:
     bool warning;
     bool randomResult;
     bool firstResult;
+    Strategy strategy;
+    unsigned int maxRuleChoices;
+    unsigned int beamWidth;
+
+    std::mt19937 randomEngine;
+    uint32_t randomSeed;
+    bool randomSeedSet;
 
     MemoizationMap memoizedMap;
 
@@ -110,12 +127,12 @@ public:
     size_t sizeStates() const;
 
     bool emptyInputs(void);
-    
+
     std::list<std::string>::const_iterator cbeginInputs(void);
 
     std::list<std::string>::const_iterator cendInputs(void);
 
-    void addInput (const std::string &input);
+    void addInput(const std::string &input);
 
     void setInputFileName(char *);
 
@@ -194,6 +211,46 @@ public:
     void setFirstResult(bool);
 
     bool getFirstResult(void) const;
+
+    void setStrategy(Strategy);
+
+    bool setStrategy(const std::string &);
+
+    Strategy getStrategy(void) const;
+
+    bool isStrategyExhaustive(void) const;
+
+    bool isStrategySample(void) const;
+
+    bool isStrategyBeam(void) const;
+
+    void setMaxRuleChoices(unsigned int);
+
+    unsigned int getMaxRuleChoices(void) const;
+
+    unsigned int getEffectiveMaxRuleChoices(void) const;
+
+    void setBeamWidth(unsigned int);
+
+    unsigned int getBeamWidth(void) const;
+
+    unsigned int getEffectiveBeamWidth(void) const;
+
+    bool insertStateItem(class ItemSet *, class Item *, bool fatalOnFailure = false);
+
+    void seedRandom(uint32_t seed);
+
+    uint32_t getRandomSeed(void) const;
+
+    bool hasRandomSeed(void) const;
+
+    uint32_t randomUInt(void);
+
+    size_t randomIndex(size_t size);
+
+    double randomDouble01(void);
+
+    std::mt19937 &getRandomEngine(void);
 
     void toHTMLState(std::ostream &, class ItemSet *);
 

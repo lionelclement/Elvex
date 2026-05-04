@@ -18,6 +18,10 @@
  ************************************************** */
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include <random>
+#include <vector>
+#include <limits>
 
 #include "generator.hpp"
 #include "compacted-lexicon.hpp"
@@ -35,6 +39,7 @@
 #include "node.hpp"
 #include "vartable.hpp"
 #include "parser_exception.hpp"
+#include "fatal_exception.hpp"
 
 /* **************************************************
  *
@@ -56,8 +61,15 @@ Generator::Generator()
 #endif
     this->reduceAll = false;
     this->warning = false;
-    // this->randomResult = false;
+    this->randomResult = false;
     this->firstResult = false;
+    this->strategy = STRATEGY_EXHAUSTIVE;
+    this->maxRuleChoices = 0;
+    this->beamWidth = 0;
+    std::random_device rd;
+    this->randomSeed = rd();
+    this->randomSeedSet = false;
+    this->randomEngine.seed(this->randomSeed);
     this->trace = false;
     this->verbose = false;
 }
@@ -302,6 +314,223 @@ bool Generator::getFirstResult() const
     return this->firstResult;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
+void Generator::setStrategy(Strategy strategy)
+{
+    this->strategy = strategy;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Generator::setStrategy(const std::string &name)
+{
+    if (name == "exhaustive")
+    {
+        setStrategy(STRATEGY_EXHAUSTIVE);
+        return true;
+    }
+
+    if (name == "sample")
+    {
+        setStrategy(STRATEGY_SAMPLE);
+        return true;
+    }
+
+    if (name == "beam")
+    {
+        setStrategy(STRATEGY_BEAM);
+        return true;
+    }
+
+    return false;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+Generator::Strategy Generator::getStrategy() const
+{
+    return this->strategy;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Generator::isStrategyExhaustive() const
+{
+    return this->strategy == STRATEGY_EXHAUSTIVE;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Generator::isStrategySample() const
+{
+    return this->strategy == STRATEGY_SAMPLE;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Generator::isStrategyBeam() const
+{
+    return this->strategy == STRATEGY_BEAM;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Generator::setMaxRuleChoices(unsigned int value)
+{
+    this->maxRuleChoices = value;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+unsigned int Generator::getMaxRuleChoices() const
+{
+    return this->maxRuleChoices;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+unsigned int Generator::getEffectiveMaxRuleChoices() const
+{
+    if (this->maxRuleChoices > 0)
+        return this->maxRuleChoices;
+
+    if (this->strategy == STRATEGY_SAMPLE)
+        return 2;
+
+    return 0;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Generator::setBeamWidth(unsigned int value)
+{
+    this->beamWidth = value;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+unsigned int Generator::getBeamWidth() const
+{
+    return this->beamWidth;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+unsigned int Generator::getEffectiveBeamWidth() const
+{
+    if (this->beamWidth > 0)
+        return this->beamWidth;
+
+    if (this->strategy == STRATEGY_BEAM)
+        return 250;
+
+    return 0;
+}
+
+void Generator::seedRandom(uint32_t seed)
+{
+    this->randomSeed = seed;
+    this->randomSeedSet = true;
+    this->randomEngine.seed(seed);
+}
+
+uint32_t Generator::getRandomSeed(void) const
+{
+    return this->randomSeed;
+}
+
+bool Generator::hasRandomSeed(void) const
+{
+    return this->randomSeedSet;
+}
+
+uint32_t Generator::randomUInt(void)
+{
+    std::uniform_int_distribution<uint32_t> distribution(
+        0,
+        std::numeric_limits<uint32_t>::max());
+
+    return distribution(this->randomEngine);
+}
+
+size_t Generator::randomIndex(size_t size)
+{
+    if (size == 0)
+    {
+        throw fatal_exception("randomIndex called with size 0");
+    }
+
+    std::uniform_int_distribution<size_t> distribution(0, size - 1);
+    return distribution(this->randomEngine);
+}
+
+double Generator::randomDouble01(void)
+{
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    return distribution(this->randomEngine);
+}
+
+std::mt19937 &Generator::getRandomEngine(void)
+{
+    return this->randomEngine;
+}
+
+/* **************************************************
+ * Insert an item into an Earley state, with optional pruning.
+ *
+ * exhaustive:
+ *   comportement historique, sauf qu’on centralise l’insertion.
+ *
+ * sample / beam:
+ *   si le budget est dépassé, on ignore l’item au lieu de bloquer.
+ ************************************************** */
+bool Generator::insertStateItem(class ItemSet *state, class Item *item, bool fatalOnFailure)
+{
+    const unsigned int effectiveBeamWidth = getEffectiveBeamWidth();
+
+    if (effectiveBeamWidth > 0 && state->size() >= effectiveBeamWidth)
+    {
+        free(item);
+        return false;
+    }
+
+    if (!isStrategyExhaustive() && this->maxItems > 0 && state->size() >= this->maxItems)
+    {
+        free(item);
+        return false;
+    }
+
+    bool inserted = state->insert(item, this);
+
+    if (inserted)
+    {
+        insertItemMap(item);
+        return true;
+    }
+
+    free(item);
+
+    if (fatalOnFailure && isStrategyExhaustive())
+    {
+        throw fatal_exception("unexpected duplicate item insertion");
+    }
+
+    return false;
+}
+
 #ifdef OUTPUT_XML
 
 /* **************************************************
@@ -533,7 +762,7 @@ Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
     ss << actualItem->peekCoreSerialString();
     ss << '\x0';
     ss << previousItem->peekCoreSerialString();
-  
+
     return ss.str();
 }
 
@@ -640,14 +869,11 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 it->toHTML(std::cout);
                 std::cout << std::endl;
 #endif
-                if (!state->insert(it, this))
+                if (!insertStateItem(state, it, true) && isStrategyExhaustive())
                 {
-                    FATAL_ERROR_UNEXPECTED;
+                    FATAL_ERROR_UNEXPECTED
                 }
-                else
-                {
-                    insertItemMap(it);
-                }
+
                 it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                 it->setRule((*actualItem)->getRule()->clone());
                 it->setIndex((*actualItem)->getIndex());
@@ -666,14 +892,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 it->toHTML(std::cout);
                 std::cout << std::endl;
 #endif
-                if (!state->insert(it, this))
-                {
-                    //FATAL_ERROR_UNEXPECTED;
-                }
-                else
-                {
-                    insertItemMap(it);
-                }
+                insertStateItem(state, it, false);
+
                 eraseItemMap((*actualItem)->getId());
                 state->erase(*actualItem);
                 modification = true;
@@ -694,7 +914,31 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                 (*actualItem)->addFlags(Flags::SEEN);
                 termsPtr terms = (*actualItem)->getCurrentTerms();
+
+                std::vector<uint8_t> candidateTermIndexes;
+
                 for (uint8_t indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1)
+                {
+                    candidateTermIndexes.push_back(indexTerm1);
+                }
+
+                const unsigned int maxRuleChoices = getEffectiveMaxRuleChoices();
+
+                if (isStrategySample() && candidateTermIndexes.size() > 1)
+                {
+                    std::shuffle(
+                        candidateTermIndexes.begin(),
+                        candidateTermIndexes.end(),
+                        this->getRandomEngine());
+                }
+
+                if (maxRuleChoices > 0 && candidateTermIndexes.size() > maxRuleChoices)
+                {
+                    candidateTermIndexes.resize(maxRuleChoices);
+                    WARNING("unfolding: too many choices, only the first " << maxRuleChoices << " will be considered");
+                }
+
+                for (uint8_t indexTerm1 : candidateTermIndexes)
                 {
                     class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                     it->setRule((*actualItem)->getRule()->clone());
@@ -707,14 +951,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                     it->toHTML(std::cout);
                     std::cout << std::endl;
 #endif
-                    if (!state->insert(it, this))
-                    {
-                        //FATAL_ERROR_UNEXPECTED;
-                    }
-                    else
-                    {
-                        insertItemMap(it);
-                    }
+
+                    insertStateItem(state, it, false);
                 }
                 eraseItemMap((*actualItem)->getId());
                 state->erase((*actualItem));
@@ -784,51 +1022,75 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                             inheritedChildFeatures->deleteAnonymousVariables();
                         }
 
+                        std::vector<rulePtr> candidateRules;
+
                         for (const auto &iterRules : parser.getRules().getRules())
                         {
-                            if ((iterRules->getLhs() == (*actualItem)->getCurrentTerm()))
+                            if (iterRules->getLhs() == (*actualItem)->getCurrentTerm())
                             {
-
-                                class Item *it;
-                                iterRules->incUsages(this);
-                                it = Item::create(iterRules->clone(), 0, Item::POSTERM_NA,
-                                                  iterRules->getStatements() ? iterRules->getStatements()->clone(0)
-                                                                             : statementsPtr());
-                                it->addRange(row);
-                                it->setInheritedFeatures(inheritedChildFeatures->clone());
-                                // it->renameVariables(it->getId());
-
-                                if (traceClose || (trace && it->getRuleTrace()))
-                                {
-                                    std::cout << "<H3>####################### CLOSE CON'T (Y -> • γ) #######################</H3>" << std::endl;
-                                    it->toHTML(std::cout);
-                                    std::cout << std::endl;
-                                    std::flush(std::cout);
-                                }
-
-                                // record the item
-                                auto found = state->find(it);
-                                if (found != state->cend())
-                                {
-                                    (*found)->addRef((*actualItem)->getId());
-
-                                    free(it);
-                                }
-                                else
-                                {
-                                    it->addRef((*actualItem)->getId());
-                                    if (!state->insert(it, this))
-                                    {
-                                        FATAL_ERROR_UNEXPECTED
-                                    }
-                                    else
-                                    {
-                                        insertItemMap(it);
-                                    }
-                                }
-                                modification = true;
-                                (*actualItem)->addFlags(Flags::SEEN);
+                                candidateRules.push_back(iterRules);
                             }
+                        }
+
+                        const unsigned int maxRuleChoices = getEffectiveMaxRuleChoices();
+
+                        if (isStrategySample() && candidateRules.size() > 1)
+                        {
+                            std::shuffle(
+                                candidateRules.begin(),
+                                candidateRules.end(),
+                                this->getRandomEngine());
+                        }
+
+                        if (maxRuleChoices > 0 && candidateRules.size() > maxRuleChoices)
+                        {
+                            candidateRules.resize(maxRuleChoices);
+                        }
+
+                        for (const auto &iterRules : candidateRules)
+                        {
+                            class Item *it;
+
+                            iterRules->incUsages(this);
+
+                            // garde ici le corps existant du for
+                            it = Item::create(iterRules->clone(), 0, Item::POSTERM_NA,
+                                              iterRules->getStatements() ? iterRules->getStatements()->clone(0)
+                                                                         : statementsPtr());
+                            it->addRange(row);
+                            it->setInheritedFeatures(inheritedChildFeatures->clone());
+                            // it->renameVariables(it->getId());
+
+                            if (traceClose || (trace && it->getRuleTrace()))
+                            {
+                                std::cout << "<H3>####################### CLOSE CON'T (Y -> • γ) #######################</H3>" << std::endl;
+                                it->toHTML(std::cout);
+                                std::cout << std::endl;
+                                std::flush(std::cout);
+                            }
+
+                            // record the item
+                            auto found = state->find(it);
+                            if (found != state->cend())
+                            {
+                                (*found)->addRef((*actualItem)->getId());
+
+                                free(it);
+                            }
+                            else
+                            {
+                                it->addRef((*actualItem)->getId());
+
+                                if (insertStateItem(state, it, true))
+                                {
+                                }
+                                else if (isStrategyExhaustive())
+                                {
+                                    FATAL_ERROR_UNEXPECTED
+                                }
+                            }
+                            modification = true;
+                            (*actualItem)->addFlags(Flags::SEEN);
                         }
                     }
                 }
@@ -923,7 +1185,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                         }
                                     }
                                 }
-                                //insEquivalentNode(forestFound, node))
+                                // insEquivalentNode(forestFound, node))
                                 {
                                     forestFound->push_node(node);
                                 }
@@ -994,14 +1256,13 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             }
                                             else
                                             {
-                                                if (!states[row]->insert(it, this))
+                                                if (insertStateItem(states[row], it, true))
+                                                {
+                                                    modification = true;
+                                                }
+                                                else if (isStrategyExhaustive())
                                                 {
                                                     FATAL_ERROR_UNEXPECTED
-                                                }
-                                                else
-                                                {
-                                                    insertItemMap(it);
-                                                    modification = true;
                                                 }
                                             }
                                             (*actualItem)->addFlags(Flags::SEEN);
@@ -1060,7 +1321,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             it->addForestIdentifiers(previousItem->getIndex(), fi);
                                         }
                                         if (!containsEquivalentNode(forestFound, node))
-                                        {   
+                                        {
                                             forestFound->push_node(node);
                                         }
                                         if (traceReduce || (trace && it->getRuleTrace()))
@@ -1087,14 +1348,13 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                                                it);
                                             // record the item
                                             it->setRefs(previousItem->getRefs());
-                                            if (!states[row]->insert(it, this))
+                                            if (insertStateItem(states[row], it, true))
+                                            {
+                                                modification = true;
+                                            }
+                                            else if (isStrategyExhaustive())
                                             {
                                                 FATAL_ERROR_UNEXPECTED
-                                            }
-                                            else
-                                            {
-                                                insertItemMap(it);
-                                                modification = true;
                                             }
                                             (*actualItem)->addFlags(Flags::SEEN);
                                         }
@@ -1260,7 +1520,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                             WARNING("too many random attempts");
                                             break;
                                         }
-                                        size_t rv = std::rand() / ((RAND_MAX + 1u) / entries->size());
+                                        size_t rv = this->randomIndex(entries->size());
                                         entry = entries->get(rv);
                                     }
                                     else
@@ -1380,19 +1640,12 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                             std::cout << std::endl;
                                         }
 
-                                        // record the item
-                                        if (!states[row]->insert(it, this))
+                                        if (insertStateItem(states[row], it, true))
                                         {
-                                            // synomym and homonym
-                                            // i.e. two different forms
-                                            // WARNING("The same word is defined twice");
-                                        }
-                                        else
-                                        {
-                                            insertItemMap(it);
                                             modification = true;
                                             modificationOnce = true;
                                         }
+
                                         (*actualItem)->addFlags(Flags::SEEN);
                                         if (this->getRandomResult())
                                         {
@@ -1456,8 +1709,7 @@ void Generator::generate(class Parser &parser)
             it->toHTML(std::cout);
             std::cout << std::endl;
         }
-        insertItemMap(it);
-        initState->insert(it, this);
+        insertStateItem(initState, it, true);
     }
 
     states.insert(std::make_pair(0, initState));
@@ -1481,16 +1733,12 @@ void Generator::generate(class Parser &parser)
     {
         throw fatal_exception("maxLength");
     }
-    if ((i % 121) == 0)
-    {
-        std::cerr << "Length : " << i << std::endl;
-    }
 
     if (!nodeRoot->empty())
     {
         for (auto forest = nodeRoot->cbegin(); forest != nodeRoot->cend(); ++forest)
         {
-            (*forest)->generate(this->getRandomResult(), this->getFirstResult());
+            (*forest)->generate(this, this->getRandomResult(), this->getFirstResult());
         }
     }
 

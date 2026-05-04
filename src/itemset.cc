@@ -119,8 +119,8 @@ bool ItemSet::insert(class Item *item, Generator *synthesizer)
     {
         std::ostringstream oss;
         oss << "too much items build : " << items.size() << " (" << synthesizer->getMaxItems() << " Max)";
-            this->toHTML(std::cout);
-            std::cout << std::endl;
+            //this->toHTML(std::cout);
+            //std::cout << std::endl;
         throw fatal_exception(oss);
     }
 #ifdef TRACE_INSERT

@@ -59,15 +59,11 @@ options\n\
 \t--verbose|-V                                verbose mode\n\
 \t--reduceAll|-a                              reduce all rules\n\
 \t--random|-r                                 outputs first sentence randomly selected\n\
+\t-seed <number>                              random seed for reproducible generation\n\
 \t--first|-f                                  outputs the first sentence\n\
-\t--trace|-t                                  trace the @trace rules\n\
-\t--traceAll\n\
-\t--traceInit\n\
-\t--traceStage\n\
-\t--traceClose\n\
-\t--traceShift\n\
-\t--traceReduce\n\
-\t--traceAction\n\
+\t-strategy <exhaustive|sample|beam>          derivation strategy; default exhaustive\n\
+\t-maxRuleChoices <number>                    max rule/disjunction choices opened in sample mode\n\
+\t-beamWidth <number>                         max items kept per state in beam mode\n\
 \t-maxLength <number>                         max sentence length\n\
 \t-maxUsages <number>                         max number of rule usage\n\
 \t-maxItems <number>                          max number of items per set\n\
@@ -79,6 +75,14 @@ options\n\
 \t-inputFile <file>                           the input\n\
 \t-compactedLexiconDirectory/-cld <directory> the directory which contains the compacted lexicon\n\
 \t-compactedLexiconFile/-clf <file>           the compacted lexicon prefix name\n\
+\t--trace|-t                                  trace the @trace rules\n\
+\t--traceAll\n\
+\t--traceInit\n\
+\t--traceStage\n\
+\t--traceClose\n\
+\t--traceShift\n\
+\t--traceReduce\n\
+\t--traceAction\n\
 ";
 #ifdef OUTPUT_XML
     std::cerr << "\
@@ -117,7 +121,7 @@ void generate(bool trace)
             forestPtr forest;
             if (generator.getRandomResult())
             {
-                unsigned int rv = std::rand() / ((RAND_MAX + 1u) / generator.getNodeRoot()->size());
+                size_t rv = generator.randomIndex(generator.getNodeRoot()->size());
                 forest = generator.getNodeRoot()->at(rv);
             }
             while (forestIt != generator.getNodeRoot()->cend())
@@ -192,7 +196,6 @@ int main(int argn, char **argv)
                     }
                     else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random"))
                     {
-                        std::srand(static_cast<unsigned int>(std::time(nullptr)));
                         generator.setRandomResult(true);
                     }
                     else if (!strcmp(argv[arg] + 1, "f") || !strcmp(argv[arg] + 1, "-first"))
@@ -338,6 +341,58 @@ int main(int argn, char **argv)
                             throw usage_exception("bad maxAttemps argument");
                         }
                     }
+                    else if (!strcmp(argv[arg] + 1, "seed"))
+                    {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                        {
+                            generator.seedRandom(
+                                static_cast<uint32_t>(std::strtoul(argv[++arg], nullptr, 10)));
+                        }
+                        else
+                        {
+                            throw usage_exception("bad seed argument");
+                        }
+                    }
+
+                    else if (!strcmp(argv[arg] + 1, "strategy"))
+                    {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                        {
+                            std::string strategyName(argv[++arg]);
+
+                            if (!generator.setStrategy(strategyName))
+                            {
+                                throw usage_exception("bad strategy argument: expected exhaustive, sample, or beam");
+                            }
+                        }
+                        else
+                        {
+                            throw usage_exception("bad strategy argument");
+                        }
+                    }
+                    else if (!strcmp(argv[arg] + 1, "maxRuleChoices"))
+                    {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                        {
+                            generator.setMaxRuleChoices(atoi(argv[++arg]));
+                        }
+                        else
+                        {
+                            throw usage_exception("bad maxRuleChoices argument");
+                        }
+                    }
+                    else if (!strcmp(argv[arg] + 1, "beamWidth"))
+                    {
+                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
+                        {
+                            generator.setBeamWidth(atoi(argv[++arg]));
+                        }
+                        else
+                        {
+                            throw usage_exception("bad beamWidth argument");
+                        }
+                    }
+
                     else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory"))
                     {
                         if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
@@ -487,7 +542,6 @@ int main(int argn, char **argv)
     </script>
 )";
         }
-        srand(time(nullptr));
 
         if (generator.getInputFileName().length() > 0)
         {

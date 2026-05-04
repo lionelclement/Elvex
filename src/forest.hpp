@@ -31,6 +31,8 @@
 #include "flags.hpp"
 #include "shared_ptr.hpp"
 
+class Generator;
+
 class Forest : public Facade,
                public std::enable_shared_from_this<class Forest>
 {
@@ -84,7 +86,7 @@ public:
     void toXML(const xmlNodePtr, bool);
 #endif
 
-    void generate(bool randomResult, bool singleResult);
+void generate(class Generator *generator, bool randomResult, bool singleResult);
 };
 
 #endif // ELVEX_FOREST_H

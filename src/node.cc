@@ -289,7 +289,7 @@ void Node::generatePermutations(Node::vectorForests &forests, int start, int end
 /* **************************************************
  * TO do: remove empty forests
  ************************************************** */
-void Node::generate(bool randomResult, bool singleResult)
+void Node::generate(class Generator *generator, bool randomResult, bool singleResult)
 {
    if (isUnsetFlags(Flags::GENERATED))
    {
@@ -297,8 +297,9 @@ void Node::generate(bool randomResult, bool singleResult)
       if (!forests.empty())
       {
          for (vectorForests::const_iterator forest = cbegin(); forest != cend(); ++forest)
-            if ((*forest)->isUnsetFlags(Flags::GENERATED))
-               (*forest)->generate(randomResult, singleResult);
+            if ((*forest)->isUnsetFlags(Flags::GENERATED)){
+               (*forest)->generate(generator, randomResult, singleResult);
+                           }
       }
       if (unordered)
       {

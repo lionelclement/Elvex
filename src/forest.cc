@@ -24,6 +24,7 @@
 #include "messages.hpp"
 #include "shared_ptr.hpp"
 #include "node.hpp"
+#include "generator.hpp"
 
 std::string Forest::EMPTY_FORM = "";
 
@@ -181,7 +182,7 @@ void Forest::toXML(xmlNodePtr nodeRoot, bool root)
 /* **************************************************
  *
  ************************************************** */
-void Forest::generate(bool randomResult, bool singleResult)
+void Forest::generate(class Generator *generator, bool randomResult, bool singleResult)
 {
     if (isUnsetFlags(Flags::GENERATED))
     {
@@ -196,8 +197,10 @@ void Forest::generate(bool randomResult, bool singleResult)
             nodePtr node;
             if (randomResult)
             {
-                size_t rv = std::rand() / ((RAND_MAX + 1u) / nodes.size());
-                node = nodes.at(rv);
+
+                size_t rv = generator->randomIndex(nodes.size());
+node = nodes.at(rv);
+
             }
             while (nodeIt != nodes.end())
             {
@@ -205,7 +208,7 @@ void Forest::generate(bool randomResult, bool singleResult)
                     node = *nodeIt;
                 if (node->isUnsetFlags(Flags::GENERATED))
                 {
-                    node->generate(randomResult, singleResult);
+                    node->generate(generator, randomResult, singleResult);
                 }
                 for (std::forward_list<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s)
                 {
