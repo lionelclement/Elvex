@@ -29,7 +29,7 @@
 #include "generator.hpp"
 
 class Statements : public Facade,
-                   // public Serializable,
+                   public Serializable,
                    public std::enable_shared_from_this<class Statements>
 {
 
@@ -45,6 +45,8 @@ private:
 
 public:
     ~Statements();
+
+    void makeCoreSerialString(void);
 
     static statementsPtr create(const statementPtr & = statementPtr());
 
@@ -62,8 +64,6 @@ public:
 
     void renameVariables(uint32_t code);
 
-    bool findVariable(uint32_t code);
-
     void print(std::ostream &outStream, uint8_t tabulationLenght, uint8_t tabulation, uint32_t color, uint32_t bgcolor, bool ln, std::string leftSep, std::string rightSep, std::string sep) const;
 
     statementsPtr clone(const std::bitset<MAX_FLAGS> &savedFlags);
@@ -72,8 +72,6 @@ public:
 
     void apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
-    //    protected:
-    //        void makeSerialString() override;
 };
 
 #endif // ELVEX_STATEMENTS_H

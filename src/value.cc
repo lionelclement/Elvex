@@ -19,6 +19,8 @@
 
 #include <sstream>
 #include <utility>
+#include <cctype>
+
 #include "value.hpp"
 #include "environment.hpp"
 #include "pairp.hpp"
@@ -33,10 +35,49 @@
 #include "vartable.hpp"
 #include "item.hpp"
 
-valuePtr Value::STATIC_NIL = Value::createEmpty(Value::NIL_VALUE);
-valuePtr Value::STATIC_TRUE = Value::createEmpty(Value::TRUE_VALUE);
-valuePtr Value::STATIC_FALSE = Value::createEmpty(Value::FALSE_VALUE);
-valuePtr Value::STATIC_ANONYMOUS = Value::createEmpty(Value::ANONYMOUS_VALUE);
+valuePtr Value::STATIC_NIL = Value::createStatic(Value::NIL_VALUE);
+valuePtr Value::STATIC_TRUE = Value::createStatic(Value::TRUE_VALUE);
+valuePtr Value::STATIC_FALSE = Value::createStatic(Value::FALSE_VALUE);
+valuePtr Value::STATIC_ANONYMOUS_VARIABLE = Value::createStatic(Value::ANONYMOUS_VARIABLE_VALUE);
+
+namespace
+{
+    bool isVariableStart(unsigned char c)
+    {
+        return std::isalpha(c) || c == '_' || c >= 128;
+    }
+
+    bool stringContainsVariable(const std::string &data)
+    {
+        size_t i = 0;
+
+        while (i < data.size())
+        {
+            if (data[i] != '$')
+            {
+                ++i;
+                continue;
+            }
+
+            if (i + 1 >= data.size())
+            {
+                ++i;
+                continue;
+            }
+
+            const unsigned char first = static_cast<unsigned char>(data[i + 1]);
+
+            if (isVariableStart(first))
+            {
+                return true;
+            }
+
+            ++i;
+        }
+
+        return false;
+    }
+}
 
 /* **************************************************
  *
@@ -51,7 +92,7 @@ Value::Value(Value::Type const type, const std::string &string)
     {
         this->code = Vartable::nameToCode(string);
     }
-    else if (type == FORM_VALUE)
+    else if (type == STRING_VALUE)
     {
         this->string = string;
     }
@@ -84,12 +125,14 @@ Value::~Value()
         features.reset();
     if (pairp)
         pairp.reset();
+    if (statement)
+        statement.reset();
 }
 
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::createEmpty(const enum Type type)
+valuePtr Value::createStatic(const enum Type type)
 {
     return valuePtr(new Value(type));
 }
@@ -129,9 +172,9 @@ valuePtr Value::createIdentifier(const std::string &name)
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::createForm(const std::string &str)
+valuePtr Value::createString(const std::string &str)
 {
-    return valuePtr(new Value(FORM_VALUE, str));
+    return valuePtr(new Value(STRING_VALUE, str));
 }
 
 /* **************************************************
@@ -161,9 +204,19 @@ valuePtr Value::createPairp(pairpPtr lst)
 /* **************************************************
  *
  ************************************************** */
-valuePtr Value::createDown2(uint32_t code)
+valuePtr Value::createDoubleDown(uint32_t code)
 {
     return valuePtr(new Value(Value::SYNTHESIZED_CHILD_FEATURES_VALUE, code));
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+valuePtr Value::createStatement(const statementPtr &statement)
+{
+    valuePtr value = valuePtr(new Value(Value::STATEMENT_VALUE));
+    value->statement = statement;
+    return value;
 }
 
 /* **************************************************
@@ -225,6 +278,14 @@ pairpPtr Value::getPairp() const
 /* **************************************************
  *
  ************************************************** */
+statementPtr Value::getStatement() const
+{
+    return statement;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 bool Value::isNil() const
 {
     return (type == NIL_VALUE);
@@ -243,15 +304,15 @@ bool Value::isTrue() const
  ************************************************** */
 bool Value::isFalse() const
 {
-    return ((type == FALSE_VALUE) || (type == NIL_VALUE) || (type == ANONYMOUS_VALUE));
+    return ((type == FALSE_VALUE) || (type == NIL_VALUE) || (type == ANONYMOUS_VARIABLE_VALUE));
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Value::isAnonymous() const
+bool Value::isAnonymousVariable() const
 {
-    return type == ANONYMOUS_VALUE;
+    return type == ANONYMOUS_VARIABLE_VALUE;
 }
 
 /* **************************************************
@@ -267,7 +328,7 @@ bool Value::isNumber() const
  ************************************************** */
 bool Value::isString() const
 {
-    return type == FORM_VALUE;
+    return type == STRING_VALUE;
 }
 
 /* **************************************************
@@ -340,7 +401,7 @@ void Value::toHTML(std::ostream &outStream) const
     case VARIABLE_VALUE:
         outStream << '$' << Vartable::codeToName(code);
         break;
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
         outStream << '_';
         break;
     case IDENTIFIER_VALUE:
@@ -349,7 +410,7 @@ void Value::toHTML(std::ostream &outStream) const
     case NUMBER_VALUE:
         outStream << number;
         break;
-    case FORM_VALUE:
+    case STRING_VALUE:
         outStream << string;
         break;
     case FEATURES_VALUE:
@@ -358,8 +419,11 @@ void Value::toHTML(std::ostream &outStream) const
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
         break;
-    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         outStream << "⇓" << code + 1;
+        break;
+    case STATEMENT_VALUE:
+        getStatement()->toHTML(outStream);
         break;
     }
 }
@@ -383,7 +447,7 @@ void Value::flatPrint(std::ostream &outStream) const
     case CONSTANT_VALUE:
         outStream << bitset->toString();
         break;
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
         outStream << '_';
         break;
     case IDENTIFIER_VALUE:
@@ -395,7 +459,7 @@ void Value::flatPrint(std::ostream &outStream) const
     case NUMBER_VALUE:
         outStream << number;
         break;
-    case FORM_VALUE:
+    case STRING_VALUE:
         outStream << '"' << string << '"';
         break;
     case FEATURES_VALUE:
@@ -404,8 +468,11 @@ void Value::flatPrint(std::ostream &outStream) const
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
         break;
-    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         outStream << "⇓" << code + 1;
+        break;
+    case STATEMENT_VALUE:
+        getStatement()->flatPrint(outStream);
         break;
     }
 }
@@ -426,7 +493,7 @@ void Value::makeCoreSerialString()
     case FALSE_VALUE:
         coreSerialString = 'c';
         break;
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
         coreSerialString = 'd';
         break;
     case CONSTANT_VALUE:
@@ -441,7 +508,7 @@ void Value::makeCoreSerialString()
     case NUMBER_VALUE:
         coreSerialString = 'h' + std::to_string(number);
         break;
-    case FORM_VALUE:
+    case STRING_VALUE:
         coreSerialString = 'i' + string;
         break;
     case FEATURES_VALUE:
@@ -450,8 +517,11 @@ void Value::makeCoreSerialString()
     case PAIRP_VALUE:
         coreSerialString = 'l' + getPairp()->peekCoreSerialString();
         break;
-    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
         coreSerialString = 'n' + std::to_string(code);
+        break;
+    case STATEMENT_VALUE:
+        coreSerialString = 'o' + (getStatement() ? getStatement()->peekCoreSerialString() : std::string("0"));
         break;
     }
 }
@@ -482,7 +552,7 @@ void Value::toXML(xmlNodePtr nodeRoot) const
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"variable");
         xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)Vartable::codeToName(getCode()).c_str());
         break;
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"anonymous");
         break;
     case IDENTIFIER_VALUE:
@@ -493,8 +563,8 @@ void Value::toXML(xmlNodePtr nodeRoot) const
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"double");
         xmlSetProp(v, (xmlChar *)"value", (const xmlChar *)std::to_string(number).c_str());
         break;
-    case FORM_VALUE:
-        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"form");
+    case STRING_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"string");
         xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)string.c_str());
         break;
     case FEATURES_VALUE:
@@ -508,6 +578,11 @@ void Value::toXML(xmlNodePtr nodeRoot) const
     case SYNTHESIZED_CHILD_FEATURES_VALUE:
         xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"down2");
         xmlNewChild(v, NULL, (const xmlChar *)"VAL", (const xmlChar *)Vartable::codeToName(getCode()).c_str());
+        break;
+
+    case STATEMENT_VALUE:
+        xmlSetProp(v, (xmlChar *)"type", (const xmlChar *)"statement");
+        getStatement()->toXML(v);
         break;
     }
 }
@@ -524,7 +599,7 @@ valuePtr Value::clone()
     case NIL_VALUE:
     case TRUE_VALUE:
     case FALSE_VALUE:
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
         result = shared_from_this();
         break;
 
@@ -536,8 +611,8 @@ valuePtr Value::clone()
         result = Value::createIdentifier(code);
         break;
 
-    case FORM_VALUE:
-        result = Value::createForm(string);
+    case STRING_VALUE:
+        result = Value::createString(string);
         break;
 
     case NUMBER_VALUE:
@@ -556,8 +631,12 @@ valuePtr Value::clone()
         result = Value::createVariable(code);
         break;
 
-    case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
-        result = Value::createDown2(code);
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
+        result = Value::createDoubleDown(code);
+        break;
+
+    case STATEMENT_VALUE:
+        result = Value::createStatement(getStatement() ? getStatement()->clone() : statementPtr());
         break;
     }
     return result;
@@ -601,7 +680,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         else if (value->type == NIL_VALUE)
         {
         }
-        else if (value->type == ANONYMOUS_VALUE)
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
         }
         else
@@ -627,7 +706,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
                                                        verbose))
                 ret = false;
         }
-        else if (value->type == ANONYMOUS_VALUE)
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
             if (!this->getFeatures()->buildEnvironment(statementRoot, environment, Features::create(),
                                                        acceptToFilterNULLVariables
@@ -660,7 +739,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
             if (bitset->toString() != Vartable::codeToName(value->getCode()))
                 ret = false;
         }
-        else if (value->type == ANONYMOUS_VALUE)
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
         }
         else
@@ -684,7 +763,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
             if (code != value->getCode())
                 ret = false;
         }
-        else if (value->type == ANONYMOUS_VALUE)
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
         }
         else
@@ -705,7 +784,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
                 ret = false;
             }
         }
-        else if (value->type == ANONYMOUS_VALUE)
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
         }
         else
@@ -714,19 +793,19 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         }
         break;
 
-    case FORM_VALUE:
+    case STRING_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
             environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
-        else if (value->type == FORM_VALUE)
+        else if (value->type == STRING_VALUE)
         {
             if (string != value->string)
             {
                 ret = false;
             }
         }
-        else if (value->type == ANONYMOUS_VALUE)
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
         }
         else
@@ -747,7 +826,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         {
             environment->add(statementRoot, value->code, shared_from_this(), verbose);
         }
-        else if (value->type == ANONYMOUS_VALUE)
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
             if (!pairp->buildEnvironment(statementRoot, environment, Pairp::NIL,
                                          acceptToFilterNULLVariables,
@@ -771,7 +850,34 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         }
         break;
 
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
+        break;
+
+    case STATEMENT_VALUE:
+        if (value->type == VARIABLE_VALUE)
+        {
+            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+        }
+        else if (value->type == STATEMENT_VALUE)
+        {
+            if (!getStatement() || !value->getStatement())
+            {
+                if (getStatement() != value->getStatement())
+                    ret = false;
+            }
+            else if (getStatement()->peekCoreSerialString() !=
+                     value->getStatement()->peekCoreSerialString())
+            {
+                ret = false;
+            }
+        }
+        else if (value->type == ANONYMOUS_VARIABLE_VALUE)
+        {
+        }
+        else
+        {
+            ret = false;
+        }
         break;
     }
 #ifdef TRACE_BUILD_ENVIRONMENT
@@ -818,12 +924,12 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
     }
 
     // _ ⊂ …
-    else if (this->isAnonymous())
+    else if (this->isAnonymousVariable())
     {
     }
 
     // … ⊂ _
-    else if (other_value->isAnonymous())
+    else if (other_value->isAnonymousVariable())
     {
     }
 
@@ -851,7 +957,7 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
             if ((*bitset & *other_value->bitset).none())
                 ret = false;
             break;
-        case FORM_VALUE:
+        case STRING_VALUE:
             if (string != other_value->string)
                 ret = false;
             break;
@@ -875,7 +981,7 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
 }
 
 /* ************************************************************
- *
+ * this == o
  ************************************************************ */
 bool Value::equal(valuePtr o) const
 {
@@ -895,9 +1001,6 @@ bool Value::equal(valuePtr o) const
     else if (o->isNil() || this->isNil())
         ret = false;
 
-    else if (o->isAnonymous() || this->isAnonymous())
-        ret = true;
-
     else
     {
         switch (o->type)
@@ -912,8 +1015,8 @@ bool Value::equal(valuePtr o) const
             else if ((type == IDENTIFIER_VALUE) && (o->bitset->toString() == Vartable::codeToName(code)))
                 ret = true;
             break;
-        case FORM_VALUE:
-            if ((type == FORM_VALUE) && (string == o->string))
+        case STRING_VALUE:
+            if ((type == STRING_VALUE) && (string == o->string))
                 ret = true;
             break;
         case NUMBER_VALUE:
@@ -929,6 +1032,16 @@ bool Value::equal(valuePtr o) const
             if ((type == PAIRP_VALUE) &&
                 (getPairp()->peekCoreSerialString() == o->getPairp()->peekCoreSerialString()))
                 ret = true;
+            break;
+        case STATEMENT_VALUE:
+            if (type == STATEMENT_VALUE)
+            {
+                if (!getStatement() || !o->getStatement())
+                    ret = (getStatement() == o->getStatement());
+                else
+                    ret = (getStatement()->peekCoreSerialString() ==
+                           o->getStatement()->peekCoreSerialString());
+            }
             break;
         default:
             FATAL_ERROR_UNEXPECTED
@@ -961,60 +1074,6 @@ bool Value::lessThan(const valuePtr &o) const
     // return ret;
 }
 
-/* ************************************************************
- *
- ************************************************************ */
-void Value::deleteAnonymousVariables()
-{
-    switch (type)
-    {
-    case NIL_VALUE:
-    case TRUE_VALUE:
-    case FALSE_VALUE:
-    case IDENTIFIER_VALUE:
-    case CONSTANT_VALUE:
-    case FORM_VALUE:
-    case VARIABLE_VALUE:
-    case ANONYMOUS_VALUE:
-    case NUMBER_VALUE:
-    case SYNTHESIZED_CHILD_FEATURES_VALUE:
-        break;
-    case FEATURES_VALUE:
-        getFeatures()->deleteAnonymousVariables();
-        break;
-    case PAIRP_VALUE:
-        getPairp()->deleteAnonymousVariables();
-        break;
-    }
-}
-
-/* ************************************************************
- *
- ************************************************************ */
-void Value::deleteVariables()
-{
-    switch (type)
-    {
-    case NIL_VALUE:
-    case TRUE_VALUE:
-    case FALSE_VALUE:
-    case IDENTIFIER_VALUE:
-    case CONSTANT_VALUE:
-    case FORM_VALUE:
-    case VARIABLE_VALUE:
-    case ANONYMOUS_VALUE:
-    case NUMBER_VALUE:
-    case SYNTHESIZED_CHILD_FEATURES_VALUE:
-        break;
-    case FEATURES_VALUE:
-        getFeatures()->deleteVariables();
-        break;
-    case PAIRP_VALUE:
-        getPairp()->deleteVariables();
-        break;
-    }
-}
-
 /* **************************************************
  *
  ************************************************** */
@@ -1029,10 +1088,10 @@ bool Value::renameVariables(uint32_t key)
     case CONSTANT_VALUE:
     case IDENTIFIER_VALUE:
     case NUMBER_VALUE:
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
     case SYNTHESIZED_CHILD_FEATURES_VALUE:
         break;
-    case FORM_VALUE:
+    case STRING_VALUE:
         Vartable::renameVariables(string, key);
         resetCoreSerial();
         effect = true;
@@ -1044,17 +1103,27 @@ bool Value::renameVariables(uint32_t key)
         break;
     case FEATURES_VALUE:
         if (getFeatures())
-            if (getFeatures()->renameVariables(key)){
+            if (getFeatures()->renameVariables(key))
+            {
                 resetCoreSerial();
                 effect = true;
             }
         break;
     case PAIRP_VALUE:
         if (getPairp())
-            if (getPairp()->renameVariables(key)){
+            if (getPairp()->renameVariables(key))
+            {
                 resetCoreSerial();
                 effect = true;
             }
+        break;
+    case STATEMENT_VALUE:
+        if (getStatement())
+        {
+            getStatement()->renameVariables(key);
+            resetCoreSerial();
+            effect = true;
+        }
         break;
     }
     return effect;
@@ -1071,10 +1140,10 @@ void Value::testEnable(const statementPtr &root, class Item *item, Generator *sy
     case TRUE_VALUE:
     case FALSE_VALUE:
     case IDENTIFIER_VALUE:
-    case FORM_VALUE:
+    case STRING_VALUE:
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
         break;
     case VARIABLE_VALUE:
         if (on)
@@ -1111,41 +1180,63 @@ void Value::testEnable(const statementPtr &root, class Item *item, Generator *sy
             root->subFlags(Flags::DISABLED);
             effect = true;
         }
+        break;
+    case STATEMENT_VALUE:
+        if (getStatement())
+            getStatement()->testEnable(root, item, synthesizer, effect, on);
+        break;
     }
 }
 
-/* **************************************************
- *
- ************************************************** */
-bool Value::containsVariable(uint32_t key) const
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+bool Value::containsVariable()
 {
+    bool result = false;
+    if (isSetFlags(Flags::CONTAINS_VARIABLE))
+        return true;
+    if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
+        return false;
     switch (type)
     {
     case NIL_VALUE:
     case TRUE_VALUE:
     case FALSE_VALUE:
     case IDENTIFIER_VALUE:
-    case FORM_VALUE:
     case CONSTANT_VALUE:
     case NUMBER_VALUE:
-    case ANONYMOUS_VALUE:
+    case ANONYMOUS_VARIABLE_VALUE:
     case SYNTHESIZED_CHILD_FEATURES_VALUE:
-
+    case STATEMENT_VALUE:
         break;
     case VARIABLE_VALUE:
-        if (code == key)
-            return true;
+        result = true;
         break;
-    case FEATURES_VALUE:
-        if (getFeatures()->findVariable(key))
-            return true;
+        case STRING_VALUE:
+        if (stringContainsVariable(string))
+        {
+            result = true;
+        }
         break;
     case PAIRP_VALUE:
-        if (getPairp()->findVariable(key))
-            return true;
+        if (this->getPairp()->containsVariable())
+        {
+            result = true;
+        }
+        break;
+    case FEATURES_VALUE:
+        if (this->getFeatures()->containsVariable())
+        {
+            result = true;
+        }
         break;
     }
-    return false;
+    if (result)
+        addFlags(Flags::CONTAINS_VARIABLE);
+    else
+        addFlags(Flags::DOES_NOT_CONTAIN_VARIABLE);
+    return result;
 }
 
 /* ************************************************************
@@ -1183,48 +1274,48 @@ void Value::apply(statementPtr statementRoot, class Item *item, Parser &parser, 
     }
 }
 
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-bool Value::containsVariable()
-{
-    bool result = false;
-    if (isSetFlags(Flags::CONTAINS_VARIABLE))
-        return true;
-    if (isSetFlags(Flags::DOES_NOT_CONTAIN_VARIABLE))
-        return false;
-    switch (type)
-    {
-    case NIL_VALUE:
-    case TRUE_VALUE:
-    case FALSE_VALUE:
-    case IDENTIFIER_VALUE:
-    case FORM_VALUE:
-    case CONSTANT_VALUE:
-    case NUMBER_VALUE:
-    case ANONYMOUS_VALUE:
-    case SYNTHESIZED_CHILD_FEATURES_VALUE:
-        break;
-    case VARIABLE_VALUE:
-        result = true;
-        break;
-    case PAIRP_VALUE:
-        if (this->getPairp()->containsVariable())
-        {
-            result = true;
-        }
-        break;
-    case FEATURES_VALUE:
-        if (this->getFeatures()->containsVariable())
-        {
-            result = true;
-        }
-        break;
-    }
-    if (result)
-        addFlags(Flags::CONTAINS_VARIABLE);
-    else
-        addFlags(Flags::DOES_NOT_CONTAIN_VARIABLE);       
-    return result;
-}
-
+// /* ************************************************************
+//  *                                                            *
+//  ************************************************************ */
+// bool Value::containsAnonymousVariable()
+// {
+//     bool result = false;
+//     if (isSetFlags(Flags::CONTAINS_ANONYMOUS_VARIABLE))
+//         return true;
+//     if (isSetFlags(Flags::DOES_NOT_CONTAIN_ANONYMOUS_VARIABLE))
+//         return false;
+//     switch (type)
+//     {
+//     case NIL_VALUE:
+//     case TRUE_VALUE:
+//     case FALSE_VALUE:
+//     case IDENTIFIER_VALUE:
+//     case FORM_VALUE:
+//     case CONSTANT_VALUE:
+//     case NUMBER_VALUE:
+//     case SYNTHESIZED_CHILD_FEATURES_VALUE:
+//     case STATEMENT_VALUE:
+//     case VARIABLE_VALUE:
+//         break;
+//     case ANONYMOUS_VARIABLE_VALUE:
+//         result = true;
+//         break;
+//     case PAIRP_VALUE:
+//         if (this->getPairp()->containsAnonymousVariable())
+//         {
+//             result = true;
+//         }
+//         break;
+//     case FEATURES_VALUE:
+//         if (this->getFeatures()->containsAnonymousVariable())
+//         {
+//             result = true;
+//         }
+//         break;
+//     }
+//     if (result)
+//         addFlags(Flags::CONTAINS_ANONYMOUS_VARIABLE);
+//     else
+//         addFlags(Flags::DOES_NOT_CONTAIN_ANONYMOUS_VARIABLE);
+//     return result;
+// }

@@ -108,7 +108,7 @@ public:
 
     featuresPtr getInheritedFeatures(void) const;
 
-    environmentPtr _getEnvironment() const;
+    environmentPtr getEnvironment() const;
 
     uint32_t getRuleId(void) const;
 
@@ -213,6 +213,12 @@ public:
     void environmentAdd(statementPtr from, uint32_t code, valuePtr value, bool verbose);
 
     void environmentRemove(uint32_t code);
+
+    valuePtr evaluateStatementValues(const valuePtr &, Parser &, Generator *, bool);
+    
+    void evaluateStatementValues(const featuresPtr &, Parser &, Generator *, bool);
+    
+    void evaluateStatementValues(const pairpPtr &, Parser &, Generator *, bool);
 
     void defaultInheritedChildFeatures(void);
 

@@ -37,10 +37,9 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexicon::CompactedLexicon(std::string &directoryName, std::string &fileName)
+CompactedLexicon::CompactedLexicon(const std::string &filePrefix)
 {
-    this->directoryName = directoryName;
-    this->fileName = fileName;
+    this->filePrefix = filePrefix;
     this->dataFile = nullptr;
     this->fsaFile = nullptr;
     this->buffer = nullptr;
@@ -263,11 +262,9 @@ void CompactedLexicon::loadFsa(bool verbose)
  ************************************************** */
 void CompactedLexicon::openFiles(const std::string &mode)
 {
-    std::ostringstream oss;
-
-    oss << this->directoryName << "/" << this->fileName << ".tbl";
-    dataFileName = oss.str();
+    dataFileName = filePrefix + ".tbl";
     dataFile = fopen(dataFileName.c_str(), mode.c_str());
+
     if (dataFile == nullptr)
     {
         std::ostringstream oss;
@@ -275,10 +272,9 @@ void CompactedLexicon::openFiles(const std::string &mode)
         throw fatal_exception(oss);
     }
 
-    oss.str("");
-    oss << this->directoryName << "/" << this->fileName << ".fsa";
-    fsaFileName = oss.str();
+    fsaFileName = filePrefix + ".fsa";
     fsaFile = fopen(fsaFileName.c_str(), mode.c_str());
+
     if (fsaFile == nullptr)
     {
         std::ostringstream oss;

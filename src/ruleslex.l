@@ -70,7 +70,7 @@ alpha {alphaMin}|{alphaCap}
 alphaNum [[:digit:]]|{alpha}|_
 identifier {alpha}{alphaNum}*|[_]{alphaNum}+
 variable "$"{identifier}
-anonymous "_"
+anonymous_variable "_"
 digit      [0-9]
 digits     [0-9]+
 integer    [+-]?{digits}
@@ -78,10 +78,10 @@ double     [+-]?{digits}(\.{digits})?([Ee][+-]?{digits})?
 string \"([^\n\"]|\\\")*\"
 blanks [[:blank:]\15]+
 rightArrow "→"|"->"
-upArrow "↑"
-downArrow "↓"
-upDoubleArrow "⇑"
-downDoubleArrow "⇓"
+up_arrow "↑"
+down_arrow "↓"
+double_up_arrow "⇑"
+double_down_arrow "⇓"
 
 %option nounput
 %option yylineno
@@ -168,29 +168,29 @@ downDoubleArrow "⇓"
 
 <INITIAL>{
   {rightArrow} {
-    DBUGPRT("TOKEN_RIGHTARROW");
-    return TOKEN_RIGHTARROW;
+    DBUGPRT("TOKEN_RIGHT_ARROW");
+    return TOKEN_RIGHT_ARROW;
   }
   
-  {upArrow} {
-    DBUGPRT("TOKEN_UPARROW");
-    return TOKEN_UPARROW;
+  {up_arrow} {
+    DBUGPRT("TOKEN_UP_ARROW");
+    return TOKEN_UP_ARROW;
   }
   
-  {upDoubleArrow} {
-    DBUGPRT("TOKEN_UP2ARROW");
-    return TOKEN_UP2ARROW;
+  {double_up_arrow} {
+    DBUGPRT("TOKEN_DOUBLE_UP_ARROW");
+    return TOKEN_DOUBLE_UP_ARROW;
   }
   
-  {downArrow} {
-    DBUGPRT("TOKEN_DOWNARROW");
+  {down_arrow} {
+    DBUGPRT("TOKEN_DOWN_ARROW");
     ruleslval.integer_slot = 1;
-    return TOKEN_DOWNARROW;
+    return TOKEN_DOWN_ARROW;
   }
   
-  {downDoubleArrow} {
-    DBUGPRT("TOKEN_DOWN2ARROW");
-    return TOKEN_DOWN2ARROW;
+  {double_down_arrow} {
+    DBUGPRT("TOKEN_DOUBLE_DOWN_ARROW");
+    return TOKEN_DOUBLE_DOWN_ARROW;
   }
   
   "<" {
@@ -205,7 +205,7 @@ downDoubleArrow "⇓"
   
   "≤"|"<=" {
     DBUGPRT("TOKEN_LE");
-    return TOKEN_LT;
+    return TOKEN_LE;
   }
   
   "≥"|">=" {
@@ -249,8 +249,8 @@ downDoubleArrow "⇓"
   }
   
   "::" {
-    DBUGPRT("TOKEN_CONS");
-    return TOKEN_CONS;
+    DBUGPRT("TOKEN_LIST_CONS");
+    return TOKEN_LIST_CONS;
   }
   
   ":" {
@@ -264,8 +264,8 @@ downDoubleArrow "⇓"
   }
   
   \# {
-    DBUGPRT("TOKEN_DASH");
-    return TOKEN_DASH;
+    DBUGPRT("TOKEN_HASH");
+    return TOKEN_HASH;
   }
   
   "∪"|[Uu] {
@@ -314,8 +314,8 @@ downDoubleArrow "⇓"
   }
   
   "@" {
-    DBUGPRT("TOKEN_AROBASE");
-    return TOKEN_AROBASE;
+    DBUGPRT("TOKEN_AT_SIGN");
+    return TOKEN_AT_SIGN;
   }
   
   "@macros" {
@@ -463,21 +463,6 @@ downDoubleArrow "⇓"
     return TOKEN_COMMA;
   }
   
-  "#" {
-    DBUGPRT("TOKEN_DASH");
-    return TOKEN_DASH;
-  }
-  
-  "+" {
-    DBUGPRT("TOKEN_PLUS");
-    return TOKEN_PLUS;
-  }
-  
-  "-" {
-    DBUGPRT("TOKEN_MINUS");
-    return TOKEN_MINUS;
-  }
-  
   "%" {
     DBUGPRT("TOKEN_MODULO");
     return TOKEN_MODULO;
@@ -538,9 +523,9 @@ downDoubleArrow "⇓"
     return TOKEN_VARIABLE;
   }
   
-  {anonymous} {
-    DBUGPRTARG("TOKEN_ANONYMOUS ", yytext);
-    return TOKEN_ANONYMOUS;
+  {anonymous_variable} {
+    DBUGPRTARG("TOKEN_ANONYMOUS_VARIABLE ", yytext);
+    return TOKEN_ANONYMOUS_VARIABLE;
   }
   
   {integer} {

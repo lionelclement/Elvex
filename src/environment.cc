@@ -86,7 +86,7 @@ bool Environment::add(statementPtr statementRoot, const std::string &key, valueP
             it->second = value;
             resetCoreSerial();
         }
-        else if (it->second->isAnonymous())
+        else if (it->second->isAnonymousVariable())
         {
             it->second = value;
             resetCoreSerial();
@@ -289,9 +289,7 @@ void Environment::replaceVariables(const featuresPtr &features, bool &effect)
         case Feature::_LEMMA_:
         case Feature::_FORM_:
         case Feature::_CONSTANT_:
-            if (feature->getValue() && ((feature->getValue()->isFeatures() || feature->getValue()->isVariable()
-                                         /*|| feature->getValue()->isListFeatures() */
-                                         || feature->getValue()->isPairp() || feature->getValue()->isString())))
+            if (feature->getValue() && ((feature->getValue()->isFeatures() || feature->getValue()->isVariable() || feature->getValue()->isPairp() || feature->getValue()->isString())))
                 replaceVariables(feature->getValue(), effect);
             break;
         case Feature::_VARIABLE_:
@@ -327,7 +325,7 @@ void Environment::replaceVariables(const featuresPtr &features, bool &effect)
                 feature->setType(Feature::_CONSTANT_);
                 feature->setAttribute(value->getBitset());
             }
-            else if (value->isAnonymous())
+            else if (value->isAnonymousVariable())
             {
                 features->erase(it);
                 effect = true;
@@ -373,7 +371,7 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
     {
         return;
     }
-    if (!value->isNil() && !value->isAnonymous())
+    if (!value->isNil() && !value->isAnonymousVariable())
     {
         switch (value->getType())
         {
@@ -382,11 +380,12 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
         case Value::FALSE_VALUE:
         case Value::CONSTANT_VALUE:
         case Value::IDENTIFIER_VALUE:
-        case Value::ANONYMOUS_VALUE:
+        case Value::ANONYMOUS_VARIABLE_VALUE:
         case Value::NUMBER_VALUE:
         case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
             break;
-        case Value::FORM_VALUE:
+        case Value::STRING_VALUE:
+            COUT_LINE;
             replaceVariables(value->getString(), effect);
             break;
         case Value::FEATURES_VALUE:
@@ -406,8 +405,11 @@ void Environment::replaceVariables(const valuePtr &value, bool &effect)
                 return;
             }
         }
-
         break;
+
+        default:
+            FATAL_ERROR_UNEXPECTED;
+            break;
         }
     }
 #ifdef TRACE_ENVIRONMENT
@@ -551,6 +553,171 @@ void Environment::replaceVariables(std::string &data, bool &effect)
     std::cout << "</td></tr></table>";
 #endif
 }
+
+// /* **************************************************
+//  *
+//  ************************************************** */
+// void Environment::_removeAnonymousVariables(const featuresPtr &features, bool &effect)
+// {
+// #ifdef TRACE_ENVIRONMENT
+//     std::cout << "<H4>Environment::removeAnonymousVariables(features)</H4>" << std::endl;
+//     std::cout << "<table border=\"1\"><tr><th>featuresPtrs</th></tr>";
+//     std::cout << "<tr><td>";
+//     features->toHTML(std::cout);
+//     std::cout << "</td></tr></table>";
+// #endif
+//     if (!features->containsAnonymousVariable())
+//     {
+// #ifdef TRACE_ENVIRONMENT
+//         std::cout << "<H4>Environment::removeAnonymousVariables(features) NOTHING TO DO</H4>" << std::endl;
+// #endif
+//         return;
+//     }
+
+//     for (auto it = features->begin(); it != features->end(); ++it)
+//     {
+//         featurePtr feature = *it;
+//         switch (feature->getType())
+//         {
+//         case Feature::_VARIABLE_:
+//             break;
+
+//         case Feature::_HEAD_:
+//         case Feature::_LEMMA_:
+//         case Feature::_FORM_:
+//         case Feature::_CONSTANT_:
+//             if (feature->getValue() && ((feature->getValue()->isFeatures() || feature->getValue()->isVariable() || feature->getValue()->isPairp() || feature->getValue()->isString())))
+//                 _removeAnonymousVariables(feature->getValue(), effect);
+//             else if (feature->getValue() && feature->getValue()->isAnonymousVariable())
+//             {
+//                 features->erase(it);
+//                 effect = true;
+//                 _removeAnonymousVariables(features, effect);
+//                 return;
+//             }
+//             break;
+//         }
+//     }
+
+// #ifdef TRACE_ENVIRONMENT
+//     std::cout << "<H4>Environment::removeAnonymousVariables(features) DONE</H4>" << std::endl;
+//     std::cout << "<table border=\"1\"><tr><th>Features</th><th>Environment</th></tr>";
+//     std::cout << "<tr><td>";
+//     features->toHTML(std::cout);
+//     std::cout << "</td><td>";
+//     this->toHTML(std::cout);
+//     std::cout << "</td></tr></table>";
+// #endif
+//     if (effect)
+//         features->resetCoreSerial();
+// }
+
+// /* **************************************************
+//  *
+//  ************************************************** */
+// void Environment::_removeAnonymousVariables(const valuePtr &value, bool &effect)
+// {
+// #ifdef TRACE_ENVIRONMENT
+//     std::cout << "<H4>Environment::removeAnonymousVariables(value)</H4>" << std::endl;
+//     std::cout << "<table border=\"1\"><tr><th>Value</th></tr>";
+//     std::cout << "<tr><td>";
+//     value->toHTML(std::cout);
+//     std::cout << "</td></tr></table>";
+// #endif
+//     if (!value->containsAnonymousVariable())
+//     {
+//         return;
+//     }
+//     if (!value->isNil() && !value->isAnonymousVariable())
+//     {
+//         switch (value->getType())
+//         {
+//         case Value::NIL_VALUE:
+//         case Value::TRUE_VALUE:
+//         case Value::FALSE_VALUE:
+//         case Value::CONSTANT_VALUE:
+//         case Value::IDENTIFIER_VALUE:
+//         case Value::VARIABLE_VALUE:
+//         case Value::NUMBER_VALUE:
+//         case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
+//         case Value::FORM_VALUE:
+//             break;
+//         case Value::ANONYMOUS_VARIABLE_VALUE:
+//             WARNING("unexpected anonymous variable value");
+//             break;
+//         case Value::FEATURES_VALUE:
+//             _removeAnonymousVariables(value->getFeatures(), effect);
+//             break;
+//         case Value::PAIRP_VALUE:
+//             _removeAnonymousVariables(value->getPairp(), effect);
+//             break;
+
+//         default:
+//             FATAL_ERROR_UNEXPECTED;
+//             break;
+//         }
+//     }
+// #ifdef TRACE_ENVIRONMENT
+//     std::cout << "<H4>Environment::_removeAnonymousVariables(value) NOTHING TO DO</H4>" << std::endl;
+// #endif
+//     return;
+// }
+
+// /* **************************************************
+//  *
+//  ************************************************** */
+// void Environment::_removeAnonymousVariables(const pairpPtr &pairp, bool &effect)
+// {
+// #ifdef TRACE_ENVIRONMENT
+//     std::cout << "<H4>Environment::_removeAnonymousVariables(pairp)</H4>" << std::endl;
+//     std::cout << "<table border=\"1\"><tr><th>Pairp</th><th>Environment</th></tr>";
+//     std::cout << "<tr><td>";
+//     pairp->flatPrint(std::cout, 0);
+//     std::cout << "</td><td>";
+//     this->toHTML(std::cout);
+//     std::cout << "</	td></tr></table>";
+// #endif
+//     if (!pairp->containsVariable())
+//     {
+// #ifdef TRACE_ENVIRONMENT
+//         std::cout << "<H4>Environment::_removeAnonymousVariables(pairp) NOTHING TO DO</H4>" << std::endl;
+// #endif
+//         return;
+//     }
+//     switch (pairp->getType())
+//     {
+//     case Pairp::_ATOM_:
+//         if (pairp->isVariable())
+//         {
+//         }
+//         else
+//             _removeAnonymousVariables(pairp->getValue(), effect);
+//         break;
+
+//     case Pairp::_PAIRP_:
+//     {
+//         pairpPtr car = pairp->getCar();
+//         pairpPtr cdr = pairp->getCdr();
+//         if (!car->isNil())
+//             _removeAnonymousVariables(car, effect);
+//         if (!cdr->isNil())
+//             _removeAnonymousVariables(cdr, effect);
+//     }
+//     break;
+
+//     case Pairp::_NIL_:
+//         break;
+//     }
+// #ifdef TRACE_ENVIRONMENT
+//     std::cout << "<H4>Environment::_removeAnonymousVariables(Pairp) result</H4>" << std::endl;
+//     std::cout << "<table border=\"1\"><tr><th>Pairp</th></tr>";
+//     std::cout << "<tr><td>";
+//     pairp->flatPrint(std::cout, 0);
+//     std::cout << "</td></tr></table>";
+// #endif
+//     if (effect)
+//         pairp->resetCoreSerial();
+// }
 
 /* **************************************************
  *

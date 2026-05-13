@@ -90,10 +90,6 @@ public:
 
     bool buildEnvironment(statementPtr statement, const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root, bool verbose);
 
-    void deleteVariables(void);
-
-    void deleteAnonymousVariables(void);
-
     bool renameVariables(uint32_t);
 
     void apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint32_t code, statementPtr statement,
@@ -116,8 +112,6 @@ public:
     bool containsVariable(void);
 
     bool containsSynthesizedChildFeatures(void);
-
-    bool findVariable(uint32_t key) const;
 
 };
 

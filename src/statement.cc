@@ -72,7 +72,7 @@ statementPtr Statement::createEmpty(uint32_t lineno, std::string bufferName, typ
 }
 
 /* **************************************************
- * DOWN DOWN2 DASH
+ * DOWN DOWN2 HASH
  ************************************************** */
 statementPtr Statement::create(uint32_t lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second)
 {
@@ -152,8 +152,7 @@ statementPtr Statement::createFieldAccess(
     std::string bufferName,
     bool rootOp,
     statementPtr base,
-    bitsetPtr attribute
-)
+    bitsetPtr attribute)
 {
     Statement *statement = new Statement(lineno, bufferName, FIELD_ACCESS_STATEMENT, rootOp);
     statement->first = base;
@@ -221,16 +220,6 @@ statementPtr Statement::createString(uint32_t lineno, std::string bufferName, bo
 {
     Statement *statement = new Statement(lineno, bufferName, STRING_STATEMENT, rootOp);
     statement->string = string;
-    return statementPtr(statement);
-}
-
-/* **************************************************
- * ANONYMOUS
- ************************************************** */
-statementPtr Statement::createAnonymous(uint32_t lineno, std::string bufferName, bool rootOp)
-{
-    Statement *statement = new Statement(lineno, bufferName, ANONYMOUS_STATEMENT, rootOp);
-    statement->value = Value::STATIC_ANONYMOUS;
     return statementPtr(statement);
 }
 
@@ -447,7 +436,7 @@ bool Statement::isFct() const
  ************************************************** */
 bool Statement::containsDash() const
 {
-    bool result = (op == DASH_STATEMENT);
+    bool result = (op == HASH_STATEMENT);
     if (first)
         result = result || first->containsDash();
     if (second)
@@ -817,10 +806,6 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         out << '$' << Vartable::codeToName(code);
         break;
 
-    case ANONYMOUS_STATEMENT:
-        out << '_';
-        break;
-
     case FEATURES_STATEMENT:
         features->flatPrint(out);
         break;
@@ -845,13 +830,13 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         out << "⇑";
         break;
 
-case FIELD_ACCESS_STATEMENT:
-    if (first)
-        first->toHTML(out);
-    out << "." << bitset->toString();
-    break;
-    
-    case DASH_STATEMENT:
+    case FIELD_ACCESS_STATEMENT:
+        if (first)
+            first->toHTML(out);
+        out << "." << bitset->toString();
+        break;
+
+    case HASH_STATEMENT:
         out << '#' << std::to_string(getFirst() + 1);
         if (getSecond() != UINT8_MAX)
             out << "." << std::to_string(getSecond() + 1);
@@ -996,6 +981,474 @@ case FIELD_ACCESS_STATEMENT:
 /* **************************************************
  *
  ************************************************** */
+void Statement::flatPrint(std::ostream &out) const
+{
+    switch (this->op)
+    {
+    case GUARD_STATEMENT:
+        features->flatPrint(out);
+        out << ";";
+        break;
+
+    case ATTEST_STATEMENT:
+        out << "attest ";
+        first->flatPrint(out);
+        out << ";";
+        break;
+
+    case ASSIGNMENT_STATEMENT:
+        first->flatPrint(out);
+        out << " = ";
+        second->flatPrint(out);
+        out << ";";
+        break;
+
+    case SUBSUME_STATEMENT:
+        first->flatPrint(out);
+        out << " ⊂ ";
+        second->flatPrint(out);
+        out << ";";
+        break;
+
+    case PRINT_STATEMENT:
+        out << "print ";
+        if (statements)
+            statements->print(out, 0, 0, 0, 0, false, "(", ")", ", ");
+        out << ";";
+        break;
+
+    case PRINTLN_STATEMENT:
+        out << "println ";
+        if (statements)
+            statements->print(out, 0, 0, 0, 0, false, "(", ")", ", ");
+        out << ";";
+        break;
+
+    case EPRINT_STATEMENT:
+        out << "eprint ";
+        if (statements)
+            statements->print(out, 0, 0, 0, 0, false, "(", ")", ", ");
+        out << ";";
+        break;
+
+    case EPRINTLN_STATEMENT:
+        out << "eprintln ";
+        if (statements)
+            statements->print(out, 0, 0, 0, 0, false, "(", ")", ", ");
+        out << ";";
+        break;
+
+    case SEARCH_STATEMENT:
+        out << "search ";
+        if (first)
+            first->flatPrint(out);
+        out << " on ";
+        out << Vartable::codeToName(code);
+        break;
+
+    case STMS_STATEMENT:
+        out << "{ ";
+        if (statements)
+            statements->print(out, 0, 0, 0, 0, false, "", "", " ");
+        out << " }";
+        break;
+
+    case IF_STATEMENT:
+        out << "if (";
+        if (first)
+            first->flatPrint(out);
+        out << ") ";
+        if (second)
+            second->flatPrint(out);
+        break;
+
+    case THEN_STATEMENT:
+        if (first)
+            first->flatPrint(out);
+        break;
+
+    case THEN_ELSE_STATEMENT:
+        if (first)
+            first->flatPrint(out);
+        if (second)
+        {
+            out << " else ";
+            second->flatPrint(out);
+        }
+        break;
+
+    case DEFERRED_STATEMENT:
+        out << "deferred (";
+        if (first)
+            first->flatPrint(out);
+        out << ") ";
+        if (second)
+            second->flatPrint(out);
+        break;
+
+    case FOREACH_STATEMENT:
+        out << "foreach ";
+        out << Vartable::codeToName(code);
+        out << " ";
+        if (first)
+            first->flatPrint(out);
+        break;
+
+    case FOREACH_CON_T_STATEMENT:
+        out << "in ";
+        if (first)
+            first->flatPrint(out);
+        out << " ";
+        if (second)
+            second->flatPrint(out);
+        break;
+
+    case NIL_STATEMENT:
+        out << "NIL";
+        break;
+
+    case CONSTANT_STATEMENT:
+        out << bitset->toString();
+        break;
+
+    case VARIABLE_STATEMENT:
+        out << '$' << Vartable::codeToName(code);
+        break;
+
+    case FEATURES_STATEMENT:
+        features->flatPrint(out);
+        break;
+
+    case PAIRP_STATEMENT:
+        pairp->flatPrint(out, true);
+        break;
+
+    case UNIF_STATEMENT:
+        out << "(";
+        if (first)
+            first->flatPrint(out);
+        out << " ∪ ";
+        if (second)
+            second->flatPrint(out);
+        out << ")";
+        break;
+
+    case INHERITED_FEATURES_STATEMENT:
+        out << "↑";
+        break;
+
+    case SYNTHESIZED_FEATURES_STATEMENT:
+        out << "⇑";
+        break;
+
+    case FIELD_ACCESS_STATEMENT:
+        if (first)
+            first->flatPrint(out);
+        out << ".";
+        if (bitset)
+            out << bitset->toString();
+        else
+            out << "<null>";
+        break;
+
+    case HASH_STATEMENT:
+        out << '#' << std::to_string(getFirst() + 1);
+        if (getSecond() != UINT8_MAX)
+            out << "." << std::to_string(getSecond() + 1);
+        break;
+
+    case INHERITED_CHILDREN_FEATURES_STATEMENT:
+        out << "↓" << std::to_string(getFirst() + 1);
+        break;
+
+    case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
+        out << "⇓" << std::to_string(getFirst() + 1);
+        break;
+
+    case STRING_STATEMENT:
+        out << '"' << string << '"';
+        break;
+
+    case NUMBER_STATEMENT:
+        out << number;
+        break;
+
+    case FUNCTION_STATEMENT:
+        switch (function)
+        {
+        case NOP:
+            out << "nop";
+            break;
+
+        case NOT:
+            out << "¬(";
+            if (first)
+                first->flatPrint(out);
+            out << ")";
+            break;
+
+        case AND:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " ∧ ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case OR:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " ∨ ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case PLUS:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " + ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case MINUS:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " - ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case TIMES:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " * ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case DIVIDE:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " / ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case MODULO:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " % ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case FLOOR:
+            out << "floor(";
+            if (first)
+                first->flatPrint(out);
+            out << ")";
+            break;
+
+        case EQUAL:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " == ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case DIFF:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " ≠ ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case LT:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " < ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case LE:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " ≤ ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case GT:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " > ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case GE:
+            out << "(";
+            if (first)
+                first->flatPrint(out);
+            out << " ≥ ";
+            if (second)
+                second->flatPrint(out);
+            out << ")";
+            break;
+
+        case MINUS_U:
+            out << "-";
+            if (first)
+                first->flatPrint(out);
+            break;
+
+        case RANDOM:
+            out << "rand()";
+            break;
+        }
+        break;
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Statement::makeCoreSerialString()
+{
+    std::ostringstream stream;
+
+    stream << 'S' << static_cast<int>(op) << ':' << (rootOp ? '1' : '0');
+
+    switch (op)
+    {
+    case HASH_STATEMENT:
+    case INHERITED_CHILDREN_FEATURES_STATEMENT:
+    case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
+    case VARIABLE_STATEMENT:
+    case FOREACH_STATEMENT:
+    case SEARCH_STATEMENT:
+        stream << ":C" << code;
+        break;
+
+    case CONSTANT_STATEMENT:
+    case FIELD_ACCESS_STATEMENT:
+        stream << ":B";
+        if (bitset)
+            stream << bitset->peekCoreSerialString();
+        if (first)
+            stream << ":A" << first->peekCoreSerialString();
+        break;
+
+    case FEATURES_STATEMENT:
+    case GUARD_STATEMENT:
+        stream << ":F";
+        if (features)
+            stream << features->peekCoreSerialString();
+        break;
+
+    case PAIRP_STATEMENT:
+        stream << ":P";
+        if (pairp)
+            stream << pairp->peekCoreSerialString();
+        break;
+
+    case STRING_STATEMENT:
+        stream << ":T" << string;
+        break;
+
+    case NUMBER_STATEMENT:
+        stream << ":N" << std::setprecision(17) << number;
+        break;
+
+    case FUNCTION_STATEMENT:
+        stream << ":FN" << static_cast<int>(function);
+        if (first)
+            stream << ":A" << first->peekCoreSerialString();
+        if (second)
+            stream << ":B" << second->peekCoreSerialString();
+        break;
+
+    case ASSIGNMENT_STATEMENT:
+    case SUBSUME_STATEMENT:
+    case UNIF_STATEMENT:
+    case ATTEST_STATEMENT:
+    case IF_STATEMENT:
+    case THEN_STATEMENT:
+    case THEN_ELSE_STATEMENT:
+    case FOREACH_CON_T_STATEMENT:
+    case DEFERRED_STATEMENT:
+        if (first)
+            stream << ":A" << first->peekCoreSerialString();
+        if (second)
+            stream << ":B" << second->peekCoreSerialString();
+        break;
+
+    case STMS_STATEMENT:
+    case PRINT_STATEMENT:
+    case PRINTLN_STATEMENT:
+    case EPRINT_STATEMENT:
+    case EPRINTLN_STATEMENT:
+        stream << ":S";
+        if (statements)
+            stream << statements->peekCoreSerialString();
+        break;
+
+    case INHERITED_FEATURES_STATEMENT:
+    case SYNTHESIZED_FEATURES_STATEMENT:
+    case NIL_STATEMENT:
+        break;
+    }
+
+    coreSerialString = stream.str();
+}
+
+#ifdef OUTPUT_XML
+/* **************************************************
+ *
+ ************************************************** */
+void Statement::toXML(xmlNodePtr nodeRoot) const
+{
+    xmlNodePtr s = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"STM", nullptr);
+
+    std::ostringstream oss;
+    flatPrint(oss);
+
+    xmlSetProp(s, (const xmlChar *)"type", (const xmlChar *)std::to_string(static_cast<int>(op)).c_str());
+    xmlSetProp(s, (const xmlChar *)"value", (const xmlChar *)oss.str().c_str());
+}
+#endif
+
+/* **************************************************
+ *
+ ************************************************** */
 statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
 {
     statementPtr statement = shared_from_this();
@@ -1004,12 +1457,11 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
     case INHERITED_FEATURES_STATEMENT:
     case SYNTHESIZED_FEATURES_STATEMENT:
     case NIL_STATEMENT:
-    case DASH_STATEMENT:
+    case HASH_STATEMENT:
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
     case STRING_STATEMENT:
     case NUMBER_STATEMENT:
-    case ANONYMOUS_STATEMENT:
         statement = shared_from_this();
         break;
     case FEATURES_STATEMENT:
@@ -1062,15 +1514,14 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
         statement = Statement::createSearch(this->lineno, this->bufferName, this->rootOp,
                                             code, first ? first->clone(protectedFlags) : statementPtr());
         break;
-case FIELD_ACCESS_STATEMENT:
-    statement = Statement::createFieldAccess(
-        this->lineno,
-        this->bufferName,
-        this->rootOp,
-        first ? first->clone(protectedFlags) : statementPtr(),
-        bitset ? bitset->clone() : bitsetPtr()
-    );
-    break;
+    case FIELD_ACCESS_STATEMENT:
+        statement = Statement::createFieldAccess(
+            this->lineno,
+            this->bufferName,
+            this->rootOp,
+            first ? first->clone(protectedFlags) : statementPtr(),
+            bitset ? bitset->clone() : bitsetPtr());
+        break;
     }
     statement->addFlags(protectedFlags & this->getFlags());
     return statement;
@@ -1173,9 +1624,37 @@ Statement::evalFeatures(class Item *item, Parser &parser, Generator *synthesizer
     }
     break;
 
+    case FIELD_ACCESS_STATEMENT:
+    {
+        valuePtr value = evalValue(item, parser, synthesizer, replaceVariables, verbose);
+        if (!value || value->isNil())
+        {
+            resultFeatures = Features::NIL;
+        }
+        else if (value->isFeatures())
+        {
+            resultFeatures = value->getFeatures()->clone();
+            if (replaceVariables && item && !item->environmentIsEmpty())
+            {
+                bool effect = false;
+                item->environmentReplaceVariables(resultFeatures, effect);
+            }
+        }
+        else
+        {
+            resultFeatures = featuresPtr();
+        }
+    }
+    break;
+
     default:
         FATAL_ERROR_UNEXPECTED;
+        break;
     }
+
+    if (replaceVariables && item && resultFeatures)
+        item->evaluateStatementValues(resultFeatures, parser, synthesizer, verbose);
+
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalFeatures DONE #######################" << std::endl;
     std::cout << "<div>" << std::endl;
@@ -1280,6 +1759,10 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
         FATAL_ERROR_UNEXPECTED;
         break;
     }
+
+    if (replaceVariables && item && resultPairp)
+        item->evaluateStatementValues(resultPairp, parser, synthesizer, verbose);
+
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalPairp DONE #######################" << std::endl;
     std::cout << "<div>" << std::endl;
@@ -1319,11 +1802,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         resultValue = Value::STATIC_NIL;
         break;
 
-    case ANONYMOUS_STATEMENT:
-        resultValue = Value::STATIC_ANONYMOUS;
-        break;
-
-    case DASH_STATEMENT:
+    case HASH_STATEMENT:
     {
         uint8_t first = getFirst();
         uint8_t second = getSecond();
@@ -1362,7 +1841,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         break;
 
     case STRING_STATEMENT:
-        resultValue = Value::createForm(string);
+        resultValue = Value::createString(string);
         goto valueBuilt;
         break;
 
@@ -1412,26 +1891,27 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         resultFeatures = (*item->getInheritedChildFeatures())[getFirst()];
         break;
 
-case FIELD_ACCESS_STATEMENT:
-{
-    featuresPtr fs = first->evalFeatures(
-        item,
-        parser,
-        synthesizer,
-        replaceVariables,
-        verbose
-    );
+    case FIELD_ACCESS_STATEMENT:
+    {
+        featuresPtr fs = first->evalFeatures(
+            item,
+            parser,
+            synthesizer,
+            replaceVariables,
+            verbose);
 
-    resultValue = fs ? fs->find(bitset) : valuePtr();
+        resultValue = fs ? fs->find(bitset) : valuePtr();
 
-    if (!resultValue)
-        resultValue = Value::STATIC_NIL;
+        if (!resultValue)
+            resultValue = Value::STATIC_NIL;
+        else
+            resultValue = resultValue->clone();
 
-    goto valueBuilt;
-}
-break;
+        goto valueBuilt;
+    }
+    break;
 
-case UNIF_STATEMENT:
+    case UNIF_STATEMENT:
     {
         featuresPtr fs1 = first->evalFeatures(item, parser, synthesizer, replaceVariables, verbose);
         if (!fs1)
@@ -1579,7 +2059,7 @@ case UNIF_STATEMENT:
 
             else if (isv1astring && isv2astring)
             {
-                resultValue = Value::createForm(v1str + v2str);
+                resultValue = Value::createString(v1str + v2str);
             }
 
             else
@@ -1860,18 +2340,17 @@ case UNIF_STATEMENT:
         }
         break;
 
-case RANDOM:
-{
-    if (!synthesizer)
-    {
-        throw fatal_exception("rand() used without generator");
-    }
+        case RANDOM:
+        {
+            if (!synthesizer)
+            {
+                throw fatal_exception("rand() used without generator");
+            }
 
-    resultValue = Value::createNumber((double)synthesizer->randomUInt());
-    goto valueBuilt;
-}
-break;
-
+            resultValue = Value::createNumber((double)synthesizer->randomUInt());
+            goto valueBuilt;
+        }
+        break;
         }
         break;
 
@@ -1892,6 +2371,8 @@ break;
             bool effect = false;
             item->environmentReplaceVariables(resultPairp, effect);
         }
+        if (replaceVariables && item)
+            item->evaluateStatementValues(resultPairp, parser, synthesizer, verbose);
         resultValue = Value::createPairp(resultPairp);
     }
 
@@ -1908,11 +2389,16 @@ break;
                 bool effect = false;
                 item->environmentReplaceVariables(resultFeatures, effect);
             }
+            if (replaceVariables && item)
+                item->evaluateStatementValues(resultFeatures, parser, synthesizer, verbose);
             resultValue = Value::createFeatures(resultFeatures);
         }
     }
 
 valueBuilt:
+    if (replaceVariables && item && resultValue)
+        resultValue = item->evaluateStatementValues(resultValue, parser, synthesizer, verbose);
+
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::evalValue DONE #######################" << std::endl;
     std::cout << "<div>" << std::endl;
@@ -1926,6 +2412,15 @@ valueBuilt:
     std::cout << "</div>" << std::endl;
 #endif
     return resultValue;
+}
+
+static featurePtr createSameSpecialFeature(const featurePtr &model, const valuePtr &value)
+{
+    if (model->isHead())
+        return Feature::createHead(value);
+    if (model->isLemma())
+        return Feature::createLemma(value);
+    FATAL_ERROR_UNEXPECTED;
 }
 
 /* **************************************************
@@ -2003,7 +2498,7 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                             break;
 
                         case Value::VARIABLE_VALUE:
-                            result->add(Feature::createHead((*i1)->getValue()));
+                            result->add(createSameSpecialFeature(*i1, (*i1)->getValue()));
                             item->environmentAdd(statementRoot, (*i2)->getValue()->getCode(), (*i1)->getValue(), verbose);
                             break;
 
@@ -2027,11 +2522,7 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                                 item->environmentAdd(statementRoot, (*i1)->getValue()->getCode(), (*i2)->getValue(), verbose);
                             }
                         }
-                        result->add(Feature::createHead((*i2)->getValue()));
-                        break;
-
-                    case Value::ANONYMOUS_VALUE:
-                        result->add(Feature::createHead((*i2)->getValue()));
+                        result->add(createSameSpecialFeature(*i1, (*i2)->getValue()));
                         break;
 
                     default:
@@ -2091,10 +2582,10 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                     case Value::FALSE_VALUE:
                         FATAL_ERROR_UNEXPECTED
 
-                    case Value::FORM_VALUE:
+                    case Value::STRING_VALUE:
                         switch ((*i2)->getValue()->getType())
                         {
-                        case Value::FORM_VALUE:
+                        case Value::STRING_VALUE:
                             if ((*i1)->getValue()->getString() != (*i2)->getValue()->getString())
                             {
                                 result = Features::BOTTOM;
@@ -2222,10 +2713,6 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                                                                 (*i1)->getValue()));
                             item->environmentAdd(statementRoot, (*i2)->getValue()->getCode(), (*i1)->getValue(), verbose);
                             break;
-                        case Value::ANONYMOUS_VALUE:
-                            result->add(Feature::createConstant((*i2)->getAttribute(),
-                                                                (*i1)->getValue()));
-                            break;
                         case Value::IDENTIFIER_VALUE:
                         {
                             std::ostringstream oss;
@@ -2233,6 +2720,11 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                             FATAL_ERROR_OSS_MSG_STM(statementRoot, oss);
                         }
                         break;
+
+                        case Value::ANONYMOUS_VARIABLE_VALUE:
+                            result->add(Feature::createConstant((*i2)->getAttribute(),
+                                                                (*i1)->getValue()));
+                            break;
 
                         default:
                             FATAL_ERROR_UNEXPECTED;
@@ -2261,10 +2753,6 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                         result->add(Feature::createConstant((*i1)->getAttribute(), (*i1)->getValue()));
                         break;
 
-                    case Value::ANONYMOUS_VALUE:
-                        result->add(Feature::createConstant((*i1)->getAttribute(), (*i2)->getValue()));
-                        break;
-
                     case Value::FEATURES_VALUE:
                     {
                         featuresPtr _features = unif(statementRoot, (*i1)->getValue()->getFeatures(),
@@ -2281,7 +2769,16 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                     break;
 
                     case Value::PAIRP_VALUE:
+                        WARNING("Unification of pairp features is not implemented yet, treating them as variables");
                         result->add(Feature::createConstant((*i1)->getAttribute(), (*i1)->getValue()));
+                        break;
+
+                    case Value::ANONYMOUS_VARIABLE_VALUE:
+                        result->add(Feature::createConstant((*i2)->getAttribute(), (*i2)->getValue()));
+                        break;
+
+                    default:
+                        FATAL_ERROR_UNEXPECTED;
                         break;
                     }
 
@@ -2362,11 +2859,11 @@ void Statement::buildInheritedChildFeatures(class Item *item, Parser &parser, Ge
         {
             item->environmentReplaceVariables(featuresCopy, verbose);
         }
-        if (replaceVariables && item && featuresCopy->containsSynthesizedChildFeatures())
-        {
-            item->replaceSynthesizedChildFeaturesValue(featuresCopy);
-        }
-
+        //if (replaceVariables && item && featuresCopy->containsSynthesizedChildFeatures())
+        //{
+        //    item->replaceSynthesizedChildFeaturesValue(featuresCopy);
+        //}
+        
         item->getInheritedChildFeatures()->add(first->getFirst(), featuresCopy);
     }
 }
@@ -2445,7 +2942,7 @@ void Statement::buildEnvironmentWithSynthesize(statementPtr statementRoot, class
             featuresPtr sonSynth = second->evalFeatures(item, parser, synthesizer, true, verbose);
             if (sonSynth)
             {
-                if (!left->buildEnvironment(statementRoot, item->_getEnvironment(), sonSynth, true
+                if (!left->buildEnvironment(statementRoot, item->getEnvironment(), sonSynth, true
 #ifdef TRACE_BUILD_ENVIRONMENT
                                             ,
                                             true
@@ -2519,7 +3016,7 @@ void Statement::buildEnvironmentWithInherited(statementPtr statementRoot, class 
             else
             {
 
-                if (!left->buildEnvironment(statementRoot, item->_getEnvironment(), right, true
+                if (!left->buildEnvironment(statementRoot, item->getEnvironment(), right, true
 #ifdef TRACE_BUILD_ENVIRONMENT
                                             ,
                                             true
@@ -2613,7 +3110,7 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
                 else
                 {
 
-                    if (!left->buildEnvironment(statementRoot, item->_getEnvironment(), right, true, true, verbose))
+                    if (!left->buildEnvironment(statementRoot, item->getEnvironment(), right, true, true, verbose))
                     {
                         addFlags(Flags::BOTTOM);
                     }
@@ -2639,7 +3136,7 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
             featuresPtr left = first->evalFeatures(item, parser, synthesizer, false, verbose);
             if (left)
             {
-                if (!left->buildEnvironment(statementRoot, item->_getEnvironment(), right, true
+                if (!left->buildEnvironment(statementRoot, item->getEnvironment(), right, true
 #ifdef TRACE_BUILD_ENVIRONMENT
                                             ,
                                             true
@@ -2710,9 +3207,9 @@ void Statement::stmGuard(statementPtr statementRoot, class Item *item, bool verb
     {
         FATAL_ERROR_STM(shared_from_this());
     }
-    featuresPtr localSecond = item->getInheritedFeatures();
+    featuresPtr inheritedFeatures = item->getInheritedFeatures();
 
-    if (!localFeatures->buildEnvironment(statementRoot, item->_getEnvironment(), localSecond, false
+    if (!localFeatures->buildEnvironment(statementRoot, item->getEnvironment(), inheritedFeatures, false
 #ifdef TRACE_BUILD_ENVIRONMENT
                                          ,
                                          true
@@ -2722,6 +3219,7 @@ void Statement::stmGuard(statementPtr statementRoot, class Item *item, bool verb
     {
         addFlags(Flags::BOTTOM);
     }
+    item->getEnvironment()->replaceVariables(inheritedFeatures, verbose);
 #ifdef TRACE_APPLY_STATEMENT
     std::cout << "####################### Statement::stmGuard DONE #######################" << std::endl;
     item->toHTML(std::cout);
@@ -2889,7 +3387,7 @@ void Statement::stmPrintln(class Item *item, Parser &parser, Generator *generato
 /* ************************************************************
  *
  ************************************************************ */
-void Statement::renameVariable(uint32_t key)
+void Statement::renameVariables(uint32_t key)
 {
     switch (op)
     {
@@ -2898,12 +3396,11 @@ void Statement::renameVariable(uint32_t key)
         break;
 
     case CONSTANT_STATEMENT:
-    case ANONYMOUS_STATEMENT:
     case NIL_STATEMENT:
     case NUMBER_STATEMENT:
     case INHERITED_FEATURES_STATEMENT:
     case SYNTHESIZED_FEATURES_STATEMENT:
-    case DASH_STATEMENT:
+    case HASH_STATEMENT:
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
     case SEARCH_STATEMENT:
@@ -2926,11 +3423,11 @@ void Statement::renameVariable(uint32_t key)
     case DEFERRED_STATEMENT:
         if (first)
         {
-            first->renameVariable(key);
+            first->renameVariables(key);
         }
         if (second)
         {
-            second->renameVariable(key);
+            second->renameVariables(key);
         }
         break;
 
@@ -2959,10 +3456,10 @@ void Statement::renameVariable(uint32_t key)
             statements->renameVariables(key);
         }
         break;
-case FIELD_ACCESS_STATEMENT:
-    if (first)
-        first->renameVariable(key);
-    break;
+    case FIELD_ACCESS_STATEMENT:
+        if (first)
+            first->renameVariables(key);
+        break;
     }
 }
 
@@ -2983,7 +3480,6 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
     case STRING_STATEMENT:
     case NUMBER_STATEMENT:
-    case ANONYMOUS_STATEMENT:
     case CONSTANT_STATEMENT:
 
         break;
@@ -3004,7 +3500,7 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
         }
         break;
 
-    case DASH_STATEMENT:
+    case HASH_STATEMENT:
         if (on)
         {
             if (item->getIndexTerms()[getFirst()] == Item::POSTERM_NA)
@@ -3189,11 +3685,11 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
             first->testEnable(statementRoot, item, synthesizer, result, on);
         break;
 
-case FIELD_ACCESS_STATEMENT:
-    if (first)
-        first->testEnable(statementRoot, item, synthesizer, result, on);
-    break;
-    
+    case FIELD_ACCESS_STATEMENT:
+        if (first)
+            first->testEnable(statementRoot, item, synthesizer, result, on);
+        break;
+
     default:
         COUT_LINE;
         std::cout << op;
@@ -3278,25 +3774,54 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
         addFlags(Flags::SEEN);
     }
 
-    // $X = a;
-    // $X = Y;
-    // $X = … ∪ … ;
-    // $X = [ … ];
-    // $X = <expr>;
-    // $X = < … >;
-    // $X = search;
-    //
-    // < … > = $X;
-    // < … > = < … >;
-    // < … > = search;
-    //
-    // [ … $X … ] ⊂ $Y;
-    // [ … $X … ] ⊂ [ … ];
-    else if (((isAssignment()) && (first->isVariable()) && ((second->isConstant()) || (second->isVariable()) || (second->isUnif()) || (second->isFeatures()) || (second->isNumber()) || (second->isString()) || (second->isFct()) || (second->isPairp()) || (second->isSearch())))
+    else if (
+        /*
+         * $X = a;
+         * $X = $Y;
+         * $X = … ∪ …;
+         * $X = […];
+         * $X = <expr>;
+         * $X = <…>;
+         * $X = search …;
+         * $X = ↑.field;
+         * $X = ⇓1.field;
+         */
+        ((isAssignment()) &&
+         (first->isVariable()) &&
+         ((second->isConstant()) ||
+          (second->isVariable()) ||
+          (second->isUnif()) ||
+          (second->isFeatures()) ||
+          (second->isNumber()) ||
+          (second->isString()) ||
+          (second->isFct()) ||
+          (second->isPairp()) ||
+          (second->isSearch()) ||
+          (second->isFieldAccess())))
 
-             || ((isAssignment()) && (first->isPairp()) && ((second->isVariable()) || (second->isPairp()) || (second->isSearch())))
+        ||
 
-             || ((isSubsume()) && (first->isFeatures()) && ((second->isVariable()) || (second->isFeatures()))))
+        /*
+         * <…> = $X;
+         * <…> = <…>;
+         * <…> = search …;
+         */
+        ((isAssignment()) &&
+         (first->isPairp()) &&
+         ((second->isVariable()) ||
+          (second->isPairp()) ||
+          (second->isSearch())))
+
+        ||
+
+        /*
+         * [… $X …] ⊂ $Y;
+         * [… $X …] ⊂ […];
+         */
+        ((isSubsume()) &&
+         (first->isFeatures()) &&
+         ((second->isVariable()) ||
+          (second->isFeatures()))))
     {
         buildEnvironmentWithValue(statementRoot, item, parser, synthesizer, verbose);
         effect = true;
@@ -3403,185 +3928,4 @@ void Statement::lookingForAssignedInheritedChildFeatures(std::vector<bool> &assi
     }
 }
 
-/* ************************************************************
- *
- ************************************************************ */
-bool Statement::containsVariable(const uint32_t key)
-{
-    switch (op)
-    {
 
-    case STMS_STATEMENT:
-    case PRINT_STATEMENT:
-    case PRINTLN_STATEMENT:
-    case EPRINT_STATEMENT:
-    case EPRINTLN_STATEMENT:
-        if (statements->findVariable(key))
-            return true;
-        break;
-
-    case IF_STATEMENT:
-        if (second->containsVariable(key))
-            return true;
-        break;
-
-    case THEN_STATEMENT:
-        if (first->containsVariable(key))
-            return true;
-        break;
-
-    case THEN_ELSE_STATEMENT:
-        if (first->containsVariable(key))
-            return true;
-        if (second)
-            if (second->containsVariable(key))
-                return true;
-        break;
-
-    case FOREACH_STATEMENT:
-        if (second->containsVariable(key))
-            return true;
-        break;
-
-    case FOREACH_CON_T_STATEMENT:
-        if (first->containsVariable(key))
-            return true;
-        if (second)
-            if (second->containsVariable(key))
-                return true;
-        break;
-
-    case GUARD_STATEMENT:
-        if (features->findVariable(key))
-            return true;
-        break;
-
-    case ASSIGNMENT_STATEMENT:
-    case SUBSUME_STATEMENT:
-        if (second->containsVariable(key))
-            return true;
-        break;
-
-    case FUNCTION_STATEMENT:
-    case UNIF_STATEMENT:
-        if (first && first->containsVariable(key))
-            return true;
-        if (second && second->containsVariable(key))
-            return true;
-        break;
-
-    case ATTEST_STATEMENT:
-        if (first->containsVariable(key))
-            return true;
-        break;
-
-    case VARIABLE_STATEMENT:
-        if (code == key)
-            return true;
-        break;
-
-    case PAIRP_STATEMENT:
-        if (pairp->findVariable(key))
-            return true;
-        break;
-
-    case FEATURES_STATEMENT:
-        if (features->findVariable(key))
-            return true;
-        break;
-
-case FIELD_ACCESS_STATEMENT:
-    if (first && first->containsVariable(key))
-        return true;
-    break;
-    
-    default:
-        FATAL_ERROR_UNEXPECTED
-        break;
-    }
-    return false;
-}
-
-/* ************************************************************
- *
- ************************************************************ */
-/*
-void Statement::makeSerialString()
-{
-    std::ostringstream stream;
-
-    stream << '(';
-    stream << static_cast<int>(op);
-    stream << ',';
-    stream << (rootOp ? '1' : '0');
-
-    switch (op)
-    {
-    case DASH_STATEMENT:
-    case INHERITED_FEATURES_STATEMENT:
-    case SYNTHESIZED_FEATURES_STATEMENT:
-    case INHERITED_CHILDREN_FEATURES_STATEMENT:
-    case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
-    case ANONYMOUS_STATEMENT:
-    case NIL_STATEMENT:
-        break;
-
-    case VARIABLE_STATEMENT:
-    case FOREACH_STATEMENT:
-    case SEARCH_STATEMENT:
-        stream << ",C:" << code;
-        break;
-
-    case CONSTANT_STATEMENT:
-        stream << ",B:" << (bitset ? bitset->peekSerialString() : std::string("0"));
-        break;
-
-    case FEATURES_STATEMENT:
-    case GUARD_STATEMENT:
-        stream << ",F:" << (features ? features->peekSerialString() : std::string("0"));
-        break;
-
-    case PAIRP_STATEMENT:
-        stream << ",P:" << (pairp ? pairp->peekSerialString() : std::string("0"));
-        break;
-
-    case STRING_STATEMENT:
-        stream << ",T:" << string;
-        break;
-
-    case NUMBER_STATEMENT:
-        stream << ",N:" << std::setprecision(17) << number;
-        break;
-
-    case FUNCTION_STATEMENT:
-        stream << ",FN:" << static_cast<int>(function);
-        stream << ",A:" << (first ? first->peekSerialString() : std::string("0"));
-        stream << ",B:" << (second ? second->peekSerialString() : std::string("0"));
-        break;
-
-    case ASSIGNMENT_STATEMENT:
-    case SUBSUME_STATEMENT:
-    case UNIF_STATEMENT:
-    case ATTEST_STATEMENT:
-    case IF_STATEMENT:
-    case THEN_STATEMENT:
-    case THEN_ELSE_STATEMENT:
-    case FOREACH_CON_T_STATEMENT:
-    case DEFERRED_STATEMENT:
-        stream << ",A:" << (first ? first->peekSerialString() : std::string("0"));
-        stream << ",B:" << (second ? second->peekSerialString() : std::string("0"));
-        break;
-
-    case STMS_STATEMENT:
-    case PRINT_STATEMENT:
-    case PRINTLN_STATEMENT:
-    case PRINTSTDERR_STATEMENT:
-    case PRINTLNSTDERR_STATEMENT:
-        stream << ",S:" << (statements ? statements->peekSerialString() : std::string("0"));
-        break;
-    }
-
-    stream << ')';
-    serialString = stream.str();
-}
-*/

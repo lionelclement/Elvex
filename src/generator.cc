@@ -157,14 +157,6 @@ void Generator::setCompactedLexiconFileName(char *bufferName)
 /* **************************************************
  *
  ************************************************** */
-void Generator::setCompactedDirectoryName(char *DirectoryName)
-{
-    compactedDirectoryName = DirectoryName;
-}
-
-/* **************************************************
- *
- ************************************************** */
 void Generator::setRulesFileName(char *name)
 {
     rulesFileName = name;
@@ -200,14 +192,6 @@ std::string Generator::getLexiconFileName() const
 std::string Generator::getCompactedLexiconFileName() const
 {
     return compactedLexiconFileName;
-}
-
-/* **************************************************
- *
- ************************************************** */
-std::string Generator::getCompactedDirectoryName() const
-{
-    return compactedDirectoryName;
 }
 
 /* **************************************************
@@ -971,7 +955,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                         std::cout << std::endl;
                     }
 
-                    if (!(*actualItem)->_getEnvironment())
+                    if (!(*actualItem)->getEnvironment())
                     {
                         (*actualItem)->_setEnvironment(Environment::create());
                     }
@@ -1014,13 +998,6 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                     featuresPtr inheritedChildFeatures = (*(*actualItem)->getInheritedChildFeatures())[(*actualItem)->getIndex()];
                     if (!inheritedChildFeatures->isNil() && !inheritedChildFeatures->isBottom())
                     {
-                        if (!(*actualItem)->environmentIsEmpty())
-                        {
-                            // replace ?
-                            // bool effect = false;
-                            //(*actualItem)->getEnvironment()->replaceVariables(inheritedChildFeatures, effect);
-                            inheritedChildFeatures->deleteAnonymousVariables();
-                        }
 
                         std::vector<rulePtr> candidateRules;
 
@@ -1059,7 +1036,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                                                          : statementsPtr());
                             it->addRange(row);
                             it->setInheritedFeatures(inheritedChildFeatures->clone());
-                            // it->renameVariables(it->getId());
+                            it->renameVariables(it->getId());
 
                             if (traceClose || (trace && it->getRuleTrace()))
                             {
@@ -1136,18 +1113,6 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     std::cout << "<H3>####################### REDUCE S -> γ • (AXIOM REDUCED) #######################</H3>" << std::endl;
                                     (*actualItem)->toHTML(std::cout);
                                     std::cout << std::endl;
-                                }
-
-                                if (!(*actualItem)->environmentIsEmpty())
-                                {
-                                    // replace ?
-                                    // bool effect = false;
-                                    //(*actualItem)->getEnvironment()->replaceVariables((*actualItem)->getSynthesizedFeatures(), effect);
-                                    // if (effect)
-                                    //{
-                                    //    FATAL_ERROR_UNEXPECTED;
-                                    //}
-                                    (*actualItem)->getSynthesizedFeatures()->deleteAnonymousVariables();
                                 }
 
                                 forestPtr forestFound = forestPtr();
@@ -1227,16 +1192,6 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             it->cloneEnvironment(previousItem);
                                             //...
                                             featuresPtr inheritedFeatures = it->getInheritedFeatures();
-                                            if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom())
-                                            {
-                                                if (!it->environmentIsEmpty())
-                                                {
-                                                    // replace ?
-                                                    // bool effect = false;
-                                                    // it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
-                                                    inheritedFeatures->deleteAnonymousVariables();
-                                                }
-                                            }
 
                                             it->addForestIdentifiers(previousItem->getIndex(), (*memoizationValue)->getForestIdentifier());
 
@@ -1279,16 +1234,6 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                                         //...
                                         featuresPtr inheritedFeatures = it->getInheritedFeatures();
-                                        if (!inheritedFeatures->isNil() && !inheritedFeatures->isBottom())
-                                        {
-                                            if (!it->environmentIsEmpty())
-                                            {
-                                                // replace ?
-                                                // bool effect = false;
-                                                // it->getEnvironment()->replaceVariables(inheritedFeatures, effect);
-                                                inheritedFeatures->deleteAnonymousVariables();
-                                            }
-                                        }
 
                                         // On transmet le contexte de previousItem
                                         nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
@@ -1539,8 +1484,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                     featuresPtr entryFeatures = entry_copy->getFeatures() ? entry_copy->getFeatures()
                                                                                           : featuresPtr();
                                     statementsPtr entryStatements = statementsPtr();
-                                    environmentPtr env = (*actualItem)->_getEnvironment()
-                                                             ? (*actualItem)->_getEnvironment()->clone(nullptr, verbose)
+                                    environmentPtr env = (*actualItem)->getEnvironment()
+                                                             ? (*actualItem)->getEnvironment()->clone(nullptr, verbose)
                                                              : Environment::create();
 
                                     /*
@@ -1581,23 +1526,23 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                             resultFeatures = inheritedChildFeaturesCopy;
                                         }
 
-                                        if (resultFeatures)
-                                        {
-                                            if (!it->environmentIsEmpty())
-                                            {
-                                                // replace ?
-                                                // bool effect = false;
-                                                // it->getEnvironment()->replaceVariables(resultFeatures, effect);
-                                            }
-                                            resultFeatures->renameVariables(entry_copy->getId());
-                                        }
+                                        // if (resultFeatures)
+                                        // {
+                                        //     if (!it->environmentIsEmpty())
+                                        //     {
+                                        //         // replace ?
+                                        //         // bool effect = false;
+                                        //         // it->getEnvironment()->replaceVariables(resultFeatures, effect);
+                                        //     }
+                                        //     resultFeatures->renameVariables(entry_copy->getId());
+                                        // }
 
                                         it->getSynthesizedChildFeatures()->add((*actualItem)->getIndex(),
                                                                                entryFeaturesCopy);
-                                        if (entryStatements)
-                                        {
-                                            entryStatements->renameVariables(entry_copy->getId());
-                                        }
+                                        // if (entryStatements)
+                                        // {
+                                        //     entryStatements->renameVariables(entry_copy->getId());
+                                        // }
                                         forestPtr forest;
                                         if (stage == STAGE_FORM)
                                         {
@@ -1701,7 +1646,7 @@ void Generator::generate(class Parser &parser)
         featuresPtr startFeatures = parser.getStartFeatures();
         it->setInheritedFeatures(startFeatures);
         // inutile
-        ////it->renameVariables(it->getId());
+        it->renameVariables(it->getId());
 
         if (traceInit || (trace && it->getRuleTrace()))
         {

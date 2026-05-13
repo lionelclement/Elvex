@@ -24,6 +24,7 @@
 #include "feature.hpp"
 #include "features.hpp"
 #include "value.hpp"
+#include "pairp.hpp"
 #include "environment.hpp"
 #include "messages.hpp"
 #include "forest.hpp"
@@ -832,7 +833,7 @@ void Item::toHTML(std::ostream &out) /*const*/
         <div class="hidden" id="cell_)"
             << std::hex << r << getId() << "\">";
         */
-       out << R"(
+        out << R"(
         <td><table>
         <tr><td bgcolor="white">
         <div class="text" id="cell_)"
@@ -942,7 +943,7 @@ void Item::makeCoreSerialString()
     {
         stream << std::hex << (int)*ref << '/';
     }
-    
+
     stream << '#';
     for (auto fi = forestIdentifiers.cbegin();
          fi != forestIdentifiers.cend();
@@ -950,7 +951,7 @@ void Item::makeCoreSerialString()
     {
         stream << '/' << ((*fi) ? (*fi)->peekCoreSerialString() : "0") << '/';
     }
-    
+
     stream << '#';
     stream << (inheritedFeatures ? inheritedFeatures->peekCoreSerialString() : "0");
 
@@ -980,8 +981,8 @@ bool Item::KeyEqual::operator()(class Item *item1, class Item *item2) const
  ************************************************** */
 void Item::renameVariables(uint32_t code)
 {
-    if (inheritedFeatures)
-        inheritedFeatures->renameVariables(code);
+    // if (inheritedFeatures)
+    //     inheritedFeatures->_renameVariables(code);
     if (statements)
         statements->renameVariables(code);
 }
@@ -1014,7 +1015,7 @@ void Item::replaceSynthesizedChildFeaturesValue(featuresPtr features)
  ************************************************** */
 void Item::replaceSynthesizedChildFeaturesValue(valuePtr value)
 {
-    if (!value->isNil() && !value->isAnonymous())
+    if (!value->isNil() && !value->isAnonymousVariable())
     {
         switch (value->getType())
         {
@@ -1077,6 +1078,16 @@ bool Item::environmentIsEmpty()
 /* **************************************************
  *
  ************************************************** */
+void Item::environmentReplaceVariables(const featuresPtr &features, bool &effect)
+{
+    if (!environment)
+        FATAL_ERROR_UNEXPECTED;
+    environment->replaceVariables(features, effect);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 void Item::environmentReplaceVariables(const valuePtr &value, bool &effect)
 {
     if (!environment)
@@ -1097,21 +1108,92 @@ void Item::environmentReplaceVariables(const pairpPtr &pair, bool &effect)
 /* **************************************************
  *
  ************************************************** */
-void Item::environmentReplaceVariables(const featuresPtr &features, bool &effect)
-{
-    if (!environment)
-        FATAL_ERROR_UNEXPECTED;
-    environment->replaceVariables(features, effect);
-}
-
-/* **************************************************
- *
- ************************************************** */
 void Item::environmentReplaceVariables(std::string &str, bool &effect)
 {
     if (!environment)
         FATAL_ERROR_UNEXPECTED;
     environment->replaceVariables(str, effect);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+valuePtr Item::evaluateStatementValues(const valuePtr &value, Parser &parser, Generator *synthesizer, bool verbose)
+{
+    if (!value)
+        return valuePtr();
+
+    switch (value->getType())
+    {
+    case Value::STATEMENT_VALUE:
+    {
+        statementPtr statement = value->getStatement();
+        if (!statement)
+            return Value::STATIC_NIL;
+
+        valuePtr evaluated = statement->evalValue(this, parser, synthesizer, true, verbose);
+        if (!evaluated)
+            return valuePtr();
+
+        evaluated = evaluated->clone();
+        return evaluateStatementValues(evaluated, parser, synthesizer, verbose);
+    }
+
+    case Value::FEATURES_VALUE:
+        evaluateStatementValues(value->getFeatures(), parser, synthesizer, verbose);
+        break;
+
+    case Value::PAIRP_VALUE:
+        evaluateStatementValues(value->getPairp(), parser, synthesizer, verbose);
+        break;
+
+    default:
+        break;
+    }
+
+    return value;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::evaluateStatementValues(const featuresPtr &features, Parser &parser, Generator *synthesizer, bool verbose)
+{
+    if (!features || features->isNil() || features->isBottom())
+        return;
+
+    for (auto feature = features->begin(); feature != features->end(); ++feature)
+    {
+        if (!(*feature) || !(*feature)->getValue())
+            continue;
+
+        valuePtr current = (*feature)->getValue();
+        valuePtr evaluated = evaluateStatementValues(current, parser, synthesizer, verbose);
+        if (evaluated != current)
+            (*feature)->setValue(evaluated);
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::evaluateStatementValues(const pairpPtr &pairp, Parser &parser, Generator *synthesizer, bool verbose)
+{
+    if (!pairp || pairp->isNil())
+        return;
+
+    if (pairp->isAtom())
+    {
+        valuePtr current = pairp->getValue();
+        valuePtr evaluated = evaluateStatementValues(current, parser, synthesizer, verbose);
+        if (evaluated != current)
+            pairp->setValue(evaluated);
+    }
+    else if (pairp->isPairp())
+    {
+        evaluateStatementValues(pairp->getCar(), parser, synthesizer, verbose);
+        evaluateStatementValues(pairp->getCdr(), parser, synthesizer, verbose);
+    }
 }
 
 /* **************************************************
@@ -1127,7 +1209,7 @@ void Item::cloneEnvironment(const class Item *from)
 /* **************************************************
  *
  ************************************************** */
-environmentPtr Item::_getEnvironment() const
+environmentPtr Item::getEnvironment() const
 {
     return environment;
 }

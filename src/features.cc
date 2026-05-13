@@ -341,11 +341,43 @@ featuresPtr Features::clone() const
 /* **************************************************
  *
  ************************************************** */
-valuePtr Features::find(const bitsetPtr &code) const
+valuePtr Features::findSpecialFeature(const bitsetPtr &code) const
 {
+    if (!code)
+        return valuePtr();
+
+    const bool asksHead = ((*code) & *Vartable::createSymbol("HEAD")).any();
+    const bool asksLemma = ((*code) & *Vartable::createSymbol("LEMMA")).any();
+    const bool asksForm = ((*code) & *Vartable::createSymbol("FORM")).any();
+
+    if (!asksHead && !asksLemma && !asksForm)
+        return valuePtr();
+
     for (const auto &feature : features)
     {
-        if (((*feature->getAttribute()) & *code).any())
+        if ((asksHead && feature->isHead()) ||
+            (asksLemma && feature->isLemma()) ||
+            (asksForm && feature->isForm()))
+        {
+            return feature->getValue();
+        }
+    }
+
+    return valuePtr();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+valuePtr Features::find(const bitsetPtr &code) const
+{
+    valuePtr special = findSpecialFeature(code);
+    if (special)
+        return special;
+
+    for (const auto &feature : features)
+    {
+        if (feature->getAttribute() && ((*feature->getAttribute()) & *code).any())
         {
             return feature->getValue();
         }
@@ -365,12 +397,6 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                                 bool verbose)
 {
     bool ret = true;
-    //	if (environment){
-    //		bool effect  =  false;
-    //		CERR_LINE;
-    //		//environment->replaceVariables(shared_from_this(), effect);
-    //		//environment->replaceVariables(features, effect);
-    //	}
 
 #ifdef TRACE_BUILD_ENVIRONMENT
     if (root)
@@ -411,14 +437,15 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                     if ((this_feature->getValue()->isNil()) && (other_feature->getValue()->isNil()))
                     {
                     }
+
                     // If both are TRUE
-                    // else if ((i1->getValue()->isTrue()) && (i2->getValue()->isTrue())) {
-                    //}
+                    else if ((this_feature->getValue()->isTrue()) && (other_feature->getValue()->isTrue())) {
+                    }
 
                     // If one is ANONYMOUS
-                    else if ((this_feature->getValue()->isAnonymous()) || (other_feature->getValue()->isAnonymous()))
-                    {
-                    }
+                    //else if ((this_feature->getValue()->isAnonymousVariable()) || (other_feature->getValue()->isAnonymousVariable()))
+                    //{
+                    //}
 
                     // Else build environment with the two values
                     else if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, other_feature->getValue(),
@@ -441,7 +468,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->add(statementRoot, this_feature->getValue()->getCode(), Value::STATIC_ANONYMOUS, verbose);
+                            environment->add(statementRoot, this_feature->getValue()->getCode(), Value::STATIC_ANONYMOUS_VARIABLE, verbose);
                         }
                         else
                         {
@@ -460,7 +487,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         }
                         else
                         {
-                            if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, Value::STATIC_ANONYMOUS,
+                            if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, Value::STATIC_ANONYMOUS_VARIABLE,
                                                                             acceptToFilterNULLVariables, false, verbose))
                             {
                                 ret = false;
@@ -622,84 +649,6 @@ void Features::testEnable(statementPtr statementRoot, class Item *item, Generato
 {
     for (auto &feature : features)
         feature->testEnable(statementRoot, item, synthesizer, effect, on);
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Features::deleteAnonymousVariables()
-{
-    bool redo = true;
-    while (redo)
-    {
-        redo = false;
-
-        for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
-        {
-            switch ((*feature)->getType())
-            {
-            case Feature::_HEAD_:
-            case Feature::_LEMMA_:
-            case Feature::_FORM_:
-            case Feature::_VARIABLE_:
-            case Feature::_CONSTANT_:
-                if ((*feature)->getValue())
-                {
-                    (*feature)->getValue()->deleteAnonymousVariables();
-                    if ((*feature)->getValue() && ((*feature)->getValue()->isAnonymous()))
-                    {
-                        features.erase(feature);
-                        redo = true;
-                    }
-                }
-                break;
-            }
-        }
-    }
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Features::deleteVariables()
-{
-    bool redo = true;
-    while (redo)
-    {
-        redo = false;
-        for (auto feature = cbegin(); feature != cend() && !redo; ++feature)
-        {
-            switch ((*feature)->getType())
-            {
-            case Feature::_HEAD_:
-            case Feature::_LEMMA_:
-            case Feature::_FORM_:
-            case Feature::_VARIABLE_:
-            case Feature::_CONSTANT_:
-                if ((*feature)->getValue())
-                {
-                    (*feature)->getValue()->deleteVariables();
-                    if ((*feature)->isVariable() || (*feature)->getValue()->isVariable())
-                    {
-                        features.erase(feature);
-                        redo = true;
-                    }
-                }
-                break;
-            }
-        }
-    }
-}
-
-/* **************************************************
- *
- ************************************************** */
-bool Features::findVariable(uint32_t key) const
-{
-    for (auto &iterator : features)
-        if (iterator->findVariable(key))
-            return true;
-    return false;
 }
 
 /* **************************************************

@@ -165,29 +165,54 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
     }
 }
 
-// /* **************************************************
-//  *
-//  ************************************************** */
-// void Statements::makeSerialString()
-// {
-//     std::ostringstream stream;
+/* **************************************************
+ *
+ ************************************************** */
+void Statements::makeCoreSerialString()
+{
+    std::ostringstream stream;
 
-//     stream << '#';
-//     if (guard)
-//         stream << '-' + guard->peekSerialString() + '/';
-//     if (!statements.empty()){
-//         for (auto statement : statements){
-//             //stream << '_' + (statement ? statement->peekSerialString() : "0") + '_';
-//             //stream << '_' + (statement ? statement->peekSerialString() : "0") + '_';
-//         }
-//     } else {
-//         stream << '0';
-//     }
-//     stream << '#';
+    stream << '{';
 
-//     stream.flush();
-//     serialString = stream.str();
-// }
+    if (guard)
+    {
+        stream << "G:";
+        stream << guard->peekCoreSerialString();
+        stream << ';';
+    }
+    else
+    {
+        stream << "G:0;";
+    }
+
+    stream << "S:";
+
+    if (statements.empty())
+    {
+        stream << '0';
+    }
+    else
+    {
+        bool firstStatement = true;
+
+        for (const auto &statement : statements)
+        {
+            if (!firstStatement)
+                stream << '|';
+
+            firstStatement = false;
+
+            if (statement)
+                stream << statement->peekCoreSerialString();
+            else
+                stream << '0';
+        }
+    }
+
+    stream << '}';
+
+    coreSerialString = stream.str();
+}
 
 /* **************************************************
  *
@@ -211,31 +236,18 @@ void Statements::renameVariables(uint32_t code)
 
     if (guard)
     {
-        guard->renameVariable(code);
+        guard->renameVariables(code);
         //effect = true;
     }
 
     for (auto statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
     {
-        (*statement)->renameVariable(code);
+        (*statement)->renameVariables(code);
         //effect = true;
     }
 
     //if (effect)
     //    resetSerial();
-}
-
-/* **************************************************
- *
- ************************************************** */
-bool Statements::findVariable(uint32_t code)
-{
-    if (guard && guard->containsVariable(code))
-        return true;
-    for (list_statement::const_iterator statement = this->statements.cbegin(); statement != this->statements.cend(); ++statement)
-        if ((*statement)->containsVariable(code))
-            return true;
-    return false;
 }
 
 /* **************************************************

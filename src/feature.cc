@@ -433,28 +433,6 @@ void Feature::testEnable(const statementPtr &root, class Item *item, Generator *
 /* **************************************************
  *
  ************************************************** */
-bool Feature::findVariable(uint32_t key) const
-{
-    switch (type)
-    {
-    case Feature::_HEAD_:
-    case Feature::_LEMMA_:
-    case Feature::_FORM_:
-    case Feature::_CONSTANT_:
-        if (value && value->containsVariable(key))
-            return true;
-        break;
-    case Feature::_VARIABLE_:
-        if ((code == key) && (!value || value->containsVariable(key)))
-            return true;
-        break;
-    }
-    return false;
-}
-
-/* **************************************************
- *
- ************************************************** */
 bool Feature::containsVariable()
 {
     bool result = false;

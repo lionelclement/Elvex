@@ -31,8 +31,10 @@ const std::bitset<MAX_FLAGS> Flags::CHOOSEN = std::bitset<MAX_FLAGS>(1ul << 7u);
 const std::bitset<MAX_FLAGS> Flags::REJECTED = std::bitset<MAX_FLAGS>(1ul << 8u);
 const std::bitset<MAX_FLAGS> Flags::CONTAINS_VARIABLE = std::bitset<MAX_FLAGS>(1ul << 9u);
 const std::bitset<MAX_FLAGS> Flags::DOES_NOT_CONTAIN_VARIABLE = std::bitset<MAX_FLAGS>(1ul << 10u);
-const std::bitset<MAX_FLAGS> Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES = std::bitset<MAX_FLAGS>(1ul << 11u);
-const std::bitset<MAX_FLAGS> Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES = std::bitset<MAX_FLAGS>(1ul << 12u);
+const std::bitset<MAX_FLAGS> Flags::CONTAINS_ANONYMOUS_VARIABLE = std::bitset<MAX_FLAGS>(1ul << 11u);
+const std::bitset<MAX_FLAGS> Flags::DOES_NOT_CONTAIN_ANONYMOUS_VARIABLE = std::bitset<MAX_FLAGS>(1ul << 12u);
+const std::bitset<MAX_FLAGS> Flags::CONTAINS_SYNTHESIZED_CHILD_FEATURES = std::bitset<MAX_FLAGS>(1ul << 13u);
+const std::bitset<MAX_FLAGS> Flags::DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES = std::bitset<MAX_FLAGS>(1ul << 14u);
 
 /* **************************************************
  *
@@ -115,6 +117,10 @@ void Flags::print(std::ostream &outStream) const
         outStream << "CONTAINS_VARIABLE ";
     if (contains(DOES_NOT_CONTAIN_VARIABLE))
         outStream << "DOES_NOT_CONTAIN_VARIABLE ";
+    if (contains(CONTAINS_ANONYMOUS_VARIABLE))
+        outStream << "CONTAINS_ANONYMOUS_VARIABLE ";
+    if (contains(DOES_NOT_CONTAIN_ANONYMOUS_VARIABLE))
+        outStream << "DOES_NOT_CONTAIN_ANONYMOUS_VARIABLE ";
     if (contains(CONTAINS_SYNTHESIZED_CHILD_FEATURES))
         outStream << "CONTAINS_SYNTHESIZED_CHILD_FEATURES ";
     if (contains(DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES))

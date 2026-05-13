@@ -392,46 +392,6 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
 /* **************************************************
  *
  ************************************************** */
-void Pairp::deleteAnonymousVariables()
-{
-    switch (type)
-    {
-    case _NIL_:
-        break;
-    case _ATOM_:
-        if (value)
-            value->deleteAnonymousVariables();
-        break;
-    case _PAIRP_:
-        pairp.car->deleteAnonymousVariables();
-        pairp.cdr->deleteAnonymousVariables();
-        break;
-    }
-}
-
-/* **************************************************
- *
- ************************************************** */
-void Pairp::deleteVariables()
-{
-    switch (type)
-    {
-    case _NIL_:
-        break;
-    case _ATOM_:
-        if (value)
-            value->deleteVariables();
-        break;
-    case _PAIRP_:
-        pairp.car->deleteVariables();
-        pairp.cdr->deleteVariables();
-        break;
-    }
-}
-
-/* **************************************************
- *
- ************************************************** */
 bool Pairp::renameVariables(uint32_t code)
 {
     bool effect = false;
@@ -604,57 +564,6 @@ void Pairp::testEnable(const statementPtr &root, class Item *item, Generator *ge
     }
 }
 
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-bool Pairp::findVariable(uint32_t key) const
-{
-    switch (type)
-    {
-    case _NIL_:
-        break;
-    case _ATOM_:
-        if (value->containsVariable(key))
-            return true;
-        break;
-    case _PAIRP_:
-        if (pairp.car && pairp.car->findVariable(key))
-            return true;
-        if (pairp.cdr && pairp.cdr->findVariable(key))
-            return true;
-        break;
-    }
-    return false;
-}
-
-/* ************************************************************
- *                                                            *
- ************************************************************ */
-void Pairp::apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint32_t code, statementPtr statement,
-                  bool &effect, bool verbose)
-{
-    switch (type)
-    {
-    case _NIL_:
-        break;
-    case _ATOM_:
-    {
-        //environmentPtr save = item->_getEnvironment();
-        //item->cloneEnvironment(item);
-        value->apply(from, item, parser, generator, code, statement->clone(0), effect, verbose);
-        //item->_getEnvironment().reset();
-        //item->setEnvironment(save);
-    }
-    break;
-    case _PAIRP_:
-        if (pairp.car)
-            pairp.car->apply(from, item, parser, generator, code, statement, effect, verbose);
-        if (pairp.cdr)
-            pairp.cdr->apply(from, item, parser, generator, code, statement, effect, verbose);
-        break;
-    }
-}
-
 /* **************************************************
  *
  ************************************************** */
@@ -710,13 +619,41 @@ bool Pairp::containsVariable()
     return result;
 }
 
+/* ************************************************************
+ *                                                            *
+ ************************************************************ */
+void Pairp::apply(statementPtr from, class Item *item, class Parser &parser, class Generator *generator, uint32_t code, statementPtr statement,
+                  bool &effect, bool verbose)
+{
+    switch (type)
+    {
+    case _NIL_:
+        break;
+    case _ATOM_:
+    {
+        //environmentPtr save = item->_getEnvironment();
+        //item->cloneEnvironment(item);
+        value->apply(from, item, parser, generator, code, statement->clone(0), effect, verbose);
+        //item->_getEnvironment().reset();
+        //item->setEnvironment(save);
+    }
+    break;
+    case _PAIRP_:
+        if (pairp.car)
+            pairp.car->apply(from, item, parser, generator, code, statement, effect, verbose);
+        if (pairp.cdr)
+            pairp.cdr->apply(from, item, parser, generator, code, statement, effect, verbose);
+        break;
+    }
+}
+
 /* **************************************************
  *
  ************************************************** */
 bool Pairp::containsSynthesizedChildFeatures()
 {
     /***
-     std::cout << "<H4>Pairp::containsVariable</H4>" << std::endl;
+     std::cout << "<H4>Pairp::containsSynthesizedChildFeatures</H4>" << std::endl;
      std::cout << "<table border = \"1\"><tr><th>this</th></tr>";
      std::cout << "<tr><td>";
      this->flatPrint(std::cout, true);

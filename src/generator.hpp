@@ -74,7 +74,6 @@ private:
     nodePtr nodeRoot;
 
     std::string compactedLexiconFileName;
-    std::string compactedDirectoryName;
     class CompactedLexicon *compactedLexicon;
 
     unsigned int maxLength;
@@ -144,8 +143,6 @@ public:
 
     void setCompactedLexiconFileName(char *);
 
-    void setCompactedDirectoryName(char *);
-
     std::string getInputFileName() const;
 
     std::string getLexiconFileName() const;
@@ -153,8 +150,6 @@ public:
     std::string getMacrosFileName() const;
 
     std::string getCompactedLexiconFileName() const;
-
-    std::string getCompactedDirectoryName() const;
 
     std::string getRulesFileName() const;
 

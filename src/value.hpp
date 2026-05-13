@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -42,50 +42,53 @@ public:
         CONSTANT_VALUE,
         VARIABLE_VALUE,
         SYNTHESIZED_CHILD_FEATURES_VALUE,
-        ANONYMOUS_VALUE,
+        ANONYMOUS_VARIABLE_VALUE,
         IDENTIFIER_VALUE,
         FEATURES_VALUE,
         PAIRP_VALUE,
         NUMBER_VALUE,
-        FORM_VALUE
+        STRING_VALUE,
+        STATEMENT_VALUE
     };
 
 private:
-    bitsetPtr bitset;    // pour encoder les constantes
-    uint32_t code; // pour encoder les identifiers et les variables
+    bitsetPtr bitset; // pour encoder les constantes
+    uint32_t code;    // pour encoder les identifiers et les variables
     pairpPtr pairp;
     std::string string;
     double number;
     featuresPtr features; // pour encoder les SF
+    statementPtr statement;
 
 public:
     static valuePtr STATIC_NIL;
     static valuePtr STATIC_TRUE;
     static valuePtr STATIC_FALSE;
-    static valuePtr STATIC_ANONYMOUS;
+    static valuePtr STATIC_ANONYMOUS_VARIABLE;
     Type type;
 
 private:
     Value(const enum Type, const std::string &);
 
     Value(const enum Type, uint32_t = 0, double = 0.0, bitsetPtr = bitsetPtr(), featuresPtr = featuresPtr(),
-          pairpPtr = pairpPtr()/*, listFeaturesPtr = listFeaturesPtr()*/);
+          pairpPtr = pairpPtr() /*, listFeaturesPtr = listFeaturesPtr()*/);
 
     void makeCoreSerialString(void);
 
 public:
     ~Value();
 
-    static valuePtr createEmpty(const enum Type type);
+    static valuePtr createStatic(const enum Type type);
     static valuePtr createNumber(double number);
     static valuePtr createVariable(uint32_t code);
     static valuePtr createIdentifier(uint32_t code);
     static valuePtr createIdentifier(const std::string &name);
-    static valuePtr createForm(const std::string &str);
+    static valuePtr createString(const std::string &str);
     static valuePtr createConstant(bitsetPtr bitset);
     static valuePtr createFeatures(featuresPtr features);
     static valuePtr createPairp(pairpPtr pairp);
-    static valuePtr createDown2(uint32_t code);
+    static valuePtr createDoubleDown(uint32_t code);
+    static valuePtr createStatement(const statementPtr &statement);
 
     enum Type getType(void) const;
 
@@ -97,9 +100,11 @@ public:
 
     double getNumber(void) const;
 
-    std::string &getString(void) ;
+    std::string &getString(void);
 
     pairpPtr getPairp(void) const;
+
+    statementPtr getStatement(void) const;
 
     void toHTML(std::ostream &) const;
 
@@ -115,10 +120,6 @@ public:
 
     valuePtr clone(void);
 
-    void deleteAnonymousVariables(void);
-
-    void deleteVariables(void);
-
     bool renameVariables(uint32_t);
 
     bool isNil(void) const;
@@ -127,7 +128,7 @@ public:
 
     bool isTrue(void) const;
 
-    bool isAnonymous(void) const;
+    bool isAnonymousVariable(void) const;
 
     bool isNumber(void) const;
 
@@ -151,10 +152,10 @@ public:
 
     bool lessThan(const valuePtr &) const;
 
-    bool containsVariable(uint32_t key) const;
+    bool _containsVariable(uint32_t key) const;
 
     void apply(statementPtr statementRoot, class Item *item, class Parser &parser, class Generator *synthesizer, uint32_t variable, const statementPtr &body,
-          bool &effect, bool verbose);
+               bool &effect, bool verbose);
 
     bool containsVariable(void);
 

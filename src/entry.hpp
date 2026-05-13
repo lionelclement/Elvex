@@ -62,7 +62,7 @@ public:
 
     void print(std::ostream &) const;
     
-    void renameVariables(uint32_t);
+    void _renameVariables(uint32_t);
 
     entryPtr clone(void) const;
 

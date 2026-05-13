@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -27,57 +27,61 @@
 #include "shared_ptr.hpp"
 #include "serializable.hpp"
 #include "generator.hpp"
+#ifdef OUTPUT_XML
+#include <libxml/tree.h>
+#endif
 
-#define FATAL_ERROR_STM(statement)                                                                       \
-    {                                                                                                    \
-        std::ostringstream oss;                                                                          \
-        if (statement)                                                                                   \
-        {                                                                                                \
+#define FATAL_ERROR_STM(statement)                                                                        \
+    {                                                                                                     \
+        std::ostringstream oss;                                                                           \
+        if (statement)                                                                                    \
+        {                                                                                                 \
             oss << "statement " << ' ' << statement->bufferName << '(' << statement->_getLineno() << ')'; \
-        }                                                                                                \
-        throw fatal_exception(oss);                                                                      \
+        }                                                                                                 \
+        throw fatal_exception(oss);                                                                       \
     }
 
-#define FATAL_ERROR_OSS_MSG_STM(statement, oss)                            \
-    {                                                          \
+#define FATAL_ERROR_OSS_MSG_STM(statement, oss)                                       \
+    {                                                                                 \
         oss << ' ' << statement->bufferName << '(' << statement->_getLineno() << ')'; \
-        throw fatal_exception(oss);                            \
+        throw fatal_exception(oss);                                                   \
     }
 
-#define FATAL_ERROR_MSG(msg)                                      \
-    {                                                                 \
-        std::ostringstream oss;                                       \
+#define FATAL_ERROR_MSG(msg)                                           \
+    {                                                                  \
+        std::ostringstream oss;                                        \
         oss << msg << ' ' << bufferName << '(' << _getLineno() << ')'; \
-        throw fatal_exception(oss);                                   \
+        throw fatal_exception(oss);                                    \
     }
 
-#define FATAL_ERROR_OSS_MSG(oss)                            \
-    {                                                          \
+#define FATAL_ERROR_OSS_MSG(oss)                                \
+    {                                                           \
         oss << ' ' << bufferName << '(' << _getLineno() << ')'; \
-        throw fatal_exception(oss);                            \
+        throw fatal_exception(oss);                             \
     }
 
-#define WARNING_STM                                                              \
-    {                                                                            \
-        std::ostringstream oss;                                                  \
+#define WARNING_STM                                                               \
+    {                                                                             \
+        std::ostringstream oss;                                                   \
         oss << "*** warning " << ' ' << bufferName << '(' << _getLineno() << ')'; \
-        std::cerr << oss.str() << std::endl;                                     \
+        std::cerr << oss.str() << std::endl;                                      \
     }
 
-#define WARNING_STM_OSS(oss)                                                              \
-    {                                                                            \
+#define WARNING_STM_OSS(oss)                                    \
+    {                                                           \
         oss << ' ' << bufferName << '(' << _getLineno() << ')'; \
-        std::cerr << oss.str() << std::endl;                                     \
+        std::cerr << oss.str() << std::endl;                    \
     }
 
 class Statement : public Facade,
+                  public Serializable,
                   public std::enable_shared_from_this<class Statement>
 {
 
 public:
     enum type
     {
-        DASH_STATEMENT,
+        HASH_STATEMENT,
         ASSIGNMENT_STATEMENT,
         SUBSUME_STATEMENT,
         INHERITED_FEATURES_STATEMENT,
@@ -86,7 +90,6 @@ public:
         SYNTHESIZED_CHILDREN_FEATURES_STATEMENT,
         FEATURES_STATEMENT,
         VARIABLE_STATEMENT,
-        ANONYMOUS_STATEMENT,
         CONSTANT_STATEMENT,
         NIL_STATEMENT,
         UNIF_STATEMENT,
@@ -164,10 +167,12 @@ public:
 
     ~Statement();
 
+    void makeCoreSerialString(void);
+
     // NIL UP UP2
     static statementPtr createEmpty(uint32_t lineno, std::string bufferName, type op, bool rootOp);
 
-    // DOWN DOWN2 DASH
+    // DOWN DOWN2 HASH
     static statementPtr create(uint32_t lineno, std::string bufferName, type op, bool rootOp, uint8_t first, uint8_t second = UINT8_MAX);
 
     // STMS PRINT PRINTLN
@@ -191,17 +196,16 @@ public:
     // SEARCH
     static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first);
 
-// FIELD_ACCESS_STATEMENT
-// ↑.attr or ⇓i.attr
-static statementPtr createFieldAccess(
-    uint32_t lineno,
-    std::string bufferName,
-    bool rootOp,
-    statementPtr base,
-    bitsetPtr attribute
-);
+    // FIELD_ACCESS_STATEMENT
+    // ↑.attr or ⇓i.attr
+    static statementPtr createFieldAccess(
+        uint32_t lineno,
+        std::string bufferName,
+        bool rootOp,
+        statementPtr base,
+        bitsetPtr attribute);
 
-// CONSTANT
+    // CONSTANT
     static statementPtr createConstant(uint32_t lineno, std::string bufferName, bool rootOp, bitsetPtr bits);
 
     // VARIABLE
@@ -212,17 +216,14 @@ static statementPtr createFieldAccess(
 
     // FCT
     static statementPtr createFunction(uint32_t lineno, std::string bufferName, bool rootOp, function_type fct,
-                               statementPtr first = statementPtr(),
-                               statementPtr second = statementPtr());
+                                       statementPtr first = statementPtr(),
+                                       statementPtr second = statementPtr());
 
     // NUMBER
     static statementPtr createNumber(uint32_t lineno, std::string bufferName, bool rootOp, double);
 
     // STRING
     static statementPtr createString(uint32_t lineno, std::string bufferName, bool rootOp, std::string str);
-
-    // ANONYMOUS
-    static statementPtr createAnonymous(uint32_t lineno, std::string bufferName, bool rootOp);
 
     bool isAssignment() const;
 
@@ -274,9 +275,9 @@ static statementPtr createFieldAccess(
 
     bool isSearch() const;
 
-bool isFieldAccess() const;
+    bool isFieldAccess() const;
 
-bool containsDash() const;
+    bool containsDash() const;
 
     function_type _getFct() const;
 
@@ -310,6 +311,12 @@ bool containsDash() const;
 
     void toHTML(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, uint32_t color = 0x000000, uint32_t bgcolor = 0xFFFFFF) const;
 
+#ifdef OUTPUT_XML
+void toXML(xmlNodePtr nodeRoot) const;
+#endif
+
+void flatPrint(std::ostream &out) const;
+
     featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool replaceVariables, bool verbose);
 
     pairpPtr evalPairp(class Item *, Parser &, Generator *, bool, bool verbose);
@@ -337,7 +344,7 @@ bool containsDash() const;
     void stmForeach(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose);
 
     void stmIf(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool replaceVariables, bool verbose);
-    
+
     void stmDeferred(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool replaceVariables, bool verbose);
 
     void stmPrint(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
@@ -350,12 +357,8 @@ bool containsDash() const;
 
     void lookingForAssignedInheritedChildFeatures(std::vector<bool> &);
 
-    void renameVariable(uint32_t);
+    void renameVariables(uint32_t);
 
-    bool containsVariable(const uint32_t);
-
-//protected:
-//    void makeSerialString() override;
 };
 
 #endif // ELVEX_STATEMENT_H

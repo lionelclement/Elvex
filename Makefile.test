@@ -20,7 +20,7 @@
 # Phony targets to avoid conflicts with files of the same name
 .PHONY: test all_pdf clean
 
-.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa .html .morpho .pattern .fromScratch .stdin
+.SUFFIXES: .input .rules .lexicon .output .xml .dot .pdf .fsa .html .morpho .pattern .stdin
 
 # Name of the Elvex program
 elvex = bin/elvex
@@ -63,35 +63,29 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 # Rule to generate an *.output file from an *.input file
 %.output: %.input %.rules %.lexicon $(elvex)
 	@echo "build $@ from $^"
-	@if test -f $*.fromScratch; then \
-		make -f Makefile.test $*.pattern $*.morpho ; \
-	fi
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
 		$(if $(wildcard $*.macros), \
-			$(elvex) -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
-			$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
+			$(elvex) --macros-file $*.macros --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@, \
+			$(elvex) --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@); \
 	else \
 		$(if $(wildcard $*.macros),\
-		 	$(elvex) -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
-		 	$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
+		 	$(elvex) --macros-file $*.macros --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@, \
+		 	$(elvex) --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@); \
 	fi
 
 # Rule to generate an *.output file from an *.input file
 %.output: %.rules %.lexicon %.stdin $(elvex)
 	@echo "build $@ from $^"
-	@if test -f $*.fromScratch; then \
-		make -f Makefile.test $*.pattern $*.morpho < $*.stdin ; \
-	fi
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
 		$(if $(wildcard $*.macros), \
-			$(elvex) -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@, \
-			$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@); \
+			$(elvex) --macros-file $*.macros --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon < $*.stdin > $@, \
+			$(elvex) --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon < $*.stdin > $@); \
 	else \
 		$(if $(wildcard $*.macros),\
-		 	$(elvex) -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@, \
-		 	$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon < $*.stdin > $@); \
+		 	$(elvex) --macros-file $*.macros --rules-file $*.rules --lexicon-file $*.lexicon < $*.stdin > $@, \
+		 	$(elvex) --rules-file $*.rules --lexicon-file $*.lexicon < $*.stdin > $@); \
 	fi
 
 # Rule to generate an *.output file from an *.input file
@@ -100,12 +94,12 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
 		$(if $(wildcard $*.macros), \
-			$(elvex) --trace -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
-			$(elvex) --trace -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
+			$(elvex) --trace --macros-file $*.macros --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@, \
+			$(elvex) --trace --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@); \
 	else \
 		$(if $(wildcard $*.macros),\
-		 	$(elvex) --trace -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@, \
-		 	$(elvex) --trace -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< > $@); \
+		 	$(elvex) --trace --macros-file $*.macros --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@, \
+		 	$(elvex) --trace --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< > $@); \
 	fi
 
 %.xml: %.input %.rules %.lexicon $(elvex)
@@ -113,12 +107,12 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 	@if test -f $*.pattern; then \
 		make -f Makefile.test $*.fsa ; \
 		$(if $(wildcard $*.macros), \
-			$(elvex) -macrosFile $*.macros -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1, \
-			$(elvex) -cld test -clf $(notdir $(basename $<)) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1); \
+			$(elvex) --macros-file $*.macros --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< -xml $*.xml > /dev/null 2>&1, \
+			$(elvex) --compacted-lexicon-file $* --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< -xml $*.xml > /dev/null 2>&1); \
 	else \
 		$(if $(wildcard $*.macros),\
-		 	$(elvex) -macrosFile $*.macros -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1, \
-		 	$(elvex) -rulesFile $*.rules -lexiconFile $*.lexicon -inputFile $< -xml $*.xml > /dev/null 2>&1); \
+		 	$(elvex) --macros-file $*.macros --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< -xml $*.xml > /dev/null 2>&1, \
+		 	$(elvex) --rules-file $*.rules --lexicon-file $*.lexicon --input-file $< -xml $*.xml > /dev/null 2>&1); \
 	fi
 
 # Check the existence of xsltproc
@@ -139,56 +133,18 @@ all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))
 		$(DOT) -T pdf -o $@ $<; \
 	fi
 
-%.fsa: %.tmp-morpho %.tmp-pattern
+%.fsa: %.morpho %.pattern
 	@echo "build $@ from $^"
-	@$(if $(wildcard $*.macros), \
-			$(elvexlexicon) -cld . -clf $* -macrosFile $*.macros -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build, \
-			$(elvexlexicon) -cld . -clf $* -patternFile $*.tmp-pattern -morphoFile $*.tmp-morpho build ); \
+	$(if $(wildcard $*.macros), \
+			$(elvexlexicon) --compacted-lexicon-file $* --macros-file $*.macros -patternFile $*.pattern -morphoFile $*.morpho build, \
+			$(elvexlexicon) --compacted-lexicon-file $* -patternFile $*.pattern -morphoFile $*.morpho build ); \
 	
-%.tmp-morpho: %.tmp-form %.tmp-pos %.tmp-lemma %.tmp-features
-	@echo "build $@ from $^"
-	@paste $*.tmp-form $*.tmp-pos $*.tmp-lemma $*.tmp-features > $@
-
-%.tmp-form: %.tmp-fplf
-	@echo "build $@ from $^"
-	@grep -v '^//' < $< | cut -f1 > $@
-
-%.tmp-pos: %.tmp-fplf
-	@echo "build $@ from $^"
-	@grep -v '^//' < $< | cut -f2 > $@
-
-%.tmp-lemma: %.tmp-fplf
-	@echo "build $@ from $^"
-	@cut -f3 < $< | tr '\-/\.' '____' > $@
-
-%.tmp-features: %.tmp-fplf
-	@echo "build $@ from $^"
-	@cut -f4 < $< | tr '\-/\.' '____' > $@
-
-%.tmp-pattern: %.pattern
-	@echo "build $@ from $^"
-	@sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | tr '\-/\.' '____' | sort -u > $@
-
-%.tmp-fplf: %.morpho
-	@echo "build $@ from $^"
-	@sed -e '/^#/d' -e '/^\/\//d' -e '/^[ 	]*$$/d' < $< | sort -u > $@
-
 %.morpho:
 	@echo "build $@"
-	@if [ -e $*.fromScratch ]; then \
-		$(python) script.py $@ $*.pattern; \
-	fi
 
 %.pattern:
 	@echo "build $@"
-	@if [ -e $*.fromScratch ]; then \
-		$(python) script.py $@ $*.pattern; \
-	fi
 
 # Cleaning generated files
 clean:
 	@rm -f $(test_dir)/*.output $(test_dir)/*.pdf $(test_dir)/*.fsa $(test_dir)/*.tbl
-	@for fromScratchFile in $(test_dir)/*.fromScratch; do \
-		base=$$(basename $$fromScratchFile .fromScratch); \
-		rm -f $(test_dir)/$$base.morpho $(test_dir)/$$base.pattern; \
-	done

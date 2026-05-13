@@ -22,7 +22,7 @@
 
 #include <bitset>
 
-#define MAX_FLAGS 12
+#define MAX_FLAGS 14
 
 class Flags
 {
@@ -38,6 +38,8 @@ public:
     static const std::bitset<MAX_FLAGS> CHOOSEN;
     static const std::bitset<MAX_FLAGS> CONTAINS_VARIABLE;
     static const std::bitset<MAX_FLAGS> DOES_NOT_CONTAIN_VARIABLE;
+    static const std::bitset<MAX_FLAGS> CONTAINS_ANONYMOUS_VARIABLE;
+    static const std::bitset<MAX_FLAGS> DOES_NOT_CONTAIN_ANONYMOUS_VARIABLE;
     static const std::bitset<MAX_FLAGS> CONTAINS_SYNTHESIZED_CHILD_FEATURES;
     static const std::bitset<MAX_FLAGS> DOES_NOT_CONTAIN_SYNTHESIZED_CHILD_FEATURES;
 

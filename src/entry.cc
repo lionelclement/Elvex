@@ -156,7 +156,7 @@ entryPtr Entry::clone() const
 /* **************************************************
  *
  ************************************************** */
-void Entry::renameVariables(uint32_t code)
+void Entry::_renameVariables(uint32_t code)
 {
     features->renameVariables(code);
 }

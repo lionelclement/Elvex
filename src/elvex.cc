@@ -17,13 +17,16 @@
  *
  ************************************************** */
 
-#include <csignal>
-#include <cstring>
-#include <unistd.h>
-#include <cstdlib>
-#include <iostream>
-#include <ctime>
 #include <algorithm>
+#include <csignal>
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <initializer_list>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <unistd.h>
 
 #include "compacted-lexicon.hpp"
 #include "parser.hpp"
@@ -37,481 +40,389 @@
 #include "usage_exception.hpp"
 #include "parser_exception.hpp"
 
-Parser parser = Parser();
-Generator generator = Generator();
+Parser parser;
+Generator generator;
 
-time_t before, after;
 #ifdef OUTPUT_XML
 xmlNodePtr xmlNodeRoot;
 xmlDocPtr document;
 #endif
 
-/* **************************************************
- *
- ************************************************** */
-void usage()
+namespace
 {
-    std::cerr << "Usage: " << PROJECT_NAME << " [options] [<input>]*\n";
-    std::cerr << "\
-options\n\
-\t--help|-h                                   print this\n\
-\t--version|-v                                print version\n\
-\t--verbose|-V                                verbose mode\n\
-\t--reduceAll|-a                              reduce all rules\n\
-\t--random|-r                                 outputs first sentence randomly selected\n\
-\t-seed <number>                              random seed for reproducible generation\n\
-\t--first|-f                                  outputs the first sentence\n\
-\t-strategy <exhaustive|sample|beam>          derivation strategy; default exhaustive\n\
-\t-maxRuleChoices <number>                    max rule/disjunction choices opened in sample mode\n\
-\t-beamWidth <number>                         max items kept per state in beam mode\n\
-\t-maxLength <number>                         max sentence length\n\
-\t-maxUsages <number>                         max number of rule usage\n\
-\t-maxItems <number>                          max number of items per set\n\
-\t-maxTime <seconds>                          max time in seconds\n\
-\t-maxAttemps <number>                        max attemps for a random choice\n\
-\t-macrosFile <file>                          the macros\n\
-\t-rulesFile <file>                           the rules\n\
-\t-lexiconFile <file>                         the lexicon\n\
-\t-inputFile <file>                           the input\n\
-\t-compactedLexiconDirectory/-cld <directory> the directory which contains the compacted lexicon\n\
-\t-compactedLexiconFile/-clf <file>           the compacted lexicon prefix name\n\
-\t--trace|-t                                  trace the @trace rules\n\
-\t--traceAll\n\
-\t--traceInit\n\
-\t--traceStage\n\
-\t--traceClose\n\
-\t--traceShift\n\
-\t--traceReduce\n\
-\t--traceAction\n\
+
+    time_t before;
+    // time_t after;
+
+    bool isOption(const char *arg, std::initializer_list<const char *> names)
+    {
+        for (const char *name : names)
+        {
+            if (std::strcmp(arg, name) == 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    char *readOptionValue(int &arg, char **argv, const std::string &optionName)
+    {
+        if (argv[arg + 1] != nullptr && argv[arg + 1][0] != '-')
+        {
+            return argv[++arg];
+        }
+
+        throw usage_exception("bad " + optionName + " argument");
+    }
+
+    void usage()
+    {
+        std::cerr << "Usage: " << PROJECT_NAME << " [options] [<input>]*\n";
+        std::cerr << "\
+Options:\n\
+\t-h, --help                                       print this help message\n\
+\t-v, --version                                    print version\n\
+\t-V, --verbose                                    enable verbose mode\n\
+\t-a, --reduce-all                                 reduce all rules\n\
+\t-r, --random                                     output one randomly selected sentence\n\
+\t--seed <number>                                  random seed for reproducible generation\n\
+\t-f, --first                                      output the first sentence\n\
+\t--strategy <exhaustive|sample|beam>              derivation strategy; default: exhaustive\n\
+\t--max-rule-choices <number>                      maximum rule/disjunction choices opened in sample mode\n\
+\t--beam-width <number>                            maximum items kept per state in beam mode\n\
+\t--max-length <number>                            maximum sentence length\n\
+\t--max-usages <number>                            maximum number of rule usages\n\
+\t--max-items <number>                             maximum number of items per set\n\
+\t--max-time <seconds>                             maximum time in seconds\n\
+\t--max-attempts <number>                          maximum attempts for a random choice\n\
+\t--macros-file <file>                             macros file\n\
+\t--rules-file <file>                              rules file\n\
+\t--lexicon-file <file>                            lexicon file\n\
+\t--input-file <file>                              input file\n\
+\t--compacted-lexicon-file, --clf <path/file>      compacted lexicon file prefix\n\
+\t-t, --trace                                      trace the @trace rules\n\
+\t--trace-all                                      trace everything\n\
+\t--trace-init                                     trace initialization\n\
+\t--trace-stage                                    trace stage steps\n\
+\t--trace-close                                    trace close steps\n\
+\t--trace-shift                                    trace shift steps\n\
+\t--trace-reduce                                   trace reduce steps\n\
+\t--trace-action                                   trace actions\n\
 ";
 #ifdef OUTPUT_XML
-    std::cerr << "\
-\t-xml <file>                                 the XML file\n";
+        std::cerr << "\
+\t--xml <file>                                     XML output file\n";
 #endif
-}
+    }
 
-/* **************************************************
- *
- ************************************************** */
-void sig_handler(int signum)
-{
-    throw fatal_exception("ALARM SIGNAL" + std::to_string(signum) + " OUT OF TIME");
-}
-
-/* **************************************************
- *
- ************************************************** */
-void generate(bool trace)
-{
-    int randomTry = 0;
-    do
+    void sig_handler(int signum)
     {
-        generator.clear();
-        if (parser.getStartTerm())
+        throw fatal_exception("alarm signal " + std::to_string(signum) + ": out of time");
+    }
+
+    void generate(bool trace)
+    {
+        int randomTry = 0;
+
+        do
         {
-            generator.generate(parser);
-        }
-        if (trace)
-        {
-            std::cout << "<ul>" << std::endl;
-        }
-        if (generator.getNodeRoot() && !generator.getNodeRoot()->empty())
-        {
-            std::vector<forestPtr>::const_iterator forestIt = generator.getNodeRoot()->cbegin();
-            forestPtr forest;
-            if (generator.getRandomResult())
+            generator.clear();
+
+            if (parser.getStartTerm())
             {
-                size_t rv = generator.randomIndex(generator.getNodeRoot()->size());
-                forest = generator.getNodeRoot()->at(rv);
+                generator.generate(parser);
             }
-            while (forestIt != generator.getNodeRoot()->cend())
+
+            if (trace)
             {
-                if (!generator.getRandomResult())
-                    forest = *forestIt;
-                for (auto i = forest->output_cbegin(); i != forest->output_cend(); ++i)
+                std::cout << "<ul>" << std::endl;
+            }
+
+            if (generator.getNodeRoot() && !generator.getNodeRoot()->empty())
+            {
+                std::vector<forestPtr>::const_iterator forestIt = generator.getNodeRoot()->cbegin();
+                forestPtr forest;
+
+                if (generator.getRandomResult())
                 {
-                    if (trace)
-                    {
-                        std::cout << "<li>" << std::endl;
-                    }
-                    std::cout << (*i) << std::endl;
-                    if (trace)
-                    {
-                        std::cout << "</li>" << std::endl;
-                    }
+                    size_t rv = generator.randomIndex(generator.getNodeRoot()->size());
+                    forest = generator.getNodeRoot()->at(rv);
                 }
-                if (generator.getRandomResult() || generator.getFirstResult())
-                    break;
-                ++forestIt;
+
+                while (forestIt != generator.getNodeRoot()->cend())
+                {
+                    if (!generator.getRandomResult())
+                    {
+                        forest = *forestIt;
+                    }
+
+                    for (auto i = forest->output_cbegin(); i != forest->output_cend(); ++i)
+                    {
+                        if (trace)
+                        {
+                            std::cout << "<li>" << std::endl;
+                        }
+
+                        std::cout << (*i) << std::endl;
+
+                        if (trace)
+                        {
+                            std::cout << "</li>" << std::endl;
+                        }
+                    }
+
+                    if (generator.getRandomResult() || generator.getFirstResult())
+                    {
+                        break;
+                    }
+
+                    ++forestIt;
+                }
             }
-        }
-        if (trace)
-        {
-            std::cout << "</ul>" << std::endl;
-        }
-    } while (generator.getRandomResult() && generator.getNodeRoot()->empty() &&
-             randomTry++ < MAXATTEMPTS);
+
+            if (trace)
+            {
+                std::cout << "</ul>" << std::endl;
+            }
+        } while (generator.getRandomResult() &&
+                 generator.getNodeRoot()->empty() &&
+                 randomTry++ < MAXATTEMPTS);
+    }
 }
 
-/* **************************************************
- *
- ************************************************** */
 int main(int argn, char **argv)
 {
     bool trace = false;
+
     try
     {
 #ifdef OUTPUT_XML
         generator.setOutXML(nullptr);
 #endif
+
         if (argn <= 1)
         {
             throw usage_exception("not enough arguments");
         }
-        else
+
+        for (int arg = 1; argv[arg] != nullptr; ++arg)
         {
-            for (unsigned int arg = 1; argv[arg]; ++arg)
+            if (argv[arg][0] != '-')
             {
-                if (argv[arg][0] == '-')
+                generator.addInput(argv[arg]);
+                continue;
+            }
+
+            const char *option = argv[arg];
+
+            if (isOption(option, {"-v", "--version"}))
+            {
+                std::cout << ELVEX_VERSION << std::endl;
+                return EXIT_SUCCESS;
+            }
+            else if (isOption(option, {"-V", "--verbose"}))
+            {
+                generator.setVerbose(true);
+                parser.setVerbose(true);
+            }
+            else if (isOption(option, {"-h", "--help"}))
+            {
+                usage();
+                return EXIT_SUCCESS;
+            }
+            else if (isOption(option, {"-a", "--reduce-all", "--reduceAll"}))
+            {
+                generator.setReduceAll(true);
+            }
+            else if (isOption(option, {"-r", "--random"}))
+            {
+                generator.setRandomResult(true);
+            }
+            else if (isOption(option, {"-f", "--first"}))
+            {
+                generator.setFirstResult(true);
+            }
+            else if (isOption(option, {"-t", "--trace"}))
+            {
+                trace = true;
+                generator.setTrace(true);
+            }
+            else if (isOption(option, {"--trace-all", "--traceAll"}))
+            {
+                trace = true;
+                generator.setTraceInit(true);
+                generator.setTraceStage(true);
+                generator.setTraceClose(true);
+                generator.setTraceShift(true);
+                generator.setTraceReduce(true);
+                generator.setTraceAction(true);
+            }
+            else if (isOption(option, {"--trace-init", "--traceInit"}))
+            {
+                trace = true;
+                generator.setTraceInit(true);
+            }
+            else if (isOption(option, {"--trace-stage", "--traceStage"}))
+            {
+                trace = true;
+                generator.setTraceStage(true);
+            }
+            else if (isOption(option, {"--trace-close", "--traceClose"}))
+            {
+                trace = true;
+                generator.setTraceClose(true);
+            }
+            else if (isOption(option, {"--trace-shift", "--traceShift"}))
+            {
+                trace = true;
+                generator.setTraceShift(true);
+            }
+            else if (isOption(option, {"--trace-reduce", "--traceReduce"}))
+            {
+                trace = true;
+                generator.setTraceReduce(true);
+            }
+            else if (isOption(option, {"--trace-action", "--traceAction"}))
+            {
+                trace = true;
+                generator.setTraceAction(true);
+            }
+            else if (isOption(option, {"--macros-file", "-macrosFile"}))
+            {
+                generator.setMacrosFileName(readOptionValue(arg, argv, "macros-file"));
+            }
+            else if (isOption(option, {"--lexicon-file", "-lexiconFile"}))
+            {
+                generator.setLexiconFileName(readOptionValue(arg, argv, "lexicon-file"));
+            }
+            else if (isOption(option, {"--rules-file", "-rulesFile"}))
+            {
+                generator.setRulesFileName(readOptionValue(arg, argv, "rules-file"));
+            }
+            else if (isOption(option, {"--input-file", "-inputFile"}))
+            {
+                generator.setInputFileName(readOptionValue(arg, argv, "input-file"));
+            }
+            else if (isOption(option, {"--max-length", "-maxLength"}))
+            {
+                generator.setMaxLength(std::atoi(readOptionValue(arg, argv, "max-length")));
+            }
+            else if (isOption(option, {"--max-usages", "-maxUsages"}))
+            {
+                generator.setMaxUsages(std::atoi(readOptionValue(arg, argv, "max-usages")));
+            }
+            else if (isOption(option, {"--max-items", "-maxItems"}))
+            {
+                generator.setMaxItems(std::atoi(readOptionValue(arg, argv, "max-items")));
+            }
+            else if (isOption(option, {"--max-time", "-maxTime"}))
+            {
+                signal(SIGALRM, sig_handler);
+                alarm(std::atoi(readOptionValue(arg, argv, "max-time")));
+                time(&before);
+            }
+            else if (isOption(option, {"--max-attempts", "-maxAttempts", "-maxAttemps"}))
+            {
+                generator.setMaxAttemps(std::atoi(readOptionValue(arg, argv, "max-attempts")));
+            }
+            else if (isOption(option, {"--seed", "-seed"}))
+            {
+                generator.seedRandom(
+                    static_cast<uint32_t>(
+                        std::strtoul(readOptionValue(arg, argv, "seed"), nullptr, 10)));
+            }
+            else if (isOption(option, {"--strategy", "-strategy"}))
+            {
+                std::string strategyName(readOptionValue(arg, argv, "strategy"));
+
+                if (!generator.setStrategy(strategyName))
                 {
-                    if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version"))
-                    {
-                        std::cout << ELVEX_VERSION << std::endl;
-                        return EXIT_SUCCESS;
-                    }
-
-                    if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose"))
-                    {
-                        generator.setVerbose(true);
-                        parser.setVerbose(true);
-                    }
-                    else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help"))
-                    {
-                        usage();
-                        return EXIT_SUCCESS;
-                    }
-                    else if (!strcmp(argv[arg] + 1, "a") || !strcmp(argv[arg] + 1, "-reduceAll"))
-                    {
-                        generator.setReduceAll(true);
-                    }
-                    else if (!strcmp(argv[arg] + 1, "r") || !strcmp(argv[arg] + 1, "-random"))
-                    {
-                        generator.setRandomResult(true);
-                    }
-                    else if (!strcmp(argv[arg] + 1, "f") || !strcmp(argv[arg] + 1, "-first"))
-                    {
-                        generator.setFirstResult(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "t") || !strcmp(argv[arg] + 1, "-trace"))
-                    {
-                        trace = true;
-                        generator.setTrace(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "-traceAll"))
-                    {
-                        trace = true;
-                        generator.setTraceInit(true);
-                        generator.setTraceStage(true);
-                        generator.setTraceClose(true);
-                        generator.setTraceShift(true);
-                        generator.setTraceReduce(true);
-                        generator.setTraceAction(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "-traceInit"))
-                    {
-                        trace = true;
-                        generator.setTraceInit(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "-traceStage"))
-                    {
-                        trace = true;
-                        generator.setTraceStage(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "-traceClose"))
-                    {
-                        trace = true;
-                        generator.setTraceClose(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "-traceShift"))
-                    {
-                        trace = true;
-                        generator.setTraceShift(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "-traceReduce"))
-                    {
-                        trace = true;
-                        generator.setTraceReduce(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "-traceAction"))
-                    {
-                        trace = true;
-                        generator.setTraceAction(true);
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "macrosFile"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setMacrosFileName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad macrosFile argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "lexiconFile"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setLexiconFileName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad lexiconFile argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "rulesFile"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setRulesFileName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad rulesFile argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "inputFile"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setInputFileName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad inputFile argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "maxLength"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setMaxLength(atoi(argv[++arg]));
-                        else
-                        {
-                            throw usage_exception("bad maxLength argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "maxUsages"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setMaxUsages(atoi(argv[++arg]));
-                        else
-                        {
-                            throw usage_exception("bad maxUsages argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "maxItems"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setMaxItems(atoi(argv[++arg]));
-                        else
-                        {
-                            throw usage_exception("bad maxItems argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "maxTime"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                        {
-                            signal(SIGALRM, sig_handler);
-                            alarm(atoi(argv[++arg]));
-                            time(&before);
-                        }
-                        else
-                        {
-                            throw usage_exception("bad maxTime argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "maxAttemps"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setMaxAttemps(atoi(argv[++arg]));
-                        else
-                        {
-                            throw usage_exception("bad maxAttemps argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "seed"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                        {
-                            generator.seedRandom(
-                                static_cast<uint32_t>(std::strtoul(argv[++arg], nullptr, 10)));
-                        }
-                        else
-                        {
-                            throw usage_exception("bad seed argument");
-                        }
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "strategy"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                        {
-                            std::string strategyName(argv[++arg]);
-
-                            if (!generator.setStrategy(strategyName))
-                            {
-                                throw usage_exception("bad strategy argument: expected exhaustive, sample, or beam");
-                            }
-                        }
-                        else
-                        {
-                            throw usage_exception("bad strategy argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "maxRuleChoices"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                        {
-                            generator.setMaxRuleChoices(atoi(argv[++arg]));
-                        }
-                        else
-                        {
-                            throw usage_exception("bad maxRuleChoices argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "beamWidth"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                        {
-                            generator.setBeamWidth(atoi(argv[++arg]));
-                        }
-                        else
-                        {
-                            throw usage_exception("bad beamWidth argument");
-                        }
-                    }
-
-                    else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setCompactedDirectoryName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad compactedLexiconDirectory argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "cld"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setCompactedDirectoryName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad cld argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "compactedLexiconFile"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setCompactedLexiconFileName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad compactedLexiconFile argument");
-                        }
-                    }
-                    else if (!strcmp(argv[arg] + 1, "clf"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                            generator.setCompactedLexiconFileName(argv[++arg]);
-                        else
-                        {
-                            throw usage_exception("bad clf argument");
-                        }
-                    }
-
-#ifdef OUTPUT_XML
-                    else if (!strcmp(argv[arg] + 1, "xml"))
-                    {
-                        if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-                        {
-                            generator.setOutXML(strdup(argv[++arg]));
-                        }
-                        else
-                        {
-                            throw usage_exception("bad xml argument");
-                        }
-                    }
-#endif
-
-                    else
-                    {
-                        std::ostringstream oss;
-                        oss << "Unknown argument: " << argv[arg] + 1 << std::endl;
-                        throw usage_exception(oss);
-                    }
-                }
-                else
-                {
-                    generator.addInput(argv[arg]);
+                    throw usage_exception("bad strategy argument: expected exhaustive, sample, or beam");
                 }
             }
-
-            if (generator.getMacrosFileName().length() > 0)
+            else if (isOption(option, {"--max-rule-choices", "-maxRuleChoices"}))
             {
-                parser.parseFile("@macros (", ")", generator.getMacrosFileName());
-                parser.getRules().analyseTerms(parser);
+                generator.setMaxRuleChoices(
+                    std::atoi(readOptionValue(arg, argv, "max-rule-choices")));
             }
-
-            if (generator.getRulesFileName().length() > 0)
+            else if (isOption(option, {"--beam-width", "-beamWidth"}))
             {
-                parser.parseFile("@rules (", ")", generator.getRulesFileName());
-                parser.getRules().analyseTerms(parser);
+                generator.setBeamWidth(
+                    std::atoi(readOptionValue(arg, argv, "beam-width")));
             }
-            else
+            else if (isOption(option, {"--compacted-lexicon-file",
+                                       "--clf",
+                                       "-compactedLexiconFile",
+                                       "-clf"}))
             {
-                throw usage_exception("Rules file not found");
-            }
-
-            if ((generator.getLexiconFileName().length() == 0) && (generator.getCompactedLexiconFileName().length() == 0))
-            {
-                throw usage_exception("Lexicon not found");
-            }
-            else
-            {
-                if (generator.getLexiconFileName().length() > 0)
-                {
-                    parser.parseFile("@lexicon (", ")", generator.getLexiconFileName());
-                }
-                if (generator.getCompactedLexiconFileName().length() > 0)
-                {
-                    char *dir = strdup((generator.getCompactedDirectoryName().length() > 0)
-                                           ? generator.getCompactedDirectoryName().c_str()
-                                           : ".");
-                    char *file = strdup(generator.getCompactedLexiconFileName().c_str());
-                    std::string dirStr = std::string(dir);
-                    std::string fileStr = std::string(file);
-                    auto *lex = new CompactedLexicon(dirStr, fileStr);
-                    lex->openFiles("r");
-                    lex->loadFsa(generator.getVerbose());
-                    lex->loadData(generator.getVerbose());
-                    lex->closeFiles();
-                    generator.setCompactedLexicon(lex);
-                }
+                generator.setCompactedLexiconFileName(
+                    readOptionValue(arg, argv, "compacted-lexicon-file"));
             }
 
 #ifdef OUTPUT_XML
-            if (generator.getOutXML())
+            else if (isOption(option, {"--xml", "-xml"}))
             {
-                document = xmlNewDoc((xmlChar *)"1.0");
-                xmlDocSetRootElement(document, xmlNewNode(nullptr, (xmlChar *)"ROOT"));
-                xmlNodeRoot = xmlDocGetRootElement(document);
+                generator.setOutXML(strdup(readOptionValue(arg, argv, "xml")));
             }
 #endif
+
+            else
+            {
+                std::ostringstream oss;
+                oss << "Unknown argument: " << option;
+                throw usage_exception(oss);
+            }
         }
 
-        // COUT_LINE;
-        // parser.printCacheLexicon(std::cout);
+        if (generator.getMacrosFileName().length() > 0)
+        {
+            parser.parseFile("@macros (", ")", generator.getMacrosFileName());
+            parser.getRules().analyseTerms(parser);
+        }
+
+        if (generator.getRulesFileName().length() > 0)
+        {
+            parser.parseFile("@rules (", ")", generator.getRulesFileName());
+            parser.getRules().analyseTerms(parser);
+        }
+        else
+        {
+            throw usage_exception("Rules file not found");
+        }
+
+        if ((generator.getLexiconFileName().length() == 0) &&
+            (generator.getCompactedLexiconFileName().length() == 0))
+        {
+            throw usage_exception("Lexicon not found");
+        }
+
+        if (generator.getLexiconFileName().length() > 0)
+        {
+            parser.parseFile("@lexicon (", ")", generator.getLexiconFileName());
+        }
+
+        if (generator.getCompactedLexiconFileName().length() > 0)
+        {
+            std::string filePrefix = generator.getCompactedLexiconFileName();
+
+            auto *lex = new CompactedLexicon(filePrefix);
+            lex->openFiles("r");
+            lex->loadFsa(generator.getVerbose());
+            lex->loadData(generator.getVerbose());
+            lex->closeFiles();
+            generator.setCompactedLexicon(lex);
+        }
+
+#ifdef OUTPUT_XML
+        if (generator.getOutXML())
+        {
+            document = xmlNewDoc((xmlChar *)"1.0");
+            xmlDocSetRootElement(document, xmlNewNode(nullptr, (xmlChar *)"ROOT"));
+            xmlNodeRoot = xmlDocGetRootElement(document);
+        }
+#endif
 
         if (trace)
         {
@@ -530,7 +441,6 @@ int main(int argn, char **argv)
 </head>
 <body>
     <script>
-        // Fonction pour basculer la visibilité du contenu
         function toggleVisibility(id) {
             var element = document.getElementById(id);
             if (element.classList.contains('hidden')) {
@@ -548,15 +458,14 @@ int main(int argn, char **argv)
             parser.parseFile("@input (", ")", generator.getInputFileName());
             generate(trace);
         }
-
         else
         {
             std::string line;
+
             while (std::getline(std::cin, line))
             {
-                generator.addInput(line); // Ajoutez chaque ligne à la liste
+                generator.addInput(line);
             }
-            // throw usage_exception("Input not found");
         }
 
         if (!generator.emptyInputs())
@@ -565,13 +474,22 @@ int main(int argn, char **argv)
             {
                 const std::string &s = *it;
 
-                auto first = std::find_if_not(s.begin(), s.end(),
-                                              [](unsigned char c)
-                                              { return std::isspace(c); });
+                auto first = std::find_if_not(
+                    s.begin(),
+                    s.end(),
+                    [](unsigned char c)
+                    {
+                        return std::isspace(c);
+                    });
 
                 if (first == s.end() ||
-                    (first != s.end() && *first == '/' && (first + 1) != s.end() && *(first + 1) == '/'))
+                    (first != s.end() &&
+                     *first == '/' &&
+                     (first + 1) != s.end() &&
+                     *(first + 1) == '/'))
+                {
                     continue;
+                }
 
                 parser.parseBuffer("@input (", ")", s, "input");
                 generate(trace);
@@ -605,6 +523,7 @@ int main(int argn, char **argv)
         std::flush(std::cerr);
         return EXIT_FAILURE;
     }
+
     if (trace)
     {
         std::cout <<
@@ -614,5 +533,6 @@ int main(int argn, char **argv)
 </html>
 )";
     }
+
     return EXIT_SUCCESS;
 }

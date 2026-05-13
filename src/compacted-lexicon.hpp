@@ -40,8 +40,7 @@ class CompactedLexicon
 {
 
 private:
-    std::string directoryName;
-    std::string fileName;
+std::string filePrefix;
     FILE *fsaFile;
     std::string fsaFileName;
     FILE *dataFile;
@@ -57,7 +56,7 @@ public:
     class CompactedLexiconTree *lexiconInit;
 
 public:
-    CompactedLexicon(std::string &directoryName, std::string &fileName);
+    CompactedLexicon(const std::string &filePrefix);
 
     void printResults(std::ostream &, uint32_t index, bool sep) const;
 

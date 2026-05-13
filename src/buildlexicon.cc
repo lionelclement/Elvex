@@ -18,8 +18,12 @@
  ************************************************** */
 
 #include <cstring>
-#include <iostream>
+#include <cstdlib>
 #include <fstream>
+#include <initializer_list>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 #include "buildlexicon.hpp"
 #include "compacted-lexicon.hpp"
@@ -32,135 +36,198 @@
 #include "fatal_exception.hpp"
 #include "usage_exception.hpp"
 
-Parser parser = Parser();
+Parser parser;
 
-/* **************************************************
- *
- ************************************************** */
-void usage()
+namespace
 {
-	std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global options] <build|consult|list> <input>\n\
-\tGlobal options:\n\
-\t-h|--help                                     print this\n\
-\t-v|--version                                  print version\n\
-\t-compactedLexiconDirectory/-cld <directory>   the directory which contains the compacted lexicon\n\
-\t-compactedLexiconFile/-clf <file>             the compacted lexicon prefix name\n\
-\t-macrosFile <file>                            the macros\n\
-\t-patternFile <file>                           the pattern file\n\
-\t-morphoFile <file>                            the morpho file"
-			  << std::endl;
+	bool isOption(const char *arg, std::initializer_list<const char *> names)
+	{
+		for (const char *name : names)
+		{
+			if (std::strcmp(arg, name) == 0)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	char *readOptionValue(int &arg, char **argv, const std::string &optionName)
+	{
+		if (argv[arg + 1] != nullptr && argv[arg + 1][0] != '-')
+		{
+			return argv[++arg];
+		}
+
+		throw usage_exception("bad " + optionName + " argument");
+	}
+
+	void usage()
+	{
+		std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global options] <build|consult|list> [<input>]\n";
+		std::cerr << "\
+Global options:\n\
+\t-h, --help                                       print this help message\n\
+\t-v, --version                                    print version\n\
+\t-V, --verbose                                    enable verbose mode\n\
+\t--compacted-lexicon-file, --clf <path/file>      compacted lexicon file prefix\n\
+\t--macros-file <file>                             macros file\n\
+\t--pattern-file <file>                            pattern file\n\
+\t--morpho-file <file>                             morpho file\n";
+	}
+
+	/* **************************************************
+	 * # form    pos    lemma    features
+	 ************************************************** */
+	void addMorpho(const std::string &line, const std::string &morphoFile, int lineno, Lexicon *morpho)
+	{
+		auto pos1 = line.find('\t');
+		auto pos2 = line.find('\t', pos1 + 1);
+		auto pos3 = line.find('\t', pos2 + 1);
+
+		std::string form(line);
+
+		if (pos1 == std::string::npos)
+		{
+			std::ostringstream oss;
+			oss << "part of speech expected in \"" << line << "\"";
+			oss << " " << morphoFile << " (line " << lineno << ")";
+			throw fatal_exception(oss.str());
+		}
+
+		form.resize(pos1);
+
+		if (pos2 == std::string::npos)
+		{
+			std::ostringstream oss;
+			oss << "lemma expected in \"" << line << "\"";
+			oss << " " << morphoFile << " (line " << lineno << ")";
+			throw fatal_exception(oss.str());
+		}
+
+		std::string pos = line.substr(pos1 + 1, pos2 - pos1 - 1);
+
+		if (pos3 == std::string::npos)
+		{
+			std::ostringstream oss;
+			oss << "features expected in \"" << line << "\"";
+			oss << " " << morphoFile << " (line " << lineno << ")";
+			throw fatal_exception(oss.str());
+		}
+
+		std::string lemma = line.substr(pos2 + 1, pos3 - pos2 - 1);
+		std::string features = line.substr(pos3 + 1);
+
+		std::string input = pos + '#' + lemma;
+		std::string output = form + '#' + features;
+		morpho->add(input, output);
+	}
+
+	/* **************************************************
+	 * # lexeme    pos    lemma    features
+	 ************************************************** */
+	void addPattern(const std::string &line, const std::string &patternFile, int lineno, Lexicon *pattern)
+	{
+		auto pos1 = line.find('\t');
+		auto pos2 = line.find('\t', pos1 + 1);
+		auto pos3 = line.find('\t', pos2 + 1);
+
+		std::string lexeme(line);
+
+		if (pos1 == std::string::npos)
+		{
+			std::ostringstream oss;
+			oss << "part of speech expected in \"" << line << "\"";
+			oss << " " << patternFile << " (line " << lineno << ")";
+			throw fatal_exception(oss.str());
+		}
+
+		lexeme.resize(pos1);
+
+		if (pos2 == std::string::npos)
+		{
+			std::ostringstream oss;
+			oss << "lemma expected in \"" << line << "\"";
+			oss << " " << patternFile << " (line " << lineno << ")";
+			throw fatal_exception(oss.str());
+		}
+
+		std::string pos = line.substr(pos1 + 1, pos2 - pos1 - 1);
+
+		if (pos3 == std::string::npos)
+		{
+			std::ostringstream oss;
+			oss << "features expected in \"" << line << "\"";
+			oss << " " << patternFile << " (line " << lineno << ")";
+			throw fatal_exception(oss.str());
+		}
+
+		std::string lemma = line.substr(pos2 + 1, pos3 - pos2 - 1);
+		std::string features = line.substr(pos3 + 1);
+
+		std::string input = pos + '#' + lexeme;
+		std::string output = lemma + '#' + features;
+		pattern->add(input, output);
+	}
+
+	void readMorphoFile(const std::string &morphoFile, Lexicon *morpho)
+	{
+		std::ifstream inputFile(morphoFile);
+		std::string line;
+		int lineno = 1;
+
+		while (std::getline(inputFile, line))
+		{
+			size_t commentPos = line.find("//");
+			if (commentPos != std::string::npos)
+			{
+				line = line.substr(0, commentPos);
+			}
+
+			if (!line.empty())
+			{
+				addMorpho(line, morphoFile, lineno, morpho);
+			}
+
+			++lineno;
+		}
+	}
+
+	void readPatternFile(const std::string &patternFile, Lexicon *pattern)
+	{
+		std::ifstream inputFile(patternFile);
+		std::string line;
+		int lineno = 1;
+
+		while (std::getline(inputFile, line))
+		{
+			size_t commentPos = line.find("//");
+			if (commentPos != std::string::npos)
+			{
+				line = line.substr(0, commentPos);
+			}
+
+			if (!line.empty())
+			{
+				addPattern(line, patternFile, lineno, pattern);
+			}
+
+			++lineno;
+		}
+	}
 }
 
-/* **************************************************
- * # form	pos	lemma	features
- ************************************************** */
-void addMorpho(std::string line, std::string morphoFile, int lineno, Lexicon *morpho)
-{
-	auto pos1 = line.find('\t');
-	auto pos2 = line.find('\t', pos1 + 1);
-	auto pos3 = line.find('\t', pos2 + 1);
-	std::string form(line);
-	if (pos1 == std::string::npos)
-	{
-		std::ostringstream oss;
-		oss << "part of speach expected in \"" << line << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss.str());
-	}
-	form.resize(pos1);
-
-	if (pos2 == std::string::npos)
-	{
-		std::ostringstream oss;
-		oss << "lemma expected in \"" << line << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss.str());
-	}
-	std::string pos = line.substr(pos1 + 1, pos2 - pos1 - 1);
-
-	if (pos3 == std::string::npos)
-	{
-		std::ostringstream oss;
-		oss << "features expected in \"" << line << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss.str());
-	}
-	std::string lemma = line.substr(pos2 + 1, pos3 - pos2 - 1);
-	std::string features = line.substr(pos3 + 1, line.size() - 1);
-
-	// CERR_LINE;
-	// std::cerr << "/form:/" << form << '/' << std::endl;
-	// std::cerr << "/pos:/" << pos << '/' << std::endl;
-	// std::cerr << "/lemma:/" << lemma << '/' << std::endl;
-	// std::cerr << "/features:/" << features << '/' << std::endl;
-
-	std::string input = pos + '#' + lemma;
-	std::string output = form + '#' + features;
-	morpho->add(input, output);
-}
-
-/* **************************************************
- * # lexeme	pos	lemma	features
- ************************************************** */
-void addPattern(std::string line, std::string morphoFile, int lineno, Lexicon *pattern)
-{
-	auto pos1 = line.find('\t');
-	auto pos2 = line.find('\t', pos1 + 1);
-	auto pos3 = line.find('\t', pos2 + 1);
-	std::string lexeme(line);
-	if (pos1 == std::string::npos)
-	{
-		std::ostringstream oss;
-		oss << "part of speach expected in \"" << line << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss.str());
-	}
-	lexeme.resize(pos1);
-
-	if (pos2 == std::string::npos)
-	{
-		std::ostringstream oss;
-		oss << "lemma expected in \"" << line << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss.str());
-	}
-	std::string pos = line.substr(pos1 + 1, pos2 - pos1 - 1);
-
-	if (pos3 == std::string::npos)
-	{
-		std::ostringstream oss;
-		oss << "features expected in \"" << line << "\"";
-		oss << " " << morphoFile << " (line " << lineno << ")";
-		throw fatal_exception(oss.str());
-	}
-	std::string lemma = line.substr(pos2 + 1, pos3 - pos2 - 1);
-	std::string features = line.substr(pos3 + 1, line.size() - 1);
-	// CERR_LINE
-	// std::cerr << "/lexeme:/" << lexeme << '/' << std::endl;
-	// std::cerr << "/pos:/" << pos << '/' << std::endl;
-	// std::cerr << "/lemma:/" << lemma << '/' << std::endl;
-	// std::cerr << "/features:/" << features << '/' << std::endl;
-
-	std::string input = pos + '#' + lexeme;
-	std::string output = lemma + '#' + features;
-	pattern->add(input, output);
-}
-
-/* **************************************************
- *
- ************************************************** */
 int main(int argn, char **argv)
 {
 	try
 	{
-		CompactedLexicon *compactedLexicon;
+		CompactedLexicon *compactedLexicon = nullptr;
 		Buildlexicon::Choice mode = Buildlexicon::NONE;
-		std::string inputFileName = std::string();
-		std::string compactedLexiconFileName = std::string();
-		std::string compactedDirectoryName = std::string();
-		std::string macrosFileName = std::string();
-		std::string patternFile = std::string();
-		std::string morphoFile = std::string();
+		std::string compactedLexiconFileName;
+		std::string macrosFileName;
+		std::string patternFile;
+		std::string morphoFile;
 		Lexicon *morpho = nullptr;
 		Lexicon *pattern = nullptr;
 		bool verbose = false;
@@ -169,117 +236,76 @@ int main(int argn, char **argv)
 		{
 			throw usage_exception("not enough arguments");
 		}
-		// generic options
-		for (unsigned int arg = 1; argv[arg]; ++arg)
-		{
-			if (argv[arg][0] == '-')
-			{
 
-				if (!strcmp(argv[arg] + 1, "V") || !strcmp(argv[arg] + 1, "-verbose"))
+		for (int arg = 1; argv[arg] != nullptr; ++arg)
+		{
+			if (argv[arg][0] != '-')
+			{
+				if (std::strcmp(argv[arg], "build") == 0)
 				{
-					verbose = true;
+					mode = Buildlexicon::BUILD;
 				}
-				if (!strcmp(argv[arg] + 1, "v") || !strcmp(argv[arg] + 1, "-version"))
+				else if (std::strcmp(argv[arg], "consult") == 0)
 				{
-					std::cout << ELVEX_VERSION << std::endl;
-					return EXIT_SUCCESS;
+					mode = Buildlexicon::CONSULT;
 				}
-				else if (!strcmp(argv[arg] + 1, "h") || !strcmp(argv[arg] + 1, "-help"))
+				else if (std::strcmp(argv[arg], "list") == 0)
 				{
-					usage();
-					return EXIT_SUCCESS;
+					mode = Buildlexicon::LIST;
 				}
-				else if (!strcmp(argv[arg] + 1, "macrosFile"))
+				else
 				{
-					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-						macrosFileName = std::string(argv[++arg]);
-					else
-					{
-						throw usage_exception("bad macrosFile argument");
-					}
+					// The historical command line accepts a final <input> argument,
+					// but the current implementation does not use it directly.
 				}
-				else if (!strcmp(argv[arg] + 1, "compactedLexiconFile"))
-				{
-					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-					{
-						compactedLexiconFileName = std::string(argv[++arg]);
-					}
-					else
-					{
-						throw usage_exception("bad compactedLexiconFile argument");
-					}
-				}
-				else if (!strcmp(argv[arg] + 1, "clf"))
-				{
-					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-					{
-						compactedLexiconFileName = std::string(argv[++arg]);
-					}
-					else
-					{
-						throw usage_exception("bad compactedLexiconFile argument");
-					}
-				}
-				else if (!strcmp(argv[arg] + 1, "compactedLexiconDirectory"))
-				{
-					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-					{
-						compactedDirectoryName = std::string(argv[++arg]);
-					}
-					else
-					{
-						throw usage_exception("bad compactedLexiconDirectory argument");
-					}
-				}
-				else if (!strcmp(argv[arg] + 1, "cld"))
-				{
-					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-					{
-						compactedDirectoryName = std::string(argv[++arg]);
-					}
-					else
-					{
-						throw usage_exception("bad compactedLexiconDirectory argument");
-					}
-				}
-				else if (!strcmp(argv[arg] + 1, "patternFile"))
-				{
-					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-					{
-						patternFile = std::string(argv[++arg]);
-					}
-					else
-					{
-						throw usage_exception("bad patternFile argument");
-					}
-				}
-				else if (!strcmp(argv[arg] + 1, "morphoFile"))
-				{
-					if ((argv[arg + 1] != nullptr) && (argv[arg + 1][0] != '-'))
-					{
-						morphoFile = std::string(argv[++arg]);
-					}
-					else
-					{
-						throw usage_exception("bad morphoFile argument");
-					}
-				}
+
+				continue;
 			}
 
+			const char *option = argv[arg];
+
+			if (isOption(option, {"-V", "--verbose"}))
+			{
+				verbose = true;
+			}
+			else if (isOption(option, {"-v", "--version"}))
+			{
+				std::cout << ELVEX_VERSION << std::endl;
+				return EXIT_SUCCESS;
+			}
+			else if (isOption(option, {"-h", "--help"}))
+			{
+				usage();
+				return EXIT_SUCCESS;
+			}
+			else if (isOption(option, {"--macros-file", "-macrosFile"}))
+			{
+				macrosFileName = readOptionValue(arg, argv, "macros-file");
+			}
+			else if (isOption(option, {"--compacted-lexicon-file",
+									   "--clf",
+									   "-compactedLexiconFile",
+									   "-clf"}))
+			{
+				compactedLexiconFileName = readOptionValue(arg, argv, "compacted-lexicon-file");
+			}
+			else if (isOption(option, {"--pattern-file", "-patternFile"}))
+			{
+				patternFile = readOptionValue(arg, argv, "pattern-file");
+			}
+			else if (isOption(option, {"--morpho-file", "-morphoFile"}))
+			{
+				morphoFile = readOptionValue(arg, argv, "morpho-file");
+			}
 			else
 			{
-				if (!strcmp(argv[arg], "build"))
-					mode = Buildlexicon::BUILD;
-				else if (!strcmp(argv[arg], "consult"))
-					mode = Buildlexicon::CONSULT;
-				else if (!strcmp(argv[arg], "list"))
-					mode = Buildlexicon::LIST;
-				else
-					inputFileName = argv[arg];
+				std::ostringstream oss;
+				oss << "Unknown argument: " << option;
+				throw usage_exception(oss);
 			}
 		}
 
-		if (macrosFileName.length() > 0)
+		if (!macrosFileName.empty())
 		{
 			parser.parseFile("@macros (", ")", macrosFileName);
 			parser.getRules().analyseTerms(parser);
@@ -288,56 +314,37 @@ int main(int argn, char **argv)
 		if (!morphoFile.empty())
 		{
 			morpho = new Lexicon(morphoFile);
-			std::ifstream inputFile;
-			inputFile.open(morphoFile.c_str());
-			std::string line;
-			int lineno = 1;
-			while (std::getline(inputFile, line))
-			{
-				size_t commentPos = line.find("//");
-				if (commentPos != std::string::npos)
-				{
-					line = line.substr(0, commentPos);
-				}
-				if (!line.empty())
-					addMorpho(line, morphoFile, lineno, morpho);
-				lineno++;
-			}
-			inputFile.close();
+			readMorphoFile(morphoFile, morpho);
 		}
 
 		if (!patternFile.empty())
 		{
 			pattern = new Lexicon(patternFile);
-			std::ifstream inputFile(patternFile);
-			std::string line;
-			int lineno = 1;
+			readPatternFile(patternFile, pattern);
+		}
 
-			while (std::getline(inputFile, line))
-			{
-				size_t commentPos = line.find("//");
-				if (commentPos != std::string::npos)
-				{
-					line = line.substr(0, commentPos);
-				}
-				if (!line.empty())
-					addPattern(line, patternFile, lineno, pattern);
-				lineno++;
-			}
-			inputFile.close();
+		if (compactedLexiconFileName.empty())
+		{
+			throw usage_exception("compacted-lexicon-file argument expected");
 		}
 
 		switch (mode)
 		{
-
 		case Buildlexicon::BUILD:
 		{
-			compactedLexicon = new CompactedLexicon(compactedDirectoryName, compactedLexiconFileName);
+compactedLexicon = new CompactedLexicon(compactedLexiconFileName);
 			compactedLexicon->openFiles("w");
+
 			if (!morpho)
-				throw usage_exception("morphoFile argument expected");
+			{
+				throw usage_exception("morpho-file argument expected");
+			}
+
 			if (!pattern)
-				throw usage_exception("patternFile argument expected");
+			{
+				throw usage_exception("pattern-file argument expected");
+			}
+
 			compactedLexicon->buildEntries(*pattern, *morpho, verbose);
 			compactedLexicon->saveFsa(verbose);
 			compactedLexicon->closeFiles();
@@ -346,7 +353,7 @@ int main(int argn, char **argv)
 
 		case Buildlexicon::CONSULT:
 		{
-			compactedLexicon = new CompactedLexicon(compactedDirectoryName, compactedLexiconFileName);
+compactedLexicon = new CompactedLexicon(compactedLexiconFileName);
 			compactedLexicon->openFiles("r");
 			compactedLexicon->loadFsa(verbose);
 			compactedLexicon->loadData(verbose);
@@ -357,7 +364,7 @@ int main(int argn, char **argv)
 
 		case Buildlexicon::LIST:
 		{
-			compactedLexicon = new CompactedLexicon(compactedDirectoryName, compactedLexiconFileName);
+			compactedLexicon = new CompactedLexicon(compactedLexiconFileName);
 			compactedLexicon->openFiles("r");
 			compactedLexicon->loadFsa(verbose);
 			compactedLexicon->loadData(verbose);
@@ -371,6 +378,7 @@ int main(int argn, char **argv)
 			throw usage_exception("bad action argument");
 		}
 		}
+
 		usage();
 	}
 	catch (usage_exception &e)
@@ -392,5 +400,6 @@ int main(int argn, char **argv)
 		std::flush(std::cerr);
 		return EXIT_FAILURE;
 	}
+
 	return EXIT_SUCCESS;
 }

@@ -92,6 +92,8 @@ public:
 
     featuresPtr clone() const;
 
+    valuePtr findSpecialFeature(const bitsetPtr &code) const;
+
     valuePtr find(const bitsetPtr &) const;
 
     bool buildEnvironment(statementPtr statementRoot, const environmentPtr &, const featuresPtr &, bool
@@ -117,15 +119,9 @@ public:
 
     bool subsumes(statementPtr statementRoot, const featuresPtr &, const environmentPtr &, bool verbose);
 
-    void deleteAnonymousVariables();
-
-    void deleteVariables();
-
     bool containsVariable();
 
     bool containsSynthesizedChildFeatures();
-
-    bool findVariable(uint32_t key) const;
 
     void apply(statementPtr statementRoot, class Item *item, class Parser &parser, Generator *synthesizer, const statementPtr &variable,
                const statementPtr &body,

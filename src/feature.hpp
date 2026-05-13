@@ -37,10 +37,10 @@ public:
     enum Type
     {
         _HEAD_ = 0,
-        _LEMMA_,
         _CONSTANT_,
+        _LEMMA_,
         _FORM_,
-        _VARIABLE_,
+        _VARIABLE_
     };
 
     static const Type first_type = _HEAD_;
@@ -113,8 +113,6 @@ public:
     bool renameVariables(uint32_t);
 
     void testEnable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
-
-    bool findVariable(uint32_t key) const;
 
     bool containsVariable(void);
 

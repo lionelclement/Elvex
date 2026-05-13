@@ -66,13 +66,19 @@ public:
 
     valuePtr get(const uint32_t) const;
 
-    void replaceVariables(const valuePtr &, bool &);
-
     void replaceVariables(const featuresPtr &, bool &);
+
+    void replaceVariables(const valuePtr &, bool &);
 
     void replaceVariables(const pairpPtr &, bool &);
 
     void replaceVariables(std::string &, bool &);
+
+    // void _removeAnonymousVariables(const featuresPtr &, bool &);
+
+    // void _removeAnonymousVariables(const valuePtr &, bool &);
+
+    // void _removeAnonymousVariables(const pairpPtr &, bool &);
 
 protected:
     void makeCoreSerialString() override;
