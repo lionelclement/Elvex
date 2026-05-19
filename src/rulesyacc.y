@@ -50,10 +50,11 @@
  extern uint32_t ruleslineno;
  extern unsigned int ruleslex();
  extern Parser parser;
- uint32_t headLineno;
- bool pref_trace;
- bool pref_withSpaces;
- bool pref_unordered;
+uint32_t headLineno;
+uint32_t currentRhsSize;
+bool pref_trace;
+bool pref_withSpaces;
+bool pref_unordered;
 
   void ruleserror(const char* str) {
       std::ostringstream oss;
@@ -74,6 +75,7 @@
   double double_slot;
   termsPtr* terms_slot; //(A|B)
   std::vector< termsPtr >* vector_terms_slot; // X Y
+  std::vector<uint32_t>* order_chain_slot;
   std::string* string_slot;
   std::pair<uint32_t, featuresPtr >* entry_slot;
   std::vector<std::pair<uint32_t, featuresPtr> >* entries_slot;
@@ -107,11 +109,10 @@
 %token TOKEN_IF TOKEN_ELSE
 %token TOKEN_DEFERRED
 %token TOKEN_NIL TOKEN_TRUE TOKEN_FALSE
-%token TOKEN_FOREACH TOKEN_IN
-%token TOKEN_SEARCH TOKEN_ON
 %token TOKEN_RAND
 %token TOKEN_TRACE TOKEN_WITH_SPACES TOKEN_WITHOUT_SPACES 
 %token TOKEN_UNORDERED
+%token TOKEN_ORDER
 
 // OPERATORS
 %token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT
@@ -119,6 +120,7 @@
 %token TOKEN_PLUS TOKEN_MINUS TOKEN_TIMES TOKEN_DIVIDE TOKEN_MODULO
 %token TOKEN_FLOOR
 %token TOKEN_EQUAL TOKEN_DIFF TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE
+%token TOKEN_DOUBLE_LT TOKEN_DOUBLE_GT
 
  // LITERALS
 %token<string_slot> TOKEN_IDENTIFIER TOKEN_STRING 
@@ -148,6 +150,7 @@
 %type<statements_slot> structure_statement list_statement compound_expression_statement
 
 %type<statement_slot> statement statements
+%type<statement_slot> order_statement
 %type<statement_slot> expression_statement
 %type<statement_slot> left_hand_side_subset_statement right_hand_side_subset_statement
 %type<statement_slot> left_hand_side_assignment_statement right_hand_side_assignment_statement
@@ -155,13 +158,14 @@
 %type<statement_slot> hash_statement
 %type<statement_slot> field_access_root field_access_statement feature_statement_value
 
+%type<order_chain_slot> order_chain
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
 %left TOKEN_OR
 %left TOKEN_AND
 %right TOKEN_NOT
 %left TOKEN_UNIFY
-%nonassoc TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE TOKEN_EQUAL TOKEN_DIFF
+%nonassoc TOKEN_LT TOKEN_LE TOKEN_GT TOKEN_GE TOKEN_EQUAL TOKEN_DIFF TOKEN_SUBSUME
 %left TOKEN_PLUS TOKEN_MINUS
 %left TOKEN_TIMES TOKEN_DIVIDE
 %left TOKEN_MODULO
@@ -430,38 +434,72 @@ pref_rule:
 	;
 
 rule:
-	pref_rule term TOKEN_RIGHT_ARROW terms_vector structure_statement
-	{
-	  DBUGPRT("rule");
-	  if (pref_unordered && $4->size() <= 1){
-		yyerror((char*)"This rule with fewer than 2 terms must not be unordered");
+    pref_rule term TOKEN_RIGHT_ARROW terms_vector
+    {
+      currentRhsSize = static_cast<uint32_t>($4->size());
+    }
+    structure_statement
+    {
+      DBUGPRT("rule");
 
-	  }
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), pref_withSpaces, pref_unordered, $2, *$4, $5 ? *$5 : statementsPtr());
-	  rule->setTrace(pref_trace);
-	  parser.getRules().addRule(rule);
-	  if (!parser.getRules().getStartTerm()){
-	    parser.getRules().setStartTerm($2);
-	  }
-	  delete($4);
-	  if ($5)
-	     delete($5);
-	}
+      if (pref_unordered && $4->size() <= 1) {
+        yyerror((char*)"This rule with fewer than 2 terms must not be unordered");
+      }
 
-	|pref_rule term TOKEN_RIGHT_ARROW structure_statement
-	{
-	  DBUGPRT("Rule");
-	  rulePtr rule = Rule::create(headLineno, parser.getTopBufferName(), pref_withSpaces, pref_unordered, $2, $4 ? *$4 : statementsPtr());
-	  rule->setTrace(pref_trace);
-	  parser.getRules().addRule(rule);
-	  if (!parser.getRules().getStartTerm()){
-	    parser.getRules().setStartTerm($2);
-	  }
-	  if ($4)
-	    delete($4);
-	}
-	;
+      rulePtr rule = Rule::create(
+        headLineno,
+        parser.getTopBufferName(),
+        pref_withSpaces,
+        pref_unordered,
+        $2,
+        *$4,
+        $6 ? *$6 : statementsPtr()
+      );
 
+      rule->setTrace(pref_trace);
+      parser.getRules().addRule(rule);
+
+      if (!parser.getRules().getStartTerm()) {
+        parser.getRules().setStartTerm($2);
+      }
+
+      delete($4);
+
+      if ($6) {
+        delete($6);
+      }
+    }
+
+    |pref_rule term TOKEN_RIGHT_ARROW
+    {
+      currentRhsSize = 0;
+    }
+    structure_statement
+    {
+      DBUGPRT("Rule");
+
+      rulePtr rule = Rule::create(
+        headLineno,
+        parser.getTopBufferName(),
+        pref_withSpaces,
+        pref_unordered,
+        $2,
+        $5 ? *$5 : statementsPtr()
+      );
+
+      rule->setTrace(pref_trace);
+      parser.getRules().addRule(rule);
+
+      if (!parser.getRules().getStartTerm()) {
+        parser.getRules().setStartTerm($2);
+      }
+
+      if ($5) {
+        delete($5);
+      }
+    }
+    ;
+	
 terms_vector:
 	terms_vector terms {
 	  DBUGPRT("term_vector");
@@ -592,6 +630,12 @@ statement:
 	  delete($1);
 	}
 
+    |order_statement
+    {
+      DBUGPRT("statement");
+      $$ = $1;
+    }
+	
 	|TOKEN_ATTEST expression_statement TOKEN_SEMI {
 	  DBUGPRT("statement");
 	  $$ = new statementPtr(Statement::createFirst(ruleslineno, parser.getTopBufferName(), Statement::ATTEST_STATEMENT, true, *$2));
@@ -647,12 +691,10 @@ statement:
 	  $$ = new statementPtr(Statement::createFirstSecond(ruleslineno, parser.getTopBufferName(), Statement::ASSIGNMENT_STATEMENT, true, *$1, *$3));
 	  // <X, …> = <…>
 	  // <X, …> = $X
-	  // <X, …> = search 
 	  if (((*$1)->isPairp()) 
 	  		&& (((*$3)->isPairp())
 				||((*$3)->isVariable()) 
-				||((*$3)->isFieldAccess())
-				||((*$3)->isSearch()))) {
+				||((*$3)->isFieldAccess()))) {
 	    }
 	  // ↓i = $X
 	  // ↓i = […]
@@ -688,7 +730,7 @@ statement:
 	  // $X = … ∪ …
 	  // $X = ⇓j
 	  // $X = <expr>
-	  // $X = search
+	  //
 	  else if (((*$1)->isVariable())
 		   &&(((*$3)->isVariable())
 		      ||((*$3)->isConstant())
@@ -700,8 +742,7 @@ statement:
 		      ||((*$3)->isString())
 		      ||((*$3)->isNumber())
 		      ||((*$3)->isFct())
-			  ||((*$3)->isFieldAccess())
-		      ||((*$3)->isSearch())));
+			  ||((*$3)->isFieldAccess())));
 	  else {
 	    yyerror((char*)"bad assignment expression");
 	  }
@@ -763,19 +804,103 @@ statement:
 	  delete($3);
 	  delete($5);
 	}
-
-	|TOKEN_FOREACH variable TOKEN_IN expression_statement statement {
-	  DBUGPRT("statement");
-	  $$ = new statementPtr(Statement::createForeach(ruleslineno,
-						  parser.getTopBufferName(),
-						  true, 
-						  $2,
-						  Statement::createFirstSecond(ruleslineno, parser.getTopBufferName(), Statement::FOREACH_CON_T_STATEMENT, false, (*$4), *$5)));
-	  delete($4);
-	  delete($5);
-	}
 	;
 
+order_statement:
+    TOKEN_ORDER order_chain TOKEN_SEMI
+	{
+	DBUGPRT("order_statement");
+
+	if ($2->size() < 2) {
+		yyerror((char*)"order chain must contain at least two indexes");
+	}
+
+	$$ = new statementPtr(
+		Statement::createOrder(
+		ruleslineno,
+		parser.getTopBufferName(),
+		Statement::ORDER_CHAIN_STATEMENT,
+		true,
+		*$2
+		)
+	);
+
+	delete($2);
+	}
+
+    |TOKEN_ORDER TOKEN_DOUBLE_LT TOKEN_INTEGER TOKEN_SEMI
+    {
+      DBUGPRT("order_statement");
+
+      if ($3 < 1 || static_cast<uint32_t>($3) > currentRhsSize) {
+        yyerror((char*)"bad order index");
+      }
+
+      $$ = new statementPtr(
+        Statement::createOrder(
+          ruleslineno,
+          parser.getTopBufferName(),
+          Statement::ORDER_FIRST_STATEMENT,
+          true,
+          static_cast<uint32_t>($3 - 1)
+        )
+      );
+    }
+
+    |TOKEN_ORDER TOKEN_DOUBLE_GT TOKEN_INTEGER TOKEN_SEMI
+    {
+      DBUGPRT("order_statement");
+
+      if ($3 < 1 || static_cast<uint32_t>($3) > currentRhsSize) {
+        yyerror((char*)"bad order index");
+      }
+
+      $$ = new statementPtr(
+        Statement::createOrder(
+          ruleslineno,
+          parser.getTopBufferName(),
+          Statement::ORDER_LAST_STATEMENT,
+          true,
+          static_cast<uint32_t>($3 - 1)
+        )
+      );
+    }
+    ;
+	
+order_chain:
+    TOKEN_INTEGER
+    {
+      DBUGPRT("order_chain");
+
+      if ($1 < 1 || static_cast<uint32_t>($1) > currentRhsSize) {
+        yyerror((char*)"bad order index");
+      }
+
+      $$ = new std::vector<uint32_t>();
+      $$->push_back(static_cast<uint32_t>($1 - 1));
+    }
+
+    |order_chain TOKEN_LT TOKEN_INTEGER
+    {
+      DBUGPRT("order_chain");
+
+      if ($3 < 1 || static_cast<uint32_t>($3) > currentRhsSize) {
+        yyerror((char*)"bad order index");
+      }
+
+      uint32_t index = static_cast<uint32_t>($3 - 1);
+
+      for (auto previous : *$1) {
+        if (previous == index) {
+          yyerror((char*)"duplicate index in order chain");
+        }
+      }
+
+      $$ = $1;
+      $$->push_back(index);
+    }
+    ;
+	
 left_hand_side_subset_statement:
 	features 
 	{
@@ -938,6 +1063,37 @@ expression_statement:
 	  delete($3);
 	}
 
+    |left_hand_side_subset_statement TOKEN_SUBSUME right_hand_side_subset_statement
+    {
+      DBUGPRT("expression_statement");
+
+      $$ = new statementPtr(
+        Statement::createFirstSecond(
+          ruleslineno,
+          parser.getTopBufferName(),
+          Statement::SUBSUME_STATEMENT,
+          false,
+          (*$1),
+          (*$3)
+        )
+      );
+
+      // […] ⊂ ↑
+      // […] ⊂ ⇓j
+      // […] ⊂ $X
+      if (((*$1)->isFeatures())
+          && (((*$3)->isUp())
+              || ((*$3)->isDown2())
+              || ((*$3)->isFieldAccess())
+              || ((*$3)->isVariable())))
+        ;
+      else
+        yyerror((char*)"bad subsumption expression");
+
+      delete($1);
+      delete($3);
+    }
+	
 	//////////////////////////////////////////////////
 	// arithmetic, string, lists
 	//////////////////////////////////////////////////
@@ -1102,21 +1258,7 @@ expression_statement:
 	  $$ = new statementPtr(Statement::createPairp(ruleslineno, parser.getTopBufferName(), false, *$1));
 	  delete($1);
 	}
-
-	//////////////////////////////////////////////////
-	// search
-	//////////////////////////////////////////////////
-	|TOKEN_SEARCH expression_statement TOKEN_ON TOKEN_IDENTIFIER {
-	  	DBUGPRT("expression_statement");
-	  	$$ = new statementPtr(Statement::createSearch(ruleslineno,
-						  parser.getTopBufferName(),
-						  true,
-						  Vartable ::nameToCode(*$4),
-						  *$2));
-		delete($2);
-	  	delete($4);
-	 }
-	 ;
+	;
 
 compound_expression_statement:
 	compound_expression_statement TOKEN_COMMA expression_statement

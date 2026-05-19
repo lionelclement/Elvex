@@ -232,7 +232,7 @@ int main(int argn, char **argv)
                 usage();
                 return EXIT_SUCCESS;
             }
-            else if (isOption(option, {"-a", "--reduce-all", "--reduceAll"}))
+            else if (isOption(option, {"-a", "--reduce-all"}))
             {
                 generator.setReduceAll(true);
             }
@@ -249,7 +249,7 @@ int main(int argn, char **argv)
                 trace = true;
                 generator.setTrace(true);
             }
-            else if (isOption(option, {"--trace-all", "--traceAll"}))
+            else if (isOption(option, {"--trace-all"}))
             {
                 trace = true;
                 generator.setTraceInit(true);
@@ -259,81 +259,81 @@ int main(int argn, char **argv)
                 generator.setTraceReduce(true);
                 generator.setTraceAction(true);
             }
-            else if (isOption(option, {"--trace-init", "--traceInit"}))
+            else if (isOption(option, {"--trace-init"}))
             {
                 trace = true;
                 generator.setTraceInit(true);
             }
-            else if (isOption(option, {"--trace-stage", "--traceStage"}))
+            else if (isOption(option, {"--trace-stage"}))
             {
                 trace = true;
                 generator.setTraceStage(true);
             }
-            else if (isOption(option, {"--trace-close", "--traceClose"}))
+            else if (isOption(option, {"--trace-close"}))
             {
                 trace = true;
                 generator.setTraceClose(true);
             }
-            else if (isOption(option, {"--trace-shift", "--traceShift"}))
+            else if (isOption(option, {"--trace-shift"}))
             {
                 trace = true;
                 generator.setTraceShift(true);
             }
-            else if (isOption(option, {"--trace-reduce", "--traceReduce"}))
+            else if (isOption(option, {"--trace-reduce"}))
             {
                 trace = true;
                 generator.setTraceReduce(true);
             }
-            else if (isOption(option, {"--trace-action", "--traceAction"}))
+            else if (isOption(option, {"--trace-action"}))
             {
                 trace = true;
                 generator.setTraceAction(true);
             }
-            else if (isOption(option, {"--macros-file", "-macrosFile"}))
+            else if (isOption(option, {"--macros-file"}))
             {
                 generator.setMacrosFileName(readOptionValue(arg, argv, "macros-file"));
             }
-            else if (isOption(option, {"--lexicon-file", "-lexiconFile"}))
+            else if (isOption(option, {"--lexicon-file"}))
             {
                 generator.setLexiconFileName(readOptionValue(arg, argv, "lexicon-file"));
             }
-            else if (isOption(option, {"--rules-file", "-rulesFile"}))
+            else if (isOption(option, {"--rules-file"}))
             {
                 generator.setRulesFileName(readOptionValue(arg, argv, "rules-file"));
             }
-            else if (isOption(option, {"--input-file", "-inputFile"}))
+            else if (isOption(option, {"--input-file"}))
             {
                 generator.setInputFileName(readOptionValue(arg, argv, "input-file"));
             }
-            else if (isOption(option, {"--max-length", "-maxLength"}))
+            else if (isOption(option, {"--max-length"}))
             {
                 generator.setMaxLength(std::atoi(readOptionValue(arg, argv, "max-length")));
             }
-            else if (isOption(option, {"--max-usages", "-maxUsages"}))
+            else if (isOption(option, {"--max-usages"}))
             {
                 generator.setMaxUsages(std::atoi(readOptionValue(arg, argv, "max-usages")));
             }
-            else if (isOption(option, {"--max-items", "-maxItems"}))
+            else if (isOption(option, {"--max-items"}))
             {
                 generator.setMaxItems(std::atoi(readOptionValue(arg, argv, "max-items")));
             }
-            else if (isOption(option, {"--max-time", "-maxTime"}))
+            else if (isOption(option, {"--max-time"}))
             {
                 signal(SIGALRM, sig_handler);
                 alarm(std::atoi(readOptionValue(arg, argv, "max-time")));
                 time(&before);
             }
-            else if (isOption(option, {"--max-attempts", "-maxAttempts", "-maxAttemps"}))
+            else if (isOption(option, {"--max-attempts"}))
             {
                 generator.setMaxAttemps(std::atoi(readOptionValue(arg, argv, "max-attempts")));
             }
-            else if (isOption(option, {"--seed", "-seed"}))
+            else if (isOption(option, {"--seed"}))
             {
                 generator.seedRandom(
                     static_cast<uint32_t>(
                         std::strtoul(readOptionValue(arg, argv, "seed"), nullptr, 10)));
             }
-            else if (isOption(option, {"--strategy", "-strategy"}))
+            else if (isOption(option, {"--strategy"}))
             {
                 std::string strategyName(readOptionValue(arg, argv, "strategy"));
 
@@ -342,27 +342,25 @@ int main(int argn, char **argv)
                     throw usage_exception("bad strategy argument: expected exhaustive, sample, or beam");
                 }
             }
-            else if (isOption(option, {"--max-rule-choices", "-maxRuleChoices"}))
+            else if (isOption(option, {"--max-rule-choices"}))
             {
                 generator.setMaxRuleChoices(
                     std::atoi(readOptionValue(arg, argv, "max-rule-choices")));
             }
-            else if (isOption(option, {"--beam-width", "-beamWidth"}))
+            else if (isOption(option, {"--beam-width"}))
             {
                 generator.setBeamWidth(
                     std::atoi(readOptionValue(arg, argv, "beam-width")));
             }
             else if (isOption(option, {"--compacted-lexicon-file",
-                                       "--clf",
-                                       "-compactedLexiconFile",
-                                       "-clf"}))
+                                       "--clf"}))
             {
                 generator.setCompactedLexiconFileName(
                     readOptionValue(arg, argv, "compacted-lexicon-file"));
             }
 
 #ifdef OUTPUT_XML
-            else if (isOption(option, {"--xml", "-xml"}))
+            else if (isOption(option, {"--xml"}))
             {
                 generator.setOutXML(strdup(readOptionValue(arg, argv, "xml")));
             }

@@ -193,6 +193,16 @@ double_down_arrow "⇓"
     return TOKEN_DOUBLE_DOWN_ARROW;
   }
   
+  "<<" {
+    DBUGPRT("TOKEN_DOUBLE_LT");
+    return TOKEN_DOUBLE_LT;
+  }
+  
+  ">>" {
+    DBUGPRT("TOKEN_DOUBLE_GT");
+    return TOKEN_DOUBLE_GT;
+  }
+  
   "<" {
     DBUGPRT("TOKEN_LT");
     return TOKEN_LT;
@@ -273,7 +283,7 @@ double_down_arrow "⇓"
     return TOKEN_UNIFY;
   }
   
-  "⊂"|"<<" {
+  "⊂" {
     DBUGPRT("TOKEN_SUBSUME");
     return TOKEN_SUBSUME;
   }
@@ -388,6 +398,11 @@ double_down_arrow "⇓"
     return TOKEN_FLOOR;
   }
   
+  "order" {
+    DBUGPRT("TOKEN_ORDER");
+    return TOKEN_ORDER;
+  }
+  
   print[lL]n {
     DBUGPRT("TOKEN_PRINTLN");
     return TOKEN_PRINTLN;
@@ -403,29 +418,9 @@ double_down_arrow "⇓"
     return TOKEN_EPRINTLN;
   }
   
-  "search" {
-    DBUGPRT("TOKEN_SEARCH");
-    return TOKEN_SEARCH;
-  }
-  
   "rand" {
     DBUGPRT("TOKEN_RAND");
     return TOKEN_RAND;
-  }
-  
-  "foreach" {
-    DBUGPRT("TOKEN_FOREACH");
-    return TOKEN_FOREACH;
-  }
-  
-  "in" {
-    DBUGPRT("TOKEN_IN");
-    return TOKEN_IN;
-  }
-  
-  "on" {
-    DBUGPRT("TOKEN_ON");
-    return TOKEN_ON;
   }
   
   "|" {

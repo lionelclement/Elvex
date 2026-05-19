@@ -722,6 +722,7 @@ class Item *Generator::createItem(class Item *item, uint32_t row)
     it->setSynthesizedFeatures(item->getSynthesizedFeatures()->clone());
     it->setSynthesizedChildFeatures(item->getSynthesizedChildFeatures()->clone());
     it->setSeen(item->getSeen());
+    it->setOrderSpecs(item->getOrderSpecs());
     return it;
 }
 
@@ -770,6 +771,12 @@ static bool sameNode(const nodePtr &a, const nodePtr &b)
         return false;
 
     if (a->size() != b->size())
+        return false;
+
+    if (a->getRhsIndexes() != b->getRhsIndexes())
+        return false;
+
+    if (a->getOrderSpecs() != b->getOrderSpecs())
         return false;
 
     for (size_t i = 0; i < a->size(); ++i)
@@ -1137,6 +1144,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     }
                                 }
                                 nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
+
+                                uint32_t rhsIndex = 0;
                                 for (auto forestIdentifier : (*actualItem)->getForestIdentifiers())
                                 {
                                     auto _forestMapIt = forestMap.find(forestIdentifier);
@@ -1146,10 +1155,15 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                                         if (forest->getFrom() != forest->getTo())
                                         {
-                                            node->push_back(forest);
+                                            node->push_back(rhsIndex, forest);
                                         }
                                     }
+
+                                    ++rhsIndex;
                                 }
+
+                                node->setOrderSpecs((*actualItem)->getOrderSpecs());
+
                                 // insEquivalentNode(forestFound, node))
                                 {
                                     forestFound->push_node(node);
@@ -1237,6 +1251,8 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                                         // On transmet le contexte de previousItem
                                         nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
+
+                                        uint32_t rhsIndex = 0;
                                         for (auto forestIdentifier : (*actualItem)->getForestIdentifiers())
                                         {
                                             auto forestMapIt = forestMap.find(forestIdentifier);
@@ -1244,10 +1260,18 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             {
                                                 FATAL_ERROR_UNEXPECTED
                                             }
+
                                             forestPtr forest = (*forestMapIt).second;
+
                                             if (forest->getFrom() != forest->getTo())
-                                                node->push_back(forest);
+                                            {
+                                                node->push_back(rhsIndex, forest);
+                                            }
+
+                                            ++rhsIndex;
                                         }
+
+                                        node->setOrderSpecs((*actualItem)->getOrderSpecs());
                                         forestPtr forestFound = forestPtr();
                                         class ForestIdentifier *fi = ForestIdentifier::create((*actualItem)->getId(),
                                                                                               (*actualItem)->getRanges()[0],

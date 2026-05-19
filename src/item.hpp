@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -29,6 +29,7 @@
 #include "serializable.hpp"
 #include "parser.hpp"
 #include "generator.hpp"
+#include "orderspec.hpp"
 
 class Item : public Facade,
              public Serializable
@@ -48,20 +49,21 @@ private:
     statementsPtr statements;                                // the semantics
     set_of_uint32_t refs;                                    // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
-    std::vector<uint32_t> ranges;                             // ranges
+    std::vector<uint32_t> ranges;                            // ranges
     featuresPtr inheritedFeatures;                           // ↑
-    listFeaturesPtr inheritedChildFeatures;                    // ↓
+    listFeaturesPtr inheritedChildFeatures;                  // ↓
     featuresPtr synthesizedFeatures;                         // ⇑
-    listFeaturesPtr synthesizedChildFeatures;                  // ⇓
+    listFeaturesPtr synthesizedChildFeatures;                // ⇓
     std::vector<class ForestIdentifier *> forestIdentifiers; // forest identifiers
     environmentPtr environment;                              // variable environment
+    vectorOrderSpecs orderSpecs;
 
     bool s_id = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
          s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
          s_inheritedChildFeatures = true, s_synthesizedFeatures = true,
          s_synthesizedChildFeatures = true, s_statements = true, s_environment = true;
-    
+
     void makeSerialString(void);
     void makeCoreSerialString(void);
 
@@ -144,6 +146,13 @@ public:
 
     void setSeen(uint8_t, bool);
 
+    void setOrderSpecs(const vectorOrderSpecs &);
+
+    void addOrderSpec(const OrderSpec &);
+
+    const vectorOrderSpecs &getOrderSpecs() const;
+
+    // rule methods
     // rule methods
 
     void printRule(std::ostream &, uint8_t index = UINT8_MAX, bool withSemantic = false, bool html = true) const;
@@ -206,18 +215,18 @@ public:
 
     void environmentReplaceVariables(std::string &, bool &);
 
-    valuePtr environmentGet(uint32_t code) ;
+    valuePtr environmentGet(uint32_t code);
 
-    bool environmentIsEmpty(void) ;
+    bool environmentIsEmpty(void);
 
     void environmentAdd(statementPtr from, uint32_t code, valuePtr value, bool verbose);
 
     void environmentRemove(uint32_t code);
 
     valuePtr evaluateStatementValues(const valuePtr &, Parser &, Generator *, bool);
-    
+
     void evaluateStatementValues(const featuresPtr &, Parser &, Generator *, bool);
-    
+
     void evaluateStatementValues(const pairpPtr &, Parser &, Generator *, bool);
 
     void defaultInheritedChildFeatures(void);

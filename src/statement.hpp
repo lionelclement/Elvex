@@ -102,16 +102,16 @@ public:
         IF_STATEMENT,
         THEN_STATEMENT,
         THEN_ELSE_STATEMENT,
-        FOREACH_STATEMENT,
-        FOREACH_CON_T_STATEMENT,
         STMS_STATEMENT,
         STRING_STATEMENT,
         PAIRP_STATEMENT,
         NUMBER_STATEMENT,
         FUNCTION_STATEMENT,
-        SEARCH_STATEMENT,
         DEFERRED_STATEMENT,
-        FIELD_ACCESS_STATEMENT
+        FIELD_ACCESS_STATEMENT,
+        ORDER_CHAIN_STATEMENT,
+        ORDER_FIRST_STATEMENT,
+        ORDER_LAST_STATEMENT
     };
 
     enum function_type
@@ -161,6 +161,7 @@ private:
     pairpPtr pairp;
     statementsPtr statements;
     double number;
+    std::vector<uint32_t> orderChain;
 
 public:
     Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);
@@ -187,14 +188,20 @@ public:
     // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH_CON_T UNIF
     static statementPtr createFirstSecond(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr first, statementPtr second);
 
-    // AFF SUBSUME IF IF_CON_T DEFERRED FOREACH_CON_T UNIF
-    static statementPtr createFirstSecondThird(uint32_t lineno, std::string bufferName, type op, bool rootOp, statementPtr first, statementPtr second);
+    // ORDER
+    static statementPtr createOrder(
+        uint32_t lineno,
+        std::string bufferName,
+        type op,
+        bool rootOp,
+        const std::vector<uint32_t> &orderChain);
 
-    // FOREACH
-    static statementPtr createForeach(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first);
-
-    // SEARCH
-    static statementPtr createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first);
+    static statementPtr createOrder(
+        uint32_t lineno,
+        std::string bufferName,
+        type op,
+        bool rootOp,
+        uint32_t rhsIndex);
 
     // FIELD_ACCESS_STATEMENT
     // ↑.attr or ⇓i.attr
@@ -259,9 +266,9 @@ public:
 
     bool isIf() const;
 
-    bool isForeach() const;
-
     bool isDeferred() const;
+
+    bool isOrder() const;
 
     bool isStms() const;
 
@@ -272,8 +279,6 @@ public:
     bool isNumber() const;
 
     bool isFct() const;
-
-    bool isSearch() const;
 
     bool isFieldAccess() const;
 
@@ -290,6 +295,8 @@ public:
     bitsetPtr _getBitset() const;
 
     uint32_t getCode() const;
+
+    const std::vector<uint32_t> &getOrderChain() const;
 
     uint8_t getFirst() const;
 
@@ -312,10 +319,10 @@ public:
     void toHTML(std::ostream &, uint8_t tabulationLenght = 5, uint8_t tabulation = 0, uint32_t color = 0x000000, uint32_t bgcolor = 0xFFFFFF) const;
 
 #ifdef OUTPUT_XML
-void toXML(xmlNodePtr nodeRoot) const;
+    void toXML(xmlNodePtr nodeRoot) const;
 #endif
 
-void flatPrint(std::ostream &out) const;
+    void flatPrint(std::ostream &out) const;
 
     featuresPtr evalFeatures(class Item *, class Parser &, class Generator *, bool replaceVariables, bool verbose);
 
@@ -358,7 +365,6 @@ void flatPrint(std::ostream &out) const;
     void lookingForAssignedInheritedChildFeatures(std::vector<bool> &);
 
     void renameVariables(uint32_t);
-
 };
 
 #endif // ELVEX_STATEMENT_H

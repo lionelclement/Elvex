@@ -64,6 +64,12 @@
         throw fatal_exception("*** unexpected"); \
     }
 
+#define FATAL_ERROR(msg)                   \
+    {                                            \
+        CERR_LINE;                               \
+        throw fatal_exception(msg); \
+    }
+
 #define WARNING(msg)                                      \
     {                                                     \
         std::cerr << "*** warning: " << msg << std::endl; \

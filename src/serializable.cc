@@ -8,7 +8,7 @@
  *
  * Author:
  * Lionel Clément
- * LaBRI - Université Bordeaux 
+ * LaBRI - Université Bordeaux
  * 351, cours de la Libération
  * 33405 Talence Cedex - France
  * lionel.clement@u-bordeaux.fr
@@ -46,9 +46,12 @@ std::string Serializable::peekCoreSerialString()
     {
         std::string old = coreSerialString;
         makeCoreSerialString();
-        if (!old.empty() && old != coreSerialString){
+#ifdef DEBUG_SERIALIZATION
+        if (!old.empty() && old != coreSerialString)
+        {
             std::cerr << old << " != " << coreSerialString << std::endl;
         }
+#endif
         coreSerialHashCode = std::hash<std::string>{}(coreSerialString);
     }
     return coreSerialString;
@@ -58,9 +61,10 @@ std::string Serializable::peekCoreSerialString()
  *
  ************************************************** */
 void Serializable::resetCoreSerial()
- {
+{
     coreSerialHashCode = 0;
- }
+    coreSerialString.clear();
+}
 
 /* **************************************************
  *

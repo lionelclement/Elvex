@@ -65,7 +65,7 @@ namespace
 
 	void usage()
 	{
-		std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global options] <build|consult|list> [<input>]\n";
+		std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global options] <build|consult|list>\n";
 		std::cerr << "\
 Global options:\n\
 \t-h, --help                                       print this help message\n\
@@ -253,12 +253,12 @@ int main(int argn, char **argv)
 				{
 					mode = Buildlexicon::LIST;
 				}
-				else
-				{
-					// The historical command line accepts a final <input> argument,
-					// but the current implementation does not use it directly.
-				}
-
+else
+{
+    std::ostringstream oss;
+    oss << "Unknown argument: " << argv[arg];
+    throw usage_exception(oss);
+}
 				continue;
 			}
 
@@ -278,22 +278,20 @@ int main(int argn, char **argv)
 				usage();
 				return EXIT_SUCCESS;
 			}
-			else if (isOption(option, {"--macros-file", "-macrosFile"}))
+			else if (isOption(option, {"--macros-file"}))
 			{
 				macrosFileName = readOptionValue(arg, argv, "macros-file");
 			}
 			else if (isOption(option, {"--compacted-lexicon-file",
-									   "--clf",
-									   "-compactedLexiconFile",
-									   "-clf"}))
+									   "--clf"}))
 			{
 				compactedLexiconFileName = readOptionValue(arg, argv, "compacted-lexicon-file");
 			}
-			else if (isOption(option, {"--pattern-file", "-patternFile"}))
+			else if (isOption(option, {"--pattern-file"}))
 			{
 				patternFile = readOptionValue(arg, argv, "pattern-file");
 			}
-			else if (isOption(option, {"--morpho-file", "-morphoFile"}))
+			else if (isOption(option, {"--morpho-file"}))
 			{
 				morphoFile = readOptionValue(arg, argv, "morpho-file");
 			}

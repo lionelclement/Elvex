@@ -869,6 +869,7 @@ class Item *Item::clone(const std::bitset<MAX_FLAGS> &protectedFlags, bool verbo
     it->addForestIdentifiers(this->forestIdentifiers);
     it->refs = this->refs;
     it->seen = this->seen;
+    it->orderSpecs = this->orderSpecs;
     it->inheritedFeatures = this->inheritedFeatures->clone();
     it->inheritedChildFeatures = this->inheritedChildFeatures->clone();
     it->synthesizedChildFeatures = this->synthesizedChildFeatures->clone();
@@ -954,6 +955,17 @@ void Item::makeCoreSerialString()
 
     stream << '#';
     stream << (inheritedFeatures ? inheritedFeatures->peekCoreSerialString() : "0");
+
+    stream << '#';
+    for (const auto &orderSpec : orderSpecs)
+    {
+        stream << static_cast<int>(orderSpec.kind) << ':';
+        for (auto index : orderSpec.indexes)
+        {
+            stream << index << ',';
+        }
+        stream << '/';
+    }
 
     stream.flush();
     coreSerialString = stream.str();
@@ -1212,4 +1224,38 @@ void Item::cloneEnvironment(const class Item *from)
 environmentPtr Item::getEnvironment() const
 {
     return environment;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::addOrderSpec(const OrderSpec &orderSpec)
+{
+    for (const auto &existing : orderSpecs)
+    {
+        if (existing == orderSpec)
+        {
+            return;
+        }
+    }
+
+    orderSpecs.push_back(orderSpec);
+    resetCoreSerial();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::setOrderSpecs(const vectorOrderSpecs &_orderSpecs)
+{
+    orderSpecs = _orderSpecs;
+    resetCoreSerial();
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const vectorOrderSpecs &Item::getOrderSpecs() const
+{
+    return orderSpecs;
 }

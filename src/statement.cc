@@ -41,6 +41,7 @@
 #include "bitset.hpp"
 #include "vartable.hpp"
 #include "flags.hpp"
+#include "orderspec.hpp"
 
 /* **************************************************
  *
@@ -123,24 +124,32 @@ statementPtr Statement::createFirstSecond(uint32_t lineno, std::string bufferNam
 }
 
 /* **************************************************
- * FOREACH
+ * ORDER
  ************************************************** */
-statementPtr Statement::createForeach(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first)
+statementPtr Statement::createOrder(
+    uint32_t lineno,
+    std::string bufferName,
+    type op,
+    bool rootOp,
+    const std::vector<uint32_t> &orderChain)
 {
-    Statement *statement = new Statement(lineno, bufferName, FOREACH_STATEMENT, rootOp);
-    statement->code = code;
-    statement->first = first;
+    Statement *statement = new Statement(lineno, bufferName, op, rootOp);
+    statement->orderChain = orderChain;
     return statementPtr(statement);
 }
 
 /* **************************************************
- * SEARCH
+ * ORDER
  ************************************************** */
-statementPtr Statement::createSearch(uint32_t lineno, std::string bufferName, bool rootOp, uint32_t code, statementPtr first)
+statementPtr Statement::createOrder(
+    uint32_t lineno,
+    std::string bufferName,
+    type op,
+    bool rootOp,
+    uint32_t rhsIndex)
 {
-    Statement *statement = new Statement(lineno, bufferName, SEARCH_STATEMENT, rootOp);
-    statement->code = code;
-    statement->first = first;
+    Statement *statement = new Statement(lineno, bufferName, op, rootOp);
+    statement->orderChain.push_back(rhsIndex);
     return statementPtr(statement);
 }
 
@@ -266,14 +275,6 @@ bool Statement::isDown() const
 /* **************************************************
  *
  ************************************************** */
-bool Statement::isSearch() const
-{
-    return op == SEARCH_STATEMENT;
-}
-
-/* **************************************************
- *
- ************************************************** */
 bool Statement::isFieldAccess() const
 {
     return op == FIELD_ACCESS_STATEMENT;
@@ -375,13 +376,13 @@ bool Statement::isIf() const
     return op == IF_STATEMENT;
 }
 
-/* **************************************************
- *
- ************************************************** */
-bool Statement::isForeach() const
-{
-    return op == FOREACH_STATEMENT;
-}
+// /* **************************************************
+//  *
+//  ************************************************** */
+// bool Statement::isForeach() const
+// {
+//     return op == FOREACH_STATEMENT;
+// }
 
 /* **************************************************
  *
@@ -389,6 +390,16 @@ bool Statement::isForeach() const
 bool Statement::isDeferred() const
 {
     return op == DEFERRED_STATEMENT;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Statement::isOrder() const
+{
+    return op == ORDER_CHAIN_STATEMENT ||
+           op == ORDER_FIRST_STATEMENT ||
+           op == ORDER_LAST_STATEMENT;
 }
 
 /* **************************************************
@@ -499,6 +510,14 @@ uint8_t Statement::getFirst() const
 uint32_t Statement::getCode() const
 {
     return code;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+const std::vector<uint32_t> &Statement::getOrderChain() const
+{
+    return orderChain;
 }
 
 /* **************************************************
@@ -670,12 +689,12 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         CLOSESPAN;
         break;
 
-    case SEARCH_STATEMENT:
-        out << "<B>search</B>&nbsp;";
-        first->toHTML(out);
-        out << "&nbsp;<B>on</B>&nbsp;";
-        out << Vartable::codeToName(code);
-        break;
+        // case SEARCH_STATEMENT:
+        //     out << "<B>search</B>&nbsp;";
+        //     first->toHTML(out);
+        //     out << "&nbsp;<B>on</B>&nbsp;";
+        //     out << Vartable::codeToName(code);
+        //     break;
 
     case STMS_STATEMENT:
         statements->print(out, tabulationLenght, tabulation, color, bgcolor, true, "{", "}", "");
@@ -771,27 +790,38 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         }
         break;
 
-    case FOREACH_STATEMENT:
+    case ORDER_CHAIN_STATEMENT:
         OPENSPAN;
-        out << "<B>foreach</B>&nbsp;";
-        out << Vartable::codeToName(code);
-        out << "&nbsp;";
+        out << "<B>order</B>&nbsp;";
+        for (size_t i = 0; i < orderChain.size(); ++i)
+        {
+            if (i)
+                out << "&nbsp;&lt;&nbsp;";
+            out << orderChain[i] + 1;
+        }
+        out << ";";
+        BR;
         CLOSESPAN;
-        first->toHTML(out, tabulationLenght, tabulation, color);
         break;
 
-    case FOREACH_CON_T_STATEMENT:
+    case ORDER_FIRST_STATEMENT:
         OPENSPAN;
-        out << "<B>in</B>&nbsp;";
-        first->toHTML(out);
+        out << "<B>order</B>&nbsp;&lt;&lt;&nbsp;";
+        if (!orderChain.empty())
+            out << orderChain[0] + 1;
+        out << ";";
+        BR;
         CLOSESPAN;
-        if (second->isStms())
-            second->toHTML(out, tabulationLenght, tabulation, color);
-        else
-        {
-            brln(out, tabulation + tabulationLenght);
-            second->toHTML(out, tabulationLenght, tabulation + tabulationLenght, color);
-        }
+        break;
+
+    case ORDER_LAST_STATEMENT:
+        OPENSPAN;
+        out << "<B>order</B>&nbsp;&gt;&gt;&nbsp;";
+        if (!orderChain.empty())
+            out << orderChain[0] + 1;
+        out << ";";
+        BR;
+        CLOSESPAN;
         break;
 
     case NIL_STATEMENT:
@@ -1038,14 +1068,6 @@ void Statement::flatPrint(std::ostream &out) const
         out << ";";
         break;
 
-    case SEARCH_STATEMENT:
-        out << "search ";
-        if (first)
-            first->flatPrint(out);
-        out << " on ";
-        out << Vartable::codeToName(code);
-        break;
-
     case STMS_STATEMENT:
         out << "{ ";
         if (statements)
@@ -1086,21 +1108,29 @@ void Statement::flatPrint(std::ostream &out) const
             second->flatPrint(out);
         break;
 
-    case FOREACH_STATEMENT:
-        out << "foreach ";
-        out << Vartable::codeToName(code);
-        out << " ";
-        if (first)
-            first->flatPrint(out);
+    case ORDER_CHAIN_STATEMENT:
+        out << "order ";
+        for (size_t i = 0; i < orderChain.size(); ++i)
+        {
+            if (i)
+                out << " < ";
+            out << orderChain[i] + 1;
+        }
+        out << ";";
         break;
 
-    case FOREACH_CON_T_STATEMENT:
-        out << "in ";
-        if (first)
-            first->flatPrint(out);
-        out << " ";
-        if (second)
-            second->flatPrint(out);
+    case ORDER_FIRST_STATEMENT:
+        out << "order << ";
+        if (!orderChain.empty())
+            out << orderChain[0] + 1;
+        out << ";";
+        break;
+
+    case ORDER_LAST_STATEMENT:
+        out << "order >> ";
+        if (!orderChain.empty())
+            out << orderChain[0] + 1;
+        out << ";";
         break;
 
     case NIL_STATEMENT:
@@ -1353,8 +1383,6 @@ void Statement::makeCoreSerialString()
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
     case VARIABLE_STATEMENT:
-    case FOREACH_STATEMENT:
-    case SEARCH_STATEMENT:
         stream << ":C" << code;
         break;
 
@@ -1403,12 +1431,19 @@ void Statement::makeCoreSerialString()
     case IF_STATEMENT:
     case THEN_STATEMENT:
     case THEN_ELSE_STATEMENT:
-    case FOREACH_CON_T_STATEMENT:
     case DEFERRED_STATEMENT:
         if (first)
             stream << ":A" << first->peekCoreSerialString();
         if (second)
             stream << ":B" << second->peekCoreSerialString();
+        break;
+
+    case ORDER_CHAIN_STATEMENT:
+    case ORDER_FIRST_STATEMENT:
+    case ORDER_LAST_STATEMENT:
+        stream << ":O";
+        for (auto index : orderChain)
+            stream << ':' << index;
         break;
 
     case STMS_STATEMENT:
@@ -1477,13 +1512,23 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
     case VARIABLE_STATEMENT:
         statement = Statement::createVariable(this->lineno, this->bufferName, this->rootOp, code);
         break;
+    case ORDER_CHAIN_STATEMENT:
+    case ORDER_FIRST_STATEMENT:
+    case ORDER_LAST_STATEMENT:
+        statement = Statement::createOrder(
+            this->lineno,
+            this->bufferName,
+            op,
+            this->rootOp,
+            orderChain);
+        break;
     case ATTEST_STATEMENT:
         statement = Statement::createFirst(this->lineno, this->bufferName, op, this->rootOp, first ? first->clone(protectedFlags) : statementPtr());
         break;
     case IF_STATEMENT:
     case THEN_STATEMENT:
     case THEN_ELSE_STATEMENT:
-    case FOREACH_CON_T_STATEMENT:
+    // case FOREACH_CON_T_STATEMENT:
     case DEFERRED_STATEMENT:
     case UNIF_STATEMENT:
     case ASSIGNMENT_STATEMENT:
@@ -1491,11 +1536,6 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
         statement = Statement::createFirstSecond(this->lineno, this->bufferName, op, this->rootOp,
                                                  first ? first->clone(protectedFlags) : statementPtr(),
                                                  second ? second->clone(protectedFlags) : statementPtr());
-        break;
-    case FOREACH_STATEMENT:
-        statement = Statement::createForeach(this->lineno, this->bufferName, this->rootOp,
-                                             code,
-                                             first ? first->clone(protectedFlags) : statementPtr());
         break;
     case FUNCTION_STATEMENT:
         statement = Statement::createFunction(this->lineno, this->bufferName, this->rootOp, function,
@@ -1509,10 +1549,6 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
     case EPRINTLN_STATEMENT:
         statement = Statement::createStatements(this->lineno, this->bufferName, op, this->rootOp,
                                                 statements->clone(protectedFlags));
-        break;
-    case SEARCH_STATEMENT:
-        statement = Statement::createSearch(this->lineno, this->bufferName, this->rootOp,
-                                            code, first ? first->clone(protectedFlags) : statementPtr());
         break;
     case FIELD_ACCESS_STATEMENT:
         statement = Statement::createFieldAccess(
@@ -1715,46 +1751,6 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
     }
     break;
 
-    case SEARCH_STATEMENT:
-    {
-        featuresPtr features = first->evalFeatures(item, parser, synthesizer, replaceVariables, verbose);
-        if (!features)
-        {
-            FATAL_ERROR_UNEXPECTED;
-        }
-        uint32_t head = features->assignHead();
-        uint32_t pos = code;
-        auto foundpos = parser.findCacheLexicon(pos);
-        if (foundpos != parser.cendCacheLexicon() && (!foundpos->second->empty()))
-        {
-            Parser::entries_map *listHead = foundpos->second;
-            entriesPtr entries = synthesizer->findByHeadThenCompactedLexicon(parser, listHead, pos, head);
-            if (entries && entries->size() > 0)
-            {
-                for (auto &entry : *entries)
-                {
-                    // auto it = entries->begin();
-                    featuresPtr entryFeatures = entry->getFeatures();
-                    if (entryFeatures)
-                    {
-                        std::stringstream stringStream;
-                        entryFeatures->flatPrint(stringStream);
-                        parser.parseBuffer("#(", ")", stringStream.str(), stringStream.str());
-                        if (resultPairp->isNil())
-                            resultPairp = Pairp::create(Value::createFeatures(parser.getLocalFeatures()));
-                        else
-                            resultPairp = Pairp::create(Pairp::create(Value::createFeatures(parser.getLocalFeatures())), resultPairp);
-                    }
-                }
-            }
-            else
-            {
-                // throw fatal_exception("search operator error: No entry for " + Vartable::codeToString(features->assignHead()));
-            }
-        }
-    }
-    break;
-
     default:
         FATAL_ERROR_UNEXPECTED;
         break;
@@ -1937,10 +1933,6 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
     }
     break;
 
-    case SEARCH_STATEMENT:
-        resultPairp = evalPairp(item, parser, synthesizer, replaceVariables, verbose);
-        break;
-
     case ATTEST_STATEMENT:
         FATAL_ERROR_STM(shared_from_this());
         break;
@@ -1949,7 +1941,69 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         resultPairp = evalPairp(item, parser, synthesizer, replaceVariables, verbose);
         break;
 
-    case FUNCTION_STATEMENT:
+case SUBSUME_STATEMENT:
+{
+    featuresPtr left = first->evalFeatures(
+        item,
+        parser,
+        synthesizer,
+        false,
+        verbose);
+
+    if (!left)
+    {
+        resultValue = Value::STATIC_FALSE;
+        goto valueBuilt;
+    }
+
+    featuresPtr right = second->evalFeatures(
+        item,
+        parser,
+        synthesizer,
+        true,
+        verbose);
+
+    if (!right)
+    {
+        resultValue = Value::STATIC_FALSE;
+        goto valueBuilt;
+    }
+
+    /*
+     * Boolean subsumption must be a strict test.
+     * It must not bind variables in the current item environment,
+     * and it must not accept missing features as anonymous variables.
+     *
+     * Therefore:
+     *   - use a local environment;
+     *   - test on a clone of the right-hand side, because buildEnvironment
+     *     temporarily marks features as SEEN;
+     *   - pass false for acceptToFilterNULLVariables.
+     */
+    environmentPtr localEnvironment = Environment::create();
+    featuresPtr rightClone = right->clone();
+
+    if (left->buildEnvironment(
+            shared_from_this(),
+            localEnvironment,
+            rightClone,
+            false,
+#ifdef TRACE_BUILD_ENVIRONMENT
+            true,
+#endif
+            verbose))
+    {
+        resultValue = Value::STATIC_TRUE;
+    }
+    else
+    {
+        resultValue = Value::STATIC_FALSE;
+    }
+
+    goto valueBuilt;
+}
+
+case FUNCTION_STATEMENT:
         switch (function)
         {
         case NOP:
@@ -2859,11 +2913,11 @@ void Statement::buildInheritedChildFeatures(class Item *item, Parser &parser, Ge
         {
             item->environmentReplaceVariables(featuresCopy, verbose);
         }
-        //if (replaceVariables && item && featuresCopy->containsSynthesizedChildFeatures())
+        // if (replaceVariables && item && featuresCopy->containsSynthesizedChildFeatures())
         //{
-        //    item->replaceSynthesizedChildFeaturesValue(featuresCopy);
-        //}
-        
+        //     item->replaceSynthesizedChildFeaturesValue(featuresCopy);
+        // }
+
         item->getInheritedChildFeatures()->add(first->getFirst(), featuresCopy);
     }
 }
@@ -3043,12 +3097,8 @@ void Statement::buildEnvironmentWithInherited(statementPtr statementRoot, class 
  * $X = a;
  * $X = [ … ];
  * $X = < … >;
- * $X = sort $X with a;
- * $X = reverse X
  * $X = <expr>
  * < … > = < … >
- * < … > = sort $X with a;
- * < … > = reverse $X;
  * < … > = $X;
  ************************************************************ */
 void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool verbose)
@@ -3067,8 +3117,6 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
         // 	 $X = [ … ];
         // 	 $X = <expr>;
         // 	 $X = < … >
-        // 	 $X = sort $X with a;
-        // 	 $X = reverse $X;
 
         if (first->isVariable())
         {
@@ -3086,8 +3134,6 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
 
         // 	 < … > = $X;
         // 	 < … > = ( … )
-        // 	 < … > = sort $X with a;
-        // 	 < … > = reverse $X;
         else if (first->isPairp())
         {
             pairpPtr right = second->evalPairp(item, parser, synthesizer, true, verbose);
@@ -3245,12 +3291,6 @@ void Statement::stmForeach(statementPtr statementRoot, class Item *item, Parser 
         value->getPairp()->apply(statementRoot, item, parser, synthesizer, code, statement, effect, verbose);
     }
 
-    // else if (value->isListFeatures())
-    // {
-    //     FATAL_ERROR_MSG("foreach does'nt apply a list");
-    //     value->getListFeatures()->apply(statementRoot, item, parser, synthesizer, variable, statement, effect);
-    // }
-
     else
     {
         FATAL_ERROR_MSG("foreach does'nt apply a list");
@@ -3403,7 +3443,9 @@ void Statement::renameVariables(uint32_t key)
     case HASH_STATEMENT:
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
-    case SEARCH_STATEMENT:
+    case ORDER_CHAIN_STATEMENT:
+    case ORDER_FIRST_STATEMENT:
+    case ORDER_LAST_STATEMENT:
         break;
 
     case STRING_STATEMENT:
@@ -3418,8 +3460,6 @@ void Statement::renameVariables(uint32_t key)
     case IF_STATEMENT:
     case THEN_STATEMENT:
     case THEN_ELSE_STATEMENT:
-    case FOREACH_STATEMENT:
-    case FOREACH_CON_T_STATEMENT:
     case DEFERRED_STATEMENT:
         if (first)
         {
@@ -3481,6 +3521,9 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
     case STRING_STATEMENT:
     case NUMBER_STATEMENT:
     case CONSTANT_STATEMENT:
+    case ORDER_CHAIN_STATEMENT:
+    case ORDER_FIRST_STATEMENT:
+    case ORDER_LAST_STATEMENT:
 
         break;
 
@@ -3641,15 +3684,6 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
             second->testEnable(second, item, synthesizer, result, on);
         break;
 
-    case FOREACH_STATEMENT:
-        first->testEnable(shared_from_this(), item, synthesizer, result, on);
-        break;
-
-    case FOREACH_CON_T_STATEMENT:
-        first->testEnable(statementRoot, item, synthesizer, result, on);
-        second->testEnable(second, item, synthesizer, result, on);
-        break;
-
     case DEFERRED_STATEMENT:
         first->testEnable(shared_from_this(), item, synthesizer, result, on);
         second->testEnable(shared_from_this(), item, synthesizer, result, on);
@@ -3678,11 +3712,6 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
 
     case FEATURES_STATEMENT:
         features->testEnable(statementRoot, item, synthesizer, result, on);
-        break;
-
-    case SEARCH_STATEMENT:
-        if (first)
-            first->testEnable(statementRoot, item, synthesizer, result, on);
         break;
 
     case FIELD_ACCESS_STATEMENT:
@@ -3732,12 +3761,6 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
     else if (isIf())
     {
         stmIf(statementRoot, item, parser, synthesizer, effect, replaceVariables, verbose);
-    }
-
-    // foreach $i in $list
-    else if (isForeach())
-    {
-        stmForeach(statementRoot, item, parser, synthesizer, effect, verbose);
     }
 
     // DEFERRED
@@ -3796,7 +3819,7 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
           (second->isString()) ||
           (second->isFct()) ||
           (second->isPairp()) ||
-          (second->isSearch()) ||
+          //   (second->isSearch()) ||
           (second->isFieldAccess())))
 
         ||
@@ -3809,8 +3832,7 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
         ((isAssignment()) &&
          (first->isPairp()) &&
          ((second->isVariable()) ||
-          (second->isPairp()) ||
-          (second->isSearch())))
+          (second->isPairp())))
 
         ||
 
@@ -3871,6 +3893,25 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
         addFlags(Flags::SEEN);
     }
 
+    else if (isOrder())
+    {
+        OrderSpec::Kind kind;
+
+        if (op == ORDER_CHAIN_STATEMENT)
+            kind = OrderSpec::CHAIN;
+        else if (op == ORDER_FIRST_STATEMENT)
+            kind = OrderSpec::FIRST;
+        else if (op == ORDER_LAST_STATEMENT)
+            kind = OrderSpec::LAST;
+        else
+            FATAL_ERROR_UNEXPECTED;
+
+        item->addOrderSpec(OrderSpec(kind, orderChain));
+
+        effect = true;
+        addFlags(Flags::SEEN);
+    }
+
     // statements
     else if (isStms())
     {
@@ -3922,10 +3963,13 @@ void Statement::lookingForAssignedInheritedChildFeatures(std::vector<bool> &assi
     }
     break;
 
+    case ORDER_CHAIN_STATEMENT:
+    case ORDER_FIRST_STATEMENT:
+    case ORDER_LAST_STATEMENT:
+        break;
+
     default:
         FATAL_ERROR_UNEXPECTED;
         break;
     }
 }
-
-
