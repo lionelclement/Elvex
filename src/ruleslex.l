@@ -373,6 +373,11 @@ double_down_arrow "⇓"
     return TOKEN_ATTEST;
   }
   
+  "by" {
+    DBUGPRT("TOKEN_BY");
+    return TOKEN_BY;
+  }
+
   "if" {
     DBUGPRT("TOKEN_IF");
     return TOKEN_IF;

@@ -65,7 +65,7 @@ namespace
 
 	void usage()
 	{
-		std::cerr << "Usage: " << PROJECT_NAME << "buildlexicon [global options] <build|consult|list>\n";
+		std::cerr << "Usage: " << PROJECT_NAME << "lexicon [global options] <build|consult|list>\n";
 		std::cerr << "\
 Global options:\n\
 \t-h, --help                                       print this help message\n\

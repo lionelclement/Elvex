@@ -154,6 +154,26 @@ statementPtr Statement::createOrder(
 }
 
 /* **************************************************
+ * ORDER
+ ************************************************** */
+statementPtr Statement::createOrderBy(
+    uint32_t lineno,
+    std::string bufferName,
+    bool rootOp,
+    const std::vector<statementPtr> &keys)
+{
+    Statement *statement = new Statement(
+        lineno,
+        bufferName,
+        ORDER_BY_STATEMENT,
+        rootOp);
+
+    statement->orderByKeys = keys;
+
+    return statementPtr(statement);
+}
+
+/* **************************************************
  * FIELD ACCESS: ↑.attr or ⇓i.attr
  ************************************************** */
 statementPtr Statement::createFieldAccess(
@@ -399,7 +419,8 @@ bool Statement::isOrder() const
 {
     return op == ORDER_CHAIN_STATEMENT ||
            op == ORDER_FIRST_STATEMENT ||
-           op == ORDER_LAST_STATEMENT;
+           op == ORDER_LAST_STATEMENT ||
+           op == ORDER_BY_STATEMENT;
 }
 
 /* **************************************************
@@ -689,13 +710,6 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         CLOSESPAN;
         break;
 
-        // case SEARCH_STATEMENT:
-        //     out << "<B>search</B>&nbsp;";
-        //     first->toHTML(out);
-        //     out << "&nbsp;<B>on</B>&nbsp;";
-        //     out << Vartable::codeToName(code);
-        //     break;
-
     case STMS_STATEMENT:
         statements->print(out, tabulationLenght, tabulation, color, bgcolor, true, "{", "}", "");
         break;
@@ -820,6 +834,20 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         if (!orderChain.empty())
             out << orderChain[0] + 1;
         out << ";";
+        BR;
+        CLOSESPAN;
+        break;
+
+    case ORDER_BY_STATEMENT:
+        OPENSPAN;
+        out << "<B>order by</B>&nbsp;&lt;";
+        for (size_t i = 0; i < orderByKeys.size(); ++i)
+        {
+            if (i)
+                out << ",&nbsp;";
+            orderByKeys[i]->toHTML(out, tabulationLenght, tabulation, color, bgcolor);
+        }
+        out << "&gt;;";
         BR;
         CLOSESPAN;
         break;
@@ -1131,6 +1159,17 @@ void Statement::flatPrint(std::ostream &out) const
         if (!orderChain.empty())
             out << orderChain[0] + 1;
         out << ";";
+        break;
+
+    case ORDER_BY_STATEMENT:
+        out << "order by <";
+        for (size_t i = 0; i < orderByKeys.size(); ++i)
+        {
+            if (i)
+                out << ",";
+            orderByKeys[i]->flatPrint(out);
+        }
+        out << ">;";
         break;
 
     case NIL_STATEMENT:
@@ -1446,6 +1485,14 @@ void Statement::makeCoreSerialString()
             stream << ':' << index;
         break;
 
+    case ORDER_BY_STATEMENT:
+        stream << ":OBY";
+        for (const auto &key : orderByKeys)
+        {
+            stream << ':' << key->peekCoreSerialString();
+        }
+        break;
+
     case STMS_STATEMENT:
     case PRINT_STATEMENT:
     case PRINTLN_STATEMENT:
@@ -1522,6 +1569,22 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
             this->rootOp,
             orderChain);
         break;
+    case ORDER_BY_STATEMENT:
+    {
+        std::vector<statementPtr> clonedKeys;
+
+        for (const auto &key : orderByKeys)
+        {
+            clonedKeys.push_back(key->clone());
+        }
+
+        statement = Statement::createOrderBy(
+            this->lineno,
+            this->bufferName,
+            this->rootOp,
+            clonedKeys);
+        break;
+    }
     case ATTEST_STATEMENT:
         statement = Statement::createFirst(this->lineno, this->bufferName, op, this->rootOp, first ? first->clone(protectedFlags) : statementPtr());
         break;
@@ -1941,69 +2004,69 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         resultPairp = evalPairp(item, parser, synthesizer, replaceVariables, verbose);
         break;
 
-case SUBSUME_STATEMENT:
-{
-    featuresPtr left = first->evalFeatures(
-        item,
-        parser,
-        synthesizer,
-        false,
-        verbose);
-
-    if (!left)
+    case SUBSUME_STATEMENT:
     {
-        resultValue = Value::STATIC_FALSE;
-        goto valueBuilt;
-    }
-
-    featuresPtr right = second->evalFeatures(
-        item,
-        parser,
-        synthesizer,
-        true,
-        verbose);
-
-    if (!right)
-    {
-        resultValue = Value::STATIC_FALSE;
-        goto valueBuilt;
-    }
-
-    /*
-     * Boolean subsumption must be a strict test.
-     * It must not bind variables in the current item environment,
-     * and it must not accept missing features as anonymous variables.
-     *
-     * Therefore:
-     *   - use a local environment;
-     *   - test on a clone of the right-hand side, because buildEnvironment
-     *     temporarily marks features as SEEN;
-     *   - pass false for acceptToFilterNULLVariables.
-     */
-    environmentPtr localEnvironment = Environment::create();
-    featuresPtr rightClone = right->clone();
-
-    if (left->buildEnvironment(
-            shared_from_this(),
-            localEnvironment,
-            rightClone,
+        featuresPtr left = first->evalFeatures(
+            item,
+            parser,
+            synthesizer,
             false,
-#ifdef TRACE_BUILD_ENVIRONMENT
+            verbose);
+
+        if (!left)
+        {
+            resultValue = Value::STATIC_FALSE;
+            goto valueBuilt;
+        }
+
+        featuresPtr right = second->evalFeatures(
+            item,
+            parser,
+            synthesizer,
             true,
+            verbose);
+
+        if (!right)
+        {
+            resultValue = Value::STATIC_FALSE;
+            goto valueBuilt;
+        }
+
+        /*
+         * Boolean subsumption must be a strict test.
+         * It must not bind variables in the current item environment,
+         * and it must not accept missing features as anonymous variables.
+         *
+         * Therefore:
+         *   - use a local environment;
+         *   - test on a clone of the right-hand side, because buildEnvironment
+         *     temporarily marks features as SEEN;
+         *   - pass false for acceptToFilterNULLVariables.
+         */
+        environmentPtr localEnvironment = Environment::create();
+        featuresPtr rightClone = right->clone();
+
+        if (left->buildEnvironment(
+                shared_from_this(),
+                localEnvironment,
+                rightClone,
+                false,
+#ifdef TRACE_BUILD_ENVIRONMENT
+                true,
 #endif
-            verbose))
-    {
-        resultValue = Value::STATIC_TRUE;
-    }
-    else
-    {
-        resultValue = Value::STATIC_FALSE;
+                verbose))
+        {
+            resultValue = Value::STATIC_TRUE;
+        }
+        else
+        {
+            resultValue = Value::STATIC_FALSE;
+        }
+
+        goto valueBuilt;
     }
 
-    goto valueBuilt;
-}
-
-case FUNCTION_STATEMENT:
+    case FUNCTION_STATEMENT:
         switch (function)
         {
         case NOP:
@@ -3448,6 +3511,15 @@ void Statement::renameVariables(uint32_t key)
     case ORDER_LAST_STATEMENT:
         break;
 
+    case ORDER_BY_STATEMENT:
+        for (std::vector<statementPtr>::iterator it = orderByKeys.begin();
+             it != orderByKeys.end();
+             ++it)
+        {
+            (*it)->renameVariables(key);
+        }
+        break;
+
     case STRING_STATEMENT:
         Vartable::renameVariables(string, key);
         break;
@@ -3524,7 +3596,15 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
     case ORDER_CHAIN_STATEMENT:
     case ORDER_FIRST_STATEMENT:
     case ORDER_LAST_STATEMENT:
+        break;
 
+    case ORDER_BY_STATEMENT:
+        for (std::vector<statementPtr>::const_iterator it = orderByKeys.cbegin();
+             it != orderByKeys.cend();
+             ++it)
+        {
+            (*it)->testEnable(statementRoot, item, synthesizer, result, on);
+        }
         break;
 
     case GUARD_STATEMENT:
@@ -3895,21 +3975,76 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
 
     else if (isOrder())
     {
-        OrderSpec::Kind kind;
+        if (op == ORDER_BY_STATEMENT)
+        {
+            std::vector<std::pair<double, uint32_t>> keyedIndexes;
 
-        if (op == ORDER_CHAIN_STATEMENT)
-            kind = OrderSpec::CHAIN;
-        else if (op == ORDER_FIRST_STATEMENT)
-            kind = OrderSpec::FIRST;
-        else if (op == ORDER_LAST_STATEMENT)
-            kind = OrderSpec::LAST;
+            for (uint32_t i = 0; i < orderByKeys.size(); ++i)
+            {
+                valuePtr value = orderByKeys[i]->evalValue(
+                    item,
+                    parser,
+                    synthesizer,
+                    true,
+                    verbose);
+
+                if (!value)
+                {
+                    FATAL_ERROR_MSG("order by key cannot be evaluated");
+                }
+
+                if (!value->isNumber())
+                {
+                    FATAL_ERROR_MSG("order by key must evaluate to a number");
+                }
+
+                keyedIndexes.push_back(
+                    std::make_pair(value->getNumber(), i));
+            }
+
+            std::stable_sort(
+                keyedIndexes.begin(),
+                keyedIndexes.end(),
+                [](const std::pair<double, uint32_t> &a,
+                   const std::pair<double, uint32_t> &b) -> bool
+                {
+                    if (a.first < b.first)
+                        return true;
+                    if (b.first < a.first)
+                        return false;
+                    return a.second < b.second;
+                });
+
+            std::vector<uint32_t> chain;
+
+            for (const auto &entry : keyedIndexes)
+            {
+                chain.push_back(entry.second);
+            }
+
+            item->addOrderSpec(OrderSpec(OrderSpec::CHAIN, chain));
+
+            effect = true;
+            addFlags(Flags::SEEN);
+        }
         else
-            FATAL_ERROR_UNEXPECTED;
+        {
+            OrderSpec::Kind kind;
 
-        item->addOrderSpec(OrderSpec(kind, orderChain));
+            if (op == ORDER_CHAIN_STATEMENT)
+                kind = OrderSpec::CHAIN;
+            else if (op == ORDER_FIRST_STATEMENT)
+                kind = OrderSpec::FIRST;
+            else if (op == ORDER_LAST_STATEMENT)
+                kind = OrderSpec::LAST;
+            else
+                FATAL_ERROR_UNEXPECTED;
 
-        effect = true;
-        addFlags(Flags::SEEN);
+            item->addOrderSpec(OrderSpec(kind, orderChain));
+
+            effect = true;
+            addFlags(Flags::SEEN);
+        }
     }
 
     // statements
@@ -3966,6 +4101,7 @@ void Statement::lookingForAssignedInheritedChildFeatures(std::vector<bool> &assi
     case ORDER_CHAIN_STATEMENT:
     case ORDER_FIRST_STATEMENT:
     case ORDER_LAST_STATEMENT:
+    case ORDER_BY_STATEMENT:
         break;
 
     default:

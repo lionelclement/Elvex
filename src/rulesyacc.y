@@ -76,6 +76,7 @@ bool pref_unordered;
   termsPtr* terms_slot; //(A|B)
   std::vector< termsPtr >* vector_terms_slot; // X Y
   std::vector<uint32_t>* order_chain_slot;
+  std::vector<statementPtr>* vector_statement_slot;
   std::string* string_slot;
   std::pair<uint32_t, featuresPtr >* entry_slot;
   std::vector<std::pair<uint32_t, featuresPtr> >* entries_slot;
@@ -112,7 +113,7 @@ bool pref_unordered;
 %token TOKEN_RAND
 %token TOKEN_TRACE TOKEN_WITH_SPACES TOKEN_WITHOUT_SPACES 
 %token TOKEN_UNORDERED
-%token TOKEN_ORDER
+%token TOKEN_ORDER TOKEN_BY
 
 // OPERATORS
 %token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT
@@ -159,6 +160,8 @@ bool pref_unordered;
 %type<statement_slot> field_access_root field_access_statement feature_statement_value
 
 %type<order_chain_slot> order_chain
+%type<vector_statement_slot> order_by_expression_list
+%type<statement_slot> order_by_key
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
 %left TOKEN_OR
@@ -865,7 +868,33 @@ order_statement:
         )
       );
     }
-    ;
+	
+	| TOKEN_ORDER TOKEN_BY TOKEN_LT order_by_expression_list TOKEN_GT TOKEN_SEMI
+    {
+      DBUGPRT("order_statement");
+
+      if ($4->size() < 2)
+      {
+        yyerror((char*)"order by must contain at least two keys");
+      }
+
+      if ($4->size() > currentRhsSize)
+      {
+        yyerror((char*)"order by has more keys than right-hand-side symbols");
+      }
+
+      $$ = new statementPtr(
+        Statement::createOrderBy(
+          ruleslineno,
+          parser.getTopBufferName(),
+          true,
+          *$4
+        )
+      );
+
+      delete($4);
+    }
+	;
 	
 order_chain:
     TOKEN_INTEGER
@@ -901,6 +930,79 @@ order_chain:
     }
     ;
 	
+order_by_expression_list:
+    order_by_key
+    {
+      DBUGPRT("order_by_expression_list");
+
+      $$ = new std::vector<statementPtr>();
+      $$->push_back(*$1);
+
+      delete($1);
+    }
+
+  | order_by_expression_list TOKEN_COMMA order_by_key
+    {
+      DBUGPRT("order_by_expression_list");
+
+      $$ = $1;
+      $$->push_back(*$3);
+
+      delete($3);
+    }
+  ;
+  
+order_by_key:
+    variable
+    {
+      DBUGPRT("order_by_key");
+
+      $$ = new statementPtr(
+        Statement::createVariable(
+          ruleslineno,
+          parser.getTopBufferName(),
+          false,
+          $1
+        )
+      );
+    }
+
+  | field_access_statement
+    {
+      DBUGPRT("order_by_key");
+
+      $$ = $1;
+    }
+
+  | TOKEN_INTEGER
+    {
+      DBUGPRT("order_by_key");
+
+      $$ = new statementPtr(
+        Statement::createNumber(
+          ruleslineno,
+          parser.getTopBufferName(),
+          false,
+          static_cast<double>($1)
+        )
+      );
+    }
+
+  | TOKEN_DOUBLE
+    {
+      DBUGPRT("order_by_key");
+
+      $$ = new statementPtr(
+        Statement::createNumber(
+          ruleslineno,
+          parser.getTopBufferName(),
+          false,
+          $1
+        )
+      );
+    }
+  ;
+  
 left_hand_side_subset_statement:
 	features 
 	{

@@ -40,7 +40,36 @@
 \begin{document}
 \maketitle
 
+\section*{Introduction}
 
+\texttt{Elvex} is a surface realisation system based on typed feature
+structures, lexical resources and syntagmatic rules. It takes as input a
+feature structure representing a concept or a generation request, combines
+it with a lexicon and a grammar, and produces one or more textual
+realizations.
+
+The central idea of \texttt{Elvex} is to describe generation by means of
+rules whose right-hand side symbols exchange information through inherited
+and synthesized feature structures. Inherited structures, written
+$\downarrow_i$, transmit information from a rule to its components, while
+synthesized structures, written $\Downarrow_i$, return information produced
+by these components. This makes it possible to express agreement,
+selection, optional constituents, alternatives and lexical constraints in a
+uniform way.
+
+This document introduces the main elements of the language: feature
+structures, lexicons, rules, operational semantics and command-line tools.
+It also describes mechanisms used during generation, such as optional
+symbols, alternatives, deferred evaluation, tracing and linearization
+constraints. The examples are intended to show both the concrete syntax and
+the style of grammar writing expected by \texttt{Elvex}.
+
+The documentation is organized progressively. The first sections present
+the linguistic and formal notions used by the system. The following
+sections describe the syntax of grammars and lexicons, then the operational
+statements available inside rules. The final sections explain how to run
+\texttt{Elvex}, how to debug grammars, and how to build or consult
+compacted lexicons.
 
 \section{Full Example: Getting Started}
 
@@ -547,6 +576,41 @@ Each rule is written:
 		            Delays the interpretation of \verb#<rules># until \verb#<boolExpr># can be
 		            evaluated. This is useful when a statement depends on synthesized
 		            attributes that are not immediately available.
+
+		      \item \verb#order i < j < ...;#
+
+		            Adds a linearization constraint between the components of the
+		            right-hand side of the current syntagmatic rule. The indexes are
+		            one-based: \verb#1# refers to the first component, \verb#2# to
+		            the second one, and so on. For instance, \verb#order 2 < 1;#
+		            states that the second component must be generated before the
+		            first one. The constraint is projected onto the components that
+		            are actually present: if an optional component is absent, the
+		            remaining components keep the relative order specified by the
+		            chain.
+
+		      \item \verb#order << i;#
+
+		            Constrains component \verb#i#, if present, to be generated before
+		            all other present components of the rule.
+
+		      \item \verb#order >> i;#
+
+		            Constrains component \verb#i#, if present, to be generated after
+		            all other present components of the rule.
+
+		      \item \verb#order by <expr_1, expr_2, ..., expr_k>;#
+
+		            Sorts the present components of the rule according to the values
+		            of the expressions \verb#expr_1#, \verb#expr_2#, ...,
+		            \verb#expr_k#. The first expression is the key associated with
+		            the first component, the second expression is the key associated
+		            with the second component, and so on. Keys must evaluate to
+		            numbers. Components are generated in increasing key order; equal
+		            keys keep the original right-hand-side order. The expressions can
+		            refer to variables or to synthesized features, for example
+		            \verb#order by <$R1,$R2,$R3>;# or
+		            \verb#order by <#$\Downarrow$\verb#1.rank, #$\Downarrow$\verb#2.rank>;#.
 
 
 	      \end{itemize}
@@ -1323,20 +1387,44 @@ Where the specific options are:
 
 \end{description}
 
-\subsection{\texttt{elvexbuildlexicon} for managing big lexicons}
 
-The \texttt{elvexbuildlexicon} command is:
+\subsection{\texttt{elvexlexicon} for managing compacted lexicons}
+
+The \texttt{elvexlexicon} command builds and inspects compacted lexicons.
+Compacted lexicons are intended for open lexical categories such as nouns,
+verbs, adjectives and adverbs. Closed or grammatical categories, such as
+prepositions, determiners, pronouns or complementizers, may remain in the
+local lexicon loaded directly by \texttt{elvex} with \verb#--lexicon-file#.
+
+The command is:
 
 \begin{lstlisting}[frame=none, numbers=none]
-elvexbuildlexicon [global options] <build|consult|list>
+elvexlexicon [global options] <build|consult|list>
 \end{lstlisting}
 
-The options are:
+The action is mandatory:
+
+\begin{description}
+	\item \verb#build#
+
+	      Builds the compacted lexicon from a pattern file and a morphological
+	      file.
+
+	\item \verb#list#
+
+	      Lists the content of an existing compacted lexicon.
+
+	\item \verb#consult#
+
+	      Consults an existing compacted lexicon interactively.
+\end{description}
+
+The global options are:
 
 \begin{description}
 	\item \verb#-h|--help#
 
-	      Displays help and exits
+	      Displays help and exits.
 
 	\item \verb#-v|--version#
 
@@ -1346,55 +1434,97 @@ The options are:
 
 	      Enables verbose mode.
 
-	\item \verb#--macros-file <file>#
-
-	      File containing macro definitions.
-
 	\item \verb#--compacted-lexicon-file <path/file># or \verb#--clf <path/file>#
 
 	      Prefix of the compacted lexicon files. The files
 	      \verb#<path/file>.tbl# and \verb#<path/file>.fsa# are used.
 
+	\item \verb#--macros-file <file>#
+
+	      File containing macro definitions used in the pattern and
+	      morphological files.
+
 	\item \verb#--pattern-file <file>#
 
-	      The pattern file consists of lines of the form:
+	      Pattern file describing lexical entries at the lexeme level. It
+	      consists of lines of the form:
 
 	      \begin{lstlisting}[frame=none, numbers=none]
 lexeme  pos  lemma  features
 \end{lstlisting}
 
+	      The \verb#lexeme# is the lexical unit selected by the generation
+	      model. It may correspond to a simple word, a collocation or an
+	      idiomatic construction. The \verb#lemma# identifies the morphological
+	      paradigm with which the lexeme is associated.
+
 	\item \verb#--morpho-file <file>#
 
-	      The morphological file consists of lines of the form:
+	      Morphological file describing inflected forms at the lemma level. It
+	      consists of lines of the form:
 
 	      \begin{lstlisting}[frame=none, numbers=none]
 form  pos  lemma  features
 \end{lstlisting}
 
+	      The \verb#form# is the produced surface form. The \verb#lemma# is used
+	      to match a morphological entry with one or more pattern entries.
 \end{description}
 
-The lexicon is the mapping of forms where the features of pattern and
-morpho are unified for each pair of \verb#pos# and \verb#lemma#.
+The compacted lexicon is built by combining pattern entries and morphological
+entries that share the same \verb#pos# and \verb#lemma#. Their feature
+structures are unified. This keeps a clear distinction between the lexeme,
+which represents a lexical choice in the generation model, and the lemma,
+which represents a morphological paradigm.
+
+For example, a pattern file may contain adjective classes and their
+linearization rank:
+
+\begin{lstlisting}[frame=none, numbers=none]
+LARGE  adj  large  [HEAD:large, type:size, rank:1]
+PINK   adj  pink   [HEAD:pink, type:color, rank:4]
+IRON   adj  iron   [HEAD:iron, type:material, rank:6]
+\end{lstlisting}
+
+and the morphological file may contain the corresponding surface forms:
+
+\begin{lstlisting}[frame=none, numbers=none]
+large  adj  large  []
+pink   adj  pink   []
+iron   adj  iron   []
+\end{lstlisting}
+
+After compilation, the resulting entries can be used by grammar rules. For
+instance, the synthesized feature \verb#rank# can later be exploited by a
+linearization instruction such as:
+
+\begin{lstlisting}[frame=none, numbers=none]
+order by <⇓1.rank, ⇓2.rank, ⇓3.rank>;
+\end{lstlisting}
 
 \subsubsection*{Command to build a compacted lexicon}
 
 \begin{lstlisting}[frame=none, numbers=none]
-elvexbuildlexicon --clf <path/file> \
+elvexlexicon --clf <path/file> \
+  --macros-file <macros-file> \
   --pattern-file <pattern-file> \
   --morpho-file <morpho-file> \
   build
 \end{lstlisting}
 
+The \verb#--macros-file# option is needed only if the pattern or
+morphological files use macros.
+
 \subsubsection*{Command to list a compacted lexicon}
 
 \begin{lstlisting}[frame=none, numbers=none]
-elvexbuildlexicon --clf <path/file> list
+elvexlexicon --clf <path/file> list
 \end{lstlisting}
 
 \subsubsection*{Command to consult a compacted lexicon}
 
 \begin{lstlisting}[frame=none, numbers=none]
-elvexbuildlexicon --clf <path/file> consult
+elvexlexicon --clf <path/file> consult
 \end{lstlisting}
 
 The compacted lexicon is a set of lexical entries of the type

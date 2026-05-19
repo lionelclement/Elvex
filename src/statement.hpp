@@ -111,7 +111,8 @@ public:
         FIELD_ACCESS_STATEMENT,
         ORDER_CHAIN_STATEMENT,
         ORDER_FIRST_STATEMENT,
-        ORDER_LAST_STATEMENT
+        ORDER_LAST_STATEMENT,
+        ORDER_BY_STATEMENT
     };
 
     enum function_type
@@ -162,6 +163,7 @@ private:
     statementsPtr statements;
     double number;
     std::vector<uint32_t> orderChain;
+    std::vector<statementPtr> orderByKeys;
 
 public:
     Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);
@@ -202,6 +204,12 @@ public:
         type op,
         bool rootOp,
         uint32_t rhsIndex);
+
+    static statementPtr createOrderBy(
+        uint32_t lineno,
+        std::string bufferName,
+        bool rootOp,
+        const std::vector<statementPtr> &keys);
 
     // FIELD_ACCESS_STATEMENT
     // ↑.attr or ⇓i.attr
@@ -297,6 +305,8 @@ public:
     uint32_t getCode() const;
 
     const std::vector<uint32_t> &getOrderChain() const;
+
+    const std::vector<statementPtr> &getOrderByKeys() const;
 
     uint8_t getFirst() const;
 
