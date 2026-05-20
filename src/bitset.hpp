@@ -31,7 +31,7 @@
 #endif
 
 #ifndef MAXBITS
-#define MAXBITS 512
+#define MAXBITS 2048
 #endif
 
 class Bitset : public std::bitset<MAXBITS>,

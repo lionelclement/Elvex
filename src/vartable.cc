@@ -63,7 +63,7 @@ Vartable::Vartable()
 /* ************************************************************
  *
  ************************************************************ */
-std::string Vartable::makeScopedName(const std::string& name, uint32_t key)
+std::string Vartable::makeScopedName(const std::string &name, uint32_t key)
 {
     std::ostringstream oss;
     oss << name << '_' << std::hex << key;
@@ -102,7 +102,7 @@ bool Vartable::isVariableChar(unsigned char c)
  * bitMap[poids] := str
  * variableMap[str] := bitset
  ************************************************************ */
-bitsetPtr Vartable::createSymbol(const std::string& name)
+bitsetPtr Vartable::createSymbol(const std::string &name)
 {
     const auto it = nameToBitsetMap.find(name);
     if (it != nameToBitsetMap.end())
@@ -112,7 +112,43 @@ bitsetPtr Vartable::createSymbol(const std::string& name)
 
     if (variableMapIndex.none())
     {
-        throw fatal_exception("Too much values to create a new symbol (" + name + " not created)");
+        std::ostringstream oss;
+
+        oss << "Too much values to create a new symbol ("
+            << name
+            << " not created)"
+            << " ; symbols="
+            << nameToBitsetMap.size()
+            << "/"
+            << MAXBITS
+            << " ; variables/codes="
+            << nameToCodeMap.size();
+
+        oss << " ; last symbols=[";
+
+        const size_t total = bitToNameMap.size();
+        const size_t first = total > 30 ? total - 30 : 0;
+
+        bool firstPrinted = true;
+
+        for (size_t i = first; i < total; ++i)
+        {
+            auto itBit = bitToNameMap.find(static_cast<uint32_t>(i));
+            if (itBit != bitToNameMap.end())
+            {
+                if (!firstPrinted)
+                {
+                    oss << ", ";
+                }
+
+                oss << i << ":" << itBit->second;
+                firstPrinted = false;
+            }
+        }
+
+        oss << "]";
+
+        throw fatal_exception(oss.str());
     }
 
     bitsetPtr result = Bitset::create(variableMapIndex);
@@ -139,7 +175,7 @@ bitsetPtr Vartable::createSymbol(const std::string& name)
 /* ************************************************************
  *
  ************************************************************ */
-bitsetPtr Vartable::createSymbol(const std::string& name, uint32_t key)
+bitsetPtr Vartable::createSymbol(const std::string &name, uint32_t key)
 {
     return createSymbol(makeScopedName(name, key));
 }
@@ -147,7 +183,7 @@ bitsetPtr Vartable::createSymbol(const std::string& name, uint32_t key)
 /* ************************************************************
  *
  ************************************************************ */
-uint32_t Vartable::nameToCode(const std::string& name)
+uint32_t Vartable::nameToCode(const std::string &name)
 {
     const auto it = nameToCodeMap.find(name);
     if (it != nameToCodeMap.end())
@@ -171,7 +207,7 @@ uint32_t Vartable::nameToCode(const std::string& name)
 /* ************************************************************
  *
  ************************************************************ */
-uint32_t Vartable::nameToCode(const std::string& name, uint32_t key)
+uint32_t Vartable::nameToCode(const std::string &name, uint32_t key)
 {
     return nameToCode(makeScopedName(name, key));
 }
@@ -179,7 +215,7 @@ uint32_t Vartable::nameToCode(const std::string& name, uint32_t key)
 /* ************************************************************
  *
  ************************************************************ */
-const std::string& Vartable::codeToName(uint32_t code)
+const std::string &Vartable::codeToName(uint32_t code)
 {
     const auto it = codeToNameMap.find(code);
     if (it == codeToNameMap.end())
@@ -192,7 +228,7 @@ const std::string& Vartable::codeToName(uint32_t code)
 /* ************************************************************
  *
  ************************************************************ */
-void Vartable::insertCodeMap(uint32_t key, const std::string& value)
+void Vartable::insertCodeMap(uint32_t key, const std::string &value)
 {
     codeToNameMap[key] = value;
     nameToCodeMap[value] = key;
@@ -222,7 +258,7 @@ Vartable::uint32_t_to_string_const_iterator Vartable::bitMapcEnd()
 /* ************************************************************
  *
  ************************************************************ */
-const std::string& Vartable::bitToName(uint32_t key)
+const std::string &Vartable::bitToName(uint32_t key)
 {
     const auto it = bitToNameMap.find(key);
     if (it == bitToNameMap.end())
@@ -235,7 +271,7 @@ const std::string& Vartable::bitToName(uint32_t key)
 /* **************************************************
  *
  ************************************************** */
-void Vartable::renameVariables(std::string& data, uint32_t key)
+void Vartable::renameVariables(std::string &data, uint32_t key)
 {
     if (data.find('$') == std::string::npos)
     {
