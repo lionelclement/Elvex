@@ -351,21 +351,20 @@ class ElvexRunner
             if ($macros !== '') {
                 $macrosFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.macros';
                 file_put_contents($macrosFile, $macros);
-                $lexiconCmdParts[] = '-macrosFile ' . escapeshellarg($macrosFile);
+                $lexiconCmdParts[] = '--macros-file ' . escapeshellarg($macrosFile);
             }
 
             $patternFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.pattern';
             file_put_contents($patternFile, $patternForBuild);
-            $lexiconCmdParts[] = '-patternFile ' . escapeshellarg($patternFile);
+            $lexiconCmdParts[] = '--pattern-file ' . escapeshellarg($patternFile);
 
             if ($morphoForBuild !== '') {
                 $morphoFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.morpho';
                 file_put_contents($morphoFile, $morphoForBuild);
-                $lexiconCmdParts[] = '-morphoFile ' . escapeshellarg($morphoFile);
+                $lexiconCmdParts[] = '--morpho-file ' . escapeshellarg($morphoFile);
             }
 
-            $lexiconCmdParts[] = '-compactedLexiconDirectory ' . escapeshellarg($dir);
-            $lexiconCmdParts[] = '-compactedLexiconFile ' . escapeshellarg($fileName);
+            $lexiconCmdParts[] = '--compacted-lexicon-file ' . escapeshellarg($dir) . '/'. escapeshellarg($fileName);
 
             $errorFileBuild = $dir . DIRECTORY_SEPARATOR . $fileName . '.build.err';
             $buildCmd = implode(' ', $lexiconCmdParts) . ' build 2> ' . escapeshellarg($errorFileBuild);
@@ -401,30 +400,29 @@ class ElvexRunner
             if (!file_exists($macrosFile)) {
                 file_put_contents($macrosFile, $macros);
             }
-            $cmdParts[] = '-macrosFile ' . escapeshellarg($macrosFile);
+            $cmdParts[] = '--macros-file ' . escapeshellarg($macrosFile);
         }
 
         if ($rules !== '') {
             $rulesFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.rules';
             file_put_contents($rulesFile, $rules);
-            $cmdParts[] = '-rulesFile ' . escapeshellarg($rulesFile);
+            $cmdParts[] = '--rules-file ' . escapeshellarg($rulesFile);
         }
 
         if ($lexicon !== '') {
             $lexiconFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.lexicon';
             file_put_contents($lexiconFile, $lexicon);
-            $cmdParts[] = '-lexiconFile ' . escapeshellarg($lexiconFile);
+            $cmdParts[] = '--lexicon-file ' . escapeshellarg($lexiconFile);
         }
 
         if ($input !== '') {
             $inputFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.input';
             file_put_contents($inputFile, $input);
-            $cmdParts[] = '-inputFile ' . escapeshellarg($inputFile);
+            $cmdParts[] = '--input-file ' . escapeshellarg($inputFile);
         }
 
         if ($pattern !== '') {
-            $cmdParts[] = '-compactedLexiconDirectory ' . escapeshellarg($dir);
-            $cmdParts[] = '-compactedLexiconFile ' . escapeshellarg($fileName);
+            $cmdParts[] = '--compacted-lexicon-filex ' . escapeshellarg($dir). '/' . escapeshellarg($fileName);
         }
 
         $outputFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.output';
