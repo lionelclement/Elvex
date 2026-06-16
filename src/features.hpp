@@ -101,7 +101,7 @@ public:
                           ,
                           bool
 #endif
-                            , bool verbose);
+                            , bool verbose, bool override);
 
     void subFlags(const std::bitset<MAX_FLAGS> &);
 

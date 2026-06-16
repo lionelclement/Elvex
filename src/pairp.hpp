@@ -88,7 +88,7 @@ public:
 
     void flatPrint(std::ostream &, bool) const;
 
-    bool buildEnvironment(statementPtr statement, const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root, bool verbose);
+    bool buildEnvironment(statementPtr statement, const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root, bool verbose, bool override);
 
     bool renameVariables(uint32_t);
 

@@ -17,7 +17,7 @@
  *
  ************************************************** */
 
- #ifndef ELVEX_ORDERSPEC_H
+#ifndef ELVEX_ORDERSPEC_H
 #define ELVEX_ORDERSPEC_H
 
 #include <vector>

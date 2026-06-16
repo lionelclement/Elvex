@@ -71,60 +71,60 @@ environmentPtr Environment::create()
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(statementPtr statementRoot, const std::string &key, valuePtr value, bool verbose)
-{
-    auto it = env.find(key);
+bool Environment::add(statementPtr statementRoot,
+                      const std::string &key,
+                      valuePtr value,
+                      bool verbose,
+                      bool overrideVariables)
+{   auto it = env.find(key);
+
     if (it == env.end())
     {
         env.insert(std::make_pair(key, value));
         resetCoreSerial();
+        return true;
     }
-    else
+
+    if (overrideVariables)
     {
-        if (!it->second)
+        it->second = value;
+        resetCoreSerial();
+        return true;
+    }
+
+    // garde : pas d’écrasement
+    if (!it->second || it->second->isAnonymousVariable())
+    {
+        it->second = value;
+        resetCoreSerial();
+        return true;
+    }
+
+    if (!value || value->isAnonymousVariable())
+    {
+        return true;
+    }
+
+    if (it->second->equal(value))
+    {
+        return true;
+    }
+
+    if (verbose)
+    {
+        if (statementRoot)
         {
-            it->second = value;
-            resetCoreSerial();
-        }
-        else if (it->second->isAnonymousVariable())
-        {
-            it->second = value;
-            resetCoreSerial();
-        }
-        else if (it->second->isVariable())
-        {
-            if (verbose)
-            {
-                if (statementRoot)
-                {
-                    WARNING("assign " << key << " with variable " << statementRoot->_getBufferName() << " (line " << std::dec << statementRoot->_getLineno() << ")");
-                }
-                else
-                {
-                    WARNING("assign " << key << " with variable ");
-                }
-            }
-            it->second = value;
-            resetCoreSerial();
+            WARNING("conflicting binding of " << key << " "
+                                              << statementRoot->_getBufferName()
+                                              << " (line " << std::dec << statementRoot->_getLineno() << ")");
         }
         else
         {
-            if (verbose)
-            {
-                if (statementRoot)
-                {
-                    WARNING("override previous value of " << key << "  " << statementRoot->_getBufferName() << " (line " << std::dec << statementRoot->_getLineno() << ")");
-                }
-                else
-                {
-                    WARNING("override previous value of " << key);
-                }
-            }
-            it->second = value;
-            resetCoreSerial();
+            WARNING("conflicting binding of " << key);
         }
     }
-    return true;
+
+    return false;
 }
 
 /* **************************************************
@@ -141,33 +141,33 @@ bool Environment::remove(const std::string &key)
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(statementPtr statement, uint32_t code, valuePtr value, bool verbose)
+bool Environment::add(statementPtr statement, uint32_t code, valuePtr value, bool verbose, bool override)
 {
     const std::string key = Vartable::codeToName(code);
-    return add(statement, key, value, verbose);
+    return add(statement, key, value, verbose, override);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(statementPtr statement, const environmentPtr &e, bool verbose)
+bool Environment::add(statementPtr statement, const environmentPtr &e, bool verbose, bool override)
 {
     bool ok = true;
     for (const auto &i : *e)
-        ok &= add(statement, i.first, i.second, verbose);
+        ok &= add(statement, i.first, i.second, verbose, override);
     return ok;
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Environment::add(statementPtr statement, const environmentPtr &e, const environmentPtr &where, bool verbose)
+bool Environment::add(statementPtr statement, const environmentPtr &e, const environmentPtr &where, bool verbose, bool override)
 {
     bool ok = true;
     if (where)
         for (const auto &i : *e)
             if (where->env.find(i.first) != where->env.end())
-                ok &= add(statement, i.first, i.second, verbose);
+                ok &= add(statement, i.first, i.second, verbose, override);
     return ok;
 }
 
@@ -252,7 +252,7 @@ environmentPtr Environment::clone(statementPtr from, bool verbose) const
     environmentPtr environment = Environment::create();
     for (const auto &i : *this)
     {
-        if (!environment->add(from, i.first, (i.second) ? i.second->clone() : valuePtr(), verbose))
+        if (!environment->add(from, i.first, (i.second) ? i.second->clone() : valuePtr(), verbose, true))
             throw fatal_exception("environment not clonable");
     }
     return environment;
@@ -553,171 +553,6 @@ void Environment::replaceVariables(std::string &data, bool &effect)
     std::cout << "</td></tr></table>";
 #endif
 }
-
-// /* **************************************************
-//  *
-//  ************************************************** */
-// void Environment::_removeAnonymousVariables(const featuresPtr &features, bool &effect)
-// {
-// #ifdef TRACE_ENVIRONMENT
-//     std::cout << "<H4>Environment::removeAnonymousVariables(features)</H4>" << std::endl;
-//     std::cout << "<table border=\"1\"><tr><th>featuresPtrs</th></tr>";
-//     std::cout << "<tr><td>";
-//     features->toHTML(std::cout);
-//     std::cout << "</td></tr></table>";
-// #endif
-//     if (!features->containsAnonymousVariable())
-//     {
-// #ifdef TRACE_ENVIRONMENT
-//         std::cout << "<H4>Environment::removeAnonymousVariables(features) NOTHING TO DO</H4>" << std::endl;
-// #endif
-//         return;
-//     }
-
-//     for (auto it = features->begin(); it != features->end(); ++it)
-//     {
-//         featurePtr feature = *it;
-//         switch (feature->getType())
-//         {
-//         case Feature::_VARIABLE_:
-//             break;
-
-//         case Feature::_HEAD_:
-//         case Feature::_LEMMA_:
-//         case Feature::_FORM_:
-//         case Feature::_CONSTANT_:
-//             if (feature->getValue() && ((feature->getValue()->isFeatures() || feature->getValue()->isVariable() || feature->getValue()->isPairp() || feature->getValue()->isString())))
-//                 _removeAnonymousVariables(feature->getValue(), effect);
-//             else if (feature->getValue() && feature->getValue()->isAnonymousVariable())
-//             {
-//                 features->erase(it);
-//                 effect = true;
-//                 _removeAnonymousVariables(features, effect);
-//                 return;
-//             }
-//             break;
-//         }
-//     }
-
-// #ifdef TRACE_ENVIRONMENT
-//     std::cout << "<H4>Environment::removeAnonymousVariables(features) DONE</H4>" << std::endl;
-//     std::cout << "<table border=\"1\"><tr><th>Features</th><th>Environment</th></tr>";
-//     std::cout << "<tr><td>";
-//     features->toHTML(std::cout);
-//     std::cout << "</td><td>";
-//     this->toHTML(std::cout);
-//     std::cout << "</td></tr></table>";
-// #endif
-//     if (effect)
-//         features->resetCoreSerial();
-// }
-
-// /* **************************************************
-//  *
-//  ************************************************** */
-// void Environment::_removeAnonymousVariables(const valuePtr &value, bool &effect)
-// {
-// #ifdef TRACE_ENVIRONMENT
-//     std::cout << "<H4>Environment::removeAnonymousVariables(value)</H4>" << std::endl;
-//     std::cout << "<table border=\"1\"><tr><th>Value</th></tr>";
-//     std::cout << "<tr><td>";
-//     value->toHTML(std::cout);
-//     std::cout << "</td></tr></table>";
-// #endif
-//     if (!value->containsAnonymousVariable())
-//     {
-//         return;
-//     }
-//     if (!value->isNil() && !value->isAnonymousVariable())
-//     {
-//         switch (value->getType())
-//         {
-//         case Value::NIL_VALUE:
-//         case Value::TRUE_VALUE:
-//         case Value::FALSE_VALUE:
-//         case Value::CONSTANT_VALUE:
-//         case Value::IDENTIFIER_VALUE:
-//         case Value::VARIABLE_VALUE:
-//         case Value::NUMBER_VALUE:
-//         case Value::SYNTHESIZED_CHILD_FEATURES_VALUE:
-//         case Value::FORM_VALUE:
-//             break;
-//         case Value::ANONYMOUS_VARIABLE_VALUE:
-//             WARNING("unexpected anonymous variable value");
-//             break;
-//         case Value::FEATURES_VALUE:
-//             _removeAnonymousVariables(value->getFeatures(), effect);
-//             break;
-//         case Value::PAIRP_VALUE:
-//             _removeAnonymousVariables(value->getPairp(), effect);
-//             break;
-
-//         default:
-//             FATAL_ERROR_UNEXPECTED;
-//             break;
-//         }
-//     }
-// #ifdef TRACE_ENVIRONMENT
-//     std::cout << "<H4>Environment::_removeAnonymousVariables(value) NOTHING TO DO</H4>" << std::endl;
-// #endif
-//     return;
-// }
-
-// /* **************************************************
-//  *
-//  ************************************************** */
-// void Environment::_removeAnonymousVariables(const pairpPtr &pairp, bool &effect)
-// {
-// #ifdef TRACE_ENVIRONMENT
-//     std::cout << "<H4>Environment::_removeAnonymousVariables(pairp)</H4>" << std::endl;
-//     std::cout << "<table border=\"1\"><tr><th>Pairp</th><th>Environment</th></tr>";
-//     std::cout << "<tr><td>";
-//     pairp->flatPrint(std::cout, 0);
-//     std::cout << "</td><td>";
-//     this->toHTML(std::cout);
-//     std::cout << "</	td></tr></table>";
-// #endif
-//     if (!pairp->containsVariable())
-//     {
-// #ifdef TRACE_ENVIRONMENT
-//         std::cout << "<H4>Environment::_removeAnonymousVariables(pairp) NOTHING TO DO</H4>" << std::endl;
-// #endif
-//         return;
-//     }
-//     switch (pairp->getType())
-//     {
-//     case Pairp::_ATOM_:
-//         if (pairp->isVariable())
-//         {
-//         }
-//         else
-//             _removeAnonymousVariables(pairp->getValue(), effect);
-//         break;
-
-//     case Pairp::_PAIRP_:
-//     {
-//         pairpPtr car = pairp->getCar();
-//         pairpPtr cdr = pairp->getCdr();
-//         if (!car->isNil())
-//             _removeAnonymousVariables(car, effect);
-//         if (!cdr->isNil())
-//             _removeAnonymousVariables(cdr, effect);
-//     }
-//     break;
-
-//     case Pairp::_NIL_:
-//         break;
-//     }
-// #ifdef TRACE_ENVIRONMENT
-//     std::cout << "<H4>Environment::_removeAnonymousVariables(Pairp) result</H4>" << std::endl;
-//     std::cout << "<table border=\"1\"><tr><th>Pairp</th></tr>";
-//     std::cout << "<tr><td>";
-//     pairp->flatPrint(std::cout, 0);
-//     std::cout << "</td></tr></table>";
-// #endif
-//     if (effect)
-//         pairp->resetCoreSerial();
-// }
 
 /* **************************************************
  *

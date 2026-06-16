@@ -191,9 +191,9 @@ public:
 
     void buildInheritedChildFeatures(statementPtr from, class Generator *);
 
-    bool addEnvironment(statementPtr from, environmentPtr, bool verbose);
+    bool addEnvironment(statementPtr from, environmentPtr, bool verbose, bool override);
 
-    bool addEnvironment(statementPtr from, environmentPtr, environmentPtr, bool verbose);
+    bool addEnvironment(statementPtr from, environmentPtr, environmentPtr, bool verbose, bool override);
 
     void addStatements(const statementsPtr &);
 

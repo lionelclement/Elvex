@@ -394,7 +394,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                                 bool root
 #endif
                                 ,
-                                bool verbose)
+                                bool verbose, bool override)
 {
     bool ret = true;
 
@@ -449,7 +449,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
 
                     // Else build environment with the two values
                     else if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, other_feature->getValue(),
-                                                                         acceptToFilterNULLVariables, false, verbose))
+                                                                         acceptToFilterNULLVariables, false, verbose, override))
                     {
                         ret = false;
                     }
@@ -468,7 +468,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         //  = > $X = NIL
                         if (acceptToFilterNULLVariables)
                         {
-                            environment->add(statementRoot, this_feature->getValue()->getCode(), Value::STATIC_ANONYMOUS_VARIABLE, verbose);
+                            environment->add(statementRoot, this_feature->getValue()->getCode(), Value::STATIC_ANONYMOUS_VARIABLE, verbose, override);
                         }
                         else
                         {
@@ -488,7 +488,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         else
                         {
                             if (!this_feature->getValue()->buildEnvironment(statementRoot, environment, Value::STATIC_ANONYMOUS_VARIABLE,
-                                                                            acceptToFilterNULLVariables, false, verbose))
+                                                                            acceptToFilterNULLVariables, false, verbose, override))
                             {
                                 ret = false;
                             }
@@ -521,7 +521,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
                         nFeatures->add(other_feature);
                     }
                 }
-                environment->add(statementRoot, this_feature->getCode(), Value::createFeatures(nFeatures), verbose);
+                environment->add(statementRoot, this_feature->getCode(), Value::createFeatures(nFeatures), verbose, override);
             }
         }
     }

@@ -258,7 +258,7 @@ void Pairp::flatPrint(std::ostream &outStream, bool par) const
 /* **************************************************
  *
  ************************************************** */
-bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root, bool verbose)
+bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root, bool verbose, bool override)
 {
     bool ret = true;
 #ifdef TRACE_BUILD_ENVIRONMENT
@@ -284,7 +284,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
         }
         else if ((otherPairp->isAtom()) && (otherPairp->value->isVariable()))
         {
-            environment->add(statement, otherPairp->value->getCode(), Value::STATIC_NIL, verbose);
+            environment->add(statement, otherPairp->value->getCode(), Value::STATIC_NIL, verbose, override);
         }
         else
         {
@@ -304,13 +304,13 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
                 switch (otherPairp->getType())
                 {
                 case _NIL_:
-                    environment->add(statement, this->value->getCode(), Value::STATIC_NIL, verbose);
+                    environment->add(statement, this->value->getCode(), Value::STATIC_NIL, verbose, override);
                     break;
                 case _ATOM_:
-                    environment->add(statement, this->value->getCode(), otherPairp->getValue(), verbose);
+                    environment->add(statement, this->value->getCode(), otherPairp->getValue(), verbose, override);
                     break;
                 case _PAIRP_:
-                    environment->add(statement, this->value->getCode(), Value::createPairp(otherPairp), verbose);
+                    environment->add(statement, this->value->getCode(), Value::createPairp(otherPairp), verbose, override);
                     break;
                 }
             }
@@ -326,9 +326,9 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
         else if (otherPairp->isAtom())
         {
             if (otherPairp->value->isVariable())
-                environment->add(statement, otherPairp->value->getCode(), this->getValue(), verbose);
+                environment->add(statement, otherPairp->value->getCode(), this->getValue(), verbose, override);
             else if (!this->value->buildEnvironment(statement, environment, otherPairp->value, acceptToFilterNULLVariables,
-                                                    root, verbose))
+                                                    root, verbose, override))
                 ret = false;
         }
         else
@@ -343,7 +343,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
                 ret = true;
             }
             else if (!this->pairp.car->buildEnvironment(statement, environment, otherPairp->pairp.car,
-                                                        acceptToFilterNULLVariables, root, verbose))
+                                                        acceptToFilterNULLVariables, root, verbose, override))
             {
                 ret = false;
             }
@@ -352,7 +352,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
                 ret = true;
             }
             else if (!this->pairp.cdr->buildEnvironment(statement, environment, otherPairp->pairp.cdr,
-                                                        acceptToFilterNULLVariables, root, verbose))
+                                                        acceptToFilterNULLVariables, root, verbose, override))
             {
                 ret = false;
             }
@@ -364,7 +364,7 @@ bool Pairp::buildEnvironment(statementPtr statement, const environmentPtr &envir
                 ret = true;
             }
             else if (!this->pairp.car->buildEnvironment(statement, environment, otherPairp,
-                                                        acceptToFilterNULLVariables, root, verbose))
+                                                        acceptToFilterNULLVariables, root, verbose, override))
             {
                 ret = false;
             }

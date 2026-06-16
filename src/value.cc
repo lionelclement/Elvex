@@ -645,7 +645,7 @@ valuePtr Value::clone()
 /* ************************************************************
  *
  ************************************************************ */
-bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root, bool verbose)
+bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root, bool verbose, bool override)
 {
 #ifdef TRACE_BUILD_ENVIRONMENT
     COUT_LINE;
@@ -675,7 +675,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case NIL_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == NIL_VALUE)
         {
@@ -692,7 +692,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case FEATURES_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == FEATURES_VALUE)
         {
@@ -703,7 +703,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
                                                        true
 #endif
                                                        ,
-                                                       verbose))
+                                                       verbose, override))
                 ret = false;
         }
         else if (value->type == ANONYMOUS_VARIABLE_VALUE)
@@ -715,7 +715,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
                                                        root
 #endif
                                                        ,
-                                                       verbose))
+                                                       verbose, override))
                 ret = false;
         }
         else
@@ -727,7 +727,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case CONSTANT_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -751,7 +751,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case IDENTIFIER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == CONSTANT_VALUE)
         {
@@ -775,7 +775,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case NUMBER_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == NUMBER_VALUE)
         {
@@ -796,7 +796,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case STRING_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == STRING_VALUE)
         {
@@ -819,18 +819,18 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
         {
             if (!pairp->buildEnvironment(statementRoot, environment, value->getPairp(),
                                          acceptToFilterNULLVariables,
-                                         root, verbose))
+                                         root, verbose, override))
                 ret = false;
         }
         else if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == ANONYMOUS_VARIABLE_VALUE)
         {
             if (!pairp->buildEnvironment(statementRoot, environment, Pairp::NIL,
                                          acceptToFilterNULLVariables,
-                                         root, verbose))
+                                         root, verbose, override))
                 ret = false;
         }
         else
@@ -842,11 +842,11 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case VARIABLE_VALUE:
         if (!value)
         {
-            ret = environment->add(statementRoot, code, STATIC_NIL, verbose);
+            ret = environment->add(statementRoot, code, STATIC_NIL, verbose, override);
         }
         else
         {
-            ret = environment->add(statementRoot, code, value, verbose);
+            ret = environment->add(statementRoot, code, value, verbose, override);
         }
         break;
 
@@ -856,7 +856,7 @@ bool Value::buildEnvironment(statementPtr statementRoot, const environmentPtr &e
     case STATEMENT_VALUE:
         if (value->type == VARIABLE_VALUE)
         {
-            environment->add(statementRoot, value->code, shared_from_this(), verbose);
+            environment->add(statementRoot, value->code, shared_from_this(), verbose, override);
         }
         else if (value->type == STATEMENT_VALUE)
         {
@@ -914,13 +914,13 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
     // $X ⊂ …
     if (this->isVariable())
     {
-        environment->add(statementRoot, code, other_value, verbose);
+        environment->add(statementRoot, code, other_value, verbose, true);
     }
 
     // … ⊂ $X
     else if (other_value->isVariable())
     {
-        environment->add(statementRoot, other_value->code, shared_from_this(), verbose);
+        environment->add(statementRoot, other_value->code, shared_from_this(), verbose, true);
     }
 
     // _ ⊂ …
@@ -985,13 +985,13 @@ bool Value::subsumes(statementPtr statementRoot, const valuePtr &other_value, co
  ************************************************************ */
 bool Value::equal(valuePtr o) const
 {
-    /* **
+    /*
         CERR_LINE;
         this->flatPrint(std::cerr);
         std::cerr << " == ";
         o->flatPrint(std::cerr);
         std::cerr << std::endl;
-     ** */
+    */
 
     bool ret = false;
 
@@ -1043,7 +1043,11 @@ bool Value::equal(valuePtr o) const
                            o->getStatement()->peekCoreSerialString());
             }
             break;
-        default:
+            case ANONYMOUS_VARIABLE_VALUE:
+                    ret = false;
+                break;
+
+            default:
             FATAL_ERROR_UNEXPECTED
         }
     }

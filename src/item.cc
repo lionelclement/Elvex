@@ -552,7 +552,7 @@ bool Item::isCompleted()
 /* **************************************************
  *
  ************************************************** */
-bool Item::addEnvironment(statementPtr from, environmentPtr _environment, bool verbose)
+bool Item::addEnvironment(statementPtr from, environmentPtr _environment, bool verbose, bool override)
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
@@ -566,13 +566,13 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, bool v
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, (_environment), verbose);
+    return this->environment->add(from, (_environment), verbose, override);
 }
 
 /* **************************************************
  *
  ************************************************** */
-bool Item::addEnvironment(statementPtr from, environmentPtr _environment, environmentPtr where, bool verbose)
+bool Item::addEnvironment(statementPtr from, environmentPtr _environment, environmentPtr where, bool verbose, bool override)
 {
 #ifdef TRACE_ENVIRONMENT
     COUT_LINE;
@@ -586,7 +586,7 @@ bool Item::addEnvironment(statementPtr from, environmentPtr _environment, enviro
 #endif
     if (!this->environment)
         this->environment = Environment::create();
-    return this->environment->add(from, _environment, where, verbose);
+    return this->environment->add(from, _environment, where, verbose, override);
 }
 
 /* **************************************************
@@ -1054,7 +1054,7 @@ void Item::environmentAdd(statementPtr statementRoot, uint32_t code, valuePtr va
 {
     if (!environment)
         FATAL_ERROR_UNEXPECTED;
-    environment->add(statementRoot, code, value, verbose);
+    environment->add(statementRoot, code, value, verbose, true);
 }
 
 /* **************************************************

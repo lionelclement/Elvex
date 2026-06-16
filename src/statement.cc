@@ -2054,7 +2054,7 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
 #ifdef TRACE_BUILD_ENVIRONMENT
                 true,
 #endif
-                verbose))
+                verbose, true))
         {
             resultValue = Value::STATIC_TRUE;
         }
@@ -2653,6 +2653,7 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
             }
             result->add(*i1);
         }
+
         else if ((*i1)->isForm())
         {
             Features::list_of_feature::const_iterator i2 = fs2->begin();
@@ -2677,6 +2678,7 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
             }
             result->add(*i1);
         }
+
         else if ((*i1)->isConstant())
         {
             Features::list_of_feature::const_iterator i2 = fs2->begin();
@@ -2686,11 +2688,50 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                     (*(*i1)->getAttribute() & *(*i2)->getAttribute()).any())
                 {
                     (*i2)->addFlags(Flags::SEEN);
+
                     if ((!(*i1)->getValue()) || (!(*i2)->getValue()))
                     {
                         result = Features::BOTTOM;
                         goto endUnif;
                     }
+
+                    /*
+                    * NIL is not a unifiable value for a present feature.
+                    *
+                    * In particular, a non-empty pair/list must not unify with NIL.
+                    * More generally, no concrete value should unify with NIL here.
+                    *
+                    * Feature-structure NIL is already handled at the beginning of unif():
+                    *
+                    *   fs1 == NIL => fs2
+                    *   fs2 == NIL => fs1
+                    *
+                    * But inside a feature value, NIL means that the value itself is NIL,
+                    * not that the feature structure is empty. Therefore:
+                    *
+                    *   [a:X] ⊓ [a:NIL]  => BOTTOM
+                    *
+                    * except optionally:
+                    *
+                    *   [a:NIL] ⊓ [a:NIL]
+                    *
+                    * which can be kept as NIL if needed.
+                    */
+                    if ((*i1)->getValue()->isNil() || (*i2)->getValue()->isNil())
+                    {
+                        if ((*i1)->getValue()->isNil() && (*i2)->getValue()->isNil())
+                        {
+                            result->add(Feature::createConstant(
+                                (*i1)->getAttribute(),
+                                Value::STATIC_NIL));
+                            break;
+                        }
+
+                        result = Features::BOTTOM;
+                        goto endUnif;
+                    }
+
+
 
                     switch ((*i1)->getValue()->getType())
                     {
@@ -3065,7 +3106,7 @@ void Statement::buildEnvironmentWithSynthesize(statementPtr statementRoot, class
                                             true
 #endif
                                             ,
-                                            verbose))
+                                            verbose, true))
                 {
 
                     addFlags(Flags::BOTTOM);
@@ -3139,7 +3180,7 @@ void Statement::buildEnvironmentWithInherited(statementPtr statementRoot, class 
                                             true
 #endif
                                             ,
-                                            verbose))
+                                            verbose, true))
                 {
                     addFlags(Flags::BOTTOM);
                 }
@@ -3219,7 +3260,7 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
                 else
                 {
 
-                    if (!left->buildEnvironment(statementRoot, item->getEnvironment(), right, true, true, verbose))
+                    if (!left->buildEnvironment(statementRoot, item->getEnvironment(), right, true, true, verbose, true))
                     {
                         addFlags(Flags::BOTTOM);
                     }
@@ -3251,7 +3292,7 @@ void Statement::buildEnvironmentWithValue(statementPtr statementRoot, class Item
                                             true
 #endif
                                             ,
-                                            verbose))
+                                            verbose, true))
                 {
                     addFlags(Flags::BOTTOM);
                 }
@@ -3317,14 +3358,13 @@ void Statement::stmGuard(statementPtr statementRoot, class Item *item, bool verb
         FATAL_ERROR_STM(shared_from_this());
     }
     featuresPtr inheritedFeatures = item->getInheritedFeatures();
-
     if (!localFeatures->buildEnvironment(statementRoot, item->getEnvironment(), inheritedFeatures, false
 #ifdef TRACE_BUILD_ENVIRONMENT
                                          ,
                                          true
 #endif
                                          ,
-                                         verbose))
+                                         verbose, false))
     {
         addFlags(Flags::BOTTOM);
     }

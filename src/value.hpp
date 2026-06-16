@@ -114,7 +114,7 @@ public:
     void toXML(xmlNodePtr) const;
 #endif
 
-    bool buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root, bool verbose);
+    bool buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root, bool verbose, bool override);
 
     bool subsumes(statementPtr statementRoot, const valuePtr &, const environmentPtr &, bool verbose);
 

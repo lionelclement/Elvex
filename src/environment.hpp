@@ -35,7 +35,7 @@ public:
 private:
     unordered_map env;
 
-    bool add(statementPtr from, const std::string &, valuePtr, bool verbose);
+    bool add(statementPtr from, const std::string &, valuePtr, bool verbose, bool override);
 
     bool remove(const std::string &);
 
@@ -46,11 +46,11 @@ public:
 
     static environmentPtr create(void);
 
-    bool add(statementPtr from, uint32_t, valuePtr, bool verbose);
+    bool add(statementPtr from, uint32_t, valuePtr, bool verbose, bool override);
 
-    bool add(statementPtr from, const environmentPtr &, bool verbose);
+    bool add(statementPtr from, const environmentPtr &, bool verbose, bool override);
 
-    bool add(statementPtr from, const environmentPtr &, const environmentPtr &, bool verbose);
+    bool add(statementPtr from, const environmentPtr &, const environmentPtr &, bool verbose, bool override);
 
     bool remove(uint32_t);
 
@@ -73,12 +73,6 @@ public:
     void replaceVariables(const pairpPtr &, bool &);
 
     void replaceVariables(std::string &, bool &);
-
-    // void _removeAnonymousVariables(const featuresPtr &, bool &);
-
-    // void _removeAnonymousVariables(const valuePtr &, bool &);
-
-    // void _removeAnonymousVariables(const pairpPtr &, bool &);
 
 protected:
     void makeCoreSerialString() override;
