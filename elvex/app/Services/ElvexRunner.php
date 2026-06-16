@@ -422,7 +422,7 @@ class ElvexRunner
         }
 
         if ($pattern !== '') {
-            $cmdParts[] = '--compacted-lexicon-filex ' . escapeshellarg($dir). '/' . escapeshellarg($fileName);
+            $cmdParts[] = '--compacted-lexicon-file ' . escapeshellarg($dir). '/' . escapeshellarg($fileName);
         }
 
         $outputFile = $dir . DIRECTORY_SEPARATOR . $fileName . '.output';
