@@ -1,0 +1,76 @@
+// =============================================================================
+// rock_direct.rules
+// =============================================================================
+// Routes rock directes par tonalité. Ces règles sélectionnent de longues cellules LilyPond préécrites dans rock_direct.lexicon.
+//
+
+
+// -----------------------------------------------------------------------------
+// Matériau rock direct de secours.
+// -----------------------------------------------------------------------------
+// Objectif :
+// Garder les sorties rock non vides avec Elvex -f.
+// Ces règles directes sont volontairement placées avant les modules rock génératifs
+// dans music.rules. Elles évitent les dérivations profondes fragiles pour les esquisses rock.
+// Elles n’affectent pas les autres styles/formes.
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_VOICE_E
+{ [role:rock_voice, form:rock_direct_band, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_GUITAR_E
+{ [role:rock_guitar, form:rock_direct_band, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_BASS_E
+{ [role:rock_bass, form:rock_direct_band, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_VOICE_A
+{ [role:rock_voice, form:rock_direct_band, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_GUITAR_A
+{ [role:rock_guitar, form:rock_direct_band, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_BASS_A
+{ [role:rock_bass, form:rock_direct_band, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_DRUMS
+{ [role:rock_drums, form:rock_direct_band]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+
+// Extension rock saxophone/chœur.
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_VOICE_SAX_E
+{ [role:rock_voice, form:rock_direct_sax_choir, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_SAX_E
+{ [role:rock_sax, form:rock_direct_sax_choir, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_CHOIR_E
+{ [role:rock_choir, form:rock_direct_sax_choir, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_GUITAR_WARM_E
+{ [role:rock_guitar_saxchoir, form:rock_direct_sax_choir, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_BASS_WARM_E
+{ [role:rock_bass_saxchoir, form:rock_direct_sax_choir, tonic_pc:4]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_VOICE_SAX_A
+{ [role:rock_voice, form:rock_direct_sax_choir, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_SAX_A
+{ [role:rock_sax, form:rock_direct_sax_choir, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_CHOIR_A
+{ [role:rock_choir, form:rock_direct_sax_choir, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_GUITAR_WARM_A
+{ [role:rock_guitar_saxchoir, form:rock_direct_sax_choir, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_BASS_WARM_A
+{ [role:rock_bass_saxchoir, form:rock_direct_sax_choir, tonic_pc:9]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_DIRECT_DRUMS_WARM
+{ [role:rock_drums_saxchoir, form:rock_direct_sax_choir]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ⇑=[cadence:authentic]; }

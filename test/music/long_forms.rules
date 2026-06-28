@@ -1,0 +1,300 @@
+// =============================================================================
+// long_forms.rules
+// =============================================================================
+// Formes longues classiques : ternary, theme_and_variations, gigue, marche, sicilienne, etc. À utiliser avec des combinaisons style/form/rhythm cohérentes.
+//
+
+// -----------------------------------------------------------------------------
+// Long-form architectures for 3–4 minute pieces.
+//
+// Note de conception :
+// Les anciennes formes courtes restent inchangées. Ces formes longues sont sélectionnées par
+// explicit form values:
+//   long_rounded_binary
+//   long_ternary
+//   long_theme_and_variations
+//   long_siciliana
+//   long_gigue
+//   long_march
+//
+// Les formes longues réutilisent des sections courtes stables. Les voix mélodiques secondaires
+// se taisent parfois pendant des mesures entières en 4/4 ou composées afin que la voix principale puisse phraser seule.
+// Bass/accompaniment/percussion roles stay comparatively continuous.
+// -----------------------------------------------------------------------------
+
+// --- Silences génériques d’une mesure entière -------------------------------
+
+@withoutSpaces
+REST_BAR4 → TAB REST BARLINE
+{ ↓1 = []; ↓2 = [dur:"1/1"]; ↓3 = []; ⇑ = [rest:true]; }
+
+@withoutSpaces
+REST_BAR6_8 → TAB REST BARLINE
+{ ↓1 = []; ↓2 = [dur:"3/4"]; ↓3 = []; ⇑ = [rest:true]; }
+
+@withoutSpaces
+REST_BAR3_4 → TAB REST BARLINE
+{ ↓1 = []; ↓2 = [dur:"3/4"]; ↓3 = []; ⇑ = [rest:true]; }
+
+REST_4_4_2 → REST_BAR4 REST_BAR4
+{ ↓1=↑; ↓2=↑; ⇑=[rest_bars:2]; }
+REST_4_4_4 → REST_4_4_2 REST_4_4_2
+{ ↓1=↑; ↓2=↑; ⇑=[rest_bars:4]; }
+REST_4_4_8 → REST_4_4_4 REST_4_4_4
+{ ↓1=↑; ↓2=↑; ⇑=[rest_bars:8]; }
+REST_4_4_16 → REST_4_4_8 REST_4_4_8
+{ ↓1=↑; ↓2=↑; ⇑=[rest_bars:16]; }
+
+REST_6_8_3 → REST_BAR6_8 REST_BAR6_8 REST_BAR6_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[rest_bars:3]; }
+REST_6_8_6 → REST_6_8_3 REST_6_8_3
+{ ↓1=↑; ↓2=↑; ⇑=[rest_bars:6]; }
+
+// --- Long rounded binary / ternary / variation forms ------------------------
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE1_ROUNDED_BINARY
+{ [role:flute1, form:long_rounded_binary, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+LONG_FLUTE1_ROUNDED_BINARY → FLUTE1_ROUNDED_BINARY FLUTE1_ROUNDED_BINARY FLUTE1_ROUNDED_BINARY FLUTE1_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_rounded_binary, bars:64]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE_PIANO_LEAD_ROUNDED_BINARY
+{ [role:flute_piano_lead, form:long_rounded_binary, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+LONG_FLUTE_PIANO_LEAD_ROUNDED_BINARY → FLUTE1_ROUNDED_BINARY REST_4_4_8 FLUTE_PIANO_LEAD_EIGHT_BAR FLUTE1_ROUNDED_BINARY REST_4_4_8 FLUTE_PIANO_LEAD_EIGHT_BAR
+{
+  // 64 mesures au total : 16 + 8 de silence + 8 + 16 + 8 de silence + 8.
+  // La voix principale respire entre les grandes phrases au lieu de jouer en continu.
+  ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑;
+  ⇑=[form:long_rounded_binary, bars:64, lead_rests:16];
+}
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE2_ROUNDED_BINARY
+{ [role:flute2, form:long_rounded_binary, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+LONG_FLUTE2_ROUNDED_BINARY → REST_4_4_16 FLUTE2_ROUNDED_BINARY REST_4_4_16 FLUTE2_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_rounded_binary, bars:64, rests:32]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_RH_ROUNDED_BINARY
+{ [role:piano_rh, form:long_rounded_binary, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_RH_ROUNDED_BINARY → PIANO_RH_ROUNDED_BINARY PIANO_RH_ROUNDED_BINARY PIANO_RH_ROUNDED_BINARY PIANO_RH_ROUNDED_BINARY PIANO_RH_ROUNDED_BINARY PIANO_RH_ROUNDED_BINARY PIANO_RH_ROUNDED_BINARY PIANO_RH_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:long_rounded_binary, bars:72]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_LH_ROUNDED_BINARY
+{ [role:piano_lh, form:long_rounded_binary, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_LH_ROUNDED_BINARY → PIANO_LH_ROUNDED_BINARY PIANO_LH_ROUNDED_BINARY PIANO_LH_ROUNDED_BINARY PIANO_LH_ROUNDED_BINARY PIANO_LH_ROUNDED_BINARY PIANO_LH_ROUNDED_BINARY PIANO_LH_ROUNDED_BINARY PIANO_LH_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:long_rounded_binary, bars:72]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_ACC_RH_ROUNDED_BINARY
+{ [role:piano_acc_rh, form:long_rounded_binary, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_ACC_RH_ROUNDED_BINARY → PIANO_ACC_RH_ROUNDED_BINARY ACC_RH_LONG_SPARSE_8 ACC_RH_LONG_PAD_8 PIANO_ACC_RH_ROUNDED_BINARY ACC_RH_LONG_SPARSE_8 ACC_RH_LONG_PAD_8 PIANO_ACC_RH_ROUNDED_BINARY ACC_RH_LONG_SPARSE_8
+{
+  // 8 blocs de 8 mesures = 64 mesures. La main droite alterne nappes, respirations espacées
+  // et accompagnement original pour éviter la répétition mécanique.
+  ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑;
+  ⇑=[form:long_rounded_binary, bars:64, texture:varied_accompaniment];
+}
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_ACC_LH_ROUNDED_BINARY
+{ [role:piano_acc_lh, form:long_rounded_binary, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_ACC_LH_ROUNDED_BINARY → PIANO_ACC_LH_ROUNDED_BINARY ACC_LH_LONG_SIMPLE_8 ACC_LH_LONG_BROKEN_8 PIANO_ACC_LH_ROUNDED_BINARY ACC_LH_LONG_SIMPLE_8 ACC_LH_LONG_BROKEN_8 PIANO_ACC_LH_ROUNDED_BINARY ACC_LH_LONG_SIMPLE_8
+{
+  // 8 blocs de 8 mesures = 64 mesures. La basse reste continue, mais alterne
+  // between broken figures, simpler basses and pedals.
+  ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑;
+  ⇑=[form:long_rounded_binary, bars:64, texture:varied_bass];
+}
+
+// Controlled 4/4 long ternary and variations.
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE1_TERNARY
+{ [role:flute1|flute_piano_lead, form:long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE1_TERNARY → FLUTE1_TERNARY_CONTROLLED FLUTE1_TERNARY_CONTROLLED FLUTE1_TERNARY_CONTROLLED FLUTE1_TERNARY_CONTROLLED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_ternary, bars:32, controlled:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE2_TERNARY
+{ [role:flute2, form:long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE2_TERNARY → REST_4_4_8 FLUTE2_TERNARY_CONTROLLED FLUTE2_TERNARY_CONTROLLED REST_4_4_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_ternary, bars:32, rests:true, controlled:true]; }
+
+
+// --- Varied 8-bar accompaniment blocks for long flute+piano ------------------
+
+@withoutSpaces
+ACC_RH_LONG_PAD_8 → ACC_RH_TONIC_HOLD ACC_RH_TONIC_HOLD ACC_RH_SUBDOMINANT_PAD ACC_RH_TONIC_HOLD ACC_RH_DOMINANT_PAD ACC_RH_TONIC_HOLD ACC_RH_CADENCE_PAD ACC_RH_FINAL_TONIC_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[texture:pad_8]; }
+
+@withoutSpaces
+ACC_RH_LONG_SPARSE_8 → ACC_RH_TONIC_HOLD REST_BAR4 ACC_RH_SUBDOMINANT_PAD REST_BAR4 ACC_RH_DOMINANT_PAD REST_BAR4 ACC_RH_CADENCE_PAD ACC_RH_FINAL_TONIC_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[texture:sparse_8]; }
+
+@withoutSpaces
+ACC_LH_LONG_SIMPLE_8 → ACC_LH_TONIC_BASS ACC_LH_TONIC_BASS ACC_LH_SUBDOMINANT_BASS ACC_LH_TONIC_BASS ACC_LH_DOMINANT_BASS ACC_LH_DOMINANT_PEDAL ACC_LH_TONIC_BASS ACC_LH_FINAL_TONIC_BASS
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[texture:simple_bass_8]; }
+
+@withoutSpaces
+ACC_LH_LONG_BROKEN_8 → ACC_LH_TONIC_BROKEN ACC_LH_SUBDOMINANT_BASS ACC_LH_DOMINANT_BROKEN ACC_LH_TONIC_BASS ACC_LH_TONIC_BROKEN ACC_LH_DOMINANT_BASS ACC_LH_DOMINANT_PEDAL ACC_LH_FINAL_TONIC_BASS
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[texture:broken_bass_8]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_RH_TERNARY
+{ [role:piano_rh|piano_acc_rh, form:long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_RH_TERNARY → PIANO_RH_TERNARY_CONTROLLED PIANO_RH_TERNARY_CONTROLLED PIANO_RH_TERNARY_CONTROLLED PIANO_RH_TERNARY_CONTROLLED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_ternary, bars:32, controlled:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_LH_TERNARY
+{ [role:piano_lh|piano_acc_lh, form:long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_LH_TERNARY → PIANO_LH_TERNARY_CONTROLLED PIANO_LH_TERNARY_CONTROLLED PIANO_LH_TERNARY_CONTROLLED PIANO_LH_TERNARY_CONTROLLED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_ternary, bars:32, controlled:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE1_VARIATIONS
+{ [role:flute1|flute_piano_lead, form:long_theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE1_VARIATIONS → FLUTE1_THEME_AND_VARIATIONS_CONTROLLED FLUTE1_THEME_AND_VARIATIONS_CONTROLLED FLUTE1_THEME_AND_VARIATIONS_CONTROLLED FLUTE1_THEME_AND_VARIATIONS_CONTROLLED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_theme_and_variations, bars:32, controlled:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE2_VARIATIONS
+{ [role:flute2, form:long_theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE2_VARIATIONS → REST_4_4_8 FLUTE2_THEME_AND_VARIATIONS_CONTROLLED FLUTE2_THEME_AND_VARIATIONS_CONTROLLED REST_4_4_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_theme_and_variations, bars:32, rests:true, controlled:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_RH_VARIATIONS
+{ [role:piano_rh|piano_acc_rh, form:long_theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_RH_VARIATIONS → PIANO_RH_THEME_AND_VARIATIONS_CONTROLLED PIANO_RH_THEME_AND_VARIATIONS_CONTROLLED PIANO_RH_THEME_AND_VARIATIONS_CONTROLLED PIANO_RH_THEME_AND_VARIATIONS_CONTROLLED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_theme_and_variations, bars:32, controlled:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_LH_VARIATIONS
+{ [role:piano_lh|piano_acc_lh, form:long_theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_LH_VARIATIONS → PIANO_LH_THEME_AND_VARIATIONS_CONTROLLED PIANO_LH_THEME_AND_VARIATIONS_CONTROLLED PIANO_LH_THEME_AND_VARIATIONS_CONTROLLED PIANO_LH_THEME_AND_VARIATIONS_CONTROLLED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_theme_and_variations, bars:32, controlled:true]; }
+
+// --- Long dance/topic forms --------------------------------------------------
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE_SICILIANA
+{ [role:flute1|flute_piano_lead, form:long_siciliana, rhythm:[topic:siciliana], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE_SICILIANA → RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ⇑=[form:long_siciliana, bars:60]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE2_SICILIANA
+{ [role:flute2, form:long_siciliana, rhythm:[topic:siciliana], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE2_SICILIANA → REST_6_8_6 RHYTHM_FLUTE_SICILIANA_SUPPORT REST_6_8_6 RHYTHM_FLUTE_SICILIANA_SUPPORT RHYTHM_FLUTE_SICILIANA_SUPPORT RHYTHM_FLUTE_SICILIANA_SUPPORT
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:long_siciliana, rests:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_RH_SICILIANA
+{ [role:piano_rh|piano_acc_rh, form:long_siciliana, rhythm:[topic:siciliana], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_RH_SICILIANA → RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ⇑=[form:long_siciliana, bars:60]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_LH_SICILIANA
+{ [role:piano_lh|piano_acc_lh, form:long_siciliana, rhythm:[topic:siciliana], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_LH_SICILIANA → RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ⇑=[form:long_siciliana, bars:60]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE_GIGUE
+{ [role:flute1|flute_piano_lead, form:long_gigue, rhythm:[topic:gallop], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE_GIGUE → RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:long_gigue, bars:48]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FLUTE2_GIGUE
+{ [role:flute2, form:long_gigue, rhythm:[topic:gallop], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_FLUTE2_GIGUE → REST_6_8_6 RHYTHM_FLUTE_GALLOP_SUPPORT RHYTHM_FLUTE_GALLOP_SUPPORT REST_6_8_6 RHYTHM_FLUTE_GALLOP_SUPPORT RHYTHM_FLUTE_GALLOP_SUPPORT
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:long_gigue, rests:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_RH_GIGUE
+{ [role:piano_acc_rh, form:long_gigue, rhythm:[topic:gallop], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_RH_GIGUE → RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:long_gigue, bars:48]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_LH_GIGUE
+{ [role:piano_acc_lh, form:long_gigue, rhythm:[topic:gallop], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_LH_GIGUE → RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:long_gigue, bars:48]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_RH_MARCH
+{ [role:piano_rh, form:long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_RH_MARCH → RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:long_march, bars:48]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_PIANO_LH_MARCH
+{ [role:piano_lh, form:long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+LONG_PIANO_LH_MARCH → RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:long_march, bars:48]; }
+
+// Routes longues génériques par famille : utiles pour quatuor à cordes / bois / mixte.
+@withoutSpaces
+MUSICAL_FORM → LONG_FAMILY_LEAD
+{ [role:lead, form:long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+LONG_FAMILY_LEAD → FAMILY_LEAD_ROUNDED_BINARY FAMILY_LEAD_ROUNDED_BINARY FAMILY_LEAD_ROUNDED_BINARY FAMILY_LEAD_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_rounded_binary]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FAMILY_COUNTER
+{ [role:countermelody|inner_voice, form:long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+LONG_FAMILY_COUNTER → REST_4_4_16 FAMILY_COUNTERMELODY_ROUNDED_BINARY REST_4_4_16 FAMILY_COUNTERMELODY_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_rounded_binary, rests:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_FAMILY_BASS
+{ [role:bass|harmonic_support|rhythmic_pedal|accent, form:long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+LONG_FAMILY_BASS → FAMILY_BASS_ROUNDED_BINARY FAMILY_BASS_ROUNDED_BINARY FAMILY_BASS_ROUNDED_BINARY FAMILY_BASS_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_rounded_binary]; }
+
+@withoutSpaces
+MUSICAL_FORM → LONG_GUITAR_ROUNDED
+{ [role:guitar, family:plucked_strings, form:long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+LONG_GUITAR_ROUNDED → GUITAR_ROUNDED_BINARY GUITAR_ROUNDED_BINARY GUITAR_ROUNDED_BINARY GUITAR_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_rounded_binary]; }
+
+
+@withoutSpaces
+MUSICAL_FORM → LONG_DRUM_KIT_ROUNDED
+{ [role:drum_kit, family:percussion, form:long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+LONG_DRUM_KIT_ROUNDED → DRUM_KIT_ROUNDED_BINARY DRUM_KIT_ROUNDED_BINARY DRUM_KIT_ROUNDED_BINARY DRUM_KIT_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:long_rounded_binary]; }

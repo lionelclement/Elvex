@@ -157,20 +157,17 @@ statementPtr Statement::createOrder(
 /* **************************************************
  * ORDER
  ************************************************** */
-statementPtr Statement::createOrderBy(
+statementPtr Statement::createOrder(
     uint32_t lineno,
     std::string bufferName,
+    type op,
     bool rootOp,
-    const std::vector<statementPtr> &keys)
+    const std::vector<uint32_t> &orderChain,
+    statementPtr featurePath)
 {
-    Statement *statement = new Statement(
-        lineno,
-        bufferName,
-        ORDER_BY_STATEMENT,
-        rootOp);
-
-    statement->orderByKeys = keys;
-
+    Statement *statement = new Statement(lineno, bufferName, op, rootOp);
+    statement->orderChain = orderChain;
+    statement->first = featurePath;
     return statementPtr(statement);
 }
 
@@ -421,7 +418,7 @@ bool Statement::isOrder() const
     return op == ORDER_CHAIN_STATEMENT ||
            op == ORDER_FIRST_STATEMENT ||
            op == ORDER_LAST_STATEMENT ||
-           op == ORDER_BY_STATEMENT;
+           op == ORDER_FIELD_ACCESS_STATEMENT;
 }
 
 /* **************************************************
@@ -839,16 +836,19 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         CLOSESPAN;
         break;
 
-    case ORDER_BY_STATEMENT:
+    case ORDER_FIELD_ACCESS_STATEMENT:
         OPENSPAN;
-        out << "<B>order by</B>&nbsp;&lt;";
-        for (size_t i = 0; i < orderByKeys.size(); ++i)
+        out << "<B>order</B>&nbsp;";
+        for (size_t i = 0; i < orderChain.size(); ++i)
         {
             if (i)
                 out << ",&nbsp;";
-            orderByKeys[i]->toHTML(out, tabulationLenght, tabulation, color, bgcolor);
+            out << orderChain[i] + 1;
         }
-        out << "&gt;;";
+        out << "&nbsp;<B>by</B>&nbsp;";
+        if (first)
+            first->toHTML(out);
+        out << ";";
         BR;
         CLOSESPAN;
         break;
@@ -902,12 +902,15 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
         break;
 
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
-        out << "↓" << std::to_string(getFirst() + 1);
+        out << "↓";
+        if (getFirst() != UINT8_MAX)
+            out << std::to_string(getFirst() + 1);
         break;
 
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
         out << "⇓";
-        out << std::to_string(getFirst() + 1);
+        if (getFirst() != UINT8_MAX)
+            out << std::to_string(getFirst() + 1);
         break;
 
     case STRING_STATEMENT:
@@ -984,6 +987,22 @@ void Statement::toHTML(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
             first->toHTML(out);
             out << ")&nbsp;";
             break;
+        case MIN:
+            out << "&nbsp;min&lt;";
+            first->toHTML(out);
+            out << ",&nbsp;";
+            second->toHTML(out);
+            out << "&gt;&nbsp;";
+            break;
+
+        case MAX:
+            out << "&nbsp;max&lt;";
+            first->toHTML(out);
+            out << ",&nbsp;";
+            second->toHTML(out);
+            out << "&gt;&nbsp;";
+            break;
+
         case EQUAL:
             out << "&nbsp;(";
             first->toHTML(out);
@@ -1162,15 +1181,18 @@ void Statement::flatPrint(std::ostream &out) const
         out << ";";
         break;
 
-    case ORDER_BY_STATEMENT:
-        out << "order by <";
-        for (size_t i = 0; i < orderByKeys.size(); ++i)
+    case ORDER_FIELD_ACCESS_STATEMENT:
+        out << "order ";
+        for (size_t i = 0; i < orderChain.size(); ++i)
         {
             if (i)
-                out << ",";
-            orderByKeys[i]->flatPrint(out);
+                out << ", ";
+            out << orderChain[i] + 1;
         }
-        out << ">;";
+        out << " by ";
+        if (first)
+            first->flatPrint(out);
+        out << ";";
         break;
 
     case NIL_STATEMENT:
@@ -1228,11 +1250,15 @@ void Statement::flatPrint(std::ostream &out) const
         break;
 
     case INHERITED_CHILDREN_FEATURES_STATEMENT:
-        out << "↓" << std::to_string(getFirst() + 1);
+        out << "↓";
+        if (getFirst() != UINT8_MAX)
+            out << std::to_string(getFirst() + 1);
         break;
 
     case SYNTHESIZED_CHILDREN_FEATURES_STATEMENT:
-        out << "⇓" << std::to_string(getFirst() + 1);
+        out << "⇓";
+        if (getFirst() != UINT8_MAX)
+            out << std::to_string(getFirst() + 1);
         break;
 
     case STRING_STATEMENT:
@@ -1332,6 +1358,26 @@ void Statement::flatPrint(std::ostream &out) const
             if (first)
                 first->flatPrint(out);
             out << ")";
+            break;
+
+        case MIN:
+            out << "min<";
+            if (first)
+                first->flatPrint(out);
+            out << ", ";
+            if (second)
+                second->flatPrint(out);
+            out << ">";
+            break;
+
+        case MAX:
+            out << "max<";
+            if (first)
+                first->flatPrint(out);
+            out << ", ";
+            if (second)
+                second->flatPrint(out);
+            out << ">";
             break;
 
         case EQUAL:
@@ -1485,13 +1531,12 @@ void Statement::makeCoreSerialString()
         for (auto index : orderChain)
             stream << ':' << index;
         break;
-
-    case ORDER_BY_STATEMENT:
-        stream << ":OBY";
-        for (const auto &key : orderByKeys)
-        {
-            stream << ':' << key->peekCoreSerialString();
-        }
+    case ORDER_FIELD_ACCESS_STATEMENT:
+        stream << ":O";
+        for (auto index : orderChain)
+            stream << ':' << index;
+        if (first)
+            stream << ":A" << first->peekCoreSerialString();
         break;
 
     case STMS_STATEMENT:
@@ -1570,22 +1615,15 @@ statementPtr Statement::clone(const std::bitset<MAX_FLAGS> &protectedFlags)
             this->rootOp,
             orderChain);
         break;
-    case ORDER_BY_STATEMENT:
-    {
-        std::vector<statementPtr> clonedKeys;
-
-        for (const auto &key : orderByKeys)
-        {
-            clonedKeys.push_back(key->clone());
-        }
-
-        statement = Statement::createOrderBy(
+    case ORDER_FIELD_ACCESS_STATEMENT:
+        statement = Statement::createOrder(
             this->lineno,
             this->bufferName,
+            op,
             this->rootOp,
-            clonedKeys);
+            orderChain,
+            first ? first->clone(protectedFlags) : statementPtr());
         break;
-    }
     case ATTEST_STATEMENT:
         statement = Statement::createFirst(this->lineno, this->bufferName, op, this->rootOp, first ? first->clone(protectedFlags) : statementPtr());
         break;
@@ -2338,6 +2376,60 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
         }
         break;
 
+        case MIN:
+        {
+            valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
+            valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
+
+            if ((!v1) || (!v2))
+            {
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
+                throw fatal_exception("Value not available");
+            }
+            else if ((v1->isNumber()) && (v2->isNumber()))
+            {
+                resultValue = Value::createNumber(std::min(v1->getNumber(), v2->getNumber()));
+            }
+            else
+            {
+                std::cout << "Error line " << this->lineno << ": min operator applied to non numbers: ";
+                v1->flatPrint(std::cout);
+                std::cout << " min ";
+                v2->flatPrint(std::cout);
+                throw fatal_exception("Incompatible types for min");
+            }
+
+            goto valueBuilt;
+        }
+        break;
+
+        case MAX:
+        {
+            valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
+            valuePtr v2 = second->evalValue(item, parser, synthesizer, replaceVariables, verbose);
+
+            if ((!v1) || (!v2))
+            {
+                std::cout << "Error line " << this->lineno << ": Value not available" << std::endl;
+                throw fatal_exception("Value not available");
+            }
+            else if ((v1->isNumber()) && (v2->isNumber()))
+            {
+                resultValue = Value::createNumber(std::max(v1->getNumber(), v2->getNumber()));
+            }
+            else
+            {
+                std::cout << "Error line " << this->lineno << ": max operator applied to non numbers: ";
+                v1->flatPrint(std::cout);
+                std::cout << " max ";
+                v2->flatPrint(std::cout);
+                throw fatal_exception("Incompatible types for max");
+            }
+
+            goto valueBuilt;
+        }
+        break;
+
         case EQUAL:
         {
             valuePtr v1 = first->evalValue(item, parser, synthesizer, replaceVariables, verbose);
@@ -2697,27 +2789,27 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                     }
 
                     /*
-                    * NIL is not a unifiable value for a present feature.
-                    *
-                    * In particular, a non-empty pair/list must not unify with NIL.
-                    * More generally, no concrete value should unify with NIL here.
-                    *
-                    * Feature-structure NIL is already handled at the beginning of unif():
-                    *
-                    *   fs1 == NIL => fs2
-                    *   fs2 == NIL => fs1
-                    *
-                    * But inside a feature value, NIL means that the value itself is NIL,
-                    * not that the feature structure is empty. Therefore:
-                    *
-                    *   [a:X] ⊓ [a:NIL]  => BOTTOM
-                    *
-                    * except optionally:
-                    *
-                    *   [a:NIL] ⊓ [a:NIL]
-                    *
-                    * which can be kept as NIL if needed.
-                    */
+                     * NIL is not a unifiable value for a present feature.
+                     *
+                     * In particular, a non-empty pair/list must not unify with NIL.
+                     * More generally, no concrete value should unify with NIL here.
+                     *
+                     * Feature-structure NIL is already handled at the beginning of unif():
+                     *
+                     *   fs1 == NIL => fs2
+                     *   fs2 == NIL => fs1
+                     *
+                     * But inside a feature value, NIL means that the value itself is NIL,
+                     * not that the feature structure is empty. Therefore:
+                     *
+                     *   [a:X] ⊓ [a:NIL]  => BOTTOM
+                     *
+                     * except optionally:
+                     *
+                     *   [a:NIL] ⊓ [a:NIL]
+                     *
+                     * which can be kept as NIL if needed.
+                     */
                     if ((*i1)->getValue()->isNil() || (*i2)->getValue()->isNil())
                     {
                         if ((*i1)->getValue()->isNil() && (*i2)->getValue()->isNil())
@@ -2731,8 +2823,6 @@ featuresPtr Statement::unif(statementPtr statementRoot, const featuresPtr &fs1, 
                         result = Features::BOTTOM;
                         goto endUnif;
                     }
-
-
 
                     switch ((*i1)->getValue()->getType())
                     {
@@ -3550,15 +3640,7 @@ void Statement::renameVariables(uint32_t key)
     case ORDER_CHAIN_STATEMENT:
     case ORDER_FIRST_STATEMENT:
     case ORDER_LAST_STATEMENT:
-        break;
-
-    case ORDER_BY_STATEMENT:
-        for (std::vector<statementPtr>::iterator it = orderByKeys.begin();
-             it != orderByKeys.end();
-             ++it)
-        {
-            (*it)->renameVariables(key);
-        }
+    case ORDER_FIELD_ACCESS_STATEMENT:
         break;
 
     case STRING_STATEMENT:
@@ -3637,15 +3719,7 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
     case ORDER_CHAIN_STATEMENT:
     case ORDER_FIRST_STATEMENT:
     case ORDER_LAST_STATEMENT:
-        break;
-
-    case ORDER_BY_STATEMENT:
-        for (std::vector<statementPtr>::const_iterator it = orderByKeys.cbegin();
-             it != orderByKeys.cend();
-             ++it)
-        {
-            (*it)->testEnable(statementRoot, item, synthesizer, result, on);
-        }
+    case ORDER_FIELD_ACCESS_STATEMENT:
         break;
 
     case GUARD_STATEMENT:
@@ -4016,73 +4090,83 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
 
     else if (isOrder())
     {
-        if (op == ORDER_BY_STATEMENT)
+
+        OrderSpec::Kind kind;
+
+        if (op == ORDER_CHAIN_STATEMENT)
+            kind = OrderSpec::CHAIN;
+        else if (op == ORDER_FIRST_STATEMENT)
+            kind = OrderSpec::FIRST;
+        else if (op == ORDER_LAST_STATEMENT)
+            kind = OrderSpec::LAST;
+        else if (op == ORDER_FIELD_ACCESS_STATEMENT)
+            kind = OrderSpec::FIELD_ACCESS;
+        else
+            FATAL_ERROR_UNEXPECTED;
+
+        if (kind == OrderSpec::FIELD_ACCESS)
         {
-            std::vector<std::pair<double, uint32_t>> keyedIndexes;
+            /*
+             * A relative field-access order such as:
+             *
+             *   order 2, 3 by ⇓.weight;
+             *
+             * depends on synthesized child features.  These values may not be
+             * available when the statement is first visited.  In that case,
+             * do not add an incomplete OrderSpec and, crucially, do not mark
+             * the statement as SEEN: it must be tried again after reductions
+             * have filled ⇓2, ⇓3, ...
+             */
+            std::vector<valuePtr> values;
+            bool ready = true;
 
-            for (uint32_t i = 0; i < orderByKeys.size(); ++i)
+            for (auto rhsIndex : orderChain)
             {
-                valuePtr value = orderByKeys[i]->evalValue(
-                    item,
-                    parser,
-                    synthesizer,
-                    true,
-                    verbose);
+                valuePtr value =
+                    first->evalOrderFieldAccess(
+                        item,
+                        parser,
+                        synthesizer,
+                        rhsIndex,
+                        verbose);
 
-                if (!value)
+                if (!value || value->isNil())
                 {
-                    FATAL_ERROR_MSG("order by key cannot be evaluated");
+                    ready = false;
+                    break;
                 }
 
-                if (!value->isNumber())
-                {
-                    FATAL_ERROR_MSG("order by key must evaluate to a number");
-                }
-
-                keyedIndexes.push_back(
-                    std::make_pair(value->getNumber(), i));
+                values.push_back(value);
             }
 
-            std::stable_sort(
-                keyedIndexes.begin(),
-                keyedIndexes.end(),
-                [](const std::pair<double, uint32_t> &a,
-                   const std::pair<double, uint32_t> &b) -> bool
-                {
-                    if (a.first < b.first)
-                        return true;
-                    if (b.first < a.first)
-                        return false;
-                    return a.second < b.second;
-                });
-
-            std::vector<uint32_t> chain;
-
-            for (const auto &entry : keyedIndexes)
+            if (!ready)
             {
-                chain.push_back(entry.second);
+                return;
             }
 
-            item->addOrderSpec(OrderSpec(OrderSpec::CHAIN, chain));
+            item->addOrderSpec(
+                OrderSpec::createFieldAccess(orderChain, first, values));
 
             effect = true;
             addFlags(Flags::SEEN);
         }
-        else
+        else if (kind == OrderSpec::CHAIN)
         {
-            OrderSpec::Kind kind;
-
-            if (op == ORDER_CHAIN_STATEMENT)
-                kind = OrderSpec::CHAIN;
-            else if (op == ORDER_FIRST_STATEMENT)
-                kind = OrderSpec::FIRST;
-            else if (op == ORDER_LAST_STATEMENT)
-                kind = OrderSpec::LAST;
-            else
-                FATAL_ERROR_UNEXPECTED;
-
-            item->addOrderSpec(OrderSpec(kind, orderChain));
-
+            item->addOrderSpec(OrderSpec::chain(orderChain));
+            effect = true;
+            addFlags(Flags::SEEN);
+        }
+        else if (kind == OrderSpec::FIRST)
+        {
+            if (!orderChain.empty())
+                item->addOrderSpec(OrderSpec::first(orderChain[0]));
+            effect = true;
+            addFlags(Flags::SEEN);
+        }
+        else if (kind == OrderSpec::LAST)
+        {
+            if (!orderChain.empty())
+                item->addOrderSpec(OrderSpec::last(orderChain[0]));
             effect = true;
             addFlags(Flags::SEEN);
         }
@@ -4142,11 +4226,69 @@ void Statement::lookingForAssignedInheritedChildFeatures(std::vector<bool> &assi
     case ORDER_CHAIN_STATEMENT:
     case ORDER_FIRST_STATEMENT:
     case ORDER_LAST_STATEMENT:
-    case ORDER_BY_STATEMENT:
+    case ORDER_FIELD_ACCESS_STATEMENT:
         break;
 
     default:
         FATAL_ERROR_UNEXPECTED;
         break;
     }
+}
+
+/* ************************************************************
+ *
+ ************************************************************ */
+valuePtr Statement::evalOrderFieldAccess(class Item *item,
+                                         Parser &parser,
+                                         Generator *synthesizer,
+                                         uint32_t rhsIndex,
+                                         bool verbose) const
+{
+    if (op == FIELD_ACCESS_STATEMENT)
+    {
+        featuresPtr fs;
+
+        if (first->op == SYNTHESIZED_FEATURES_STATEMENT ||
+            (first->op == SYNTHESIZED_CHILDREN_FEATURES_STATEMENT &&
+             first->getFirst() == UINT8_MAX))
+        {
+            fs = (*item->getSynthesizedChildFeatures())[rhsIndex];
+        }
+        else if (first->op == INHERITED_FEATURES_STATEMENT ||
+                 (first->op == INHERITED_CHILDREN_FEATURES_STATEMENT &&
+                  first->getFirst() == UINT8_MAX))
+        {
+            fs = (*item->getInheritedChildFeatures())[rhsIndex];
+        }
+        else if (first->op == FIELD_ACCESS_STATEMENT)
+        {
+            valuePtr baseValue = first->evalOrderFieldAccess(
+                item,
+                parser,
+                synthesizer,
+                rhsIndex,
+                verbose);
+
+            if (baseValue && baseValue->isFeatures())
+                fs = baseValue->getFeatures();
+        }
+        else
+        {
+            fs = first->evalFeatures(
+                item,
+                parser,
+                synthesizer,
+                true,
+                verbose);
+        }
+
+        valuePtr result = fs ? fs->find(bitset) : valuePtr();
+
+        if (!result)
+            return Value::STATIC_NIL;
+
+        return result->clone();
+    }
+
+    FATAL_ERROR_UNEXPECTED;
 }

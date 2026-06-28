@@ -1,1 +1,11 @@
+[a:1]
+[b:[HEAD:X, i:[HEAD:Y], ii:36]]
+[c:Y]
+[d:X]
+[j:36]
+[e:[HEAD:X, isA:yes, LEMMA:_a, FORM:"aaa"]]
+[f:yes]
+[g:X]
+[h:_a]
+[i:"aaa"]
 a b

@@ -1,0 +1,1159 @@
+/* **************************************************
+ * 
+ ************************************************** */
+@withoutSpaces
+Axiom → Text_with_features strongPunct {
+  //eprintln __FILE__, "...";
+  //eprintln __FILE__, " will take a while due to the large number of possible combinations.";
+  ↓1 = ↑;
+  [punct:$punc] ⊂ ⇓1;
+  ↓2 = [punct:$punc];
+}
+
+/* **************************************************
+ * 
+ ************************************************** */
+@trace
+Text_with_features → VTENSE S_tense {
+  [vtense:$vtense] ⊂ ⇓2;
+  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  if (¬ $tense)
+    $tense = present;
+  // not interrogative, not negative
+  if (¬ $verbal_constr)
+    $verbal_constr = no_int | no_neg;
+  [vtense:$vtenseSth] ⊂ ⇓2;
+  attest($vtenseSth != infinitive);
+  ↓1 = [vtense:$vtenseSth];
+  ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+S_tense → S_tense form S_tense {
+  [HEAD:succ, i:$i, ii:$ii, lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  if (¬ $tense)
+    $tense = present;
+  if (¬ $verbal_constr)
+    $verbal_constr = no_int | no_neg;
+  ↓1 = $i ∪ [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
+  ↓2 = [FORM:", and "];
+  ↓3 = $ii ∪ [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
+  ⇑ = ⇓3;
+}
+
+Text → S_tense strongPunct {
+  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  if (¬ $tense)
+    $tense = present;
+  if (¬ $verbal_constr)
+    $verbal_constr = no_int | no_neg;
+  ↓1 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
+  [punct:$punc] ⊂ ⇓1;
+  ↓2 = [punct:$punc];
+}
+
+Text → NP {
+  [lexical_function:$lexical_function, $Rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  ↓1 = [lexical_function:$lexical_function, $Rest];
+}
+
+/* **************************************************
+ * 
+ ************************************************** */
+S_tense → S_anaphoric {
+  [tense:$tense, $Rest];
+  [mode:$mode, vtense:$vtense, aspect:$aspect] ⊂ ↑;
+
+  if (¬ $vtense){
+    if (¬ $tense)
+      $tense = present;
+
+    if (¬ $mode)
+      $mode = indicative;
+
+    if (¬ $aspect)
+      $aspect = default;
+
+    if ($mode == indicative) {
+      // $Present
+      if ($tense == present){
+        if ($aspect == continuous)
+          $vtense = present_continuous;
+        else
+          $vtense = present;
+      }
+
+      // Past
+      else if ($tense == past){
+        if ($aspect == continuous)
+          $vtense = past_continuous;
+        else if ($aspect == perfect)
+          $vtense = present_perfect;
+        else
+          $vtense = preterite;
+      }
+
+      // Future
+      else if ($tense == future){
+        if ($aspect == continuous)
+          $vtense = future_continuous;
+        else
+          $vtense = future;
+      }
+
+      // Else
+      else
+        $vtense = $tense;
+    }
+
+    // Else
+    else
+      $vtense = $vtense;
+  }
+  
+  ↓1 = [vtense:$vtense] ∪ $Rest;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+* [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R]
+* [i:$I] ⊂ ↑;
+* =>
+* [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R]
+ ************************************************** */
+S_anaphoric → S_mod {
+  [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
+  attest ($ID1 == $ID2);
+  [i:$I] ⊂ ↑;
+  ↓1 = [i:$I, ii:[ii:[i:[HEAD:pro, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R];
+  ⇑ = ⇓1;
+}
+
+S_anaphoric → S_mod {
+  [i:[ID:$ID1], ii:[ii:[i:[HEAD:$H2, ID:$ID2, $RII_II_I], $RII_II], $R_II], $R] ⊂ ↑;
+  attest (¬$ID1 ∨ ¬$ID2 ∨ $ID1 != $ID2);
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Sentence modifiers
+ ************************************************** */
+S_mod → S_mod form {
+  [MOD:<$H :: $T>, $Rest];
+  ↓1 = [MOD:$T, $Rest];
+  ↓2 = $H;
+  ⇑ = ⇓1;
+}
+
+S_mod → S_mod advs {
+  [MOD:<$H :: $T>, $Rest];
+  ↓1 = [MOD:$T, $Rest];
+  ↓2 = $H;
+  ⇑ = ⇓1;
+}
+
+S_mod → S {
+  [MOD:NIL, $Rest];
+  ↓1 = $Rest;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Cause : conclusion when premise
+ ************************************************** */
+S → S_anaphoric form S_anaphoric {
+  [HEAD:CAUSE, i:$premise, ii:$conclusion, $Rest];
+
+  [i:[i:$I_premise, $Rest_premise]] ⊂ ↑; // $I_premise = the agent of the premise
+  [ii:[i:$I_conclusion, $Rest_conclusion]] ⊂ ↑; // $I_conclusion = the agent of the conclusion
+  [i:[i:[ID:$ID_I_premise]]] ⊂ ↑; // $ID_I_premise = the agent ID of the premise
+  [ii:[i:[ID:$ID_I_conclusion]]] ⊂ ↑; // $ID_I_conclusion = the agent ID of the conclusion
+  
+  [vtense:$vtense, $Rest_vtense] ⊂ $Rest;
+
+  if (¬ $vtense ∨ ($vtense == present)) {
+    ↓2 = [FORM:"now that"];
+    $vtensePremise = present_continuous;
+    $vtenseConclusion = present_continuous;
+  }
+  else if ($vtense == preterite) {
+    ↓2 = [FORM:"when"];
+    $vtensePremise = past_continuous;
+    $vtenseConclusion = past_continuous;
+  }
+  else if ($vtense == future) {
+    ↓2 = [FORM:"when"];
+    $vtensePremise = future_continuous;
+    $vtenseConclusion = future_continuous;
+  }
+
+  // If the agent's ID exists in both of the two clauses and they refer to the same value
+  if ($ID_I_premise ∧ $ID_I_conclusion ∧ ($ID_I_premise == $ID_I_conclusion)) { 
+    [i:[HEAD:_, $Synth_I_conclusion]] ⊂ ⇓1; // Provide the characteristics of the realized agent,
+                                      //excluding its head that has been synthesized.
+    $Inh_I_conclusion = [i:[HEAD:pro, ID:$ID_I_premise, $Synth_I_conclusion]]; //Generate a pronoun to refer to the agent of the conclusion
+    ↓1 = $Rest_conclusion ∪ [i:$I_premise] ∪ [vtense:$vtenseConclusion] ∪ $Rest_vtense; // The first clause.
+    ↓3 = $Rest_premise ∪ $Inh_I_conclusion ∪ [vtense:$vtensePremise] ∪ $Rest_vtense; // The second clause.
+  }
+  else {
+    ↓1 = $conclusion ∪ $Rest; // The first clause.
+    ↓3 = $premise ∪ $Rest; // The second clause.
+  }
+  ⇑ = ⇓2 ∪ [punct:_dot_];
+}
+
+/* **************************************************
+ * Sentence arguments
+ ************************************************** */
+S → S {
+  [i:$i, ii:NIL, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, $Rest];
+  ⇑ = ⇓1;
+}
+
+S → S {
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, $Rest];
+  ⇑ = ⇓1;
+}
+
+S → S {
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $Rest];
+  ⇑ = ⇓1;
+}
+
+S → S {
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, OBJ_THETA:$ii, iiReal:OBJ_THETA, $Rest];
+  ⇑ = ⇓1;
+}
+
+S → S {
+  [i:$i, ii:$ii, iii:NIL, $Rest];
+  ↓1 = [SUBJECT:$i, SCOMP:$ii, iiReal:SCOMP, $Rest];
+  ⇑ = ⇓1;
+}
+
+// Infinitive subject controller
+S → S {
+  [i:$i248, ii:$ii248, iii:NIL, $Rest248];
+  [i:[HEAD:$H1, ID:$ID1], ii:[i:[HEAD:$H2, ID:$ID2], $iiRest249]] ⊂ ↑;
+  attest (¬$H1 ∨ ¬$H2 ∨ ($H1 == $H2));
+  attest ($ID1 == $ID2);
+  ↓1 = [SUBJECT:$i248, VCOMP:[i:$i248, $iiRest249], iiReal:VCOMP, $Rest248];
+  ⇑ = ⇓1;
+}
+
+zS → S {
+  [i:$i, ii:$ii, iii:$iii, $Rest];
+  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, OBJ_THETA:$iii, iiiReal:OBJ_THETA, $Rest];
+  ⇑ = ⇓1;
+}
+
+zS → S {
+  [i:$i, ii:$ii, iii:$iii, $Rest];
+  ↓1 = [SUBJECT:$i, OBJECT:$ii, iiReal:OBJECT, SCOMP:$iii, iiiReal:SCOMP, $Rest];
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Affirmative Sentence
+ ************************************************** */
+S → (NP|cln) VP {
+  [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
+  [verbal_constr:$verbal_constr] ⊂ ↑;
+  if (#1){
+    attest ($vtense != infinitive);
+    ↓1 = $SUBJECT ∪ [case:nominative];
+    $Synth_Subject = ⇓1;
+    ↓2 = [SUBJECT:$Synth_Subject, vtense:$vtense, tensed:true, $Rest];
+    [SUBJECT:$expected_subject] ⊂ ⇓2;
+    attest $Synth_Subject ∪ $expected_subject;
+  }
+  else {
+    attest ($vtense == infinitive);
+    ↓2 = [vtense:$vtense, $Rest];
+  }
+    // not Interrogative form
+  attest ($verbal_constr == no_int);
+  $iSynth = ⇓1;
+  ⇑ = ⇓2 ∪ [i:$iSynth, punct:_dot_];
+}
+
+/* **************************************************
+ * Exclamatory Sentence
+ ************************************************** */
+S → VP {
+  [SUBJECT:$SUBJECT, verbal_constr:$verbal_constr, vtense:$vtense, $Rest];
+  // not Interrogative form
+  attest (($verbal_constr == excl));
+  ↓1 = [SUBJECT:[@_2s], vtense:present] ∪ [SUBJECT:$SUBJECT, vtense:$vtense, tensed:true, verbal_constr:$verbal_constr, $Rest];
+  ⇑ = ⇓1 ∪ [form:excl];
+}
+
+/* **************************************************
+ * Interrogative Sentence
+ ************************************************** */
+___S → aux NP|cln VP strongPunct {
+  [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
+  [verbal_constr:$verbal_constr] ⊂ ↑;
+  ↓2 = $SUBJECT ∪ [case:nominative];
+  $Synth_Subject = ⇓2;
+  // Interrogative form
+  attest (($verbal_constr == int));
+  ↓1 = ↑ ∪ [SUBJECT:$Synth_Subject, tensed:true];
+  [verbal_constr:$synth_verbal_constr, aux_form:$aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
+  ↓3 = $Rest ∪ [aux_form:$aux_form, vtense:$verb_vform];
+  ⇑ = ⇓1 ∪ [form:int];
+}
+
+/* **************************************************
+ * Noun phrase
+ ************************************************** */
+NP → det N1 {
+  [def:$def, number:$number, $Rest] ⊂ ⇓2;
+  deferred(⇓2) {
+    if (¬ $def)
+      $def = true;
+    if (¬ $number)
+      $number = sg;
+    ↓1 = [def:$def, number:$number, $Rest];
+  }
+  ↓2 = ↑;
+  ⇑ = ⇓1 ∪ ⇓2 ∪ [def:$def, @_3];
+}
+
+NP → proper_noun {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+NP → pro {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+N1 → N {
+  [MOD:NIL, $Rest];
+  ↓1 = ↑; 
+  ⇑ = ⇓1;
+}
+
+N1 → (adjQuality) N2 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjQuality;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓2;
+}
+
+N2 → (adjSize) N3 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjSize;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓2;
+}
+
+N3 → (adjAge) N4 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjAge;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓2;
+}
+
+N4 → (adjShape) N5 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjShape;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓2;
+}
+
+N5 → (adjColor) N6 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjColor;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓2;
+}
+
+N6 → (adjOrigin) N7 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjOrigin;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓2;
+}
+
+N7 → (adjMaterial) N8 {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjMaterial;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = ↑; 
+  ⇑ = ⇓2;
+}
+
+N8 → (adjPurpose) N {
+  [MOD:$List, $Rest];
+  foreach $Adj in $List {
+      $Entries = search $Adj on adjPurpose;
+      if (($Entries ≠ <>))
+        ↓1 = $Adj;
+  }
+  attest (↓1 => #1);
+  ↓2 = $Rest; 
+  ⇑ = ⇓2;
+}
+
+N → common_noun {
+  [MOD:NIL, $Rest];
+  ↓1 = $Rest;
+  ⇑ = ⇓1 ∪ ↑;
+}
+
+/* **************************************************
+ * Verb and its complements
+ ************************************************** */
+VP → VN (NP) (part) (NP) (AP|form) (PP) (SCOMP|VCOMP) {
+  // Given Arguments
+  [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;
+  // Idiomatic Arguments
+  [OBJECT:$Synth_OBJECT, OBLIQUE:$Synth_OBLIQUE, OBJ_THETA:$Synth_OBJ_THETA, PRED_ADJ:$Synth_PRED_ADJ, SCOMP:$Synth_SCOMP, VCOMP:$Synth_VCOMP, particule:$particle] ⊂ ⇓1;
+  ↓1 = $Rest;
+  
+  if (#2) {
+    if ($Synth_OBJECT)
+      $OBJECT = $OBJECT ∪ $Synth_OBJECT; 
+    ↓2 = [case:accusative, lexical_function:$lexical_function, $OBJECT];
+  }
+  else {
+    attest (¬$OBJECT ∧ ¬$Synth_OBJECT);
+  }
+  
+  if (#3) {
+    attest ($particle);
+    ↓3 = [particle:$particle];
+  }
+  else {
+    attest (¬$particle);
+  }
+  
+  if (#4) {
+    if ($Synth_OBLIQUE)
+      $OBLIQUE = $OBLIQUE ∪ $Synth_OBLIQUE; 
+    ↓4 = [lexical_function:$lexical_function, $OBLIQUE];
+  }
+  else {
+    attest (¬$OBLIQUE ∧ ¬$Synth_OBLIQUE);
+  }
+  
+  if (#5) {
+    if ($Synth_PRED_ADJ)
+      $PRED_ADJ = $PRED_ADJ ∪ $Synth_PRED_ADJ; 
+    ↓5 = [lexical_function:$lexical_function, $PRED_ADJ];
+  }
+  else {
+    attest (¬$PRED_ADJ ∧ ¬$Synth_PRED_ADJ);
+  }
+
+  if (#6) {
+    [pcase:$pcase] ⊂ ⇓1;
+    if ($Synth_OBJ_THETA)
+      $OBJ_THETA = $OBJ_THETA ∪ $Synth_OBJ_THETA; 
+    ↓6 = [lexical_function:$lexical_function, pcase:$pcase, $OBJ_THETA];
+  }
+  else {
+    attest (¬$OBJ_THETA ∧ ¬$Synth_OBJ_THETA);
+  }
+  
+  if (#7.1) {
+    [compl:$compl] ⊂ ⇓1;
+    if ($Synth_SCOMP)
+      $SCOMP = $SCOMP ∪ $Synth_SCOMP; 
+    ↓7 = [lexical_function:$lexical_function, compl:$compl, $SCOMP];
+  }
+  else if (#7.2) {
+    if ($Synth_VCOMP)
+      $VCOMP = $VCOMP ∪ $Synth_VCOMP; 
+    ↓7 = [lexical_function:$lexical_function, $VCOMP];
+  }
+  else {
+    attest (¬$SCOMP ∧ ¬$Synth_SCOMP);
+    attest (¬$VCOMP ∧ ¬$Synth_VCOMP);
+  }
+  
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Verb 
+ ************************************************** */
+VN → VERB {
+  [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, PRED_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $Rest];
+  ↓1 = $Rest;
+  ⇑ = ⇓1;
+}
+
+/* **************************************************
+ * Simple Verb 
+ ************************************************** */
+// he feels good
+// does he [not] feel good
+// he felt good
+// did he [not] feel good
+// is he [not] feeling good
+// has he [not] felt good
+// will he [not] feel good
+// was he [not] feeling good
+// had he [not] felt good
+VERB → (not) verb {
+  [verbal_constr:$verbal_constr, aux_form:none, $Rest] ⊂ ↑;
+  if (#1) {
+    attest (($verbal_constr == neg));
+    ↓1 = [];
+    ↓2 = $Rest ∪ [vtense:infinitive|past_participle|present_participle];
+  } else {
+    attest (($verbal_constr == no_neg));
+    ↓2 = $Rest ∪ [vtense:present|preterite|infinitive|past_participle|present_participle];
+  }
+  ⇑ = ⇓2;
+}
+
+// will he [not] have felt good
+// has he [not] been feeling good
+// had he [not] been feeling good
+VERB → (not) have|be|been|have_been verb {
+  [aux_form:have|be|been|have_been];
+  [aux_form:_, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
+  if (#1) {
+    attest (($verbal_constr == neg));
+    ↓1 = [];
+  } else {
+    attest (($verbal_constr == no_neg));
+  }
+  ↓3 = $Rest ∪ [vtense:infinitive|past_participle|present_participle];
+  [aux_form:$aux_form] ⊂ ↑;
+  [aux_form:$synth_aux_form] ⊂ ⇓3;
+  ↓2 = [aux_form:$aux_form] ∪ [aux_form:$synth_aux_form];
+  ⇑ = ⇓3;
+}
+
+// he doesn't feel good
+// he didn't feel good
+// he is [not] feeling good
+// he has [not] felt good
+// he will [not] feel good
+// he was [not] feeling good
+// he had [not] felt good
+
+// he didn't feel good
+// he didn't feel good
+// he didn't feel good
+// he will feel good
+
+// he will have [not] felt good
+VERB → aux (not) (have|be|been|have_been) verb {
+  ↓1 = ↑;
+  [verbal_constr:$verbal_constr, aux_form:$aux_form] ⊂ ↑;
+  //attest ((¬ $verbal_constr) ∨ ($verbal_constr == int|neg));
+  [vtense:_, tensed:_, $Rest] ⊂ ↑;
+  [verbal_constr:$synth_verbal_constr, aux_form:$synth_aux_form, verb_vform:$verb_vform] ⊂ ⇓1;
+  if (#2) {
+    attest (($verbal_constr == neg));
+    ↓2 = [];
+  } else {
+    attest (($verbal_constr == no_neg));
+  }
+  if (#3) {
+    attest ($synth_aux_form);
+    ↓3 = [aux_form:$aux_form] ∪ [aux_form:$synth_aux_form];
+  }
+  else {
+    attest ((¬ $synth_aux_form) ∨ ($synth_aux_form == none));
+  }
+  ↓4 = $Rest ∪ [vtense:$verb_vform];
+  [vtense:_, tensed:_, $Rest4] ⊂ ⇓4;
+  ⇑ = ⇓1 ∪ $Rest4;
+}
+
+/* **************************************************
+ * Adjective phrase
+ ************************************************** */
+AP → (adv) adj {
+  ↓2 = ↑;
+  [MOD:<$MOD>] ⊂ ↑;
+  deferred(⇓2) {
+    [MOD:<$Synth_MOD>] ⊂ ⇓2;
+    if (#1) {
+      attest ($MOD ∨ $Synth_MOD);
+      if ($MOD ∧ $Synth_MOD)
+        ↓1 = $Synth_MOD ∪ $MOD;
+      else if ($MOD)
+        ↓1 = $MOD;
+      else if ($Synth_MOD)
+        ↓1 = $Synth_MOD;
+    }  else {
+      // Bug if $Synth_MOD doesn't exist
+      //attest ((¬ ($MOD)) ∧ (¬ ($Synth_MOD)));
+      attest (¬ ($MOD));
+      attest (¬ ($Synth_MOD));
+    }
+  }
+  ⇑ = ⇓2;
+}
+
+/* **************************************************
+ * Prep phrase
+ ************************************************** */
+PP → prep NP {
+  ↓1 = ↑;
+  ↓2 = ↑;
+  ⇑ = ⇓2;
+}
+
+/* **************************************************
+ * 
+ ************************************************** */
+SCOMP → csu S_tense {
+  ↓1 = ↑;
+  [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  if (¬ $tense)
+    $tense = present;
+  if (¬ $verbal_constr)
+    $verbal_constr = no_int | no_neg;
+  ↓2 = [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
+  ⇑ = ⇓2;
+}
+
+/* **************************************************
+ * 
+ ************************************************** */
+VCOMP → to S {
+  ↓1 = [];
+  [lexical_function:$lexical_function, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
+  if (¬ $lexical_function)
+    $lexical_function = none;
+  // not interrogative, not negative
+  if (¬ $verbal_constr)
+    $verbal_constr = no_int | no_neg;
+  ↓2 = [lexical_function:$lexical_function, vtense:infinitive, verbal_constr:$verbal_constr, $Rest];
+  ⇑ = ⇓1;
+}/************************************************************
+*  Forms
+************************************************************/
+FORM form;
+
+/************************************************************
+*  Variable words
+************************************************************/
+"$vtense: "	VTENSE [vtense:$vtense];
+
+/************************************************************
+* Noms propres
+************************************************************/
+John	proper_noun [HEAD:JOHN, @_3s, @hum];
+Mary	proper_noun [HEAD:MARY, @_3s, @hum];
+Elvex	proper_noun [HEAD:ELVEX, @_3s];
+
+/************************************************************
+* Pronoms nominatifs
+************************************************************/
+I	cln [HEAD:pro, @_1s, animate:true, @hum, case:nominative]
+	| cln [HEAD:EGO, @_1s, animate:true, @hum, case:nominative];
+you	cln [HEAD:pro, @_2s, animate:true, @hum, case:nominative]
+	| cln [HEAD:pro, @_2p, animate:true, @hum, case:nominative]
+	| cln [HEAD:YOU, @_2s, animate:true, @hum, case:nominative];
+he	cln [HEAD:pro, @_3ms, animate:true, @hum, case:nominative];
+she	cln [HEAD:pro, @_3fs, animate:true, @hum, case:nominative];
+it	cln [HEAD:pro, @_3fs, @nohum, case:nominative];
+we	cln [HEAD:pro, @_1p, animate:true, @hum, case:nominative];
+they	cln [HEAD:pro, @_3p, case:nominative];
+
+/************************************************************
+* Pronoms accusatifs
+************************************************************/
+me	pro [HEAD:pro, @_1s, animate:true, @hum, case:accusative];
+you	pro [HEAD:pro, @_2, animate:true, @hum, case:accusative];
+him	pro [HEAD:pro, @_3ms, animate:true, @hum, case:accusative];
+her	pro [HEAD:pro, @_3fs, animate:true, @hum, case:accusative];
+it	pro [HEAD:pro, @_3s, @nohum, case:accusative];
+us	pro [HEAD:pro, @_1p, animate:true, @hum, case:accusative];
+them	pro [HEAD:pro, @_3p, case:accusative];
+
+/************************************************************
+* Pronoms réflexifs
+************************************************************/
+myself	pro [HEAD:pro, @_1s, case:reflexive];
+yourself pro [HEAD:pro, @_2s, case:reflexive];
+himself pro [HEAD:pro, @_3s, case:reflexive];
+
+// Déterminants
+a	det	[number:sg, def:false, poss:false, part:false, dem:false];
+""	det	[number:pl, def:false, poss:false, part:false, dem:false];
+the	det	[def:true, poss:false, part:false, dem:false];
+
+my	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_1s]];
+your	det [number:sg, def:false, poss:true, part:false, dem:false, owner:[@_2s]];
+our	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_1p]];
+their	det [number:pl, def:false, poss:true, part:false, dem:false, owner:[@_3p]];
+his	det [number:sg, gender:ms, def:false, poss:true, part:false, dem:false, owner:[@_3ms]];
+her	det [number:sg, gender:fs, def:false, poss:true, part:false, dem:false, owner:[@_3fs]];
+
+/************************************************************
+* Auxiliaires verbaux
+************************************************************/
+// negative or interrogative forms 
+do	aux [vtense:present, tensed:true, SUBJECT:[@_12s], verb_vform:infinitive, verbal_constr:neg|int]
+	| aux [vtense:present, tensed:true, SUBJECT:[@p], verb_vform:infinitive, verbal_constr:neg|int];
+does	aux [vtense:present, tensed:true, SUBJECT:[@_3s], verb_vform:infinitive, verbal_constr:neg|int];
+
+did	aux [vtense:preterite, tensed:true, verb_vform:infinitive, verbal_constr:neg|int];
+
+// simple auxiliary
+am	aux [vtense:present_continuous, tensed:true, SUBJECT:[@_1s], verb_vform:present_participle];
+are	aux [vtense:present_continuous, tensed:true, SUBJECT:[@_2s], verb_vform:present_participle]
+	| aux [vtense:present_continuous, tensed:true, SUBJECT:[@p], verb_vform:present_participle];
+is	aux [vtense:present_continuous, tensed:true, SUBJECT:[@_3s], verb_vform:present_participle];
+
+have	aux [vtense:present_perfect, tensed:true, SUBJECT:[@_12s], verb_vform:past_participle]
+	| aux [vtense:present_perfect, tensed:true, SUBJECT:[@p], verb_vform:past_participle];
+has	aux [vtense:present_perfect, tensed:true, SUBJECT:[@_3s], verb_vform:past_participle];
+
+will	aux [vtense:future, tensed:true, verb_vform:infinitive];
+
+was	aux [vtense:past_continuous, tensed:true, SUBJECT:[@_13s], verb_vform:present_participle];
+were	aux [vtense:past_continuous, tensed:true, SUBJECT:[@_2s], verb_vform:present_participle]
+	| aux [vtense:past_continuous, tensed:true, SUBJECT:[@p], verb_vform:present_participle];
+
+had	aux [vtense:past_perfect, tensed:true, verb_vform:past_participle];
+
+// complex auxiliary
+will	aux [vtense:future_perfect, tensed:true, aux_form:have, verb_vform:past_participle];
+
+will	aux [vtense:future_continuous, tensed:true, aux_form:be, verb_vform:present_participle];
+
+have	aux [vtense:present_perfect_continuous, tensed:true, SUBJECT:[@_12s], aux_form:been, verb_vform:present_participle]
+	| aux [vtense:present_perfect_continuous, tensed:true, SUBJECT:[@p], aux_form:been, verb_vform:present_participle];
+has	aux [vtense:present_perfect_continuous, tensed:true, SUBJECT:[@_3s], aux_form:been, verb_vform:present_participle];
+
+had	aux [vtense:past_perfect_continuous, tensed:true, aux_form:been, verb_vform:present_participle];
+
+will	aux [vtense:future_perfect_continuous, tensed:true, aux_form:have_been, verb_vform:present_participle];
+
+have	have [aux_form:have];
+be	be [aux_form:be];
+been	been [aux_form:been];
+"have been"	have [aux_form:have_been];
+not	not;
+
+/************************************************************
+* 
+************************************************************/
+"?"	strongPunct [punct:_int_];
+"."	strongPunct [punct:_dot_];
+"!"	strongPunct [punct:_excl_];
+
+/************************************************************
+* 
+************************************************************/
+"down"	part [particle:_down_];
+"out"	part [particle:_out_];
+
+/************************************************************
+* 
+************************************************************/
+"to"	prep [pcase:_to_];
+"at"	prep [pcase:_at_];
+"on"	prep [pcase:_on_];
+"over"	prep [pcase:_over_];
+
+/************************************************************
+* 
+************************************************************/
+"to"	to [];
+
+/************************************************************
+* 
+************************************************************/
+"that"	csu [compl:_that_];
+"if"	csu [compl:_if_];
+"when"	csu [compl:_when_];
+"whether"	csu [compl:_whether_];
+
+/************************************************************
+* 
+************************************************************/
+"abroad" advs [HEAD:ABROAD];
+
+"black"	adjColor [HEAD:BLACK];
+"big"	adjSize	[HEAD:BIG];
+
+"beautiful"	adjQuality [HEAD:BEAUTIFUL];
+"large"	adjSize [HEAD:LARGE];
+"round" adjShape [HEAD:ROUND];
+"wooden" adjMaterial [HEAD:WOODEN];// ***********************************************************
+//  Verbs
+// ***********************************************************/
+feel	verb	TO_FEEL	[vtense:present,tensed:true,SUBJECT:[@_12s]]
+feel	verb	TO_FEEL	[vtense:present,tensed:true,SUBJECT:[@p]]
+feels	verb	TO_FEEL	[vtense:present,tensed:true,SUBJECT:[@_3s]]
+felt	verb	TO_FEEL	[vtense:preterite,tensed:true]
+felt	verb	TO_FEEL	[vtense:past_participle,tensed:false]
+feeling	verb	TO_FEEL	[vtense:present_participle,tensed:false]
+feel	verb	TO_FEEL	[vtense:infinitive,tensed:false]
+
+appreciate	verb	TO_APPRECIATE	[vtense:present,SUBJECT:[@_12s]]
+appreciate	verb	TO_APPRECIATE	[vtense:present,SUBJECT:[@p]]
+appreciates	verb	TO_APPRECIATE	[vtense:present,SUBJECT:[@_3s]]
+appreciated	verb	TO_APPRECIATE	[vtense:preterite]
+appreciated	verb	TO_APPRECIATE	[vtense:past_participle,tensed:false]
+appreciating	verb	TO_APPRECIATE	[vtense:present_participle,tensed:false]
+appreciate	verb	TO_APPRECIATE	[vtense:infinitive]
+
+use	verb	TO_USE	[vtense:present,SUBJECT:[@_12s],tensed:true]
+use	verb	TO_USE	[vtense:present,SUBJECT:[@p],tensed:true]
+uses	verb	TO_USE	[vtense:present,SUBJECT:[@_3s],tensed:true]
+used	verb	TO_USE	[vtense:preterite,tensed:true]
+used	verb	TO_USE	[vtense:past_participle,tensed:false]
+using	verb	TO_USE	[vtense:present_participle,tensed:false]
+use	verb	TO_USE	[vtense:infinitive,tensed:true]
+
+accept	verb	TO_ACCEPT	[vtense:present,SUBJECT:[@_12s]]
+accept	verb	TO_ACCEPT	[vtense:present,SUBJECT:[@p]]
+accepts	verb	TO_ACCEPT	[vtense:present,SUBJECT:[@_3s]]
+accepted	verb	TO_ACCEPT	[vtense:preterite]
+accepted	verb	TO_ACCEPT	[vtense:past_participle,tensed:false]
+accepting	verb	TO_ACCEPT	[vtense:present_participle,tensed:false]
+accept	verb	TO_ACCEPT	[vtense:infinitive]
+
+enjoy	verb	TO_ENJOY	[vtense:present,SUBJECT:[@_12s]]
+enjoy	verb	TO_ENJOY	[vtense:present,SUBJECT:[@p]]
+enjoys	verb	TO_ENJOY	[vtense:present,SUBJECT:[@_3s]]
+enjoyed	verb	TO_ENJOY	[vtense:preterite]
+enjoyed	verb	TO_ENJOY	[vtense:past_participle,tensed:false]
+enjoying	verb	TO_ENJOY	[vtense:present_participle,tensed:false]
+enjoy	verb	TO_ENJOY	[vtense:infinitive,tensed:false]
+
+suffer	verb	TO_SUFFER	[vtense:present,SUBJECT:[@_12s]]
+suffer	verb	TO_SUFFER	[vtense:present,SUBJECT:[@p]]
+suffers	verb	TO_SUFFER	[vtense:present,SUBJECT:[@_3s]]
+suffered	verb	TO_SUFFER	[vtense:preterite]
+suffered	verb	TO_SUFFER	[vtense:past_participle,tensed:false]
+suffering	verb	TO_SUFFER	[vtense:present_participle,tensed:false]
+suffer	verb	TO_SUFFER	[vtense:infinitive,tensed:false]
+
+endure	verb	TO_ENDURE	[vtense:present,SUBJECT:[@_12s]]
+endure	verb	TO_ENDURE	[vtense:present,SUBJECT:[@p]]
+endures	verb	TO_ENDURE	[vtense:present,SUBJECT:[@_3s]]
+endured	verb	TO_ENDURE	[vtense:preterite]
+endured	verb	TO_ENDURE	[vtense:past_participle,tensed:false]
+enduring	verb	TO_ENDURE	[vtense:present_participle,tensed:false]
+endure	verb	TO_ENDURE	[vtense:infinitive,tensed:false]
+
+stay away	verb	TO_STAY_AWAY	[vtense:present,SUBJECT:[@_12s]]
+stay away	verb	TO_STAY_AWAY	[vtense:present,SUBJECT:[@p]]
+stays away	verb	TO_STAY_AWAY	[vtense:present,SUBJECT:[@_3s]]
+stayed away	verb	TO_STAY_AWAY	[vtense:preterite]
+stayed away	verb	TO_STAY_AWAY	[vtense:past_participle,tensed:false]
+staying away	verb	TO_STAY_AWAY	[vtense:present_participle,tensed:false]
+stay away	verb	TO_STAY_AWAY	[vtense:infinitive,tensed:false]
+
+call	verb	TO_CALL	[vtense:present,SUBJECT:[@_12s]]
+call	verb	TO_CALL	[vtense:present,SUBJECT:[@p]]
+calls	verb	TO_CALL	[vtense:present,SUBJECT:[@_3s]]
+called	verb	TO_CALL	[vtense:preterite]
+called	verb	TO_CALL	[vtense:past_participle,tensed:false]
+calling	verb	TO_CALL	[vtense:present_participle,tensed:false]
+call	verb	TO_CALL	[vtense:infinitive,tensed:false,tensed:false]
+
+snore	verb	TO_SNORE	[vtense:present,SUBJECT:[@_12s]]
+snore	verb	TO_SNORE	[vtense:present,SUBJECT:[@p]]
+snores	verb	TO_SNORE	[vtense:present,SUBJECT:[@_3s]]
+snored	verb	TO_SNORE	[vtense:preterite]
+snored	verb	TO_SNORE	[vtense:past_participle,tensed:false]
+snoring	verb	TO_SNORE	[vtense:present_participle,tensed:false]
+snore	verb	TO_SNORE	[vtense:infinitive,tensed:false]
+
+chase	verb	TO_CHASE	[vtense:present,SUBJECT:[@_12s]]
+chase	verb	TO_CHASE	[vtense:present,SUBJECT:[@p]]
+chases	verb	TO_CHASE	[vtense:present,SUBJECT:[@_3s]]
+chased	verb	TO_CHASE	[vtense:preterite]
+chased	verb	TO_CHASE	[vtense:past_participle,tensed:false]
+chasing	verb	TO_CHASE	[vtense:present_participle,tensed:false]
+chase	verb	TO_CHASE	[vtense:infinitive,tensed:false]
+
+study	verb	TO_STUDY	[vtense:present,SUBJECT:[@_12s]]
+study	verb	TO_STUDY	[vtense:present,SUBJECT:[@p]]
+studies	verb	TO_STUDY	[vtense:present,SUBJECT:[@_3s]]
+studied	verb	TO_STUDY	[vtense:preterite]
+studied	verb	TO_STUDY	[vtense:past_participle,tensed:false]
+studing	verb	TO_STUDY	[vtense:present_participle,tensed:false]
+study	verb	TO_STUDY	[vtense:infinitive,tensed:false]
+
+say	verb	TO_SAY	[vtense:present,SUBJECT:[@_12s]]
+say	verb	TO_SAY	[vtense:present,SUBJECT:[@p]]
+says	verb	TO_SAY	[vtense:present,SUBJECT:[@_3s]]
+said	verb	TO_SAY	[vtense:preterite]
+said	verb	TO_SAY	[vtense:past_participle,tensed:false]
+saying	verb	TO_SAY	[vtense:present_participle,tensed:false]
+say	verb	TO_SAY	[vtense:infinitive,tensed:false]
+
+want	verb	TO_WANT	[vtense:present,SUBJECT:[@_12s]]
+want	verb	TO_WANT	[vtense:present,SUBJECT:[@p]]
+wants	verb	TO_WANT	[vtense:present,SUBJECT:[@_3s]]
+wanted	verb	TO_WANT	[vtense:preterite]
+wanted	verb	TO_WANT	[vtense:past_participle,tensed:false]
+wanting	verb	TO_WANT	[vtense:present_participle,tensed:false]
+want	verb	TO_WANT	[vtense:infinitive,tensed:false]
+
+sit	verb	TO_SIT	[vtense:present,SUBJECT:[@_12s]]
+sit	verb	TO_SIT	[vtense:present,SUBJECT:[@p]]
+sits	verb	TO_SIT	[vtense:present,SUBJECT:[@_3s]]
+sat	verb	TO_SIT	[vtense:preterite]
+sat	verb	TO_SIT	[vtense:past_participle,tensed:false]
+sitting	verb	TO_SIT	[vtense:present_participle,tensed:false]
+sit	verb	TO_SIT	[vtense:infinitive,tensed:false]
+
+tell	verb	TO_TELL	[vtense:present,SUBJECT:[@_12s]]
+tell	verb	TO_TELL	[vtense:present,SUBJECT:[@p]]
+tells	verb	TO_TELL	[vtense:present,SUBJECT:[@_3s]]
+told	verb	TO_TELL	[vtense:preterite]
+told	verb	TO_TELL	[vtense:past_participle,tensed:false]
+telling	verb	TO_TELL	[vtense:present_participle,tensed:false]
+tell	verb	TO_TELL	[vtense:infinitive,tensed:false]
+
+am	verb	TO_BE	[vtense:present,SUBJECT:[@_1s]]
+are	verb	TO_BE	[vtense:present,SUBJECT:[@_2s]]
+is	verb	TO_BE	[vtense:present,SUBJECT:[@_3s]]
+are	verb	TO_BE	[vtense:present,SUBJECT:[@p]]
+was	verb	TO_BE	[vtense:preterite,SUBJECT:[@_1s]]
+were	verb	TO_BE	[vtense:preterite,SUBJECT:[@_2s]]
+was	verb	TO_BE	[vtense:preterite,SUBJECT:[@_3s]]
+were	verb	TO_BE	[vtense:preterite,SUBJECT:[@p]]
+been	verb	TO_BE	[vtense:past_participle,tensed:false]
+being	verb	TO_BE	[vtense:present_participle,tensed:false]
+be	verb	TO_BE	[vtense:infinitive]
+
+have	verb	TO_HAVE	[vtense:present,SUBJECT:[@_12s]]
+has	verb	TO_HAVE	[vtense:present,SUBJECT:[@_3s]]
+have	verb	TO_HAVE	[vtense:present,SUBJECT:[@p]]
+had	verb	TO_HAVE	[vtense:preterite,SUBJECT:[]]
+had	verb	TO_HAVE	[vtense:past_participle,tensed:false]
+having	verb	TO_HAVE	[vtense:present_participle,tensed:false]
+have	verb	TO_HAVE	[vtense:infinitive]
+
+find	verb	TO_FIND	[vtense:present]
+found	verb	TO_FIND	[vtense:preterite]
+found	verb	TO_FIND	[vtense:past_participle,tensed:false]
+finding	verb	TO_FIND	[vtense:present_participle,tensed:false]
+find	verb	TO_FIND	[vtense:infinitive,tensed:false]
+
+meow	verb	TO_MEOW	[vtense:present,SUBJECT:[@_12s]]
+meow	verb	TO_MEOW	[vtense:present,SUBJECT:[@p]]
+meows	verb	TO_MEOW	[vtense:present,SUBJECT:[@_3s]]
+meowed	verb	TO_MEOW	[vtense:preterite]
+meowed	verb	TO_MEOW	[vtense:past_participle,tensed:false]
+meowing	verb	TO_MEOW	[vtense:present_participle,tensed:false]
+meow	verb	TO_MEOW	[vtense:infinitive,tensed:false]
+
+thrill	verb	TO_THRILL	[vtense:present,SUBJECT:[@_12s]]
+thrill	verb	TO_THRILL	[vtense:present,SUBJECT:[@p]]
+thrills	verb	TO_THRILL	[vtense:present,SUBJECT:[@_3s]]
+thrilled	verb	TO_THRILL	[vtense:preterite]
+thrilled	verb	TO_THRILL	[vtense:past_participle,tensed:false]
+thrill	verb	TO_THRILL	[vtense:infinitive,tensed:false]
+
+// ***********************************************************
+//  Nouns
+// ***********************************************************/
+pain	common_noun	PAIN	[]
+sadness	common_noun	SADNESS	[]
+hope	common_noun	HOPE	[]
+tenderness	common_noun	TENDERNESS	[]
+warning	common_noun	WARNING	[]
+divine blessings	common_noun	DIVINE_BLESSINGS	[]
+chair	common_noun	CHAIR		[]
+chair man	common_noun	CHAIR_MAN	[@s]
+moon	common_noun	MOON	[@s]
+moons	common_noun	MOON	[@p]
+student	common_noun	STUDENT	[@s]
+students	common_noun	STUDENT	[@p]
+professor	common_noun	PROFESSOR	[@s]
+professors	common_noun	PROFESSOR	[@p]
+cat	common_noun	CAT	[@s]
+cats	common_noun	CAT	[@p]
+mouse	common_noun	MOUSE	[@s]
+mice	common_noun	MOUSE	[@p]
+table	common_noun	TABLE	[@s]
+tables	common_noun	TABLE	[@p]
+privilege	common_noun	PRIVILEGE	[@s]
+privileges	common_noun	PRIVILEGE	[@p]
+opportunity	common_noun	OPPORTUNITY	[@s]
+opportunities	common_noun	OPPORTUNITY	[@p]
+
+// ***********************************************************[]
+//  Adjectives[]
+// ***********************************************************/[]
+nice	adj	NICE	[]
+thrilled	adj	THRILLED	[]
+bad	adj	BAD	[]
+good	adj	GOOD	[]
+happy	adj	HAPPY	[]
+lucky	adj	LUCKY	[]
+big	adj	BIG	[]
+black	adj	BLACK	[]
+blessed	adj	BLESSED	[]
+
+// ***********************************************************[]
+//  Adverbs[]
+// ***********************************************************/[]
+very	adv	VERY	[]
+extremely	adv	EXTREMELY	[]
+
+// end// @macro	features
+// lexeme	pos	lemma	features
+
+// ***********************************************************
+// Macros
+// ***********************************************************/
+
+EUPHORIC	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[FORM:"over the moon"]]
+EUPHORIC	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[HEAD:HAPPY,MOD:<[HEAD:EXTREMELY]>]]
+EUPHORIC	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[HEAD:THRILLED]]
+
+PRIVILEGE	verb	TO_HAVE	[SUBJECT:[@hum],iiReal:VCOMP,OBLIQUE:[HEAD:PRIVILEGE, @s, @def]]
+PRIVILEGE	verb	TO_HAVE	[SUBJECT:[@hum],iiReal:VCOMP,OBLIQUE:[HEAD:OPPORTUNITY, @s, @def]]
+PRIVILEGE	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[HEAD:LUCKY]]
+PRIVILEGE	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[HEAD:BLESSED]]
+PRIVILEGE	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP|SCOMP,PRED_ADJ:[FORM:"in a position"]]
+PRIVILEGE	verb	TO_BE	[SUBJECT:[@hum],iiReal:VCOMP,PRED_ADJ:[FORM:"able"]]
+
+TO_CHASE	verb	TO_CHASE	[iiReal:OBJECT]
+TO_FIND_OUT	verb	TO_FIND	[particule:_out_,iiReal:SCOMP,compl:_that_]
+TO_STUDY	verb	TO_STUDY	[SUBJECT:[@hum],iiReal:OBJECT]
+TO_MEOW	verb	TO_MEOW	[]
+TO_ACCEPT	verb	TO_ACCEPT	[iiReal:OBJECT|VCOMP|SCOMP,compl:_that_]
+
+TO_FEEL	verb	TO_FEEL	[HEAD:TO_FEEL,SUBJECT:[@hum],iiReal:PRED_ADJ|SCOMP|OBJECT|OBJ_THETA,pcase:_at_,compl:_that_|_if_]
+
+TO_FEEL_THE_PAIN	TO_FEEL	verb	[iiReal:OBJECT,OBJECT:[HEAD:PAIN,@def,@s]]
+TO_FEEL_BLUE	verb	TO_FEEL	[iiReal:PRED_ADJ,PRED_ADJ:[HEAD:BLUE]]
+
+TO_APPRECIATE	verb	TO_APPRECIATE	[SUBJECT:[@hum],iiReal:OBJECT]
+
+TO_ENJOY	verb	TO_ENJOY	[SUBJECT:[@hum],iiReal:OBJECT]
+TO_SUFFER	verb	TO_SUFFER	[SUBJECT:[@hum],iiReal:OBJECT]
+TO_ENDURE	verb	TO_ENDURE	[SUBJECT:[@hum],iiReal:OBJECT]
+
+TO_USE	verb	TO_USE	[SUBJECT:[@hum],iiReal:OBJECT]
+
+TO_STAY_AWAY	verb	TO_STAY_AWAY	[SUBJECT:[@hum]]
+
+//  To CALL
+//  to call someone/something
+TO_CALL	verb	TO_CALL	[SUBJECT:[@hum],iiReal:OBJECT]
+//  to call someone down : to reprimand a person
+TO_CALL_DOWN_1	verb	TO_CALL	[SUBJECT:[@hum],iiReal:OBJECT,OBJECT:[@hum],particule:_down_]
+//  to call something down to someone: to shout something to a person on a lower level
+TO_CALL_DOWN_2	verb	TO_CALL	[SUBJECT:[@hum],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:_to_,particule:_down_]
+//  to call something down on someone: to invoke some sort of divine punishment onto someone
+TO_CALL_DOWN_3	verb	TO_CALL	[SUBJECT:[@hum],iiReal:OBJECT,OBJECT:[human:false],iiiReal:OBJ_THETA,pcase:_on_,particule:_down_]
+
+TO_SNORE	verb	TO_SNORE	[SUBJECT:[animate:true]]
+
+TO_SIT	verb	TO_SIT	[iiReal:OBJ_THETA,pcase:_on_]
+
+TO_SAY	verb	TO_SAY	[iiReal:SCOMP,compl:_that_]
+
+TO_WANT	verb	TO_WANT	[SUBJECT:[],iiReal:VCOMP,VCOMP:[]]
+
+TO_TELL	verb	TO_TELL	[SUBJECT:[@hum],iiReal:OBJECT,iiiReal:SCOMP,ii_csu:_that_]
+
+
+////////
+//   To put on the brakes: to describe the act of slowing down or stopping something, especially a vehicle, in a sudden or emergency situation.
+//   To hit the brakes: to suddenly stop or slow down, especially in a vehicle
+//   To pump the brakes: to apply and release the brakes repeatedly, as a way of slowing down a vehicle without skidding or losing control
+//   To step on the brakes: to press down on the brake pedal in a vehicle, as a way of slowing down or stopping
+////////
+
+
+//Nouns
+PAIN	common_noun	PAIN	[countable:false]
+SADNESS	common_noun	SADNESS	[countable:false]
+HOPE	common_noun	HOPE	[countable:false]
+TENDERNESS	common_noun	TENDERNESS	[countable:false]
+WARNING	common_noun	WARNING	[]
+DIVINE_BLESSINGS	common_noun	DIVINE_BLESSINGS	[]
+CHAIR	common_noun	CHAIR	[]
+CHAIR_MAN	common_noun	CHAIR_MAN	[]
+MOON	common_noun	MOON	[]
+STUDENT	common_noun	STUDENT	[]
+PROFESSOR	common_noun	PROFESSOR	[]
+CAT	common_noun	CAT	[]
+MOUSE	common_noun	MOUSE	[]
+TABLE	common_noun	TABLE	[]
+PRIVILEGE	common_noun	PRIVILEGE	[]
+OPPORTUNITY	common_noun	OPPORTUNITY	[]
+
+//  Adjectives
+THRILLED	adj	THRILLED	[type:opinion]
+NICE	adj	NICE	[type:opinion]
+BAD	adj	BAD	[lexical_function:none,type:opinion]
+BAD	adj	BAD	[lexical_function:magn,MOD:[HEAD:VERY],type:opinion]
+GOOD	adj	GOOD	[type:opinion]
+HAPPY	adj	HAPPY	[type:opinion]
+LUCKY	adj	LUCKY	[type:opinion]
+BLESSED	adj	BLESSED	[type:opinion]
+BLUE	adj	BLUE	[type:color]
+BLACK	adj	BLACK	[type:color]
+BIG	adj	BIG	[type:size]
+
+// type:Opinion, Size, Age, Shape, Color, Origin, Material, Purpose/Qualifier
+//  Adverbs
+VERY	adv	VERY	[]
+EXTREMELY	adv	EXTREMELY	[]
+//  end

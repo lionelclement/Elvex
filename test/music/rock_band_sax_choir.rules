@@ -1,0 +1,260 @@
+// =============================================================================
+// rock_band_sax_choir.rules
+// =============================================================================
+// Variante rock avec saxophone et choeur. Ajoute les rôles rock_sax et rock_choir.
+//
+
+// -----------------------------------------------------------------------------
+// Groupe rock avec saxophone et chœur : extension rock classique plus chaude.
+// -----------------------------------------------------------------------------
+// Sélectionné uniquement par :
+//   music:[style:rock, form:rock_song_sax_choir]
+//   ensemble:[type:rock_band_sax_choir]
+//
+// Objectif : éviter une texture métallique limitée à la guitare en ajoutant des réponses mélodiques de saxophone et
+// des nappes/hooks de chœur, tout en adoucissant le rôle de la guitare.
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_VOICE_FORM
+{ [role:rock_voice, form:rock_song_sax_choir]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑ ∪ [form:rock_song_verse_chorus]; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_SAX_FORM
+{ [role:rock_sax, form:rock_song_sax_choir]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_CHOIR_FORM
+{ [role:rock_choir, form:rock_song_sax_choir]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_GUITAR_WARM_FORM
+{ [role:rock_guitar_saxchoir, form:rock_song_sax_choir]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_BASS_FORM
+{ [role:rock_bass_saxchoir, form:rock_song_sax_choir]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑ ∪ [role:rock_bass, form:rock_song_verse_chorus]; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → ROCK_DRUMS_FORM
+{ [role:rock_drums_saxchoir, form:rock_song_sax_choir]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑ ∪ [role:rock_drums, form:rock_song_verse_chorus]; ⇑ = ⇓1; }
+
+// Même architecture de 64 mesures que rock_band, afin que toutes les portées restent alignées.
+@withoutSpaces
+ROCK_SAX_FORM → ROCK_SAX_INTRO_4 ROCK_SAX_VERSE1_12 ROCK_SAX_PRE_8 ROCK_SAX_CHORUS_12 ROCK_SAX_VERSE2_12 ROCK_SAX_BRIDGE_8 ROCK_SAX_FINAL_CHORUS_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+ROCK_CHOIR_FORM → ROCK_CHOIR_INTRO_4 ROCK_CHOIR_VERSE1_12 ROCK_CHOIR_PRE_8 ROCK_CHOIR_CHORUS_12 ROCK_CHOIR_VERSE2_12 ROCK_CHOIR_BRIDGE_8 ROCK_CHOIR_FINAL_CHORUS_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+ROCK_GUITAR_WARM_FORM → ROCK_GTR_WARM_INTRO_4 ROCK_GTR_WARM_VERSE1_12 ROCK_GTR_WARM_PRE_8 ROCK_GTR_WARM_CHORUS_12 ROCK_GTR_WARM_VERSE2_12 ROCK_GTR_WARM_BRIDGE_8 ROCK_GTR_WARM_FINAL_CHORUS_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[cadence:authentic]; }
+
+// -----------------------------------------------------------------------------
+// Saxophone : contre-mélodies et ornements de remplissage. Le saxophone n’est pas continu ; il répond
+// à la voix et devient important dans le pré-refrain, le refrain et le pont.
+// -----------------------------------------------------------------------------
+ROCK_SAX_INTRO_4 → ROCK_SAX_RIFF_LOW ROCK_SAX_REST ROCK_SAX_RIFF_ANSWER ROCK_SAX_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+ROCK_SAX_VERSE1_12 → ROCK_SAX_REST ROCK_SAX_FILL_SHORT ROCK_SAX_REST ROCK_SAX_ANSWER_LOW ROCK_SAX_REST ROCK_SAX_FILL_SHORT ROCK_SAX_REST ROCK_SAX_HOLD_DOM ROCK_SAX_REST ROCK_SAX_FILL_RISE ROCK_SAX_ANSWER_LOW ROCK_SAX_HOLD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:half]; }
+ROCK_SAX_PRE_8 → ROCK_SAX_RISE1 ROCK_SAX_RISE2 ROCK_SAX_HOLD ROCK_SAX_FILL_RISE ROCK_SAX_RISE1 ROCK_SAX_RISE2 ROCK_SAX_RISE_HIGH ROCK_SAX_HOLD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:dominant]; }
+ROCK_SAX_CHORUS_12 → ROCK_SAX_HOOK ROCK_SAX_ANSWER_HIGH ROCK_SAX_HOOK ROCK_SAX_HOLD ROCK_SAX_HOOK_HIGH ROCK_SAX_ANSWER_HIGH ROCK_SAX_FILL_RISE ROCK_SAX_HOLD ROCK_SAX_TAG ROCK_SAX_TAG2 ROCK_SAX_AUTH ROCK_SAX_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:authentic]; }
+ROCK_SAX_VERSE2_12 → ROCK_SAX_FILL_SHORT ROCK_SAX_REST ROCK_SAX_ANSWER_LOW ROCK_SAX_REST ROCK_SAX_FILL_SHORT ROCK_SAX_REST ROCK_SAX_FILL_RISE ROCK_SAX_HOLD_DOM ROCK_SAX_REST ROCK_SAX_RISE1 ROCK_SAX_RISE2 ROCK_SAX_HOLD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:half]; }
+ROCK_SAX_BRIDGE_8 → ROCK_SAX_BRIDGE_LOW ROCK_SAX_BRIDGE_REPLY ROCK_SAX_BRIDGE_CLIMB ROCK_SAX_HOLD ROCK_SAX_BRIDGE_LOW ROCK_SAX_BRIDGE_REPLY ROCK_SAX_RISE_HIGH ROCK_SAX_HOLD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:dominant]; }
+ROCK_SAX_FINAL_CHORUS_8 → ROCK_SAX_HOOK ROCK_SAX_ANSWER_HIGH ROCK_SAX_HOOK_HIGH ROCK_SAX_HOLD ROCK_SAX_TAG ROCK_SAX_TAG2 ROCK_SAX_AUTH ROCK_SAX_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+ROCK_SAX_REST → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_RIFF_LOW → BAR6
+{ ↓1=↑ ∪ [motif:[o1:0,o2:3,o3:5,o4:7,o5:5,o6:3], rhythm:[r1:"1/8",r2:"1/8",r3:"1/4",r4:"1/8",r5:"1/8",r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_RIFF_ANSWER → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7,o2:10,o3:9,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_FILL_SHORT → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:5,o2:7,o3:10], rhythm:[r1:"1/4",rr:"1/4",r2:"1/4",r3:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_ANSWER_LOW → BAR4
+{ ↓1=↑ ∪ [motif:[o1:3,o2:5,o3:7,o4:3], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_FILL_RISE → BAR6
+{ ↓1=↑ ∪ [motif:[o1:7,o2:9,o3:10,o4:12,o5:14,o6:12], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/4",r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_RISE1 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5,o2:7,o3:9,o4:10], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_RISE2 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:10,o2:12,o3:14,o4:16,o5:14,o6:12], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/4",r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_RISE_HIGH → BAR6
+{ ↓1=↑ ∪ [motif:[o1:12,o2:14,o3:16,o4:17,o5:19,o6:16], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/4",r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_HOOK → BAR8
+{ ↓1=↑ ∪ [motif:[o1:16,o2:14,o3:12,o4:10,o5:12,o6:10,o7:7,o8:10], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_HOOK_HIGH → BAR6
+{ ↓1=↑ ∪ [motif:[o1:19,o2:17,o3:16,o4:14,o5:16,o6:19], rhythm:[r1:"1/8",r2:"1/8",r3:"1/4",r4:"1/8",r5:"1/8",r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_ANSWER_HIGH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12,o2:14,o3:12,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_TAG → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14,o2:12,o3:10,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_TAG2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7,o2:10,o3:12,o4:10], rhythm:[r1:"1/8",r2:"1/8",r3:"1/4",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_HOLD → BAR2
+{ ↓1=↑ ∪ [motif:[o1:12,o2:7], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_HOLD_DOM → BAR1
+{ ↓1=↑ ∪ [motif:[o1:14], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_AUTH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:0], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_FINAL → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_BRIDGE_LOW → BAR4
+{ ↓1=↑ ∪ [motif:[o1:2,o2:3,o3:5,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_BRIDGE_REPLY → BAR6
+{ ↓1=↑ ∪ [motif:[o1:7,o2:5,o3:3,o4:5,o5:7,o6:10], rhythm:[r1:"1/8",r2:"1/8",r3:"1/4",r4:"1/8",r5:"1/8",r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_SAX_BRIDGE_CLIMB → BAR6
+{ ↓1=↑ ∪ [motif:[o1:10,o2:12,o3:14,o4:16,o5:17,o6:16], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/4",r6:"1/4"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// Chœur : surtout des silences dans les couplets, des nappes et hooks de soutien dans les refrains.
+// -----------------------------------------------------------------------------
+ROCK_CHOIR_INTRO_4 → ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_REST
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+ROCK_CHOIR_VERSE1_12 → ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_PAD_SOFT ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_PAD_DOM ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_PAD_SOFT ROCK_CHOIR_PAD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:half]; }
+ROCK_CHOIR_PRE_8 → ROCK_CHOIR_PAD_IV ROCK_CHOIR_PAD_bVII ROCK_CHOIR_PAD_I ROCK_CHOIR_PAD_DOM ROCK_CHOIR_PAD_IV ROCK_CHOIR_PAD_bVII ROCK_CHOIR_PAD_RISE ROCK_CHOIR_PAD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:dominant]; }
+ROCK_CHOIR_CHORUS_12 → ROCK_CHOIR_HOOK ROCK_CHOIR_ANSWER ROCK_CHOIR_HOOK ROCK_CHOIR_RING ROCK_CHOIR_HOOK_HIGH ROCK_CHOIR_ANSWER ROCK_CHOIR_PAD_IV ROCK_CHOIR_RING ROCK_CHOIR_TAG ROCK_CHOIR_TAG2 ROCK_CHOIR_AUTH ROCK_CHOIR_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:authentic]; }
+ROCK_CHOIR_VERSE2_12 → ROCK_CHOIR_REST ROCK_CHOIR_PAD_SOFT ROCK_CHOIR_REST ROCK_CHOIR_PAD_SOFT ROCK_CHOIR_REST ROCK_CHOIR_REST ROCK_CHOIR_PAD_SOFT ROCK_CHOIR_PAD_DOM ROCK_CHOIR_REST ROCK_CHOIR_PAD_SOFT ROCK_CHOIR_PAD_IV ROCK_CHOIR_PAD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:half]; }
+ROCK_CHOIR_BRIDGE_8 → ROCK_CHOIR_PAD_vi ROCK_CHOIR_PAD_IV ROCK_CHOIR_PAD_I ROCK_CHOIR_PAD_DOM ROCK_CHOIR_PAD_vi ROCK_CHOIR_PAD_IV ROCK_CHOIR_PAD_RISE ROCK_CHOIR_PAD_DOM
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:dominant]; }
+ROCK_CHOIR_FINAL_CHORUS_8 → ROCK_CHOIR_HOOK ROCK_CHOIR_ANSWER ROCK_CHOIR_HOOK_HIGH ROCK_CHOIR_RING ROCK_CHOIR_TAG ROCK_CHOIR_TAG2 ROCK_CHOIR_AUTH ROCK_CHOIR_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+ROCK_CHOIR_REST → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_PAD_SOFT → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:0, q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_PAD_I → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:0, q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_PAD_IV → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:5, q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_PAD_bVII → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:10, q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_PAD_vi → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:9, q1:min], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_PAD_DOM → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:7, q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_PAD_RISE → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:5, q1:maj, root2:7, q2:maj, root3:10, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_HOOK → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12,o2:12,o3:10,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_HOOK_HIGH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:16,o2:14,o3:12,o4:10], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_ANSWER → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7,o2:10,o3:12,o4:10], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_RING → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_TAG → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14,o2:12,o3:10,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_TAG2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7,o2:10,o3:12,o4:10], rhythm:[r1:"1/8",r2:"1/8",r3:"1/4",r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_AUTH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:0], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_CHOIR_FINAL → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// Warmer guitar: cleaner chord/riff support, less constant high metallic motion.
+// -----------------------------------------------------------------------------
+ROCK_GTR_WARM_INTRO_4 → ROCK_GTR_WARM_I ROCK_GTR_WARM_bVII ROCK_GTR_WARM_IV ROCK_GTR_WARM_STOP_I
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+ROCK_GTR_WARM_VERSE1_12 → ROCK_GTR_WARM_I ROCK_GTR_WARM_I ROCK_GTR_WARM_bVII ROCK_GTR_WARM_IV ROCK_GTR_WARM_I ROCK_GTR_WARM_SPACE ROCK_GTR_WARM_bVII ROCK_GTR_WARM_STOP_V ROCK_GTR_WARM_I ROCK_GTR_WARM_bVII ROCK_GTR_WARM_IV ROCK_GTR_WARM_STOP_V
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:half]; }
+ROCK_GTR_WARM_PRE_8 → ROCK_GTR_WARM_IV_bVII ROCK_GTR_WARM_I_V ROCK_GTR_WARM_IV_bVII ROCK_GTR_WARM_STOP_V ROCK_GTR_WARM_IV_bVII ROCK_GTR_WARM_I_V ROCK_GTR_WARM_CLIMB ROCK_GTR_WARM_STOP_V
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:dominant]; }
+ROCK_GTR_WARM_CHORUS_12 → ROCK_GTR_WARM_I_bVII_IV_I ROCK_GTR_WARM_I_V_bVII_IV ROCK_GTR_WARM_I_bVII_IV_I ROCK_GTR_WARM_STOP_I ROCK_GTR_WARM_I_bVII_IV_I ROCK_GTR_WARM_I_V_bVII_IV ROCK_GTR_WARM_IV ROCK_GTR_WARM_STOP_I ROCK_GTR_WARM_IV_bVII ROCK_GTR_WARM_I_V ROCK_GTR_WARM_CLIMB ROCK_GTR_WARM_STOP_I
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:authentic]; }
+ROCK_GTR_WARM_VERSE2_12 → ROCK_GTR_WARM_I ROCK_GTR_WARM_bVII ROCK_GTR_WARM_IV ROCK_GTR_WARM_STOP_I ROCK_GTR_WARM_I ROCK_GTR_WARM_SPACE ROCK_GTR_WARM_bVII ROCK_GTR_WARM_STOP_V ROCK_GTR_WARM_I ROCK_GTR_WARM_bVII ROCK_GTR_WARM_IV ROCK_GTR_WARM_STOP_V
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ⇑=[cadence:half]; }
+ROCK_GTR_WARM_BRIDGE_8 → ROCK_GTR_WARM_vi ROCK_GTR_WARM_IV ROCK_GTR_WARM_I ROCK_GTR_WARM_STOP_V ROCK_GTR_WARM_vi ROCK_GTR_WARM_IV ROCK_GTR_WARM_CLIMB ROCK_GTR_WARM_STOP_V
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:dominant]; }
+ROCK_GTR_WARM_FINAL_CHORUS_8 → ROCK_GTR_WARM_I_bVII_IV_I ROCK_GTR_WARM_I_V_bVII_IV ROCK_GTR_WARM_I_bVII_IV_I ROCK_GTR_WARM_STOP_I ROCK_GTR_WARM_IV_bVII ROCK_GTR_WARM_I_V ROCK_GTR_WARM_CLIMB ROCK_GTR_WARM_FINAL_I
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:authentic]; }
+
+@withoutSpaces
+ROCK_GTR_WARM_I → CHORD_BAR4
+{ [mode:major] ⊂ ↑; ↓1=↑ ∪ [chords:[root1:0,q1:maj,root2:0,q2:maj,root3:0,q3:maj,root4:0,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_bVII → CHORD_BAR4
+{ [mode:major] ⊂ ↑; ↓1=↑ ∪ [chords:[root1:10,q1:maj,root2:10,q2:maj,root3:10,q3:maj,root4:10,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_IV → CHORD_BAR4
+{ [mode:major] ⊂ ↑; ↓1=↑ ∪ [chords:[root1:5,q1:maj,root2:5,q2:maj,root3:5,q3:maj,root4:5,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_vi → CHORD_BAR4
+{ [mode:major] ⊂ ↑; ↓1=↑ ∪ [chords:[root1:9,q1:min,root2:9,q2:min,root3:9,q3:min,root4:9,q4:min], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_SPACE → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_STOP_I → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:0,q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_STOP_V → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:7,q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_IV_bVII → CHORD_BAR2
+{ ↓1=↑ ∪ [chords:[root1:5,q1:maj,root2:10,q2:maj], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_I_V → CHORD_BAR2
+{ ↓1=↑ ∪ [chords:[root1:0,q1:maj,root2:7,q2:maj], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_I_bVII_IV_I → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:0,q1:maj,root2:10,q2:maj,root3:5,q3:maj,root4:0,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_I_V_bVII_IV → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:0,q1:maj,root2:7,q2:maj,root3:10,q3:maj,root4:5,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_CLIMB → BAR8
+{ ↓1=↑ ∪ [motif:[o1:5,o2:7,o3:9,o4:10,o5:12,o6:14,o7:16,o8:17], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+ROCK_GTR_WARM_FINAL_I → CHORD_BAR1
+{ ↓1=↑ ∪ [chords:[root1:0,q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }

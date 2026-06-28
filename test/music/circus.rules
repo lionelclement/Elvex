@@ -1,0 +1,284 @@
+// =============================================================================
+// circus.rules -- fanfare de cirque tonale, structurée et peu dense
+// =============================================================================
+// Objectif : produire une courte pièce de cirque qui reste musicale.
+//
+// La version précédente accumulait des variantes locales, ce qui donnait une
+// texture précipitée et confuse. Cette version part au contraire de règles
+// tonales :
+//   1. phrase périodique de 8 mesures en 2/4 ;
+//   2. antécédent 1-4 : I - V - I - V, demi-cadence ;
+//   3. conséquent 5-8 : IV - ii/V - V - I, cadence parfaite ;
+//   4. les temps forts portent des notes de l'accord ;
+//   5. les notes de passage sont conjointes et résolues ;
+//   6. contre-mélodie et cuivres ne jouent pas tout le temps ;
+//   7. la percussion soutient la marche sans remplir toutes les subdivisions.
+//
+// Les hauteurs sont toujours des offsets relatifs à tonic_pc : le module est
+// transposable et n'est pas attaché à do majeur. Le .input fourni utilise si
+// bémol majeur, tempo 96, accidental_policy:flat.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 0. Silence court spécifique à la mesure 2/4.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+CIRCUS_REST_2_4 → TAB REST BARLINE
+{ ↓1=[]; ↓2=[dur:"1/2"]; ↓3=[]; ⇑=[rest:true]; }
+
+// -----------------------------------------------------------------------------
+// 1. Dispatch par fonction musicale générique.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+MUSICAL_FORM → CIRCUS_TONAL_LEAD_FORM
+{
+  [role:lead, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[role:lead, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  ⇑=⇓1;
+}
+
+@withoutSpaces
+MUSICAL_FORM → CIRCUS_TONAL_COUNTER_FORM
+{
+  [role:countermelody, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[role:countermelody, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  ⇑=⇓1;
+}
+
+@withoutSpaces
+MUSICAL_FORM → CIRCUS_TONAL_BRASS_FORM
+{
+  [role:harmonic_support, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[role:harmonic_support, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  ⇑=⇓1;
+}
+
+@withoutSpaces
+MUSICAL_FORM → CIRCUS_TONAL_ACCENT_FORM
+{
+  [role:accent, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[role:accent, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  ⇑=⇓1;
+}
+
+@withoutSpaces
+MUSICAL_FORM → CIRCUS_TONAL_BASS_FORM
+{
+  [role:bass, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[role:bass, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  ⇑=⇓1;
+}
+
+@withoutSpaces
+MUSICAL_FORM → CIRCUS_TONAL_PULSE_FORM
+{
+  [role:rhythmic_pedal, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[role:rhythmic_pedal, form:circus_tonal_period_8, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  ⇑=⇓1;
+}
+
+// -----------------------------------------------------------------------------
+// 2. Forme commune de huit mesures.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+CIRCUS_TONAL_LEAD_FORM → CT_LEAD_1_I CT_LEAD_2_V_HALF CT_LEAD_3_I_ANSWER CT_LEAD_4_V_HALF CT_LEAD_5_IV CT_LEAD_6_PREDOM CT_LEAD_7_DOM CT_LEAD_8_I_CLOSE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:perfect_authentic]; }
+
+@withoutSpaces
+CIRCUS_TONAL_COUNTER_FORM → CT_COUNTER_1_REST CT_COUNTER_2_THIRDS CT_COUNTER_3_REST CT_COUNTER_4_ECHO CT_COUNTER_5_SIXTHS CT_COUNTER_6_PASSING CT_COUNTER_7_REST CT_COUNTER_8_SOFT_CLOSE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:perfect_authentic]; }
+
+@withoutSpaces
+CIRCUS_TONAL_BRASS_FORM → CT_BRASS_1_TONIC CT_BRASS_2_DOMINANT CT_BRASS_3_REST CT_BRASS_4_DOMINANT CT_BRASS_5_SUBDOM CT_BRASS_6_PREDOM CT_BRASS_7_DOMINANT CT_BRASS_8_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:perfect_authentic]; }
+
+@withoutSpaces
+CIRCUS_TONAL_ACCENT_FORM → CT_ACCENT_1_AFTERBEAT CT_ACCENT_2_REST CT_ACCENT_3_AFTERBEAT CT_ACCENT_4_DOM_PUNCT CT_ACCENT_5_AFTERBEAT CT_ACCENT_6_REST CT_ACCENT_7_CADENCE CT_ACCENT_8_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:perfect_authentic]; }
+
+@withoutSpaces
+CIRCUS_TONAL_BASS_FORM → CT_BASS_1_I CT_BASS_2_V CT_BASS_3_I CT_BASS_4_V CT_BASS_5_IV CT_BASS_6_II_V CT_BASS_7_V CT_BASS_8_I
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:perfect_authentic]; }
+
+@withoutSpaces
+CIRCUS_TONAL_PULSE_FORM → CT_PULSE_1 CT_PULSE_2_LIGHT CT_PULSE_3 CT_PULSE_4_BREAK CT_PULSE_5 CT_PULSE_6_LIGHT CT_PULSE_7_ROLL CT_PULSE_8_STOP
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[cadence:perfect_authentic]; }
+
+// -----------------------------------------------------------------------------
+// 3. Lead : mélodie diatonique, appuis harmoniques aux temps forts.
+//    En majeur : 0=I, 2=II, 4=III, 5=IV, 7=V, 9=VI, 11=VII, 12=I.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+CT_LEAD_1_I → BAR4_STACCATO
+{ $r=rand()%100; attest $r < 35; ↓1=↑ ∪ [motif:[o1:0,o2:4,o3:7,o4:4], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_LEAD_1_I → BAR4
+{ ↓1=↑ ∪ [motif:[o1:0,o2:2,o3:4,o4:7], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CT_LEAD_2_V_HALF → BAR4
+{ ↓1=↑ ∪ [motif:[o1:9,o2:7,o3:11,o4:7], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CT_LEAD_3_I_ANSWER → BAR4
+{ $r=rand()%100; attest $r < 35; ↓1=↑ ∪ [motif:[o1:7,o2:4,o3:2,o4:0], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_LEAD_3_I_ANSWER → BAR4
+{ ↓1=↑ ∪ [motif:[o1:4,o2:7,o3:9,o4:7], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CT_LEAD_4_V_HALF → BAR2
+{ ↓1=↑ ∪ [motif:[o1:11,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CT_LEAD_5_IV → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5,o2:7,o3:9,o4:12], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CT_LEAD_6_PREDOM → BAR4_SLURRED
+{ ↓1=↑ ∪ [motif:[o1:14,o2:12,o3:9,o4:11], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CT_LEAD_7_DOM → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14,o2:12,o3:11,o4:9], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CT_LEAD_8_I_CLOSE → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:0], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// 4. Contre-mélodie : entrées espacées, consonances, résolutions conjointes.
+// -----------------------------------------------------------------------------
+
+CT_COUNTER_1_REST → CIRCUS_REST_2_4 { ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+CT_COUNTER_2_THIRDS → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:4,o2:7,o3:9], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+CT_COUNTER_3_REST → CIRCUS_REST_2_4 { ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+CT_COUNTER_4_ECHO → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:9,o2:7,o3:4], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_COUNTER_5_SIXTHS → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12,o2:9,o3:7,o4:5], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_COUNTER_6_PASSING → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:9,o2:11,o3:12], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+CT_COUNTER_7_REST → CIRCUS_REST_2_4 { ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+CT_COUNTER_8_SOFT_CLOSE → BAR2
+{ ↓1=↑ ∪ [motif:[o1:4,o2:0], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// 5. Cuivres aigus : harmonie claire, valeurs longues, pas de doublure continue.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+CT_BRASS_1_TONIC → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:12], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BRASS_2_DOMINANT → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:11], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+CT_BRASS_3_REST → CIRCUS_REST_2_4 { ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+CT_BRASS_4_DOMINANT → BAR2
+{ ↓1=↑ ∪ [motif:[o1:11,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BRASS_5_SUBDOM → BAR2
+{ ↓1=↑ ∪ [motif:[o1:5,o2:12], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BRASS_6_PREDOM → BAR2
+{ ↓1=↑ ∪ [motif:[o1:9,o2:11], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BRASS_7_DOMINANT → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:11], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BRASS_8_TONIC → BAR2
+{ ↓1=↑ ∪ [motif:[o1:12,o2:0], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// 6. Trombone / accents : afterbeats et préparation cadentielle.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+CT_ACCENT_1_AFTERBEAT → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7,o3:0], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+CT_ACCENT_2_REST → CIRCUS_REST_2_4 { ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+CT_ACCENT_3_AFTERBEAT → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:0,o2:4,o3:7], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_ACCENT_4_DOM_PUNCT → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_ACCENT_5_AFTERBEAT → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:5,o2:9,o3:12], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+CT_ACCENT_6_REST → CIRCUS_REST_2_4 { ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+CT_ACCENT_7_CADENCE → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:11], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_ACCENT_8_TONIC → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:0], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// 7. Basse : fondamentale fonctionnelle. Oom-pah, mais jamais chromatique.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+CT_BASS_1_I → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BASS_2_V → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:14], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BASS_3_I → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BASS_4_V → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BASS_5_IV → BAR2
+{ ↓1=↑ ∪ [motif:[o1:5,o2:12], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BASS_6_II_V → BAR2
+{ ↓1=↑ ∪ [motif:[o1:2,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BASS_7_V → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7,o2:14], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_BASS_8_I → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:0], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// 8. Percussion : pulsation lisible, breaks aux cadences seulement.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+CT_PULSE_1 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_PULSE_2_LIGHT → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7,o3:0], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_PULSE_3 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_PULSE_4_BREAK → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:7,o2:7,o3:0], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_PULSE_5 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_PULSE_6_LIGHT → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:0,o2:7,o3:0], rhythm:[r1:"1/8",rr:"1/8",r2:"1/8",r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_PULSE_7_ROLL → BAR4_STACCATO
+{ ↓1=↑ ∪ [motif:[o1:0,o2:0,o3:7,o4:7], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CT_PULSE_8_STOP → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0,o2:0], rhythm:[r1:"1/4",r2:"1/4"]]; ⇑=⇓1; }

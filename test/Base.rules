@@ -2,6 +2,16 @@
 S → A B
 {
   [i:$i, $rest];
+  println [a:1];
+  println [b:↑];
+  println [c:↑.i.HEAD];
+  println [d:↑.HEAD];
+  println [e:⇓1];
+  println [f:⇓1.isA];
+  println [g:⇓1.HEAD];
+  println [h:⇓1.LEMMA];
+  println [i:⇓1.FORM];
+  println [j:↑.ii];
   ↓1 = ↑;
   ↓2 = $i;
 }

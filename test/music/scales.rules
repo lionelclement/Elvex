@@ -1,0 +1,1110 @@
+// -----------------------------------------------------------------------------
+// scales.rules
+// -----------------------------------------------------------------------------
+// form:scales produit des études de gammes pédagogiques de façon séquentielle, pas comme un ensemble.
+// La flûte commence une octave sous ensemble.flute.octave et couvre un large registre pratique,
+// mais évite les notes extrêmes aiguës. Les sections sont séparées par \bar "||" + \break. Les marques de respiration sont utilisées
+// uniquement dans les sections de gammes de flûte.
+// -----------------------------------------------------------------------------
+
+SCALE_FLUTE_SEQUENCE → SCALE_FLUTE_STAFF
+{ ↓1 = ↑; ⇑ = [study:scales_single_flute_staff]; }
+
+SCALE_PIANO_SEQUENCE → SCALE_PIANO_GROUP
+{ ↓1 = ↑; ⇑ = [study:scales_single_piano_staff]; }
+
+@withoutSpaces
+SCALE_FLUTE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[form:scales], ensemble:[flute:[midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den], bpm:$bpm] ⊂ ↑;
+  $scale_octave = $octave - 1;
+  ↓1 = [];
+  ↓2 = [instrument_name:"Scales"];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:scale_flute_all, form:scales, mode:$mode, tonic_pc:$tonic_pc, octave:$scale_octave, accidental_policy:$accidental_policy, num:$num, den:$den];
+  ↓9 = [];
+}
+
+@withoutSpaces
+SCALE_PIANO_GROUP → PIANO_OPEN SCALE_PIANO_RH_STAFF SCALE_PIANO_LH_STAFF PIANO_CLOSE
+{ ↓1 = []; ↓2 = ↑; ↓3 = ↑; ↓4 = []; }
+
+@withoutSpaces
+SCALE_PIANO_RH_STAFF → PIANO_RH_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[form:scales], ensemble:[piano:[midi:$midi, right_hand:[octave:$octave, dynamic:$dynamic]]],
+   notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den], bpm:$bpm] ⊂ ↑;
+  ↓1=[]; ↓2=[instrument_name:"Scales"]; ↓3=[midi_instrument:$midi]; ↓4=[bpm:$bpm];
+  ↓5=[tonic:$tonic, mode:$mode]; ↓6=[num:$num, den:$den]; ↓7=[]; ↓8=[dynamic:$dynamic];
+  ↓9=[role:scale_piano_rh_all, form:scales, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den];
+  ↓10=[];
+}
+
+@withoutSpaces
+SCALE_PIANO_LH_STAFF → PIANO_LH_OPEN MIDI_INSTRUMENT KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[form:scales], ensemble:[piano:[midi:$midi, left_hand:[octave:$octave, dynamic:$dynamic]]],
+   notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1=[]; ↓2=[midi_instrument:$midi]; ↓3=[tonic:$tonic, mode:$mode]; ↓4=[num:$num, den:$den]; ↓5=[]; ↓6=[dynamic:$dynamic];
+  ↓7=[role:scale_piano_lh_all, form:scales, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den];
+  ↓8=[];
+}
+
+// --- Labels ----------------------------------------------------------------
+SCALE_LABEL_HELD → SCALE_SECTION_LABEL
+{ ↓1=[section_label:"Sons tenus"]; }
+SCALE_LABEL_SCALE_NO_SLUR → SCALE_SECTION_LABEL
+{ ↓1=[section_label:"Gamme sans liaison"]; }
+SCALE_LABEL_SCALE_SLUR → SCALE_SECTION_LABEL
+{ ↓1=[section_label:"Gamme avec liaison"]; }
+SCALE_LABEL_THIRDS → SCALE_SECTION_LABEL
+{ ↓1=[section_label:"Tierces"]; }
+SCALE_LABEL_TONIC → SCALE_SECTION_LABEL
+{ ↓1=[section_label:"Tonique"]; }
+SCALE_LABEL_DOM7 → SCALE_SECTION_LABEL
+{ ↓1=[section_label:"Dominante 7e"]; }
+
+// --- MUSICAL_FORM dispatch --------------------------------------------------
+MUSICAL_FORM → SCALE_LABEL_HELD SCALE_HELD_TONES_ALL SCALE_SECTION_BREAK SCALE_LABEL_SCALE_NO_SLUR SCALE_SCALE_ASC_DESC_BREATH SCALE_SECTION_BREAK SCALE_LABEL_SCALE_SLUR SCALE_SCALE_ASC_DESC_SLURRED_BREATH SCALE_SECTION_BREAK SCALE_LABEL_THIRDS SCALE_THIRDS_ASC_DESC_BREATH SCALE_SECTION_BREAK SCALE_LABEL_TONIC SCALE_TONIC_PACKETS_ASC_DESC_BREATH SCALE_SECTION_BREAK SCALE_LABEL_DOM7 SCALE_DOM7_PACKETS_ASC_DESC_BREATH
+{ [role:scale_flute_all, form:scales]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ↓2=↑; ↓3=[]; ↓4=[]; ↓5=↑; ↓6=[]; ↓7=[]; ↓8=↑; ↓9=[]; ↓10=[]; ↓11=↑; ↓12=[]; ↓13=[]; ↓14=↑; ↓15=[]; ↓16=[]; ↓17=↑; ⇑=[study:flute_scales_all]; }
+
+MUSICAL_FORM → SCALE_LABEL_HELD SCALE_HELD_TONES_ALL SCALE_SECTION_BREAK SCALE_LABEL_SCALE_NO_SLUR SCALE_SCALE_ASC_DESC SCALE_SECTION_BREAK SCALE_LABEL_SCALE_SLUR SCALE_SCALE_ASC_DESC_SLURRED SCALE_SECTION_BREAK SCALE_LABEL_THIRDS SCALE_THIRDS_ASC_DESC SCALE_SECTION_BREAK SCALE_LABEL_TONIC SCALE_TONIC_PACKETS_ASC_DESC SCALE_SECTION_BREAK SCALE_LABEL_DOM7 SCALE_DOM7_PACKETS_ASC_DESC
+{ [role:scale_piano_rh_all, form:scales]; [num:$num, den:$den] ⊂ ↑; ↓1=[]; ↓2=↑; ↓3=[]; ↓4=[]; ↓5=↑; ↓6=[]; ↓7=[]; ↓8=↑; ↓9=[]; ↓10=[]; ↓11=↑; ↓12=[]; ↓13=[]; ↓14=↑; ↓15=[]; ↓16=[]; ↓17=↑; ⇑=[study:piano_rh_scales_all]; }
+
+// La main gauche reflète les durées et le nombre de sections ; les étiquettes et sauts de ligne sont portés par RH.
+MUSICAL_FORM → SCALE_HELD_TONES_ALL SCALE_SCALE_ASC_DESC SCALE_SCALE_ASC_DESC SCALE_THIRDS_ASC_DESC SCALE_TONIC_PACKETS_ASC_DESC SCALE_DOM7_PACKETS_ASC_DESC
+{ [role:scale_piano_lh_all, form:scales]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[study:piano_lh_scales_all]; }
+
+// --- Sons tenus : toutes les notes de gamme en rondes avec point d’orgue ----
+SCALE_HELD_TONES_ALL → SCALE_HELD_TONES_MAJOR_ALL
+{ [mode:major]; ↓1=↑; ⇑=[study:held_all_major]; }
+
+SCALE_HELD_TONES_ALL → SCALE_HELD_TONES_MINOR_ALL
+{ [mode:minor]; ↓1=↑; ⇑=[study:held_all_minor]; }
+
+SCALE_HELD_TONES_MAJOR_ALL → SCALE_HELD_O0 SCALE_HELD_O2 SCALE_HELD_O4 SCALE_HELD_O5 SCALE_HELD_O7 SCALE_HELD_O9 SCALE_HELD_O11 SCALE_HELD_O12 SCALE_HELD_O14 SCALE_HELD_O16 SCALE_HELD_O17 SCALE_HELD_O19 SCALE_HELD_O21 SCALE_HELD_O23 SCALE_HELD_O24 SCALE_HELD_O26 SCALE_HELD_O28 SCALE_HELD_O29 SCALE_HELD_O31 SCALE_HELD_O33 SCALE_HELD_O35
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ↓17=↑; ↓18=↑; ↓19=↑; ↓20=↑; ↓21=↑; ⇑=[study:scale_held_tones_major_all_limited_high]; }
+
+SCALE_HELD_TONES_MINOR_ALL → SCALE_HELD_O0 SCALE_HELD_O2 SCALE_HELD_O3 SCALE_HELD_O5 SCALE_HELD_O7 SCALE_HELD_O8 SCALE_HELD_O10 SCALE_HELD_O12 SCALE_HELD_O14 SCALE_HELD_O15 SCALE_HELD_O17 SCALE_HELD_O19 SCALE_HELD_O20 SCALE_HELD_O22 SCALE_HELD_O24 SCALE_HELD_O26 SCALE_HELD_O27 SCALE_HELD_O29 SCALE_HELD_O31 SCALE_HELD_O32 SCALE_HELD_O34
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ↓17=↑; ↓18=↑; ↓19=↑; ↓20=↑; ↓21=↑; ⇑=[study:scale_held_tones_minor_all_limited_high]; }
+
+SCALE_HELD_O0 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:0, last_function:held];
+}
+
+SCALE_HELD_O2 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:2], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:2, last_function:held];
+}
+
+SCALE_HELD_O3 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:3], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:3, last_function:held];
+}
+
+SCALE_HELD_O4 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:4], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:4, last_function:held];
+}
+
+SCALE_HELD_O5 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:5, last_function:held];
+}
+
+SCALE_HELD_O7 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:7, last_function:held];
+}
+
+SCALE_HELD_O8 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:8], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:8, last_function:held];
+}
+
+SCALE_HELD_O9 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:9], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:9, last_function:held];
+}
+
+SCALE_HELD_O10 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:10], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:10, last_function:held];
+}
+
+SCALE_HELD_O11 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:11], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:11, last_function:held];
+}
+
+SCALE_HELD_O12 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:12], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:12, last_function:held];
+}
+
+SCALE_HELD_O14 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:14], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:14, last_function:held];
+}
+
+SCALE_HELD_O15 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:15], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:15, last_function:held];
+}
+
+SCALE_HELD_O16 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:16], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:16, last_function:held];
+}
+
+SCALE_HELD_O17 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:17], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:17, last_function:held];
+}
+
+SCALE_HELD_O19 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:19], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:19, last_function:held];
+}
+
+SCALE_HELD_O20 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:20], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:20, last_function:held];
+}
+
+SCALE_HELD_O21 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:21], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:21, last_function:held];
+}
+
+SCALE_HELD_O22 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:22], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:22, last_function:held];
+}
+
+SCALE_HELD_O23 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:23], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:23, last_function:held];
+}
+
+SCALE_HELD_O24 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:24], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:24, last_function:held];
+}
+
+SCALE_HELD_O26 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:26], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:26, last_function:held];
+}
+
+SCALE_HELD_O27 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:27], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:27, last_function:held];
+}
+
+SCALE_HELD_O28 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:28], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:28, last_function:held];
+}
+
+SCALE_HELD_O29 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:29], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:29, last_function:held];
+}
+
+SCALE_HELD_O31 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:31], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:31, last_function:held];
+}
+
+SCALE_HELD_O32 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:32], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:32, last_function:held];
+}
+
+SCALE_HELD_O33 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:33], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:33, last_function:held];
+}
+
+SCALE_HELD_O34 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:34], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:34, last_function:held];
+}
+
+SCALE_HELD_O35 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:35], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:35, last_function:held];
+}
+
+SCALE_HELD_O36 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:36], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:36, last_function:held];
+}
+
+SCALE_HELD_O38 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:38], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:38, last_function:held];
+}
+
+SCALE_HELD_O39 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:39], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:39, last_function:held];
+}
+
+SCALE_HELD_O40 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:40], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:40, last_function:held];
+}
+
+SCALE_HELD_O41 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:41], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:41, last_function:held];
+}
+
+SCALE_HELD_O43 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:43], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:43, last_function:held];
+}
+
+SCALE_HELD_O44 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:44], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:44, last_function:held];
+}
+
+SCALE_HELD_O45 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:45], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:45, last_function:held];
+}
+
+SCALE_HELD_O46 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:46], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:46, last_function:held];
+}
+
+SCALE_HELD_O47 → BAR1_FERMATA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:47], rhythm:[r1:"1/1"]];
+  ⇑=[last_offset:47, last_function:held];
+}
+
+SCALE_SCALE_ASC → SCALE_UP_BAR1 SCALE_UP_BAR2 SCALE_UP_BAR3
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_scale_asc_limited_high]; }
+
+SCALE_SCALE_DESC → SCALE_DOWN_BAR2 SCALE_DOWN_BAR3 SCALE_DOWN_BAR4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_scale_desc_limited_high]; }
+
+SCALE_SCALE_ASC_BREATH → SCALE_UP_BAR1 SCALE_BREATH SCALE_UP_BAR2 SCALE_BREATH SCALE_UP_BAR3
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_scale_asc_breath_limited_high]; }
+
+SCALE_SCALE_DESC_BREATH → SCALE_DOWN_BAR2 SCALE_BREATH SCALE_DOWN_BAR3 SCALE_BREATH SCALE_DOWN_BAR4
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_scale_desc_breath_limited_high]; }
+
+SCALE_SCALE_ASC_SLURRED → SCALE_UP_BAR1_SLURRED SCALE_UP_BAR2_SLURRED SCALE_UP_BAR3_SLURRED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_scale_asc_slurred_limited_high]; }
+
+SCALE_SCALE_DESC_SLURRED → SCALE_DOWN_BAR2_SLURRED SCALE_DOWN_BAR3_SLURRED SCALE_DOWN_BAR4_SLURRED
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_scale_desc_slurred_limited_high]; }
+
+SCALE_SCALE_ASC_SLURRED_BREATH → SCALE_UP_BAR1_SLURRED SCALE_BREATH SCALE_UP_BAR2_SLURRED SCALE_BREATH SCALE_UP_BAR3_SLURRED
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_scale_asc_slurred_breath_limited_high]; }
+
+SCALE_SCALE_DESC_SLURRED_BREATH → SCALE_DOWN_BAR2_SLURRED SCALE_BREATH SCALE_DOWN_BAR3_SLURRED SCALE_BREATH SCALE_DOWN_BAR4_SLURRED
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_scale_desc_slurred_breath_limited_high]; }
+
+SCALE_SCALE_ASC_DESC → SCALE_SCALE_ASC SCALE_SCALE_DESC
+{ ↓1=↑; ↓2=↑; ⇑=[study:scale_scale_asc_desc]; }
+
+SCALE_SCALE_ASC_DESC_BREATH → SCALE_SCALE_ASC_BREATH SCALE_BREATH SCALE_SCALE_DESC_BREATH
+{ ↓1=↑; ↓2=[]; ↓3=↑; ⇑=[study:scale_scale_asc_desc_breath]; }
+
+SCALE_SCALE_ASC_DESC_SLURRED → SCALE_SCALE_ASC_SLURRED SCALE_SCALE_DESC_SLURRED
+{ ↓1=↑; ↓2=↑; ⇑=[study:scale_scale_asc_desc_slurred]; }
+
+SCALE_SCALE_ASC_DESC_SLURRED_BREATH → SCALE_SCALE_ASC_SLURRED_BREATH SCALE_BREATH SCALE_SCALE_DESC_SLURRED_BREATH
+{ ↓1=↑; ↓2=[]; ↓3=↑; ⇑=[study:scale_scale_asc_desc_slurred_breath]; }
+
+SCALE_UP_BAR1 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:2,o3:4,o4:5,o5:7,o6:9,o7:11],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar1];
+}
+
+SCALE_UP_BAR1 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:2,o3:3,o4:5,o5:7,o6:8,o7:10],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar1];
+}
+SCALE_UP_BAR1_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:2,o3:4,o4:5,o5:7,o6:9,o7:11],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar1_slurred];
+}
+
+SCALE_UP_BAR1_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:2,o3:3,o4:5,o5:7,o6:8,o7:10],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar1_slurred];
+}
+SCALE_UP_BAR2 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:12,o2:14,o3:16,o4:17,o5:19,o6:21,o7:23],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar2];
+}
+
+SCALE_UP_BAR2 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:12,o2:14,o3:15,o4:17,o5:19,o6:20,o7:22],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar2];
+}
+SCALE_UP_BAR2_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:12,o2:14,o3:16,o4:17,o5:19,o6:21,o7:23],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar2_slurred];
+}
+
+SCALE_UP_BAR2_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:12,o2:14,o3:15,o4:17,o5:19,o6:20,o7:22],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar2_slurred];
+}
+SCALE_UP_BAR3 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:26,o3:28,o4:29,o5:31,o6:33,o7:35],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar3];
+}
+
+SCALE_UP_BAR3 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:26,o3:27,o4:29,o5:31,o6:32,o7:34],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar3];
+}
+SCALE_UP_BAR3_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:26,o3:28,o4:29,o5:31,o6:33,o7:35],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar3_slurred];
+}
+
+SCALE_UP_BAR3_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:26,o3:27,o4:29,o5:31,o6:32,o7:34],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar3_slurred];
+}
+SCALE_UP_BAR4 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:36,o2:38,o3:40,o4:41,o5:43,o6:45,o7:45],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar4];
+}
+
+SCALE_UP_BAR4 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:36,o2:38,o3:39,o4:41,o5:43,o6:44,o7:44],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar4];
+}
+SCALE_UP_BAR4_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:36,o2:38,o3:40,o4:41,o5:43,o6:45,o7:45],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar4_slurred];
+}
+
+SCALE_UP_BAR4_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:36,o2:38,o3:39,o4:41,o5:43,o6:44,o7:44],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_up_bar4_slurred];
+}
+SCALE_DOWN_BAR1 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:45,o2:43,o3:41,o4:40,o5:38,o6:36,o7:35],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar1];
+}
+
+SCALE_DOWN_BAR1 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:44,o2:43,o3:41,o4:39,o5:38,o6:36,o7:34],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar1];
+}
+SCALE_DOWN_BAR1_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:45,o2:43,o3:41,o4:40,o5:38,o6:36,o7:35],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar1_slurred];
+}
+
+SCALE_DOWN_BAR1_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:44,o2:43,o3:41,o4:39,o5:38,o6:36,o7:34],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar1_slurred];
+}
+SCALE_DOWN_BAR2 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:33,o2:31,o3:29,o4:28,o5:26,o6:24,o7:23],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar2];
+}
+
+SCALE_DOWN_BAR2 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:32,o2:31,o3:29,o4:27,o5:26,o6:24,o7:22],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar2];
+}
+SCALE_DOWN_BAR2_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:33,o2:31,o3:29,o4:28,o5:26,o6:24,o7:23],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar2_slurred];
+}
+
+SCALE_DOWN_BAR2_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:32,o2:31,o3:29,o4:27,o5:26,o6:24,o7:22],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar2_slurred];
+}
+SCALE_DOWN_BAR3 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:21,o2:19,o3:17,o4:16,o5:14,o6:12,o7:11],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar3];
+}
+
+SCALE_DOWN_BAR3 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:20,o2:19,o3:17,o4:15,o5:14,o6:12,o7:10],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar3];
+}
+SCALE_DOWN_BAR3_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:21,o2:19,o3:17,o4:16,o5:14,o6:12,o7:11],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar3_slurred];
+}
+
+SCALE_DOWN_BAR3_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:20,o2:19,o3:17,o4:15,o5:14,o6:12,o7:10],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar3_slurred];
+}
+SCALE_DOWN_BAR4 → BAR7
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:9,o2:7,o3:5,o4:4,o5:2,o6:0,o7:0],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar4];
+}
+
+SCALE_DOWN_BAR4 → BAR7
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:8,o2:7,o3:5,o4:3,o5:2,o6:0,o7:0],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar4];
+}
+SCALE_DOWN_BAR4_SLURRED → BAR7_SLURRED
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:9,o2:7,o3:5,o4:4,o5:2,o6:0,o7:0],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar4_slurred];
+}
+
+SCALE_DOWN_BAR4_SLURRED → BAR7_SLURRED
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:8,o2:7,o3:5,o4:3,o5:2,o6:0,o7:0],
+      rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8"]];
+  ⇑=[last_function:scale_down_bar4_slurred];
+}
+SCALE_THIRDS_ASC → SCALE_THIRDS_UP_BAR1 SCALE_THIRDS_UP_BAR2 SCALE_THIRDS_UP_BAR3 SCALE_THIRDS_UP_BAR4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[study:scale_thirds_asc_limited_high]; }
+
+SCALE_THIRDS_DESC → SCALE_THIRDS_DOWN_BAR2 SCALE_THIRDS_DOWN_BAR3 SCALE_THIRDS_DOWN_BAR4 SCALE_THIRDS_DOWN_BAR5
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[study:scale_thirds_desc_limited_high]; }
+
+SCALE_THIRDS_ASC_BREATH → SCALE_THIRDS_UP_BAR1 SCALE_BREATH SCALE_THIRDS_UP_BAR2 SCALE_BREATH SCALE_THIRDS_UP_BAR3 SCALE_BREATH SCALE_THIRDS_UP_BAR4
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ↓6=[]; ↓7=↑; ⇑=[study:scale_thirds_asc_breath_limited_high]; }
+
+SCALE_THIRDS_DESC_BREATH → SCALE_THIRDS_DOWN_BAR2 SCALE_BREATH SCALE_THIRDS_DOWN_BAR3 SCALE_BREATH SCALE_THIRDS_DOWN_BAR4 SCALE_BREATH SCALE_THIRDS_DOWN_BAR5
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ↓6=[]; ↓7=↑; ⇑=[study:scale_thirds_desc_breath_limited_high]; }
+
+SCALE_THIRDS_ASC_DESC → SCALE_THIRDS_ASC SCALE_THIRDS_DESC
+{ ↓1=↑; ↓2=↑; ⇑=[study:scale_thirds_asc_desc]; }
+
+SCALE_THIRDS_ASC_DESC_BREATH → SCALE_THIRDS_ASC_BREATH SCALE_BREATH SCALE_THIRDS_DESC_BREATH
+{ ↓1=↑; ↓2=[]; ↓3=↑; ⇑=[study:scale_thirds_asc_desc_breath]; }
+
+SCALE_THIRDS_UP_BAR1 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:4,o3:2,o4:5,o5:4,o6:7,o7:5,o8:9],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar1];
+}
+
+SCALE_THIRDS_UP_BAR1 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:3,o3:2,o4:5,o5:3,o6:7,o7:5,o8:8],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar1];
+}
+SCALE_THIRDS_UP_BAR2 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:7,o2:11,o3:9,o4:12,o5:11,o6:14,o7:12,o8:16],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar2];
+}
+
+SCALE_THIRDS_UP_BAR2 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:7,o2:10,o3:8,o4:12,o5:10,o6:14,o7:12,o8:15],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar2];
+}
+SCALE_THIRDS_UP_BAR3 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:14,o2:17,o3:16,o4:19,o5:17,o6:21,o7:19,o8:23],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar3];
+}
+
+SCALE_THIRDS_UP_BAR3 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:14,o2:17,o3:15,o4:19,o5:17,o6:20,o7:19,o8:22],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar3];
+}
+SCALE_THIRDS_UP_BAR4 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:21,o2:24,o3:23,o4:26,o5:24,o6:28,o7:26,o8:29],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar4];
+}
+
+SCALE_THIRDS_UP_BAR4 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:20,o2:24,o3:22,o4:26,o5:24,o6:27,o7:26,o8:29],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar4];
+}
+SCALE_THIRDS_UP_BAR5 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:28,o2:31,o3:29,o4:33,o5:31,o6:35,o7:33,o8:36],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar5];
+}
+
+SCALE_THIRDS_UP_BAR5 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:27,o2:31,o3:29,o4:32,o5:31,o6:34,o7:32,o8:36],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_up_bar5];
+}
+SCALE_THIRDS_DOWN_BAR1 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:36,o2:33,o3:35,o4:31,o5:33,o6:29,o7:31,o8:28],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar1];
+}
+
+SCALE_THIRDS_DOWN_BAR1 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:36,o2:32,o3:34,o4:31,o5:32,o6:29,o7:31,o8:27],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar1];
+}
+SCALE_THIRDS_DOWN_BAR2 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:29,o2:26,o3:28,o4:24,o5:26,o6:23,o7:24,o8:21],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar2];
+}
+
+SCALE_THIRDS_DOWN_BAR2 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:29,o2:26,o3:27,o4:24,o5:26,o6:22,o7:24,o8:20],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar2];
+}
+SCALE_THIRDS_DOWN_BAR3 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:23,o2:19,o3:21,o4:17,o5:19,o6:16,o7:17,o8:14],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar3];
+}
+
+SCALE_THIRDS_DOWN_BAR3 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:22,o2:19,o3:20,o4:17,o5:19,o6:15,o7:17,o8:14],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar3];
+}
+SCALE_THIRDS_DOWN_BAR4 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:16,o2:12,o3:14,o4:11,o5:12,o6:9,o7:11,o8:7],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar4];
+}
+
+SCALE_THIRDS_DOWN_BAR4 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:15,o2:12,o3:14,o4:10,o5:12,o6:8,o7:10,o8:7],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar4];
+}
+SCALE_THIRDS_DOWN_BAR5 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:9,o2:5,o3:7,o4:4,o5:5,o6:2,o7:4,o8:0],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar5];
+}
+
+SCALE_THIRDS_DOWN_BAR5 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:8,o2:5,o3:7,o4:3,o5:5,o6:2,o7:3,o8:0],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_thirds_down_bar5];
+}
+SCALE_TONIC_PACKETS_ASC → SCALE_TONIC_UP_BAR1 SCALE_TONIC_UP_BAR2 SCALE_TONIC_UP_BAR3
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_tonic_packets_asc_limited_high]; }
+
+SCALE_TONIC_PACKETS_DESC → SCALE_TONIC_DOWN_BAR2 SCALE_TONIC_DOWN_BAR3 SCALE_TONIC_DOWN_BAR4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_tonic_packets_desc_limited_high]; }
+
+SCALE_TONIC_PACKETS_ASC_BREATH → SCALE_TONIC_UP_BAR1 SCALE_BREATH SCALE_TONIC_UP_BAR2 SCALE_BREATH SCALE_TONIC_UP_BAR3
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_tonic_packets_asc_breath_limited_high]; }
+
+SCALE_TONIC_PACKETS_DESC_BREATH → SCALE_TONIC_DOWN_BAR2 SCALE_BREATH SCALE_TONIC_DOWN_BAR3 SCALE_BREATH SCALE_TONIC_DOWN_BAR4
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_tonic_packets_desc_breath_limited_high]; }
+
+SCALE_TONIC_PACKETS_ASC_DESC → SCALE_TONIC_PACKETS_ASC SCALE_TONIC_PACKETS_DESC
+{ ↓1=↑; ↓2=↑; ⇑=[study:scale_tonic_packets_asc_desc]; }
+
+SCALE_TONIC_PACKETS_ASC_DESC_BREATH → SCALE_TONIC_PACKETS_ASC_BREATH SCALE_BREATH SCALE_TONIC_PACKETS_DESC_BREATH
+{ ↓1=↑; ↓2=[]; ↓3=↑; ⇑=[study:scale_tonic_packets_asc_desc_breath]; }
+
+SCALE_TONIC_UP_BAR1 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:4,o3:7,o4:12,o5:4,o6:7,o7:12,o8:16],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar1];
+}
+
+SCALE_TONIC_UP_BAR1 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:3,o3:7,o4:12,o5:3,o6:7,o7:12,o8:15],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar1];
+}
+SCALE_TONIC_UP_BAR2 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:7,o2:12,o3:16,o4:19,o5:12,o6:16,o7:19,o8:24],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar2];
+}
+
+SCALE_TONIC_UP_BAR2 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:7,o2:12,o3:15,o4:19,o5:12,o6:15,o7:19,o8:24],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar2];
+}
+SCALE_TONIC_UP_BAR3 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:16,o2:19,o3:24,o4:28,o5:19,o6:24,o7:28,o8:31],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar3];
+}
+
+SCALE_TONIC_UP_BAR3 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:15,o2:19,o3:24,o4:27,o5:19,o6:24,o7:27,o8:31],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar3];
+}
+SCALE_TONIC_UP_BAR4 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:28,o3:31,o4:36,o5:28,o6:31,o7:36,o8:40],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar4];
+}
+
+SCALE_TONIC_UP_BAR4 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:27,o3:31,o4:36,o5:27,o6:31,o7:36,o8:39],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_up_bar4];
+}
+SCALE_TONIC_DOWN_BAR1 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:40,o2:36,o3:31,o4:28,o5:36,o6:31,o7:28,o8:24],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar1];
+}
+
+SCALE_TONIC_DOWN_BAR1 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:39,o2:36,o3:31,o4:27,o5:36,o6:31,o7:27,o8:24],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar1];
+}
+SCALE_TONIC_DOWN_BAR2 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:31,o2:28,o3:24,o4:19,o5:28,o6:24,o7:19,o8:16],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar2];
+}
+
+SCALE_TONIC_DOWN_BAR2 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:31,o2:27,o3:24,o4:19,o5:27,o6:24,o7:19,o8:15],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar2];
+}
+SCALE_TONIC_DOWN_BAR3 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:19,o3:16,o4:12,o5:19,o6:16,o7:12,o8:7],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar3];
+}
+
+SCALE_TONIC_DOWN_BAR3 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:24,o2:19,o3:15,o4:12,o5:19,o6:15,o7:12,o8:7],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar3];
+}
+SCALE_TONIC_DOWN_BAR4 → BAR8
+{
+  [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:16,o2:12,o3:7,o4:4,o5:12,o6:7,o7:4,o8:0],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar4];
+}
+
+SCALE_TONIC_DOWN_BAR4 → BAR8
+{
+  [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:15,o2:12,o3:7,o4:3,o5:12,o6:7,o7:3,o8:0],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_tonic_down_bar4];
+}
+SCALE_DOM7_PACKETS_ASC → SCALE_DOM7_UP_BAR1 SCALE_DOM7_UP_BAR2 SCALE_DOM7_UP_BAR3
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_dom7_packets_asc_limited_high]; }
+
+SCALE_DOM7_PACKETS_DESC → SCALE_DOM7_DOWN_BAR2 SCALE_DOM7_DOWN_BAR3 SCALE_DOM7_DOWN_BAR4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[study:scale_dom7_packets_desc_limited_high]; }
+
+SCALE_DOM7_PACKETS_ASC_BREATH → SCALE_DOM7_UP_BAR1 SCALE_BREATH SCALE_DOM7_UP_BAR2 SCALE_BREATH SCALE_DOM7_UP_BAR3
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_dom7_packets_asc_breath_limited_high]; }
+
+SCALE_DOM7_PACKETS_DESC_BREATH → SCALE_DOM7_DOWN_BAR2 SCALE_BREATH SCALE_DOM7_DOWN_BAR3 SCALE_BREATH SCALE_DOM7_DOWN_BAR4
+{ ↓1=↑; ↓2=[]; ↓3=↑; ↓4=[]; ↓5=↑; ⇑=[study:scale_dom7_packets_desc_breath_limited_high]; }
+
+SCALE_DOM7_PACKETS_ASC_DESC → SCALE_DOM7_PACKETS_ASC SCALE_DOM7_PACKETS_DESC
+{ ↓1=↑; ↓2=↑; ⇑=[study:scale_dom7_packets_asc_desc]; }
+
+SCALE_DOM7_PACKETS_ASC_DESC_BREATH → SCALE_DOM7_PACKETS_ASC_BREATH SCALE_BREATH SCALE_DOM7_PACKETS_DESC_BREATH
+{ ↓1=↑; ↓2=[]; ↓3=↑; ⇑=[study:scale_dom7_packets_asc_desc_breath]; }
+
+SCALE_DOM7_UP_BAR1 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:7,o2:11,o3:14,o4:17,o5:11,o6:14,o7:17,o8:19],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_up_bar1];
+}
+SCALE_DOM7_UP_BAR2 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:14,o2:17,o3:19,o4:23,o5:17,o6:19,o7:23,o8:26],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_up_bar2];
+}
+SCALE_DOM7_UP_BAR3 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:19,o2:23,o3:26,o4:29,o5:23,o6:26,o7:29,o8:31],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_up_bar3];
+}
+SCALE_DOM7_UP_BAR4 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:26,o2:29,o3:31,o4:35,o5:29,o6:31,o7:35,o8:38],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_up_bar4];
+}
+SCALE_DOM7_DOWN_BAR1 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:38,o2:35,o3:31,o4:29,o5:35,o6:31,o7:29,o8:26],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_down_bar1];
+}
+SCALE_DOM7_DOWN_BAR2 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:31,o2:29,o3:26,o4:23,o5:29,o6:26,o7:23,o8:19],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_down_bar2];
+}
+SCALE_DOM7_DOWN_BAR3 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:26,o2:23,o3:19,o4:17,o5:23,o6:19,o7:17,o8:14],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_down_bar3];
+}
+SCALE_DOM7_DOWN_BAR4 → BAR8
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:19,o2:17,o3:14,o4:11,o5:17,o6:14,o7:11,o8:7],
+      rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]];
+  ⇑=[last_function:scale_dom7_down_bar4];
+}

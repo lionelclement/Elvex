@@ -1,0 +1,171 @@
+S → ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank>;
+
+  ⇑ = ↑;
+}
+
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+S → ADJ
+{
+  [mod:<$M1>];
+
+  ↓1 = $M1;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ
+{
+  [mod:<$M1,$M2>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+
+  order by <⇓1.rank, ⇓2.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5,$M6>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+  ↓6 = $M6;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5,$M6,$M7>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+  ↓6 = $M6;
+  ↓7 = $M7;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank, ⇓7.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5,$M6,$M7,$M8>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+  ↓6 = $M6;
+  ↓7 = $M7;
+  ↓8 = $M8;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank, ⇓7.rank, ⇓8.rank>;
+
+  ⇑ = ↑;
+}
+
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}big              adj [HEAD:big, FORM:"big", type:size, rank:1];
+large            adj [HEAD:large, FORM:"large", type:size, rank:1];
+small            adj [HEAD:small, FORM:"small", type:size, rank:1];
+
+old              adj [HEAD:old, FORM:"old", type:age, rank:2];
+young            adj [HEAD:young, FORM:"young", type:age, rank:2];
+new              adj [HEAD:new, FORM:"new", type:age, rank:2];
+
+round            adj [HEAD:round, FORM:"round", type:shape, rank:3];
+square           adj [HEAD:square, FORM:"square", type:shape, rank:3];
+"square-section" adj [HEAD:square_section, FORM:"square-section", type:shape, rank:3];
+triangular       adj [HEAD:triangular, FORM:"triangular", type:shape, rank:3];
+
+red              adj [HEAD:red, FORM:"red", type:color, rank:4];
+pink             adj [HEAD:pink, FORM:"pink", type:color, rank:4];
+black            adj [HEAD:black, FORM:"black", type:color, rank:4];
+yellow           adj [HEAD:yellow, FORM:"yellow", type:color, rank:4];
+
+French           adj [HEAD:french, FORM:"French", type:origin, rank:5];
+Italian          adj [HEAD:italian, FORM:"Italian", type:origin, rank:5];
+Japanese         adj [HEAD:japanese, FORM:"Japanese", type:origin, rank:5];
+
+iron             adj [HEAD:iron, FORM:"iron", type:material, rank:6];
+wooden           adj [HEAD:wooden, FORM:"wooden", type:material, rank:6];
+plastic          adj [HEAD:plastic, FORM:"plastic", type:material, rank:6];
+silk             adj [HEAD:silk, FORM:"silk", type:material, rank:6];
+
+cooking          adj [HEAD:cooking, FORM:"cooking", type:purpose, rank:7];
+sleeping         adj [HEAD:sleeping, FORM:"sleeping", type:purpose, rank:7];
+running          adj [HEAD:running, FORM:"running", type:purpose, rank:7];
+
+nice             adj [HEAD:nice, FORM:"nice", type:opinion, rank:0];
+beautiful        adj [HEAD:beautiful, FORM:"beautiful", type:opinion, rank:0];
+strange          adj [HEAD:strange, FORM:"strange", type:opinion, rank:0];

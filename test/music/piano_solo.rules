@@ -1,0 +1,462 @@
+// =============================================================================
+// piano_solo.rules
+// =============================================================================
+// Matériau pour piano seul. Sépare généralement main droite et main gauche avec les rôles piano_rh et piano_lh.
+//
+
+// --- Matériau main droite / main gauche de piano ---------------------------
+// La partie de piano est divisée en deux rôles :
+// piano_rh = main droite, écrite avec les terminaux CHORD
+// piano_lh = main gauche, écrite avec les terminaux NOTE en patrons de clé de fa
+// Le plan de phrase reflète le plan binaire arrondi de la flûte afin que les lignes flûte+piano
+// stay aligned bar-for-bar.
+
+@withoutSpaces
+PIANO_RH_ROUNDED_BINARY → RH_A_PERIOD RH_A_VARIATION RH_CODA_SHORT
+{
+  // Réduction binaire arrondie fiable de main droite de piano avec variation rythmique.
+  // Nombre de mesures : 4 + 3 + 2 = 9 mesures.
+  // La version précédente en 16 mesures atteignait RH_B_PERIOD dans le log mais ne terminait pas.
+  // Ce routage garde une forme complète A / retour / cadence sans la coûteuse section modulante.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode] ⊂ ↑;
+  ↓1 = ↑;
+  ↓2 = ↑;
+  ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_LH_ROUNDED_BINARY → LH_A_PERIOD LH_A_VARIATION LH_CODA_SHORT
+{
+  // Route fiable de main gauche de piano alignée sur la main droite, avec figures d’accompagnement variées.
+  // Nombre de mesures : 4 + 3 + 2 = 9 mesures.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode] ⊂ ↑;
+  ↓1 = ↑;
+  ↓2 = ↑;
+  ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+RH_A_PERIOD → RH_TONIC_BROKEN_STYLE RH_PREDOMINANT_SUSTAINED_CHORDS RH_DOMINANT_BROKEN_STYLE RH_TONIC_SYNCOPATED_CHORDS
+{
+  // Ouverture de piano seul : alterne figures brisées en croches, harmonie tenue,
+  // mouvement de dominante et réponse tonique syncopée. Cela évite quatre mesures identiques
+  // d’accords en noires tout en gardant le même plan harmonique de 4 mesures.
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ⇑ = [last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+RH_A_VARIATION → RH_TONIC_ARPEGGIATED_CHORDS RH_CADENTIAL_SIX_FOUR RH_TONIC_CADENCE_CHORDS
+{
+  // Three-bar return variation: arpeggiated tonic, cadential 6/4, cadence.
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ⇑ = [last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+RH_B_PERIOD → RH_MODULATING_CHORDS RH_DOMINANT_KEY_CHORDS RH_DOMINANT_CHORDS
+{
+  [tonic_pc:$tonic_pc] ⊂ ↑;
+  $new_key_abs = $tonic_pc + 7; $new_key_pc = $new_key_abs % 12;
+  ↓1 = ↑;
+  ↓2 = ↑ ∪ [tonic_pc:$new_key_pc];
+  ↓3 = ↑ ∪ [tonic_pc:$new_key_pc];
+  ⇑ = [home_tonic_pc:$tonic_pc, current_key_pc:$new_key_pc, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+RH_A_RETURN → RH_TONIC_CHORDS RH_TONIC_CADENCE_CHORDS
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+RH_CODA → RH_CADENTIAL_SIX_FOUR RH_DOMINANT_CHORDS RH_TONIC_CHORDS RH_FINAL_TONIC_CHORD
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ⇑ = [last_function:tonic, tension:resolved, cadence:final]; }
+
+@withoutSpaces
+RH_CODA_SHORT → RH_DOMINANT_CHORDS RH_FINAL_TONIC_CHORD
+{
+  // Cadence finale de 2 mesures pour la routage de piano fiable.
+  ↓1 = ↑; ↓2 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+LH_A_PERIOD → LH_ALBERTI_TONIC LH_PREDOMINANT_BASS_HALF LH_ALBERTI_DOMINANT LH_TONIC_BASS_LEAP
+{
+  // La main gauche de piano seul utilise des figures d’accompagnement plutôt que quatre
+  // mesures de basse en noires : Alberti, soutien en blanches, dominante Alberti, basse par saut.
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ⇑ = [last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+LH_A_VARIATION → LH_TONIC_BASS_LEAP LH_DOMINANT_PEDAL_EIGHTHS LH_TONIC_BASS_HALF
+{
+  // Variation de basse plus courte alignée avec RH_A_VARIATION.
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ⇑ = [last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+LH_B_PERIOD → LH_MODULATING_BASS LH_DOMINANT_PEDAL_BASS LH_DOMINANT_BASS
+{
+  [tonic_pc:$tonic_pc] ⊂ ↑;
+  $new_key_abs = $tonic_pc + 7; $new_key_pc = $new_key_abs % 12;
+  ↓1 = ↑;
+  ↓2 = ↑ ∪ [tonic_pc:$new_key_pc];
+  ↓3 = ↑ ∪ [tonic_pc:$new_key_pc];
+  ⇑ = [home_tonic_pc:$tonic_pc, current_key_pc:$new_key_pc, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+LH_A_RETURN → LH_TONIC_BASS LH_TONIC_BASS
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+LH_CODA → LH_CADENTIAL_BASS LH_DOMINANT_PEDAL_BASS LH_TONIC_BASS LH_FINAL_TONIC_BASS
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ⇑ = [last_function:tonic, tension:resolved, cadence:final]; }
+
+@withoutSpaces
+LH_CODA_SHORT → LH_DOMINANT_BASS LH_FINAL_TONIC_BASS
+{
+  // Cadence finale de basse de 2 mesures pour la routage de piano fiable.
+  ↓1 = ↑; ↓2 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+// Fonctions d’accords de main droite. En majeur, I et IV sont majeurs ; en mineur, i et iv
+// sont mineurs tandis que V reste majeur pour une sensible classique.
+@withoutSpaces
+RH_TONIC_CHORDS → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:4, q2:min, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_TONIC_CHORDS → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:3, q2:maj, root3:7, q3:maj, root4:0, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_TONIC_BROKEN_STYLE → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:7, q2:maj, root3:4, q3:min, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_TONIC_BROKEN_STYLE → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:7, q2:maj, root3:3, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_PREDOMINANT_CHORDS → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:maj, root2:2, q2:min, root3:7, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+RH_PREDOMINANT_CHORDS → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:min, root2:2, q2:dim, root3:7, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+RH_DOMINANT_CHORDS → CHORD_BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:11, q2:dim, root3:7, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+RH_MODULATING_CHORDS → CHORD_BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:5, q2:maj, root3:2, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:pivot]; }
+
+@withoutSpaces
+RH_DOMINANT_KEY_CHORDS → CHORD_BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:4, q2:min, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:dominant_key]; }
+
+@withoutSpaces
+RH_TONIC_CADENCE_CHORDS → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:maj, root2:7, q2:maj, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_TONIC_CADENCE_CHORDS → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:min, root2:7, q2:maj, root3:7, q3:maj, root4:0, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_CADENTIAL_SIX_FOUR → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:7, q2:maj, root3:0, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:cadential_six_four]; }
+
+@withoutSpaces
+RH_CADENTIAL_SIX_FOUR → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:7, q2:maj, root3:0, q3:min, root4:7, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:cadential_six_four]; }
+
+@withoutSpaces
+RH_PREDOMINANT_SUSTAINED_CHORDS → CHORD_BAR2
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:maj, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+RH_PREDOMINANT_SUSTAINED_CHORDS → CHORD_BAR2
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:min, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+RH_DOMINANT_BROKEN_STYLE → CHORD_BAR6
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:11, q2:dim, root3:7, q3:maj, root4:11, q4:dim, root5:7, q5:maj, root6:7, q6:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+RH_TONIC_SYNCOPATED_CHORDS → CHORD_BAR6
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:4, q2:min, root3:7, q3:maj, root4:4, q4:min, root5:7, q5:maj, root6:0, q6:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_TONIC_SYNCOPATED_CHORDS → CHORD_BAR6
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:3, q2:maj, root3:7, q3:maj, root4:3, q4:maj, root5:7, q5:maj, root6:0, q6:min], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_TONIC_ARPEGGIATED_CHORDS → CHORD_BAR6
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:7, q2:maj, root3:4, q3:min, root4:7, q4:maj, root5:0, q5:maj, root6:7, q6:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_TONIC_ARPEGGIATED_CHORDS → CHORD_BAR6
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:7, q2:maj, root3:3, q3:maj, root4:7, q4:maj, root5:0, q5:min, root6:7, q6:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_FINAL_TONIC_CHORD → CHORD_BAR1
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:maj, dur:"1/1"]; ⇑ = [last_function:tonic, cadence:final]; }
+
+@withoutSpaces
+RH_FINAL_TONIC_CHORD → CHORD_BAR1
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:min, dur:"1/1"]; ⇑ = [last_function:tonic, cadence:final]; }
+
+// Figures de basse et d’accompagnement de main gauche.
+@withoutSpaces
+LH_TONIC_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0, o2:7, o3:12, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+LH_PREDOMINANT_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5, o2:12, o3:9, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+LH_DOMINANT_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7, o2:14, o3:11, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+LH_ALBERTI_TONIC → BAR8
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0, o2:7, o3:4, o4:7, o5:0, o6:7, o7:4, o8:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/8", r7:"1/8", r8:"1/8"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+LH_ALBERTI_DOMINANT → BAR8
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7, o2:14, o3:11, o4:14, o5:7, o6:14, o7:11, o8:14], rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/8", r7:"1/8", r8:"1/8"]]; ⇑ = [last_function:dominant]; }
+
+@withoutSpaces
+LH_MODULATING_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0, o2:5, o3:2, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:pivot]; }
+
+@withoutSpaces
+LH_DOMINANT_PEDAL_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7, o2:7, o3:7, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+LH_CADENTIAL_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0, o2:7, o3:12, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:cadential_six_four]; }
+
+@withoutSpaces
+LH_PREDOMINANT_BASS_HALF → BAR2
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+LH_TONIC_BASS_LEAP → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0, o2:12, o3:7, o4:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+LH_DOMINANT_PEDAL_EIGHTHS → BAR8
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7, o2:14, o3:7, o4:14, o5:7, o6:14, o7:11, o8:14], rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/8", r7:"1/8", r8:"1/8"]]; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+LH_TONIC_BASS_HALF → BAR2
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0, o2:0], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+LH_FINAL_TONIC_BASS → BAR1
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑ = [last_function:tonic, cadence:final]; }
+
+// -----------------------------------------------------------------------------
+// Plans formels supplémentaires pour piano_solo.
+// Ces plans réutilisent le vocabulaire de piano stable ci-dessus, mais l’organisent en
+// différentes formes formelles. Ils évitent l’ancienne routage modulant coûteuse de 16 mesures
+// pour piano, afin que la génération reste praticable.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+PIANO_RH_TERNARY → RH_A_PERIOD RH_CONTRAST_PERIOD RH_A_RETURN RH_CODA_SHORT
+{
+  // A - contrasting B - A return - cadence.
+  // 4 + 3 + 2 + 2 = 11 mesures en 4/4.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_LH_TERNARY → LH_A_PERIOD LH_CONTRAST_PERIOD LH_A_RETURN LH_CODA_SHORT
+{
+  // La main gauche reflète la grille formelle de la main droite.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+RH_CONTRAST_PERIOD → RH_PREDOMINANT_SUSTAINED_CHORDS RH_DOMINANT_BROKEN_STYLE RH_TONIC_SYNCOPATED_CHORDS
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ⇑ = [last_function:tonic, tension:medium]; }
+
+@withoutSpaces
+LH_CONTRAST_PERIOD → LH_PREDOMINANT_BASS_HALF LH_DOMINANT_PEDAL_EIGHTHS LH_TONIC_BASS_HALF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ⇑ = [last_function:tonic, tension:medium]; }
+
+@withoutSpaces
+PIANO_RH_THEME_AND_VARIATIONS → RH_A_PERIOD RH_A_VARIATION RH_REGISTER_VARIATION RH_CODA_SHORT
+{
+  // Theme - rhythmic variation - brighter/chordal variation - cadence.
+  // 4 + 3 + 3 + 2 = 12 mesures en 4/4.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_LH_THEME_AND_VARIATIONS → LH_A_PERIOD LH_A_VARIATION LH_REGISTER_VARIATION LH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+RH_REGISTER_VARIATION → RH_TONIC_ARPEGGIATED_CHORDS RH_PREDOMINANT_SUSTAINED_CHORDS RH_TONIC_CADENCE_CHORDS
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+LH_REGISTER_VARIATION → LH_TONIC_BASS_LEAP LH_PREDOMINANT_BASS_HALF LH_TONIC_BASS_HALF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+PIANO_RH_MINUET_TRIO → RH_MINUET_A RH_MINUET_B RH_TRIO_A RH_MINUET_RETURN RH_MINUET_CODA
+{
+  // 3/4 seulement. Menuet/trio compact pour piano seul.
+  // 2 + 2 + 2 + 2 + 2 = 10 mesures en 3/4.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:3, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_LH_MINUET_TRIO → LH_MINUET_A LH_MINUET_B LH_TRIO_A LH_MINUET_RETURN LH_MINUET_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:3, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+RH_MINUET_A → RH_MINUET_TONIC RH_MINUET_CADENCE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+RH_MINUET_B → RH_MINUET_PREDOMINANT RH_MINUET_DOMINANT
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+RH_TRIO_A → RH_MINUET_SUBDOMINANT RH_MINUET_CADENCE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:medium]; }
+
+@withoutSpaces
+RH_MINUET_RETURN → RH_MINUET_TONIC RH_MINUET_CADENCE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+RH_MINUET_CODA → RH_MINUET_DOMINANT RH_MINUET_FINAL
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:resolved, cadence:final]; }
+
+@withoutSpaces
+LH_MINUET_A → LH_MINUET_TONIC LH_MINUET_CADENCE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+LH_MINUET_B → LH_MINUET_PREDOMINANT LH_MINUET_DOMINANT
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+LH_TRIO_A → LH_MINUET_SUBDOMINANT LH_MINUET_CADENCE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:medium]; }
+
+@withoutSpaces
+LH_MINUET_RETURN → LH_MINUET_TONIC LH_MINUET_CADENCE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+LH_MINUET_CODA → LH_MINUET_DOMINANT LH_MINUET_FINAL
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:resolved, cadence:final]; }
+
+// --- Cellules d’accords de main droite en 3/4 pour menuet/trio de piano seul ----
+// Ces cellules évitent volontairement l’ancien profil constant « noire-noire-noire ».
+// Chaque mesure totalise toujours 3/4, mais alterne blanche+noire, noire+blanche, et
+// petites levées en croches. Cela rend 03_neutral_piano_minuet_trio moins mécanique.
+
+@withoutSpaces
+RH_MINUET_TONIC → CHORD_BAR2
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_MINUET_TONIC → CHORD_BAR2
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_MINUET_PREDOMINANT → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:maj, root2:2, q2:min, root3:5, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+RH_MINUET_PREDOMINANT → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:min, root2:2, q2:dim, root3:5, q3:min, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+RH_MINUET_DOMINANT → CHORD_BAR2
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj], rhythm:[r1:"1/4", r2:"1/2"]]; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+RH_MINUET_SUBDOMINANT → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:maj, root2:0, q2:maj, root3:5, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]]; ⇑ = [last_function:subdominant]; }
+
+@withoutSpaces
+RH_MINUET_SUBDOMINANT → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:min, root2:0, q2:min, root3:5, q3:min, root4:0, q4:min], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]]; ⇑ = [last_function:subdominant]; }
+
+@withoutSpaces
+RH_MINUET_CADENCE → CHORD_BAR2
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:0, q2:maj], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_MINUET_CADENCE → CHORD_BAR2
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:0, q2:min], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+RH_MINUET_FINAL → CHORD_BAR2
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:0, q2:maj], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic, cadence:final]; }
+
+@withoutSpaces
+RH_MINUET_FINAL → CHORD_BAR2
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:0, q2:min], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic, cadence:final]; }
+
+// --- Cellules de main gauche en 3/4 pour menuet/trio de piano seul ----------
+@withoutSpaces
+LH_MINUET_TONIC → BAR2
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0, o2:7], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+LH_MINUET_PREDOMINANT → BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5, o2:12, o3:9, o4:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+LH_MINUET_PREDOMINANT → BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5, o2:12, o3:8, o4:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]]; ⇑ = [last_function:predominant]; }
+
+@withoutSpaces
+LH_MINUET_DOMINANT → BAR2
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7, o2:14], rhythm:[r1:"1/4", r2:"1/2"]]; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+LH_MINUET_SUBDOMINANT → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5, o2:12, o3:5, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]]; ⇑ = [last_function:subdominant]; }
+
+@withoutSpaces
+LH_MINUET_CADENCE → BAR2
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7, o2:0], rhythm:[r1:"1/2", r2:"1/4"]]; ⇑ = [last_function:tonic]; }
+
+@withoutSpaces
+LH_MINUET_FINAL → BAR1_34_DOTTED_HALF
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0], rhythm:[r1:"3/4"]]; ⇑ = [last_function:tonic, cadence:final]; }

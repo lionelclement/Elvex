@@ -1,6 +1,7 @@
 /* **************************************************
  * 
  ************************************************** */
+@withoutSpaces
 Axiom → Text_with_features strongPunct {
   //eprintln __FILE__, "...";
   //eprintln __FILE__, " will take a while due to the large number of possible combinations.";
@@ -30,6 +31,7 @@ Text_with_features → VTENSE S_tense {
   ⇑ = ⇓2;
 }
 
+@withoutSpaces
 S_tense → S_tense form S_tense {
   [HEAD:succ, i:$i, ii:$ii, lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
   if (¬ $lexical_function)
@@ -39,7 +41,7 @@ S_tense → S_tense form S_tense {
   if (¬ $verbal_constr)
     $verbal_constr = no_int | no_neg;
   ↓1 = $i ∪ [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
-  ↓2 = [FORM:", "];
+  ↓2 = [FORM:", and "];
   ↓3 = $ii ∪ [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest];
   ⇑ = ⇓3;
 }

@@ -1,0 +1,26 @@
+// =============================================================================
+// scale.rules
+// =============================================================================
+// Point d'entrée spécialisé pour les fichiers de gammes. Dans cette version il réutilise la grammaire complète via music.rules, ce qui garantit que la racine PIECE et les instruments à rôles sont compris.
+//
+
+// -----------------------------------------------------------------------------
+// scale.rules
+// -----------------------------------------------------------------------------
+// Fichier de règles utilisé par le Makefile pour les entrées dont le nom contient « scales ».
+//
+// IMPORTANT:
+// Les entrées de gammes utilisent la même syntaxe PIECE / ensemble.instruments que les autres
+// inputs musicaux. Le routage complet se trouve dans music.rules, avec notamment :
+//   - flexible defaults,
+//   - key/meter/tempo handling,
+//   - portées fondées sur les rôles,
+//   - matériau musical des gammes.
+//
+// scale.rules délègue donc à music.rules. Garder ce fichier séparé reste
+// utile, car le Makefile peut le sélectionner explicitement pour les entrées de gammes,
+// et il pourra plus tard être spécialisé à nouveau si la grammaire des gammes devient complètement
+// indépendante.
+// -----------------------------------------------------------------------------
+
+#include music.rules

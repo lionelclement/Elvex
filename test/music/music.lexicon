@@ -1,0 +1,26 @@
+// =============================================================================
+// music.lexicon
+// =============================================================================
+// Fichier racine du lexique. Il assemble les lexiques spécialisés. Les règles produisent des catégories symboliques ; le lexique transforme ces catégories en texte LilyPond.
+//
+// -----------------------------------------------------------------------------
+// COMMENTAIRES DE LECTURE DU LEXIQUE
+// -----------------------------------------------------------------------------
+// Syntaxe générale d'une entrée lexicale :
+//
+//   "texte LilyPond" CATEGORIE [traits];
+//
+// Quand une règle produit CATEGORIE avec des traits compatibles, Elvex émet le
+// texte LilyPond entre guillemets. Les traits entre crochets servent à choisir
+// la bonne entrée : hauteur, durée, mode, dynamique, instrument MIDI, etc.
+// -----------------------------------------------------------------------------
+
+// Fichier lexique racine. Les entrées lexicales sont réparties par type.
+//   common.lexicon = LilyPond syntax, instruments, dynamics, rests, notes
+// chords.lexicon = terminaux CHORD utilisés par les règles de main droite du piano
+
+#include common.lexicon
+#include chords.lexicon
+#include pop_direct.lexicon
+#include rock_direct.lexicon
+#include circus.lexicon

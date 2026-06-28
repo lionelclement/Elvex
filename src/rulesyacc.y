@@ -74,7 +74,7 @@ bool pref_unordered;
   int64_t integer_slot;
   double double_slot;
   termsPtr* terms_slot; //(A|B)
-  std::vector< termsPtr >* vector_terms_slot; // X Y
+  std::vector<termsPtr>* vector_terms_slot; // X Y
   std::vector<uint32_t>* order_chain_slot;
   std::vector<statementPtr>* vector_statement_slot;
   std::string* string_slot;
@@ -114,6 +114,8 @@ bool pref_unordered;
 %token TOKEN_TRACE TOKEN_WITH_SPACES TOKEN_WITHOUT_SPACES 
 %token TOKEN_UNORDERED
 %token TOKEN_ORDER TOKEN_BY
+%token TOKEN_MIN
+%token TOKEN_MAX
 
 // OPERATORS
 %token TOKEN_UNIFY TOKEN_SUBSUME TOKEN_ASSIGNMENT TOKEN_PIPE TOKEN_NOT
@@ -150,6 +152,7 @@ bool pref_unordered;
 
 %type<statements_slot> structure_statement list_statement compound_expression_statement
 
+
 %type<statement_slot> statement statements
 %type<statement_slot> order_statement
 %type<statement_slot> expression_statement
@@ -158,10 +161,9 @@ bool pref_unordered;
 %type<statement_slot> up_statement down_statement double_up_statement double_down_statement
 %type<statement_slot> hash_statement
 %type<statement_slot> field_access_root field_access_statement feature_statement_value
+%type<statement_slot> order_relative_root order_relative_path
 
-%type<order_chain_slot> order_chain
-%type<vector_statement_slot> order_by_expression_list
-%type<statement_slot> order_by_key
+%type<order_chain_slot> order_chain order_index_list
 
 %nonassoc TOKEN_IMPLICATION TOKEN_EQUIV
 %left TOKEN_OR
@@ -810,6 +812,7 @@ statement:
 	;
 
 order_statement:
+	// order 1 < 2 < 3;
     TOKEN_ORDER order_chain TOKEN_SEMI
 	{
 	DBUGPRT("order_statement");
@@ -831,6 +834,7 @@ order_statement:
 	delete($2);
 	}
 
+	// order << 2;
     |TOKEN_ORDER TOKEN_DOUBLE_LT TOKEN_INTEGER TOKEN_SEMI
     {
       DBUGPRT("order_statement");
@@ -850,6 +854,7 @@ order_statement:
       );
     }
 
+	// order >> 2;
     |TOKEN_ORDER TOKEN_DOUBLE_GT TOKEN_INTEGER TOKEN_SEMI
     {
       DBUGPRT("order_statement");
@@ -869,47 +874,128 @@ order_statement:
       );
     }
 	
-	| TOKEN_ORDER TOKEN_BY TOKEN_LT order_by_expression_list TOKEN_GT TOKEN_SEMI
+	// order 2, 3 by ⇓.prosody.weight;
+	| TOKEN_ORDER order_index_list TOKEN_BY order_relative_path TOKEN_SEMI
     {
-      DBUGPRT("order_statement");
-
-      if ($4->size() < 2)
-      {
-        yyerror((char*)"order by must contain at least two keys");
-      }
-
-      if ($4->size() > currentRhsSize)
-      {
-        yyerror((char*)"order by has more keys than right-hand-side symbols");
-      }
-
-      $$ = new statementPtr(
-        Statement::createOrderBy(
-          ruleslineno,
-          parser.getTopBufferName(),
-          true,
-          *$4
-        )
-      );
-
-      delete($4);
+		DBUGPRT("order_statement");
+		$$ = new statementPtr(
+			Statement::createOrder(
+				ruleslineno,
+				parser.getTopBufferName(),
+				Statement::ORDER_FIELD_ACCESS_STATEMENT,
+				true,
+				*$2, *$4
+			)
+		);
+		delete($2);
+		delete($4);
     }
 	;
 	
-order_chain:
+order_index_list:
     TOKEN_INTEGER
-    {
-      DBUGPRT("order_chain");
-
+	{
+      DBUGPRT("order_index_list");
       if ($1 < 1 || static_cast<uint32_t>($1) > currentRhsSize) {
         yyerror((char*)"bad order index");
       }
 
       $$ = new std::vector<uint32_t>();
       $$->push_back(static_cast<uint32_t>($1 - 1));
+	}
+  
+	| order_index_list TOKEN_COMMA TOKEN_INTEGER
+	{
+		DBUGPRT("order_index_list");
+		if ($3 < 1 || static_cast<uint32_t>($3) > currentRhsSize) {
+		yyerror((char*)"bad order index");
+		}
+
+		uint32_t index = static_cast<uint32_t>($3 - 1);
+
+		for (auto previous : *$1) {
+			if (previous == index) {
+			yyerror((char*)"duplicate index in order chain");
+			}
+		}
+
+		$$ = $1;
+		$$->push_back(index);
+	}
+	;
+  
+order_relative_path:
+    order_relative_root TOKEN_DOT field_access_attribute
+	{
+	  DBUGPRT("order_relative_path");
+	  $$ = new statementPtr(
+		Statement::createFieldAccess(
+		  ruleslineno,
+		  parser.getTopBufferName(),
+		  false,
+		  *$1,
+		  *$3
+		)
+	  );
+	  delete($1);
+	  delete($3);
+	}
+
+  | order_relative_path TOKEN_DOT field_access_attribute 
+  {
+	  DBUGPRT("order_relative_path");
+	  $$ = new statementPtr(
+		Statement::createFieldAccess(
+		  ruleslineno,
+		  parser.getTopBufferName(),
+		  false,
+		  *$1,
+		  *$3
+		)
+	  );
+	  delete($1);
+	  delete($3);
+  }
+  ;
+  
+order_relative_root:
+	TOKEN_DOWN_ARROW {
+	  DBUGPRT("order_relative_root inherited child");
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::INHERITED_CHILDREN_FEATURES_STATEMENT, false, UINT8_MAX));
+	}
+
+	|TOKEN_DOUBLE_DOWN_ARROW {
+	  DBUGPRT("order_relative_root synthesized child");
+	  $$ = new statementPtr(Statement::create(ruleslineno, parser.getTopBufferName(), Statement::SYNTHESIZED_CHILDREN_FEATURES_STATEMENT, false, UINT8_MAX));
+	}
+	;
+
+
+order_chain:
+    TOKEN_INTEGER TOKEN_LT TOKEN_INTEGER
+    {
+      DBUGPRT("order_chain");
+
+      if ($1 < 1 || static_cast<uint32_t>($1) > currentRhsSize) {
+        yyerror((char*)"bad order index");
+      }
+      if ($3 < 1 || static_cast<uint32_t>($3) > currentRhsSize) {
+        yyerror((char*)"bad order index");
+      }
+
+      uint32_t index1 = static_cast<uint32_t>($1 - 1);
+      uint32_t index2 = static_cast<uint32_t>($3 - 1);
+
+      if (index1 == index2) {
+        yyerror((char*)"duplicate index in order chain");
+      }
+
+      $$ = new std::vector<uint32_t>();
+      $$->push_back(index1);
+      $$->push_back(index2);
     }
 
-    |order_chain TOKEN_LT TOKEN_INTEGER
+  | order_chain TOKEN_LT TOKEN_INTEGER
     {
       DBUGPRT("order_chain");
 
@@ -927,79 +1013,6 @@ order_chain:
 
       $$ = $1;
       $$->push_back(index);
-    }
-    ;
-	
-order_by_expression_list:
-    order_by_key
-    {
-      DBUGPRT("order_by_expression_list");
-
-      $$ = new std::vector<statementPtr>();
-      $$->push_back(*$1);
-
-      delete($1);
-    }
-
-  | order_by_expression_list TOKEN_COMMA order_by_key
-    {
-      DBUGPRT("order_by_expression_list");
-
-      $$ = $1;
-      $$->push_back(*$3);
-
-      delete($3);
-    }
-  ;
-  
-order_by_key:
-    variable
-    {
-      DBUGPRT("order_by_key");
-
-      $$ = new statementPtr(
-        Statement::createVariable(
-          ruleslineno,
-          parser.getTopBufferName(),
-          false,
-          $1
-        )
-      );
-    }
-
-  | field_access_statement
-    {
-      DBUGPRT("order_by_key");
-
-      $$ = $1;
-    }
-
-  | TOKEN_INTEGER
-    {
-      DBUGPRT("order_by_key");
-
-      $$ = new statementPtr(
-        Statement::createNumber(
-          ruleslineno,
-          parser.getTopBufferName(),
-          false,
-          static_cast<double>($1)
-        )
-      );
-    }
-
-  | TOKEN_DOUBLE
-    {
-      DBUGPRT("order_by_key");
-
-      $$ = new statementPtr(
-        Statement::createNumber(
-          ruleslineno,
-          parser.getTopBufferName(),
-          false,
-          $1
-        )
-      );
     }
   ;
   
@@ -1253,6 +1266,22 @@ expression_statement:
 	  delete($3);
 	}
 
+	|TOKEN_MIN TOKEN_LT expression_statement TOKEN_COMMA expression_statement TOKEN_GT
+	{
+	  DBUGPRT("expression_statement");
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MIN, (*$3), (*$5)));
+	  delete($3);
+	  delete($5);
+	}
+
+	|TOKEN_MAX TOKEN_LT expression_statement TOKEN_COMMA expression_statement TOKEN_GT
+	{
+	  DBUGPRT("expression_statement");
+	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MAX, (*$3), (*$5)));
+	  delete($3);
+	  delete($5);
+	}
+	
 	|TOKEN_RAND TOKEN_LPAR TOKEN_RPAR
 	{
 	  DBUGPRT("expression_statement");

@@ -337,13 +337,10 @@ void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer,
          statement != statements.cend();
          ++statement)
     {
-        if ((*statement)->isSetFlags(Flags::SEEN))
-        {
-            continue;
-        }
-        if ((*statement)->isSetFlags(Flags::DISABLED))
+        if ((*statement)->isUnsetFlags(Flags::SEEN))
         {
             allSeen = false;
+            break;
         }
     }
 

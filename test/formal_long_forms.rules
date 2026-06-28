@@ -1,0 +1,261 @@
+// -----------------------------------------------------------------------------
+// Formal long-form architectures.
+//
+// This module avoids building long pieces by simple repetition.  It introduces
+// section functions (intro, theme, variation, transition, contrast,
+// development, recap, coda) and uses synthesized attributes to pass information
+// from one section to the next.
+//
+// Explicit form values:
+//   formal_long_rounded_binary
+//   formal_long_ternary
+//   formal_long_theme_and_variations
+//   formal_long_siciliana
+//   formal_long_gigue
+//   formal_long_march
+//
+// Design pattern:
+//   - macro-form is almost deterministic;
+//   - local cells still contain limited variation;
+//   - melodic secondary voices rest in some sections;
+//   - bass/accompaniment/percussion remain comparatively continuous;
+//   - synthesized attributes such as last_offset, section_role, theme_end,
+//     contrast_end are propagated to later sections.
+// -----------------------------------------------------------------------------
+
+// --- Flute / flute+piano lead: formal rounded binary -------------------------
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FLUTE_LEAD_ROUNDED
+{ [role:flute1|flute_piano_lead, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+FORMAL_LONG_FLUTE_LEAD_ROUNDED → FORMAL_LEAD_INTRO_4 FORMAL_LEAD_THEME_A_8 FORMAL_LEAD_A_VARIANT_8 FORMAL_LEAD_TRANSITION_4 FORMAL_LEAD_CONTRAST_B_8 FORMAL_LEAD_DEVELOPMENT_8 FORMAL_LEAD_RECAP_A_8 FORMAL_LEAD_CODA_4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:intro];
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:theme];
+  [last_offset:$theme_end] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:variation, opening_offset:$theme_end];
+  [last_offset:$var_end] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:transition, opening_offset:$var_end];
+  [last_offset:$transition_end] ⊂ ⇓4;
+  ↓5 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:contrast, opening_offset:$transition_end];
+  [last_offset:$contrast_end] ⊂ ⇓5;
+  ↓6 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:development, opening_offset:$contrast_end, theme_reference:$theme_end];
+  [last_offset:$dev_end] ⊂ ⇓6;
+  ↓7 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:recap, opening_offset:$theme_end, previous_offset:$dev_end];
+  [last_function:$recap_function] ⊂ ⇓7;
+  ↓8 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, section_role:coda, previous_function:$recap_function, theme_reference:$theme_end];
+  ⇑ = [form:formal_long_rounded_binary, bars:52, theme_end:$theme_end, contrast_end:$contrast_end, recap_function:$recap_function];
+}
+
+FORMAL_LEAD_INTRO_4 → REST_4_4_4
+{ ↓1=↑; ⇑=[section_role:intro, last_offset:0, texture:breath_before_theme]; }
+
+FORMAL_LEAD_THEME_A_8 → FLUTE_PIANO_LEAD_EIGHT_BAR
+{ ↓1=↑; [last_offset:$m] ⊂ ⇓1; ⇑=[section_role:theme, last_offset:$m, theme_material:a]; }
+
+FORMAL_LEAD_A_VARIANT_8 → FLP_A_PERIOD FLP_VARIATION FL1_FINAL_RESOLUTION
+{ ↓1=↑; ↓2=↑; ↓3=↑; [last_offset:$m] ⊂ ⇓3; ⇑=[section_role:variation, last_offset:$m, variation:ornamented]; }
+
+FORMAL_LEAD_TRANSITION_4 → FL1_MODULATING_MOTIF FL1_SEQUENCE_MOTIF FL1_DOMINANT_PREP FL1_AUTHENTIC_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; [last_offset:$m] ⊂ ⇓4; ⇑=[section_role:transition, last_offset:$m, harmonic_function:dominant_prep]; }
+
+FORMAL_LEAD_CONTRAST_B_8 → FLP_CONTRAST_PERIOD FL1_SEQUENCE_MOTIF FL1_DOMINANT_KEY_MOTIF FL1_DOMINANT_KEY_CADENCE FL1_RETURN_MOTIF FL1_AUTHENTIC_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; [last_offset:$m] ⊂ ⇓6; ⇑=[section_role:contrast, last_offset:$m, register:upper_middle]; }
+
+FORMAL_LEAD_DEVELOPMENT_8 → FL1_SEQUENCE_MOTIF REST_BAR4 FL1_MODULATING_MOTIF REST_BAR4 FL1_DOMINANT_PREP FL1_SEQUENCE_MOTIF FL1_AUTHENTIC_CADENCE REST_BAR4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; [last_offset:$m] ⊂ ⇓7; ⇑=[section_role:development, last_offset:$m, texture:fragmented]; }
+
+FORMAL_LEAD_RECAP_A_8 → FLUTE_PIANO_LEAD_EIGHT_BAR
+{ ↓1=↑; [last_function:$f] ⊂ ⇓1; [last_offset:$m] ⊂ ⇓1; ⇑=[section_role:recap, last_offset:$m, last_function:$f, recalled:true]; }
+
+FORMAL_LEAD_CODA_4 → FL1_DOMINANT_PREP FL1_FINAL_RESOLUTION REST_BAR4 REST_BAR4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; [last_function:$f] ⊂ ⇓2; ⇑=[section_role:coda, last_function:$f, texture:cadential_breath]; }
+
+// --- Flute II / secondary melody: formal rounded binary ---------------------
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FLUTE2_ROUNDED
+{ [role:flute2, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+FORMAL_LONG_FLUTE2_ROUNDED → REST_4_4_4 FLUTE2_A_SUPPORT FLUTE2_A_VARIATION REST_4_4_4 FLUTE2_B_SUPPORT FLUTE2_A_RETURN REST_4_4_8 FLUTE2_CODA REST_4_4_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ⇑=[form:formal_long_rounded_binary, bars:52, role:secondary, rests:16]; }
+
+// --- Piano accompaniment: formal rounded binary -----------------------------
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_ACC_RH_ROUNDED
+{ [role:piano_acc_rh, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+FORMAL_LONG_PIANO_ACC_RH_ROUNDED → ACC_RH_LONG_PAD_8 PIANO_ACC_RH_ROUNDED_BINARY ACC_RH_LONG_SPARSE_8 ACC_RH_LONG_PAD_8 PIANO_ACC_RH_ROUNDED_BINARY ACC_RH_LONG_SPARSE_8 ACC_RH_CODA_SHORT
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_rounded_binary, bars:52, texture:accompaniment_arch]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_ACC_LH_ROUNDED
+{ [role:piano_acc_lh, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+FORMAL_LONG_PIANO_ACC_LH_ROUNDED → ACC_LH_LONG_SIMPLE_8 PIANO_ACC_LH_ROUNDED_BINARY ACC_LH_LONG_BROKEN_8 ACC_LH_LONG_SIMPLE_8 PIANO_ACC_LH_ROUNDED_BINARY ACC_LH_LONG_BROKEN_8 ACC_LH_CODA_SHORT
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_rounded_binary, bars:52, texture:bass_arch]; }
+
+// --- Solo piano: formal rounded binary / ternary / variations ---------------
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_RH_ROUNDED
+{ [role:piano_rh, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_RH_ROUNDED → RH_A_PERIOD RH_A_VARIATION RH_B_PERIOD RH_A_RETURN RH_A_VARIATION RH_CODA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:formal_long_rounded_binary, section_plan:theme_variation_contrast_recap_coda]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_LH_ROUNDED
+{ [role:piano_lh, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_LH_ROUNDED → LH_A_PERIOD LH_A_VARIATION LH_B_PERIOD LH_A_RETURN LH_A_VARIATION LH_CODA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:formal_long_rounded_binary, section_plan:theme_variation_contrast_recap_coda]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_RH_VARIATIONS
+{ [role:piano_rh, form:formal_long_theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_RH_VARIATIONS → RH_FORMAL_THEME_8 RH_FORMAL_RHYTHMIC_VARIATION_8 RH_FORMAL_REGISTER_VARIATION_8 RH_FORMAL_CONTRAST_CODA_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:formal_long_theme_and_variations, bars:32, variations:3, cadence:final]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_LH_VARIATIONS
+{ [role:piano_lh, form:formal_long_theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_LH_VARIATIONS → LH_FORMAL_THEME_8 LH_FORMAL_RHYTHMIC_VARIATION_8 LH_FORMAL_REGISTER_VARIATION_8 LH_FORMAL_CONTRAST_CODA_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[form:formal_long_theme_and_variations, bars:32, variations:3, cadence:final]; }
+
+// --- Formal long ternary for flute duet / flute+piano -----------------------
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FLUTE_LEAD_TERNARY
+{ [role:flute1|flute_piano_lead, form:formal_long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_FLUTE_LEAD_TERNARY → FORMAL_LEAD_INTRO_4 FORMAL_LEAD_THEME_A_8 FORMAL_LEAD_A_VARIANT_8 FORMAL_LEAD_CONTRAST_B_8 FORMAL_LEAD_DEVELOPMENT_8 FORMAL_LEAD_RECAP_A_8 FORMAL_LEAD_CODA_4
+{ ↓1=↑; ↓2=↑; [last_offset:$theme_end] ⊂ ⇓2; ↓3=↑ ∪ [theme_reference:$theme_end]; ↓4=↑; ↓5=↑; ↓6=↑ ∪ [theme_reference:$theme_end]; ↓7=↑; ⇑=[form:formal_long_ternary, bars:48, theme_end:$theme_end]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FLUTE2_TERNARY
+{ [role:flute2, form:formal_long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_FLUTE2_TERNARY → REST_4_4_8 FLUTE2_TERNARY_CONTROLLED REST_4_4_4 FLUTE2_TERNARY_CONTROLLED REST_4_4_8 FLUTE2_CODA REST_4_4_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_ternary, bars:48, rests:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_ACC_RH_TERNARY
+{ [role:piano_acc_rh, form:formal_long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_ACC_RH_TERNARY → ACC_RH_LONG_PAD_8 PIANO_ACC_RH_TERNARY ACC_RH_LONG_SPARSE_8 PIANO_ACC_RH_TERNARY ACC_RH_LONG_PAD_8 ACC_RH_CODA_SHORT
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:formal_long_ternary, texture:formal_accompaniment]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_ACC_LH_TERNARY
+{ [role:piano_acc_lh, form:formal_long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_ACC_LH_TERNARY → ACC_LH_LONG_SIMPLE_8 PIANO_ACC_LH_TERNARY ACC_LH_LONG_BROKEN_8 PIANO_ACC_LH_TERNARY ACC_LH_LONG_SIMPLE_8 ACC_LH_CODA_SHORT
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:formal_long_ternary, texture:formal_bass]; }
+
+// --- Formal dance/topic long forms -----------------------------------------
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FLUTE_SICILIANA
+{ [role:flute1|flute_piano_lead, form:formal_long_siciliana, rhythm:[topic:siciliana], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_FLUTE_SICILIANA → RHYTHM_FLUTE_SICILIANA_MELODY REST_6_8_3 RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY REST_6_8_3 RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY RHYTHM_FLUTE_SICILIANA_MELODY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:formal_long_siciliana, texture:phrased_with_breaths]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_RH_SICILIANA
+{ [role:piano_rh|piano_acc_rh, form:formal_long_siciliana, rhythm:[topic:siciliana], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_RH_SICILIANA → RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA RHYTHM_PIANO_ACC_RH_SICILIANA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_siciliana, texture:continuous_pastoral_accompaniment]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_LH_SICILIANA
+{ [role:piano_lh|piano_acc_lh, form:formal_long_siciliana, rhythm:[topic:siciliana], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_LH_SICILIANA → RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA RHYTHM_PIANO_ACC_LH_SICILIANA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_siciliana, texture:continuous_pastoral_bass]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FLUTE_GIGUE
+{ [role:flute1|flute_piano_lead, form:formal_long_gigue, rhythm:[topic:gallop], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_FLUTE_GIGUE → RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY REST_6_8_3 RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY REST_6_8_3 RHYTHM_FLUTE_GALLOP_MELODY RHYTHM_FLUTE_GALLOP_MELODY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:formal_long_gigue, texture:dance_with_breaths]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_RH_GIGUE
+{ [role:piano_acc_rh, form:formal_long_gigue, rhythm:[topic:gallop], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_RH_GIGUE → RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP RHYTHM_PIANO_ACC_RH_GALLOP
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:formal_long_gigue, texture:steady_compound_accompaniment]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_LH_GIGUE
+{ [role:piano_acc_lh, form:formal_long_gigue, rhythm:[topic:gallop], num:6, den:8]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_LH_GIGUE → RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP RHYTHM_PIANO_ACC_LH_GALLOP
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:formal_long_gigue, texture:steady_compound_bass]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_RH_MARCH
+{ [role:piano_rh, form:formal_long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_RH_MARCH → RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH REST_4_4_4 RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH RHYTHM_PIANO_RH_MARCH
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_march, section_plan:march_trio_recap]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PIANO_LH_MARCH
+{ [role:piano_lh, form:formal_long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PIANO_LH_MARCH → RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH RHYTHM_PIANO_LH_MARCH
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_march, texture:continuous_march_bass]; }
+
+// --- Generic family ensembles / guitar -------------------------------------
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FAMILY_LEAD
+{ [role:lead, form:formal_long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_FAMILY_LEAD → FAMILY_LEAD_ROUNDED_BINARY FAMILY_LEAD_ROUNDED_BINARY FAMILY_LEAD_ROUNDED_BINARY REST_4_4_8 FAMILY_LEAD_ROUNDED_BINARY FAMILY_LEAD_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[form:formal_long_rounded_binary, role:lead, section_plan:formal_family]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FAMILY_COUNTER
+{ [role:countermelody|inner_voice, form:formal_long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_FAMILY_COUNTER → REST_4_4_8 FAMILY_COUNTERMELODY_ROUNDED_BINARY REST_4_4_8 FAMILY_COUNTERMELODY_ROUNDED_BINARY REST_4_4_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ⇑=[form:formal_long_rounded_binary, role:counter, rests:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_FAMILY_BASS
+{ [role:bass|harmonic_support|rhythmic_pedal|accent|bass_accent|cadence_accent, form:formal_long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_FAMILY_BASS → FAMILY_BASS_ROUNDED_BINARY FAMILY_BASS_ROUNDED_BINARY FAMILY_BASS_ROUNDED_BINARY FAMILY_BASS_ROUNDED_BINARY FAMILY_BASS_ROUNDED_BINARY
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ⇑=[form:formal_long_rounded_binary, role:bass, continuous:true]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_GUITAR_ROUNDED
+{ [role:guitar, family:plucked_strings, form:formal_long_rounded_binary]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_GUITAR_ROUNDED → GUITAR_STRUM_TONIC GUITAR_A GUITAR_STRUM_PREDOMINANT GUITAR_A_VARIANT GUITAR_STRUM_TONIC GUITAR_B GUITAR_RETURN GUITAR_STRUM_CODA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:formal_long_rounded_binary, role:guitar, texture:chords_and_arpeggios]; }
+
+// --- Formal long percussion ensemble march ---------------------------------
+// These routes make form:formal_long_march work for type:percussion_ensemble.
+// The four percussion roles are aligned to the same section plan, but each role
+// uses a different density: timpani pedal, snare-like accents, bass-drum pulses,
+// and cymbal/cadence accents.
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PERCUSSION_PEDAL_MARCH
+{ [role:rhythmic_pedal, family:percussion, form:formal_long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PERCUSSION_PEDAL_MARCH → FAMILY_PERC_PEDAL_A FAMILY_PERC_PEDAL_A FAMILY_PERC_PEDAL_B FAMILY_PERC_PEDAL_RETURN FAMILY_PERC_PEDAL_A FAMILY_PERC_PEDAL_B FAMILY_PERC_PEDAL_RETURN FAMILY_PERC_CODA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[form:formal_long_march, role:rhythmic_pedal, section_plan:percussion_march]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PERCUSSION_ACCENT_MARCH
+{ [role:accent, family:percussion, form:formal_long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PERCUSSION_ACCENT_MARCH → REST_4_4_4 FAMILY_PERC_ACCENT_A FAMILY_PERC_ACCENT_B REST_4_4_4 FAMILY_PERC_ACCENT_A FAMILY_PERC_ACCENT_RETURN FAMILY_PERC_CODA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_march, role:accent, section_plan:percussion_march]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PERCUSSION_BASS_ACCENT_MARCH
+{ [role:bass_accent, family:percussion, form:formal_long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PERCUSSION_BASS_ACCENT_MARCH → FAMILY_PERC_ACCENT_A REST_4_4_4 FAMILY_PERC_ACCENT_A FAMILY_PERC_ACCENT_B REST_4_4_4 FAMILY_PERC_ACCENT_RETURN FAMILY_PERC_CODA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ⇑=[form:formal_long_march, role:bass_accent, section_plan:percussion_march]; }
+
+@withoutSpaces
+MUSICAL_FORM → FORMAL_LONG_PERCUSSION_CADENCE_ACCENT_MARCH
+{ [role:cadence_accent, family:percussion, form:formal_long_march, rhythm:[topic:march], num:4, den:4]; ↓1=↑; ⇑=⇓1; }
+FORMAL_LONG_PERCUSSION_CADENCE_ACCENT_MARCH → REST_4_4_8 FAMILY_PERC_ACCENT_RETURN REST_4_4_4 FAMILY_PERC_ACCENT_RETURN FAMILY_PERC_CODA
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ⇑=[form:formal_long_march, role:cadence_accent, section_plan:percussion_march]; }

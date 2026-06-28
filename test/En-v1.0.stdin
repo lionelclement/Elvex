@@ -1,0 +1,6 @@
+// Simple transitive sentence
+Axiom [HEAD:TO_USE, i:[HEAD:JOHN], ii:[HEAD:ELVEX], vtense:present]
+
+// Adjective-order test: should realize the adjectives by rank, not input order.
+// Expected NP order: a beautiful big old round black English wooden writing table
+// Axiom [HEAD:TO_SEE, i:[HEAD:JOHN], ii:[HEAD:TABLE, MOD:<[HEAD:WOODEN],[HEAD:BLACK],[HEAD:BEAUTIFUL],[HEAD:WRITING],[HEAD:OLD],[HEAD:BIG],[HEAD:ENGLISH],[HEAD:ROUND]>], vtense:present]

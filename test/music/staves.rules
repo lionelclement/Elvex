@@ -1,0 +1,1545 @@
+// =============================================================================
+// staves.rules
+// =============================================================================
+// Construction des portées LilyPond et dispatch musical historique. Les règles STAFF_* fabriquent les blocs \new Staff / PianoStaff, puis STAFF_MUSIC appelle MUSICAL_FORM.
+//
+//
+
+FLUTE1_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:flute_duet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[flute1:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:flute1, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+FLUTE2_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:flute_duet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[flute2:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:flute2, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+
+// --- Enveloppes de portées génériques/spécialisées -------------------------
+// Ces enveloppes routent les blocs d’entrée vers les rôles musicaux. Le matériau musical réel
+// est sélectionné ensuite par MUSICAL_FORM à partir de role + form.
+
+@withoutSpaces
+FLUTE_SOLO_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:solo_flute]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[flute:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:flute1, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+FLUTE_WITH_PIANO_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:flute_piano_duet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[flute:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:flute_piano_lead, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+PIANO_STAFF_GROUP → PIANO_OPEN PIANO_RH_STAFF PIANO_LH_STAFF PIANO_CLOSE
+{
+  ↓1 = [];
+  ↓2 = ↑;
+  ↓3 = ↑;
+  ↓4 = [];
+}
+
+
+// PianoStaff utilisé seulement dans flute_piano_duet.
+// Il route volontairement vers des rôles d’accompagnement au lieu des rôles de piano seul.
+// Résultat : la flûte porte la mélodie ; le piano fournit soutien harmonique et basse.
+@withoutSpaces
+PIANO_ACCOMP_STAFF_GROUP → PIANO_OPEN PIANO_ACC_RH_STAFF PIANO_ACC_LH_STAFF PIANO_CLOSE
+{
+  ↓1 = [];
+  ↓2 = ↑;
+  ↓3 = ↑;
+  ↓4 = [];
+}
+
+@withoutSpaces
+PIANO_ACC_RH_STAFF → PIANO_RH_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:flute_piano_duet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[piano:[name:$name, midi:$midi, right_hand:[octave:$octave, dynamic:$dynamic]]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:piano_acc_rh, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+PIANO_ACC_LH_STAFF → PIANO_LH_OPEN MIDI_INSTRUMENT KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:flute_piano_duet]];
+  [music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[piano:[midi:$midi, left_hand:[octave:$octave, dynamic:$dynamic]]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [midi_instrument:$midi];
+  ↓3 = [tonic:$tonic, mode:$mode];
+  ↓4 = [num:$num, den:$den];
+  ↓5 = [];
+  ↓6 = [dynamic:$dynamic];
+  ↓7 = [role:piano_acc_lh, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓8 = [];
+}
+
+@withoutSpaces
+PIANO_RH_STAFF → PIANO_RH_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[piano:[name:$name, midi:$midi, right_hand:[octave:$octave, dynamic:$dynamic]]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:piano_rh, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+PIANO_LH_STAFF → PIANO_LH_OPEN MIDI_INSTRUMENT KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic]];
+  [music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[piano:[midi:$midi, left_hand:[octave:$octave, dynamic:$dynamic]]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [midi_instrument:$midi];
+  ↓3 = [tonic:$tonic, mode:$mode];
+  ↓4 = [num:$num, den:$den];
+  ↓5 = [];
+  ↓6 = [dynamic:$dynamic];
+  ↓7 = [role:piano_lh, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓8 = [];
+}
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// STAFF_MUSIC : point de jonction entre une portée LilyPond et le matériau.
+// Tout ce qui précède ouvre/configure la portée ; MUSICAL_FORM insère les notes.
+// -----------------------------------------------------------------------------
+STAFF_MUSIC → MUSICAL_FORM FINAL_BARLINE NL
+{ ↓1 = ↑; ↓2 = []; ↓3 = []; ⇑ = ⇓1; }
+
+
+// Rôles de piano. Pour l’instant, le matériau de piano est volontairement implémenté pour
+// rounded_binary seulement. Les autres formes restent disponibles pour les routages de flûte seule.
+@withoutSpaces
+MUSICAL_FORM → PIANO_RH_ROUNDED_BINARY
+{ [role:piano_rh, form:rounded_binary, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_LH_ROUNDED_BINARY
+{ [role:piano_lh, form:rounded_binary, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+
+// Rôles d’accompagnement de piano utilisés seulement pour flute_piano_duet.
+// Ils sont volontairement moins mélodiques que piano_solo : surtout nappes d’accords,
+// figures d’Alberti/basse brisée, pédales et soutien cadentiel.
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_RH_ROUNDED_BINARY
+{ [role:piano_acc_rh, form:rounded_binary, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_LH_ROUNDED_BINARY
+{ [role:piano_acc_lh, form:rounded_binary, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// Voix principale de flûte utilisée dans flute_piano_duet.
+// Utilise un plan dédié de 8 mesures, aligné avec la routage de piano fiable.
+// Cela évite le routage de modulation de piano en 16 mesures qui empêchait Elvex de terminer.
+@withoutSpaces
+MUSICAL_FORM → FLUTE_PIANO_LEAD_EIGHT_BAR
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+
+
+// --- Dispatches de formes supplémentaires pour piano et flûte+piano ---------
+// Ces routages débloquent form:ternary, form:theme_and_variations et
+// form:minuet_trio pour piano_solo et flute_piano_duet.
+// Les plans musicaux concrets se trouvent dans piano_solo.rules et
+// piano_accompaniment.rules. Minuet/trio est volontairement gardé par 3/4.
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_RH_TERNARY_CONTROLLED
+{ [role:piano_rh, form:ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_LH_TERNARY_CONTROLLED
+{ [role:piano_lh, form:ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_RH_THEME_AND_VARIATIONS_CONTROLLED
+{ [role:piano_rh, form:theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_LH_THEME_AND_VARIATIONS_CONTROLLED
+{ [role:piano_lh, form:theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_RH_MINUET_TRIO
+{ [role:piano_rh, form:minuet_trio, num:3, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_LH_MINUET_TRIO
+{ [role:piano_lh, form:minuet_trio, num:3, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_RH_TERNARY_CONTROLLED
+{ [role:piano_acc_rh, form:ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_LH_TERNARY_CONTROLLED
+{ [role:piano_acc_lh, form:ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_RH_THEME_AND_VARIATIONS_CONTROLLED
+{ [role:piano_acc_rh, form:theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_LH_THEME_AND_VARIATIONS_CONTROLLED
+{ [role:piano_acc_lh, form:theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_RH_MINUET_TRIO
+{ [role:piano_acc_rh, form:minuet_trio, num:3, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → PIANO_ACC_LH_MINUET_TRIO
+{ [role:piano_acc_lh, form:minuet_trio, num:3, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE_PIANO_LEAD_TERNARY_CONTROLLED
+{ [role:flute_piano_lead, form:ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE_PIANO_LEAD_THEME_AND_VARIATIONS_CONTROLLED
+{ [role:flute_piano_lead, form:theme_and_variations, num:4, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE_PIANO_LEAD_MINUET_TRIO
+{ [role:flute_piano_lead, form:minuet_trio, num:3, den:4, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// Dispatch par rôle. Les deux voix partagent le même plan formel mais pas le même matériau.
+
+
+// -----------------------------------------------------------------------------
+// Enveloppes expérimentales d’ensemble fondées sur les familles.
+// Elles gardent la mise en page de la partition fixe tout en transmettant les traits génériques role + family
+// à MUSICAL_FORM. Cela évite de dupliquer des formes complètes par instrument.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+STRING_QUARTET_SCORE → VIOLIN1_STAFF VIOLIN2_STAFF VIOLA_STAFF CELLO_STAFF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; }
+
+@withoutSpaces
+WOODWIND_TRIO_SCORE → WOODWIND1_STAFF WOODWIND2_STAFF WOODWIND3_STAFF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; }
+
+@withoutSpaces
+BRASS_TRIO_SCORE → BRASS1_STAFF BRASS2_STAFF BRASS3_STAFF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; }
+
+@withoutSpaces
+PERCUSSION_ENSEMBLE_SCORE → PERCUSSION1_STAFF PERCUSSION2_STAFF PERCUSSION3_STAFF PERCUSSION4_STAFF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; }
+
+@withoutSpaces
+PERCUSSION_DUO_SCORE → PERCUSSION1_STAFF PERCUSSION2_STAFF
+{ ↓1 = ↑; ↓2 = ↑; }
+
+@withoutSpaces
+MIXED_QUINTET_SCORE → MIXED_WOODWIND_STAFF MIXED_STRING_STAFF MIXED_BASS_STAFF MIXED_BRASS_STAFF MIXED_PERCUSSION_STAFF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑; }
+
+@withoutSpaces
+VIOLIN1_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:string_quartet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[violin1:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:lead, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+VIOLIN2_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:string_quartet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[violin2:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:countermelody, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+VIOLA_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_ALTO DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:string_quartet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[viola:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:inner_voice, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+CELLO_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:string_quartet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[cello:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:bass, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+WOODWIND1_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:woodwind_trio]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[woodwind1:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:lead, family:woodwind, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+WOODWIND2_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:woodwind_trio]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[woodwind2:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:countermelody, family:woodwind, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+WOODWIND3_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:woodwind_trio]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[woodwind3:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:bass, family:woodwind, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+BRASS1_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:brass_trio]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[brass1:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:lead, family:brass, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+BRASS2_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:brass_trio]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[brass2:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:harmonic_support, family:brass, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+BRASS3_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:brass_trio]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[brass3:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:bass, family:brass, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+PERCUSSION1_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:percussion_ensemble]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[percussion1:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rhythmic_pedal, family:percussion, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+PERCUSSION2_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:percussion_ensemble]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[percussion2:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:accent, family:percussion, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+PERCUSSION3_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:percussion_ensemble]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[percussion3:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:bass_accent, family:percussion, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+PERCUSSION4_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:percussion_ensemble]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[percussion4:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:cadence_accent, family:percussion, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+MIXED_WOODWIND_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[woodwind:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:lead, family:woodwind, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+MIXED_STRING_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[string:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:countermelody, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+MIXED_BASS_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[bass:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:bass, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+MIXED_BRASS_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[brass:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:harmonic_support, family:brass, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+MIXED_PERCUSSION_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[percussion:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rhythmic_pedal, family:percussion, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+// -----------------------------------------------------------------------------
+// Enveloppes de portées pour guitare et batterie.
+// La guitare utilise la clé treble_8, car elle sonne une octave plus bas que l’écriture.
+// La batterie utilise la clé de percussion. Le matériau rythmique réutilise actuellement les terminaux NOTE
+// comme substituts, mais la portée est visuellement marquée comme percussion.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+FLUTE_GUITAR_FLUTE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:flute_guitar_duet|flute_guitar_drums|mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[flute:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:lead, family:woodwind, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+GUITAR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE_8 DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:guitar_solo|flute_guitar_duet|guitar_drums_duo|flute_guitar_drums|mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[guitar:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:guitar, family:plucked_strings, form:$form, tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+DRUMS_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:drum_kit|guitar_drums_duo|flute_guitar_drums]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[drums:[name:$name, family:$family, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:drum_kit, family:percussion, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+// -----------------------------------------------------------------------------
+// Route de quintette mixte avec guitare.
+// Cela prend en charge les entrées utilisant :
+//   type:mixed_quintet
+//   flute + violin + cello + horn + guitar
+// sans retomber dans l’ancienne route générique mixed_quintet
+// qui attend des blocs woodwind/string/bass/brass/percussion.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+MIXED_QUINTET_GUITAR_SCORE → FLUTE_GUITAR_FLUTE_STAFF MIXED_GUITAR_VIOLIN_STAFF MIXED_GUITAR_CELLO_STAFF MIXED_GUITAR_HORN_STAFF GUITAR_STAFF
+{ ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑; }
+
+@withoutSpaces
+MIXED_GUITAR_VIOLIN_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[violin:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:countermelody, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+MIXED_GUITAR_CELLO_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[cello:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:bass, family:bowed_strings, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+MIXED_GUITAR_HORN_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:classical_19c, phrase_model:periodic], ensemble:[type:mixed_quintet]];
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[horn:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:harmonic_support, family:brass, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+// -----------------------------------------------------------------------------
+// Portées dédiées de chanson française. Elles ne réutilisent pas GUITAR_STAFF, donc elles
+// ne peuvent pas interférer avec les routages existants de guitare / flûte-guitare.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+CHANSON_VOICE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:chanson_francaise_voix_guitare, voice:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:chanson_voice, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+CHANSON_GUITAR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE_8 DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:chanson_francaise_voix_guitare, guitar:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+
+// -----------------------------------------------------------------------------
+// Portées dédiées pour groupe rock. Ces portées ne sont sélectionnées que par les entrées rock_band.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+ROCK_VOICE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_verse_chorus, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band, voice:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:rock_voice, form:rock_direct_band, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+ROCK_GUITAR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE_8 DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_verse_chorus, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band, electric_guitar:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rock_guitar, form:rock_direct_band, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROCK_BASS_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_verse_chorus, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band, bass:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rock_bass, form:rock_direct_band, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROCK_DRUMS_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_verse_chorus, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band, drums:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rock_drums, form:rock_direct_band, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+
+// -----------------------------------------------------------------------------
+// Portées dédiées pour groupe rock avec saxophone et chœur d’accompagnement.
+// Ces portées ne remplacent pas les routages rock_band existants.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+ROCK_SAX_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_sax_choir, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band_sax_choir, sax:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:rock_sax, form:rock_direct_sax_choir, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+ROCK_CHOIR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_sax_choir, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band_sax_choir, choir:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:rock_choir, form:rock_direct_sax_choir, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+ROCK_GUITAR_SAXCHOIR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE_8 DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_sax_choir, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band_sax_choir, electric_guitar:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rock_guitar_saxchoir, form:rock_direct_sax_choir, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROCK_BASS_SAXCHOIR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_sax_choir, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band_sax_choir, bass:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rock_bass_saxchoir, form:rock_direct_sax_choir, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROCK_DRUMS_SAXCHOIR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_sax_choir, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band_sax_choir, drums:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:rock_drums_saxchoir, form:rock_direct_sax_choir, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+
+// -----------------------------------------------------------------------------
+// Portées dédiées pour chanson pop à la guitare ; elles ne modifient pas les routes de guitare classique.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+POP_LEAD_MELODY_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:pop_60s_80s, form:pop_song_verse_chorus, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:pop_guitar_song, lead:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:pop_vocal_guide, form:pop_song_verse_chorus, tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+POP_GUITAR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE_8 DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:pop_60s_80s, form:pop_song_verse_chorus, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:pop_guitar_song, guitar:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:pop_guitar, form:pop_song_verse_chorus, tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+
+@withoutSpaces
+ROCK_VOICE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:rock, form:rock_song_sax_choir, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:rock_band_sax_choir, voice:[name:$name, midi:$midi, octave:$octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:rock_voice, form:rock_direct_sax_choir, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+
+// -----------------------------------------------------------------------------
+// Chanson française - portées dédiées pour grand ensemble.
+// Ces règles sont sélectionnées seulement par ensemble:type:grand_ensemble.
+// Elles conservent volontairement les noms d’instruments et instruments MIDI de l’entrée,
+// mais réutilisent le matériau sûr de chanson à des octaves fixes prises en charge :
+// - matériau chanson_voice à l’octave 4 pour les instruments de mélodie/contre-mélodie ;
+// - matériau chanson_guitar à l’octave 3 pour les instruments harmoniques/d’accompagnement.
+// Cela évite l’échec de sortie vide causé par une demande au lexique d’accords existant
+// pour des octaves d’accords non prises en charge, comme 2 ou 4.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+GE_VOICE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, voice:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:chanson_voice, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:4, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+GE_PIANO_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, piano:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_GUITAR_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE_8 DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, guitar:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_BASS_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, bass:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_ACCORDION_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, accordion:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_VIOLIN1_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, violin1:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_voice, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:4, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_VIOLIN2_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, violin2:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_VIOLA_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_ALTO DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, viola:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_CELLO_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, cello:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_FLUTE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, flute:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:chanson_voice, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:4, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+GE_CLARINET_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, clarinet:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [dynamic:$dynamic];
+  ↓8 = [role:chanson_voice, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:4, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓9 = [];
+}
+
+@withoutSpaces
+GE_HORN_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, horn:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+GE_PERCUSSION_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form, phrase_model:verse_chorus,
+          rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   ensemble:[type:grand_ensemble, percussion:[name:$name, midi:$midi, octave:$input_octave, dynamic:$dynamic]],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den],
+   bpm:$bpm] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:chanson_guitar, form:$form, mode:$mode, tonic_pc:$tonic_pc, octave:3, accidental_policy:$accidental_policy, num:$num, den:$den,
+        rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}

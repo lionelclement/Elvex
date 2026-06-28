@@ -328,7 +328,7 @@ uint32_t Node::rhsIndexAt(size_t index) const
 /* **************************************************
  *
  ************************************************** */
-void Node::setOrderSpecs(const vectorOrderSpecs &_orderSpecs)
+void Node::setOrderSpecs(const OrderSpecs &_orderSpecs)
 {
    orderSpecs = _orderSpecs;
 }
@@ -336,7 +336,7 @@ void Node::setOrderSpecs(const vectorOrderSpecs &_orderSpecs)
 /* **************************************************
  *
  ************************************************** */
-const vectorOrderSpecs &Node::getOrderSpecs() const
+const OrderSpecs &Node::getOrderSpecs() const
 {
    return orderSpecs;
 }
@@ -366,74 +366,8 @@ std::vector<std::vector<size_t>> Node::computeTopologicalOrders() const
 
    std::vector<std::vector<bool>> edge(n, std::vector<bool>(n, false));
 
-   auto findChildPosition = [&](uint32_t rhsIndex) -> int
-   {
-      for (size_t i = 0; i < rhsIndexes.size(); ++i)
-      {
-         if (rhsIndexes[i] == rhsIndex)
-            return static_cast<int>(i);
-      }
-      return -1;
-   };
-
-   auto addEdge = [&](size_t before, size_t after)
-   {
-      if (before != after)
-         edge[before][after] = true;
-   };
-
-   for (const auto &spec : orderSpecs)
-   {
-      if (spec.kind == OrderSpec::CHAIN)
-      {
-         std::vector<size_t> projected;
-
-         for (auto rhsIndex : spec.indexes)
-         {
-            int childPosition = findChildPosition(rhsIndex);
-            if (childPosition >= 0)
-               projected.push_back(static_cast<size_t>(childPosition));
-         }
-
-         for (size_t i = 0; i + 1 < projected.size(); ++i)
-         {
-            addEdge(projected[i], projected[i + 1]);
-         }
-      }
-      else if (spec.kind == OrderSpec::FIRST)
-      {
-         if (spec.indexes.empty())
-            continue;
-
-         int childPosition = findChildPosition(spec.indexes[0]);
-
-         if (childPosition >= 0)
-         {
-            for (size_t i = 0; i < n; ++i)
-            {
-               if (i != static_cast<size_t>(childPosition))
-                  addEdge(static_cast<size_t>(childPosition), i);
-            }
-         }
-      }
-      else if (spec.kind == OrderSpec::LAST)
-      {
-         if (spec.indexes.empty())
-            continue;
-
-         int childPosition = findChildPosition(spec.indexes[0]);
-
-         if (childPosition >= 0)
-         {
-            for (size_t i = 0; i < n; ++i)
-            {
-               if (i != static_cast<size_t>(childPosition))
-                  addEdge(i, static_cast<size_t>(childPosition));
-            }
-         }
-      }
-   }
-
+   orderSpecs.addEdges(edge, rhsIndexes);
+   
    std::vector<int> indegree(n, 0);
 
    for (size_t i = 0; i < n; ++i)

@@ -112,7 +112,7 @@ public:
         ORDER_CHAIN_STATEMENT,
         ORDER_FIRST_STATEMENT,
         ORDER_LAST_STATEMENT,
-        ORDER_BY_STATEMENT
+        ORDER_FIELD_ACCESS_STATEMENT
     };
 
     enum function_type
@@ -134,6 +134,8 @@ public:
         MODULO,
         MINUS_U,
         FLOOR,
+        MIN,
+        MAX,
         RANDOM
     };
 
@@ -205,11 +207,13 @@ public:
         bool rootOp,
         uint32_t rhsIndex);
 
-    static statementPtr createOrderBy(
+    static statementPtr createOrder(
         uint32_t lineno,
         std::string bufferName,
+        type op,
         bool rootOp,
-        const std::vector<statementPtr> &keys);
+        const std::vector<uint32_t> &orderChain,
+        statementPtr featurePath);
 
     // FIELD_ACCESS_STATEMENT
     // ↑.attr or ⇓i.attr
@@ -375,6 +379,12 @@ public:
     void lookingForAssignedInheritedChildFeatures(std::vector<bool> &);
 
     void renameVariables(uint32_t);
+
+    valuePtr evalOrderFieldAccess(class Item *,
+                              class Parser &,
+                              class Generator *,
+                              uint32_t rhsIndex,
+                              bool verbose) const;
 };
 
 #endif // ELVEX_STATEMENT_H

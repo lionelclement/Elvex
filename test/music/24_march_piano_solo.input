@@ -1,0 +1,69 @@
+PIECE [
+// -----------------------------------------------------------------------------
+// Aide de lecture de ce .input
+// -----------------------------------------------------------------------------
+// PIECE décrit la pièce demandée à Elvex.
+// generation.syntax : instrument_roles est la syntaxe publique actuelle.
+// generation.strict : false laisse la grammaire compléter ou adapter certains traits.
+// generation.fallback : true autorise les solutions de repli prévues par les règles.
+// title et composer sont libres ; bpm est le tempo LilyPond de base.
+// music.style possibles : classical_19c, pop_60s_80s, chanson_francaise, rock.
+// Pour classical_19c, les formes sûres incluent rounded_binary, minuet_trio et les formes long_* ou formal_* présentes dans les exemples.
+// Pour pop_60s_80s, utiliser surtout form:pop_song_verse_chorus avec phrase_model:verse_chorus.
+// Pour chanson_francaise, utiliser les formes chanson_francaise_couplet_refrain* avec phrase_model:verse_chorus.
+// Pour rock, utiliser rock_song_verse_chorus ou les formes rock explicitement présentes dans les exemples.
+// phrase_model possibles usuels : periodic pour le classique, verse_chorus pour pop, chanson et rock.
+// rhythm.topic possibles usuels : neutral, siciliana, gallop, dotted, lombard, syncopation, march, pop_backbeat, pop_ballad, chanson_syllabic, chanson_lyrique, chanson_parlee, chanson_nostalgique, chanson_hook, rock_backbeat, classic_rock_backbeat.
+// rhythm.dance possibles usuels : none, gigue, sarabande.
+// rhythm.density possibles usuels : sparse, low_medium, medium, active.
+// rhythm.articulation possibles usuels : neutral, slurred, detached, marked, legato, accented.
+// ensemble.instruments contient count puis i1, i2, etc. ; count doit correspondre au nombre d'instruments déclarés.
+// family possibles usuels : woodwind, keyboard, strings, brass, percussion, plucked_strings, voice, electric, drumkit.
+// role doit correspondre aux règles musicales ; exemples : lead, bass, harmonic_support, flute1, flute2, flute_piano_lead, piano_acc_rh, piano_acc_lh, pop_vocal_guide, pop_guitar, chanson_voice, chanson_guitar, rock_voice, rock_guitar, rock_bass, rock_drums.
+// clef possibles usuels : treble, bass, alto, tenor, treble_8.
+// dynamic possibles usuels : p, mp, mf, f.
+// key.tonic possibles usuels : c, d, e, f, g, a, b, bes, ees ; key.mode : major ou minor.
+// meter est généralement [num:4, den:4], mais les règles peuvent aussi utiliser d'autres mesures si elles sont prévues.
+// Modifier de préférence une combinaison complète déjà cohérente plutôt que changer style, form, phrase_model et rhythm indépendamment.
+// -----------------------------------------------------------------------------
+  generation:[syntax:instrument_roles, strict:false, fallback:true],
+
+  title:"March for Piano",
+  composer:"Elvex",
+  bpm:112,
+
+  music:[
+      style:classical_19c,
+      form:rounded_binary,
+      phrase_model:periodic,
+  
+      // Rhythmic/dance selector.
+      // Keep topic:neutral for scales and ordinary classical forms.
+      rhythm:[
+        topic:march,
+        dance:none,
+        density:medium,
+        anacrusis:false,
+        hemiola_at_cadence:false,
+        ostinato:bass,
+        articulation:marked
+      ]
+    ],
+
+  ensemble:[
+      instruments:[
+        count:2,
+        i1:[id:piano_rh, name:"Piano", family:keyboard, role:piano_rh, midi:"acoustic grand", clef:treble, octave:4, dynamic:mp],
+        i2:[id:piano_lh, name:"Piano LH", family:keyboard, role:piano_lh, midi:"acoustic grand", clef:bass, octave:3, dynamic:p]
+      ]
+    ],
+
+  key:[
+      tonic:c,
+      mode:major],
+
+  meter:[
+      num:4,
+      den:4
+    ]
+]

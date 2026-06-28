@@ -1,0 +1,554 @@
+// =============================================================================
+// role_ensemble.rules
+// =============================================================================
+// Routage générique par instruments à rôles. Ce module lit ensemble.instruments[count, i1, i2, ...] et crée autant de portées que nécessaire. Chaque instrument reçoit ensuite son role et sa family pour choisir le matériau musical.
+//
+
+// -----------------------------------------------------------------------------
+// Routage d’ensemble par rôles, représentation indexée avec count explicite.
+//
+// Les instruments sont déclarés comme traits indexés :
+//   ensemble:[instruments:[count:3,
+//     i1:[id:flute, role:flute_piano_lead, ...],
+//     i2:[id:piano_rh, role:piano_acc_rh, ...],
+//     i3:[id:piano_lh, role:piano_acc_lh, ...]]]
+//
+// Le champ count est volontairement explicite. Il empêche les règles SCORE plus courtes
+// de correspondre à aussi des ensembles plus grands et évite les variables d’instrument non liées
+// dans les expressions arithmétiques comme octave +/- 1.
+// La plage supportée est count:1..15.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// SCORE : choisit le nombre de portées à partir de ensemble.instruments.count.
+// Chaque variante SCORE prépare le contexte d'un instrument i1, i2, ... puis
+// appelle ROLE_STAFF autant de fois que nécessaire. L'ordre 1..15 est volontaire
+// car count rend les règles disjointes.
+// -----------------------------------------------------------------------------
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:1, i1:$I1]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:2, i1:$I1, i2:$I2]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:3, i1:$I1, i2:$I2, i3:$I3]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+  ↓10 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:4, i1:$I1, i2:$I2, i3:$I3, i4:$I4]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = [];
+  ↓9 = [];
+  ↓10 = [];
+  ↓11 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:5, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = [];
+  ↓10 = [];
+  ↓11 = [];
+  ↓12 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:6, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = [];
+  ↓11 = [];
+  ↓12 = [];
+  ↓13 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:7, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = [];
+  ↓12 = [];
+  ↓13 = [];
+  ↓14 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:8, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = [];
+  ↓13 = [];
+  ↓14 = [];
+  ↓15 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:9, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8, i9:$I9]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [instrument:$I9, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = [];
+  ↓14 = [];
+  ↓15 = [];
+  ↓16 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:10, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8, i9:$I9, i10:$I10]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [instrument:$I9, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = ↑ ∪ [instrument:$I10, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓14 = [];
+  ↓15 = [];
+  ↓16 = [];
+  ↓17 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:11, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8, i9:$I9, i10:$I10, i11:$I11]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [instrument:$I9, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = ↑ ∪ [instrument:$I10, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓14 = ↑ ∪ [instrument:$I11, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓15 = [];
+  ↓16 = [];
+  ↓17 = [];
+  ↓18 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:12, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8, i9:$I9, i10:$I10, i11:$I11, i12:$I12]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [instrument:$I9, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = ↑ ∪ [instrument:$I10, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓14 = ↑ ∪ [instrument:$I11, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓15 = ↑ ∪ [instrument:$I12, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓16 = [];
+  ↓17 = [];
+  ↓18 = [];
+  ↓19 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:13, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8, i9:$I9, i10:$I10, i11:$I11, i12:$I12, i13:$I13]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [instrument:$I9, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = ↑ ∪ [instrument:$I10, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓14 = ↑ ∪ [instrument:$I11, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓15 = ↑ ∪ [instrument:$I12, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓16 = ↑ ∪ [instrument:$I13, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓17 = [];
+  ↓18 = [];
+  ↓19 = [];
+  ↓20 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:14, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8, i9:$I9, i10:$I10, i11:$I11, i12:$I12, i13:$I13, i14:$I14]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [instrument:$I9, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = ↑ ∪ [instrument:$I10, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓14 = ↑ ∪ [instrument:$I11, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓15 = ↑ ∪ [instrument:$I12, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓16 = ↑ ∪ [instrument:$I13, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓17 = ↑ ∪ [instrument:$I14, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓18 = [];
+  ↓19 = [];
+  ↓20 = [];
+  ↓21 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF ROLE_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [generation:[syntax:instrument_roles], ensemble:[instruments:[count:15, i1:$I1, i2:$I2, i3:$I3, i4:$I4, i5:$I5, i6:$I6, i7:$I7, i8:$I8, i9:$I9, i10:$I10, i11:$I11, i12:$I12, i13:$I13, i14:$I14, i15:$I15]]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [instrument:$I1, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [instrument:$I2, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [instrument:$I3, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [instrument:$I4, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [instrument:$I5, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [instrument:$I6, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [instrument:$I7, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [instrument:$I8, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [instrument:$I9, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = ↑ ∪ [instrument:$I10, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓14 = ↑ ∪ [instrument:$I11, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓15 = ↑ ∪ [instrument:$I12, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓16 = ↑ ∪ [instrument:$I13, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓17 = ↑ ∪ [instrument:$I14, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓18 = ↑ ∪ [instrument:$I15, notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓19 = [];
+  ↓20 = [];
+  ↓21 = [];
+  ↓22 = [];
+}
+
+
+// --- Correspondance de rôles spéciale pour les études de gammes -------------
+// Dans la grammaire historique, form:scales n’utilisait pas les rôles normaux flute1/piano_rh
+// mais routait vers scale_flute_all, scale_piano_rh_all et
+// scale_piano_lh_all. Lorsque les entrées ont été convertis vers ensemble.instruments,
+// 00_scales_solo_flute.entrée a cessé de produire une sortie parce que ROLE_STAFF
+// transmettait role:flute1 à STAFF_MUSIC, alors que scales.rules ne définit
+// MUSICAL_FORM que pour role:scale_flute_all.
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// ROLE_STAFF : fabrique une portée LilyPond pour l'instrument courant.
+// Les variantes ci-dessous choisissent la bonne clé et le bon type de portée
+// selon les traits de l'instrument : clef, family, role et id. Ensuite
+// STAFF_MUSIC demande au matériau musical correspondant au role de se réaliser.
+// -----------------------------------------------------------------------------
+ROLE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [bpm:$bpm,
+   music:[form:scales],
+   instrument:[id:$id, name:$name, family:woodwind, role:$role, midi:$midi, clef:treble, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  $scale_octave = $octave - 1;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:scale_flute_all, form:scales, mode:$mode, tonic_pc:$tonic_pc, octave:$scale_octave, accidental_policy:$accidental_policy, num:$num, den:$den];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROLE_STAFF → PIANO_RH_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [bpm:$bpm,
+   music:[form:scales],
+   instrument:[id:$id, name:$name, family:keyboard, role:piano_rh, midi:$midi, clef:treble, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [role:scale_piano_rh_all, form:scales, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROLE_STAFF → PIANO_LH_OPEN MIDI_INSTRUMENT KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [music:[form:scales],
+   instrument:[id:$id, name:$name, family:keyboard, role:piano_lh, midi:$midi, clef:bass, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [midi_instrument:$midi];
+  ↓3 = [tonic:$tonic, mode:$mode];
+  ↓4 = [num:$num, den:$den];
+  ↓5 = [];
+  ↓6 = [dynamic:$dynamic];
+  ↓7 = [role:scale_piano_lh_all, form:scales, mode:$mode, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den];
+  ↓8 = [];
+}
+
+// --- Variantes de portée par clé --------------------------------------------
+
+@withoutSpaces
+ROLE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   instrument:[id:$id, name:$name, family:$family, role:$role, midi:$midi, clef:treble, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [id:$id, role:$role, family:$family, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROLE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_BASS DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   instrument:[id:$id, name:$name, family:$family, role:$role, midi:$midi, clef:bass, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [id:$id, role:$role, family:$family, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROLE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_ALTO DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   instrument:[id:$id, name:$name, family:$family, role:$role, midi:$midi, clef:alto, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [id:$id, role:$role, family:$family, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROLE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_TREBLE_8 DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   instrument:[id:$id, name:$name, family:$family, role:$role, midi:$midi, clef:treble_8, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [id:$id, role:$role, family:$family, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}
+
+@withoutSpaces
+ROLE_STAFF → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT TEMPO KEY TIME CLEF_PERCUSSION DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{
+  [bpm:$bpm,
+   music:[form:$form, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]],
+   instrument:[id:$id, name:$name, family:$family, role:$role, midi:$midi, clef:percussion, octave:$octave, dynamic:$dynamic],
+   notation:[accidental_policy:$accidental_policy],
+   key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc],
+   meter:[num:$num, den:$den]] ⊂ ↑;
+  ↓1 = [];
+  ↓2 = [instrument_name:$name];
+  ↓3 = [midi_instrument:$midi];
+  ↓4 = [bpm:$bpm];
+  ↓5 = [tonic:$tonic, mode:$mode];
+  ↓6 = [num:$num, den:$den];
+  ↓7 = [];
+  ↓8 = [dynamic:$dynamic];
+  ↓9 = [id:$id, role:$role, family:$family, form:$form, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:$num, den:$den, rhythm:[topic:$topic, dance:$dance, density:$density, anacrusis:$anacrusis, hemiola_at_cadence:$hemiola_at_cadence, ostinato:$ostinato, articulation:$articulation]];
+  ↓10 = [];
+}

@@ -29,7 +29,7 @@
 
 #include "facade.hpp"
 #include "shared_ptr.hpp"
-#include "orderspec.hpp"
+#include "orderspecs.hpp"
 
 class Generator;
 
@@ -43,7 +43,7 @@ public:
 private:
     vectorForests forests;
     std::vector<uint32_t> rhsIndexes;
-    vectorOrderSpecs orderSpecs;
+    OrderSpecs orderSpecs;
     std::forward_list<std::string> output;
     bool withSpaces;
     bool unordered;
@@ -80,9 +80,9 @@ public:
 
     uint32_t rhsIndexAt(size_t) const;
 
-    void setOrderSpecs(const vectorOrderSpecs &);
-
-    const vectorOrderSpecs &getOrderSpecs() const;
+    void setOrderSpecs(const OrderSpecs &);
+    
+    const OrderSpecs &getOrderSpecs() const;
 
     const std::vector<uint32_t> &getRhsIndexes() const;
 

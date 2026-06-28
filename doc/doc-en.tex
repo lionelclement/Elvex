@@ -14,7 +14,7 @@
   frame=single,
   numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
   numbersep=5pt,                   % how far the line-numbers are from the code
-  literate=  {→}{{$\rightarrow$}}1 {↓}{{$\downarrow$}}1 {↑}{{$\uparrow$}}1 {⇓}{{$\Downarrow$}}1 {⇑}{{$\Uparrow$}}1 {⊂}{{$\subset$}}1 {∪}{{$\cup$}}1 {¬}{{$\lnot$}}1
+  literate=  {→}{{$\rightarrow$}}1 {↓}{{$\downarrow$}}1 {↑}{{$\uparrow$}}1 {⇓}{{$\Downarrow$}}1 {⇑}{{$\Uparrow$}}1 {⊂}{{$\subset$}}1 {∪}{{$\cup$}}1 {¬}{{$\lnot$}}1 {≠}{{$\neq$}}1 {≤}{{$\leq$}}1 {≥}{{$\geq$}}1 {∨}{{$\lor$}}1 {∧}{{$\land$}}1 {⇒}{{$\Rightarrow$}}1 {⇔}{{$\Leftrightarrow$}}1
   {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
   {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
   {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
@@ -363,6 +363,46 @@ problem.
 
 \section{Elvex notations}
 
+
+\subsection{General syntax}
+
+Elvex source files may contain comments and file inclusions.
+
+\paragraph{Comments}
+
+Two forms of comments are accepted:
+
+\begin{itemize}
+	\item line comments, introduced by \verb#//# and ending at the end of the line;
+	\item block comments, delimited by \verb#/*# and \verb#*/#.
+\end{itemize}
+
+For example:
+
+\begin{lstlisting}[numbers=none]
+// This is a line comment
+
+/*
+   This is a block comment.
+   It may span several lines.
+*/
+\end{lstlisting}
+
+\paragraph{File inclusion}
+
+An Elvex source file may include another file with the directive
+\verb|\#include| at the beginning of a line:
+
+\begin{lstlisting}[numbers=none]
+#include path/to/file.elvex
+\end{lstlisting}
+
+The included file is read as if its contents occurred at the position of
+the directive.  This is useful for splitting large descriptions into several
+files.
+
+When verbose mode is enabled, Elvex reports the opening of included files.
+
 A syntagmatic rule is written
 
 $A~ \rightarrow B_1 B_2 \dots B_k <operational~semantics>$
@@ -391,6 +431,39 @@ $A~ \rightarrow B_1 B_2 \dots B_i \dots B_k$
 	\item $\Downarrow_i$: refers to the synthesized attribute of $B_i$.
 \end{itemize}
 
+\paragraph{ASCII alternatives}
+
+Most symbolic operators also have ASCII alternatives.  These alternatives
+are often more convenient when writing grammar files on a standard keyboard.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Symbolic notation & ASCII notation & Meaning \\
+\hline
+$\rightarrow$ & \verb#-># & rule arrow \\
+$\cup$ & \verb#U# & unification \\
+$\subset$ & \verb#<<<# & subsumption \\
+$\neq$ & \verb#!=# & inequality \\
+$\leq$ & \verb#<=# & less than or equal \\
+$\geq$ & \verb#>=# & greater than or equal \\
+$\lor$ & \verb#||# & logical disjunction \\
+$\land$ & \verb#&&# & logical conjunction \\
+$\Rightarrow$ & \verb#=># & implication \\
+$\Leftrightarrow$ & \verb#<=># & equivalence \\
+$\lnot$ & \verb#!# & negation \\
+\hline
+\end{tabular}
+\end{center}
+
+For example, the following two rules use equivalent notations:
+
+\begin{lstlisting}[numbers=none]
+S → NP VP { ↓1 = ↑ ∪ [case:nom]; }
+
+S -> NP VP { ↓1 = ↑ U [case:nom]; }
+\end{lstlisting}
+
 The named variables are noted by an identifier preceded by ``\$'',
 the anonymous variables are noted ``\verb#_#'', the
 constant values are noted by identifiers.
@@ -400,22 +473,32 @@ where $ f_i$ is a feature as
 \begin{itemize}
 	\item a linked variable feature
 	\item an anonymous variable feature
-	\item \verb#HEAD:<identifier of a lexeme># a feature for a predicate
-	\item \verb#FORM:"<form>"# a feature for a literal form
+	\item \verb#HEAD:<identifier of a lexeme>#, \verb#HEAD:$X# or
+	      \verb#HEAD:_# for a predicate, a predicate stored in a variable, or
+	      an anonymous predicate.
+	\item \verb#LEMMA:<identifier>#, \verb#LEMMA:$X# for a lemma constraint.
+	\item \verb#FORM:"<form>"#, \verb#FORM:$X# or \verb#FORM:_# for a literal
+	      form, a form stored in a variable, or an anonymous form.  Literal
+	      forms may be concatenated with \verb#+#, for example
+	      \verb#FORM:"New" + " " + "York"#.
 	\item a pair $attr_i:val_i$
 	      \begin{itemize}
 		      \item with $attr_i$ a named attribute
 		      \item and with $val_i$ the value of an attribute that can be:
 
 		            \begin{itemize}
-			            \item A named variable
-			            \item An anonymous variable
-			            \item A nil value (\texttt{NIL})
-			            \item An atomic constant
-			            \item A set of atomic constants separated by \verb#|#
-			            \item A literal constant (number)
-			            \item A feature structure
-			            \item A list of feature structures
+		            \item A named variable
+		            \item An anonymous variable
+		            \item A nil value (\texttt{NIL})
+		            \item An atomic constant
+		            \item A set of atomic constants separated by \verb#|#
+		            \item A literal constant: integer or double
+		            \item A feature structure
+		            \item A list
+		            \item An inherited or synthesized attribute: $\uparrow$,
+		                  $\Downarrow_i$
+		            \item A field access such as $\uparrow$\verb#.attr# or
+		                  $\Downarrow$\verb#i.attr#
 		            \end{itemize}
 	      \end{itemize}
 
@@ -423,10 +506,12 @@ where $ f_i$ is a feature as
 
 The lists are noted
 \begin{itemize}
-	\item $<f_1, f_2, \dots, f_k>$ with $f_i$ as feature structures or lists
-	\item $<head::tail>$ with $head$ as a feature structure or a list and $tail$, a
-	      list. $head$ refers to the first item on the list, $tail$ the rest
-	      of the list.
+	\item $<f_1, f_2, \dots, f_k>$ with $f_i$ as variables, constants,
+	      numbers, feature structures, lists, inherited or synthesized
+	      attributes, or field accesses.
+	\item $<head::tail>$ with $head$ as one list element and $tail$ as a list.
+	      $head$ refers to the first item on the list, $tail$ to the rest of
+	      the list.  The tail may also be \verb#NIL#.
 \end{itemize}
 
 If one wishes to bring an operational semantics to the syntagmatic
@@ -461,16 +546,18 @@ Each rule is written:
 	      it can produce a syntactic constraint. Conversely, a syntactic constraint
 	      does not necessarily have to be linked to a specific concept.
 
-	\item \verb#print <expr>;# Displays the expression at standard output
-	      (useful for debugging).
+	\item \verb#print <expr_1>, ..., <expr_n>;# Displays one or several
+	      expressions at standard output (useful for debugging).
 
-	\item \verb#println <expr>;# Does the same and displays a new line.
+	\item \verb#println <expr_1>, ..., <expr_n>;# Does the same and displays a
+	      new line.
 
-	\item \verb#eprint <expr>;# Displays the expression on standard error
-	      (useful for debugging without changing generated output).
+	\item \verb#eprint <expr_1>, ..., <expr_n>;# Displays one or several
+	      expressions on standard error (useful for debugging without changing
+	      generated output).
 
-	\item \verb#eprintln <expr>;# Does the same on standard error and
-	      displays a new line.
+	\item \verb#eprintln <expr_1>, ..., <expr_n>;# Does the same on standard
+	      error and displays a new line.
 
 	\item  \verb#<expr_1> = <expr_2>;#
 
@@ -599,16 +686,16 @@ Each rule is written:
 		            Constrains component \verb#i#, if present, to be generated after
 		            all other present components of the rule.
 
-		      \item \verb#order by <expr_1, expr_2, ..., expr_k>;#
+		      \item \verb#order by <key_1, key_2, ..., key_k>;#
 
-		            Sorts the present components of the rule according to the values
-		            of the expressions \verb#expr_1#, \verb#expr_2#, ...,
-		            \verb#expr_k#. The first expression is the key associated with
-		            the first component, the second expression is the key associated
-		            with the second component, and so on. Keys must evaluate to
-		            numbers. Components are generated in increasing key order; equal
-		            keys keep the original right-hand-side order. The expressions can
-		            refer to variables or to synthesized features, for example
+		            Sorts the present components of the rule according to the keys
+		            associated with them.  The first key is associated with the first
+		            component, the second key with the second component, and so on.
+		            Keys must be numeric and the current parser accepts only a
+		            variable, a field access, an integer or a double as a key; it
+		            does not accept an arbitrary algebraic expression in this
+		            position.  Components are generated in increasing key order;
+		            equal keys keep the original right-hand-side order.  For example:
 		            \verb#order by <$R1,$R2,$R3>;# or
 		            \verb#order by <#$\Downarrow$\verb#1.rank, #$\Downarrow$\verb#2.rank>;#.
 
@@ -646,6 +733,8 @@ Each rule is written:
 		      \item $\downarrow_i$
 		      \item $\Downarrow_i$
 		      \item $\uparrow$\verb#.attr# and $\Downarrow$\verb#i.attr# Field access
+		      \item \verb|#i| and \verb|#i.j| Access to generated values identified
+		            by one-based indexes
 		      \item \verb#[...]# Feature structure
 		      \item \verb#NIL# Null value of a feature
 		      \item \verb#a|b...# Constant evaluated as true
@@ -653,7 +742,24 @@ Each rule is written:
 		      \item \verb#<...># List evaluated as true if not null (\verb#<>#)
 	      \end{itemize}
 
-	      Let's add algebraic expressions and numbers:
+\paragraph{Predefined string constants}
+
+The lexer provides two predefined string constants that are useful for
+debugging:
+
+\begin{itemize}
+	\item \verb#__LINE__# expands to the current line number;
+	\item \verb#__FILE__# expands to the current file name.
+\end{itemize}
+
+They are treated as strings and may be used in expressions, for instance
+with printing statements:
+
+\begin{lstlisting}[numbers=none]
+eprintln("debug at " + __FILE__ + ":" + __LINE__);
+\end{lstlisting}
+
+Let's add algebraic expressions and numbers:
 
 	      \begin{itemize}
 		      \item \verb#<expr>#  $<$ \verb#<expr>#
@@ -666,7 +772,11 @@ Each rule is written:
 		      \item \verb#<expr>#  \% \verb#<expr>#
 		      \item \verb#<expr>#  $/$ \verb#<expr>#
 		      \item $-$ \verb#<expr>#
-		      \item Double-precision floating-point format number
+		      \item \verb#floor(<expr>)# Integer floor of a numeric expression
+		      \item \verb#rand()# Random number generator
+		      \item Double-precision floating-point format number.  In the current
+		            lexer, double literals are written with a leading \verb#d#,
+		            for example \verb#d1.25#.
 	      \end{itemize}
 
 \end{itemize}
@@ -766,6 +876,31 @@ a	v[HEAD:brouillard, subjC:[FORM:"il"],
 
 \end{itemize}
 
+
+\subsection{Macros}
+
+Macro files contain definitions of the form:
+
+\begin{lstlisting}[numbers=none]
+@name = [feature:value, ...];
+\end{lstlisting}
+
+A macro expands to the feature structure on the right-hand side.  It can be
+used as an item in a feature structure, either alone or mixed with explicit
+features:
+
+\begin{lstlisting}[numbers=none]
+@commonNoun = [cat:noun, number:sg];
+
+N → n {
+  ↓1 = [@commonNoun, HEAD:$H];
+}
+\end{lstlisting}
+
+If a macro name is unknown, parsing fails with an error.  Macro expansion is
+syntactic: the features stored in the macro are inserted where \verb#@name#
+appears.
+
 \subsection{Lexicon}
 
 The lexicon is a list of entries separated by semicolons.
@@ -787,6 +922,10 @@ The sequence to be produced may be:
 	\item \texttt{FORM}: the sequence produced will literally be the one
 	      given by the feature \texttt{FORM}; variables in the form are resolved
 	      during generation.
+
+	\item \texttt{FORM} followed by an identifier in a lexical entry, for
+	      example \verb#FORM title;#, declares an entry whose produced form is
+	      supplied dynamically.
 
 \end{itemize}
 
@@ -913,6 +1052,11 @@ feature structure containing the concept and the illocutionary structure to be e
 
 
 \texttt{HEAD} allows you to define the named concept to be generated.
+The special features \texttt{HEAD}, \texttt{LEMMA} and \texttt{FORM} can also
+be accessed by field access, for example $\uparrow$\verb#.HEAD#, $\uparrow$\verb#.LEMMA# or
+$\Downarrow$\verb#1.FORM#.  This is useful when a rule has to inspect the concept,
+lemma or literal form stored in an inherited or synthesized feature
+structure.
 
 examples
 
@@ -1229,12 +1373,6 @@ make
 sudo make install
 \end{lstlisting}
 
-\subsection{Trying \texttt{Elvex}}
-
-\begin{lstlisting}[frame=none, numbers=none]
-. ./try-me.sh
-\end{lstlisting}
-
 \subsection{\texttt{Elvex} command}
 
 The \texttt{elvex} command is:
@@ -1296,7 +1434,8 @@ The options are:
 
 	\item \verb#--macros-file <file>#
 
-	      File containing macro definitions.
+	      File containing macro definitions.  Each definition has the form
+		      \verb#@name = [features];#.
 
 	\item \verb#--rules-file <file>#
 
@@ -1314,6 +1453,12 @@ The options are:
 
 	      Prefix of the compacted lexicon files. The files
 	      \verb#<path/file>.tbl# and \verb#<path/file>.fsa# are used.
+
+	\item \verb#--xml <file>#
+
+	      Writes an XML representation of the generation forest to
+	      \verb#<file>#. This option is available only when \texttt{Elvex}
+	      has been compiled with XML output support.
 
 	\item \verb#--max-length <integer>#
 
@@ -1442,7 +1587,8 @@ The global options are:
 	\item \verb#--macros-file <file>#
 
 	      File containing macro definitions used in the pattern and
-	      morphological files.
+		      morphological files.  Each definition has the form
+		      \verb#@name = [features];#.
 
 	\item \verb#--pattern-file <file>#
 

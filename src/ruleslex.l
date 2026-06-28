@@ -429,6 +429,16 @@ double_down_arrow "⇓"
     return TOKEN_RAND;
   }
   
+  "min" {
+    DBUGPRT("TOKEN_MIN");
+    return TOKEN_MIN;
+  }
+
+  "max" {
+    DBUGPRT("TOKEN_MAX");
+    return TOKEN_MAX;
+  }
+  
   "|" {
     DBUGPRT("TOKEN_PIPE");
     return TOKEN_PIPE;

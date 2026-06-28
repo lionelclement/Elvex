@@ -1,0 +1,508 @@
+// =============================================================================
+// pop_didactic.rules — mini-grammaire pop/chanson simple, bornée et didactique
+// =============================================================================
+// Cette grammaire remplace les gros modules historiques par un chemin de
+// génération court. Le but est d'éviter l'explosion observée :
+//   *** fatal error: too much items build : 12001 (12000 Max)
+//
+// Principe musical
+// ----------------
+// Les règles décrivent des fonctions, pas des instruments :
+//   lead / countermelody / guitar / piano_rh / piano_lh / keyboard_rh /
+//   keyboard_lh / keyboard / pad / brass_punch / bass / drums / hand_drums.
+//
+// Pour piano et clavier, on distingue deux fonctions pédagogiques :
+//   - *_lh : accompagnement harmonique de main gauche, principalement basse +
+//            accord, avec quelques mesures d'accords plaqués pour respirer ;
+//   - *_rh : réponse mélodique de main droite, c'est-à-dire de petits fragments
+//            placés dans les espaces de la mélodie principale ou du chant.
+//
+// La forme pop_didactic_verse_chorus_16 vaut 16 mesures :
+//   1-4   couplet A      I - V - vi - IV
+//   5-8   couplet A'     I - V - IV - I
+//   9-12  refrain B      vi - IV - I - V
+//   13-16 cadence        IV - V - I - I
+//
+// En mineur, on conserve la même logique fonctionnelle mais avec :
+//   i - V - VI - iv, puis iv - V - i.
+//
+// Les notes sont données comme degrés relatifs à tonic_pc. Les règles BAR*
+// convertissent ensuite tonic_pc + offset en pc absolu modulo 12.
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. Racine LilyPond : header + score.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+PIECE → VERSION PAPER_NO_TAGLINE HEADER SCORE
+{ ↓1=[]; ↓2=[]; ↓3=↑; ↓4=↑; ⇑=[]; }
+
+@withoutSpaces
+HEADER → HEADER_OPEN TITLE COMPOSER HEADER_CLOSE
+{ [title:$title, composer:$composer] ⊂ ↑; ↓1=[]; ↓2=[title:$title]; ↓3=[composer:$composer]; ↓4=[]; ⇑=[]; }
+
+// La tonique numérique tonic_pc est maintenant donnée directement dans les inputs.
+// Cela évite une règle vide KEY_PROFILE qui bloquait la réduction dans Elvex.
+
+// Scores bornés aux tailles d'ensemble présentes dans les exemples : 4, 6, 7, 9.
+// IMPORTANT : tonic_pc est lu directement dans key. On évite ainsi un non-terminal
+// vide intermédiaire pour calculer la tonique, qui rendait la dérivation fragile.
+
+@withoutSpaces
+SCORE → SCORE_OPEN PAR_OPEN STAFF1 STAFF2 STAFF3 STAFF4 PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [ensemble:[instruments:[count:4]], key:[tonic:$tonic, mode:$mode, tonic_pc:$t], notation:[accidental_policy:$a]] ⊂ ↑;
+  $ctx = ↑ ∪ [tonic_pc:$t, key:[tonic:$tonic, mode:$mode, tonic_pc:$t], accidental_policy:$a];
+  ↓1=[]; ↓2=[];
+  ↓3=$ctx; ↓4=$ctx; ↓5=$ctx; ↓6=$ctx;
+  ↓7=[]; ↓8=[]; ↓9=[]; ↓10=[];
+  ⇑=[];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN PAR_OPEN STAFF1 STAFF2 STAFF3 STAFF4 STAFF5 STAFF6 PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [ensemble:[instruments:[count:6]], key:[tonic:$tonic, mode:$mode, tonic_pc:$t], notation:[accidental_policy:$a]] ⊂ ↑;
+  $ctx = ↑ ∪ [tonic_pc:$t, key:[tonic:$tonic, mode:$mode, tonic_pc:$t], accidental_policy:$a];
+  ↓1=[]; ↓2=[];
+  ↓3=$ctx; ↓4=$ctx; ↓5=$ctx; ↓6=$ctx; ↓7=$ctx; ↓8=$ctx;
+  ↓9=[]; ↓10=[]; ↓11=[]; ↓12=[];
+  ⇑=[];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN PAR_OPEN STAFF1 STAFF2 STAFF3 STAFF4 STAFF5 STAFF6 STAFF7 PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [ensemble:[instruments:[count:7]], key:[tonic:$tonic, mode:$mode, tonic_pc:$t], notation:[accidental_policy:$a]] ⊂ ↑;
+  $ctx = ↑ ∪ [tonic_pc:$t, key:[tonic:$tonic, mode:$mode, tonic_pc:$t], accidental_policy:$a];
+  ↓1=[]; ↓2=[];
+  ↓3=$ctx; ↓4=$ctx; ↓5=$ctx; ↓6=$ctx; ↓7=$ctx; ↓8=$ctx; ↓9=$ctx;
+  ↓10=[]; ↓11=[]; ↓12=[]; ↓13=[];
+  ⇑=[];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN PAR_OPEN STAFF1 STAFF2 STAFF3 STAFF4 STAFF5 STAFF6 STAFF7 STAFF8 STAFF9 PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [ensemble:[instruments:[count:9]], key:[tonic:$tonic, mode:$mode, tonic_pc:$t], notation:[accidental_policy:$a]] ⊂ ↑;
+  $ctx = ↑ ∪ [tonic_pc:$t, key:[tonic:$tonic, mode:$mode, tonic_pc:$t], accidental_policy:$a];
+  ↓1=[]; ↓2=[];
+  ↓3=$ctx; ↓4=$ctx; ↓5=$ctx; ↓6=$ctx; ↓7=$ctx; ↓8=$ctx; ↓9=$ctx; ↓10=$ctx; ↓11=$ctx;
+  ↓12=[]; ↓13=[]; ↓14=[]; ↓15=[];
+  ⇑=[];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN PAR_OPEN STAFF1 STAFF2 STAFF3 STAFF4 STAFF5 STAFF6 STAFF7 STAFF8 STAFF9 STAFF10 PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [ensemble:[instruments:[count:10]], key:[tonic:$tonic, mode:$mode, tonic_pc:$t], notation:[accidental_policy:$a]] ⊂ ↑;
+  $ctx = ↑ ∪ [tonic_pc:$t, key:[tonic:$tonic, mode:$mode, tonic_pc:$t], accidental_policy:$a];
+  ↓1=[]; ↓2=[];
+  ↓3=$ctx; ↓4=$ctx; ↓5=$ctx; ↓6=$ctx; ↓7=$ctx; ↓8=$ctx; ↓9=$ctx; ↓10=$ctx; ↓11=$ctx; ↓12=$ctx;
+  ↓13=[]; ↓14=[]; ↓15=[]; ↓16=[];
+  ⇑=[];
+}
+
+// -----------------------------------------------------------------------------
+// 2. Portées. Chaque STAFFn extrait seulement l'instrument correspondant.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+STAFF1 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i1:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF2 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i2:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF3 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i3:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF4 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i4:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF5 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i5:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF6 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i6:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF7 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i7:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF8 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i8:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF9 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i9:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+@withoutSpaces
+STAFF10 → STAFF_OPEN INSTRUMENT_NAME MIDI_INSTRUMENT CLEF_AUTO TEMPO KEY TIME DYNAMIC STAFF_MUSIC STAFF_CLOSE
+{ [bpm:$bpm, music:[form:$form], ensemble:[instruments:[i10:[name:$name,midi:$midi,clef:$clef,octave:$oct,role:$role,dynamic:$dyn]]], key:[tonic:$tonic,mode:$mode,tonic_pc:$t], meter:[num:$num,den:$den], accidental_policy:$a] ⊂ ↑; ↓1=[]; ↓2=[instrument_name:$name]; ↓3=[midi_instrument:$midi]; ↓4=[clef:$clef]; ↓5=[bpm:$bpm]; ↓6=[tonic:$tonic,mode:$mode]; ↓7=[num:$num,den:$den]; ↓8=[dynamic:$dyn]; ↓9=[form:$form,role:$role,tonic_pc:$t,mode:$mode,octave:$oct,accidental_policy:$a]; ↓10=[]; ⇑=[]; }
+
+@withoutSpaces
+CLEF_AUTO → CLEF_TREBLE { [clef:treble] ⊂ ↑; ↓1=[]; ⇑=[];}
+@withoutSpaces
+CLEF_AUTO → CLEF_BASS { [clef:bass] ⊂ ↑; ↓1=[]; ⇑=[];}
+@withoutSpaces
+CLEF_AUTO → CLEF_TREBLE_8 { [clef:treble_8] ⊂ ↑; ↓1=[]; ⇑=[];}
+@withoutSpaces
+CLEF_AUTO → CLEF_PERCUSSION { [clef:percussion] ⊂ ↑; ↓1=[]; ⇑=[];}
+
+@withoutSpaces
+STAFF_MUSIC → ROLE_MUSIC FINAL_BARLINE NL
+{ ↓1=↑; ↓2=[]; ↓3=[]; ⇑=[]; }
+
+// -----------------------------------------------------------------------------
+// 3. Dispatch fonctionnel : un rôle public sélectionne un matériau.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+ROLE_MUSIC → POPD_LEAD_16 { [form:pop_didactic_verse_chorus_16, role:lead] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_LEAD_16 { [form:pop_didactic_verse_chorus_16, role:voice] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_COUNTER_16 { [form:pop_didactic_verse_chorus_16, role:countermelody] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_CHORDS_16 { [form:pop_didactic_verse_chorus_16, role:guitar] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_PIANO_RH_16 { [form:pop_didactic_verse_chorus_16, role:piano_rh] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_PIANO_LH_16 { [form:pop_didactic_verse_chorus_16, role:piano_lh] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_KEYBOARD_RH_16 { [form:pop_didactic_verse_chorus_16, role:keyboard_rh] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_KEYBOARD_LH_16 { [form:pop_didactic_verse_chorus_16, role:keyboard_lh] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_PAD_16 { [form:pop_didactic_verse_chorus_16, role:keyboard] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_PAD_16 { [form:pop_didactic_verse_chorus_16, role:pad] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_BRASS_16 { [form:pop_didactic_verse_chorus_16, role:brass_punch] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_BASS_16 { [form:pop_didactic_verse_chorus_16, role:bass] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_DRUMS_16 { [form:pop_didactic_verse_chorus_16, role:drums] ⊂ ↑; ↓1=↑; ⇑=[];}
+@withoutSpaces
+ROLE_MUSIC → POPD_HAND_DRUMS_16 { [form:pop_didactic_verse_chorus_16, role:hand_drums] ⊂ ↑; ↓1=↑; ⇑=[];}
+
+// -----------------------------------------------------------------------------
+// 4. Formes de 16 mesures par fonction.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+POPD_LEAD_16 → REST_BAR MEL_I MEL_I MEL_V MEL_VI MEL_IV MEL_V MEL_I MEL_IV MEL_V MEL_HOOK_HEAD MEL_HOOK_LIFT MEL_HOOK_ECHO MEL_HOOK_SEQUENCE MEL_HOOK_PRECAD MEL_HOOK_CLOSE
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_COUNTER_16 → CNT_REST CNT_REST CNT_THIRD CNT_REST CNT_REST CNT_LOW CNT_REST CNT_CLOSE CNT_REST CNT_THIRD CNT_REST CNT_HOOK_ANSWER CNT_REST CNT_HOOK_TAIL CNT_SUSPEND CNT_CLOSE
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+
+// Piano / clavier : séparation didactique des mains.
+// La main droite ne double pas la mélodie : elle répond après les phrases,
+// comme un petit contrechant de piano. La main gauche porte l'harmonie avec
+// alternance basse-accord ; certaines mesures sont en accords seulement pour
+// éviter un ostinato mécanique.
+@withoutSpaces
+POPD_PIANO_RH_16 → REST_BAR RH_REST RH_REPLY_I RH_REST RH_REPLY_VI RH_REST RH_REPLY_V RH_REST RH_PRECHORUS_ANSWER RH_REST RH_HOOK_ANSWER RH_HOOK_LIFT RH_REST RH_HOOK_TAIL RH_PRECAD RH_CLOSE
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_KEYBOARD_RH_16 → REST_BAR RH_PAD_RESPONSE RH_REST RH_REPLY_V RH_REST RH_REPLY_IV RH_REST RH_CLOSE RH_REST RH_PRECHORUS_ANSWER RH_HOOK_SOFT RH_REST RH_HOOK_TAIL RH_REST RH_PRECAD RH_CLOSE
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_PIANO_LH_16 → LH_I_PATTERN LH_I_CHORDS LH_I_PATTERN LH_V_PATTERN LH_VI_PATTERN LH_IV_CHORDS LH_V_PATTERN LH_I_CHORDS LH_IV_PATTERN LH_V_PATTERN LH_I_CHORDS LH_VI_PATTERN LH_IV_PATTERN LH_I_CHORDS LH_V_PATTERN LH_I_FINAL
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_KEYBOARD_LH_16 → LH_I_CHORDS LH_I_CHORDS LH_I_PATTERN LH_V_CHORDS LH_VI_PATTERN LH_IV_CHORDS LH_V_PATTERN LH_I_CHORDS LH_IV_CHORDS LH_V_PATTERN LH_I_CHORDS LH_VI_PATTERN LH_IV_CHORDS LH_I_CHORDS LH_V_PATTERN LH_I_FINAL
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_CHORDS_16 → CH_I CH_I CH_I CH_V CH_VI CH_IV CH_V CH_I CH_IV CH_V CH_I CH_VI CH_IV CH_I CH_V CH_I
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_PAD_16 → PAD_I PAD_I PAD_I PAD_V PAD_VI PAD_IV PAD_V PAD_I PAD_IV PAD_V PAD_I PAD_VI PAD_IV PAD_I PAD_V PAD_I
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_BRASS_16 → REST_BAR REST_BAR REST_BAR REST_BAR REST_BAR BR_IV REST_BAR BR_V REST_BAR REST_BAR BR_HOOK_PUNCH BR_HOOK_LIFT REST_BAR BR_HOOK_ANSWER BR_V BR_I
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_BASS_16 → BS_I BS_I BS_I BS_V BS_VI BS_IV BS_V BS_I BS_IV BS_V BS_I BS_VI BS_IV BS_I BS_V BS_I
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_DRUMS_16 → REST_BAR DRUM_BAR DRUM_BAR DRUM_FILL DRUM_BAR DRUM_BAR DRUM_BAR DRUM_FILL DRUM_BAR DRUM_BAR DRUM_FILL DRUM_BAR DRUM_BAR DRUM_BAR DRUM_FILL DRUM_BAR
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+@withoutSpaces
+POPD_HAND_DRUMS_16 → HAND_LOW HAND_LOW HAND_OPEN HAND_LOW HAND_LOW HAND_OPEN HAND_LOW HAND_OPEN HAND_OPEN HAND_LOW HAND_OPEN HAND_FILL HAND_LOW HAND_OPEN HAND_FILL HAND_LOW
+{ ↓1=↑;↓2=↑;↓3=↑;↓4=↑;↓5=↑;↓6=↑;↓7=↑;↓8=↑;↓9=↑;↓10=↑;↓11=↑;↓12=↑;↓13=↑;↓14=↑;↓15=↑;↓16=↑; }
+
+// -----------------------------------------------------------------------------
+// 5. Cellules mélodiques/harmoniques. Les commentaires expliquent la fonction.
+// -----------------------------------------------------------------------------
+
+// I : stable, ouverture sur 1-3-2-1.
+@withoutSpaces
+MEL_I → BAR4 { ↓1=↑ ∪ [motif:[o1:0,o2:4,o3:2,o4:0], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+// V : question sur dominante, finit sur la tierce de I pour rester chantable.
+@withoutSpaces
+MEL_V → BAR4 { ↓1=↑ ∪ [motif:[o1:7,o2:9,o3:7,o4:4], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=[];}
+// vi/VI : élargissement du refrain, montée vers l'octave.
+@withoutSpaces
+MEL_VI → BAR4 { ↓1=↑ ∪ [motif:[o1:9,o2:7,o3:9,o4:12], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+// IV/iv : retombée conjointe vers la tonique.
+@withoutSpaces
+MEL_IV → BAR4 { ↓1=↑ ∪ [motif:[o1:5,o2:4,o3:2,o4:0], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+// Refrain : point haut puis détente.
+@withoutSpaces
+MEL_I_HIGH → BAR4 { ↓1=↑ ∪ [motif:[o1:7,o2:11,o3:12,o4:9], rhythm:[r1:"1/8",r2:"1/8",r3:"1/4",r4:"1/2"]]; ⇑=[];}
+@withoutSpaces
+MEL_I_CLOSE → BAR2 { ↓1=↑ ∪ [motif:[o1:2,o2:0], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+
+
+// Refrain structuré : ces cellules ne sont pas attachées à un morceau précis.
+// Elles décrivent des fonctions générales : tête de hook, écho, montée,
+// séquence et cadence. Cela donne plus de relief sans copier-coller ad hoc.
+@withoutSpaces
+MEL_HOOK_HEAD → BAR4 { ↓1=↑ ∪ [motif:[o1:5,o2:7,o3:9,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=[];}
+@withoutSpaces
+MEL_HOOK_ECHO → BAR2 { ↓1=↑ ∪ [motif:[o1:4,o2:2], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+MEL_HOOK_LIFT → BAR4 { ↓1=↑ ∪ [motif:[o1:5,o2:7,o3:9,o4:12], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+MEL_HOOK_SEQUENCE → BAR4 { ↓1=↑ ∪ [motif:[o1:7,o2:9,o3:11,o4:9], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/2"]]; ⇑=[];}
+@withoutSpaces
+MEL_HOOK_PRECAD → BAR4 { ↓1=↑ ∪ [motif:[o1:5,o2:4,o3:2,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+MEL_HOOK_CLOSE → BAR2 { ↓1=↑ ∪ [motif:[o1:2,o2:0], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+
+@withoutSpaces
+CNT_REST → REST_BAR { ↓1=↑; ⇑=[];}
+@withoutSpaces
+CNT_LOW → BAR2 { ↓1=↑ ∪ [motif:[o1:0,o2:4], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+CNT_THIRD → BAR2 { ↓1=↑ ∪ [motif:[o1:4,o2:5], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+CNT_HIGH → BAR4 { ↓1=↑ ∪ [motif:[o1:7,o2:9,o3:7,o4:5], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+CNT_CLOSE → BAR1 { ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=[];}
+
+// Contrechant de refrain : réponses courtes dans les espaces du chant.
+@withoutSpaces
+CNT_HOOK_ANSWER → BAR2 { ↓1=↑ ∪ [motif:[o1:9,o2:7], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+CNT_HOOK_TAIL → BAR4 { ↓1=↑ ∪ [motif:[o1:4,o2:5,o3:7,o4:5], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+CNT_SUSPEND → BAR2 { ↓1=↑ ∪ [motif:[o1:5,o2:4], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+
+// Main droite piano/clavier : réponses mélodiques.
+// Elles évitent les temps forts occupés par la voix : beaucoup de demi-mesures,
+// de fins de phrase et de mouvements conjoints. Ces cellules peuvent servir au
+// piano acoustique comme au clavier électrique.
+@withoutSpaces
+RH_REST → REST_BAR { ↓1=↑; ⇑=[];}
+@withoutSpaces
+RH_REPLY_I → BAR2 { ↓1=↑ ∪ [motif:[o1:4,o2:2], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+RH_REPLY_V → BAR2 { ↓1=↑ ∪ [motif:[o1:7,o2:4], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+RH_REPLY_IV → BAR2 { ↓1=↑ ∪ [motif:[o1:5,o2:4], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+RH_REPLY_VI → BAR4 { ↓1=↑ ∪ [motif:[o1:9,o2:7,o3:5,o4:4], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+RH_PRECHORUS_ANSWER → BAR4 { ↓1=↑ ∪ [motif:[o1:5,o2:7,o3:9,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+RH_HOOK_ANSWER → BAR2 { ↓1=↑ ∪ [motif:[o1:12,o2:9], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+RH_HOOK_LIFT → BAR4 { ↓1=↑ ∪ [motif:[o1:7,o2:9,o3:11,o4:12], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+RH_HOOK_SOFT → BAR2 { ↓1=↑ ∪ [motif:[o1:9,o2:7], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+RH_HOOK_TAIL → BAR4 { ↓1=↑ ∪ [motif:[o1:4,o2:5,o3:7,o4:5], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+RH_PRECAD → BAR2 { ↓1=↑ ∪ [motif:[o1:7,o2:11], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+RH_CLOSE → BAR2 { ↓1=↑ ∪ [motif:[o1:2,o2:0], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+RH_PAD_RESPONSE → BAR1 { ↓1=↑ ∪ [motif:[o1:7], rhythm:[r1:"1/1"]]; ⇑=[];}
+
+// Main gauche piano/clavier : fonction harmonique.
+// PATTERN = basse sur le temps fort, accord au milieu, quinte, accord.
+// CHORDS  = accords plaqués réguliers, pour alléger l'effet basse obstinée.
+@withoutSpaces
+LH_I_PATTERN → LH_BASS_CHORD { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,fifth:7,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_I_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,fifth:7,quality:min]; ⇑=[];}
+@withoutSpaces
+LH_I_CHORDS → LH_CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_I_CHORDS → LH_CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+@withoutSpaces
+LH_V_PATTERN → LH_BASS_CHORD { ↓1=↑ ∪ [root:7,fifth:2,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_V_CHORDS → LH_CHORD4 { ↓1=↑ ∪ [root:7,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_IV_PATTERN → LH_BASS_CHORD { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,fifth:0,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_IV_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,fifth:0,quality:min]; ⇑=[];}
+@withoutSpaces
+LH_IV_CHORDS → LH_CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_IV_CHORDS → LH_CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:min]; ⇑=[];}
+@withoutSpaces
+LH_VI_PATTERN → LH_BASS_CHORD { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,fifth:4,quality:min]; ⇑=[];}
+@withoutSpaces
+LH_VI_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:8,fifth:3,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_I_FINAL → LH_HALF_CADENCE { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
+@withoutSpaces
+LH_I_FINAL → LH_HALF_CADENCE { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+
+// Accords. Les règles majeures/mineures sont séparées pour rester lisibles.
+@withoutSpaces
+CH_I → CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
+@withoutSpaces
+CH_I → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+@withoutSpaces
+CH_V → CHORD4 { ↓1=↑ ∪ [root:7,quality:maj]; ⇑=[];}
+@withoutSpaces
+CH_IV → CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:maj]; ⇑=[];}
+@withoutSpaces
+CH_IV → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:min]; ⇑=[];}
+@withoutSpaces
+CH_VI → CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,quality:min]; ⇑=[];}
+@withoutSpaces
+CH_VI → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:8,quality:maj]; ⇑=[];}
+
+@withoutSpaces
+PAD_I → CHORD1 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
+@withoutSpaces
+PAD_I → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+@withoutSpaces
+PAD_V → CHORD1 { ↓1=↑ ∪ [root:7,quality:maj]; ⇑=[];}
+@withoutSpaces
+PAD_IV → CHORD1 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:maj]; ⇑=[];}
+@withoutSpaces
+PAD_IV → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:min]; ⇑=[];}
+@withoutSpaces
+PAD_VI → CHORD1 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,quality:min]; ⇑=[];}
+@withoutSpaces
+PAD_VI → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:8,quality:maj]; ⇑=[];}
+
+@withoutSpaces
+BR_I → BAR2 { ↓1=↑ ∪ [motif:[o1:0,o2:7], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+BR_V → BAR2 { ↓1=↑ ∪ [motif:[o1:7,o2:11], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+BR_IV → BAR2 { ↓1=↑ ∪ [motif:[o1:5,o2:9], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+BR_VI → BAR2 { ↓1=↑ ∪ [motif:[o1:9,o2:12], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+
+// Cuivres de refrain : ponctuations formelles, pas doublure permanente.
+@withoutSpaces
+BR_HOOK_PUNCH → BAR2 { ↓1=↑ ∪ [motif:[o1:5,o2:0], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+BR_HOOK_LIFT → BAR2 { ↓1=↑ ∪ [motif:[o1:7,o2:11], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+@withoutSpaces
+BR_HOOK_ANSWER → BAR2 { ↓1=↑ ∪ [motif:[o1:9,o2:7], rhythm:[r1:"1/2",r2:"1/2"]]; ⇑=[];}
+
+@withoutSpaces
+BS_I → BAR4 { ↓1=↑ ∪ [motif:[o1:0,o2:0,o3:7,o4:0], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+BS_V → BAR4 { ↓1=↑ ∪ [motif:[o1:7,o2:7,o3:2,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+BS_IV → BAR4 { ↓1=↑ ∪ [motif:[o1:5,o2:5,o3:0,o4:5], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+BS_VI → BAR4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [motif:[o1:9,o2:9,o3:4,o4:9], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+BS_VI → BAR4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [motif:[o1:8,o2:8,o3:3,o4:8], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+
+@withoutSpaces
+DRUM_BAR → BAR4 { ↓1=↑ ∪ [motif:[o1:0,o2:7,o3:0,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+DRUM_FILL → BAR8 { ↓1=↑ ∪ [motif:[o1:0,o2:0,o3:7,o4:0,o5:0,o6:7,o7:0,o8:7], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]]; ⇑=[];}
+@withoutSpaces
+HAND_LOW → BAR4 { ↓1=↑ ∪ [motif:[o1:0,o2:0,o3:5,o4:0], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+HAND_OPEN → BAR4 { ↓1=↑ ∪ [motif:[o1:5,o2:0,o3:5,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[];}
+@withoutSpaces
+HAND_FILL → BAR8 { ↓1=↑ ∪ [motif:[o1:0,o2:5,o3:0,o4:7,o5:0,o6:5,o7:7,o8:5], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8",r7:"1/8",r8:"1/8"]]; ⇑=[];}
+
+// -----------------------------------------------------------------------------
+// 6. Barres de bas niveau : conversion degrés -> notes LilyPond.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+REST_BAR → REST BARLINE { ↓1=[dur:"1/1"]; ↓2=[]; ⇑=[];}
+
+@withoutSpaces
+BAR1 → NOTE BARLINE
+{ [tonic_pc:$t, octave:$oct, accidental_policy:$a, motif:[o1:$o1], rhythm:[r1:$r1]] ⊂ ↑; $pc1=($t+$o1)%12; ↓1=[pc:$pc1,octave:$oct,dur:$r1,accidental_policy:$a]; ↓2=[]; }
+@withoutSpaces
+BAR2 → NOTE NOTE BARLINE
+{ [tonic_pc:$t, octave:$oct, accidental_policy:$a, motif:[o1:$o1,o2:$o2], rhythm:[r1:$r1,r2:$r2]] ⊂ ↑; $pc1=($t+$o1)%12; $pc2=($t+$o2)%12; ↓1=[pc:$pc1,octave:$oct,dur:$r1,accidental_policy:$a]; ↓2=[pc:$pc2,octave:$oct,dur:$r2,accidental_policy:$a]; ↓3=[]; }
+@withoutSpaces
+BAR4 → NOTE NOTE NOTE NOTE BARLINE
+{ [tonic_pc:$t, octave:$oct, accidental_policy:$a, motif:[o1:$o1,o2:$o2,o3:$o3,o4:$o4], rhythm:[r1:$r1,r2:$r2,r3:$r3,r4:$r4]] ⊂ ↑; $pc1=($t+$o1)%12; $pc2=($t+$o2)%12; $pc3=($t+$o3)%12; $pc4=($t+$o4)%12; ↓1=[pc:$pc1,octave:$oct,dur:$r1,accidental_policy:$a]; ↓2=[pc:$pc2,octave:$oct,dur:$r2,accidental_policy:$a]; ↓3=[pc:$pc3,octave:$oct,dur:$r3,accidental_policy:$a]; ↓4=[pc:$pc4,octave:$oct,dur:$r4,accidental_policy:$a]; ↓5=[]; }
+@withoutSpaces
+BAR8 → NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE BARLINE
+{ [tonic_pc:$t, octave:$oct, accidental_policy:$a, motif:[o1:$o1,o2:$o2,o3:$o3,o4:$o4,o5:$o5,o6:$o6,o7:$o7,o8:$o8], rhythm:[r1:$r1,r2:$r2,r3:$r3,r4:$r4,r5:$r5,r6:$r6,r7:$r7,r8:$r8]] ⊂ ↑; $pc1=($t+$o1)%12; $pc2=($t+$o2)%12; $pc3=($t+$o3)%12; $pc4=($t+$o4)%12; $pc5=($t+$o5)%12; $pc6=($t+$o6)%12; $pc7=($t+$o7)%12; $pc8=($t+$o8)%12; ↓1=[pc:$pc1,octave:$oct,dur:$r1,accidental_policy:$a]; ↓2=[pc:$pc2,octave:$oct,dur:$r2,accidental_policy:$a]; ↓3=[pc:$pc3,octave:$oct,dur:$r3,accidental_policy:$a]; ↓4=[pc:$pc4,octave:$oct,dur:$r4,accidental_policy:$a]; ↓5=[pc:$pc5,octave:$oct,dur:$r5,accidental_policy:$a]; ↓6=[pc:$pc6,octave:$oct,dur:$r6,accidental_policy:$a]; ↓7=[pc:$pc7,octave:$oct,dur:$r7,accidental_policy:$a]; ↓8=[pc:$pc8,octave:$oct,dur:$r8,accidental_policy:$a]; ↓9=[]; }
+
+@withoutSpaces
+LH_BASS_CHORD → NOTE CHORD NOTE CHORD BARLINE
+{
+  [tonic_pc:$t, octave:$oct, accidental_policy:$a, root:$root, fifth:$fifth, quality:$q] ⊂ ↑;
+  $pcRoot=($t+$root)%12;
+  $pcFifth=($t+$fifth)%12;
+  $chOct=$oct+1;
+  ↓1=[pc:$pcRoot,octave:$oct,dur:"1/4",accidental_policy:$a];
+  ↓2=[root_pc:$pcRoot,octave:$chOct,dur:"1/4",quality:$q,accidental_policy:$a];
+  ↓3=[pc:$pcFifth,octave:$oct,dur:"1/4",accidental_policy:$a];
+  ↓4=[root_pc:$pcRoot,octave:$chOct,dur:"1/4",quality:$q,accidental_policy:$a];
+  ↓5=[];
+  ⇑=[];
+}
+
+@withoutSpaces
+LH_HALF_CADENCE → NOTE CHORD BARLINE
+{
+  [tonic_pc:$t, octave:$oct, accidental_policy:$a, root:$root, quality:$q] ⊂ ↑;
+  $pcRoot=($t+$root)%12;
+  $chOct=$oct+1;
+  ↓1=[pc:$pcRoot,octave:$oct,dur:"1/2",accidental_policy:$a];
+  ↓2=[root_pc:$pcRoot,octave:$chOct,dur:"1/2",quality:$q,accidental_policy:$a];
+  ↓3=[];
+  ⇑=[];
+}
+
+
+// Accords de main gauche.
+// Les entrées CHORD du lexique commencent à l'octave 3.
+// Les parties piano_lh/keyboard_lh peuvent être écrites à l'octave 2 pour les basses ;
+// on place donc les accords une octave au-dessus, comme LH_BASS_CHORD et LH_HALF_CADENCE.
+@withoutSpaces
+LH_CHORD4 → CHORD CHORD CHORD CHORD BARLINE
+{
+  [tonic_pc:$t, octave:$oct, accidental_policy:$a, root:$root, quality:$q] ⊂ ↑;
+  $pc=($t+$root)%12;
+  $chOct=$oct+1;
+  ↓1=[root_pc:$pc,octave:$chOct,dur:"1/4",quality:$q,accidental_policy:$a];
+  ↓2=[root_pc:$pc,octave:$chOct,dur:"1/4",quality:$q,accidental_policy:$a];
+  ↓3=[root_pc:$pc,octave:$chOct,dur:"1/4",quality:$q,accidental_policy:$a];
+  ↓4=[root_pc:$pc,octave:$chOct,dur:"1/4",quality:$q,accidental_policy:$a];
+  ↓5=[];
+  ⇑=[];
+}
+
+@withoutSpaces
+CHORD1 → CHORD BARLINE
+{ [tonic_pc:$t, octave:$oct, accidental_policy:$a, root:$root, quality:$q] ⊂ ↑; $pc=($t+$root)%12; ↓1=[root_pc:$pc,octave:$oct,dur:"1/1",quality:$q,accidental_policy:$a]; ↓2=[]; }
+@withoutSpaces
+CHORD4 → CHORD CHORD CHORD CHORD BARLINE
+{ [tonic_pc:$t, octave:$oct, accidental_policy:$a, root:$root, quality:$q] ⊂ ↑; $pc=($t+$root)%12; ↓1=[root_pc:$pc,octave:$oct,dur:"1/4",quality:$q,accidental_policy:$a]; ↓2=[root_pc:$pc,octave:$oct,dur:"1/4",quality:$q,accidental_policy:$a]; ↓3=[root_pc:$pc,octave:$oct,dur:"1/4",quality:$q,accidental_policy:$a]; ↓4=[root_pc:$pc,octave:$oct,dur:"1/4",quality:$q,accidental_policy:$a]; ↓5=[]; }

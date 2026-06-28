@@ -1,0 +1,33 @@
+PIECE [
+  // Exemple de refrain pop avec cuivres : les cuivres ponctuent, ils ne jouent pas tout le temps.
+  generation:[syntax:instrument_roles, strict:false, fallback:true],
+
+  title:"Refrain pop avec cuivres",
+  composer:"Elvex didactic pop",
+  bpm:108,
+
+  music:[
+    style:english_pop,
+    form:pop_didactic_verse_chorus_16,
+    phrase_model:verse_chorus,
+    rhythm:[topic:pop_backbeat, dance:none, density:medium, anacrusis:false, hemiola_at_cadence:false, ostinato:guitar_strum, articulation:marked]
+  ],
+
+  ensemble:[instruments:[
+    count:10,
+    i1:[id:voice, name:"Voice",      family:voice,           role:lead,        midi:"voice oohs", clef:treble, octave:4, dynamic:mf],
+    i2:[id:gtr,   name:"Nylon guitar",family:plucked_strings,role:guitar,      midi:"acoustic guitar (nylon)", clef:treble_8, octave:3, dynamic:mp],
+    i3:[id:bass,  name:"Bass",       family:electric,        role:bass,        midi:"electric bass (finger)", clef:bass, octave:2, dynamic:mf],
+    i4:[id:drums, name:"Drums",      family:drumkit,         role:drums,       midi:"woodblock", clef:percussion, octave:3, dynamic:mf],
+    i5:[id:tpt,   name:"Trompette",  family:brass,           role:brass_punch, midi:"trumpet", clef:treble, octave:4, dynamic:mf],
+    i6:[id:tbn,   name:"Trombone",   family:brass,           role:brass_punch, midi:"trombone", clef:bass, octave:3, dynamic:mf],
+    i7:[id:horn,  name:"Cor",        family:brass,           role:pad,         midi:"french horn", clef:treble, octave:3, dynamic:mp],
+    i8:[id:tuba,  name:"Tuba",       family:brass,           role:bass,        midi:"tuba", clef:bass, octave:2, dynamic:mp],
+    i9:[id:keysrh,name:"Clavier RH", family:keyboard,        role:keyboard_rh, midi:"electric piano 1", clef:treble, octave:4, dynamic:p],
+    i10:[id:keyslh,name:"Clavier LH", family:keyboard,        role:keyboard_lh, midi:"electric piano 1", clef:bass, octave:2, dynamic:p]
+  ]],
+
+  key:[tonic:d, mode:major, tonic_pc:2],
+  notation:[accidental_policy:sharp],
+  meter:[num:4, den:4]
+]

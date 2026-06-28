@@ -1,0 +1,626 @@
+// =============================================================================
+// flute.rules
+// =============================================================================
+// Matériau pour flûte : solo, duo, lignes de tête et motifs de forme classique. Les rôles courants sont flute1, flute2 et flute_piano_lead.
+//
+
+MUSICAL_FORM → FLUTE1_ROUNDED_BINARY
+{ [role:flute1, form:rounded_binary, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE2_ROUNDED_BINARY
+{ [role:flute2, form:rounded_binary, rhythm:[topic:neutral]]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// Flûte I : période antécédent/conséquent, milieu contrastant, retour, courte coda.
+@withoutSpaces
+FLUTE1_ROUNDED_BINARY → FLUTE1_A_PERIOD FLUTE1_A_VARIATION FLUTE1_B_PERIOD FLUTE1_A_RETURN FLUTE1_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a_end, last_function:$f1, tension:$t1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a_end, previous_function:$f1, previous_tension:$t1];
+  [last_offset:$var_end] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$var_end, section:b];
+  [home_tonic_pc:$home, current_key_pc:$current, last_offset:$b_end] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$home, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b_end, section:return];
+  [last_function:$return_function] ⊂ ⇓4;
+  ↓5 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$return_function];
+  ⇑ = ⇓5;
+}
+
+// Flûte II : contre-ligne plus légère et soutien harmonique. Elle suit la même carte cadentielle.
+@withoutSpaces
+FLUTE2_ROUNDED_BINARY → FLUTE2_A_SUPPORT FLUTE2_A_VARIATION FLUTE2_B_SUPPORT FLUTE2_A_RETURN FLUTE2_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a_end, last_function:$f1, tension:$t1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a_end, previous_function:$f1, previous_tension:$t1];
+  [last_offset:$var_end] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$var_end, section:b];
+  [home_tonic_pc:$home, current_key_pc:$current, last_offset:$b_end] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$home, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b_end, section:return];
+  [last_function:$return_function] ⊂ ⇓4;
+  ↓5 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$return_function];
+  ⇑ = ⇓5;
+}
+
+// --- Compact flute+piano lead ----------------------------------------------
+// Ligne principale courte pour duo flûte + piano. Elle réutilise le matériau lexical existant de Flûte I
+// tout en gardant une dérivation totale assez petite pour une génération fiable.
+@withoutSpaces
+FLUTE_PIANO_LEAD_COMPACT → FL1_OPENING_MOTIF FL1_AUTHENTIC_CADENCE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  ↓2 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:compact];
+}
+
+@withoutSpaces
+FLUTE_PIANO_LEAD_EIGHT_BAR → FL1_OPENING_MOTIF FL1_ANSWER_MOTIF FL1_HALF_CADENCE FL1_AUTHENTIC_CADENCE FL1_RETURN_MOTIF FL1_AUTHENTIC_CADENCE FL1_DOMINANT_PREP FL1_FINAL_RESOLUTION
+{
+  // Ligne de flûte de 8 mesures d’une mesure pour duo flûte+piano.
+  // Elle utilise les cellules existantes de Flûte I, alignées avec la routage de piano de 8 mesures.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_offset:$m2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m2];
+  [last_function:$f3, tension:$t3] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f3, previous_tension:$t3];
+  [last_function:$f4, tension:$t4] ⊂ ⇓4;
+  ↓5 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f4, previous_tension:$t4];
+  [last_function:$f5, tension:$t5] ⊂ ⇓5;
+  ↓6 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f5, previous_tension:$t5];
+  [last_function:$f6, tension:$t6] ⊂ ⇓6;
+  ↓7 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f6, previous_tension:$t6];
+  [last_function:$f7, tension:$t7] ⊂ ⇓7;
+  ↓8 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f7, previous_tension:$t7];
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+// --- Sections Flûte I -------------------------------------------------------
+// Plusieurs variantes sont volontairement laissées ambiguës ; le générateur peut choisir n’importe quel arbre.
+
+@withoutSpaces
+FLUTE1_A_PERIOD → FL1_OPENING_MOTIF FL1_ANSWER_MOTIF FL1_HALF_CADENCE FL1_AUTHENTIC_CADENCE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_offset:$m2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m2];
+  [last_function:$f3, tension:$t3] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f3, previous_tension:$t3];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE1_A_VARIATION → FL1_ORNAMENTED_MOTIF FL1_SEQUENCE_MOTIF FL1_AUTHENTIC_CADENCE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$opening] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_function:$f2, tension:$t2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f2, previous_tension:$t2];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLUTE1_B_PERIOD → FL1_MODULATING_MOTIF FL1_DOMINANT_KEY_MOTIF FL1_DOMINANT_KEY_CADENCE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $new_key_abs = $tonic_pc + 7;
+  $new_key_pc = $new_key_abs % 12;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_function:$f2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f2];
+  ⇑ = [home_tonic_pc:$tonic_pc, current_key_pc:$new_key_pc, last_offset:7, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+FLUTE1_A_RETURN → FL1_RETURN_MOTIF FL1_AUTHENTIC_CADENCE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$opening] ⊂ ↑;
+  ↓1 = ↑;
+  [last_function:$f1, tension:$t1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f1, previous_tension:$t1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE1_CODA → FL1_CODA_CALL FL1_DOMINANT_PREP FL1_CADENTIAL_SIX_FOUR FL1_FINAL_RESOLUTION
+{
+  // Coda affirmée : bref rappel du thème, préparation de dominante,
+  // couleur de sixte et quarte cadentielle, puis résolution finale sur la tonique.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$call_end, last_function:$call_function] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$call_end, previous_function:$call_function];
+  [last_function:$dom_function, tension:$dom_tension] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$dom_function, previous_tension:$dom_tension];
+  [last_function:$cad_function, tension:$cad_tension] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$cad_function, previous_tension:$cad_tension];
+  ⇑ = ⇓4;
+}
+
+// --- Sections Flûte II ------------------------------------------------------
+
+@withoutSpaces
+FLUTE2_A_SUPPORT → FL2_TONIC_SUPPORT FL2_SUBDOMINANT_SUPPORT FL2_DOMINANT_SUPPORT FL2_TONIC_RESOLUTION
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_function:$f1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f1];
+  [last_function:$f2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f2];
+  [last_function:$f3, tension:$t3] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f3, previous_tension:$t3];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE2_A_VARIATION → FL2_PASSING_SUPPORT FL2_SEQUENCE_SUPPORT FL2_TONIC_RESOLUTION
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_function:$f2, tension:$t2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f2, previous_tension:$t2];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLUTE2_B_SUPPORT → FL2_MODULATING_SUPPORT FL2_DOMINANT_PEDAL FL2_DOMINANT_SUPPORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $new_key_abs = $tonic_pc + 7;
+  $new_key_pc = $new_key_abs % 12;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_function:$f2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f2];
+  ⇑ = [home_tonic_pc:$tonic_pc, current_key_pc:$new_key_pc, last_offset:7, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+FLUTE2_A_RETURN → FL2_TONIC_SUPPORT FL2_TONIC_RESOLUTION
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_function:$f1, tension:$t1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f1, previous_tension:$t1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE2_CODA → FL2_CODA_ANSWER FL2_DOMINANT_PEDAL FL2_CADENTIAL_SIX_FOUR_SUPPORT FL2_FINAL_RESOLUTION
+{
+  // Flûte II ne s’arrête pas sous l’appel final. Elle répond légèrement,
+  // maintient la zone de dominante, puis résout avec Flûte I.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$answer_end, last_function:$answer_function] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$answer_end, previous_function:$answer_function];
+  [last_function:$pedal_function, tension:$pedal_tension] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$pedal_function, previous_tension:$pedal_tension];
+  [last_function:$cad_function, tension:$cad_tension] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$cad_function, previous_tension:$cad_tension];
+  ⇑ = ⇓4;
+}
+
+// --- Matériau mélodique, Flûte I -------------------------------------------
+
+// Politique chromatique : les variantes aléatoires doivent être des cellules musicales complètes.
+// Une hauteur chromatique est utilisée uniquement comme note de passage, broderie,
+// ou sensible secondaire, et doit résoudre immédiatement dans la même mesure.
+// Cela évite le problème antérieur d’altérations isolées qui sonnaient mal.
+
+@withoutSpaces
+FL1_OPENING_MOTIF → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 70) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:2, o3:4, o4:7, o5:5, o6:4],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  } else if ($r < 84) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:4, o3:2, o4:5, o5:7, o6:4],
+          rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  } else {
+    // Couleur de passage chromatique : en ré majeur, 0-1-2 donne ré-ré dièse-mi.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:1, o3:2, o4:4, o5:5, o6:4],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+FL1_ANSWER_MOTIF → BAR6
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 79) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:$opening, o2:5, o3:4, o4:2, o5:4, o6:7],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  } else {
+    // Approche chromatique fonctionnelle : la quarte augmentée résout immédiatement vers la dominante.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:$opening, o2:5, o3:4, o4:5, o5:6, o6:7],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_ORNAMENTED_MOTIF → BAR8
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 70) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:$opening, o2:2, o3:4, o4:5, o5:7, o6:5, o7:4, o8:2],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/8", r7:"1/8", r8:"1/8"]];
+  } else {
+    // Broderie supérieure/couleur de passage chromatique : la quarte augmentée mène à la dominante.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:$opening, o2:2, o3:4, o4:5, o5:6, o6:7, o7:5, o8:4],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/8", r7:"1/8", r8:"1/8"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:subdominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_SEQUENCE_MOTIF → BAR6
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:$opening, o2:7, o3:9, o4:11, o5:9, o6:7],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_MODULATING_MOTIF → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:4, o2:5, o3:7, o4:9, o5:11, o6:12],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:pivot, tension:medium];
+}
+
+@withoutSpaces
+FL1_DOMINANT_KEY_MOTIF → BAR6
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:0, o2:2, o3:4, o4:7, o5:9, o6:7],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonicized_dominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_RETURN_MOTIF → BAR6
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:5, o3:4, o4:2, o5:4, o6:0],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+FL1_HALF_CADENCE → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 84) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:2, o2:4, o3:6, o4:7],
+          rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  } else {
+    // Broderie chromatique inférieure vers la dominante.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:2, o2:4, o3:6, o4:7],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:high, cadence:half];
+}
+
+@withoutSpaces
+FL1_DOMINANT_KEY_CADENCE → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:2, o2:4, o3:6, o4:7],
+        rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:high, cadence:half];
+}
+
+@withoutSpaces
+FL1_AUTHENTIC_CADENCE → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 84) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:7, o2:4, o3:2, o4:0],
+          rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  } else {
+    // Descente chromatique fonctionnelle : en ré majeur, la-sol dièse-fa dièse-ré, avec résolution chromatique.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:7, o2:6, o3:4, o4:0],
+          rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:low, cadence:authentic];
+}
+
+@withoutSpaces
+FL1_DOMINANT_PREP → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:5, o2:7, o3:11, o4:7],
+        rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+FL1_CODA_CALL → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:0, o2:4, o3:7, o4:12, o5:11, o6:7],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic_recall, tension:medium, section:coda];
+}
+
+@withoutSpaces
+FL1_CADENTIAL_SIX_FOUR → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:12, o2:9, o3:7, o4:6],
+        rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:cadential_six_four, tension:high, cadence:preparation];
+}
+
+@withoutSpaces
+FL1_FINAL_RESOLUTION → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Résolution finale : courte descente de dominante, puis tonique plus longue.
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:4, o3:2, o4:0],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:resolved, cadence:final];
+}
+
+// --- Matériau de soutien, Flûte II ------------------------------------------
+
+@withoutSpaces
+FL2_TONIC_SUPPORT → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:0, o2:4, o3:7, o4:4],
+        rhythm:[r1:"1/2", r2:"1/4", r3:"1/8", r4:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+FL2_SUBDOMINANT_SUPPORT → BAR4
+{
+  [previous_function:$prev] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:5, o2:9, o3:12, o4:9],
+        rhythm:[r1:"1/2", r2:"1/4", r3:"1/8", r4:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:subdominant, tension:medium];
+}
+
+@withoutSpaces
+FL2_DOMINANT_SUPPORT → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:11, o3:14, o4:7],
+        rhythm:[r1:"1/2", r2:"1/4", r3:"1/8", r4:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+FL2_TONIC_RESOLUTION → BAR4
+{
+  [previous_tension:$t] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:4, o3:2, o4:0],
+        rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:low, cadence:authentic];
+}
+
+@withoutSpaces
+FL2_CODA_ANSWER → BAR4_REST_AFTER_1
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Une brève réponse retardée laisse de l’espace pour l’appel de coda de Flûte I.
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:0, o2:4, o3:7],
+        rhythm:[r1:"1/4", rr:"1/8", r2:"1/8", r3:"1/2"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic_answer, tension:medium, section:coda];
+}
+
+@withoutSpaces
+FL2_CADENTIAL_SIX_FOUR_SUPPORT → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:0, o2:7, o3:12, o4:11],
+        rhythm:[r1:"1/2", r2:"1/4", r3:"1/8", r4:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:cadential_support, tension:high, cadence:preparation];
+}
+
+@withoutSpaces
+FL2_FINAL_RESOLUTION → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:4, o3:2, o4:0],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+FL2_PASSING_SUPPORT → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        // Soutien de passage chromatique : la tierce abaissée / seconde haussée colore la ligne
+        // sans changer la longueur de phrase. En ré majeur, cela donne fa naturel.
+        motif:[o1:0, o2:2, o3:3, o4:4, o5:5, o6:4],
+        rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4", r5:"1/8", r6:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:passing, tension:low];
+}
+
+@withoutSpaces
+FL2_SEQUENCE_SUPPORT → BAR6
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:$opening, o2:4, o3:7, o4:9, o5:7, o6:4],
+        rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4", r5:"1/8", r6:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:medium];
+}
+
+@withoutSpaces
+FL2_MODULATING_SUPPORT → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:4, o2:7, o3:9, o4:11],
+        rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:pivot, tension:medium];
+}
+
+@withoutSpaces
+FL2_DOMINANT_PEDAL → BAR4
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:7, o3:11, o4:7],
+        rhythm:[r1:"1/2", r2:"1/4", r3:"1/8", r4:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:high];
+}
+
+
+// -----------------------------------------------------------------------------
+// Formes de flûte conductrice utilisées spécifiquement dans flute_piano_duet.
+// Elles sont alignées avec les plans d’accompagnement de piano_accompaniment.rules :
+// ternary              = 11 mesures
+// theme_and_variations = 9 mesures
+// minuet_trio          = 13 mesures en 3/4
+// La flûte reste la voix mélodique principale ; le piano reste accompagnateur.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+FLUTE_PIANO_LEAD_TERNARY → FLP_A_PERIOD FLP_CONTRAST_PERIOD FLP_A_RETURN FLP_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; [last_offset:$a] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a]; [last_offset:$b] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b]; [last_offset:$c] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$c];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE_PIANO_LEAD_THEME_AND_VARIATIONS → FLP_A_PERIOD FLP_VARIATION FLP_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; [last_offset:$a] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a]; [last_offset:$b] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLUTE_PIANO_LEAD_MINUET_TRIO → FLUTE1_MINUET_TRIO
+{
+  // Réutilise le dessin complet de menuet/trio de Flûte I. L’accompagnement de piano
+  // du menuet/trio possède la même grille de 13 mesures.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:3, den:4] ⊂ ↑;
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FLP_A_PERIOD → FL1_OPENING_MOTIF FL1_ANSWER_MOTIF FL1_HALF_CADENCE FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; [last_function:$f2] ⊂ ⇓2; ↓3 = ↑ ∪ [previous_function:$f2]; [last_function:$f3] ⊂ ⇓3; ↓4 = ↑ ∪ [previous_function:$f3]; ⇑ = ⇓4; }
+
+@withoutSpaces
+FLP_CONTRAST_PERIOD → FL1_MODULATING_MOTIF FL1_SEQUENCE_MOTIF FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; [last_function:$f2] ⊂ ⇓2; ↓3 = ↑ ∪ [previous_function:$f2]; ⇑ = ⇓3; }
+
+@withoutSpaces
+FLP_A_RETURN → FL1_RETURN_MOTIF FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_function:$f1] ⊂ ⇓1; ↓2 = ↑ ∪ [previous_function:$f1]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FLP_VARIATION → FL1_ECHO_MOTIF FL1_SEQUENCE_MOTIF FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; [last_function:$f2] ⊂ ⇓2; ↓3 = ↑ ∪ [previous_function:$f2]; ⇑ = ⇓3; }
+
+@withoutSpaces
+FLP_CODA_SHORT → FL1_DOMINANT_PREP FL1_FINAL_RESOLUTION
+{ ↓1 = ↑; [last_function:$f1] ⊂ ⇓1; ↓2 = ↑ ∪ [previous_function:$f1]; ⇑ = ⇓2; }

@@ -1,0 +1,1107 @@
+// =============================================================================
+// bars.rules
+// =============================================================================
+// Briques de bas niveau : BAR1, BAR2, BAR4, BAR6, BAR8 et variantes avec silences. Ces règles transforment les traits de hauteur/durée en notes LilyPond via le lexique.
+//
+
+// --- Mesures de bas niveau --------------------------------------------------
+// Ces règles réalisent les degrés sous forme de classes de hauteurs absolues et synthétisent
+// les premières/dernières notes afin que les règles parentes puissent continuer depuis le résultat produit.
+
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// BAR* : patrons de mesures.
+// BAR1 contient une note longue, BAR4 quatre événements, BAR8 huit événements,
+// etc. Les règles de matériau choisissent un BAR*, puis les traits de hauteur
+// et durée sont réalisés par NOTE/REST/CHORD dans les lexiques.
+// -----------------------------------------------------------------------------
+BAR1 → TAB NOTE BARLINE
+{
+  // Une mesure complète en 4/4 écrite comme une seule ronde.
+  // Utilisé surtout pour la note finale de basse de la main gauche du piano.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a], rhythm:[r1:$r1]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a;
+  $oct1_shift = floor($pc1_abs / 12);
+  $pc1 = $pc1_abs % 12;
+  $o1 = $octave + $oct1_shift;
+  ↓1=[];
+  ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3=[];
+  ⇑ = [first_offset:$a, last_offset:$a, first_pc:$pc1, last_pc:$pc1];
+}
+
+
+@withoutSpaces
+BAR2 → TAB NOTE NOTE BARLINE
+{
+  // Une mesure divisée en deux événements, généralement deux blanches.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b], rhythm:[r1:$r1, r2:$r2]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  ↓1=[];
+  ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4=[];
+  ⇑ = [first_offset:$a, last_offset:$b, first_pc:$pc1, last_pc:$pc2];
+}
+
+@withoutSpaces
+BAR4 → TAB NOTE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  ↓1 = [];
+  ↓2 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓5 = [pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓6 = [];
+  ⇑ = [first_offset:$a, last_offset:$d, first_pc:$pc1, last_pc:$pc4];
+}
+
+@withoutSpaces
+BAR6 → TAB NOTE NOTE NOTE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d, o5:$e, o6:$f],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5, r6:$r6]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  $pc6_abs = $tonic_pc + $f; $oct6_shift = floor($pc6_abs / 12); $pc6 = $pc6_abs % 12; $o6 = $octave + $oct6_shift;
+  ↓1 = [];
+  ↓2 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓5 = [pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓6 = [pc:$pc5, octave:$o5, dur:$r5, accidental_policy:$accidental_policy];
+  ↓7 = [pc:$pc6, octave:$o6, dur:$r6, accidental_policy:$accidental_policy];
+  ↓8 = [];
+  ⇑ = [first_offset:$a, last_offset:$f, first_pc:$pc1, last_pc:$pc6];
+}
+
+@withoutSpaces
+BAR8 → TAB NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d, o5:$e, o6:$f, o7:$g, o8:$h],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5, r6:$r6, r7:$r7, r8:$r8]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  $pc6_abs = $tonic_pc + $f; $oct6_shift = floor($pc6_abs / 12); $pc6 = $pc6_abs % 12; $o6 = $octave + $oct6_shift;
+  $pc7_abs = $tonic_pc + $g; $oct7_shift = floor($pc7_abs / 12); $pc7 = $pc7_abs % 12; $o7 = $octave + $oct7_shift;
+  $pc8_abs = $tonic_pc + $h; $oct8_shift = floor($pc8_abs / 12); $pc8 = $pc8_abs % 12; $o8 = $octave + $oct8_shift;
+  ↓1 = [];
+  ↓2 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓5 = [pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓6 = [pc:$pc5, octave:$o5, dur:$r5, accidental_policy:$accidental_policy];
+  ↓7 = [pc:$pc6, octave:$o6, dur:$r6, accidental_policy:$accidental_policy];
+  ↓8 = [pc:$pc7, octave:$o7, dur:$r7, accidental_policy:$accidental_policy];
+  ↓9 = [pc:$pc8, octave:$o8, dur:$r8, accidental_policy:$accidental_policy];
+  ↓10 = [];
+  ⇑ = [first_offset:$a, last_offset:$h, first_pc:$pc1, last_pc:$pc8];
+}
+
+
+// -----------------------------------------------------------------------------
+// Dessins formels supplémentaires.
+// Ces formes ne renomment pas simplement rounded_binary : chaque forme possède un plan
+// de sections distinct et des fonctions musicales différentes.
+//   - ternary: A - contrasting B - A return - coda.
+//   - theme_and_variations: theme - rhythmic/ornamental variation - register variation - coda.
+//   - minuet_trio: dance-like 3/4 minuet, trio, da capo-style return, coda.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE1_TERNARY_CONTROLLED
+{ [role:flute1, form:ternary]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE2_TERNARY_CONTROLLED
+{ [role:flute2, form:ternary]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE1_THEME_AND_VARIATIONS_CONTROLLED
+{ [role:flute1, form:theme_and_variations]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE2_THEME_AND_VARIATIONS_CONTROLLED
+{ [role:flute2, form:theme_and_variations]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE1_MINUET_TRIO
+{ [role:flute1, form:minuet_trio]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FLUTE2_MINUET_TRIO
+{ [role:flute2, form:minuet_trio]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+// --- Forme ternaire ----------------------------------------------------------
+// La forme ternaire est plus courte et plus claire que le binaire arrondi : A, B contrastant,
+// retour de A, puis coda. La section B fait quatre mesures et module davantage.
+
+@withoutSpaces
+FLUTE1_TERNARY → FLUTE1_A_PERIOD FLUTE1_TERNARY_B FLUTE1_A_RETURN FLUTE1_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a_end] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a_end, section:b];
+  [home_tonic_pc:$home, last_offset:$b_end] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$home, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b_end, section:return];
+  [last_function:$ret] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$ret];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE2_TERNARY → FLUTE2_A_SUPPORT FLUTE2_TERNARY_B FLUTE2_A_RETURN FLUTE2_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a_end] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a_end, section:b];
+  [home_tonic_pc:$home, last_offset:$b_end] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$home, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b_end, section:return];
+  [last_function:$ret] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$ret];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE1_TERNARY_B → FL1_MODULATING_MOTIF FL1_DOMINANT_KEY_MOTIF FL1_SEQUENCE_MOTIF FL1_DOMINANT_KEY_CADENCE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $new_key_abs = $tonic_pc + 7;
+  $new_key_pc = $new_key_abs % 12;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_offset:$m2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m2];
+  [last_function:$f3] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f3];
+  ⇑ = [home_tonic_pc:$tonic_pc, current_key_pc:$new_key_pc, last_offset:7, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+FLUTE2_TERNARY_B → FL2_MODULATING_SUPPORT FL2_DOMINANT_PEDAL FL2_SEQUENCE_SUPPORT FL2_DOMINANT_SUPPORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $new_key_abs = $tonic_pc + 7;
+  $new_key_pc = $new_key_abs % 12;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy];
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_offset:$m2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m2];
+  [last_function:$f3] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$new_key_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f3];
+  ⇑ = [home_tonic_pc:$tonic_pc, current_key_pc:$new_key_pc, last_offset:7, last_function:dominant, tension:high];
+}
+
+// --- Thème et variations -----------------------------------------------------
+// Cette forme modifie le traitement du même matériau au lieu de simplement
+// ajouter un B contrastant : d’abord une variation ornée, puis une variation de registre.
+
+@withoutSpaces
+FLUTE1_THEME_AND_VARIATIONS → FLUTE1_A_PERIOD FLUTE1_A_VARIATION FLUTE1_REGISTER_VARIATION FLUTE1_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$theme_end] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$theme_end, variation:ornamented];
+  [last_offset:$var1_end] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$var1_end, variation:register];
+  [last_function:$var2_function] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$var2_function];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE2_THEME_AND_VARIATIONS → FLUTE2_A_SUPPORT FLUTE2_A_VARIATION FLUTE2_REGISTER_VARIATION FLUTE2_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$theme_end] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$theme_end, variation:ornamented];
+  [last_offset:$var1_end] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$var1_end, variation:register];
+  [last_function:$var2_function] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$var2_function];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE1_REGISTER_VARIATION → FL1_HIGH_REGISTER_MOTIF FL1_ECHO_MOTIF FL1_SEQUENCE_MOTIF FL1_AUTHENTIC_CADENCE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$opening] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_offset:$m2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m2];
+  [last_function:$f3, tension:$t3] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f3, previous_tension:$t3];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FLUTE2_REGISTER_VARIATION → FL2_MOBILE_COUNTERLINE FL2_ECHO_SUPPORT FL2_DOMINANT_SUPPORT FL2_TONIC_RESOLUTION
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$opening] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$m1];
+  [last_function:$f2] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f2];
+  [last_function:$f3, tension:$t3] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, previous_function:$f3, previous_tension:$t3];
+  ⇑ = ⇓4;
+}
+
+@withoutSpaces
+FL1_HIGH_REGISTER_MOTIF → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:9, o3:12, o4:14, o5:12, o6:9],
+        rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4", r5:"1/8", r6:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_ECHO_MOTIF → BAR6
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:$opening, o2:7, o3:5, o4:4, o5:2, o6:4],
+        rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+FL2_MOBILE_COUNTERLINE → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:4, o2:7, o3:9, o4:7, o5:5, o6:4],
+        rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4", r5:"1/8", r6:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:counterline, tension:medium];
+}
+
+@withoutSpaces
+FL2_ECHO_SUPPORT → BAR4
+{
+  [opening_offset:$opening] ⊂ ↑;
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:$opening, o2:7, o3:4, o4:2],
+        rhythm:[r1:"1/2", r2:"1/4", r3:"1/8", r4:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:tonic, tension:low];
+}
+
+// --- Menuet et trio ----------------------------------------------------------
+// minuet_trio est volontairement différent : il exige une mesure en 3/4, utilise BAR3,
+// et produit une phrase de danse plutôt que le matériau périodique en 4/4.
+
+@withoutSpaces
+FLUTE1_MINUET_TRIO → FLUTE1_MINUET_A FLUTE1_MINUET_B FLUTE1_TRIO_A FLUTE1_TRIO_B FLUTE1_MINUET_DA_CAPO FLUTE1_MINUET_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; [last_offset:$a] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a]; [last_offset:$b] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b]; [last_offset:$c] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$c]; [last_offset:$d] ⊂ ⇓4;
+  ↓5 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$d]; [last_offset:$e] ⊂ ⇓5;
+  ↓6 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$e];
+  ⇑ = ⇓6;
+}
+
+@withoutSpaces
+FLUTE2_MINUET_TRIO → FLUTE2_MINUET_A FLUTE2_MINUET_B FLUTE2_TRIO_A FLUTE2_TRIO_B FLUTE2_MINUET_DA_CAPO FLUTE2_MINUET_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; [last_offset:$a] ⊂ ⇓1;
+  ↓2 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$a]; [last_offset:$b] ⊂ ⇓2;
+  ↓3 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$b]; [last_offset:$c] ⊂ ⇓3;
+  ↓4 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$c]; [last_offset:$d] ⊂ ⇓4;
+  ↓5 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$d]; [last_offset:$e] ⊂ ⇓5;
+  ↓6 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, opening_offset:$e];
+  ⇑ = ⇓6;
+}
+
+@withoutSpaces
+FLUTE1_MINUET_A → FL1_MINUET_STEP FL1_MINUET_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE1_MINUET_B → FL1_MINUET_TURN FL1_MINUET_HALF_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE1_TRIO_A → FL1_TRIO_GENTLE FL1_TRIO_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE1_TRIO_B → FL1_TRIO_SEQUENCE FL1_TRIO_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE1_MINUET_DA_CAPO → FL1_MINUET_STEP FL1_MINUET_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE1_MINUET_CODA → FL1_MINUET_CODA_CALL FL1_MINUET_HALF_CADENCE FL1_MINUET_FINAL
+{
+  // Coda de menuet : un bref rappel, une préparation semi-cadentielle,
+  // puis une tonique finale clairement conclusive.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  [last_offset:$m2] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [previous_offset:$m2];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLUTE2_MINUET_A → FL2_MINUET_SUPPORT FL2_MINUET_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE2_MINUET_B → FL2_MINUET_WALK FL2_MINUET_DOMINANT
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE2_TRIO_A → FL2_TRIO_SUPPORT FL2_MINUET_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE2_TRIO_B → FL2_TRIO_WALK FL2_MINUET_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE2_MINUET_DA_CAPO → FL2_MINUET_SUPPORT FL2_MINUET_CADENCE
+{
+  // La deuxième cellule suit la fin mélodique de la première sans
+  // s’unifier avec un opening_offset déjà présent dans le contexte hérité.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  ⇑ = ⇓2;
+}
+
+@withoutSpaces
+FLUTE2_MINUET_CODA → FL2_MINUET_CODA_SUPPORT FL2_MINUET_DOMINANT FL2_MINUET_FINAL
+{
+  // La deuxième voix maintient la texture pendant la coda du menuet :
+  // soutien, dominante, résolution finale.
+  ↓1 = ↑;
+  [last_offset:$m1] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [previous_offset:$m1];
+  [last_offset:$m2] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [previous_offset:$m2];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FL1_MINUET_STEP → BAR4_34
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $low_octave = $octave - 1;
+  $r = rand() % 100;
+  if ($r < 55) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:2, o3:4, o4:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]];
+  } else if ($r < 72) {
+    // Mouvement de menuet dans le registre de do grave.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$low_octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:2, o3:4, o4:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]];
+  } else if ($r < 88) {
+    // Montée par broderie chromatique inférieure. En ré majeur : ré-mi-fa naturel-fa dièse.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:2, o3:3, o4:4], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]];
+  } else {
+    // Quarte augmentée menant à une couleur de dominante. En ré majeur : mi-fa dièse-sol dièse-la.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:2, o2:4, o3:6, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+FL1_MINUET_TURN → BAR4_34
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $r = rand() % 100;
+  if ($r < 68) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:7, o2:9, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  } else if ($r < 84) {
+    // Gruppetto aigu vers la troisième octave.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:12, o2:14, o3:16, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  } else {
+    // Broderie chromatique supérieure autour de la dominante.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:7, o2:8, o3:9, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:dominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_MINUET_CADENCE → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 84) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:4, o2:2, o3:0], rhythm:[r1:"3/8", r2:"1/8", r3:"1/4"]];
+  } else {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:4, o2:2, o3:0], rhythm:[r1:"3/8", r2:"1/8", r3:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic, tension:low, cadence:authentic];
+}
+
+@withoutSpaces
+FL1_MINUET_HALF_CADENCE → BAR4_34
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Demi-cadence avec une petite figure d’approche vers la dominante.
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:2, o2:4, o3:5, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:dominant, tension:high, cadence:half];
+}
+
+@withoutSpaces
+FL1_TRIO_GENTLE → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Trio : premier temps plus ample, résolution plus légère.
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:5, o2:9, o3:12], rhythm:[r1:"3/8", r2:"1/8", r3:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:subdominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_TRIO_SEQUENCE → BAR4_34
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $low_octave = $octave - 1;
+  $r = rand() % 100;
+  if ($r < 60) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:9, o2:7, o3:5, o4:4], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  } else if ($r < 76) {
+    // Réponse grave du trio.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$low_octave, accidental_policy:$accidental_policy,
+          motif:[o1:12, o2:9, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  } else if ($r < 90) {
+    // Séquence aiguë du trio.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:21, o2:19, o3:16, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  } else {
+    // Descente chromatique dans le trio.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:9, o2:8, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:subdominant, tension:medium];
+}
+
+@withoutSpaces
+FL1_TRIO_CADENCE → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:4, o3:0], rhythm:[r1:"1/4", r2:"1/8", r3:"3/8"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic, tension:low, cadence:authentic];
+}
+
+@withoutSpaces
+FL1_MINUET_CODA_CALL → BAR4_34
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $r = rand() % 100;
+  if ($r < 75) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:4, o3:7, o4:9], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]];
+  } else {
+    // Rappel aigu de coda, jouable mais plus lumineux.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:12, o2:16, o3:19, o4:21], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic_recall, tension:medium, section:coda];
+}
+
+@withoutSpaces
+FL1_MINUET_FINAL → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Final affirmé : dominante, médiante, longue tonique.
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:4, o3:0], rhythm:[r1:"1/8", r2:"1/8", r3:"1/2"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+FL2_MINUET_SUPPORT → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 84) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:7, o3:4], rhythm:[r1:"1/2", r2:"1/8", r3:"1/8"]];
+  } else {
+    // Soutien chromatique intérieur.
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:3, o3:4], rhythm:[r1:"1/2", r2:"1/8", r3:"1/8"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic, tension:low];
+}
+
+@withoutSpaces
+FL2_MINUET_WALK → BAR4_34
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 84) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:4, o2:5, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  } else {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:4, o2:5, o3:6, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:passing, tension:medium];
+}
+
+@withoutSpaces
+FL2_MINUET_DOMINANT → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:11, o3:7], rhythm:[r1:"3/8", r2:"1/8", r3:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:dominant, tension:high];
+}
+
+@withoutSpaces
+FL2_TRIO_SUPPORT → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:5, o2:12, o3:9], rhythm:[r1:"1/2", r2:"1/8", r3:"1/8"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:subdominant, tension:medium];
+}
+
+@withoutSpaces
+FL2_TRIO_WALK → BAR4_34
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:9, o2:7, o3:5, o4:4], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:subdominant, tension:medium];
+}
+
+@withoutSpaces
+FL2_MINUET_CADENCE → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  // Choix interne avec rand() % 100 pour réduire l’ambiguïté grammaticale tout en conservant la variation musicale.
+  $r = rand() % 100;
+  if ($r < 84) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:4, o2:2, o3:0], rhythm:[r1:"1/4", r2:"1/8", r3:"3/8"]];
+  } else {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:4, o2:2, o3:0], rhythm:[r1:"1/4", r2:"1/8", r3:"3/8"]];
+  }
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic, tension:low, cadence:authentic];
+}
+
+@withoutSpaces
+FL2_MINUET_CODA_SUPPORT → BAR4_34_REST_AFTER_1
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:0, o2:7, o3:4], rhythm:[r1:"1/4", rr:"1/8", r2:"1/8", r3:"1/4"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic_support, tension:medium, section:coda];
+}
+
+@withoutSpaces
+FL2_MINUET_FINAL → BAR3
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+        motif:[o1:7, o2:4, o3:0], rhythm:[r1:"1/8", r2:"1/8", r3:"1/2"]];
+  [last_offset:$last] ⊂ ⇓1; ⇑ = [last_offset:$last, last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+BAR3 → TAB NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  ↓1 = [];
+  ↓2 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓5 = [];
+  ⇑ = [first_offset:$a, last_offset:$c, first_pc:$pc1, last_pc:$pc3];
+}
+
+
+@withoutSpaces
+BAR4_34 → TAB NOTE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  ↓1 = [];
+  ↓2 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓5 = [pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓6 = [];
+  ⇑ = [first_offset:$a, last_offset:$d, first_pc:$pc1, last_pc:$pc4];
+}
+
+// -----------------------------------------------------------------------------
+// Vocabulaire rythmique supplémentaire.
+// Ces variantes augmentent volontairement l’ambiguïté : le générateur peut choisir
+// des tournures plus actives, des triolets, des silences courts, des liaisons, des notes staccato, des tenues, et
+// des valeurs pointées. Chaque mesure conserve néanmoins la durée métrique correcte.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+BAR8_32_TURN → TAB NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d, o5:$e, o6:$f, o7:$g, o8:$h],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5, r6:$r6, r7:$r7, r8:$r8]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  $pc6_abs = $tonic_pc + $f; $oct6_shift = floor($pc6_abs / 12); $pc6 = $pc6_abs % 12; $o6 = $octave + $oct6_shift;
+  $pc7_abs = $tonic_pc + $g; $oct7_shift = floor($pc7_abs / 12); $pc7 = $pc7_abs % 12; $o7 = $octave + $oct7_shift;
+  $pc8_abs = $tonic_pc + $h; $oct8_shift = floor($pc8_abs / 12); $pc8 = $pc8_abs % 12; $o8 = $octave + $oct8_shift;
+  ↓1 = [];
+  ↓2 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓5 = [pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓6 = [pc:$pc5, octave:$o5, dur:$r5, accidental_policy:$accidental_policy];
+  ↓7 = [pc:$pc6, octave:$o6, dur:$r6, accidental_policy:$accidental_policy];
+  ↓8 = [pc:$pc7, octave:$o7, dur:$r7, accidental_policy:$accidental_policy];
+  ↓9 = [pc:$pc8, octave:$o8, dur:$r8, accidental_policy:$accidental_policy];
+  ↓10 = [];
+  ⇑ = [first_offset:$a, last_offset:$h, first_pc:$pc1, last_pc:$pc8];
+}
+
+@withoutSpaces
+BAR_TRIPLET4 → TAB TUPLET3_OPEN NOTE NOTE NOTE TUPLET_CLOSE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d, o5:$e, o6:$f],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5, r6:$r6]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  $pc6_abs = $tonic_pc + $f; $oct6_shift = floor($pc6_abs / 12); $pc6 = $pc6_abs % 12; $o6 = $octave + $oct6_shift;
+  ↓1 = []; ↓2 = [];
+  ↓3 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓4 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓5 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓6 = [];
+  ↓7 = [pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓8 = [pc:$pc5, octave:$o5, dur:$r5, accidental_policy:$accidental_policy];
+  ↓9 = [pc:$pc6, octave:$o6, dur:$r6, accidental_policy:$accidental_policy];
+  ↓10 = [];
+  ⇑ = [first_offset:$a, last_offset:$f, first_pc:$pc1, last_pc:$pc6];
+}
+
+@withoutSpaces
+BAR4_REST_AFTER_1 → TAB NOTE REST NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c],
+   rhythm:[r1:$r1, rr:$rr, r2:$r2, r3:$r3]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  ↓1 = [];
+  ↓2 = [pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3 = [dur:$rr];
+  ↓4 = [pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓5 = [pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓6 = [];
+  ⇑ = [first_offset:$a, last_offset:$c, first_pc:$pc1, last_pc:$pc3];
+}
+
+@withoutSpaces
+BAR4_SLURRED → TAB NOTE SLUR_OPEN NOTE NOTE SLUR_CLOSE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d], rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  ↓1=[]; ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy]; ↓3=[];
+  ↓4=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy]; ↓5=[pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy]; ↓6=[];
+  ↓7=[pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy]; ↓8=[];
+  ⇑ = [first_offset:$a, last_offset:$d, first_pc:$pc1, last_pc:$pc4];
+}
+
+@withoutSpaces
+BAR4_STACCATO → TAB NOTE STACCATO NOTE NOTE STACCATO NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d], rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  ↓1=[]; ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy]; ↓3=[];
+  ↓4=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy]; ↓5=[pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy]; ↓6=[];
+  ↓7=[pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy]; ↓8=[];
+  ⇑ = [first_offset:$a, last_offset:$d, first_pc:$pc1, last_pc:$pc4];
+}
+
+@withoutSpaces
+BAR4_TIED_SUPPORT → TAB NOTE TIE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d], rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  ↓1=[]; ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy]; ↓3=[];
+  ↓4=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy]; ↓5=[pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy]; ↓6=[pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy]; ↓7=[];
+  ⇑ = [first_offset:$a, last_offset:$d, first_pc:$pc1, last_pc:$pc4];
+}
+
+@withoutSpaces
+BAR4_34_TRIPLET → TAB TUPLET3_OPEN NOTE NOTE NOTE TUPLET_CLOSE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d, o5:$e], rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  ↓1=[]; ↓2=[]; ↓3=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy]; ↓4=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy]; ↓5=[pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy]; ↓6=[]; ↓7=[pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy]; ↓8=[pc:$pc5, octave:$o5, dur:$r5, accidental_policy:$accidental_policy]; ↓9=[];
+  ⇑ = [first_offset:$a, last_offset:$e, first_pc:$pc1, last_pc:$pc5];
+}
+
+@withoutSpaces
+BAR1_34_DOTTED_HALF → TAB NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a], rhythm:[r1:$r1]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  ↓1=[]; ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy]; ↓3=[];
+  ⇑ = [first_offset:$a, last_offset:$a, first_pc:$pc1, last_pc:$pc1];
+}
+
+@withoutSpaces
+BAR4_34_REST_AFTER_1 → TAB NOTE REST NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c], rhythm:[r1:$r1, rr:$rr, r2:$r2, r3:$r3]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  ↓1=[]; ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy]; ↓3=[dur:$rr]; ↓4=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy]; ↓5=[pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy]; ↓6=[];
+  ⇑ = [first_offset:$a, last_offset:$c, first_pc:$pc1, last_pc:$pc3];
+}
+
+
+
+// --- Mesures d’accords de piano de bas niveau -------------------------------
+// Les terminaux CHORD sont définis dans music.lexicon. Ces règles calculent la fondamentale de chaque accord
+// à partir de tonic_pc + un décalage diatonique/chromatique, puis demandent au lexique un accord
+// avec la qualité, la durée, l’octave et la politique d’altérations demandées.
+
+
+@withoutSpaces
+CHORD_BAR3 → TAB CHORD CHORD CHORD BARLINE
+{
+  // Une mesure en 3/4 faite de trois événements d’accords, généralement trois noires.
+  // Utilisé par le matériau de menuet/trio au piano.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   chords:[root1:$a, q1:$q1, root2:$b, q2:$q2, root3:$c, q3:$q3],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  ↓1 = [];
+  ↓2 = [root_pc:$pc1, octave:$o1, dur:$r1, quality:$q1, accidental_policy:$accidental_policy];
+  ↓3 = [root_pc:$pc2, octave:$o2, dur:$r2, quality:$q2, accidental_policy:$accidental_policy];
+  ↓4 = [root_pc:$pc3, octave:$o3, dur:$r3, quality:$q3, accidental_policy:$accidental_policy];
+  ↓5 = [];
+  ⇑ = [first_root:$a, last_root:$c, first_pc:$pc1, last_pc:$pc3];
+}
+
+@withoutSpaces
+CHORD_BAR2 → TAB CHORD CHORD BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   chords:[root1:$a, q1:$q1, root2:$b, q2:$q2],
+   rhythm:[r1:$r1, r2:$r2]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  ↓1 = [];
+  ↓2 = [root_pc:$pc1, octave:$o1, dur:$r1, quality:$q1, accidental_policy:$accidental_policy];
+  ↓3 = [root_pc:$pc2, octave:$o2, dur:$r2, quality:$q2, accidental_policy:$accidental_policy];
+  ↓4 = [];
+  ⇑ = [first_root:$a, last_root:$b, first_pc:$pc1, last_pc:$pc2];
+}
+
+@withoutSpaces
+CHORD_BAR4 → TAB CHORD CHORD CHORD CHORD BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   chords:[root1:$a, q1:$q1, root2:$b, q2:$q2, root3:$c, q3:$q3, root4:$d, q4:$q4],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  ↓1 = [];
+  ↓2 = [root_pc:$pc1, octave:$o1, dur:$r1, quality:$q1, accidental_policy:$accidental_policy];
+  ↓3 = [root_pc:$pc2, octave:$o2, dur:$r2, quality:$q2, accidental_policy:$accidental_policy];
+  ↓4 = [root_pc:$pc3, octave:$o3, dur:$r3, quality:$q3, accidental_policy:$accidental_policy];
+  ↓5 = [root_pc:$pc4, octave:$o4, dur:$r4, quality:$q4, accidental_policy:$accidental_policy];
+  ↓6 = [];
+  ⇑ = [first_root:$a, last_root:$d, first_pc:$pc1, last_pc:$pc4];
+}
+
+
+@withoutSpaces
+CHORD_BAR6 → TAB CHORD CHORD CHORD CHORD CHORD CHORD BARLINE
+{
+  // Six événements d’accords dans une mesure. Utile pour la figuration de piano seul :
+  // par exemple 1/8+1/8+1/4+1/8+1/8+1/4.
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   chords:[root1:$a, q1:$q1, root2:$b, q2:$q2, root3:$c, q3:$q3, root4:$d, q4:$q4, root5:$e, q5:$q5, root6:$f, q6:$q6],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5, r6:$r6]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  $pc6_abs = $tonic_pc + $f; $oct6_shift = floor($pc6_abs / 12); $pc6 = $pc6_abs % 12; $o6 = $octave + $oct6_shift;
+  ↓1 = [];
+  ↓2 = [root_pc:$pc1, octave:$o1, dur:$r1, quality:$q1, accidental_policy:$accidental_policy];
+  ↓3 = [root_pc:$pc2, octave:$o2, dur:$r2, quality:$q2, accidental_policy:$accidental_policy];
+  ↓4 = [root_pc:$pc3, octave:$o3, dur:$r3, quality:$q3, accidental_policy:$accidental_policy];
+  ↓5 = [root_pc:$pc4, octave:$o4, dur:$r4, quality:$q4, accidental_policy:$accidental_policy];
+  ↓6 = [root_pc:$pc5, octave:$o5, dur:$r5, quality:$q5, accidental_policy:$accidental_policy];
+  ↓7 = [root_pc:$pc6, octave:$o6, dur:$r6, quality:$q6, accidental_policy:$accidental_policy];
+  ↓8 = [];
+  ⇑ = [first_root:$a, last_root:$f, first_pc:$pc1, last_pc:$pc6];
+}
+
+@withoutSpaces
+CHORD_BAR1 → TAB CHORD BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   root:$root, quality:$quality, dur:$dur] ⊂ ↑;
+  $pc_abs = $tonic_pc + $root; $oct_shift = floor($pc_abs / 12); $pc = $pc_abs % 12; $o = $octave + $oct_shift;
+  ↓1 = [];
+  ↓2 = [root_pc:$pc, octave:$o, dur:$dur, quality:$quality, accidental_policy:$accidental_policy];
+  ↓3 = [];
+  ⇑ = [first_root:$root, last_root:$root, first_pc:$pc, last_pc:$pc];
+}
+
+
+// --- Mesures supplémentaires pour études de gammes --------------------------
+// BAR1_FERMATA est utilisé pour les sons tenus : une ronde avec point d’orgue.
+@withoutSpaces
+BAR1_FERMATA → TAB NOTE FERMATA BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a], rhythm:[r1:$r1]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a;
+  $oct1_shift = floor($pc1_abs / 12);
+  $pc1 = $pc1_abs % 12;
+  $o1 = $octave + $oct1_shift;
+  ↓1=[];
+  ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3=[];
+  ↓4=[];
+  ⇑ = [first_offset:$a, last_offset:$a, first_pc:$pc1, last_pc:$pc1];
+}
+
+// BAR7 réalise une noire suivie de six croches : 4 + 6×8 = 4/4.
+@withoutSpaces
+BAR7 → TAB NOTE NOTE NOTE NOTE NOTE NOTE NOTE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d, o5:$e, o6:$f, o7:$g],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5, r6:$r6, r7:$r7]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  $pc6_abs = $tonic_pc + $f; $oct6_shift = floor($pc6_abs / 12); $pc6 = $pc6_abs % 12; $o6 = $octave + $oct6_shift;
+  $pc7_abs = $tonic_pc + $g; $oct7_shift = floor($pc7_abs / 12); $pc7 = $pc7_abs % 12; $o7 = $octave + $oct7_shift;
+  ↓1=[];
+  ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓4=[pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓5=[pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓6=[pc:$pc5, octave:$o5, dur:$r5, accidental_policy:$accidental_policy];
+  ↓7=[pc:$pc6, octave:$o6, dur:$r6, accidental_policy:$accidental_policy];
+  ↓8=[pc:$pc7, octave:$o7, dur:$r7, accidental_policy:$accidental_policy];
+  ↓9=[];
+  ⇑ = [first_offset:$a, last_offset:$g, first_pc:$pc1, last_pc:$pc7];
+}
+
+// Accord en ronde avec point d’orgue pour les sections de sons tenus au piano.
+@withoutSpaces
+CHORD_BAR1_FERMATA → TAB CHORD FERMATA BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   root:$root, quality:$quality, dur:$dur] ⊂ ↑;
+  $root_abs = $tonic_pc + $root;
+  $root_pc = $root_abs % 12;
+  $oct_shift = floor($root_abs / 12);
+  $root_oct = $octave + $oct_shift;
+  ↓1=[];
+  ↓2=[root_pc:$root_pc, root_octave:$root_oct, quality:$quality, dur:$dur, accidental_policy:$accidental_policy];
+  ↓3=[];
+  ↓4=[];
+  ⇑ = [last_function:chord_fermata];
+}
+
+
+// BAR7_SLURRED est la version liée de BAR7 : la première note ouvre la liaison,
+// la dernière la ferme. Même profil de durée : noire + six croches = 4/4.
+@withoutSpaces
+BAR7_SLURRED → TAB NOTE SLUR_OPEN NOTE NOTE NOTE NOTE NOTE NOTE SLUR_CLOSE BARLINE
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+   motif:[o1:$a, o2:$b, o3:$c, o4:$d, o5:$e, o6:$f, o7:$g],
+   rhythm:[r1:$r1, r2:$r2, r3:$r3, r4:$r4, r5:$r5, r6:$r6, r7:$r7]] ⊂ ↑;
+  $pc1_abs = $tonic_pc + $a; $oct1_shift = floor($pc1_abs / 12); $pc1 = $pc1_abs % 12; $o1 = $octave + $oct1_shift;
+  $pc2_abs = $tonic_pc + $b; $oct2_shift = floor($pc2_abs / 12); $pc2 = $pc2_abs % 12; $o2 = $octave + $oct2_shift;
+  $pc3_abs = $tonic_pc + $c; $oct3_shift = floor($pc3_abs / 12); $pc3 = $pc3_abs % 12; $o3 = $octave + $oct3_shift;
+  $pc4_abs = $tonic_pc + $d; $oct4_shift = floor($pc4_abs / 12); $pc4 = $pc4_abs % 12; $o4 = $octave + $oct4_shift;
+  $pc5_abs = $tonic_pc + $e; $oct5_shift = floor($pc5_abs / 12); $pc5 = $pc5_abs % 12; $o5 = $octave + $oct5_shift;
+  $pc6_abs = $tonic_pc + $f; $oct6_shift = floor($pc6_abs / 12); $pc6 = $pc6_abs % 12; $o6 = $octave + $oct6_shift;
+  $pc7_abs = $tonic_pc + $g; $oct7_shift = floor($pc7_abs / 12); $pc7 = $pc7_abs % 12; $o7 = $octave + $oct7_shift;
+  ↓1=[];
+  ↓2=[pc:$pc1, octave:$o1, dur:$r1, accidental_policy:$accidental_policy];
+  ↓3=[];
+  ↓4=[pc:$pc2, octave:$o2, dur:$r2, accidental_policy:$accidental_policy];
+  ↓5=[pc:$pc3, octave:$o3, dur:$r3, accidental_policy:$accidental_policy];
+  ↓6=[pc:$pc4, octave:$o4, dur:$r4, accidental_policy:$accidental_policy];
+  ↓7=[pc:$pc5, octave:$o5, dur:$r5, accidental_policy:$accidental_policy];
+  ↓8=[pc:$pc6, octave:$o6, dur:$r6, accidental_policy:$accidental_policy];
+  ↓9=[pc:$pc7, octave:$o7, dur:$r7, accidental_policy:$accidental_policy];
+  ↓10=[];
+  ↓11=[];
+  ⇑ = [first_offset:$a, last_offset:$g, first_pc:$pc1, last_pc:$pc7];
+}

@@ -1,0 +1,477 @@
+// =============================================================================
+// instrument_families.rules
+// =============================================================================
+// Règles génériques pour familles d'instruments : cordes, bois, cuivres, guitare, percussions, ensembles mixtes. Elles donnent des motifs utilisables selon family et role.
+//
+
+// -----------------------------------------------------------------------------
+// Matériau générique par famille d’instruments.
+//
+// Objectif : ajouter de nouveaux instruments sans dupliquer chaque plan formel par instrument.
+// Les enveloppes de staves.rules associent les instruments concrets à :
+//   role   = lead, countermelody, inner_voice, bass, harmonic_support,
+//            rhythmic_pedal, accent
+//   family = woodwind, bowed_strings, brass, percussion
+//
+// Ces règles fournissent actuellement un matériau rounded_binary prudent. Elles sont
+// volontairement simples et stables : de futures règles idiomatiques pourront spécialiser par
+// famille tout en gardant la même interface role/form.
+// -----------------------------------------------------------------------------
+
+// --- Dispatch générique par rôle --------------------------------------------
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// Entrées génériques par famille instrumentale.
+// Utiles pour les ensembles custom ou mixtes quand aucun module spécialisé
+// n'est plus précis.
+// -----------------------------------------------------------------------------
+MUSICAL_FORM → FAMILY_LEAD_ROUNDED_BINARY
+{ [role:lead, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FAMILY_COUNTERMELODY_ROUNDED_BINARY
+{ [role:countermelody, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FAMILY_INNER_VOICE_ROUNDED_BINARY
+{ [role:inner_voice, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FAMILY_BASS_ROUNDED_BINARY
+{ [role:bass, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FAMILY_HARMONIC_SUPPORT_ROUNDED_BINARY
+{ [role:harmonic_support, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FAMILY_RHYTHMIC_PEDAL_ROUNDED_BINARY
+{ [role:rhythmic_pedal|bass_accent, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → FAMILY_ACCENT_ROUNDED_BINARY
+{ [role:accent|cadence_accent, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// --- Lead / counterline / support plans -------------------------------------
+
+@withoutSpaces
+FAMILY_LEAD_ROUNDED_BINARY → FAMILY_LEAD_A FAMILY_LEAD_A_VARIANT FAMILY_LEAD_B FAMILY_LEAD_RETURN FAMILY_LEAD_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑;
+  ↓2 = ↑;
+  ↓3 = ↑;
+  ↓4 = ↑;
+  ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+@withoutSpaces
+FAMILY_COUNTERMELODY_ROUNDED_BINARY → FAMILY_COUNTER_A FAMILY_COUNTER_A FAMILY_COUNTER_B FAMILY_COUNTER_RETURN FAMILY_COUNTER_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+@withoutSpaces
+FAMILY_INNER_VOICE_ROUNDED_BINARY → FAMILY_INNER_A FAMILY_INNER_A FAMILY_INNER_B FAMILY_INNER_RETURN FAMILY_INNER_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+@withoutSpaces
+FAMILY_HARMONIC_SUPPORT_ROUNDED_BINARY → FAMILY_SUPPORT_A FAMILY_SUPPORT_A FAMILY_SUPPORT_B FAMILY_SUPPORT_RETURN FAMILY_SUPPORT_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+@withoutSpaces
+FAMILY_BASS_ROUNDED_BINARY → FAMILY_BASS_A FAMILY_BASS_A FAMILY_BASS_B FAMILY_BASS_RETURN FAMILY_BASS_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+@withoutSpaces
+FAMILY_RHYTHMIC_PEDAL_ROUNDED_BINARY → FAMILY_PERC_PEDAL_A FAMILY_PERC_PEDAL_A FAMILY_PERC_PEDAL_B FAMILY_PERC_PEDAL_RETURN FAMILY_PERC_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+@withoutSpaces
+FAMILY_ACCENT_ROUNDED_BINARY → FAMILY_PERC_ACCENT_A FAMILY_PERC_ACCENT_A FAMILY_PERC_ACCENT_B FAMILY_PERC_ACCENT_RETURN FAMILY_PERC_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+// --- Cellules d’une mesure : rôles mélodiques ------------------------------
+
+@withoutSpaces
+FAMILY_LEAD_A → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:2, o3:4, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_LEAD_A_VARIANT → BAR4_SLURRED
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:9, o3:11, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_LEAD_B → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:12, o2:11, o3:9, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_LEAD_RETURN → BAR4_SLURRED
+{
+  ↓1 = ↑ ∪ [motif:[o1:4, o2:5, o3:7, o4:0], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_LEAD_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_COUNTER_A → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:4, o2:7, o3:5, o4:4], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_COUNTER_B → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:5, o3:4, o4:2], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_COUNTER_RETURN → BAR4_SLURRED
+{
+  ↓1 = ↑ ∪ [motif:[o1:2, o2:4, o3:5, o4:4], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_COUNTER_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:4], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}
+
+// --- Cellules d’une mesure : intérieur/soutien/basse -----------------------
+
+@withoutSpaces
+FAMILY_INNER_A → BAR2
+{
+  ↓1 = ↑ ∪ [motif:[o1:4, o2:5], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_INNER_B → BAR2
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:5], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_INNER_RETURN → BAR2
+{
+  ↓1 = ↑ ∪ [motif:[o1:4, o2:2], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_INNER_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_SUPPORT_A → BAR2
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:7], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_SUPPORT_B → BAR2
+{
+  ↓1 = ↑ ∪ [motif:[o1:5, o2:7], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_SUPPORT_RETURN → BAR2
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:0], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_SUPPORT_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_BASS_A → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:0, o3:7, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_BASS_B → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:5, o2:5, o3:7, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_BASS_RETURN → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:7, o3:0, o4:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_BASS_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}
+
+// --- Cellules d’une mesure : secours pseudo-percussif en hauteurs ----------
+// Elles utilisent des terminaux NOTE ordinaires afin que la même mécanique de portée LilyPond fonctionne.
+// Un futur percussion.lexicon pourra remplacer cela par des tokens spécifiques à \drummode.
+
+@withoutSpaces
+FAMILY_PERC_PEDAL_A → BAR4_STACCATO
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:0, o3:0, o4:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_PERC_PEDAL_B → BAR4_STACCATO
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:7, o3:7, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_PERC_PEDAL_RETURN → BAR4_STACCATO
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:0, o3:7, o4:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_PERC_ACCENT_A → BAR4_REST_AFTER_1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:7, o3:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", rr:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_PERC_ACCENT_B → BAR4_REST_AFTER_1
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:0, o3:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", rr:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_PERC_ACCENT_RETURN → BAR4_STACCATO
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:7, o3:0, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+FAMILY_PERC_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}
+
+// -----------------------------------------------------------------------------
+// Ajouts guitare et batterie.
+// La guitare est traitée comme plucked_strings : clé treble_8 et soutien arpégé.
+// La batterie est traitée comme percussion non mélodique utilisant la clé de percussion, mais
+// l’implémentation actuelle réutilise encore des terminaux NOTE comme substituts rythmiques.
+// Un futur percussion.lexicon pourra les remplacer par de vrais tokens \drummode.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+MUSICAL_FORM → GUITAR_ROUNDED_BINARY
+{ [role:guitar, family:plucked_strings, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → DRUM_KIT_ROUNDED_BINARY
+{ [role:drum_kit, family:percussion, form:rounded_binary]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+GUITAR_ROUNDED_BINARY → GUITAR_STRUM_TONIC GUITAR_A GUITAR_STRUM_PREDOMINANT GUITAR_RETURN GUITAR_STRUM_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+// Un plan de guitare un peu plus harmonique. Les anciens GUITAR_A/GUITAR_RETURN
+// sont conservées, mais alternées avec de vraies mesures CHORD grattées afin que
+// la guitare ne sonne pas seulement comme des arpèges monodiques.
+
+
+@withoutSpaces
+GUITAR_STRUM_TONIC → CHORD_BAR2
+{
+  // Deux larges accords de tonique grattés. En majeur : I - V.
+  [mode:major] ⊂ ↑;
+  ↓1 = ↑ ∪ [chords:[root1:0, q1:maj, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_STRUM_TONIC → CHORD_BAR2
+{
+  // Minor-key tonic version: i - V.
+  [mode:minor] ⊂ ↑;
+  ↓1 = ↑ ∪ [chords:[root1:0, q1:min, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_STRUM_PREDOMINANT → CHORD_BAR4
+{
+  // Simple four-beat guitar accompaniment: I - IV - V - I.
+  [mode:major] ⊂ ↑;
+  ↓1 = ↑ ∪ [chords:[root1:0, q1:maj, root2:5, q2:maj, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_STRUM_PREDOMINANT → CHORD_BAR4
+{
+  // Minor-key version: i - iv - V - i.
+  [mode:minor] ⊂ ↑;
+  ↓1 = ↑ ∪ [chords:[root1:0, q1:min, root2:5, q2:min, root3:7, q3:maj, root4:0, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_STRUM_CODA → CHORD_BAR1
+{
+  [mode:major] ⊂ ↑;
+  ↓1 = ↑ ∪ [root:0, quality:maj, dur:"1/1"];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_STRUM_CODA → CHORD_BAR1
+{
+  [mode:minor] ⊂ ↑;
+  ↓1 = ↑ ∪ [root:0, quality:min, dur:"1/1"];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_A → BAR4_SLURRED
+{
+  // Broken tonic sonority: root, fifth, octave, third above.
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:7, o3:12, o4:16], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_A_VARIANT → BAR4
+{
+  // Slightly more rhythmic answer, still stable and playable.
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:4, o3:7, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_B → BAR4_SLURRED
+{
+  // Predominant/dominant color.
+  ↓1 = ↑ ∪ [motif:[o1:5, o2:12, o3:7, o4:11], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_RETURN → BAR4
+{
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:12, o3:4, o4:0], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+GUITAR_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+DRUM_KIT_ROUNDED_BINARY → DRUM_KIT_A DRUM_KIT_A DRUM_KIT_B DRUM_KIT_RETURN DRUM_KIT_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑; ↓4 = ↑; ↓5 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved];
+}
+
+@withoutSpaces
+DRUM_KIT_A → BAR4_STACCATO
+{
+  // Kick/snare-like placeholder: low/high/low/high on quarter pulses.
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:7, o3:0, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+DRUM_KIT_B → BAR4_REST_AFTER_1
+{
+  // Mesure plus légère avec un silence à la fin.
+  ↓1 = ↑ ∪ [motif:[o1:7, o2:7, o3:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", rr:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+DRUM_KIT_RETURN → BAR4_STACCATO
+{
+  ↓1 = ↑ ∪ [motif:[o1:0, o2:7, o3:7, o4:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ⇑ = ⇓1;
+}
+
+@withoutSpaces
+DRUM_KIT_CODA → BAR1
+{
+  ↓1 = ↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]];
+  ⇑ = ⇓1;
+}

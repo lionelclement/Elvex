@@ -1,0 +1,993 @@
+// =============================================================================
+// header.rules
+// =============================================================================
+// En-tête LilyPond et profils de tonalité. Ce module écrit \version, \paper, \header,
+// et prépare les traits utiles pour \key, armure et altérations.
+//
+
+// Grammaire dérivée du fichier duet.rules fourni.
+// Étendue pour quatre routages pratiques d’ensemble :
+//   - solo_flute
+//   - flute_duet
+//   - piano_solo
+//   - flute_piano_duet
+//
+// Le matériau original de duo de flûtes est conservé. Les nouvelles règles de piano ajoutent :
+// - main droite : terminaux CHORD pour accords plaqués
+// - main gauche : patrons de basse/accompagnement utilisant les terminaux NOTE
+//
+// Note de conception :
+// Le choix de l’instrument et le rôle musical sont séparés. Le matériau de flûte réutilise
+//   the original lead/support rules; piano has its own right/left hand roles.
+
+@withoutSpaces
+PIECE → VERSION PAPER_NO_TAGLINE HEADER SCORE
+{ ↓1 = []; ↓2 = []; ↓3 = ↑; ↓4 = ↑; }
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// HEADER : écrit le bloc \header LilyPond à partir de title et composer.
+// -----------------------------------------------------------------------------
+HEADER → HEADER_OPEN TITLE COMPOSER HEADER_CLOSE
+{
+  [title:$title, composer:$composer] ⊂ ↑;
+  ↓1 = []; ↓2 = [title:$title]; ↓3 = [composer:$composer]; ↓4 = [];
+}
+
+// Mise en page fixe de partition pour deux portées de flûte indépendantes.
+// KEY_PROFILE est un enfant silencieux. Il déduit la politique d’orthographe des altérations
+// depuis la tonalité quand l’entrée ne fournit pas explicitement de notation.
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN FLUTE1_STAFF FLUTE2_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[form:rounded_binary|ternary|theme_and_variations|minuet_trio|long_rounded_binary|long_ternary|long_theme_and_variations|long_siciliana|long_gigue|long_march|formal_long_rounded_binary|formal_long_ternary|formal_long_theme_and_variations|formal_long_siciliana|formal_long_gigue|formal_long_march], 
+  ensemble:[type:flute_duet]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+}
+
+
+// --- Routages de partition supplémentaires ---------------------------------
+// Les variantes de SCORE sont sélectionnées par ensemble.type dans music.entrée.
+// flute_duet utilise la règle SCORE originale ci-dessus.
+
+// Une portée de flûte, utilisant le matériau original de Flûte I / voix conductrice.
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN FLUTE_SOLO_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[form:rounded_binary|ternary|theme_and_variations|minuet_trio|long_rounded_binary|long_ternary|long_theme_and_variations|long_siciliana|long_gigue|long_march|formal_long_rounded_binary|formal_long_ternary|formal_long_theme_and_variations|formal_long_siciliana|formal_long_gigue|formal_long_march], 
+  ensemble:[type:solo_flute]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+// Piano seul : un PianoStaff contenant main droite et main gauche.
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN PIANO_STAFF_GROUP PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[form:rounded_binary|ternary|theme_and_variations|minuet_trio|long_rounded_binary|long_ternary|long_theme_and_variations|long_siciliana|long_gigue|long_march|formal_long_rounded_binary|formal_long_ternary|formal_long_theme_and_variations|formal_long_siciliana|formal_long_gigue|formal_long_march], ensemble:[type:piano_solo]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+// Duo flûte + piano : une portée de flûte suivie d’un PianoStaff.
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN FLUTE_WITH_PIANO_STAFF PIANO_ACCOMP_STAFF_GROUP PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[form:rounded_binary|ternary|theme_and_variations|minuet_trio|long_rounded_binary|long_ternary|long_theme_and_variations|long_siciliana|long_gigue|long_march|formal_long_rounded_binary|formal_long_ternary|formal_long_theme_and_variations|formal_long_siciliana|formal_long_gigue|formal_long_march], ensemble:[type:flute_piano_duet]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+}
+
+
+
+// form:scales est spécial : les exercices doivent être séquentiels, pas simultanés.
+// Ces règles SCORE utilisent donc SEQ_OPEN/SEQ_CLOSE ({ ... }) au lieu de
+// PAR_OPEN/PAR_CLOSE (<< ... >>). Chaque exercice commence après le précédent.
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE SEQ_OPEN SCALE_FLUTE_SEQUENCE SEQ_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[form:scales], ensemble:[type:solo_flute|flute_duet|flute_piano_duet]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE SEQ_OPEN SCALE_PIANO_SEQUENCE SEQ_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[form:scales], ensemble:[type:piano_solo]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+// --- Orthographe de tonalité et profil de classes de hauteurs ---------------
+// KEY_PROFILE est un enfant silencieux. L’utilisateur écrit seulement key:[tonic:..., mode:...]
+// dans les fichiers .entrée. tonic_pc est déduit ici et transmis comme donnée interne.
+// Important : la valeur numérique est assignée via $pc pour rester numérique dans
+// les règles arithmétiques ultérieures comme $pitch = $tonic_pc + $offset.
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// KEY_PROFILE : transforme key:[tonic, mode] en traits utiles au reste de la
+// grammaire, notamment tonic_pc et accidental_policy.
+// -----------------------------------------------------------------------------
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:c]];
+  $pc = 0;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:cis]];
+  $pc = 1;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:des]];
+  $pc = 1;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:d]];
+  $pc = 2;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:dis]];
+  $pc = 3;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:ees]];
+  $pc = 3;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:e]];
+  $pc = 4;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:f]];
+  $pc = 5;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:fis]];
+  $pc = 6;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:ges]];
+  $pc = 6;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:g]];
+  $pc = 7;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:gis]];
+  $pc = 8;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:aes]];
+  $pc = 8;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:a]];
+  $pc = 9;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:ais]];
+  $pc = 10;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:bes]];
+  $pc = 10;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:b]];
+  $pc = 11;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:[accidental_policy:$accidental_policy], key:[tonic:ces]];
+  $pc = 11;
+  ↓1 = [];
+  ⇑ = [accidental_policy:$accidental_policy, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:c, mode:major]];
+  $pc = 0;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:g, mode:major]];
+  $pc = 7;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:d, mode:major]];
+  $pc = 2;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:a, mode:major]];
+  $pc = 9;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:e, mode:major]];
+  $pc = 4;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:b, mode:major]];
+  $pc = 11;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:fis, mode:major]];
+  $pc = 6;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:cis, mode:major]];
+  $pc = 1;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:f, mode:major]];
+  $pc = 5;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:bes, mode:major]];
+  $pc = 10;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:ees, mode:major]];
+  $pc = 3;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:aes, mode:major]];
+  $pc = 8;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:des, mode:major]];
+  $pc = 1;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:ges, mode:major]];
+  $pc = 6;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:ces, mode:major]];
+  $pc = 11;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:a, mode:minor]];
+  $pc = 9;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:e, mode:minor]];
+  $pc = 4;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:b, mode:minor]];
+  $pc = 11;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:fis, mode:minor]];
+  $pc = 6;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:cis, mode:minor]];
+  $pc = 1;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:gis, mode:minor]];
+  $pc = 8;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:dis, mode:minor]];
+  $pc = 3;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:ais, mode:minor]];
+  $pc = 10;
+  ↓1 = [];
+  ⇑ = [accidental_policy:sharp, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:d, mode:minor]];
+  $pc = 2;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:g, mode:minor]];
+  $pc = 7;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:c, mode:minor]];
+  $pc = 0;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:f, mode:minor]];
+  $pc = 5;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:bes, mode:minor]];
+  $pc = 10;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:ees, mode:minor]];
+  $pc = 3;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+@withoutSpaces
+KEY_PROFILE → EMPTY
+{
+  [notation:NIL, key:[tonic:aes, mode:minor]];
+  $pc = 8;
+  ↓1 = [];
+  ⇑ = [accidental_policy:flat, tonic_pc:$pc];
+}
+
+
+// -----------------------------------------------------------------------------
+// Routages expérimentaux d’ensemble fondés sur les familles.
+// Ils sont volontairement additifs : les routages flûte/piano existantes ne changent pas.
+// Chaque ensemble concret associe les instruments à des rôles musicaux génériques comme
+// lead, support, inner_voice, bass, harmonic_support et rhythmic_pedal.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN STRING_QUARTET_SCORE PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:string_quartet]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN WOODWIND_TRIO_SCORE PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [
+    music:[form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:woodwind_trio]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN BRASS_TRIO_SCORE PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:brass_trio]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN PERCUSSION_ENSEMBLE_SCORE PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary
+          |formal_long_march
+          |long_march], 
+    ensemble:[type:percussion_ensemble, percussion3:[name:$p3name], percussion4:[name:$p4name]]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN PERCUSSION_DUO_SCORE PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary
+          |formal_long_march
+          |long_march],
+    ensemble:[type:percussion_ensemble, percussion1:[name:$p1name], percussion2:[name:$p2name]]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN MIXED_QUINTET_SCORE PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  // Quintette mixte générique original : bois + corde + basse + cuivre + percussion.
+  // La garde de sous-ensemble supplémentaire empêche cette route de correspondre à les entrées
+  // de quintette mixte avec guitare et de laisser des variables indéfinies.
+  [music:[
+    form:rounded_binary|long_rounded_binary|formal_long_rounded_binary],
+    ensemble:[type:mixed_quintet,
+             woodwind:[], string:[], bass:[], brass:[], percussion:[]]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN MIXED_QUINTET_GUITAR_SCORE PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  // Quintette mixte avec guitare utilisé par des entrées comme
+  // 90_TEST_mixed_quintet_with_guitar_chords.input:
+  // flute + violin + cello + horn + guitar.
+  [music:[
+    form:rounded_binary|long_rounded_binary|formal_long_rounded_binary],
+    ensemble:[type:mixed_quintet,
+             flute:[], violin:[], cello:[], horn:[], guitar:[]]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+// --- Routages de partition guitare / batterie ------------------------------
+// Ce sont des routes rounded_binary expérimentales mais stables. Elles utilisent la même
+// architecture role+family que les autres instruments ajoutés.
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN GUITAR_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:guitar_solo]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN DRUMS_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:drum_kit]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN FLUTE_GUITAR_FLUTE_STAFF GUITAR_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:flute_guitar_duet]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN GUITAR_STAFF DRUMS_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:guitar_drums_duo]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+}
+
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN FLUTE_GUITAR_FLUTE_STAFF GUITAR_STAFF DRUMS_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[
+    form:rounded_binary
+          |long_rounded_binary
+          |formal_long_rounded_binary], 
+    ensemble:[type:flute_guitar_drums]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+  ↓10 = [];
+}
+
+// -----------------------------------------------------------------------------
+// Routage de partition chanson française voix + guitare.
+// Routage additif : sélectionnée seulement par ensemble:type:chanson_francaise_voix_guitare.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN CHANSON_VOICE_STAFF CHANSON_GUITAR_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form],
+   ensemble:[type:chanson_francaise_voix_guitare]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+// Chanson française - grand ensemble.
+// Routage additif : sélectionnée seulement par ensemble:type:grand_ensemble.
+// Elle réalise chaque instrument demandé par l’entrée comme une portée LilyPond séparée.
+// Le matériau musical reste une réutilisation prudente du matériau existant
+// de voix/guitare de chanson ; les registres utilisés pour le matériau généré sont
+// forcés à des valeurs sûres prises en charge par le lexique de notes/accords.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN GE_VOICE_STAFF GE_PIANO_STAFF GE_GUITAR_STAFF GE_BASS_STAFF GE_ACCORDION_STAFF GE_VIOLIN1_STAFF GE_VIOLIN2_STAFF GE_VIOLA_STAFF GE_CELLO_STAFF GE_FLUTE_STAFF GE_CLARINET_STAFF GE_HORN_STAFF GE_PERCUSSION_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[style:chanson_francaise, form:$form],
+   ensemble:[type:grand_ensemble]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓11 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓12 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓13 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓14 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓15 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓16 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓17 = [];
+  ↓18 = [];
+  ↓19 = [];
+  ↓20 = [];
+}
+
+// -----------------------------------------------------------------------------
+// Routage de partition groupe rock : voix + guitare électrique + basse électrique + batterie.
+// Routage additif ; ne réutilise pas les routages de partition guitare/batterie classiques.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROCK_VOICE_STAFF ROCK_GUITAR_STAFF ROCK_BASS_STAFF ROCK_DRUMS_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[style:rock, form:rock_song_verse_chorus],
+   ensemble:[type:rock_band]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = [];
+  ↓9 = [];
+  ↓10 = [];
+  ↓11 = [];
+}
+
+
+// -----------------------------------------------------------------------------
+// Groupe rock avec saxophone et chœur d’accompagnement.
+// Routage additif : sélectionnée seulement par ensemble:type:rock_band_sax_choir.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN ROCK_VOICE_STAFF ROCK_SAX_STAFF ROCK_CHOIR_STAFF ROCK_GUITAR_SAXCHOIR_STAFF ROCK_BASS_SAXCHOIR_STAFF ROCK_DRUMS_SAXCHOIR_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[style:rock, form:rock_song_sax_choir],
+   ensemble:[type:rock_band_sax_choir]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓7 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓8 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓9 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓10 = [];
+  ↓11 = [];
+  ↓12 = [];
+  ↓13 = [];
+}
+
+
+// -----------------------------------------------------------------------------
+// Chanson pop à la guitare : mélodie principale + guitare acoustique/steel.
+// Routage additif, sélectionnée seulement par ensemble:type:pop_guitar_song.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+SCORE → SCORE_OPEN KEY_PROFILE PAR_OPEN POP_LEAD_MELODY_STAFF POP_GUITAR_STAFF PAR_CLOSE LAYOUT MIDI SCORE_CLOSE
+{
+  [music:[style:pop_60s_80s, form:pop_song_verse_chorus], ensemble:[type:pop_guitar_song]];
+  ↓1 = [];
+  ↓2 = ↑;
+  [accidental_policy:$accidental_policy, tonic_pc:$tonic_pc] ⊂ ⇓2;
+  [key:[tonic:$tonic, mode:$mode]] ⊂ ↑;
+  ↓3 = [];
+  ↓4 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓5 = ↑ ∪ [notation:[accidental_policy:$accidental_policy], key:[tonic:$tonic, mode:$mode, tonic_pc:$tonic_pc], tonic_pc:$tonic_pc];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [];
+  ↓9 = [];
+}

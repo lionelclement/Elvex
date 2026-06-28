@@ -21,38 +21,62 @@
 #define ELVEX_ORDERSPEC_H
 
 #include <vector>
+#include <string>
 #include <cstdint>
+#include "shared_ptr.hpp"
 
-struct OrderSpec
+class OrderSpec
 {
+public:
     enum Kind
     {
         CHAIN,
         FIRST,
-        LAST
+        LAST,
+        FIELD_ACCESS
     };
 
+private:
     Kind kind;
     std::vector<uint32_t> indexes;
 
-    OrderSpec() = default;
+    // Used only for FIELD_ACCESS.
+    statementPtr fieldAccessStatement;
+    std::vector<valuePtr> fieldAccessValues;
 
-    OrderSpec(Kind kind, const std::vector<uint32_t> &indexes)
-        : kind(kind), indexes(indexes)
-    {
-    }
+public:
+    OrderSpec();
 
-    bool operator==(const OrderSpec &other) const
-    {
-        return kind == other.kind && indexes == other.indexes;
-    }
+    OrderSpec(Kind kind, const std::vector<uint32_t> &indexes);
 
-    bool operator!=(const OrderSpec &other) const
-    {
-        return !(*this == other);
-    }
+    OrderSpec(Kind kind,
+              const std::vector<uint32_t> &indexes,
+              const statementPtr &fieldAccessStatement,
+              const std::vector<valuePtr> &fieldAccessValues);
+
+    static OrderSpec chain(const std::vector<uint32_t> &indexes);
+    static OrderSpec first(uint32_t index);
+    static OrderSpec last(uint32_t index);
+    static OrderSpec createFieldAccess(const std::vector<uint32_t> &indexes,
+                                       const statementPtr &fieldAccessStatement,
+                                       const std::vector<valuePtr> &fieldAccessValues);
+
+    Kind getKind() const;
+    const std::vector<uint32_t> &getIndexes() const;
+
+    const statementPtr &getFieldAccess() const;
+    const std::vector<valuePtr> &getFieldAccessValues() const;
+
+    bool hasFieldAccess() const;
+
+    void addEdges(std::vector<std::vector<bool>> &edge,
+                  const std::vector<uint32_t> &rhsIndexes) const;
+
+    std::string toString() const;
+    std::string coreSerialString() const;
+
+    bool operator==(const OrderSpec &other) const;
+    bool operator!=(const OrderSpec &other) const;
 };
-
-typedef std::vector<OrderSpec> vectorOrderSpecs;
 
 #endif

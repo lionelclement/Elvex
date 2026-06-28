@@ -1,0 +1,30 @@
+PIECE [
+  // Exemple pop anglais : voix, piano en deux mains, basse, batterie et clavier en deux mains.
+  generation:[syntax:instrument_roles, strict:false, fallback:true],
+
+  title:"Small English Pop Band",
+  composer:"Elvex didactic pop",
+  bpm:104,
+
+  music:[
+    style:english_pop,
+    form:pop_didactic_verse_chorus_16,
+    phrase_model:verse_chorus,
+    rhythm:[topic:pop_backbeat, dance:none, density:medium, anacrusis:false, hemiola_at_cadence:false, ostinato:piano_chords, articulation:legato]
+  ],
+
+  ensemble:[instruments:[
+    count:7,
+    i1:[id:voice, name:"Lead vocal", family:voice,    role:lead,     midi:"voice oohs", clef:treble, octave:4, dynamic:mf],
+    i2:[id:rh,    name:"Piano RH",   family:keyboard, role:piano_rh, midi:"acoustic grand", clef:treble, octave:3, dynamic:mp],
+    i3:[id:lh,    name:"Piano LH",   family:keyboard, role:piano_lh, midi:"acoustic grand", clef:bass, octave:2, dynamic:mp],
+    i4:[id:bass,  name:"Bass",       family:electric, role:bass,     midi:"electric bass (finger)", clef:bass, octave:2, dynamic:mf],
+    i5:[id:drums, name:"Drums",      family:drumkit,  role:drums,    midi:"woodblock", clef:percussion, octave:3, dynamic:mf],
+    i6:[id:keysrh,name:"Keyboard RH",family:keyboard, role:keyboard_rh, midi:"electric piano 1", clef:treble, octave:4, dynamic:p],
+    i7:[id:keyslh,name:"Keyboard LH",family:keyboard, role:keyboard_lh, midi:"electric piano 1", clef:bass, octave:2, dynamic:p]
+  ]],
+
+  key:[tonic:g, mode:major, tonic_pc:7],
+  notation:[accidental_policy:sharp],
+  meter:[num:4, den:4]
+]

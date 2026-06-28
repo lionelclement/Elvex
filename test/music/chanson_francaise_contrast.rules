@@ -1,0 +1,413 @@
+// =============================================================================
+// chanson_francaise_contrast.rules
+// =============================================================================
+// Variantes contrastées de chanson française : récit bas, grande arche, hook syncopé, ligne descendante.
+//
+
+// -----------------------------------------------------------------------------
+// Chanson française : variantes mélodiques fortement contrastées
+// -----------------------------------------------------------------------------
+// Module additif. Ces formes possèdent des profils de contour/rythme distincts afin que
+// `Elvex -f` donne des mélodies visiblement différentes, pas seulement des variantes de première analyse.
+//
+// Formes :
+//   chanson_francaise_couplet_refrain_recit_bas
+//   chanson_francaise_couplet_refrain_grande_arche
+//   chanson_francaise_couplet_refrain_hook_syncopated
+//   chanson_francaise_couplet_refrain_descendante
+//
+// La guitare utilise le CHANSON_GUITAR_FORM stable de chanson_francaise.rules.
+
+@withoutSpaces
+MUSICAL_FORM → CFC_RECIT_FORM
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_recit_bas]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_recit_bas]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → CFC_ARCHE_FORM
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_grande_arche]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_grande_arche]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → CFC_HOOK_FORM
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_hook_syncopated]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_hook_syncopated]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → CFC_DESC_FORM
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_descendante]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_descendante]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+// Même architecture de 72 mesures que la chanson de base.
+@withoutSpaces
+CFC_RECIT_FORM → CFC_RECIT_INTRO_4 CFC_RECIT_VERSE_16 CFC_RECIT_CHORUS_16 CFC_RECIT_VERSE2_16 CFC_RECIT_CHORUS2_16 CFC_RECIT_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[cadence:authentic]; }
+@withoutSpaces
+CFC_ARCHE_FORM → CFC_ARCHE_INTRO_4 CFC_ARCHE_VERSE_16 CFC_ARCHE_CHORUS_16 CFC_ARCHE_VERSE2_16 CFC_ARCHE_CHORUS2_16 CFC_ARCHE_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[cadence:authentic]; }
+@withoutSpaces
+CFC_HOOK_FORM → CFC_HOOK_INTRO_4 CFC_HOOK_VERSE_16 CFC_HOOK_CHORUS_16 CFC_HOOK_VERSE2_16 CFC_HOOK_CHORUS2_16 CFC_HOOK_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[cadence:authentic]; }
+@withoutSpaces
+CFC_DESC_FORM → CFC_DESC_INTRO_4 CFC_DESC_VERSE_16 CFC_DESC_CHORUS_16 CFC_DESC_VERSE2_16 CFC_DESC_CHORUS2_16 CFC_DESC_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[cadence:authentic]; }
+
+// -----------------------------------------------------------------------------
+// Plans de sections. Le contraste vient de l’usage de patrons de mesures différents :
+// recit_bas       : BAR2 + silences, registre grave, rythme parlé.
+// grande_arche    : BAR6/BAR8, ambitus plus large, longues arches ascendantes/descendantes.
+// hook_syncopated : hook répété et reconnaissable avec contretemps/silences.
+// descendante     : contour descendant persistant, cadence nostalgique.
+// -----------------------------------------------------------------------------
+
+CFC_RECIT_INTRO_4 → REST_BAR4 CFC_R_LOW1 CFC_R_REST1 CFC_R_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CFC_RECIT_VERSE_16 → CFC_R_LOW1 CFC_R_REST1 CFC_R_LOW2 REST_BAR4 CFC_R_STEP CFC_R_LOW3 CFC_R_FALL CFC_R_HALF CFC_R_LOW4 CFC_R_REST2 CFC_R_LOW2 REST_BAR4 CFC_R_FALL2 CFC_R_DOM CFC_R_AUTH CFC_R_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_RECIT_CHORUS_16 → CFC_R_CHANT CFC_R_ANSWER CFC_R_CHANT2 CFC_R_REST1 CFC_R_OPEN CFC_R_ANSWER2 CFC_R_COLOR CFC_R_HALF CFC_R_CHANT CFC_R_ANSWER CFC_R_CHANT2 CFC_R_REST2 CFC_R_COLOR2 CFC_R_DOM CFC_R_AUTH CFC_R_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_RECIT_VERSE2_16 → CFC_R_LOW4 CFC_R_REST2 CFC_R_LOW2 REST_BAR4 CFC_R_STEP2 CFC_R_LOW3 CFC_R_FALL CFC_R_HALF CFC_R_LOW1 CFC_R_REST1 CFC_R_LOW2 REST_BAR4 CFC_R_FALL2 CFC_R_DOM CFC_R_AUTH CFC_R_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_RECIT_CHORUS2_16 → CFC_R_CHANT CFC_R_ANSWER CFC_R_CHANT2 CFC_R_REST1 CFC_R_OPEN2 CFC_R_ANSWER2 CFC_R_COLOR CFC_R_HALF CFC_R_CHANT CFC_R_ANSWER CFC_R_CHANT2 CFC_R_REST2 CFC_R_COLOR2 CFC_R_DOM CFC_R_AUTH CFC_R_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_RECIT_OUTRO_4 → CFC_R_FALL CFC_R_DOM CFC_R_AUTH CFC_R_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+CFC_ARCHE_INTRO_4 → REST_BAR4 CFC_A_ASC1 CFC_A_ASC2 CFC_A_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CFC_ARCHE_VERSE_16 → CFC_A_ASC1 CFC_A_ASC2 CFC_A_PEAK1 CFC_A_BREATH CFC_A_DESC1 CFC_A_DESC2 CFC_A_LOW_TURN CFC_A_HALF CFC_A_ASC3 CFC_A_ASC4 CFC_A_PEAK2 CFC_A_BREATH CFC_A_DESC3 CFC_A_DOM CFC_A_AUTH CFC_A_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_ARCHE_CHORUS_16 → CFC_A_CH_OPEN CFC_A_CH_PEAK CFC_A_CH_RUN CFC_A_BREATH CFC_A_CH_OPEN2 CFC_A_CH_PEAK2 CFC_A_CH_FALL CFC_A_HALF CFC_A_CH_OPEN CFC_A_CH_PEAK CFC_A_CH_RUN2 CFC_A_BREATH CFC_A_CH_TAG CFC_A_DOM CFC_A_AUTH2 CFC_A_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_ARCHE_VERSE2_16 → CFC_A_ASC3 CFC_A_ASC4 CFC_A_PEAK1 CFC_A_BREATH CFC_A_DESC2 CFC_A_DESC3 CFC_A_LOW_TURN CFC_A_HALF CFC_A_ASC1 CFC_A_ASC2 CFC_A_PEAK2 CFC_A_BREATH CFC_A_DESC1 CFC_A_DOM CFC_A_AUTH CFC_A_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_ARCHE_CHORUS2_16 → CFC_A_CH_OPEN CFC_A_CH_PEAK CFC_A_CH_RUN CFC_A_BREATH CFC_A_CH_OPEN2 CFC_A_CH_PEAK2 CFC_A_CH_FALL CFC_A_HALF CFC_A_CH_OPEN CFC_A_CH_PEAK CFC_A_CH_RUN2 CFC_A_BREATH CFC_A_CH_TAG CFC_A_DOM CFC_A_AUTH2 CFC_A_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_ARCHE_OUTRO_4 → CFC_A_DESC3 CFC_A_DOM CFC_A_AUTH CFC_A_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+CFC_HOOK_INTRO_4 → REST_BAR4 CFC_H_CELL CFC_H_ANSWER CFC_H_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CFC_HOOK_VERSE_16 → CFC_H_VERSE1 CFC_H_VERSE2 CFC_H_VERSE3 CFC_H_REST CFC_H_VERSE4 CFC_H_VERSE5 CFC_H_VERSE6 CFC_H_HALF CFC_H_VERSE1B CFC_H_VERSE2 CFC_H_VERSE3B CFC_H_REST CFC_H_VERSE6 CFC_H_DOM CFC_H_AUTH CFC_H_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_HOOK_CHORUS_16 → CFC_H_CELL CFC_H_ANSWER CFC_H_CELL_UP CFC_H_REST CFC_H_CELL CFC_H_TURN CFC_H_LIFT CFC_H_HALF CFC_H_CELL CFC_H_ANSWER CFC_H_CELL_UP2 CFC_H_REST CFC_H_LIFT2 CFC_H_DOM CFC_H_AUTH2 CFC_H_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_HOOK_VERSE2_16 → CFC_H_VERSE1B CFC_H_VERSE2 CFC_H_VERSE3 CFC_H_REST CFC_H_VERSE4B CFC_H_VERSE5 CFC_H_VERSE6 CFC_H_HALF CFC_H_VERSE1 CFC_H_VERSE2 CFC_H_VERSE3B CFC_H_REST CFC_H_VERSE6 CFC_H_DOM CFC_H_AUTH CFC_H_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_HOOK_CHORUS2_16 → CFC_H_CELL CFC_H_ANSWER CFC_H_CELL_UP CFC_H_REST CFC_H_CELL CFC_H_TURN CFC_H_LIFT CFC_H_HALF CFC_H_CELL CFC_H_ANSWER CFC_H_CELL_UP2 CFC_H_REST CFC_H_LIFT2 CFC_H_DOM CFC_H_AUTH2 CFC_H_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_HOOK_OUTRO_4 → CFC_H_CELL CFC_H_DOM CFC_H_AUTH CFC_H_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+CFC_DESC_INTRO_4 → REST_BAR4 CFC_D_SIGH CFC_D_TURN CFC_D_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CFC_DESC_VERSE_16 → CFC_D_SIGH CFC_D_FALL1 CFC_D_FALL2 CFC_D_BREATH CFC_D_TURN CFC_D_FALL3 CFC_D_LOW CFC_D_HALF CFC_D_SIGH2 CFC_D_FALL1 CFC_D_FALL4 CFC_D_BREATH CFC_D_LOW2 CFC_D_DOM CFC_D_AUTH CFC_D_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_DESC_CHORUS_16 → CFC_D_CH_HIGH CFC_D_CH_FALL CFC_D_CH_REPLY CFC_D_BREATH CFC_D_CH_HIGH2 CFC_D_CH_FALL2 CFC_D_CH_COLOR CFC_D_HALF CFC_D_CH_HIGH CFC_D_CH_FALL CFC_D_CH_REPLY2 CFC_D_BREATH CFC_D_CH_COLOR2 CFC_D_DOM CFC_D_AUTH CFC_D_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_DESC_VERSE2_16 → CFC_D_SIGH2 CFC_D_FALL1 CFC_D_FALL2 CFC_D_BREATH CFC_D_TURN2 CFC_D_FALL3 CFC_D_LOW CFC_D_HALF CFC_D_SIGH CFC_D_FALL1 CFC_D_FALL4 CFC_D_BREATH CFC_D_LOW2 CFC_D_DOM CFC_D_AUTH CFC_D_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_DESC_CHORUS2_16 → CFC_D_CH_HIGH CFC_D_CH_FALL CFC_D_CH_REPLY CFC_D_BREATH CFC_D_CH_HIGH2 CFC_D_CH_FALL2 CFC_D_CH_COLOR CFC_D_HALF CFC_D_CH_HIGH CFC_D_CH_FALL CFC_D_CH_REPLY2 CFC_D_BREATH CFC_D_CH_COLOR2 CFC_D_DOM CFC_D_AUTH CFC_D_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CFC_DESC_OUTRO_4 → CFC_D_LOW2 CFC_D_DOM CFC_D_AUTH CFC_D_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+// -----------------------------------------------------------------------------
+// Cellules de mesure
+// -----------------------------------------------------------------------------
+@withoutSpaces
+CFC_R_LOW1 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0, o2:3], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_LOW2 → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:2, o2:0, o3:3], rhythm:[r1:"1/4", rr:"1/4", r2:"1/8", r3:"3/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_LOW3 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:3, o2:2], rhythm:[r1:"3/4", r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_LOW4 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:0, o2:0, o3:2, o4:3], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_STEP → BAR4
+{ ↓1=↑ ∪ [motif:[o1:3, o2:5, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_STEP2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5, o2:7, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_FALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:5, o3:3, o4:2], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_FALL2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:7, o3:5, o4:3], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_REST1 → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:3, o2:2, o3:0], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_REST2 → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:5, o2:3, o3:2], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_HALF → BAR2
+{ ↓1=↑ ∪ [motif:[o1:5, o2:2], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_DOM → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7, o2:11], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_AUTH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7, o2:0], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_TONIC_LOW → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_TONIC → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_CHANT → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:7, o3:8, o4:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_ANSWER → BAR2
+{ ↓1=↑ ∪ [motif:[o1:5, o2:3], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_CHANT2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:8, o3:7, o4:5], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_OPEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:8, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_OPEN2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:10, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_ANSWER2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7, o2:3], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:7, o3:5, o4:3], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_R_COLOR2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:8, o3:7, o4:5], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+
+// Cellules de grande arche
+@withoutSpaces
+CFC_A_ASC1 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:0, o2:3, o3:7, o4:12, o5:14, o6:15], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_ASC2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:17, o3:19, o4:22], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_ASC3 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:3, o2:7, o3:10, o4:15, o5:19, o6:22], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_ASC4 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:19, o4:24], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_PEAK1 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:22, o2:19], rhythm:[r1:"3/4", r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_PEAK2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:24, o2:22], rhythm:[r1:"3/4", r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_BREATH → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:15], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_DESC1 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:22, o2:19, o3:17, o4:15, o5:12, o6:10], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_DESC2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:12, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_DESC3 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:15, o4:12], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_LOW_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_HALF → BAR2
+{ ↓1=↑ ∪ [motif:[o1:15, o2:12], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_DOM → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:17, o3:19, o4:23], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_AUTH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:19, o2:12], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_AUTH2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:24, o2:19], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_HOLD → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_FINAL → BAR1
+{ ↓1=↑ ∪ [motif:[o1:24], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_OPEN → BAR8
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:19, o4:22, o5:24, o6:22, o7:19, o8:15], rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/8", r7:"1/8", r8:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_OPEN2 → BAR8
+{ ↓1=↑ ∪ [motif:[o1:15, o2:17, o3:19, o4:22, o5:24, o6:22, o7:19, o8:17], rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/8", r6:"1/8", r7:"1/8", r8:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_PEAK → BAR2
+{ ↓1=↑ ∪ [motif:[o1:24, o2:22], rhythm:[r1:"3/4", r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_PEAK2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:27, o2:24], rhythm:[r1:"3/4", r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_RUN → BAR6
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:15, o4:12, o5:10, o6:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_RUN2 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:22, o2:19, o3:17, o4:15, o5:12, o6:10], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_FALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:22, o2:19, o3:17, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_A_CH_TAG → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:19, o3:22, o4:24], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+
+// Cellules de hook syncopé
+@withoutSpaces
+CFC_H_CELL → BAR6
+{ ↓1=↑ ∪ [motif:[o1:12, o2:12, o3:15, o4:14, o5:12, o6:10], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_ANSWER → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_CELL_UP → BAR6
+{ ↓1=↑ ∪ [motif:[o1:15, o2:15, o3:19, o4:17, o5:15, o6:14], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_CELL_UP2 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:17, o2:17, o3:20, o4:19, o5:17, o6:15], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_REST → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10], rhythm:[r1:"1/4", rr:"1/4", r2:"1/4", r3:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:14, o4:12], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_LIFT → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:17, o3:19, o4:22], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_LIFT2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:19, o3:22, o4:24], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_HALF → BAR2
+{ ↓1=↑ ∪ [motif:[o1:14, o2:10], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_DOM → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:11, o3:14, o4:19], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_AUTH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:12, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_AUTH2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:19, o2:12], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_TONIC → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_FINAL → BAR1
+{ ↓1=↑ ∪ [motif:[o1:19], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE1 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE1B → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5, o2:8, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE2 → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:3, o2:5, o3:7], rhythm:[r1:"1/4", rr:"1/4", r2:"1/4", r3:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE3 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12, o4:10, o5:7, o6:5], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE3B → BAR6
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:14, o4:12, o5:10, o6:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE4 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5, o2:7, o3:8, o4:10], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE4B → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:8, o3:10, o4:12], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE5 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:10, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_H_VERSE6 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:7, o3:5, o4:3], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+
+// Cellules descendantes
+@withoutSpaces
+CFC_D_SIGH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_SIGH2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:15, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_FALL1 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:15, o2:14, o3:12, o4:10, o5:8, o6:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_FALL2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:10, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_FALL3 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:8, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_FALL4 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_BREATH → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:7, o2:5, o3:3], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:10, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_TURN2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:10, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_LOW → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_LOW2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:5, o2:0], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_HALF → BAR2
+{ ↓1=↑ ∪ [motif:[o1:8, o2:5], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_DOM → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:11, o3:14, o4:11], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_AUTH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7, o2:0], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_TONIC → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_HIGH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17], rhythm:[r1:"3/4", r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_HIGH2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:22, o2:19], rhythm:[r1:"3/4", r2:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_FALL → BAR6
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:14, o4:12, o5:10, o6:8], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_FALL2 → BAR6
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:15, o4:14, o5:12, o6:10], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_REPLY → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:7, o3:5, o4:3], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_REPLY2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:8, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:10, o3:8, o4:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CFC_D_CH_COLOR2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:12, o3:10, o4:8], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }

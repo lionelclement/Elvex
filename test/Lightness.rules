@@ -1,0 +1,111 @@
+// light-verb construction
+Axiom -> S
+{
+  [i:$I, ii:NIL, iii:$III, iv:NIL, lex_func:$lex_fun, $Rest];
+  ↓1 = [subj:$I, obj:[], prep_obj:$III, lex_func:$lex_fun, $Rest];
+}
+
+// light-verb construction with lex_func
+Axiom -> S
+{
+  [i:$I, ii:NIL, iii:$III, iv:NIL, lex_func:NIL, $Rest];
+  ↓1 = [subj:$I, obj:[], prep_obj:$III, lex_func:none, $Rest];
+}
+
+// light-verb construction with modifier
+Axiom -> S
+{
+  [i:$I, ii:$II, iii:$III, iv:NIL, lex_func:NIL, $Rest];
+  ↓1 = [subj:$I, obj:$II, prep_obj:$III, lex_func:none, $Rest];
+}
+
+S -> NP VP
+{
+  [subj:$subj, $rest];
+  [HEAD:$predSubj] ⊂ $subj;
+  ↓1 = $subj ∪ [@det];
+  $subjSynt = ⇓1;
+  [number:$N, gender:$G, person:$P] ⊂ ⇓1;
+  ↓2 = [subj:[number:$N, gender:$G, person:$P], $rest] ∪ [subj:$subjSynt];
+  ⇑ = ⇓2 ∪ [subj:$subjSynt];
+}
+
+// fait peur
+// fait une peur bleue
+@trace
+VP → VP NP PP {
+  [obj:$obj, prep_obj:$prep_obj, prep_obj2:NIL, $rest];
+  ↓1 = $rest;
+  [obj:$objSynt, prep_obj:$prep_objSynt] ⊂ ⇓1;
+  ↓2 = $obj ∪ $objSynt;
+  ↓3 = $prep_obj U $prep_objSynt;
+  ⇑ = ⇓1 ∪ [obj:⇓2];
+  order 1 < 2;
+  order 1 < 3;
+  order 2, 3 by ⇓.weight;
+}
+
+VP → verb {
+  [obj:NIL, prep_obj:NIL, prep_obj2:NIL, scomp:NIL, vcomp:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+NP → N {
+  [@no_det, $rest];
+  ↓1 = $rest;
+  ⇑ = ⇓1;
+}
+
+N → noun {
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1 ∪ [weight:1];
+}
+
+N → N adj {
+  [mod:<$head::$tail>, $rest];
+  ↓1 = [mod:$tail, $rest];
+  $number = ⇓1.number;
+  $gender = ⇓1.gender;
+  ↓2 = $head ∪ [number:$number, gender:$gender];
+  [weight:_, $restSynt] ⊂ ⇓1;
+  if (⇓2.pos == pre) {
+    order 2 < 1;
+  } else {
+    order 1 < 2;
+  }
+  ⇑ = $restSynt ∪ [weight:2];
+}
+
+/*
+N → N REL {
+  [mod:<$head::$tail>, $rest];
+  ↓1 = [mod:$tail, $rest];
+  [weight:_, $restSynt] ⊂ ⇓1;
+  ⇑ = $restSynt ∪ [weight:3];
+}
+*/
+
+NP → det N {
+  [@det, $rest];
+  ↓1 = $rest;
+  ↓2 = $rest;
+  [weight:_, $nSynt] ⊂ ⇓2;
+  ⇑ = ⇓1 ∪ $nSynt ∪ [weight:2];
+}
+
+NP → properNoun {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+PP → prep NP {
+   ↓1 = ↑;
+   ↓2 = ↑ ∪ [@det];
+   [weight:_, $npSynt] ⊂ ⇓2;
+   ⇑ = ⇓1 ∪ $npSynt ∪ [weight:2];
+}
+
+REL → prel VP {
+}

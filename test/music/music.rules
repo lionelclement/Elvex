@@ -1,0 +1,42 @@
+// =============================================================================
+// music.rules
+// =============================================================================
+// Fichier racine de la grammaire musicale. Il ne contient presque pas de règles propres : il assemble les modules spécialisés avec #include.
+// Ordre important : les normalisations et le routage de haut niveau doivent venir avant les règles de matériau musical.
+//
+
+// Fichier racine de la grammaire. Les vraies règles sont réparties en modules avec #include.
+// Modifier les fichiers inclus selon le sujet :
+//   header.rules              = PIECE/HEADER/SCORE/key spelling
+//   staves.rules              = Staff/PianoStaff routing and role dispatch
+// flute.rules               = matériau flûte solo / duo de flûtes / flûte conductrice
+//   piano_solo.rules          = solo piano texture
+//   piano_accompaniment.rules = flute+piano accompaniment texture
+// rhythm_patterns.rules     = topics rythmiques/danses optionnels sélectionnés par music.rhythm
+// controlled_forms.rules    = routes à ambiguïté réduite pour ternary/theme_and_variations
+//   scales.rules              = pedagogical scale/exercise form: scales only
+//   bars.rules                = low-level NOTE/CHORD bar realization
+
+#include flexible_defaults.rules
+#include header.rules
+#include role_ensemble.rules
+#include staves.rules
+#include pop_song.rules
+#include regression_safe_forms.rules
+#include flute.rules
+#include long_forms.rules
+#include formal_long_forms.rules
+#include instrument_families.rules
+#include piano_solo.rules
+#include piano_accompaniment.rules
+#include rhythm_patterns.rules
+#include controlled_forms.rules
+#include scale_material.rules
+#include chanson_francaise.rules
+#include chanson_francaise_variants.rules
+#include chanson_francaise_contrast.rules
+#include rock_direct.rules
+#include circus.rules
+#include rock_band.rules
+#include rock_band_sax_choir.rules
+#include bars.rules

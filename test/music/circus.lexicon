@@ -1,0 +1,11 @@
+// =============================================================================
+// circus.lexicon
+// =============================================================================
+// Lexique du style cirque.
+// Cette version reste volontairement légère : la musique est décrite dans
+// circus.rules à l'aide de catégories musicales structurées, et la réalisation
+// LilyPond repose sur les terminaux génériques de common.lexicon et bars.rules.
+// Le fichier existe pour documenter le module et pour permettre d'ajouter plus
+// tard des marques textuelles ou articulations propres au style sans changer
+// music.lexicon.
+// =============================================================================

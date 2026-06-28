@@ -1,15 +1,16 @@
 @trace
 S → A A
 {
-  eprintln __FILE__, "...";
+  println __FILE__, "...";
   [a:$x];
   ↓1 = ↑;
-  ↓2 = ⇓1 U [b:$x];
+  ↓2 = ⇓1 U [b:$x, c:$x, d:$x];
 }
 
 @trace
 A → a 
 {
+  [c:$c];
   [b:$x] ⊂ ↑;
   ↓1 = ↑ U [c:$x];
   ⇑ = ⇓1;

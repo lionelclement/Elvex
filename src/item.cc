@@ -658,6 +658,8 @@ void Item::toHTML(std::ostream &out) /*const*/
         out << "<th bgcolor=\"white\"><center>Statements</center></th>";
     if (s_environment && environment)
         out << "<th align = center>Environment</th>";
+    if (s_orderSpecs)
+        out << "<th align = center>OrderSpecs</th>";
     out << "</tr><tr>";
     if (s_id)
     {
@@ -853,6 +855,18 @@ void Item::toHTML(std::ostream &out) /*const*/
         environment->toHTML(out);
         out << "</td>";
     }
+    if (s_orderSpecs)
+    {
+        out << "<td align=\"center\">";
+        for (OrderSpecs::const_iterator it = orderSpecs.begin();
+            it != orderSpecs.end();
+            ++it)
+        {
+            out << it->toString() << "<br>";
+        }
+        out << "</td>";
+    }
+
     out << "</tr></table>";
     out << std::endl;
 }
@@ -957,15 +971,7 @@ void Item::makeCoreSerialString()
     stream << (inheritedFeatures ? inheritedFeatures->peekCoreSerialString() : "0");
 
     stream << '#';
-    for (const auto &orderSpec : orderSpecs)
-    {
-        stream << static_cast<int>(orderSpec.kind) << ':';
-        for (auto index : orderSpec.indexes)
-        {
-            stream << index << ',';
-        }
-        stream << '/';
-    }
+    stream << orderSpecs.coreSerialString();
 
     stream.flush();
     coreSerialString = stream.str();
@@ -1231,22 +1237,14 @@ environmentPtr Item::getEnvironment() const
  ************************************************** */
 void Item::addOrderSpec(const OrderSpec &orderSpec)
 {
-    for (const auto &existing : orderSpecs)
-    {
-        if (existing == orderSpec)
-        {
-            return;
-        }
-    }
-
-    orderSpecs.push_back(orderSpec);
+    orderSpecs.add(orderSpec);
     resetCoreSerial();
 }
 
 /* **************************************************
  *
  ************************************************** */
-void Item::setOrderSpecs(const vectorOrderSpecs &_orderSpecs)
+void Item::setOrderSpecs(const OrderSpecs &_orderSpecs)
 {
     orderSpecs = _orderSpecs;
     resetCoreSerial();
@@ -1255,7 +1253,7 @@ void Item::setOrderSpecs(const vectorOrderSpecs &_orderSpecs)
 /* **************************************************
  *
  ************************************************** */
-const vectorOrderSpecs &Item::getOrderSpecs() const
+const OrderSpecs &Item::getOrderSpecs() const
 {
     return orderSpecs;
 }

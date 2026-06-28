@@ -1,0 +1,27 @@
+PIECE [
+  // Exemple très léger : chanson française acoustique.
+  generation:[syntax:instrument_roles, strict:false, fallback:true],
+
+  title:"Chanson acoustique simple",
+  composer:"Elvex didactic pop",
+  bpm:88,
+
+  music:[
+    style:pop_chanson,
+    form:pop_didactic_verse_chorus_16,
+    phrase_model:verse_chorus,
+    rhythm:[topic:chanson_acoustic, dance:none, density:medium, anacrusis:false, hemiola_at_cadence:false, ostinato:guitar_arpeggio, articulation:legato]
+  ],
+
+  ensemble:[instruments:[
+    count:4,
+    i1:[id:voice,  name:"Voix",          family:voice,           role:lead,       midi:"voice oohs",                clef:treble,   octave:5, dynamic:mf],
+    i2:[id:guitar, name:"Guitare nylon", family:plucked_strings, role:guitar,     midi:"acoustic guitar (nylon)",  clef:treble_8, octave:3, dynamic:mp, texture:arpeggiated],
+    i3:[id:bass,   name:"Contrebasse",   family:strings,         role:bass,       midi:"contrabass",               clef:bass,     octave:2, dynamic:mp],
+    i4:[id:djembe, name:"Djembe",        family:percussion,      role:hand_drums, midi:"woodblock",                clef:percussion, octave:4, dynamic:f]
+  ]],
+
+  key:[tonic:a, mode:minor, tonic_pc:9],
+  notation:[accidental_policy:sharp],
+  meter:[num:4, den:4]
+]

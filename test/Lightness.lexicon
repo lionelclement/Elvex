@@ -1,0 +1,220 @@
+"un"    det [@ms, @indef];
+"une"   det [@fs, @indef];
+"des"   det [@p,  @indef, qual:no];
+
+"le"    det [@ms, @def];
+"la"    det [@fs, @def];
+"les"   det [@p,  @def, qual:no];
+
+"mon"   det [@ms, @poss, personPoss:one,   numberPoss:sg];
+"ma"    det [@fs, @poss, personPoss:one,   numberPoss:sg];
+"mes"   det [@p,  @poss, personPoss:one,   numberPoss:sg];
+
+"ton"   det [@ms, @poss, personPoss:two,   numberPoss:sg];
+"ta"    det [@fs, @poss, personPoss:two,   numberPoss:sg];
+"tes"   det [@p,  @poss, personPoss:two,   numberPoss:sg];
+
+"son"   det [@ms, @poss, personPoss:three, numberPoss:sg];
+"sa"    det [@fs, @poss, personPoss:three, numberPoss:sg];
+"ses"   det [@p,  @poss, personPoss:three, numberPoss:sg];
+
+"notre" det [@ms, @poss, personPoss:one,   numberPoss:pl];
+"nos"   det [@p,  @poss, personPoss:one,   numberPoss:pl];
+
+"votre" det [@ms, @poss, personPoss:two,   numberPoss:pl];
+"vos"   det [@p,  @poss, personPoss:two,   numberPoss:pl];
+
+"leur"  det [@ms, @poss, personPoss:three, numberPoss:pl];
+"leurs" det [@p,  @poss, personPoss:three, numberPoss:pl];
+
+"ce"    det [@ms, @dem];
+"cette" det [@fs, @dem];
+"ces"   det [@p,  @dem];
+
+"de"	prep[form:de];
+"à"	prep[form:à];
+"par"	prep[form:par];
+"pour"	prep[form:pour];
+"sur"	prep[form:sur];
+"avant"	prep[form:avant];
+"après"	prep[form:après];
+"avec"	prep[form:avec];
+"contre"	prep[form:contre];
+"dans"	prep[form:dans];
+
+/* **************************************************
+ * Verbal auxiliaries
+ ************************************************** */
+suis	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:one, number:sg]];
+es	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:two, number:sg]];
+est	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:three, number:sg]];
+sommes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:one, number:pl]];
+êtes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:two, number:pl]];
+sont	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:present, vform:tensed, subj:[person:three, number:pl]];
+
+étais	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:one|two, number:sg]];
+était	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:three, number:sg]];
+étiez	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:one, number:pl]];
+étions	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:two, number:pl]];
+étaient	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:imperfect, vform:tensed, subj:[person:three, number:pl]];
+
+serai	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:one, number:sg]];
+seras	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:two, number:sg]];
+sera	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:three, number:sg]];
+serons	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:one, number:pl]];
+serez	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:two, number:pl]];
+seront	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:future, vform:tensed, subj:[person:three, number:pl]];
+
+fus	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:one|two, number:sg]];
+fut	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:three, number:sg]];
+fûmes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:one, number:pl]];
+fûtes	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:two, number:pl]];
+furent	aux_être [aux:être, voice:passive, finite:yes, mode:indicative, vtense:past_historic, vform:tensed, subj:[person:three, number:pl]];
+
+suis	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:sg]];
+es	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:sg]];
+est	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:sg]];
+sommes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:pl]];
+êtes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:pl]];
+sont	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:pl]];
+
+étais	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one|two, number:sg]];
+était	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+étions	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+étiez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+étaient	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+
+fus	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one|two, number:sg]];
+fut	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:sg]];
+fûmes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one, number:pl]];
+fûtes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:two, number:pl]];
+furent	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+serai	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:sg]];
+seras	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:sg]];
+sera	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:sg]];
+serons	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:pl]];
+serez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:pl]];
+seront	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one, number:sg]];
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:two, number:sg]];
+serait	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+serions	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+seriez	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+seraient	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+sois	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:sg]];
+sois	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:sg]];
+soit	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+soyons	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+soyez	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+soient	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+fusse	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:sg]];
+fusses	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:sg]];
+fût	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+fussions	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+fussiez	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+fussent	aux_être [aux:être, voice:active, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+
+// suis en train de 
+suis	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:one, number:sg]];
+es	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:two, number:sg]];
+est	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:three, number:sg]];
+sommes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:one, number:pl]];
+êtes	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:two, number:pl]];
+sont	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:present_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:one, number:sg]];
+serais	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:two, number:sg]];
+serait	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:three, number:sg]];
+serions	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:one, number:pl]];
+seriez	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:two, number:pl]];
+seraient	aux_être [aux:être, voice:active, finite:yes, mode:conditional, vtense:present_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+// étais en train de 
+étais	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:one|two, number:sg]];
+était	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:three, number:sg]];
+étions	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:one, number:pl]];
+étiez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:two, number:pl]];
+étaient	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:past_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+// serai en train de 
+serai	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:one, number:sg]];
+seras	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:two, number:sg]];
+sera	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:three, number:sg]];
+serons	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:one, number:pl]];
+serez	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:two, number:pl]];
+seront	aux_être [aux:être, voice:active, finite:yes, mode:indicative, vtense:future_progressive, vform:tensed, subj:[person:three, number:pl]];
+
+// viens de <inf> 
+viens	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:one|two, number:sg]];
+vient	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:three, number:sg]];
+venons	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:one, number:pl]];
+venez	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:two, number:pl]];
+viennent	aux_venir [aux:venir, voice:active, finite:yes, mode:indicative, vtense:recent_past, vform:tensed, subj:[person:three, number:pl]];
+
+// commence à <inf> 
+commence	aux_commencer [aux:commencer, voice:active, finite:yes, mode:indicative, vtense:recent_present, vform:tensed, subj:[person:one|three, number:sg]];
+commences	aux_commencer [aux:commencer, voice:active, finite:yes, mode:indicative, vtense:recent_present, vform:tensed, subj:[person:two, number:sg]];
+commençons	aux_commencer [aux:commencer, voice:active, finite:yes, mode:indicative, vtense:recent_present, vform:tensed, subj:[person:one, number:pl]];
+commencez	aux_commencer [aux:commencer, voice:active, finite:yes, mode:indicative, vtense:recent_present, vform:tensed, subj:[person:two, number:pl]];
+commencent	aux_commencer [aux:commencer, voice:active, finite:yes, mode:indicative, vtense:recent_present, vform:tensed, subj:[person:three, number:pl]];
+
+// vas <inf> 
+vais	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:one, number:sg]];
+vas	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:two, number:sg]];
+va	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:three, number:sg]];
+allons	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:one, number:pl]];
+allez	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:two, number:pl]];
+vont	aux_aller [aux:aller, voice:active, finite:yes, mode:indicative, vtense:near_future, vform:tensed, subj:[person:three, number:pl]];
+
+été	aux_être [vform:participle, vtense:past];
+
+ai	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:sg]];
+as	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:sg]];
+a	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:sg]];
+avons	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:one, number:pl]];
+avez	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:two, number:pl]];
+ont	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:passe_compose, vform:tensed, subj:[person:three, number:pl]];
+
+avais	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one|two, number:sg]];
+avait	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+avions	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+aviez	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+avaient	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+
+aurais	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one|two, number:sg]];
+aurait	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+aurions	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+auriez	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+auraient	aux_avoir [aux:avoir, finite:yes, mode:conditional, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+aurai	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:sg]];
+auras	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:sg]];
+aura	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:sg]];
+aurons	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:one, number:pl]];
+aurez	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:two, number:pl]];
+auront	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:future_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+eus	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one|two, number:sg]];
+eut	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:sg]];
+eûmes	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:one, number:pl]];
+eûtes	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:two, number:pl]];
+eurent	aux_avoir [aux:avoir, finite:yes, mode:indicative, vtense:past_anterieur, vform:tensed, subj:[person:three, number:pl]];
+
+aie	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:sg]];
+aies	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:sg]];
+ait	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:sg]];
+ayons	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:one, number:pl]];
+ayez	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:two, number:pl]];
+aient	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:past, vform:tensed, subj:[person:three, number:pl]];
+
+eusse	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:sg]];
+eusses	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:sg]];
+eût	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:sg]];
+eussions	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:one, number:pl]];
+eussiez	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:two, number:pl]];
+eussent	aux_avoir [aux:avoir, finite:yes, mode:subjonctive, vtense:pluperfect, vform:tensed, subj:[person:three, number:pl]];
+

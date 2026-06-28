@@ -1,0 +1,121 @@
+// =============================================================================
+// flexible_defaults.rules
+// =============================================================================
+// Normalisation de l'entrée utilisateur. Ce module transforme une PIECE incomplète ou concise en un contexte complet : titre, compositeur, tempo, mesure, tonalité et valeurs rythmiques par défaut.
+//
+
+// -----------------------------------------------------------------------------
+// Normalisation flexible de l’entrée.
+//
+// La nouvelle syntaxe publique d’entrée utilise :
+//   generation:[syntax:instrument_roles]
+//   ensemble:[instruments:[i1:[id:..., role:..., family:..., clef:..., ...], i2:[...], ...]]
+//
+// Cette règle construit les valeurs par défaut normalisées utilisées par les règles de bas niveau :
+// titre, compositeur, bpm, style, phrase_model, rhythm, notation, key et meter.
+// Routing consumes ensemble.instruments directly.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// PIECE : racine publique d'un .entrée.
+// La règle commence par FLEX_INPUT pour compléter les valeurs manquantes, puis
+// produit les blocs LilyPond standard : version, papier, en-tête et partition.
+// -----------------------------------------------------------------------------
+PIECE → FLEX_INPUT VERSION PAPER_NO_TAGLINE HEADER SCORE
+{
+  [generation:[syntax:instrument_roles]] ⊂ ↑;
+  ↓1 = ↑;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = ⇓1;
+  ↓5 = ⇓1;
+}
+
+@withoutSpaces
+FLEX_INPUT → EMPTY
+{
+  [generation:[syntax:instrument_roles]] ⊂ ↑;
+
+  $title = ↑.title;
+  if (!$title) $title = "Untitled";
+
+  $composer = ↑.composer;
+  if (!$composer) $composer = "Elvex";
+
+  $bpm = ↑.bpm;
+  if (!$bpm) $bpm = 96;
+
+  $style = ↑.music.style;
+  if (!$style) $style = classical_19c;
+
+  $form = ↑.music.form;
+  if (!$form) $form = rounded_binary;
+
+  $phrase_model = ↑.music.phrase_model;
+  if (!$phrase_model) $phrase_model = periodic;
+
+  $topic = ↑.music.rhythm.topic;
+  if (!$topic) $topic = ↑.music.preferences.rhythm_topic;
+  if (!$topic) $topic = neutral;
+
+  $dance = ↑.music.rhythm.dance;
+  if (!$dance) $dance = ↑.music.preferences.dance;
+  if (!$dance) $dance = none;
+
+  $density = ↑.music.rhythm.density;
+  if (!$density) $density = ↑.music.preferences.density;
+  if (!$density) $density = medium;
+
+  $articulation = ↑.music.rhythm.articulation;
+  if (!$articulation) $articulation = ↑.music.preferences.articulation;
+  if (!$articulation) $articulation = neutral;
+
+  $anacrusis = ↑.music.rhythm.anacrusis;
+  if (!$anacrusis) $anacrusis = false;
+
+  $hemiola_at_cadence = ↑.music.rhythm.hemiola_at_cadence;
+  if (!$hemiola_at_cadence) $hemiola_at_cadence = false;
+
+  $ostinato = ↑.music.rhythm.ostinato;
+  if (!$ostinato) $ostinato = none;
+
+  $tonic = ↑.key.tonic;
+  if (!$tonic) $tonic = c;
+
+  $mode = ↑.key.mode;
+  if (!$mode) $mode = major;
+
+  $num = ↑.meter.num;
+  if (!$num) $num = 4;
+
+  $den = ↑.meter.den;
+  if (!$den) $den = 4;
+
+  $accidental_policy = ↑.notation.accidental_policy;
+  if (!$accidental_policy) $accidental_policy = auto;
+
+  ⇑ = ↑ ∪ [
+    title:$title,
+    composer:$composer,
+    bpm:$bpm,
+    music:[
+      style:$style,
+      form:$form,
+      phrase_model:$phrase_model,
+      rhythm:[
+        topic:$topic,
+        dance:$dance,
+        density:$density,
+        anacrusis:$anacrusis,
+        hemiola_at_cadence:$hemiola_at_cadence,
+        ostinato:$ostinato,
+        articulation:$articulation
+      ]
+    ],
+    key:[tonic:$tonic, mode:$mode],
+    meter:[num:$num, den:$den],
+    notation:[accidental_policy:$accidental_policy]
+  ];
+  ↓1 = [];
+}

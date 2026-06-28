@@ -19,6 +19,7 @@
 
 #include <algorithm>
 #include <csignal>
+#include <cctype>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
@@ -53,6 +54,8 @@ namespace
 
     time_t before;
     // time_t after;
+
+    void generate(bool trace);
 
     bool isOption(const char *arg, std::initializer_list<const char *> names)
     {
@@ -89,6 +92,7 @@ Options:\n\
 \t-r, --random                                     output one randomly selected sentence\n\
 \t--seed <number>                                  random seed for reproducible generation\n\
 \t-f, --first                                      output the first sentence\n\
+\t--server-stdio                                   read one input per stdin line and flush each result\n\
 \t--strategy <exhaustive|sample|beam>              derivation strategy; default: exhaustive\n\
 \t--max-rule-choices <number>                      maximum rule/disjunction choices opened in sample mode\n\
 \t--beam-width <number>                            maximum items kept per state in beam mode\n\
@@ -120,6 +124,39 @@ Options:\n\
     void sig_handler(int signum)
     {
         throw fatal_exception("alarm signal " + std::to_string(signum) + ": out of time");
+    }
+
+    bool isBlankOrComment(const std::string &s)
+    {
+        auto first = std::find_if_not(
+            s.begin(),
+            s.end(),
+            [](unsigned char c)
+            {
+                return std::isspace(c);
+            });
+
+        return first == s.end() ||
+               (*first == '/' &&
+                (first + 1) != s.end() &&
+                *(first + 1) == '/');
+    }
+
+    void processInputBuffer(const std::string &s, bool trace, const std::string &bufferName = "input")
+    {
+        if (isBlankOrComment(s))
+        {
+            return;
+        }
+
+        parser.parseBuffer("@input (", ")", s, bufferName);
+        generate(trace);
+    }
+
+    void writeServerRecordSeparator()
+    {
+        std::cout << "\x1e" << std::endl;
+        std::cout << std::flush;
     }
 
     void generate(bool trace)
@@ -195,6 +232,7 @@ Options:\n\
 int main(int argn, char **argv)
 {
     bool trace = false;
+    bool serverStdio = false;
 
     try
     {
@@ -243,6 +281,10 @@ int main(int argn, char **argv)
             else if (isOption(option, {"-f", "--first"}))
             {
                 generator.setFirstResult(true);
+            }
+            else if (isOption(option, {"--server-stdio", "--stdio-server"}))
+            {
+                serverStdio = true;
             }
             else if (isOption(option, {"-t", "--trace"}))
             {
@@ -451,46 +493,62 @@ int main(int argn, char **argv)
 )";
         }
 
-        if (generator.getInputFileName().length() > 0)
+        if (serverStdio)
         {
-            parser.parseFile("@input (", ")", generator.getInputFileName());
-            generate(trace);
-        }
-        else
-        {
+            if (generator.getInputFileName().length() > 0 || !generator.emptyInputs())
+            {
+                throw usage_exception("--server-stdio cannot be used with --input-file or positional inputs");
+            }
+
             std::string line;
 
             while (std::getline(std::cin, line))
             {
-                generator.addInput(line);
-            }
-        }
-
-        if (!generator.emptyInputs())
-        {
-            for (auto it = generator.cbeginInputs(); it != generator.cendInputs(); ++it)
-            {
-                const std::string &s = *it;
-
-                auto first = std::find_if_not(
-                    s.begin(),
-                    s.end(),
-                    [](unsigned char c)
-                    {
-                        return std::isspace(c);
-                    });
-
-                if (first == s.end() ||
-                    (first != s.end() &&
-                     *first == '/' &&
-                     (first + 1) != s.end() &&
-                     *(first + 1) == '/'))
+                if (isBlankOrComment(line))
                 {
                     continue;
                 }
 
-                parser.parseBuffer("@input (", ")", s, "input");
+                try
+                {
+                    processInputBuffer(line, trace);
+                    writeServerRecordSeparator();
+                }
+                catch (parser_exception &e)
+                {
+                    std::cout << "ERROR\tparser\t" << e.what() << std::endl;
+                    writeServerRecordSeparator();
+                }
+                catch (fatal_exception &e)
+                {
+                    std::cout << "ERROR\tfatal\t" << e.what() << std::endl;
+                    writeServerRecordSeparator();
+                }
+            }
+        }
+        else
+        {
+            if (generator.getInputFileName().length() > 0)
+            {
+                parser.parseFile("@input (", ")", generator.getInputFileName());
                 generate(trace);
+            }
+            else
+            {
+                std::string line;
+
+                while (std::getline(std::cin, line))
+                {
+                    generator.addInput(line);
+                }
+            }
+
+            if (!generator.emptyInputs())
+            {
+                for (auto it = generator.cbeginInputs(); it != generator.cendInputs(); ++it)
+                {
+                    processInputBuffer(*it, trace);
+                }
             }
         }
 

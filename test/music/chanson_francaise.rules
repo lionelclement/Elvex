@@ -1,0 +1,231 @@
+// =============================================================================
+// chanson_francaise.rules
+// =============================================================================
+// Forme chanson française standard : voix + guitare, intro, couplets, refrains, outro. Rôles : chanson_voice et chanson_guitar.
+//
+
+// -----------------------------------------------------------------------------
+// Chanson française : voix + guitare nylon
+// -----------------------------------------------------------------------------
+// Module additif. Il est sélectionné uniquement par :
+//   music:[style:chanson_francaise, form:chanson_francaise_couplet_refrain]
+//   ensemble:[type:chanson_francaise_voix_guitare]
+// Aucune routage classique/pop/guitare existante n’est modifiée.
+//
+// La référence musicale est une esquisse simple de chanson française :
+// intro - couplet - refrain - couplet varié - refrain final - outro
+// avec une ligne vocale syllabique, des respirations/silences, et une guitare nylon arpégée.
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// Entrées chanson française standard.
+// La voix et la guitare partagent la même forme globale : intro, couplet,
+// refrain, deuxième couplet, refrain final, outro.
+// -----------------------------------------------------------------------------
+MUSICAL_FORM → CHANSON_VOICE_FORM
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+// 72 mesures au total, proche du fichier .ly de référence :
+// intro 4 + couplet 16 + refrain 16 + couplet 16 + refrain final 16 + outro 4.
+// À 92 bpm, cela dure un peu plus de 3 minutes ; à 104 bpm, un peu moins de 3 minutes.
+@withoutSpaces
+CHANSON_VOICE_FORM → CHANSON_VOICE_INTRO_4 CHANSON_VOICE_VERSE1_16 CHANSON_VOICE_CHORUS_16 CHANSON_VOICE_VERSE2_16 CHANSON_VOICE_FINAL_CHORUS_16 CHANSON_VOICE_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[last_function:tonic, cadence:authentic]; }
+
+@withoutSpaces
+CHANSON_GUITAR_FORM → CHANSON_GTR_INTRO_4 CHANSON_GTR_VERSE1_16 CHANSON_GTR_CHORUS_16 CHANSON_GTR_VERSE2_16 CHANSON_GTR_FINAL_CHORUS_16 CHANSON_GTR_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[last_function:tonic, cadence:authentic]; }
+
+// -----------------------------------------------------------------------------
+// Sections vocales. Les décalages sont relatifs à la tonique. En la mineur :
+//   0=a, 2=b, 3=c, 5=d, 7=e, 8=f, 10=g, 11=gis, 12=a'.
+// -----------------------------------------------------------------------------
+
+CHANSON_VOICE_INTRO_4 → REST_BAR4 CH_VOICE_INTRO_CALL CH_VOICE_INTRO_TURN CH_VOICE_HELD_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+CHANSON_VOICE_VERSE1_16 → CH_VOICE_VERSE_LOW_A CH_VOICE_VERSE_DOM_ECHO CH_VOICE_VERSE_LOW_A2 CH_VOICE_VERSE_BREATH CH_VOICE_VERSE_STEPDOWN CH_VOICE_VERSE_OPEN CH_VOICE_VERSE_COLOR CH_VOICE_HALF_CADENCE CH_VOICE_VERSE_LOW_A CH_VOICE_VERSE_DOM_ECHO CH_VOICE_VERSE_LOW_A2 CH_VOICE_VERSE_BREATH CH_VOICE_VERSE_FALL CH_VOICE_DOMINANT_LIFT CH_VOICE_AUTH_CADENCE CH_VOICE_AUTH_CADENCE_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_VOICE_CHORUS_16 → CH_VOICE_CHORUS_HOOK CH_VOICE_CHORUS_ANSWER CH_VOICE_CHORUS_RISE CH_VOICE_CHORUS_BREATH CH_VOICE_CHORUS_HIGH_LINE CH_VOICE_CHORUS_OPEN CH_VOICE_CHORUS_COLOR CH_VOICE_HALF_CADENCE CH_VOICE_CHORUS_HOOK CH_VOICE_CHORUS_ANSWER CH_VOICE_CHORUS_RISE CH_VOICE_CHORUS_BREATH CH_VOICE_CHORUS_HIGH_LINE CH_VOICE_DOMINANT_LIFT CH_VOICE_AUTH_CADENCE CH_VOICE_FINAL_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_VOICE_VERSE2_16 → CH_VOICE_VERSE_PICKUP CH_VOICE_VERSE_SPACE CH_VOICE_VERSE_LOW_A2 CH_VOICE_VERSE_BREATH CH_VOICE_VERSE_STEPDOWN CH_VOICE_VERSE_OPEN CH_VOICE_VERSE_COLOR CH_VOICE_HALF_CADENCE CH_VOICE_VERSE_LOW_A CH_VOICE_VERSE_DOM_ECHO CH_VOICE_VERSE_PICKUP2 CH_VOICE_VERSE_BREATH CH_VOICE_VERSE_FALL CH_VOICE_DOMINANT_LIFT CH_VOICE_AUTH_CADENCE CH_VOICE_AUTH_CADENCE_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_VOICE_FINAL_CHORUS_16 → CH_VOICE_CHORUS_HOOK CH_VOICE_CHORUS_ANSWER CH_VOICE_CHORUS_RISE CH_VOICE_CHORUS_BREATH CH_VOICE_CHORUS_HIGH_LINE CH_VOICE_CHORUS_OPEN CH_VOICE_CHORUS_COLOR CH_VOICE_HALF_CADENCE CH_VOICE_CHORUS_HOOK CH_VOICE_CHORUS_ANSWER CH_VOICE_CHORUS_RISE CH_VOICE_CHORUS_BREATH CH_VOICE_CHORUS_HIGH_LINE CH_VOICE_DOMINANT_LIFT CH_VOICE_AUTH_CADENCE CH_VOICE_FINAL_TAG
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_VOICE_OUTRO_4 → CH_VOICE_CHORUS_COLOR CH_VOICE_AUTH_CADENCE CH_VOICE_DOMINANT_LIFT CH_VOICE_FINAL_HOLD
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+// Cellules vocales : syllabiques, avec plusieurs silences/respirations.
+@withoutSpaces
+CH_VOICE_INTRO_CALL → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7, o2:12], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_INTRO_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_HELD_TONIC → BAR1
+{ ↓1=↑ ∪ [motif:[o1:7], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CH_VOICE_VERSE_LOW_A → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:12, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_DOM_ECHO → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:11, o2:7, o3:7], rhythm:[r1:"1/4", rr:"1/4", r2:"1/4", r3:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_LOW_A2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:12, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_BREATH → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:12, o2:12, o3:14], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_STEPDOWN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_OPEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:7, o3:10, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CH_VOICE_CHORUS_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:8, o3:12, o4:17], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CH_VOICE_HALF_CADENCE → BAR2
+{ ↓1=↑ ∪ [motif:[o1:11, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_FALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:14, o3:12, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_DOMINANT_LIFT → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:11, o3:14, o4:11], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_AUTH_CADENCE → BAR2
+{ ↓1=↑ ∪ [motif:[o1:12, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_AUTH_CADENCE_HOLD → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+
+@withoutSpaces
+CH_VOICE_CHORUS_HOOK → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_CHORUS_ANSWER → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:14, o2:10, o3:7], rhythm:[r1:"1/4", rr:"1/4", r2:"1/4", r3:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_CHORUS_RISE → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:17, o4:19], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_CHORUS_BREATH → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:14, o2:14, o3:15], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_CHORUS_HIGH_LINE → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_CHORUS_OPEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_FINAL_HOLD → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_FINAL_TAG → BAR2
+{ ↓1=↑ ∪ [motif:[o1:15, o2:12], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_PICKUP → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:12, o2:12, o3:14], rhythm:[r1:"1/4", rr:"1/4", r2:"1/4", r3:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_SPACE → BAR2
+{ ↓1=↑ ∪ [motif:[o1:11, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_VOICE_VERSE_PICKUP2 → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:14], rhythm:[r1:"1/4", rr:"1/4", r2:"1/4", r3:"1/4"]]; ⇑=⇓1; }
+
+// -----------------------------------------------------------------------------
+// Sections de guitare. Arpèges de guitare nylon + quelques accords plaqués.
+// En la mineur, les fondamentales utilisent les décalages : i=0, V=7, iv=5, VII=10, III=3, VI=8.
+// -----------------------------------------------------------------------------
+
+CHANSON_GTR_INTRO_4 → CH_GTR_ARP_TONIC CH_GTR_ARP_DOMINANT CH_GTR_ARP_TONIC CH_GTR_ARP_DOMINANT
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:dominant]; }
+
+CHANSON_GTR_VERSE1_16 → CH_GTR_STRUM_TONIC CH_GTR_STRUM_DOMINANT CH_GTR_STRUM_TONIC CH_GTR_STRUM_SUBDOM CH_GTR_STRUM_SEVENTH CH_GTR_STRUM_RELMAJ CH_GTR_STRUM_SUBMED CH_GTR_STRUM_DOMINANT CH_GTR_ARP_TONIC CH_GTR_ARP_DOMINANT CH_GTR_ARP_TONIC CH_GTR_ARP_SUBDOM CH_GTR_STRUM_SUBMED CH_GTR_STRUM_DOMINANT CH_GTR_ARP_TONIC CH_GTR_HOLD_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_GTR_CHORUS_16 → CH_GTR_ARP_RELMAJ CH_GTR_ARP_SEVENTH CH_GTR_ARP_TONIC CH_GTR_ARP_DOMINANT CH_GTR_ARP_SUBMED CH_GTR_ARP_RELMAJ CH_GTR_ARP_SUBDOM CH_GTR_ARP_DOMINANT CH_GTR_PAIR_REL_SEV CH_GTR_PAIR_TON_DOM CH_GTR_PAIR_SUB_REL CH_GTR_PAIR_SUB_DOM CH_GTR_ARP_SUBMED CH_GTR_ARP_DOMINANT CH_GTR_ARP_TONIC CH_GTR_HOLD_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_GTR_VERSE2_16 → CH_GTR_STRUM_TONIC CH_GTR_STRUM_DOMINANT CH_GTR_STRUM_TONIC CH_GTR_STRUM_SUBDOM CH_GTR_STRUM_SEVENTH CH_GTR_STRUM_RELMAJ CH_GTR_STRUM_SUBMED CH_GTR_STRUM_DOMINANT CH_GTR_ARP_TONIC CH_GTR_ARP_DOMINANT CH_GTR_ARP_TONIC CH_GTR_ARP_SUBDOM CH_GTR_STRUM_SUBMED CH_GTR_STRUM_DOMINANT CH_GTR_ARP_TONIC CH_GTR_HOLD_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_GTR_FINAL_CHORUS_16 → CH_GTR_ARP_RELMAJ CH_GTR_ARP_SEVENTH CH_GTR_ARP_TONIC CH_GTR_ARP_DOMINANT CH_GTR_ARP_SUBMED CH_GTR_ARP_RELMAJ CH_GTR_ARP_SUBDOM CH_GTR_ARP_DOMINANT CH_GTR_PAIR_REL_SEV CH_GTR_PAIR_TON_DOM CH_GTR_PAIR_SUB_REL CH_GTR_PAIR_SUB_DOM CH_GTR_ARP_SUBMED CH_GTR_ARP_DOMINANT CH_GTR_ARP_TONIC CH_GTR_HOLD_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+
+CHANSON_GTR_OUTRO_4 → CH_GTR_ARP_SUBDOM CH_GTR_ARP_TONIC CH_GTR_ARP_DOMINANT CH_GTR_HOLD_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+// Arpèges à quatre événements. Chaque événement est une noire pour garder la routage robuste.
+@withoutSpaces
+CH_GTR_ARP_TONIC → BAR4
+{ ↓1=↑ ∪ [motif:[o1:0, o2:7, o3:12, o4:15], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_ARP_DOMINANT → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:14, o3:19, o4:23], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_ARP_SUBDOM → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5, o2:12, o3:17, o4:20], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_ARP_SEVENTH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:14, o3:17, o4:22], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_ARP_RELMAJ → BAR4
+{ ↓1=↑ ∪ [motif:[o1:3, o2:10, o3:15, o4:19], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_ARP_SUBMED → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:15, o3:20, o4:24], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+
+// Accords grattés.
+@withoutSpaces
+CH_GTR_STRUM_TONIC → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:0, q1:min, root2:0, q2:min, root3:0, q3:min, root4:0, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_STRUM_DOMINANT → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:7, q1:maj, root2:7, q2:maj, root3:7, q3:maj, root4:7, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_STRUM_SUBDOM → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:5, q1:min, root2:5, q2:min, root3:5, q3:min, root4:5, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_STRUM_SEVENTH → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:10, q1:maj, root2:10, q2:maj, root3:10, q3:maj, root4:10, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_STRUM_RELMAJ → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:3, q1:maj, root2:3, q2:maj, root3:3, q3:maj, root4:3, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_STRUM_SUBMED → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:8, q1:maj, root2:8, q2:maj, root3:8, q3:maj, root4:8, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+
+// Mesures à deux accords pour le mouvement du refrain.
+@withoutSpaces
+CH_GTR_PAIR_REL_SEV → CHORD_BAR2
+{ ↓1=↑ ∪ [chords:[root1:3, q1:maj, root2:10, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_PAIR_TON_DOM → CHORD_BAR2
+{ ↓1=↑ ∪ [chords:[root1:0, q1:min, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_PAIR_SUB_REL → CHORD_BAR2
+{ ↓1=↑ ∪ [chords:[root1:5, q1:min, root2:3, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_PAIR_SUB_DOM → CHORD_BAR2
+{ ↓1=↑ ∪ [chords:[root1:5, q1:min, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CH_GTR_HOLD_TONIC → CHORD_BAR1
+{ ↓1=↑ ∪ [root:0, quality:min, dur:"1/1"]; ⇑=⇓1; }

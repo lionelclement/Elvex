@@ -1,0 +1,11 @@
+Axiom [HEAD:FAIRE_PEUR, i:[HEAD:LIEU, @s, dem:yes], iii:[HEAD:ENFANT, @p, @def]]
+Axiom [HEAD:FAIRE_PEUR, lex_func:magn, i:[HEAD:LIEU, @s, dem:yes], iii:[HEAD:ENFANT, @p, @def]]
+
+Axiom [HEAD:RENDRE_HOMMAGE, i:[HEAD:PRÉSIDENT, @ms, @def], iii:[HEAD:VICTIME, @p, @def]]
+Axiom [HEAD:RENDRE_HOMMAGE, lex_func:magn, i:[HEAD:PRÉSIDENT, @ms, @def], iii:[HEAD:VICTIME, @p, @def]]
+
+Axiom [HEAD:RENDRE_VISITE, i:[HEAD:PAUL], iii:[HEAD:VOISIN, @fs, @poss, personPoss:three, numberPoss:sg]]
+Axiom [HEAD:RENDRE_VISITE, lex_func:magn, i:[HEAD:PAUL], iii:[HEAD:VOISIN, @fs, @poss, personPoss:three, numberPoss:sg]]
+
+Axiom [HEAD:PORTER_PLAINTE, i:[HEAD:MARIE], iii:[HEAD:ENTREPRISE, @s, @def]]
+Axiom [HEAD:PORTER_PLAINTE, i:[HEAD:MARIE], ii:[mod:<[HEAD:EXPOSER, ii:[HEAD:FAIT]]>], iii:[HEAD:ENTREPRISE, @s, @def]]

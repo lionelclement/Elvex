@@ -1,0 +1,38 @@
+PIECE [
+  generation:[syntax:instrument_roles, strict:false, fallback:true],
+
+  title:"Structured Circus Fanfare",
+  composer:"Elvex",
+  bpm:96,
+
+  music:[
+    style:classical_19c,
+    form:circus_tonal_period_8,
+    phrase_model:periodic,
+    rhythm:[
+      topic:circus_galop,
+      dance:march,
+      density:moderate,
+      anacrusis:false,
+      hemiola_at_cadence:false,
+      ostinato:oom_pah,
+      articulation:mixed
+    ]
+  ],
+
+  ensemble:[
+    instruments:[
+      count:6,
+      i1:[id:sax, name:"Alto Sax", family:woodwind, role:lead, midi:"alto sax", clef:treble, octave:4, dynamic:f],
+      i2:[id:clarinet, name:"Clarinet", family:woodwind, role:countermelody, midi:"clarinet", clef:treble, octave:5, dynamic:mf],
+      i3:[id:trumpet, name:"Trumpet", family:brass, role:harmonic_support, midi:"trumpet", clef:treble, octave:5, dynamic:f],
+      i4:[id:trombone, name:"Trombone", family:brass, role:accent, midi:"trombone", clef:bass, octave:3, dynamic:mf],
+      i5:[id:tuba, name:"Tuba", family:brass, role:bass, midi:"tuba", clef:bass, octave:2, dynamic:mf],
+      i6:[id:perc, name:"Percussion", family:percussion, role:rhythmic_pedal, midi:"woodblock", clef:percussion, octave:3, dynamic:f]
+    ]
+  ],
+
+  key:[tonic:c, mode:major],
+  notation:[accidental_policy:sharp],
+  meter:[num:2, den:4]
+]

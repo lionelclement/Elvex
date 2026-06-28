@@ -1,0 +1,68 @@
+# Build artifacts
+/build/
+/cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+
+# Binaries
+/bin/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+a.out
+
+# Logs and generated reports
+*.log
+log.html
+log.txt
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+
+# Python cache
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Local scratch files
+detruire
+detruire.txt
+src.zip
+
+# Web app local config/runtime
+elvex-www/tmp/
+elvex-www/config/config.local.php
+
+# Benchmark generated data/results
+benchmark/**/__pycache__/
+benchmark/**/*.pyc
+benchmark/**/*.log
+benchmark/**/log.html
+benchmark/**/log.txt
+benchmark/**/*.zip
+benchmark/**/outputs_*
+benchmark/**/details_*.jsonl
+benchmark/**/metrics_*.json
+benchmark/**/results/
+benchmark/**/runs/
+benchmark/**/data/raw/
+benchmark/**/data/processed/
+benchmark/**/inputs_*/*
+
+# Local/unpublished work
+benchmark/
+motiflow-poc/
+test/*.morpho
+test/*.pattern

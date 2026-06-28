@@ -1,0 +1,422 @@
+// =============================================================================
+// chanson_francaise_variants.rules
+// =============================================================================
+// Variantes de chanson française : lyrique, parlée, nostalgique, refrain hook. Chaque variante garde la logique couplet/refrain mais change les motifs.
+//
+
+// -----------------------------------------------------------------------------
+// Chanson française : variantes mélodiques explicites
+// -----------------------------------------------------------------------------
+// Extension additive. Elle ne modifie pas la forme originale
+//   chanson_francaise_couplet_refrain
+// Les nouveaux inputs peuvent choisir une famille mélodique spécifique en utilisant l’une de ces formes :
+//   chanson_francaise_couplet_refrain_lyrique
+//   chanson_francaise_couplet_refrain_parle
+//   chanson_francaise_couplet_refrain_nostalgique
+//   chanson_francaise_couplet_refrain_refrain_hook
+//
+// La guitare réutilise le CHANSON_GUITAR_FORM stable de chanson_francaise.rules.
+// Seule la ligne de voix/mélodie change.
+
+@withoutSpaces
+MUSICAL_FORM → CHANSON_VOICE_FORM_LYRIQUE
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_lyrique]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_lyrique]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → CHANSON_VOICE_FORM_PARLE
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_parle]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_parle]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → CHANSON_VOICE_FORM_NOSTALGIQUE
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_nostalgique]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_nostalgique]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → CHANSON_VOICE_FORM_REFRAIN_HOOK
+{ [role:chanson_voice, form:chanson_francaise_couplet_refrain_refrain_hook]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → CHANSON_GUITAR_FORM
+{ [role:chanson_guitar, form:chanson_francaise_couplet_refrain_refrain_hook]; [num:$num, den:$den] ⊂ ↑; ↓1 = ↑; ⇑ = ⇓1; }
+
+// Même architecture de 72 mesures que la forme de chanson originale.
+@withoutSpaces
+CHANSON_VOICE_FORM_LYRIQUE → CHV_LYR_INTRO_4 CHV_LYR_VERSE1_16 CHV_LYR_CHORUS_16 CHV_LYR_VERSE2_16 CHV_LYR_FINAL_CHORUS_16 CHV_LYR_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[last_function:tonic, cadence:authentic]; }
+@withoutSpaces
+CHANSON_VOICE_FORM_PARLE → CHV_PAR_INTRO_4 CHV_PAR_VERSE1_16 CHV_PAR_CHORUS_16 CHV_PAR_VERSE2_16 CHV_PAR_FINAL_CHORUS_16 CHV_PAR_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[last_function:tonic, cadence:authentic]; }
+@withoutSpaces
+CHANSON_VOICE_FORM_NOSTALGIQUE → CHV_NOS_INTRO_4 CHV_NOS_VERSE1_16 CHV_NOS_CHORUS_16 CHV_NOS_VERSE2_16 CHV_NOS_FINAL_CHORUS_16 CHV_NOS_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[last_function:tonic, cadence:authentic]; }
+@withoutSpaces
+CHANSON_VOICE_FORM_REFRAIN_HOOK → CHV_HOOK_INTRO_4 CHV_HOOK_VERSE1_16 CHV_HOOK_CHORUS_16 CHV_HOOK_VERSE2_16 CHV_HOOK_FINAL_CHORUS_16 CHV_HOOK_OUTRO_4
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[last_function:tonic, cadence:authentic]; }
+
+// -----------------------------------------------------------------------------
+// LYRIQUE : arches plus longues, moins de notes répétées, refrain plus ample.
+// -----------------------------------------------------------------------------
+CHV_LYR_INTRO_4 → REST_BAR4 CHV_LYR_A CHV_LYR_B CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CHV_LYR_VERSE1_16 → CHV_LYR_A CHV_LYR_B CHV_LYR_C CHV_BREATH_1 CHV_LYR_D CHV_LYR_E CHV_LYR_F CHV_HALF_1 CHV_LYR_A2 CHV_LYR_B2 CHV_LYR_C2 CHV_BREATH_2 CHV_LYR_DESC CHV_DOM_LIFT CHV_AUTH_1 CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_LYR_CHORUS_16 → CHV_LYR_CH_HOOK CHV_LYR_CH_ANSWER CHV_LYR_CH_RISE CHV_BREATH_1 CHV_LYR_CH_HIGH CHV_LYR_CH_OPEN CHV_LYR_CH_COLOR CHV_HALF_2 CHV_LYR_CH_HOOK2 CHV_LYR_CH_ANSWER CHV_LYR_CH_RISE2 CHV_BREATH_2 CHV_LYR_CH_HIGH2 CHV_DOM_LIFT CHV_AUTH_2 CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_LYR_VERSE2_16 → CHV_LYR_A2 CHV_LYR_SPACE CHV_LYR_C CHV_BREATH_1 CHV_LYR_D2 CHV_LYR_E CHV_LYR_F2 CHV_HALF_1 CHV_LYR_A CHV_LYR_B2 CHV_LYR_C2 CHV_BREATH_2 CHV_LYR_DESC CHV_DOM_LIFT CHV_AUTH_1 CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_LYR_FINAL_CHORUS_16 → CHV_LYR_CH_HOOK CHV_LYR_CH_ANSWER CHV_LYR_CH_RISE CHV_BREATH_1 CHV_LYR_CH_HIGH CHV_LYR_CH_OPEN CHV_LYR_CH_COLOR CHV_HALF_2 CHV_LYR_CH_HOOK2 CHV_LYR_CH_ANSWER CHV_LYR_CH_RISE2 CHV_BREATH_2 CHV_LYR_CH_HIGH2 CHV_DOM_LIFT CHV_AUTH_2 CHV_FINAL_TAG_UP
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_LYR_OUTRO_4 → CHV_LYR_CH_COLOR CHV_AUTH_1 CHV_DOM_LIFT CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+// -----------------------------------------------------------------------------
+// PARLE : tessiture plus grave, davantage de silences, chanson parlée / récit.
+// -----------------------------------------------------------------------------
+CHV_PAR_INTRO_4 → REST_BAR4 CHV_PAR_LOW_CALL CHV_PAR_TURN CHV_PAR_REST_ANSWER
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CHV_PAR_VERSE1_16 → CHV_PAR_LOW_CALL CHV_PAR_REST_ANSWER CHV_PAR_LOW_STEP CHV_BREATH_1 CHV_PAR_REPEAT CHV_PAR_FALL CHV_PAR_COLOR CHV_HALF_1 CHV_PAR_LOW_CALL2 CHV_PAR_REST_ANSWER CHV_PAR_LOW_STEP2 CHV_BREATH_2 CHV_PAR_FALL2 CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_LONG_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_PAR_CHORUS_16 → CHV_PAR_CH_HOOK CHV_PAR_CH_ANSWER CHV_PAR_CH_OPEN CHV_BREATH_1 CHV_PAR_CH_HOOK2 CHV_PAR_CH_ANSWER2 CHV_PAR_CH_COLOR CHV_HALF_2 CHV_PAR_CH_HOOK CHV_PAR_CH_ANSWER CHV_PAR_CH_OPEN2 CHV_BREATH_2 CHV_PAR_CH_COLOR2 CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_PAR_VERSE2_16 → CHV_PAR_LOW_CALL2 CHV_PAR_REST_ANSWER CHV_PAR_LOW_STEP CHV_BREATH_1 CHV_PAR_REPEAT2 CHV_PAR_FALL CHV_PAR_COLOR2 CHV_HALF_1 CHV_PAR_LOW_CALL CHV_PAR_REST_ANSWER CHV_PAR_LOW_STEP2 CHV_BREATH_2 CHV_PAR_FALL2 CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_LONG_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_PAR_FINAL_CHORUS_16 → CHV_PAR_CH_HOOK CHV_PAR_CH_ANSWER CHV_PAR_CH_OPEN CHV_BREATH_1 CHV_PAR_CH_HOOK2 CHV_PAR_CH_ANSWER2 CHV_PAR_CH_COLOR CHV_HALF_2 CHV_PAR_CH_HOOK CHV_PAR_CH_ANSWER CHV_PAR_CH_OPEN2 CHV_BREATH_2 CHV_PAR_CH_COLOR2 CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_FINAL_TAG_DOWN
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_PAR_OUTRO_4 → CHV_PAR_CH_COLOR CHV_AUTH_LOW CHV_PAR_REST_ANSWER CHV_LONG_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+// -----------------------------------------------------------------------------
+// NOSTALGIQUE : gestes descendants, tournures expressives proches de l’appoggiature.
+// -----------------------------------------------------------------------------
+CHV_NOS_INTRO_4 → REST_BAR4 CHV_NOS_SIGH CHV_NOS_TURN CHV_LONG_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CHV_NOS_VERSE1_16 → CHV_NOS_SIGH CHV_NOS_REPLY CHV_NOS_FALL CHV_BREATH_1 CHV_NOS_OPEN CHV_NOS_LOW_TURN CHV_NOS_COLOR CHV_HALF_1 CHV_NOS_SIGH2 CHV_NOS_REPLY CHV_NOS_FALL2 CHV_BREATH_2 CHV_NOS_DESC CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_LONG_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_NOS_CHORUS_16 → CHV_NOS_CH_HOOK CHV_NOS_CH_REPLY CHV_NOS_CH_RISE CHV_BREATH_1 CHV_NOS_CH_HIGH CHV_NOS_CH_FALL CHV_NOS_CH_COLOR CHV_HALF_2 CHV_NOS_CH_HOOK2 CHV_NOS_CH_REPLY CHV_NOS_CH_RISE2 CHV_BREATH_2 CHV_NOS_CH_HIGH2 CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_NOS_VERSE2_16 → CHV_NOS_SIGH2 CHV_NOS_REPLY CHV_NOS_FALL CHV_BREATH_1 CHV_NOS_OPEN2 CHV_NOS_LOW_TURN CHV_NOS_COLOR2 CHV_HALF_1 CHV_NOS_SIGH CHV_NOS_REPLY CHV_NOS_FALL2 CHV_BREATH_2 CHV_NOS_DESC CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_LONG_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_NOS_FINAL_CHORUS_16 → CHV_NOS_CH_HOOK CHV_NOS_CH_REPLY CHV_NOS_CH_RISE CHV_BREATH_1 CHV_NOS_CH_HIGH CHV_NOS_CH_FALL CHV_NOS_CH_COLOR CHV_HALF_2 CHV_NOS_CH_HOOK2 CHV_NOS_CH_REPLY CHV_NOS_CH_RISE2 CHV_BREATH_2 CHV_NOS_CH_HIGH2 CHV_DOM_LIFT_LOW CHV_AUTH_LOW CHV_FINAL_TAG_DOWN
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_NOS_OUTRO_4 → CHV_NOS_DESC CHV_AUTH_LOW CHV_NOS_TURN CHV_LONG_TONIC_LOW
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+// -----------------------------------------------------------------------------
+// REFRAIN_HOOK : motif de refrain répété et plus mémorisable.
+// -----------------------------------------------------------------------------
+CHV_HOOK_INTRO_4 → REST_BAR4 CHV_HOOK_CELL CHV_HOOK_ANSWER CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+CHV_HOOK_VERSE1_16 → CHV_HOOK_VERSE_A CHV_HOOK_VERSE_B CHV_HOOK_VERSE_C CHV_BREATH_1 CHV_HOOK_VERSE_D CHV_HOOK_VERSE_E CHV_HOOK_VERSE_F CHV_HALF_1 CHV_HOOK_VERSE_A2 CHV_HOOK_VERSE_B CHV_HOOK_VERSE_C2 CHV_BREATH_2 CHV_HOOK_VERSE_FALL CHV_DOM_LIFT CHV_AUTH_1 CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_HOOK_CHORUS_16 → CHV_HOOK_CELL CHV_HOOK_ANSWER CHV_HOOK_CELL_UP CHV_BREATH_1 CHV_HOOK_CELL CHV_HOOK_TURN CHV_HOOK_LIFT CHV_HALF_2 CHV_HOOK_CELL CHV_HOOK_ANSWER CHV_HOOK_CELL_UP2 CHV_BREATH_2 CHV_HOOK_LIFT2 CHV_DOM_LIFT CHV_AUTH_2 CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_HOOK_VERSE2_16 → CHV_HOOK_VERSE_A2 CHV_HOOK_VERSE_B2 CHV_HOOK_VERSE_C CHV_BREATH_1 CHV_HOOK_VERSE_D2 CHV_HOOK_VERSE_E CHV_HOOK_VERSE_F2 CHV_HALF_1 CHV_HOOK_VERSE_A CHV_HOOK_VERSE_B CHV_HOOK_VERSE_C2 CHV_BREATH_2 CHV_HOOK_VERSE_FALL CHV_DOM_LIFT CHV_AUTH_1 CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_HOOK_FINAL_CHORUS_16 → CHV_HOOK_CELL CHV_HOOK_ANSWER CHV_HOOK_CELL_UP CHV_BREATH_1 CHV_HOOK_CELL CHV_HOOK_TURN CHV_HOOK_LIFT CHV_HALF_2 CHV_HOOK_CELL CHV_HOOK_ANSWER CHV_HOOK_CELL_UP2 CHV_BREATH_2 CHV_HOOK_LIFT2 CHV_DOM_LIFT CHV_AUTH_2 CHV_FINAL_TAG_UP
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ↓9=↑; ↓10=↑; ↓11=↑; ↓12=↑; ↓13=↑; ↓14=↑; ↓15=↑; ↓16=↑; ⇑=[cadence:authentic]; }
+CHV_HOOK_OUTRO_4 → CHV_HOOK_CELL CHV_AUTH_1 CHV_HOOK_ANSWER CHV_LONG_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[last_function:tonic]; }
+
+// -----------------------------------------------------------------------------
+// Cellules partagées.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+CHV_BREATH_1 → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:12, o2:10, o3:7], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_BREATH_2 → BAR4_REST_AFTER_1
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10], rhythm:[r1:"1/2", rr:"1/4", r2:"1/8", r3:"1/8"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HALF_1 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:11, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HALF_2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:14, o2:11], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_DOM_LIFT → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:11, o3:14, o4:16], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_DOM_LIFT_LOW → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:11, o3:14, o4:11], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_AUTH_1 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:12, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_AUTH_2 → BAR2
+{ ↓1=↑ ∪ [motif:[o1:16, o2:12], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_AUTH_LOW → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7, o2:0], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LONG_TONIC → BAR1
+{ ↓1=↑ ∪ [motif:[o1:12], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LONG_TONIC_LOW → BAR1
+{ ↓1=↑ ∪ [motif:[o1:7], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_FINAL_TAG_UP → BAR2
+{ ↓1=↑ ∪ [motif:[o1:16, o2:19], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_FINAL_TAG_DOWN → BAR2
+{ ↓1=↑ ∪ [motif:[o1:12, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+
+// Cellules lyriques
+@withoutSpaces
+CHV_LYR_A → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:12, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_A2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_B → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_B2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:16, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_C → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:14, o3:16, o4:19], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_C2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:17, o4:16], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_D → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:19, o3:17, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_D2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:17, o3:19, o4:17], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_E → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_F → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_F2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:16, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_DESC → BAR4
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:15, o4:12], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_SPACE → BAR2
+{ ↓1=↑ ∪ [motif:[o1:14, o2:10], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_HOOK → BAR4
+{ ↓1=↑ ∪ [motif:[o1:19, o2:19, o3:17, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_HOOK2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:16, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_ANSWER → BAR4
+{ ↓1=↑ ∪ [motif:[o1:16, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_RISE → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:19, o4:22], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_RISE2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:16, o3:19, o4:21], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_HIGH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:22, o2:21, o3:19, o4:17], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_HIGH2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:21, o2:19, o3:17, o4:16], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_OPEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:14, o3:16, o4:17], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_LYR_CH_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:12, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+
+// Cellules parlées
+@withoutSpaces
+CHV_PAR_LOW_CALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:7, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_LOW_CALL2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_REST_ANSWER → BAR2
+{ ↓1=↑ ∪ [motif:[o1:10, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_LOW_STEP → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:8, o3:10, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_LOW_STEP2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_REPEAT → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_REPEAT2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_FALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:10, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_FALL2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:10, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_COLOR2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:8, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_HOOK → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:12, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_HOOK2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_ANSWER → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:7, o3:10, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_ANSWER2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_OPEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_OPEN2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:14, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_PAR_CH_COLOR2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+
+// Cellules nostalgiques
+@withoutSpaces
+CHV_NOS_SIGH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_SIGH2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_REPLY → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_FALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:10, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_FALL2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_OPEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_OPEN2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:8, o3:12, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_LOW_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:8, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_COLOR2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_DESC → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:12, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_HOOK → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:17, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_HOOK2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:19, o3:17, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_REPLY → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_RISE → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:15, o4:17], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_RISE2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:14, o3:17, o4:19], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_HIGH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:19, o2:17, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_HIGH2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_FALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_NOS_CH_COLOR → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:12, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+
+// Cellules de hook
+@withoutSpaces
+CHV_HOOK_CELL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:12, o3:15, o4:14], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_ANSWER → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:7, o3:10, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_CELL_UP → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:15, o3:19, o4:17], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_CELL_UP2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:17, o3:21, o4:19], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:16, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_LIFT → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:14, o3:16, o4:19], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_LIFT2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:16, o3:19, o4:21], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_A → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:10, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_A2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:12, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_B → BAR4
+{ ↓1=↑ ∪ [motif:[o1:10, o2:12, o3:10, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_B2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_C → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:15, o3:14, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_C2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:14, o3:15, o4:17], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_D → BAR4
+{ ↓1=↑ ∪ [motif:[o1:15, o2:14, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_D2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:15, o3:17, o4:15], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_E → BAR4
+{ ↓1=↑ ∪ [motif:[o1:8, o2:10, o3:12, o4:10], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_F → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:10, o3:8, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_F2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:14, o2:12, o3:10, o4:8], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+CHV_HOOK_VERSE_FALL → BAR4
+{ ↓1=↑ ∪ [motif:[o1:17, o2:15, o3:12, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }

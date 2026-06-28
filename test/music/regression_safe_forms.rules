@@ -1,0 +1,255 @@
+// =============================================================================
+// regression_safe_forms.rules
+// =============================================================================
+// Formes de secours et routes stables conservées pour éviter les régressions. Ce module contient des combinaisons connues pour produire du LilyPond valide.
+//
+
+
+// -----------------------------------------------------------------------------
+// Dispatches qui doivent apparaître avant long_forms/formal_long_forms dans music.rules.
+// Ils contournent les chaînes fragiles last_offset -> opening_offset qui peuvent produire `_`.
+// -----------------------------------------------------------------------------
+
+
+// -----------------------------------------------------------------------------
+// Dispatches sûrs, exacts et prioritaires pour les fichiers générés 200/201 qui échouaient.
+// Ils évitent qu’Elvex choisisse les anciennes règles formal_long_*, dont le last_offset synthétisé
+// peut rester anonyme et causer ensuite des expressions comme 7 + _.
+// Ils sont volontairement plus spécifiques que les anciens dispatches sûrs génériques :
+// rôle exact, forme exacte, mesure et topic rythmique exacts.
+// -----------------------------------------------------------------------------
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_LEAD_32
+{ [role:flute_piano_lead, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_PIANO_RH_VARIATIONS_32
+{ [role:piano_acc_rh, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_PIANO_LH_VARIATIONS_32
+{ [role:piano_acc_lh, form:formal_long_rounded_binary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_LEAD_32
+{ [role:flute1, form:formal_long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_SUPPORT_32
+{ [role:flute2, form:formal_long_ternary, num:4, den:4, rhythm:[topic:neutral]]; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_LEAD_32
+{ [role:flute1|flute_piano_lead, form:long_ternary]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_SUPPORT_32
+{ [role:flute2, form:long_ternary]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_LEAD_32
+{ [role:flute1|flute_piano_lead, form:formal_long_ternary]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_SUPPORT_32
+{ [role:flute2, form:formal_long_ternary]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → SAFE_FLUTE_LONG_TERNARY_LEAD_32
+{ [role:flute_piano_lead, form:formal_long_rounded_binary]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_PIANO_RH_VARIATIONS_32
+{ [role:piano_acc_rh, form:formal_long_rounded_binary]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_PIANO_LH_VARIATIONS_32
+{ [role:piano_acc_lh, form:formal_long_rounded_binary]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → SAFE_PIANO_RH_VARIATIONS_32
+{ [role:piano_rh, form:formal_long_theme_and_variations]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+@withoutSpaces
+MUSICAL_FORM → SAFE_PIANO_LH_VARIATIONS_32
+{ [role:piano_lh, form:formal_long_theme_and_variations]; [num:$num, den:$den] ⊂ ↑; ↓1=↑; ⇑=⇓1; }
+
+
+// -----------------------------------------------------------------------------
+// Matériau de secours anti-régression pour d’anciens fichiers générés vides.
+//
+// Objectif :
+// Garde 101/201/202 non vides sans dépendre de chaînes fragiles comme
+// last_offset -> opening_offset. Chaque mesure reçoit explicitement tonic_pc,
+// octave et accidental_policy depuis le contexte de portée, afin qu’aucun `_` anonyme
+// n’atteigne les calculs de BAR4 / CHORD_BAR4.
+// -----------------------------------------------------------------------------
+
+@withoutSpaces
+SAFE_FLUTE_LONG_TERNARY_LEAD_32 → SAFE_FLUTE_LEAD_A_8 SAFE_FLUTE_LEAD_B_8 SAFE_FLUTE_LEAD_A_PRIME_8 SAFE_FLUTE_LEAD_CODA_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[bars:32, safe:true]; }
+
+@withoutSpaces
+SAFE_FLUTE_LONG_TERNARY_SUPPORT_32 → SAFE_FLUTE_SUPPORT_A_8 SAFE_FLUTE_SUPPORT_B_8 SAFE_FLUTE_SUPPORT_A_PRIME_8 SAFE_FLUTE_SUPPORT_CODA_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[bars:32, safe:true]; }
+
+SAFE_FLUTE_LEAD_A_8 → SAFE_FLUTE_BAR_UP SAFE_FLUTE_BAR_TURN SAFE_FLUTE_BAR_DOM SAFE_FLUTE_BAR_CLOSE SAFE_FLUTE_BAR_UP SAFE_FLUTE_BAR_SEQ SAFE_FLUTE_BAR_DOM SAFE_FLUTE_BAR_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:a]; }
+SAFE_FLUTE_LEAD_B_8 → SAFE_FLUTE_BAR_HIGH SAFE_FLUTE_BAR_SEQ SAFE_FLUTE_BAR_HIGH2 SAFE_FLUTE_BAR_DOM SAFE_FLUTE_BAR_STEPDOWN SAFE_FLUTE_BAR_TURN SAFE_FLUTE_BAR_DOM SAFE_FLUTE_BAR_CLOSE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:b]; }
+SAFE_FLUTE_LEAD_A_PRIME_8 → SAFE_FLUTE_BAR_UP SAFE_FLUTE_BAR_TURN2 SAFE_FLUTE_BAR_SEQ SAFE_FLUTE_BAR_CLOSE SAFE_FLUTE_BAR_HIGH SAFE_FLUTE_BAR_STEPDOWN SAFE_FLUTE_BAR_DOM SAFE_FLUTE_BAR_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:a_prime]; }
+SAFE_FLUTE_LEAD_CODA_8 → SAFE_FLUTE_BAR_SEQ SAFE_FLUTE_BAR_DOM SAFE_FLUTE_BAR_HIGH2 SAFE_FLUTE_BAR_CLOSE SAFE_FLUTE_BAR_STEPDOWN SAFE_FLUTE_BAR_DOM SAFE_FLUTE_BAR_CLOSE SAFE_FLUTE_BAR_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:coda]; }
+
+SAFE_FLUTE_SUPPORT_A_8 → SAFE_FLUTE_SUP_TONIC SAFE_FLUTE_SUP_THIRD SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_TONIC SAFE_FLUTE_SUP_LOW SAFE_FLUTE_SUP_THIRD SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:a_support]; }
+SAFE_FLUTE_SUPPORT_B_8 → SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_STEP SAFE_FLUTE_SUP_HIGH SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_LOW SAFE_FLUTE_SUP_STEP SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_TONIC
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:b_support]; }
+SAFE_FLUTE_SUPPORT_A_PRIME_8 → SAFE_FLUTE_SUP_TONIC SAFE_FLUTE_SUP_STEP SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_TONIC SAFE_FLUTE_SUP_LOW SAFE_FLUTE_SUP_THIRD SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:a_prime_support]; }
+SAFE_FLUTE_SUPPORT_CODA_8 → SAFE_FLUTE_SUP_STEP SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_HIGH SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_LOW SAFE_FLUTE_SUP_DOM SAFE_FLUTE_SUP_TONIC SAFE_FLUTE_SUP_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; ⇑=[section:coda_support]; }
+
+@withoutSpaces
+SAFE_FLUTE_BAR_UP → BAR4
+{ ↓1=↑ ∪ [motif:[o1:0, o2:2, o3:4, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_TURN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:9, o3:7, o4:5], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_TURN2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:4, o2:7, o3:9, o4:7], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_DOM → BAR4
+{ ↓1=↑ ∪ [motif:[o1:2, o2:4, o3:6, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_CLOSE → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:5, o3:4, o4:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_SEQ → BAR4
+{ ↓1=↑ ∪ [motif:[o1:4, o2:5, o3:7, o4:9], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_HIGH → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:9, o3:11, o4:12], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_HIGH2 → BAR4
+{ ↓1=↑ ∪ [motif:[o1:12, o2:11, o3:9, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_STEPDOWN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:9, o2:7, o3:5, o4:4], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_BAR_FINAL → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+
+@withoutSpaces
+SAFE_FLUTE_SUP_TONIC → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0, o2:4], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_SUP_THIRD → BAR2
+{ ↓1=↑ ∪ [motif:[o1:4, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_SUP_DOM → BAR2
+{ ↓1=↑ ∪ [motif:[o1:7, o2:6], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_SUP_LOW → BAR2
+{ ↓1=↑ ∪ [motif:[o1:0, o2:2], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_SUP_STEP → BAR4
+{ ↓1=↑ ∪ [motif:[o1:2, o2:4, o3:5, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_SUP_HIGH → BAR2
+{ ↓1=↑ ∪ [motif:[o1:9, o2:7], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_FLUTE_SUP_FINAL → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+
+@withoutSpaces
+SAFE_PIANO_RH_VARIATIONS_32 → SAFE_PIANO_RH_THEME_8 SAFE_PIANO_RH_RHYTHM_8 SAFE_PIANO_RH_REGISTER_8 SAFE_PIANO_RH_CODA_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[bars:32, safe:true]; }
+@withoutSpaces
+SAFE_PIANO_LH_VARIATIONS_32 → SAFE_PIANO_LH_THEME_8 SAFE_PIANO_LH_RHYTHM_8 SAFE_PIANO_LH_REGISTER_8 SAFE_PIANO_LH_CODA_8
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[bars:32, safe:true]; }
+
+SAFE_PIANO_RH_THEME_8 → SAFE_RH_I SAFE_RH_IV SAFE_RH_V SAFE_RH_I SAFE_RH_VI SAFE_RH_IV SAFE_RH_V SAFE_RH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+SAFE_PIANO_RH_RHYTHM_8 → SAFE_RH_I_ALT SAFE_RH_IV_ALT SAFE_RH_V SAFE_RH_I SAFE_RH_SEQ SAFE_RH_IV SAFE_RH_V_ALT SAFE_RH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+SAFE_PIANO_RH_REGISTER_8 → SAFE_RH_HIGH_I SAFE_RH_HIGH_IV SAFE_RH_HIGH_V SAFE_RH_HIGH_I SAFE_RH_I_ALT SAFE_RH_SEQ SAFE_RH_V SAFE_RH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+SAFE_PIANO_RH_CODA_8 → SAFE_RH_SEQ SAFE_RH_IV SAFE_RH_V_ALT SAFE_RH_I SAFE_RH_IV_ALT SAFE_RH_V SAFE_RH_V_ALT SAFE_RH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+
+SAFE_PIANO_LH_THEME_8 → SAFE_LH_I SAFE_LH_IV SAFE_LH_V SAFE_LH_I SAFE_LH_VI SAFE_LH_IV SAFE_LH_V SAFE_LH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+SAFE_PIANO_LH_RHYTHM_8 → SAFE_LH_I_BROKEN SAFE_LH_IV_BROKEN SAFE_LH_V SAFE_LH_I SAFE_LH_SEQ SAFE_LH_IV SAFE_LH_V SAFE_LH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+SAFE_PIANO_LH_REGISTER_8 → SAFE_LH_LOW_I SAFE_LH_LOW_IV SAFE_LH_LOW_V SAFE_LH_LOW_I SAFE_LH_I_BROKEN SAFE_LH_SEQ SAFE_LH_V SAFE_LH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+SAFE_PIANO_LH_CODA_8 → SAFE_LH_SEQ SAFE_LH_IV SAFE_LH_V SAFE_LH_I SAFE_LH_IV_BROKEN SAFE_LH_V SAFE_LH_V SAFE_LH_I_FINAL
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ↓7=↑; ↓8=↑; }
+
+@withoutSpaces
+SAFE_RH_I → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:0, q1:maj, root2:4, q2:min, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_IV → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:5, q1:maj, root2:9, q2:min, root3:5, q3:maj, root4:9, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_V → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:7, q1:maj, root2:11, q2:dim, root3:7, q3:maj, root4:11, q4:dim], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_VI → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:9, q1:min, root2:5, q2:maj, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_SEQ → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:9, q1:min, root2:2, q2:min, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_I_ALT → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:0, q1:maj, root2:7, q2:maj, root3:4, q3:min, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_IV_ALT → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:5, q1:maj, root2:0, q2:maj, root3:2, q3:min, root4:5, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_V_ALT → CHORD_BAR4
+{ ↓1=↑ ∪ [chords:[root1:7, q1:maj, root2:7, q2:maj, root3:11, q3:dim, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_HIGH_I → CHORD_BAR4
+{ ↓1=↑ ∪ [octave:5, chords:[root1:0, q1:maj, root2:4, q2:min, root3:7, q3:maj, root4:12, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_HIGH_IV → CHORD_BAR4
+{ ↓1=↑ ∪ [octave:5, chords:[root1:5, q1:maj, root2:9, q2:min, root3:12, q3:maj, root4:9, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_HIGH_V → CHORD_BAR4
+{ ↓1=↑ ∪ [octave:5, chords:[root1:7, q1:maj, root2:11, q2:dim, root3:14, q3:maj, root4:11, q4:dim], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_HIGH_I_FINAL → CHORD_BAR1
+{ ↓1=↑ ∪ [octave:5, root:0, quality:maj, dur:"1/1"]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_RH_I_FINAL → CHORD_BAR1
+{ ↓1=↑ ∪ [root:0, quality:maj, dur:"1/1"]; ⇑=⇓1; }
+
+@withoutSpaces
+SAFE_LH_I → BAR4
+{ ↓1=↑ ∪ [motif:[o1:0, o2:7, o3:4, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_IV → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5, o2:12, o3:9, o4:12], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_V → BAR4
+{ ↓1=↑ ∪ [motif:[o1:7, o2:14, o3:11, o4:14], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_VI → BAR4
+{ ↓1=↑ ∪ [motif:[o1:9, o2:16, o3:12, o4:16], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_SEQ → BAR4
+{ ↓1=↑ ∪ [motif:[o1:9, o2:5, o3:7, o4:0], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_I_BROKEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:0, o2:4, o3:7, o4:12], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_IV_BROKEN → BAR4
+{ ↓1=↑ ∪ [motif:[o1:5, o2:9, o3:12, o4:17], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_LOW_I → BAR4
+{ ↓1=↑ ∪ [octave:2, motif:[o1:0, o2:7, o3:4, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_LOW_IV → BAR4
+{ ↓1=↑ ∪ [octave:2, motif:[o1:5, o2:12, o3:9, o4:12], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_LOW_V → BAR4
+{ ↓1=↑ ∪ [octave:2, motif:[o1:7, o2:14, o3:11, o4:14], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+@withoutSpaces
+SAFE_LH_I_FINAL → BAR1
+{ ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }

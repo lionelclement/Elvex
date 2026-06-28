@@ -29,7 +29,7 @@
 #include "serializable.hpp"
 #include "parser.hpp"
 #include "generator.hpp"
-#include "orderspec.hpp"
+#include "orderspecs.hpp"
 
 class Item : public Facade,
              public Serializable
@@ -56,13 +56,13 @@ private:
     listFeaturesPtr synthesizedChildFeatures;                // ⇓
     std::vector<class ForestIdentifier *> forestIdentifiers; // forest identifiers
     environmentPtr environment;                              // variable environment
-    vectorOrderSpecs orderSpecs;
+    OrderSpecs orderSpecs;
 
     bool s_id = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
          s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
          s_inheritedChildFeatures = true, s_synthesizedFeatures = true,
-         s_synthesizedChildFeatures = true, s_statements = true, s_environment = true;
+         s_synthesizedChildFeatures = true, s_statements = true, s_environment = true, s_orderSpecs = true;
 
     void makeSerialString(void);
     void makeCoreSerialString(void);
@@ -146,14 +146,12 @@ public:
 
     void setSeen(uint8_t, bool);
 
-    void setOrderSpecs(const vectorOrderSpecs &);
+    void setOrderSpecs(const OrderSpecs &);
+
+    const OrderSpecs &getOrderSpecs() const;
+
 
     void addOrderSpec(const OrderSpec &);
-
-    const vectorOrderSpecs &getOrderSpecs() const;
-
-    // rule methods
-    // rule methods
 
     void printRule(std::ostream &, uint8_t index = UINT8_MAX, bool withSemantic = false, bool html = true) const;
 

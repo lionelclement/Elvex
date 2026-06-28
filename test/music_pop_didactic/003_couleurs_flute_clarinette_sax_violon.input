@@ -1,0 +1,30 @@
+PIECE [
+  // Exemple de couleurs de chambre : plusieurs solistes se partagent les fonctions.
+  generation:[syntax:instrument_roles, strict:false, fallback:true],
+
+  title:"Pop de chambre",
+  composer:"Elvex didactic pop",
+  bpm:96,
+
+  music:[
+    style:pop_chanson,
+    form:pop_didactic_verse_chorus_16,
+    phrase_model:verse_chorus,
+    rhythm:[topic:soft_pop, dance:none, density:low_medium, anacrusis:false, hemiola_at_cadence:false, ostinato:guitar_arpeggio, articulation:legato]
+  ],
+
+  ensemble:[instruments:[
+    count:7,
+    i1:[id:flute,  name:"Flute",      family:woodwind,        role:lead,          midi:"flute", clef:treble, octave:5, dynamic:mf],
+    i2:[id:clar,   name:"Clarinette", family:woodwind,        role:countermelody, midi:"clarinet", clef:treble, octave:4, dynamic:mp],
+    i3:[id:sax,    name:"Saxophone",  family:woodwind,        role:countermelody, midi:"alto sax", clef:treble, octave:4, dynamic:mp],
+    i4:[id:violin, name:"Violon",     family:strings,         role:pad,           midi:"violin", clef:treble, octave:4, dynamic:p],
+    i5:[id:cello,  name:"Violoncelle",family:strings,         role:bass,          midi:"cello", clef:bass, octave:2, dynamic:mp],
+    i6:[id:guitar, name:"Guitare",    family:plucked_strings, role:guitar,        midi:"acoustic guitar (nylon)", clef:treble_8, octave:3, dynamic:mp],
+    i7:[id:djembe, name:"Djembe",     family:percussion,      role:hand_drums,    midi:"woodblock", clef:percussion, octave:3, dynamic:p]
+  ]],
+
+  key:[tonic:c, mode:major, tonic_pc:0],
+  notation:[accidental_policy:sharp],
+  meter:[num:4, den:4]
+]

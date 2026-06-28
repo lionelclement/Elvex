@@ -1,2 +1,2 @@
-a a[HEAD:X];
-b b[HEAD:Y];
+a a[HEAD:X, LEMMA:_a, FORM:"aaa", isA:yes];
+b b[HEAD:Y, isA:no];

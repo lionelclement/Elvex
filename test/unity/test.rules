@@ -1,0 +1,23 @@
+S -> OK dot {
+  [HEAD:test,
+   i:[s:[ID:$X]],
+   ii:[s:[ID:$X]]];
+
+  ↓1 = [];
+  ↓2 = [];
+
+  ⇑ = ⇓1;
+}
+
+S -> BAD dot {
+  [HEAD:test,
+   i:[s:[ID:$X]],
+   ii:[s:[ID:$Y]]];
+
+   attest $X != $Y;
+
+  ↓1 = [];
+  ↓2 = [];
+
+  ⇑ = ⇓1;
+}

@@ -1,0 +1,19 @@
+S → ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank>;
+
+  ⇑ = ↑;
+}
+
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

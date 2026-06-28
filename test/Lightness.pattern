@@ -1,0 +1,30 @@
+LIEU	noun	LIEU	[]
+ENFANT	noun	ENFANT	[]
+PRÉSIDENT	noun	PRÉSIDENT	[]
+VOISIN	noun	VOISIN	[]
+VICTIME	noun	VICTIME	[]
+PEUR	noun	PEUR	[]
+HOMMAGE	noun	HOMMAGE	[]
+VISITE	noun	VISITE	[]
+PLAINTE	noun	PLAINTE	[]
+ENTREPRISE	noun	ENTREPRISE	[]
+
+PAUL	properNoun	PAUL	[]
+MARIE	properNoun	MARIE	[]
+
+IMMENSE	adj	IMMENSE	[pos:pre|post]
+ÉCLATANT	adj	ÉCLATANT	[pos:post]
+LONG	adj	LONG	[pos:pre]
+
+EXPOSER	verb	EXPOSER	[]
+
+FAIRE_PEUR	verb	FAIRE	[obj:[HEAD:PEUR, @s, @no_det], prep_obj:[form:à], lex_func:none]
+FAIRE_PEUR	verb	FAIRE	[obj:[HEAD:PEUR, @s, @indef, @det, mod:<[HEAD:IMMENSE]>], prep_obj:[form:à], lex_func:magn]
+
+RENDRE_HOMMAGE	verb	RENDRE	[obj:[HEAD:HOMMAGE, @s, @no_det], prep_obj:[form:à], lex_func:none]
+RENDRE_HOMMAGE	verb	RENDRE	[obj:[HEAD:HOMMAGE, @s, @det, @indef, mod:<[HEAD:ÉCLATANT]>], prep_obj:[form:à], lex_func:magn]
+
+RENDRE_VISITE	verb	RENDRE	[obj:[HEAD:VISITE, @s, @no_det], prep_obj:[form:à], lex_func:none]
+RENDRE_VISITE	verb	RENDRE	[obj:[HEAD:VISITE, @s, @det, @indef, mod:<[HEAD:LONG]>], prep_obj:[form:à], lex_func:magn]
+
+PORTER_PLAINTE	verb	PORTER	[obj:[HEAD:PLAINTE, @s, @no_det], prep_obj:[form:contre], lex_func:none]

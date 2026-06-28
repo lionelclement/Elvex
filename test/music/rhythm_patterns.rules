@@ -1,0 +1,341 @@
+// =============================================================================
+// rhythm_patterns.rules
+// =============================================================================
+// Variantes rythmiques et danses. Les traits music.rhythm.topic, dance, density et articulation orientent vers sicilienne, gigue, marche, sarabande, syncopes, etc.
+//
+
+// -----------------------------------------------------------------------------
+// rhythm_patterns.rules
+// -----------------------------------------------------------------------------
+// Topics rythmiques / danses optionnels sélectionnés depuis music.entrée :
+//
+//   music:[ rhythm:[topic:siciliana, dance:none, ...] ]
+//
+// Design:
+// - form reste l’architecture à grande échelle, généralement rounded_binary.
+//   - rhythm.topic / rhythm.dance sélectionnent les cellules caractéristiques.
+// - Les formes classiques existantes sont gardées par rhythm.topic:neutral, donc un
+// topic non neutre route ici au lieu de faire exploser l’ambiguïté.
+//
+// Ce premier module implémente des routes courtes et stables pour les familles métriques
+// les plus utiles. D’autres danses pourront recevoir leurs propres cellules tout en gardant le
+// même schéma d’entrée.
+// -----------------------------------------------------------------------------
+
+// --- 6/8 compound topics: siciliana, lullaby, gallop/gigue ------------------
+
+@withoutSpaces
+// -----------------------------------------------------------------------------
+// Entrées rythmiques.
+// Ces routages sont activées par music.rhythm.topic / dance / density. Elles
+// permettent de colorer une forme sans changer tout l'ensemble.
+// -----------------------------------------------------------------------------
+MUSICAL_FORM → RHYTHM_FLUTE_SICILIANA_MELODY
+{ [role:flute1, form:rounded_binary, rhythm:[topic:siciliana], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SICILIANA_SUPPORT
+{ [role:flute2, form:rounded_binary, rhythm:[topic:siciliana], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SICILIANA_MELODY
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[topic:siciliana], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_RH_SICILIANA
+{ [role:piano_rh, form:rounded_binary, rhythm:[topic:siciliana], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_LH_SICILIANA
+{ [role:piano_lh, form:rounded_binary, rhythm:[topic:siciliana], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_ACC_RH_SICILIANA
+{ [role:piano_acc_rh, form:rounded_binary, rhythm:[topic:siciliana], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_ACC_LH_SICILIANA
+{ [role:piano_acc_lh, form:rounded_binary, rhythm:[topic:siciliana], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// Gigue / gallop réutilisent le même routage en 6/8, mais avec un patron plus actif.
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_GALLOP_MELODY
+{ [role:flute1, form:rounded_binary, rhythm:[topic:gallop], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_GALLOP_SUPPORT
+{ [role:flute2, form:rounded_binary, rhythm:[topic:gallop], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_GALLOP_MELODY
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[topic:gallop], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_ACC_RH_GALLOP
+{ [role:piano_acc_rh, form:rounded_binary, rhythm:[topic:gallop], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_ACC_LH_GALLOP
+{ [role:piano_acc_lh, form:rounded_binary, rhythm:[topic:gallop], num:6, den:8]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// --- 4/4 binary topics: dotted, lombard, syncopation, march, offbeat --------
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_DOTTED_MELODY
+{ [role:flute1, form:rounded_binary, rhythm:[topic:dotted], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_DOTTED_SUPPORT
+{ [role:flute2, form:rounded_binary, rhythm:[topic:dotted], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_DOTTED_MELODY
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[topic:dotted], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_ACC_RH_DOTTED
+{ [role:piano_acc_rh, form:rounded_binary, rhythm:[topic:dotted], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_ACC_LH_DOTTED
+{ [role:piano_acc_lh, form:rounded_binary, rhythm:[topic:dotted], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_RH_DOTTED
+{ [role:piano_rh, form:rounded_binary, rhythm:[topic:dotted], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_LH_MARCH
+{ [role:piano_lh, form:rounded_binary, rhythm:[topic:dotted], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_LOMBARD_MELODY
+{ [role:flute1, form:rounded_binary, rhythm:[topic:lombard], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_LOMBARD_SUPPORT
+{ [role:flute2, form:rounded_binary, rhythm:[topic:lombard], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_LOMBARD_MELODY
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[topic:lombard], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SYNCOPATED_MELODY
+{ [role:flute1, form:rounded_binary, rhythm:[topic:syncopation], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SYNCOPATED_SUPPORT
+{ [role:flute2, form:rounded_binary, rhythm:[topic:syncopation], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SYNCOPATED_MELODY
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[topic:syncopation], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_MARCH_MELODY
+{ [role:flute1, form:rounded_binary, rhythm:[topic:march], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_MARCH_SUPPORT
+{ [role:flute2, form:rounded_binary, rhythm:[topic:march], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_MARCH_MELODY
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[topic:march], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_RH_MARCH
+{ [role:piano_rh, form:rounded_binary, rhythm:[topic:march], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_PIANO_LH_MARCH
+{ [role:piano_lh, form:rounded_binary, rhythm:[topic:march], num:4, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// --- 3/4 dance topics: sarabande, minuet, polonaise, mazurka ----------------
+
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SARABANDE_MELODY
+{ [role:flute1, form:rounded_binary, rhythm:[dance:sarabande], num:3, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SARABANDE_SUPPORT
+{ [role:flute2, form:rounded_binary, rhythm:[dance:sarabande], num:3, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+@withoutSpaces
+MUSICAL_FORM → RHYTHM_FLUTE_SARABANDE_MELODY
+{ [role:flute_piano_lead, form:rounded_binary, rhythm:[dance:sarabande], num:3, den:4]; ↓1 = ↑; ⇑ = ⇓1; }
+
+// --- Concrete melodic/support plans ----------------------------------------
+
+RHYTHM_FLUTE_SICILIANA_MELODY → SICILIANA_CALL SICILIANA_ANSWER SICILIANA_SEQUENCE SICILIANA_CADENCE SICILIANA_CALL SICILIANA_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:siciliana]; }
+
+RHYTHM_FLUTE_SICILIANA_SUPPORT → SICILIANA_SUPPORT_TONIC SICILIANA_SUPPORT_DOMINANT SICILIANA_SUPPORT_TONIC SICILIANA_SUPPORT_CADENCE SICILIANA_SUPPORT_TONIC SICILIANA_SUPPORT_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:siciliana_support]; }
+
+RHYTHM_FLUTE_GALLOP_MELODY → GALLOP_BAR GALLOP_BAR GALLOP_SEQUENCE GALLOP_CADENCE GALLOP_BAR GALLOP_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:gallop]; }
+
+RHYTHM_FLUTE_GALLOP_SUPPORT → SICILIANA_SUPPORT_TONIC SICILIANA_SUPPORT_DOMINANT SICILIANA_SUPPORT_TONIC SICILIANA_SUPPORT_CADENCE SICILIANA_SUPPORT_TONIC SICILIANA_SUPPORT_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:gallop_support]; }
+
+RHYTHM_FLUTE_DOTTED_MELODY → DOTTED_BAR DOTTED_BAR DOTTED_SEQUENCE DOTTED_CADENCE DOTTED_BAR DOTTED_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:dotted]; }
+RHYTHM_FLUTE_DOTTED_SUPPORT → MARCH_SUPPORT_BAR DOTTED_SUPPORT_BAR MARCH_SUPPORT_BAR DOTTED_SUPPORT_BAR MARCH_SUPPORT_BAR DOTTED_SUPPORT_BAR
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:dotted_support]; }
+
+RHYTHM_FLUTE_LOMBARD_MELODY → LOMBARD_BAR LOMBARD_BAR LOMBARD_SEQUENCE LOMBARD_CADENCE LOMBARD_BAR LOMBARD_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:lombard]; }
+RHYTHM_FLUTE_LOMBARD_SUPPORT → MARCH_SUPPORT_BAR DOTTED_SUPPORT_BAR MARCH_SUPPORT_BAR DOTTED_SUPPORT_BAR MARCH_SUPPORT_BAR DOTTED_SUPPORT_BAR
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:lombard_support]; }
+
+RHYTHM_FLUTE_SYNCOPATED_MELODY → SYNCOPATED_BAR SYNCOPATED_BAR SYNCOPATED_SEQUENCE SYNCOPATED_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[topic:syncopation]; }
+RHYTHM_FLUTE_SYNCOPATED_SUPPORT → SYNCOPATED_SUPPORT_BAR SYNCOPATED_SUPPORT_BAR MARCH_SUPPORT_BAR SYNCOPATED_SUPPORT_BAR
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ⇑=[topic:syncopation_support]; }
+
+RHYTHM_FLUTE_MARCH_MELODY → MARCH_BAR MARCH_BAR MARCH_SEQUENCE MARCH_CADENCE MARCH_BAR MARCH_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:march]; }
+RHYTHM_FLUTE_MARCH_SUPPORT → MARCH_SUPPORT_BAR MARCH_SUPPORT_BAR MARCH_SUPPORT_BAR MARCH_CADENCE MARCH_SUPPORT_BAR MARCH_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:march_support]; }
+
+RHYTHM_FLUTE_SARABANDE_MELODY → SARABANDE_BAR SARABANDE_BAR SARABANDE_SEQUENCE SARABANDE_CADENCE SARABANDE_BAR SARABANDE_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:sarabande]; }
+RHYTHM_FLUTE_SARABANDE_SUPPORT → SARABANDE_SUPPORT_BAR SARABANDE_SUPPORT_BAR SARABANDE_SUPPORT_BAR SARABANDE_CADENCE SARABANDE_SUPPORT_BAR SARABANDE_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:sarabande_support]; }
+
+// --- Plans de piano ---------------------------------------------------------
+
+RHYTHM_PIANO_RH_SICILIANA → PIANO_SICILIANA_CHORDS PIANO_SICILIANA_CHORDS PIANO_SICILIANA_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[topic:piano_siciliana_rh]; }
+RHYTHM_PIANO_LH_SICILIANA → PIANO_SICILIANA_BASS PIANO_SICILIANA_BASS PIANO_SICILIANA_BASS_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[topic:piano_siciliana_lh]; }
+RHYTHM_PIANO_ACC_RH_SICILIANA → PIANO_SICILIANA_CHORDS PIANO_SICILIANA_CHORDS PIANO_SICILIANA_CHORDS PIANO_SICILIANA_CADENCE PIANO_SICILIANA_CHORDS PIANO_SICILIANA_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_acc_siciliana_rh]; }
+RHYTHM_PIANO_ACC_LH_SICILIANA → PIANO_SICILIANA_BASS PIANO_SICILIANA_BASS PIANO_SICILIANA_BASS PIANO_SICILIANA_BASS_CADENCE PIANO_SICILIANA_BASS PIANO_SICILIANA_BASS_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_acc_siciliana_lh]; }
+
+RHYTHM_PIANO_ACC_RH_GALLOP → PIANO_GALLOP_CHORDS PIANO_GALLOP_CHORDS PIANO_GALLOP_CHORDS PIANO_GALLOP_CADENCE PIANO_GALLOP_CHORDS PIANO_GALLOP_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_acc_gallop_rh]; }
+RHYTHM_PIANO_ACC_LH_GALLOP → PIANO_GALLOP_BASS PIANO_GALLOP_BASS PIANO_GALLOP_BASS PIANO_GALLOP_BASS_CADENCE PIANO_GALLOP_BASS PIANO_GALLOP_BASS_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_acc_gallop_lh]; }
+RHYTHM_PIANO_ACC_RH_DOTTED → PIANO_DOTTED_CHORDS PIANO_DOTTED_CHORDS PIANO_DOTTED_CHORDS PIANO_DOTTED_CADENCE PIANO_DOTTED_CHORDS PIANO_DOTTED_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_acc_dotted_rh]; }
+RHYTHM_PIANO_ACC_LH_DOTTED → PIANO_MARCH_BASS PIANO_MARCH_BASS PIANO_MARCH_BASS PIANO_MARCH_CADENCE PIANO_MARCH_BASS PIANO_MARCH_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_acc_dotted_lh]; }
+
+RHYTHM_PIANO_RH_DOTTED → PIANO_DOTTED_CHORDS PIANO_DOTTED_CHORDS PIANO_DOTTED_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ⇑=[topic:piano_dotted_rh]; }
+RHYTHM_PIANO_RH_MARCH → MARCH_BAR MARCH_SEQUENCE MARCH_BAR MARCH_CADENCE MARCH_SEQUENCE MARCH_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_march_rh_melodic]; }
+RHYTHM_PIANO_LH_MARCH → PIANO_MARCH_BASS PIANO_MARCH_BASS PIANO_MARCH_BASS PIANO_MARCH_CADENCE PIANO_MARCH_BASS PIANO_MARCH_CADENCE
+{ ↓1=↑; ↓2=↑; ↓3=↑; ↓4=↑; ↓5=↑; ↓6=↑; ⇑=[topic:piano_march_lh]; }
+
+// --- Cellules de flûte en 6/8 ----------------------------------------------
+
+SICILIANA_CALL → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:0,o2:2,o3:4,o4:7,o5:5,o6:4], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:siciliana_call];
+}
+SICILIANA_ANSWER → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:4,o2:5,o3:7,o4:9,o5:7,o6:5], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:siciliana_answer];
+}
+SICILIANA_SEQUENCE → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:5,o2:7,o3:9,o4:12,o5:11,o6:9], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:siciliana_sequence];
+}
+SICILIANA_CADENCE → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+      motif:[o1:7,o2:5,o3:4,o4:2,o5:0,o6:0], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:siciliana_cadence_diatonic];
+}
+SICILIANA_SUPPORT_TONIC → BAR6
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:4,o4:0,o5:7,o6:4], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8"]]; ⇑=[last_function:support_tonic]; }
+SICILIANA_SUPPORT_DOMINANT → BAR6
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:14,o3:11,o4:7,o5:14,o6:11], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8"]]; ⇑=[last_function:support_dominant]; }
+SICILIANA_SUPPORT_CADENCE → BAR6
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:5,o3:4,o4:2,o5:0,o6:0], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8"]]; ⇑=[last_function:support_cadence_diatonic]; }
+
+GALLOP_BAR → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:4,o3:7,o4:4], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:gallop_broad]; }
+GALLOP_SEQUENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5,o2:9,o3:12,o4:9], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:gallop_sequence_broad]; }
+GALLOP_CADENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:5,o3:4,o4:0], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:gallop_cadence_broad]; }
+
+// --- Cellules en 4/4 --------------------------------------------------------
+
+DOTTED_BAR → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:2,o3:4,o4:7], rhythm:[r1:"3/16",r2:"1/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:dotted]; }
+DOTTED_SEQUENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5,o2:7,o3:9,o4:12], rhythm:[r1:"3/16",r2:"1/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:dotted_sequence]; }
+DOTTED_CADENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:5,o3:4,o4:0], rhythm:[r1:"3/16",r2:"1/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:dotted_cadence]; }
+DOTTED_SUPPORT_BAR → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:4,o4:0], rhythm:[r1:"3/16",r2:"1/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:dotted_support]; }
+
+LOMBARD_BAR → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:2,o3:4,o4:7], rhythm:[r1:"1/16",r2:"3/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:lombard]; }
+LOMBARD_SEQUENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5,o2:7,o3:9,o4:12], rhythm:[r1:"1/16",r2:"3/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:lombard_sequence]; }
+LOMBARD_CADENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:5,o3:4,o4:0], rhythm:[r1:"1/16",r2:"3/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:lombard_cadence]; }
+
+SYNCOPATED_BAR → BAR4_TIED_SUPPORT
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:0,o3:4,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:syncopated]; }
+SYNCOPATED_SEQUENCE → BAR4_TIED_SUPPORT
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5,o2:5,o3:9,o4:12], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:syncopated_sequence]; }
+SYNCOPATED_CADENCE → BAR4_TIED_SUPPORT
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:7,o3:4,o4:0], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:syncopated_cadence]; }
+SYNCOPATED_SUPPORT_BAR → BAR4_TIED_SUPPORT
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:0,o3:7,o4:4], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:syncopated_support]; }
+
+MARCH_BAR → BAR4_STACCATO
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:4,o3:7,o4:12], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:march]; }
+MARCH_SEQUENCE → BAR4_STACCATO
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5,o2:9,o3:12,o4:17], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:march_sequence]; }
+MARCH_CADENCE → BAR4_STACCATO
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:11,o3:4,o4:0], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:march_cadence]; }
+MARCH_SUPPORT_BAR → BAR4_STACCATO
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:0,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:march_support]; }
+
+// --- Cellules en 3/4 --------------------------------------------------------
+
+SARABANDE_BAR → BAR4_34
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:4,o3:5,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/4"]]; ⇑=[last_function:sarabande]; }
+SARABANDE_SEQUENCE → BAR4_34
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:5,o2:9,o3:7,o4:12], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/4"]]; ⇑=[last_function:sarabande_sequence]; }
+SARABANDE_CADENCE → BAR4_34
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:5,o3:4,o4:0], rhythm:[r1:"1/4",r2:"1/8",r3:"1/8",r4:"1/4"]]; ⇑=[last_function:sarabande_cadence]; }
+SARABANDE_SUPPORT_BAR → BAR3
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:4], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4"]]; ⇑=[last_function:sarabande_support]; }
+
+// --- Cellules de piano ------------------------------------------------------
+
+PIANO_SICILIANA_CHORDS → CHORD_BAR6
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:0, q2:maj, root3:0, q3:maj, root4:7, q4:maj, root5:7, q5:maj, root6:7, q6:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_chords]; }
+PIANO_SICILIANA_CHORDS → CHORD_BAR6
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:0, q2:min, root3:0, q3:min, root4:7, q4:maj, root5:7, q5:maj, root6:7, q6:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_chords]; }
+PIANO_SICILIANA_CADENCE → CHORD_BAR6
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj, root3:7, q3:maj, root4:0, q4:maj, root5:0, q5:maj, root6:0, q6:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_cadence]; }
+PIANO_SICILIANA_CADENCE → CHORD_BAR6
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj, root3:7, q3:maj, root4:0, q4:min, root5:0, q5:min, root6:0, q6:min], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_cadence]; }
+PIANO_SICILIANA_BASS → BAR6
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:12,o4:7,o5:12,o6:7], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_bass]; }
+PIANO_SICILIANA_BASS_CADENCE → BAR6
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:14,o3:11,o4:0,o5:7,o6:12], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_bass_cadence]; }
+
+PIANO_GALLOP_CHORDS → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:maj,root2:0,q2:maj,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_chords]; }
+PIANO_GALLOP_CHORDS → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:min,root2:0,q2:min,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_chords]; }
+PIANO_GALLOP_CADENCE → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7,q1:maj,root2:7,q2:maj,root3:0,q3:maj,root4:0,q4:maj], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_cadence]; }
+PIANO_GALLOP_CADENCE → CHORD_BAR4
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7,q1:maj,root2:7,q2:maj,root3:0,q3:min,root4:0,q4:min], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_cadence]; }
+PIANO_GALLOP_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:12,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_bass]; }
+PIANO_GALLOP_BASS_CADENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:12,o3:7,o4:0], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_bass_cadence]; }
+
+PIANO_DOTTED_CHORDS → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:maj,root2:0,q2:maj,root3:7,q3:maj,root4:0,q4:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:piano_dotted_chords]; }
+PIANO_DOTTED_CADENCE → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7,q1:maj,root2:7,q2:maj,root3:0,q3:maj,root4:0,q4:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/4",r4:"1/2"]]; ⇑=[last_function:piano_dotted_cadence]; }
+PIANO_MARCH_CHORDS → CHORD_BAR4
+{ [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:maj,root2:7,q2:maj,root3:0,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:piano_march_chords]; }
+PIANO_MARCH_BASS → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:0,o4:7], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:piano_march_bass]; }
+PIANO_MARCH_CADENCE → BAR4
+{ [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:7,o2:12,o3:7,o4:0], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=[last_function:piano_march_cadence]; }

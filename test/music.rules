@@ -1,0 +1,11 @@
+// =============================================================================
+// music.rules — mini-grammaire pop didactique autonome
+// =============================================================================
+// Version simplifiée après le dépassement "too much items build".
+// On n'inclut plus les gros modules historiques role_ensemble/staves/bars :
+// ils apportent beaucoup de formes anciennes et provoquent une explosion de
+// l'espace de dérivation. Ici, tout le chemin PIECE -> SCORE -> STAFF -> MUSIC
+// est local, court, commenté et borné.
+// =============================================================================
+
+#include pop_didactic.rules

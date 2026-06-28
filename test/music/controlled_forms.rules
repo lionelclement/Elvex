@@ -1,0 +1,301 @@
+// =============================================================================
+// controlled_forms.rules
+// =============================================================================
+// Versions contrôlées de formes longues. Ces règles réduisent l'ambiguïté pour éviter l'explosion du nombre de dérivations Elvex.
+//
+
+// -----------------------------------------------------------------------------
+// Variantes formelles contrôlées pour ternary et theme_and_variations.
+// -----------------------------------------------------------------------------
+// Raison d’être de ce fichier :
+// Les routages complètes de ternary/theme sont musicalement intéressantes mais peuvent devenir très
+// ambiguës, car plusieurs portées choisissent de longues chaînes de cellules au même
+// moment. Ces routages contrôlées conservent la même idée formelle, mais réduisent
+// l’espace de recherche ainsi :
+// - en routant chaque rôle/forme vers un seul plan compact ;
+// - en utilisant des gardes au niveau MUSICAL_FORM (rôle + forme, et mesure si nécessaire) ;
+// - en utilisant rand() dans les cellules pour la variation locale au lieu d’ajouter beaucoup
+//       parallel grammar alternatives.
+//
+// Scope:
+// Seules les formes ternary et theme_and_variations sont redirigées ici.
+// rounded_binary et minuet_trio conservent leurs règles existantes.
+// -----------------------------------------------------------------------------
+
+// --- Flûte solo / duo de flûtes : ternaire contrôlé -------------------------
+// 4 + 2 + 2 = 8 mesures en 4/4.
+
+@withoutSpaces
+FLUTE1_TERNARY_CONTROLLED → FLUTE1_A_PERIOD FL1_CTL_B_TWO FL1_CTL_RETURN_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [opening_offset:$a];
+  [last_offset:$b] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [opening_offset:$b];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLUTE2_TERNARY_CONTROLLED → FLUTE2_A_SUPPORT FL2_CTL_B_TWO FL2_CTL_RETURN_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [opening_offset:$a];
+  [last_offset:$b] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [opening_offset:$b];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FL1_CTL_B_TWO → FL1_CTL_CONTRAST_CALL FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FL2_CTL_B_TWO → FL2_CTL_CONTRAST_SUPPORT FL2_TONIC_RESOLUTION
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FL1_CTL_RETURN_CODA → FL1_RETURN_MOTIF FL1_FINAL_RESOLUTION
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FL2_CTL_RETURN_CODA → FL2_ECHO_SUPPORT FL2_FINAL_RESOLUTION
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FL1_CTL_CONTRAST_CALL → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $r = rand() % 100;
+  if ($r < 65) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:7, o2:9, o3:11, o4:14], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]];
+  } else {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:5, o2:7, o3:9, o4:7], rhythm:[r1:"1/4", r2:"1/8", r3:"1/8", r4:"1/2"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:dominant, tension:medium];
+}
+
+@withoutSpaces
+FL2_CTL_CONTRAST_SUPPORT → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $r = rand() % 100;
+  if ($r < 70) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:5, o3:7, o4:5], rhythm:[r1:"1/2", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  } else {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:7, o3:5, o4:4], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:support, tension:medium];
+}
+
+// --- Flûte solo / duo de flûtes : thème et variations contrôlés ------------
+// 4 + 2 + 2 = 8 mesures en 4/4.
+
+@withoutSpaces
+FLUTE1_THEME_AND_VARIATIONS_CONTROLLED → FLUTE1_A_PERIOD FL1_CTL_VARIATION_TWO FL1_CTL_RETURN_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [opening_offset:$a, variation:controlled];
+  [last_offset:$b] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [opening_offset:$b];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLUTE2_THEME_AND_VARIATIONS_CONTROLLED → FLUTE2_A_SUPPORT FL2_CTL_VARIATION_TWO FL2_CTL_RETURN_CODA
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑;
+  [last_offset:$a] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [opening_offset:$a, variation:controlled];
+  [last_offset:$b] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [opening_offset:$b];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FL1_CTL_VARIATION_TWO → FL1_CTL_VARIATION_SPIN FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FL2_CTL_VARIATION_TWO → FL2_CTL_VARIATION_SUPPORT FL2_TONIC_RESOLUTION
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FL1_CTL_VARIATION_SPIN → BAR6
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $r = rand() % 100;
+  if ($r < 60) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:2, o3:4, o4:5, o5:7, o6:4],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/8", r4:"1/8", r5:"1/4", r6:"1/4"]];
+  } else {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:7, o2:5, o3:4, o4:2, o5:4, o6:0],
+          rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/8", r5:"1/8", r6:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:variation, tension:medium];
+}
+
+@withoutSpaces
+FL2_CTL_VARIATION_SUPPORT → BAR4
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑;
+  $r = rand() % 100;
+  if ($r < 70) {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:7, o3:4, o4:7], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  } else {
+    ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy,
+          motif:[o1:0, o2:4, o3:7, o4:4], rhythm:[r1:"1/2", r2:"1/8", r3:"1/8", r4:"1/4"]];
+  }
+  [last_offset:$last] ⊂ ⇓1;
+  ⇑ = [last_offset:$last, last_function:variation_support, tension:low];
+}
+
+// --- Flûte + piano, voix principale : variantes contrôlées -----------------
+// La flûte reste conductrice et s’aligne avec l’accompagnement : 8 mesures.
+
+@withoutSpaces
+FLUTE_PIANO_LEAD_TERNARY_CONTROLLED → FLP_A_PERIOD FLP_CTL_CONTRAST_TWO FLP_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; [last_offset:$a] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [opening_offset:$a]; [last_offset:$b] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [opening_offset:$b];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLUTE_PIANO_LEAD_THEME_AND_VARIATIONS_CONTROLLED → FLP_A_PERIOD FLP_CTL_VARIATION_TWO FLP_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; [last_offset:$a] ⊂ ⇓1;
+  ↓2 = ↑ ∪ [opening_offset:$a]; [last_offset:$b] ⊂ ⇓2;
+  ↓3 = ↑ ∪ [opening_offset:$b];
+  ⇑ = ⇓3;
+}
+
+@withoutSpaces
+FLP_CTL_CONTRAST_TWO → FL1_CTL_CONTRAST_CALL FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+@withoutSpaces
+FLP_CTL_VARIATION_TWO → FL1_CTL_VARIATION_SPIN FL1_AUTHENTIC_CADENCE
+{ ↓1 = ↑; [last_offset:$a] ⊂ ⇓1; ↓2 = ↑ ∪ [opening_offset:$a]; ⇑ = ⇓2; }
+
+// --- Piano seul : variantes contrôlées --------------------------------------
+// 4 + 2 + 2 = 8 mesures. Elles préservent la texture de piano seul mais évitent
+// longer ambiguous contrast/register chains.
+
+@withoutSpaces
+PIANO_RH_TERNARY_CONTROLLED → RH_A_PERIOD RH_CTL_CONTRAST_TWO RH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_LH_TERNARY_CONTROLLED → LH_A_PERIOD LH_CTL_CONTRAST_TWO LH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_RH_THEME_AND_VARIATIONS_CONTROLLED → RH_A_PERIOD RH_CTL_VARIATION_TWO RH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_LH_THEME_AND_VARIATIONS_CONTROLLED → LH_A_PERIOD LH_CTL_VARIATION_TWO LH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+RH_CTL_CONTRAST_TWO → RH_PREDOMINANT_SUSTAINED_CHORDS RH_DOMINANT_BROKEN_STYLE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+LH_CTL_CONTRAST_TWO → LH_PREDOMINANT_BASS_HALF LH_DOMINANT_PEDAL_EIGHTHS
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:high]; }
+
+@withoutSpaces
+RH_CTL_VARIATION_TWO → RH_TONIC_SYNCOPATED_CHORDS RH_DOMINANT_BROKEN_STYLE
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:medium]; }
+
+@withoutSpaces
+LH_CTL_VARIATION_TWO → LH_TONIC_BASS_LEAP LH_DOMINANT_PEDAL_EIGHTHS
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:medium]; }
+
+// --- Flute+piano accompaniment: controlled variants -------------------------
+// Même grille de 8 mesures que la voix de flûte : A(4) + contraste/variation(2) + coda(2).
+
+@withoutSpaces
+PIANO_ACC_RH_TERNARY_CONTROLLED → ACC_RH_A_PERIOD ACC_RH_CTL_CONTRAST_TWO ACC_RH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_ACC_LH_TERNARY_CONTROLLED → ACC_LH_A_PERIOD ACC_LH_CTL_CONTRAST_TWO ACC_LH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_ACC_RH_THEME_AND_VARIATIONS_CONTROLLED → ACC_RH_A_PERIOD ACC_RH_CTL_VARIATION_TWO ACC_RH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+PIANO_ACC_LH_THEME_AND_VARIATIONS_CONTROLLED → ACC_LH_A_PERIOD ACC_LH_CTL_VARIATION_TWO ACC_LH_CODA_SHORT
+{
+  [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, mode:$mode, num:4, den:4] ⊂ ↑;
+  ↓1 = ↑; ↓2 = ↑; ↓3 = ↑;
+  ⇑ = [last_function:tonic, tension:resolved, cadence:final];
+}
+
+@withoutSpaces
+ACC_RH_CTL_CONTRAST_TWO → ACC_RH_SUBDOMINANT_PAD ACC_RH_DOMINANT_PAD
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:medium]; }
+
+@withoutSpaces
+ACC_LH_CTL_CONTRAST_TWO → ACC_LH_SUBDOMINANT_BASS ACC_LH_DOMINANT_PEDAL
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:medium]; }
+
+@withoutSpaces
+ACC_RH_CTL_VARIATION_TWO → ACC_RH_TONIC_HOLD ACC_RH_CADENCE_PAD
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:tonic, tension:low]; }
+
+@withoutSpaces
+ACC_LH_CTL_VARIATION_TWO → ACC_LH_TONIC_BROKEN ACC_LH_DOMINANT_BASS
+{ ↓1 = ↑; ↓2 = ↑; ⇑ = [last_function:dominant, tension:medium]; }

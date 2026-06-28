@@ -1,0 +1,29 @@
+S -> ADJs
+{
+  ↓1 = ↑;
+}
+
+ADJs → ADJ
+{
+  [mod:<$Uniq>];
+  ↓1 = $Uniq;
+  ⇑ = [minRank:⇓1.rank];
+}
+
+ADJs → ADJs ADJ
+{
+  [mod:<$Head :: $Tail>];
+  ↓1 = [mod:$Tail];
+  ↓2 = $Head;
+  order by <⇓1.minRank, ⇓2.rank>;
+
+  $minRank = min<⇓1.minRank, ⇓2.rank>;
+
+  ⇑ = [minRank:$minRank];
+}
+
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

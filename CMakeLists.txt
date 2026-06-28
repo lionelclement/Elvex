@@ -83,6 +83,10 @@ set(ELVEX_COMMON_SOURCES
         src/messages.hpp
         src/node.cc
         src/node.hpp
+        src/orderspec.cc
+        src/orderspec.hpp
+        src/orderspecs.cc
+        src/orderspecs.hpp
         src/pairp.cc
         src/pairp.hpp
         src/parser.cc
@@ -130,7 +134,6 @@ if (LibXml2_FOUND)
     target_compile_definitions(elvex PUBLIC
             MAXFLAGS=16
             OUTPUT_XML
-            MAXBITS=512
             MAXLENGTH=12000
             MAXUSAGES=12000
             MAXITEMS=12000
