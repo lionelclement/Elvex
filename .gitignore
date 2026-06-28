@@ -64,3 +64,4 @@ benchmark/**/inputs_*/*
 # Local/unpublished work
 motiflow-poc/
 test/env1.0.*
+elvex-www/config/config.php
