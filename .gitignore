@@ -62,7 +62,5 @@ benchmark/**/data/processed/
 benchmark/**/inputs_*/*
 
 # Local/unpublished work
-benchmark/
 motiflow-poc/
-test/*.morpho
-test/*.pattern
+test/env1.0.*
