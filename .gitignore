@@ -36,11 +36,6 @@ venv/
 # macOS
 .DS_Store
 
-# Local scratch files
-detruire
-detruire.txt
-src.zip
-
 # Web app local config/runtime
 elvex-www/tmp/
 elvex-www/config/config.local.php
