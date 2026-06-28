@@ -7,7 +7,7 @@ class ProjectController
     private function requireLogin(): void
     {
         if (!is_logged_in()) {
-            flash('error', 'Connecte-toi pour gérer les projets.');
+            flash('error', 'Sign in to manage projects.');
             redirect('');
         }
     }
@@ -33,12 +33,12 @@ class ProjectController
 
         $payload = $this->payload();
         if ($payload['name'] === '') {
-            flash('error', 'Le nom du projet est obligatoire.');
+            flash('error', 'Project name is required.');
             redirect('');
         }
 
         $projectId = Project::create((int)current_user()['id'], $payload);
-        flash('success', 'Projet créé.');
+        flash('success', 'Project created.');
         redirect('?project=' . $projectId);
     }
 
@@ -49,18 +49,18 @@ class ProjectController
 
         $id = (int)($_POST['id'] ?? 0);
         if ($id <= 0) {
-            flash('error', 'Projet invalide.');
+            flash('error', 'Invalid project.');
             redirect('');
         }
 
         $payload = $this->payload();
         if ($payload['name'] === '') {
-            flash('error', 'Le nom du projet est obligatoire.');
+            flash('error', 'Project name is required.');
             redirect('?project=' . $id);
         }
 
         Project::update($id, (int)current_user()['id'], $payload);
-        flash('success', 'Projet mis à jour.');
+        flash('success', 'Project updated.');
         redirect('?project=' . $id);
     }
 
@@ -72,10 +72,78 @@ class ProjectController
         $id = (int)($_POST['id'] ?? 0);
         if ($id > 0) {
             Project::delete($id, (int)current_user()['id']);
-            flash('success', 'Projet supprimé.');
+            flash('success', 'Project deleted.');
         }
 
         redirect('');
+    }
+
+
+    private function jsonResponse(array $payload, int $status = 200): void
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+        http_response_code($status);
+        echo json_encode($payload, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    public function serverStart(): void
+    {
+        require_csrf();
+
+        try {
+            $this->jsonResponse(ElvexRunner::startServer($this->payload()));
+        } catch (Throwable $e) {
+            $this->jsonResponse([
+                'message' => 'Error starting the Elvex server.',
+                'running' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function serverStop(): void
+    {
+        require_csrf();
+
+        try {
+            $this->jsonResponse(ElvexRunner::stopServer());
+        } catch (Throwable $e) {
+            $this->jsonResponse([
+                'message' => 'Error stopping the Elvex server.',
+                'running' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function serverSend(): void
+    {
+        require_csrf();
+
+        try {
+            $input = (string)($_POST['server_input'] ?? $_POST['input'] ?? '');
+            $this->jsonResponse(ElvexRunner::sendToServer($input));
+        } catch (Throwable $e) {
+            $this->jsonResponse([
+                'message' => 'Error while processing the input.',
+                'running' => false,
+                'output' => '',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function serverStatus(): void
+    {
+        try {
+            $this->jsonResponse(ElvexRunner::serverStatus());
+        } catch (Throwable $e) {
+            $this->jsonResponse([
+                'running' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function run(): void

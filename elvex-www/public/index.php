@@ -28,6 +28,10 @@ if ($method === 'POST' && $route === 'projects/create') { $projects->create(); e
 if ($method === 'POST' && $route === 'projects/update') { $projects->update(); exit; }
 if ($method === 'POST' && $route === 'projects/delete') { $projects->delete(); exit; }
 if ($method === 'POST' && $route === 'projects/run') { $projects->run(); exit; }
+if ($method === 'POST' && $route === 'projects/server/start') { $projects->serverStart(); exit; }
+if ($method === 'POST' && $route === 'projects/server/stop') { $projects->serverStop(); exit; }
+if ($method === 'POST' && $route === 'projects/server/send') { $projects->serverSend(); exit; }
+if ($method === 'GET' && $route === 'projects/server/status') { $projects->serverStatus(); exit; }
 
 http_response_code(404);
 echo '404';

@@ -14,7 +14,10 @@ if ($sessionId === '') {
 }
 
 $safeSessionId = preg_replace('/[^A-Za-z0-9_-]/', '_', $sessionId);
-$baseTmp = '/var/www/elvex/tmp';
+
+$configFile = __DIR__ . '/config/config.php';
+$config = is_file($configFile) ? require $configFile : [];
+$baseTmp = $config['elvex']['tmp_dir'] ?? (__DIR__ . '/tmp');
 $logFile = $baseTmp . DIRECTORY_SEPARATOR . $safeSessionId . DIRECTORY_SEPARATOR . $uuid . '.log';
 
 if (!is_file($logFile)) {
