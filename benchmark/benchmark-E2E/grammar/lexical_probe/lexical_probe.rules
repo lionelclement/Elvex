@@ -1,0 +1,28 @@
+/************************************************************
+* Lexical-dependency probe skeleton.
+*
+* This is a compact executable skeleton. You can replace or refine it
+* with a grammar that actually uses synthesized information (⇑) to pass
+* lexical requirements from one choice point to another.
+************************************************************/
+
+text → NP {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/*
+text → VP {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+*/
+
+NP → ADJ N {
+  [mod:NIL, lexical_function:_, $rest];
+  ↓2 = $rest;
+  [mod:<$MOD>, number:$synthesizedNumber, gender:$synthesizedGender] ⊂ ⇓2;
+  ↓1 = [number:$synthesizedNumber, gender:$synthesizedGender, $MOD];
+  ⇑ = ↑;
+}
+

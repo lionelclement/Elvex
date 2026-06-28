@@ -1,0 +1,24 @@
+{
+  "sources": [
+    {
+      "name": "webnlg-dataset-gitlab",
+      "type": "git",
+      "url": "https://gitlab.com/shimorina/webnlg-dataset.git",
+      "path": "data/raw/webnlg-dataset-gitlab"
+    },
+    {
+      "name": "webnlg-dataset-github-mirror",
+      "type": "git",
+      "url": "https://github.com/fuzihaofzh/webnlg-dataset.git",
+      "path": "data/raw/webnlg-dataset-github-mirror",
+      "optional": true
+    },
+    {
+      "name": "webnlg-challenge-2023-hf",
+      "type": "git",
+      "url": "https://huggingface.co/datasets/webnlg/challenge-2023",
+      "path": "data/raw/webnlg-challenge-2023-hf",
+      "optional": true
+    }
+  ]
+}

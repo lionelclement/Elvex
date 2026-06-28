@@ -1,0 +1,270 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+ELVEX_MAX_ITEMS="${ELVEX_MAX_ITEMS:-200000}"
+ELVEX_MAX_TIME="${ELVEX_MAX_TIME:-10}"
+VENV="$ROOT/.venv"
+REQUIREMENTS="$ROOT/requirements.txt"
+export PYTHONPATH="$ROOT${PYTHONPATH:+:$PYTHONPATH}"
+
+find_python3() {
+  if [ -n "${PYTHON:-}" ] && command -v "$PYTHON" >/dev/null 2>&1; then
+    "$PYTHON" - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.version_info >= (3, 10) else 1)
+PY
+    return 0
+  fi
+  for candidate in python3 python3.12 python3.11 python3.10 /opt/homebrew/bin/python3 /usr/local/bin/python3; do
+    if command -v "$candidate" >/dev/null 2>&1; then
+      if "$candidate" - <<'PY' >/dev/null 2>&1
+import sys
+raise SystemExit(0 if sys.version_info >= (3, 10) else 1)
+PY
+      then
+        printf '%s\n' "$candidate"
+        return 0
+      fi
+    fi
+  done
+  return 1
+}
+
+base_python() {
+  local py
+  if ! py="$(find_python3)"; then
+    cat >&2 <<'EOF'
+Python 3.10+ was not found.
+On macOS with Homebrew:
+  brew install python
+then run again:
+  ./run setup
+EOF
+    exit 2
+  fi
+  printf '%s\n' "$py"
+}
+
+ensure_venv() {
+  if [ ! -x "$VENV/bin/python" ]; then
+    local py
+    py="$(base_python)"
+    echo "+ creating local .venv environment with $py"
+    "$py" -m venv "$VENV"
+  fi
+  "$VENV/bin/python" -m pip install --upgrade pip >/dev/null
+  if [ -s "$REQUIREMENTS" ]; then
+    "$VENV/bin/python" -m pip install -q -r "$REQUIREMENTS"
+  fi
+}
+
+py_run() {
+  ensure_venv
+  "$VENV/bin/python" "$@"
+}
+
+need_cmd() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "$1 not found in PATH" >&2
+    echo "Please install it or add it to PATH." >&2
+    exit 2
+  fi
+}
+
+cmd="${1:-help}"
+shift || true
+
+case "$cmd" in
+  setup|venv)
+    ensure_venv
+    "$VENV/bin/python" --version
+    echo "Environment ready: $VENV"
+    ;;
+  download)
+    py_run "$ROOT/scripts/download_webnlg.py" "$@" ;;
+  extract)
+    py_run "$ROOT/scripts/extract_webnlg.py" "$@" ;;
+  lexicon)
+    py_run "$ROOT/scripts/build_elvex_lexicon.py" "$@" ;;
+  numeric-report)
+    py_run "$ROOT/scripts/report_numeric_lexicon.py" "$@" ;;
+  compact)
+    need_cmd elvexlexicon
+    if [ ! -s "$ROOT/user/main.macros" ]; then
+      echo "user/main.macros is empty; remove --macros-file from this command or add macros." >&2
+      exit 2
+    fi
+    mkdir -p "$ROOT/build/lexicon"
+    elvexlexicon \
+      --compacted-lexicon-file "$ROOT/build/lexicon/main" \
+      --macros-file "$ROOT/user/main.macros" \
+      --pattern-file "$ROOT/user/main.pattern" \
+      --morpho-file "$ROOT/user/main.morpho" \
+      build
+    ;;
+  select)
+    py_run "$ROOT/scripts/select_sequences.py" "$@" ;;
+  inputs)
+    py_run "$ROOT/scripts/generate_inputs.py" "$@" ;;
+  inputs-by-size)
+    py_run "$ROOT/scripts/generate_inputs.py" "$@" ;;
+  validate)
+    py_run "$ROOT/scripts/validate_project.py" "$@" ;;
+  all)
+    py_run "$ROOT/scripts/download_webnlg.py" "$@"
+    py_run "$ROOT/scripts/extract_webnlg.py"
+    py_run "$ROOT/scripts/build_elvex_lexicon.py"
+    "$0" compact
+    py_run "$ROOT/scripts/select_sequences.py"
+    py_run "$ROOT/scripts/generate_inputs.py" 1
+    py_run "$ROOT/scripts/validate_project.py"
+    ;;
+  elvex-sample)
+    need_cmd elvex
+    need_cmd elvexlexicon
+    if [ ! -f "$ROOT/build/lexicon/main.tbl" ] || [ ! -f "$ROOT/build/lexicon/main.fsa" ]; then
+      "$0" compact
+    fi
+    elvex \
+      --macros-file "$ROOT/user/main.macros" \
+      --rules-file "$ROOT/user/main.rules" \
+      --lexicon-file "$ROOT/user/main.lexicon" \
+      --compacted-lexicon-file "$ROOT/build/lexicon/main" \
+      --input-file "$ROOT/user/main.input" \
+      --max-length 40 --max-items "$ELVEX_MAX_ITEMS" --max-time "$ELVEX_MAX_TIME" \
+      | "$VENV/bin/python" "$ROOT/scripts/postprocess_elvex_output.py"
+    ;;
+  elvex-one)
+    need_cmd elvex
+    input_file="${1:-$ROOT/user/main.input}"
+    if [ ! -f "$input_file" ]; then
+      echo "Input file not found: $input_file" >&2
+      exit 2
+    fi
+    if [ ! -f "$ROOT/build/lexicon/main.tbl" ] || [ ! -f "$ROOT/build/lexicon/main.fsa" ]; then
+      "$0" compact
+    fi
+    elvex \
+      --macros-file "$ROOT/user/main.macros" \
+      --rules-file "$ROOT/user/main.rules" \
+      --lexicon-file "$ROOT/user/main.lexicon" \
+      --compacted-lexicon-file "$ROOT/build/lexicon/main" \
+      --input-file "$input_file" \
+      --max-length 40 --max-items "$ELVEX_MAX_ITEMS" --max-time "$ELVEX_MAX_TIME" \
+      | "$VENV/bin/python" "$ROOT/scripts/postprocess_elvex_output.py"
+    ;;
+  elvex-tests)
+    need_cmd elvex
+    size="${1:-1}"
+    limit="${2:-0}"
+    if [ "$size" = "1" ]; then
+      input_dir="$ROOT/build/inputs/simple_triples"
+    else
+      input_dir="$ROOT/build/inputs/${size}_triples"
+    fi
+    if [ ! -d "$input_dir" ]; then
+      "$0" inputs "$size"
+    fi
+    if [ ! -f "$ROOT/build/lexicon/main.tbl" ] || [ ! -f "$ROOT/build/lexicon/main.fsa" ]; then
+      "$0" compact
+    fi
+    mkdir -p "$ROOT/build/outputs" "$ROOT/build/logs/elvex"
+    count=0
+    ok=0
+    fail=0
+    for input_file in "$input_dir"/*.input; do
+      [ -e "$input_file" ] || continue
+      count=$((count + 1))
+      base="$(basename "$input_file" .input)"
+      if elvex \
+        --macros-file "$ROOT/user/main.macros" \
+        --rules-file "$ROOT/user/main.rules" \
+        --lexicon-file "$ROOT/user/main.lexicon" \
+        --compacted-lexicon-file "$ROOT/build/lexicon/main" \
+        --input-file "$input_file" \
+        --max-length 80 --max-items "$ELVEX_MAX_ITEMS" --max-time "$ELVEX_MAX_TIME" \
+        2> "$ROOT/build/logs/elvex/$base.err" \
+        | "$VENV/bin/python" "$ROOT/scripts/postprocess_elvex_output.py" \
+        > "$ROOT/build/outputs/$base.out"; then
+        ok=$((ok + 1))
+      else
+        fail=$((fail + 1))
+      fi
+      if [ "$limit" -gt 0 ] && [ "$count" -ge "$limit" ]; then
+        break
+      fi
+    done
+    echo "Elvex tests run for ${size} triple(s): $count; ok: $ok; failed: $fail"
+    echo "Outputs: build/outputs/"
+    echo "Errors:  build/logs/elvex/"
+    ;;
+  compare-one)
+    need_cmd elvex
+    size="${1:-1}"
+    selector="${2:-1}"
+    py_run "$ROOT/scripts/compare_elvex.py" one "$size" "$selector" ;;
+  compare|score)
+    need_cmd elvex
+    size="${1:-1}"
+    limit="${2:-20}"
+    py_run "$ROOT/scripts/compare_elvex.py" batch "$size" "$limit" ;;
+  postprocess)
+    ensure_venv
+    "$VENV/bin/python" "$ROOT/scripts/postprocess_elvex_output.py"
+    ;;
+  clean-venv)
+    rm -rf "$VENV"
+    echo "Environment removed: $VENV"
+    ;;
+  help|-h|--help)
+    cat <<'EOF'
+Usage: ./run <command> [options]
+
+Commands:
+  setup        Create/update the local Python .venv environment
+  download     Download WebNLG into data/raw/
+  extract      Extract triples to data/processed/triples.jsonl
+  lexicon      Generate user/main.pattern, user/main.morpho and local includes
+  numeric-report [file]
+               Report numeric-looking proper_noun entries in a morphology file
+  compact      Build build/lexicon/main.tbl and build/lexicon/main.fsa with elvexlexicon
+  select       Group entries by number of triples in build/sequences/
+  inputs [n]   Generate one .input file per WebNLG entry with n triples; default n=1
+  validate     Check expected files
+  all          Run download, extract, lexicon, compact, select, inputs, validate
+  elvex-sample Run elvex on user/main.input and print all outputs
+  elvex-one    Run elvex on one .input file path and print all outputs
+  elvex-tests  Run elvex on generated tests one by one; outputs contain all generated lines
+  compare-one  Run one input, show all Elvex outputs, best-of-N matches, BLEU and chrF
+  compare      Batch report with best-of-N exact/normalized scores plus sacreBLEU BLEU/chrF
+  score        Alias for compare: ./run score [n] [limit]
+  postprocess  Finalize raw Elvex output from stdin: capitalization and punctuation spacing
+  clean-venv   Remove .venv
+
+Elvex file layout:
+  user/main.macros
+  user/main.input
+  user/main.rules
+  user/main.lexicon
+  user/override.pattern    Optional user compact-lexicon additions
+  user/override.morpho     Optional user compact-lexicon additions
+  user/rules/frames.rules  Predicate-specific paraphrase frames
+  build/lexicon/main.tbl
+  build/lexicon/main.fsa
+
+macOS/Homebrew:
+  brew install python git
+  ./run setup
+  ./run all
+
+The python command is never used directly. ./run detects python3,
+creates .venv, then runs scripts with .venv/bin/python.
+EOF
+    ;;
+  *)
+    echo "Unknown command: $cmd" >&2
+    "$0" help
+    exit 1
+    ;;
+esac

@@ -1,0 +1,20 @@
+/************************************************************
+ * Auto-generated local determiners.
+ * Closed-class entries only: no HEAD here.
+ * Format: output-form<TAB>POS<TAB>features;
+ ************************************************************/
+"a"	det	[@s, @indef];
+"all"	det	[@p, indef:false, def:false, poss:false, part:false, dem:false, quant:all];
+"any"	det	[@p, indef:false, def:false, poss:false, part:false, dem:false, quant:any];
+"each"	det	[@s, indef:false, def:false, poss:false, part:false, dem:false, quant:each];
+"every"	det	[@s, indef:false, def:false, poss:false, part:false, dem:false, quant:every];
+"few"	det	[@p, indef:false, def:false, poss:false, part:false, dem:false, quant:few];
+"many"	det	[@p, indef:false, def:false, poss:false, part:false, dem:false, quant:many];
+"no"	det	[@p, indef:false, def:false, poss:false, part:false, dem:false, quant:no];
+"several"	det	[@p, indef:false, def:false, poss:false, part:false, dem:false, quant:several];
+"some"	det	[@p, indef:false, def:false, poss:false, part:false, dem:false, quant:some];
+"that"	det	[@s, def:true, poss:false, part:false, dem:true];
+"the"	det	[def:true, poss:false, part:false, dem:false];
+"these"	det	[@p, def:true, poss:false, part:false, dem:true];
+"this"	det	[@s, def:true, poss:false, part:false, dem:true];
+"those"	det	[@p, def:true, poss:false, part:false, dem:true];

@@ -1,0 +1,145 @@
+/************************************************************
+* Auto-generated factorized E2E rules for real supported items.
+************************************************************/
+
+@withoutSpaces
+Axiom → RestaurantDescription {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+
+/*** name + 1 slot(s) ***/
+RestaurantDescription → NAME SLOTREAL {
+  [HEAD:DESCRIBE_RESTAURANT,
+   name:$name,
+   slot1:$S1
+  ];
+
+  ↓1 = [name:$name];
+  ↓2 = $S1;
+
+  ⇑ = ↑;
+}
+
+/*** name + 2 slot(s) ***/
+RestaurantDescription → NAME SLOTREAL COORD SLOTREAL {
+  [HEAD:DESCRIBE_RESTAURANT,
+   name:$name,
+   slot1:$S1,
+   slot2:$S2
+  ];
+
+  ↓1 = [name:$name];
+  ↓2 = $S1;
+  ↓3 = [];
+  ↓4 = $S2;
+
+  ⇑ = ↑;
+}
+
+/*** name + 3 slot(s) ***/
+RestaurantDescription → NAME SLOTREAL COORD SLOTREAL COORD SLOTREAL {
+  [HEAD:DESCRIBE_RESTAURANT,
+   name:$name,
+   slot1:$S1,
+   slot2:$S2,
+   slot3:$S3
+  ];
+
+  ↓1 = [name:$name];
+  ↓2 = $S1;
+  ↓3 = [];
+  ↓4 = $S2;
+  ↓5 = [];
+  ↓6 = $S3;
+
+  ⇑ = ↑;
+}
+
+/*** name + 4 slot(s) ***/
+RestaurantDescription → NAME SLOTREAL COORD SLOTREAL COORD SLOTREAL COORD SLOTREAL {
+  [HEAD:DESCRIBE_RESTAURANT,
+   name:$name,
+   slot1:$S1,
+   slot2:$S2,
+   slot3:$S3,
+   slot4:$S4
+  ];
+
+  ↓1 = [name:$name];
+  ↓2 = $S1;
+  ↓3 = [];
+  ↓4 = $S2;
+  ↓5 = [];
+  ↓6 = $S3;
+  ↓7 = [];
+  ↓8 = $S4;
+
+  ⇑ = ↑;
+}
+
+/*** name + 5 slot(s) ***/
+RestaurantDescription → NAME SLOTREAL COORD SLOTREAL COORD SLOTREAL COORD SLOTREAL COORD SLOTREAL {
+  [HEAD:DESCRIBE_RESTAURANT,
+   name:$name,
+   slot1:$S1,
+   slot2:$S2,
+   slot3:$S3,
+   slot4:$S4,
+   slot5:$S5
+  ];
+
+  ↓1 = [name:$name];
+  ↓2 = $S1;
+  ↓3 = [];
+  ↓4 = $S2;
+  ↓5 = [];
+  ↓6 = $S3;
+  ↓7 = [];
+  ↓8 = $S4;
+  ↓9 = [];
+  ↓10 = $S5;
+
+  ⇑ = ↑;
+}
+
+/*** name + 6 slot(s) ***/
+RestaurantDescription → NAME SLOTREAL COORD SLOTREAL COORD SLOTREAL COORD SLOTREAL COORD SLOTREAL COORD SLOTREAL {
+  [HEAD:DESCRIBE_RESTAURANT,
+   name:$name,
+   slot1:$S1,
+   slot2:$S2,
+   slot3:$S3,
+   slot4:$S4,
+   slot5:$S5,
+   slot6:$S6
+  ];
+
+  ↓1 = [name:$name];
+  ↓2 = $S1;
+  ↓3 = [];
+  ↓4 = $S2;
+  ↓5 = [];
+  ↓6 = $S3;
+  ↓7 = [];
+  ↓8 = $S4;
+  ↓9 = [];
+  ↓10 = $S5;
+  ↓11 = [];
+  ↓12 = $S6;
+
+  ⇑ = ↑;
+}
+
+SLOTREAL → SLOT_MARKER SLOT_VALUE {
+  [slot:$Slot, value:$Value];
+  ↓1 = [slot:$Slot];
+  ↓2 = [slot:$Slot, value:$Value];
+  ⇑ = ↑;
+}
+
+NAME → name { ↓1 = ↑; ⇑ = ⇓1; }
+SLOT_MARKER → slot_marker { ↓1 = ↑; ⇑ = ⇓1; }
+SLOT_VALUE → slot_value { ↓1 = ↑; ⇑ = ⇓1; }
+COORD → coord { ↓1 = ↑; ⇑ = ⇓1; }

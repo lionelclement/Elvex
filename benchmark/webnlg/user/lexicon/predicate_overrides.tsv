@@ -1,0 +1,3 @@
+predicate	pattern	lexeme	form	prep
+# Legacy TSV override file kept for compatibility.
+# Prefer user/override.pattern + user/override.morpho + user/rules/frames.rules for predicate-specific paraphrases.

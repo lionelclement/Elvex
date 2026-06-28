@@ -1,0 +1,4758 @@
+/************************************************************
+ * Predicate-specific frames.
+ *
+ * General policy:
+ * - If a WebNLG predicate maps directly to a verbal relation, the generic
+ *   SVO rules in simple_triples.rules are enough.
+ * - If the predicate does not map naturally to an immediate verb frame,
+ *   write an explicit frame here and add the needed lexical resources in
+ *   user/override.pattern and user/override.morpho.
+ ************************************************************/
+
+// leaderName(X,Y) -> The leader of X is Y.
+// Example: The leader of Aarhus is Jacob Bundsgaard.
+SENT -> NP cop NP {
+  [HEAD:leader_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_LEADER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// leaderName(X,Y) -> Y is the leader of X.
+// This paraphrase is valid but may score differently from the WebNLG reference.
+SENT -> NP cop NP {
+  [HEAD:leader_Name, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_LEADER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// runwayLength(X,Y) -> The runway length at X is Y meters.
+// Example: The runway length at Aarhus Airport is 2777.0 meters.
+SENT -> NP cop NUMBER_METERS {
+  [HEAD:runway_Length, i:$I, ii:$II];
+  ↓1 = [HEAD:_RUNWAY_LENGTH, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// location(X,Y) -> X is located in Y.
+SENT -> NP cop _located_ prep NP {
+  [HEAD:location, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// country(X,Y) -> X is located in Y.
+SENT -> NP cop _located_ prep NP {
+  [HEAD:country, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+
+// hubAirport(X,Y) -> The hub airport of X is Y.
+SENT -> NP cop NP {
+  [HEAD:hub_Airport, i:$I, ii:$II];
+  ↓1 = [HEAD:_HUB_AIRPORT, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// targetAirport(X,Y) -> The target airport of X is Y.
+SENT -> NP cop NP {
+  [HEAD:target_Airport, i:$I, ii:$II];
+  ↓1 = [HEAD:_TARGET_AIRPORT, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// runwayName(X,Y) -> The runway name of X is Y.
+SENT -> NP cop VALUE {
+  [HEAD:runway_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_RUNWAY_NAME, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// runwayDesignation(X,Y) -> The runway name of X is Y.
+SENT -> NP cop VALUE {
+  [HEAD:runway_Designation, i:$I, ii:$II];
+  ↓1 = [HEAD:_RUNWAY_NAME, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// faa(X,Y) -> The location identifier of X is Y.
+SENT -> NP cop VALUE {
+  [HEAD:faa, i:$I, ii:$II];
+  ↓1 = [HEAD:_LOCATION_IDENTIFIER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// locationIdentifier(X,Y) -> The location identifier of X is Y.
+SENT -> NP cop VALUE {
+  [HEAD:location_Identifier, i:$I, ii:$II];
+  ↓1 = [HEAD:_LOCATION_IDENTIFIER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// 1st_runway_LengthFeet(X,Y) -> The first runway length in feet of X is Y.
+SENT -> NP cop NUMBER {
+  [HEAD:P_1st_runway_Length_Feet, i:$I, ii:$II];
+  ↓1 = [HEAD:_FIRST_RUNWAY_LENGTH_IN_FEET, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// r1LengthF(X,Y) -> The first runway length in feet of X is Y.
+SENT -> NP cop NUMBER {
+  [HEAD:r1_Length_F, i:$I, ii:$II];
+  ↓1 = [HEAD:_FIRST_RUNWAY_LENGTH_IN_FEET, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// city(X,Y) -> X serves Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP VREL NP {
+//   [HEAD:city, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [HEAD:_SERVE, @present, @indicative, @_3s];
+//   ↓3 = $II;
+//   ⇑ = ⇓3;
+// }
+// 
+*/
+
+// operator(X,Y) -> X is operated by Y.
+SENT -> NP cop _operated_ _by_ NP {
+  [HEAD:operator, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// operatingOrganisation(X,Y) -> X is operated by Y.
+SENT -> NP cop _operated_ _by_ NP {
+  [HEAD:operating_Organisation, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// operator(X,Y) -> Y is the operating organisation of X.
+SENT -> NP cop NP {
+  [HEAD:operator, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_OPERATING_ORGANISATION, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// operatingOrganisation(X,Y) -> Y is the operating organisation of X.
+SENT -> NP cop NP {
+  [HEAD:operating_Organisation, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_OPERATING_ORGANISATION, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// owner(X,Y) -> The owner of X is Y.
+SENT -> NP cop NP {
+  [HEAD:owner, i:$I, ii:$II];
+  ↓1 = [HEAD:_OWNER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// owner(X,Y) -> Y is the owner of X.
+SENT -> NP cop NP {
+  [HEAD:owner, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_OWNER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// elevationM(X,Y) -> X has an elevation of Y metres above sea level.
+SENT -> NP _has_ det common_noun prep NUMBER_METRES _above_ _sea_level_ {
+  [HEAD:elevation_M, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ELEVATION, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ↓7 = [];
+  ↓8 = [];
+  ⇑ = ⇓8;
+}
+
+// elevation(X,Y) -> X has an elevation of Y metres above sea level.
+SENT -> NP _has_ det common_noun prep NUMBER_METRES _above_ _sea_level_ {
+  [HEAD:elevation, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ELEVATION, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ↓7 = [];
+  ↓8 = [];
+  ⇑ = ⇓8;
+}
+
+// elevationAboveTheSeaLevel_(in_metres)(X,Y) -> X has an elevation of Y metres above sea level.
+SENT -> NP _has_ det common_noun prep NUMBER_METRES _above_ _sea_level_ {
+  [HEAD:elevation_Above_The_Sea_Level_in_metres, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ELEVATION, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ↓7 = [];
+  ↓8 = [];
+  ⇑ = ⇓8;
+}
+
+// runwayLength(X,Y) -> The runway length of X is Y.
+// Kept after the existing "at X ... meters" frame so the earlier exact match is not disturbed.
+SENT -> NP cop NUMBER {
+  [HEAD:runway_Length, i:$I, ii:$II];
+  ↓1 = [HEAD:_RUNWAY_LENGTH, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// runwayLength(X,Y) -> X has a runway length of Y.
+SENT -> NP _has_ det common_noun prep NUMBER {
+  [HEAD:runway_Length, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_RUNWAY_LENGTH, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// cityServed(X,Y) -> X serves Y.
+SENT -> NP VREL NP {
+  [HEAD:city_Served, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [HEAD:_SERVE, @present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// runwayName(X,Y) -> Y is the runway name of X.
+SENT -> VALUE cop NP {
+  [HEAD:runway_Name, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_RUNWAY_NAME, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// runwayDesignation(X,Y) -> Y is the runway name of X.
+SENT -> VALUE cop NP {
+  [HEAD:runway_Designation, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_RUNWAY_NAME, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// runwayName(X,Y) -> Y is the runway name at X.
+SENT -> VALUE cop NP {
+  [HEAD:runway_Name, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_RUNWAY_NAME, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ⇑ = ⇓3;
+}
+
+// runwayDesignation(X,Y) -> Y is the runway name at X.
+SENT -> VALUE cop NP {
+  [HEAD:runway_Designation, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_RUNWAY_NAME, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ⇑ = ⇓3;
+}
+
+/************************************************************
+ * v27 frames added from log(24) no-normalized-match analysis.
+ * These frames target productive predicate families and keep complex
+ * verbal material as reusable surface constructions rather than one-off
+ * lexicalized sentences.
+ ************************************************************/
+
+// location/country(X,Y) -> X is found in Y.
+SENT -> NP cop _found_ prep NP {
+  [HEAD:location, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop prep NP {
+  [HEAD:country, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// isPartOf/subdivisionName(X,Y) -> X is part of Y.
+SENT -> NP cop _part_ prep NP {
+  [HEAD:is_Part_Of, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _part_ prep NP {
+  [HEAD:subdivision_Name, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// leader(X,Y) -> The leader of X is Y. / Y is the leader of X.
+SENT -> NP cop NP {
+  [HEAD:leader, i:$I, ii:$II];
+  ↓1 = [HEAD:_LEADER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:leader, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_LEADER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// runwayLength(X,Y) -> The length of the runway at X is Y metres.
+SENT -> NP cop NUMBER_METRES {
+  [HEAD:runway_Length, i:$I, ii:$II];
+  ↓1 = [HEAD:_LENGTH_OF_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// first-runway length in metres.
+SENT -> NP cop NUMBER_METRES {
+  [HEAD:r1_Length_M, i:$I, ii:$II];
+  ↓1 = [HEAD:_LENGTH_OF_FIRST_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NUMBER_METRES {
+  [HEAD:P_1st_runway_Length_Metre, i:$I, ii:$II];
+  ↓1 = [HEAD:_LENGTH_OF_FIRST_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// Third/fourth runway length in feet; reuse the nominal-length pattern.
+SENT -> NP cop NUMBER {
+  [HEAD:r3_Length_F, i:$I, ii:$II];
+  ↓1 = [HEAD:_LENGTH_OF_THIRD_RUNWAY_IN_FEET, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NUMBER {
+  [HEAD:P_3rd_runway_Length_Feet, i:$I, ii:$II];
+  ↓1 = [HEAD:_LENGTH_OF_THIRD_RUNWAY_IN_FEET, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NUMBER {
+  [HEAD:r4_Length_F, i:$I, ii:$II];
+  ↓1 = [HEAD:_LENGTH_OF_FOURTH_RUNWAY_IN_FEET, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// Runway surface family: The nth runway at X is made from/of Y.
+SENT -> NP cop _made_ _from_ ARG {
+  [HEAD:r1_Surface, i:$I, ii:$II];
+  ↓1 = [HEAD:_FIRST_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _made_ prep ARG {
+  [HEAD:P_1st_runway_Surface_Type, i:$I, ii:$II];
+  ↓1 = [HEAD:_FIRST_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _made_ _from_ ARG {
+  [HEAD:r2_Surface, i:$I, ii:$II];
+  ↓1 = [HEAD:_SECOND_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _made_ _from_ ARG {
+  [HEAD:r3_Surface, i:$I, ii:$II];
+  ↓1 = [HEAD:_THIRD_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _made_ prep ARG {
+  [HEAD:r4_Surface, i:$I, ii:$II];
+  ↓1 = [HEAD:_FOURTH_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _made_ prep ARG {
+  [HEAD:P_4th_runway_Surface_Type, i:$I, ii:$II];
+  ↓1 = [HEAD:_FOURTH_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _made_ prep ARG {
+  [HEAD:runway_Surface, i:$I, ii:$II];
+  ↓1 = [HEAD:_SURFACE_OF_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _made_ prep ARG {
+  [HEAD:runway_Surface_Type, i:$I, ii:$II];
+  ↓1 = [HEAD:_SURFACE_OF_RUNWAY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// Runway number family: Y is the number of the fifth runway of X.
+SENT -> ARG cop NP {
+  [HEAD:r5_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_NUMBER_OF_FIFTH_RUNWAY, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> ARG cop NP {
+  [HEAD:P__5th_runway_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_NUMBER_OF_FIFTH_RUNWAY, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// city/cityServed(X,Y) -> X serves the city of Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP VREL NP {
+//   [HEAD:city, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [HEAD:_SERVE, @present, @indicative, @_3s];
+//   ↓3 = [HEAD:_CITY, @def, @s, dem:false, poss:false, part:false, ofObj:$II];
+//   ⇑ = ⇓3;
+// }
+*/
+
+SENT -> NP VREL NP {
+  [HEAD:city_Served, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [HEAD:_SERVE, @present, @indicative, @_3s];
+  ↓3 = [HEAD:_CITY, @def, @s, dem:false, poss:false, part:false, ofObj:$II];
+  ⇑ = ⇓3;
+}
+
+// elevation(X,Y) -> X is Y metres above sea level.
+SENT -> NP cop NUMBER_METRES _above_ _sea_level_ {
+  [HEAD:elevation, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop NUMBER_METRES _above_ _sea_level_ {
+  [HEAD:elevation_M, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop NUMBER_METRES _above_ _sea_level_ {
+  [HEAD:elevation_Above_The_Sea_Level_in_metres, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+// operator/operatingOrganisation(X,Y) -> Y operates X.
+SENT -> NP _operates_ NP {
+  [HEAD:operator, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _operates_ NP {
+  [HEAD:operating_Organisation, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+
+// owner(X,Y) -> X is owned by Y.
+SENT -> NP cop _owned_ _by_ NP {
+  [HEAD:owner, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// language(X,Y) -> Y is the language of X.
+SENT -> NP cop NP {
+  [HEAD:language, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_LANGUAGE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// associated musical acts/bands/artists: X is associated with Y.
+SENT -> NP cop _associated_ prep NP {
+  [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _associated_ prep NP {
+  [HEAD:associated_Band, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _associated_ prep NP {
+  [HEAD:associated_Acts, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// genre(X,Y): X is a Y musician / artist.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop det ARG _musician_ {
+//   [HEAD:genre, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@indef, @s];
+//   ↓4 = $II;
+//   ↓5 = [];
+//   ⇑ = ⇓5;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop det ARG _artist_ {
+//   [HEAD:genre, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@indef, @s];
+//   ↓4 = $II;
+//   ↓5 = [];
+//   ⇑ = ⇓5;
+// }
+*/
+
+// recordLabel/label(X,Y): X is signed with the record label Y.
+SENT -> NP cop _signed_ prep NP ARG {
+  [HEAD:record_Label, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = [HEAD:_RECORD_LABEL, @def, @s, dem:false, poss:false, part:false];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop _signed_ prep NP ARG {
+  [HEAD:label, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = [HEAD:_RECORD_LABEL, @def, @s, dem:false, poss:false, part:false];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// activeYearsStartYear(X,Y): X started performing in Y.
+SENT -> NP _started_ _performing_ prep ARG {
+  [HEAD:active_Years_Start_Year, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// birthPlace/placeOfBirth(X,Y): X was born in Y.
+SENT -> NP _was_ _born_ prep ARG {
+  [HEAD:birth_Place, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _was_ _born_ prep ARG {
+  [HEAD:place_Of_Birth, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+
+
+/************************************************************
+ * v28 frames from log-1-1000 no-normalized-match analysis.
+ * These are still family-level frames: generic musical/event/background
+ * constructions and reusable preposition/verb patterns.
+ ************************************************************/
+
+// genre(X,Y): X performs/plays Y music; X uses the genre Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _performs_ ARG _music_ {
+//   [HEAD:genre, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = $II;
+//   ↓4 = [];
+//   ⇑ = ⇓4;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _plays_ ARG _music_ {
+//   [HEAD:genre, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = $II;
+//   ↓4 = [];
+//   ⇑ = ⇓4;
+// }
+*/
+
+/* V48: removed remaining risky genre paraphrase.
+SENT -> NP _uses_ det common_noun ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = [HEAD:_GENRE_NOUN, @s];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+*/
+
+SENT -> NP cop ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = [HEAD:_MUSICAL_GENRE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// instrument(X,Y): X plays Y / X plays the Y.
+SENT -> NP _plays_ ARG {
+  [HEAD:instrument, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _plays_ NP {
+  [HEAD:instrument, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_INSTRUMENT, @def, @s, dem:false, poss:false, part:false, ofObj:$II];
+  ⇑ = ⇓3;
+}
+
+// background(X,Y): X has a background as Y.
+SENT -> NP _has_ det common_noun prep ARG {
+  [HEAD:background, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_BACKGROUND, @s];
+  ↓5 = [pcas:as];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// stylisticOrigin(s)(X,Y): X originated from Y; X has stylistic origins in Y.
+SENT -> NP _originated_ _from_ ARG {
+  [HEAD:stylistic_Origin, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _originated_ _from_ ARG {
+  [HEAD:stylistic_Origins, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _has_ _stylistic_origins_ prep ARG {
+  [HEAD:stylistic_Origin, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _has_ _stylistic_origins_ prep ARG {
+  [HEAD:stylistic_Origins, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// recordLabel/label(X,Y): X is signed to/with Y.
+SENT -> NP cop _signed_ prep NP {
+  [HEAD:record_Label, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:to];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _signed_ prep NP {
+  [HEAD:label, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:to];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// Associated musician/band/acts: Y is associated with X as a broad inverse paraphrase.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop _associated_ prep NP {
+//   [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = $II;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [];
+//   ↓4 = [pcas:with];
+//   ↓5 = $I;
+//   ⇑ = ⇓5;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop _associated_ prep NP {
+//   [HEAD:associated_Band, i:$I, ii:$II];
+//   ↓1 = $II;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [];
+//   ↓4 = [pcas:with];
+//   ↓5 = $I;
+//   ⇑ = ⇓5;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop _associated_ prep NP {
+//   [HEAD:associated_Acts, i:$I, ii:$II];
+//   ↓1 = $II;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [];
+//   ↓4 = [pcas:with];
+//   ↓5 = $I;
+//   ⇑ = ⇓5;
+// }
+// 
+*/
+
+/************************************************************
+ * v29 frames from low BLEU/chrF (<70) analysis on 1..1000.
+ * Family-level frames only; complex tense/aspect auxiliaries stay generic
+ * surface patterns rather than one-off predicate-specific hacks.
+ ************************************************************/
+
+// associated_Musical_Artist: X is associated with the musical artist Y.
+SENT -> NP cop _associated_ prep det common_noun ARG {
+  [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = [@def, @s, dem:false, poss:false, part:false];
+  ↓6 = [HEAD:_MUSICAL_ARTIST_NOUN, @s];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+// associated_Musical_Artist: X plays with the band Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _plays_ prep det common_noun ARG {
+//   [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [pcas:with];
+//   ↓4 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓5 = [HEAD:_BAND_NOUN, @s];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+// associated_Band: X is associated with the musical artist Y.
+SENT -> NP cop _associated_ prep det common_noun ARG {
+  [HEAD:associated_Band, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = [@def, @s, dem:false, poss:false, part:false];
+  ↓6 = [HEAD:_MUSICAL_ARTIST_NOUN, @s];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+// associated_Band: X plays with the band Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _plays_ prep det common_noun ARG {
+//   [HEAD:associated_Band, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [pcas:with];
+//   ↓4 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓5 = [HEAD:_BAND_NOUN, @s];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+// associated_Acts: X is associated with the musical artist Y.
+SENT -> NP cop _associated_ prep det common_noun ARG {
+  [HEAD:associated_Acts, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = [@def, @s, dem:false, poss:false, part:false];
+  ↓6 = [HEAD:_MUSICAL_ARTIST_NOUN, @s];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+// associated_Acts: X plays with the band Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _plays_ prep det common_noun ARG {
+//   [HEAD:associated_Acts, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [pcas:with];
+//   ↓4 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓5 = [HEAD:_BAND_NOUN, @s];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+// associated_Band_associated_Musical_Artist: X is associated with the musical artist Y.
+SENT -> NP cop _associated_ prep det common_noun ARG {
+  [HEAD:associated_Band_associated_Musical_Artist, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = [@def, @s, dem:false, poss:false, part:false];
+  ↓6 = [HEAD:_MUSICAL_ARTIST_NOUN, @s];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+// associated_Band_associated_Musical_Artist: X plays with the band Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _plays_ prep det common_noun ARG {
+//   [HEAD:associated_Band_associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [pcas:with];
+//   ↓4 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓5 = [HEAD:_BAND_NOUN, @s];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+// activeYearsStartYear: X became active in Y; X started a career in Y.
+SENT -> NP _became_ _active_ prep ARG {
+  [HEAD:active_Years_Start_Year, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _started_ det common_noun prep ARG {
+  [HEAD:active_Years_Start_Year, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_CAREER, @s];
+  ↓5 = [pcas:in];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// language: The Y language is spoken in X.
+SENT -> ARG cop _spoken_ prep NP {
+  [HEAD:language, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $I;
+  ⇑ = ⇓5;
+}
+
+// language: One of the languages of X is Y.
+SENT -> _one_ prep NP cop ARG {
+  [HEAD:language, i:$I, ii:$II];
+  ↓1 = [];
+  ↓2 = [pcas:of];
+  ↓3 = [HEAD:_LANGUAGES, @def, @p, dem:false, poss:false, part:false, ofObj:$I];
+  ↓4 = [@present, @indicative, @_3s];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// official_Language: The Y language is spoken in X.
+SENT -> ARG cop _spoken_ prep NP {
+  [HEAD:official_Language, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $I;
+  ⇑ = ⇓5;
+}
+
+// official_Language: One of the languages of X is Y.
+SENT -> _one_ prep NP cop ARG {
+  [HEAD:official_Language, i:$I, ii:$II];
+  ↓1 = [];
+  ↓2 = [pcas:of];
+  ↓3 = [HEAD:_LANGUAGES, @def, @p, dem:false, poss:false, part:false, ofObj:$I];
+  ↓4 = [@present, @indicative, @_3s];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// officialLanguage: The official language of X is Y; Y is the official language of X.
+SENT -> NP cop ARG {
+  [HEAD:official_Language, i:$I, ii:$II];
+  ↓1 = [HEAD:_OFFICIAL_LANGUAGE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> ARG cop NP {
+  [HEAD:official_Language, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_OFFICIAL_LANGUAGE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// background: X is a Y; Y is part of the background of X.
+SENT -> NP cop det ARG {
+  [HEAD:background, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> ARG cop _part_word_ prep NP {
+  [HEAD:background, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = [HEAD:_BACKGROUND, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓5;
+}
+
+// occupation: X is a Y; Y is X's occupation (as a non-possessive variant).
+SENT -> NP cop det ARG {
+  [HEAD:occupation, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop NP {
+  [HEAD:occupation, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_OCCUPATION, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// instrument: X plays the Y; X uses Y; The instruments that X plays are Y.
+SENT -> NP _plays_ det ARG {
+  [HEAD:instrument, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _uses_ ARG {
+  [HEAD:instrument, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _that_word_ NP _plays_ cop ARG {
+  [HEAD:instrument, i:$I, ii:$II];
+  ↓1 = [HEAD:_INSTRUMENT, @def, @p, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = $I;
+  ↓4 = [@present, @indicative, @_3s];
+  ↓5 = [@present, @indicative, @_3p];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// genre: record-label/music-entity variants.
+/* V47 semantic cleanup: removed risky genre alternative.
+SENT -> NP _deals_ prep det ARG common_noun {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:with];
+  ↓4 = [@def, @s, dem:false, poss:false, part:false];
+  ↓5 = $II;
+  ↓6 = [HEAD:_GENRE_NOUN, @s];
+  ⇑ = ⇓6;
+}
+
+*/
+/* V47 semantic cleanup: removed risky genre alternative.
+SENT -> NP _produces_ ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+*/
+// musicFusionGenre: Y is a music fusion genre of X.
+SENT -> ARG cop det common_noun prep NP {
+  [HEAD:music_Fusion_Genre, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_MUSIC_FUSION_GENRE, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det common_noun prep NP {
+  [HEAD:music_Fusion_Genre, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_MUSICAL_GENRE, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+// capital/currency/mayor: common copular relation frames.
+SENT -> NP cop NP {
+  [HEAD:capital, i:$I, ii:$II];
+  ↓1 = [HEAD:_CAPITAL, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:capital, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_CAPITAL, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:currency, i:$I, ii:$II];
+  ↓1 = [HEAD:_CURRENCY, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:mayor, i:$I, ii:$II];
+  ↓1 = [HEAD:_MAYOR, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop prep NP {
+  [HEAD:hometown, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _comes_ prep NP {
+  [HEAD:hometown, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop prep NP {
+  [HEAD:country, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:in];
+  ↓4 = [HEAD:_COUNTRY_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$II];
+  ⇑ = ⇓4;
+}
+
+// elevationF: X has an elevation of Y feet above sea level; X is Y feet above sea level.
+SENT -> NP _has_ det common_noun prep NUMBER_FEET _above_ _sea_level_ {
+  [HEAD:elevation_F, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_ELEVATION, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ↓7 = [];
+  ↓8 = [];
+  ⇑ = ⇓8;
+}
+
+SENT -> NP cop NUMBER_FEET _above_ _sea_level_ {
+  [HEAD:elevation_F, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+// birthYear: X was born in Y.
+SENT -> NP _was_ _born_ prep ARG {
+  [HEAD:birth_Year, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// leaderParty: The leader party in X is Y; Y is the leading party of X.
+SENT -> NP cop NP {
+  [HEAD:leader_Party, i:$I, ii:$II];
+  ↓1 = [HEAD:_LEADER_PARTY, @def, @s, dem:false, poss:false, part:false, atObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:leader_Party, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_LEADING_PARTY, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// demonym: The people of X are called Y.
+SENT -> NP cop _called_ ARG {
+  [HEAD:demonym, i:$I, ii:$II];
+  ↓1 = [HEAD:_PEOPLE, @def, @p, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3p];
+  ↓3 = [];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop _known_ _as_word_ ARG {
+  [HEAD:demonym, i:$I, ii:$II];
+  ↓1 = [HEAD:_PEOPLE, @def, @p, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3p];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// battles/battle: X fought in Y; Y was a battle involving X.
+SENT -> NP _fought_ prep NP {
+  [HEAD:battles, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _fought_ prep NP {
+  [HEAD:battle, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+/************************************************************
+ * v30 frames from v29 low-score analysis on 1..1000.
+ * These target the remaining productive families without adding
+ * one-off sentence-specific frames.
+ ************************************************************/
+
+// associated*: X is a member of Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop det common_noun prep NP {
+//   [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@indef, @s];
+//   ↓4 = [HEAD:_MEMBER, @s];
+//   ↓5 = [pcas:of];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop det common_noun prep NP {
+//   [HEAD:associated_Band, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@indef, @s];
+//   ↓4 = [HEAD:_MEMBER, @s];
+//   ↓5 = [pcas:of];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop det common_noun prep NP {
+//   [HEAD:associated_Acts, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@indef, @s];
+//   ↓4 = [HEAD:_MEMBER, @s];
+//   ↓5 = [pcas:of];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+// associated*: X is part of Y.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop _part_word_ prep NP {
+//   [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [];
+//   ↓4 = [pcas:of];
+//   ↓5 = $II;
+//   ⇑ = ⇓5;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop _part_word_ prep NP {
+//   [HEAD:associated_Band, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [];
+//   ↓4 = [pcas:of];
+//   ↓5 = $II;
+//   ⇑ = ⇓5;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop _part_word_ prep NP {
+//   [HEAD:associated_Acts, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [];
+//   ↓4 = [pcas:of];
+//   ↓5 = $II;
+//   ⇑ = ⇓5;
+// }
+*/
+
+// associated*: X was a member of the Y band.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _was_ det common_noun prep det ARG _band_word_ {
+//   [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [];
+//   ↓3 = [@indef, @s];
+//   ↓4 = [HEAD:_MEMBER, @s];
+//   ↓5 = [pcas:of];
+//   ↓6 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓7 = $II;
+//   ↓8 = [];
+//   ⇑ = ⇓8;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _was_ det common_noun prep det ARG _band_word_ {
+//   [HEAD:associated_Band, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [];
+//   ↓3 = [@indef, @s];
+//   ↓4 = [HEAD:_MEMBER, @s];
+//   ↓5 = [pcas:of];
+//   ↓6 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓7 = $II;
+//   ↓8 = [];
+//   ⇑ = ⇓8;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _was_ det common_noun prep det ARG _band_word_ {
+//   [HEAD:associated_Acts, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [];
+//   ↓3 = [@indef, @s];
+//   ↓4 = [HEAD:_MEMBER, @s];
+//   ↓5 = [pcas:of];
+//   ↓6 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓7 = $II;
+//   ↓8 = [];
+//   ⇑ = ⇓8;
+// }
+*/
+
+// instrument: X is a singer and also plays Y.
+SENT -> NP cop det common_noun _and_ _also_ _plays_ ARG {
+  [HEAD:instrument, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_SINGER_NOUN, @s];
+  ↓5 = [];
+  ↓6 = [];
+  ↓7 = [@present, @indicative, @_3s];
+  ↓8 = $II;
+  ⇑ = ⇓8;
+}
+
+// instrument: X uses voice / the voice. Useful for Singing/Voice references.
+SENT -> NP _uses_ det common_noun {
+  [HEAD:instrument, i:$I, ii:[FORM:"Singing"]];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = [HEAD:_VOICE_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+// genre: X is associated with the Y.
+/* V47 semantic cleanup: removed risky genre alternative.
+SENT -> NP cop _associated_ prep det ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = [@def, @s, dem:false, poss:false, part:false];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+*/
+// genre: The main genre of music of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = [HEAD:_MAIN_GENRE_OF_MUSIC, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// genre: X has the music genre Y.
+SENT -> NP _has_ det common_noun ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = [HEAD:_MUSIC_GENRE_NOUN, @s];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// derivative(s): X derives from Y / X is a derivative of Y.
+SENT -> NP _derives_ prep ARG {
+  [HEAD:derivative, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _derives_ prep ARG {
+  [HEAD:derivatives, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop det common_noun prep ARG {
+  [HEAD:derivative, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_DERIVATIVE_NOUN, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop det common_noun prep ARG {
+  [HEAD:derivatives, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_DERIVATIVE_NOUN, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// battle(s): X was involved in Y; one of the noted X battles was Y.
+SENT -> NP cop _involved_ prep NP {
+  [HEAD:battle, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _involved_ prep NP {
+  [HEAD:battles, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> _one_ prep det _noted_ NP _battles_word_ _was_ NP {
+  [HEAD:battle, i:$I, ii:$II];
+  ↓1 = [];
+  ↓2 = [pcas:of];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = [];
+  ↓5 = $I;
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = $II;
+  ⇑ = ⇓8;
+}
+
+SENT -> _one_ prep det _noted_ NP _battles_word_ _was_ NP {
+  [HEAD:battles, i:$I, ii:$II];
+  ↓1 = [];
+  ↓2 = [pcas:of];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = [];
+  ↓5 = $I;
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = $II;
+  ⇑ = ⇓8;
+}
+
+// surface variants still causing normalized no-match: The 4th runway at X has a surface of Y.
+SENT -> NP prep NP _has_ det common_noun prep ARG {
+  [HEAD:r4_Surface, i:$I, ii:$II];
+  ↓1 = [HEAD:_FOURTH_RUNWAY, @def, @s, dem:false, poss:false, part:false];
+  ↓2 = [pcas:at];
+  ↓3 = $I;
+  ↓4 = [@present, @indicative, @_3s];
+  ↓5 = [@indef, @s];
+  ↓6 = [HEAD:_SURFACE_NOUN, @s];
+  ↓7 = [pcas:of];
+  ↓8 = $II;
+  ⇑ = ⇓8;
+}
+
+SENT -> NP prep NP _has_ det common_noun prep ARG {
+  [HEAD:P_4th_runway_Surface_Type, i:$I, ii:$II];
+  ↓1 = [HEAD:_FOURTH_RUNWAY, @def, @s, dem:false, poss:false, part:false];
+  ↓2 = [pcas:at];
+  ↓3 = $I;
+  ↓4 = [@present, @indicative, @_3s];
+  ↓5 = [@indef, @s];
+  ↓6 = [HEAD:_SURFACE_NOUN, @s];
+  ↓7 = [pcas:of];
+  ↓8 = $II;
+  ⇑ = ⇓8;
+}
+
+/************************************************************
+ * v31 targeted frames from low BLEU/chrF diagnosis.
+ * These frames avoid broad ad-hoc lexicalization and focus on predicate
+ * families where the v30 outputs were grammatical but still far from
+ * WebNLG references, or where a genuine predicate frame was missing.
+ ************************************************************/
+
+// origin/hometown: X comes from Y; X is from Y; The origin of X is Y.
+SENT -> NP _comes_ prep NP {
+  [HEAD:origin, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop prep NP {
+  [HEAD:origin, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop NP {
+  [HEAD:origin, i:$I, ii:$II];
+  ↓1 = [HEAD:_ORIGIN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// Additional origin-like hometown form, kept because WebNLG often uses "comes from".
+SENT -> NP cop NP {
+  [HEAD:hometown, i:$I, ii:$II];
+  ↓1 = [HEAD:_ORIGIN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// ethnicGroup: An ethnic group of X is Y; Y is an ethnic group in/of X.
+SENT -> det common_noun prep NP cop ARG {
+  [HEAD:ethnic_Group, i:$I, ii:$II];
+  ↓1 = [@indef, @s, before_vowel:true];
+  ↓2 = [HEAD:_ETHNIC_GROUP, @s];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det common_noun prep NP {
+  [HEAD:ethnic_Group, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ETHNIC_GROUP, @s];
+  ↓5 = [pcas:in];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det common_noun prep NP {
+  [HEAD:ethnic_Group, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ETHNIC_GROUP, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det common_noun _called_ det ARG {
+  [HEAD:ethnic_Group, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ETHNIC_GROUP, @s];
+  ↓5 = [];
+  ↓6 = [@def, @s, dem:false, poss:false, part:false];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+// Taxonomy: X belongs to the division/order/class/family of Y.
+SENT -> NP _belongs_ prep det common_noun prep ARG {
+  [HEAD:division, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:to];
+  ↓4 = [@def, @s, dem:false, poss:false, part:false];
+  ↓5 = [HEAD:_DIVISION_TAXON, @s];
+  ↓6 = [pcas:of];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+SENT -> NP _belongs_ prep det common_noun prep ARG {
+  [HEAD:P_order, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:to];
+  ↓4 = [@def, @s, dem:false, poss:false, part:false];
+  ↓5 = [HEAD:_ORDER_TAXON, @s];
+  ↓6 = [pcas:of];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+SENT -> NP _belongs_ prep det common_noun prep ARG {
+  [HEAD:class, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:to];
+  ↓4 = [@def, @s, dem:false, poss:false, part:false];
+  ↓5 = [HEAD:_CLASS_TAXON, @s];
+  ↓6 = [pcas:of];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+SENT -> NP _belongs_ prep det common_noun prep ARG {
+  [HEAD:family, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:to];
+  ↓4 = [@def, @s, dem:false, poss:false, part:false];
+  ↓5 = [HEAD:_FAMILY_TAXON, @s];
+  ↓6 = [pcas:of];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+// aircraftTransport: Y is a transport aircraft in X; the transport aircraft for X is Y.
+SENT -> ARG cop det common_noun prep NP {
+  [HEAD:aircraft_Transport, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_TRANSPORT_AIRCRAFT, @s];
+  ↓5 = [pcas:in];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> det common_noun prep NP cop ARG {
+  [HEAD:aircraft_Transport, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [HEAD:_TRANSPORT_AIRCRAFT, @s];
+  ↓3 = [pcas:for];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// aircraftAttack / attackAircraft: Y is an attack aircraft of X.
+SENT -> ARG cop det common_noun prep NP {
+  [HEAD:aircraft_Attack, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ATTACK_AIRCRAFT, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det common_noun prep NP {
+  [HEAD:attack_Aircraft, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_ATTACK_AIRCRAFT, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+// headquarter: The headquarters of X are in Y / are located in Y.
+SENT -> NP cop prep NP {
+  [HEAD:headquarter, i:$I, ii:$II];
+  ↓1 = [HEAD:_HEADQUARTERS, @def, @p, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3p];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop _located_ prep NP {
+  [HEAD:headquarter, i:$I, ii:$II];
+  ↓1 = [HEAD:_HEADQUARTERS, @def, @p, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3p];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// anthem: The national anthem of X is called Y.
+SENT -> NP cop _called_ ARG {
+  [HEAD:anthem, i:$I, ii:$II];
+  ↓1 = [HEAD:_NATIONAL_ANTHEM, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// associated*: typed WebNLG variants with singer/band cues.
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> det common_noun NP cop _associated_ prep det common_noun NP {
+//   [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓2 = [HEAD:_SINGER_NOUN, @s];
+//   ↓3 = $I;
+//   ↓4 = [@present, @indicative, @_3s];
+//   ↓5 = [];
+//   ↓6 = [pcas:with];
+//   ↓7 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓8 = [HEAD:_BAND_NOUN, @s];
+//   ↓9 = $II;
+//   ⇑ = ⇓9;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> det common_noun NP cop _associated_ prep det common_noun NP {
+//   [HEAD:associated_Band, i:$I, ii:$II];
+//   ↓1 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓2 = [HEAD:_SINGER_NOUN, @s];
+//   ↓3 = $I;
+//   ↓4 = [@present, @indicative, @_3s];
+//   ↓5 = [];
+//   ↓6 = [pcas:with];
+//   ↓7 = [@def, @s, dem:false, poss:false, part:false];
+//   ↓8 = [HEAD:_BAND_NOUN, @s];
+//   ↓9 = $II;
+//   ⇑ = ⇓9;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _performed_ prep NP {
+//   [HEAD:associated_Musical_Artist, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [];
+//   ↓3 = [pcas:for];
+//   ↓4 = $II;
+//   ⇑ = ⇓4;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _performed_ prep NP {
+//   [HEAD:associated_Band, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [];
+//   ↓3 = [pcas:for];
+//   ↓4 = $II;
+//   ⇑ = ⇓4;
+// }
+*/
+
+// genre: extra low-score references.
+/* V47 semantic cleanup: removed risky genre alternative.
+SENT -> NP cop det common_noun prep ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [HEAD:_EXPONENT, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+*/
+/* V47 semantic cleanup: removed risky genre alternative.
+SENT -> NP cop det common_noun prep det common_noun ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_PERFORMER, @s];
+  ↓5 = [pcas:of];
+  ↓6 = [@def, @s, dem:false, poss:false, part:false];
+  ↓7 = [HEAD:_MUSICAL_GENRE, @s];
+  ↓8 = $II;
+  ⇑ = ⇓8;
+}
+
+*/
+/* V47 semantic cleanup: removed risky genre alternative.
+SENT -> NP _sings_ ARG _music_ {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+*/
+
+/************************************************************
+ * v32 missing-output frames.
+ * Focused on predicates that produced empty output or raw nominal fallbacks
+ * in the 1-2000 diagnostic logs. These frames intentionally target missing
+ * coverage and avoid broad new paraphrase families.
+ ************************************************************/
+
+// deathPlace/placeOfDeath(X,Y): X died in Y; The death place of X is Y.
+SENT -> NP _died_ prep ARG {
+  [HEAD:death_Place, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _died_ prep ARG {
+  [HEAD:place_Of_Death, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:death_Place, i:$I, ii:$II];
+  ↓1 = [HEAD:_DEATH_PLACE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:place_Of_Death, i:$I, ii:$II];
+  ↓1 = [HEAD:_DEATH_PLACE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// alias/alternativeName(X,Y): X has the alternative name Y; The alternative name of X is Y.
+SENT -> NP _has_ NP ARG {
+  [HEAD:alias, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_ALTERNATIVE_NAME, @def, @s, dem:false, poss:false, part:false];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _has_ NP ARG {
+  [HEAD:alternative_Name, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_ALTERNATIVE_NAME, @def, @s, dem:false, poss:false, part:false];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:alias, i:$I, ii:$II];
+  ↓1 = [HEAD:_ALTERNATIVE_NAME, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:alternative_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_ALTERNATIVE_NAME, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// birthDate/dateOfBirth(X,Y): X was born on/in Y.
+SENT -> NP _was_ _born_ prep ARG {
+  [HEAD:birth_Date, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:on];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _was_ _born_ prep ARG {
+  [HEAD:date_Of_Birth, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:on];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// Sport: club/team/clubs/league.
+SENT -> NP _plays_ prep NP {
+  [HEAD:club, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _played_ prep NP {
+  [HEAD:club, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _plays_ prep NP {
+  [HEAD:clubs, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _played_ prep NP {
+  [HEAD:clubs, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _plays_ prep NP {
+  [HEAD:team, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _played_ prep NP {
+  [HEAD:team, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _plays_ prep NP {
+  [HEAD:league, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop NP {
+  [HEAD:league, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_LEAGUE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// Sport roles: manager/coach/position/ground/youthclub.
+SENT -> NP cop NP {
+  [HEAD:manager, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_MANAGER_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:coach, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_COACH_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _plays_ prep ARG {
+  [HEAD:position, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:as];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop NP {
+  [HEAD:position, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_POSITION_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:ground, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_GROUND_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _played_ prep NP {
+  [HEAD:youthclub, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _played_ prep NP {
+  [HEAD:youth_Club, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:for];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// Space / NASA frames.
+SENT -> NP cop det common_noun prep NP {
+  [HEAD:mission, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_MISSION_NOUN, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop det common_noun prep NP {
+  [HEAD:crew1_Up, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_CREW_MEMBER_NOUN, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop det common_noun prep NP {
+  [HEAD:crew2_Up, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_CREW_MEMBER_NOUN, @s];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop NP {
+  [HEAD:commander, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_COMMANDER_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> _NASA_ _selected_ NP prep ARG {
+  [HEAD:selection, i:$I, ii:$II];
+  ↓1 = [];
+  ↓2 = [];
+  ↓3 = $I;
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _was_ _selected_ _by_ _NASA_ prep ARG {
+  [HEAD:selection, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [];
+  ↓6 = [pcas:in];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+SENT -> NP _was_ _selected_ _by_ _NASA_ prep ARG {
+  [HEAD:was_Selected_By_NASA, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [];
+  ↓6 = [pcas:in];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+SENT -> NP _spent_ NUMBER_UNIT prep _space_word_ {
+  [HEAD:time_In_Space, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = $II;
+  ↓4 = [pcas:in];
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _was_ _awarded_ ARG {
+  [HEAD:awards, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _was_ _awarded_ ARG {
+  [HEAD:award, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// Other high-frequency nominal fallbacks from the diagnostics.
+SENT -> NP cop NP {
+  [HEAD:chairman, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_CHAIRMAN_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:floor_Area, i:$I, ii:$II];
+  ↓1 = [HEAD:_FLOOR_AREA_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:address, i:$I, ii:$II];
+  ↓1 = [HEAD:_ADDRESS_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:status, i:$I, ii:$II];
+  ↓1 = [HEAD:_STATUS_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:alma_Mater, i:$I, ii:$II];
+  ↓1 = [HEAD:_ALMA_MATER_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:birth_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_BIRTH_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+
+/************************************************************
+ * v33: numeric/unit and building/astronomy frames.
+ ************************************************************/
+
+// buildingStartDate/startDate(X,Y): X opened/began in Y; The construction/building of X began in Y.
+SENT -> NP _opened_ prep ARG {
+  [HEAD:building_Start_Date, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+SENT -> NP _opened_ prep ARG {
+  [HEAD:start_Date, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+SENT -> NP _began_ prep ARG {
+  [HEAD:building_Start_Date, i:$I, ii:$II];
+  ↓1 = [HEAD:_CONSTRUCTION_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+SENT -> NP _began_ prep ARG {
+  [HEAD:start_Date, i:$I, ii:$II];
+  ↓1 = [HEAD:_CONSTRUCTION_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// completionDate/buildingEndDate(X,Y): X was completed in Y.
+SENT -> NP _was_ _completed_ prep ARG {
+  [HEAD:completion_Date, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _was_ _completed_ prep ARG {
+  [HEAD:building_End_Date, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// architect(X,Y): Y designed X; X was designed by Y.
+SENT -> NP _designed_ NP {
+  [HEAD:architect, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+SENT -> NP _was_ _designed_ _by_ NP {
+  [HEAD:architect, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP cop NP {
+  [HEAD:architect, i:$I, ii:$II];
+  ↓1 = [HEAD:_ARCHITECT_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// cost(X,Y): X cost Y; The cost of X is Y.
+SENT -> NP _cost_ ARG {
+  [HEAD:cost, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+SENT -> NP cop ARG {
+  [HEAD:cost, i:$I, ii:$II];
+  ↓1 = [HEAD:_COST_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// Reusable numeric-property pattern: X has a <property> of Y.
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:floor_Area, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_FLOOR_AREA_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:floor_Count, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_FLOOR_COUNT_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:average_Speed, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_AVERAGE_SPEED_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:escape_Velocity, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_ESCAPE_VELOCITY_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:orbital_Period, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_ORBITAL_PERIOD_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:periapsis, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_PERIAPSIS_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:apoapsis, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_APOAPSIS_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:mass, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_MASS_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:temperature, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_TEMPERATURE_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:area_Total, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_TOTAL_AREA_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:area_Water, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_WATER_AREA_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+SENT -> NP _has_ NP prep ARG {
+  [HEAD:population_Density, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_POPULATION_DENSITY_NOUN, @indef, @s, dem:false, poss:false, part:false];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// Nominal exact-ish frames: The <property> of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:area_Code, i:$I, ii:$II];
+  ↓1 = [HEAD:_AREA_CODE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+SENT -> NP cop ARG {
+  [HEAD:former_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_FORMER_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+SENT -> NP cop NP {
+  [HEAD:largest_City, i:$I, ii:$II];
+  ↓1 = [HEAD:_LARGEST_CITY_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// v33 fix3 user-requested frames for strict BLEU/chrF failures.
+// creator(X,Y) -> X is the creator of Y.
+SENT -> NP cop NP {
+  [HEAD:creator, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_CREATOR_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$II];
+  ⇑ = ⇓3;
+}
+
+// creators(X,Y) -> X is the creator of Y.
+SENT -> NP cop NP {
+  [HEAD:creators, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_CREATOR_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$II];
+  ⇑ = ⇓3;
+}
+
+// epoch(X,Y) -> The epoch date of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:epoch, i:$I, ii:$II];
+  ↓1 = [HEAD:_EPOCH_DATE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// leaderTitle(X,Y) -> The leader title of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:leader_Title, i:$I, ii:$II];
+  ↓1 = [HEAD:_LEADER_TITLE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// averageSpeed(X,Y) -> X has an average speed of Y.
+SENT -> NP _has_ det _average_speed_word_ prep ARG {
+  [HEAD:average_Speed, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// avgSpeed(X,Y) -> X has an average speed of Y.
+SENT -> NP _has_ det _average_speed_word_ prep ARG {
+  [HEAD:avg_Speed, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// height(X,Y) -> X is Y high.
+SENT -> NP cop ARG _high_word_ {
+  [HEAD:height, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+// Person/height(X,Y) -> X is Y high.
+SENT -> NP cop ARG _high_word_ {
+  [HEAD:Person_height, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+/************************************************************
+ * v34: targeted frames for the high-frequency low BLEU+chrF
+ * cases in the WebNLG pilot.  These are deliberately local
+ * predicate frames: they improve benchmark coverage without
+ * changing the controlled generation algorithm.
+ ************************************************************/
+
+// creator / creators: WebNLG usually verbalizes the object as creator.
+SENT -> NP _created_ NP {
+  [HEAD:creator, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _created_ NP {
+  [HEAD:creators, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _was_ _created_ _by_ NP {
+  [HEAD:creator, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _was_ _created_ _by_ NP {
+  [HEAD:creators, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop det _creator_word_ prep NP {
+  [HEAD:creator, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop det _creator_word_ prep NP {
+  [HEAD:creators, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+// Ingredients and variants.
+SENT -> ARG cop det _ingredient_word_ prep NP {
+  [HEAD:ingredient, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det _ingredient_word_ prep NP {
+  [HEAD:main_Ingredient, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _ingredient_word_ prep NP cop ARG {
+  [HEAD:ingredient, i:$I, ii:$II];
+  ↓1 = [@indef, @s, before_vowel:true];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _variant_word_ prep NP cop ARG {
+  [HEAD:has_Variant, i:$I, ii:$II];
+  ↓1 = [@indef, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det _variation_word_ prep NP {
+  [HEAD:dish_Variation, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det _variation_word_ prep NP {
+  [HEAD:has_Variant, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+// Vehicle/film/book style relations.
+/* V48: removed bare/telegraphic engine frame.
+SENT -> NP _has_ det ARG {
+  [HEAD:engine, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+*/
+
+SENT -> NP cop _related_ prep NP {
+  [HEAD:related_Mean_Of_Transportation, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:to];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _followed_ _by_ NP {
+  [HEAD:subsequent_Work, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _followed_ NP {
+  [HEAD:subsequent_Work, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _was_ _preceded_ _by_ NP {
+  [HEAD:previous_Work, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _preceded_ NP {
+  [HEAD:previous_Work, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _starred_ prep NP {
+  [HEAD:starring, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $I;
+  ⇑ = ⇓4;
+}
+
+// Location/organization frames that were too generic in v33.
+SENT -> NP cop _located_ prep det _region_word_ prep NP {
+  [HEAD:region, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = [@def, @s];
+  ↓6 = [];
+  ↓7 = [pcas:of];
+  ↓8 = $II;
+  ⇑ = ⇓8;
+}
+
+SENT -> NP cop _based_ prep NP {
+  [HEAD:city, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+/* V48: keep city as located/based; remove home paraphrase for singleton diagnostics.
+SENT -> det _home_word_ prep NP cop NP {
+  [HEAD:city, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+*/
+
+SENT -> NP _poss_s_ _club_word_ cop ARG {
+  [HEAD:club, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [@present, @indicative, @_3s];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _poss_s_ _club_word_ cop ARG {
+  [HEAD:team, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [@present, @indicative, @_3s];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _plays_ prep ARG {
+  [HEAD:season, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop det _city_word_ prep NP {
+//   [HEAD:country, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@indef, @s];
+//   ↓4 = [];
+//   ↓5 = [pcas:in];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+// Numeric and role frames close to WebNLG references.
+SENT -> NP _has_ det _area_word_ prep ARG {
+  [HEAD:area_Total, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _total_area_word_ prep NP cop ARG {
+  [HEAD:area_Total, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _population_density_word_ prep NP cop ARG {
+  [HEAD:population_Density, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ ARG _people_per_square_kilometer_ {
+  [HEAD:population_Density, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+SENT -> det _water_area_word_ prep NP cop ARG {
+  [HEAD:area_Water, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> det _leader_word_ prep NP cop NP {
+//   [HEAD:leader_Title, i:$I, ii:$II];
+//   ↓1 = [@def, @s];
+//   ↓2 = [];
+//   ↓3 = [pcas:of];
+//   ↓4 = $I;
+//   ↓5 = [@present, @indicative, @_3s];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP cop det _leader_word_ prep NP {
+//   [HEAD:leader_Title, i:$I, ii:$II];
+//   ↓1 = $II;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@def, @s];
+//   ↓4 = [];
+//   ↓5 = [pcas:of];
+//   ↓6 = $I;
+//   ⇑ = ⇓6;
+// }
+*/
+
+SENT -> det _birth_date_word_ prep NP cop ARG {
+  [HEAD:birth_Date, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _birth_date_word_ prep NP cop ARG {
+  [HEAD:date_Of_Birth, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop ARG _tall_word_ {
+  [HEAD:height, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop ARG _tall_word_ {
+  [HEAD:Person_height, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _has_ ARG _members_word_ {
+  [HEAD:capacity, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _won_ ARG {
+  [HEAD:award, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _received_ det _award_word_ prep ARG {
+  [HEAD:award, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [];
+  ↓5 = [pcas:from];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> ARG cop det _ethnic_ _group_word_ prep NP {
+  [HEAD:ethnic_Groups, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s, before_vowel:true];
+  ↓4 = [];
+  ↓5 = [];
+  ↓6 = [pcas:in];
+  ↓7 = $I;
+  ⇑ = ⇓7;
+}
+
+SENT -> NP cop _manufactured_ _by_ NP {
+  [HEAD:manufacturer, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop det _manufacturer_word_ prep NP {
+  [HEAD:manufacturer, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $I;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _makes_ NP {
+  [HEAD:manufacturer, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [];
+  ↓3 = $I;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop det _member_word_ prep ARG {
+  [HEAD:party, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _nationality_word_ prep NP cop ARG {
+  [HEAD:nationality, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:class, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+
+/************************************************************
+ * v37: productive frames for single-triple empty outputs.
+ * These target predicate families observed in comparison_1_triples:
+ * sport roles/grounds, offices, names/aliases, locations, identifiers,
+ * dates, bibliographic data, vehicles, food, and selected technical values.
+ ************************************************************/
+
+// Sports: ground / manager / coach / chairman.
+SENT -> NP _plays_ prep ARG {
+  [HEAD:ground, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:at];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop NP {
+  [HEAD:ground, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_GROUND_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:manager, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_MANAGER_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop _managed_ _by_ ARG {
+  [HEAD:manager, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop NP {
+  [HEAD:coach, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_COACH_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop NP {
+  [HEAD:chairman, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_CHAIRMAN_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+// Political offices and occupations.
+SENT -> NP _worked_ prep ARG {
+  [HEAD:office, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:as];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _held_ NP {
+  [HEAD:office, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [HEAD:_OFFICE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$II];
+  ⇑ = ⇓3;
+}
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _was_ ARG {
+//   [HEAD:office, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [];
+//   ↓3 = $II;
+//   ⇑ = ⇓3;
+// }
+*/
+
+SENT -> NP _worked_ prep ARG {
+  [HEAD:office_worked_At_worked_As, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:as];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _was_ ARG {
+//   [HEAD:office_worked_At_worked_As, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [];
+//   ↓3 = $II;
+//   ⇑ = ⇓3;
+// }
+*/
+
+// Full names, long names, aliases, nicknames, alter egos.
+SENT -> NP cop ARG {
+  [HEAD:fullname, i:$I, ii:$II];
+  ↓1 = [HEAD:_FULL_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:full_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_FULL_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:long_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_FULL_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop _known_ prep ARG {
+  [HEAD:alternative_Name, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:as];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _also_ _known_ prep ARG {
+  [HEAD:alias, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [pcas:as];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop _also_ _known_ prep ARG {
+  [HEAD:aka, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [pcas:as];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop _also_ _known_ prep ARG {
+  [HEAD:nickname, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [pcas:as];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:alter_Ego, i:$I, ii:$II];
+  ↓1 = [HEAD:_ALTERNATIVE_NAME, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _was_ _born_ ARG {
+  [HEAD:birth_Name, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// Education.
+SENT -> NP _attended_ ARG {
+  [HEAD:alma_Mater, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _graduated_ prep ARG {
+  [HEAD:alma_Mater, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// Locations.
+SENT -> NP cop _located_ prep ARG {
+  [HEAD:location, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _found_ prep ARG {
+  [HEAD:location, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _located_ prep ARG {
+  [HEAD:location_City, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _located_ prep ARG {
+  [HEAD:location_Country, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _located_ prep ARG {
+  [HEAD:foundation_Place, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _part_ prep ARG {
+  [HEAD:subdivision_Name, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _comes_ prep ARG {
+  [HEAD:country, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:from];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP cop _popular_ prep ARG {
+  [HEAD:region, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// Buildings, addresses and quantities.
+SENT -> NP _has_ det NP prep ARG {
+  [HEAD:floor_Area, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [HEAD:_FLOOR_AREA_NOUN, @s, dem:false, poss:false, part:false];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:address, i:$I, ii:$II];
+  ↓1 = [HEAD:_ADDRESS_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _has_ ARG _pages_word_ {
+  [HEAD:number_Of_Pages, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+// Bibliographic identifiers and publication.
+SENT -> NP _has_ det _ISSN_number_word_ ARG {
+  [HEAD:issn, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _ISSN_number_word_ ARG {
+  [HEAD:ISSN_number, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _ISSN_number_word_ ARG {
+  [HEAD:issn_Number, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _ISBN_word_ ARG {
+  [HEAD:isbn, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _ISBN_word_ ARG {
+  [HEAD:ISBN_number, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _ISBN_word_ ARG {
+  [HEAD:isbn_Number, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _CODEN_code_word_ ARG {
+  [HEAD:coden, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _CODEN_code_word_ ARG {
+  [HEAD:CODEN_code, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _CODEN_code_word_ ARG {
+  [HEAD:coden_Code, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _ICAO_location_identifier_word_ ARG {
+  [HEAD:icao_Location_Identifier, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _ICAO_location_identifier_word_ ARG {
+  [HEAD:ICAO_Location_Identifier, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _IATA_location_identifier_word_ ARG {
+  [HEAD:iata_Location_Identifier, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@def, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP cop _published_ _by_ ARG {
+  [HEAD:publisher, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP cop ARG {
+  [HEAD:abbreviation, i:$I, ii:$II];
+  ↓1 = [HEAD:_ABBREVIATION_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// Media, vehicles and technical values.
+SENT -> NP cop _available_ prep ARG {
+  [HEAD:media_Type, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = [pcas:in]; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ ARG _transmission_word_ {
+  [HEAD:transmission, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = $II; ↓4 = []; ⇑ = ⇓4;
+}
+SENT -> NP _has_ det _wheelbase_word_ prep ARG {
+  [HEAD:wheelbase, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP cop _assembled_ prep ARG {
+  [HEAD:assembly, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = [pcas:in]; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP cop _manufactured_ _by_ ARG {
+  [HEAD:manufacturer, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _has_ det _density_word_ prep ARG {
+  [HEAD:density, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _has_ det _course_word_ prep ARG {
+  [HEAD:course, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _has_ det _UTC_offset_word_ prep ARG {
+  [HEAD:utc_Offset, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+
+// Food ingredients.
+SENT -> NP _has_ ARG prep _main_ _ingredients_word_ {
+  [HEAD:main_Ingredients, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = $II; ↓4 = [pcas:as]; ↓5 = []; ↓6 = []; ⇑ = ⇓6;
+}
+SENT -> NP _has_ ARG prep _main_ _ingredients_word_ {
+  [HEAD:ingredient_Name, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = $II; ↓4 = [pcas:as]; ↓5 = []; ↓6 = []; ⇑ = ⇓6;
+}
+
+// Dates, retirement, death, flights, ships and releases.
+SENT -> NP _started_ det _career_word_ prep ARG {
+  [HEAD:active_Years_Start_Date, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:on]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _was_ _active_ _until_ ARG {
+  [HEAD:active_Years_End_Date, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = []; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _retired_ prep ARG {
+  [HEAD:date_Of_Retirement, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [pcas:on]; ↓4 = $II; ⇑ = ⇓4;
+}
+SENT -> NP _retired_ prep ARG {
+  [HEAD:date_Of_Ret, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [pcas:on]; ↓4 = $II; ⇑ = ⇓4;
+}
+SENT -> NP _died_ prep ARG {
+  [HEAD:death_Date, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [pcas:on]; ↓4 = $II; ⇑ = ⇓4;
+}
+SENT -> NP _died_ prep ARG {
+  [HEAD:date_Of_Death, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [pcas:on]; ↓4 = $II; ⇑ = ⇓4;
+}
+SENT -> NP _made_ det _maiden_flight_word_ prep ARG {
+  [HEAD:maiden_Flight, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:on]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _made_ det _maiden_flight_word_ prep ARG {
+  [HEAD:maiden_Voyage, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:on]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _made_ det _final_flight_word_ prep ARG {
+  [HEAD:final_Flight, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:on]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP cop _launched_ prep ARG {
+  [HEAD:ship_Launch, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = [pcas:on]; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP cop _christened_ prep ARG {
+  [HEAD:christening_Date, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = [pcas:on]; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP cop _released_ prep ARG {
+  [HEAD:release_Date, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = [pcas:on]; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP cop _inaugurated_ prep ARG {
+  [HEAD:inauguration_Date, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = [pcas:on]; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _began_ ARG prep ARG {
+  [HEAD:ship_In_Service, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [HEAD:_SERVICE_NOUN]; ↓4 = [pcas:on]; ↓5 = $II; ⇑ = ⇓5;
+}
+
+// Space, discovery, military, creation, precedence.
+SENT -> NP cop _commanded_ _by_ ARG {
+  [HEAD:commander, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> NP _served_ prep det _crew_member_word_ prep ARG {
+  [HEAD:was_a_crew_member_of, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [pcas:as]; ↓4 = [@indef, @s]; ↓5 = []; ↓6 = [pcas:of]; ↓7 = $II; ⇑ = ⇓7;
+}
+SENT -> NP _served_ prep det _crew_member_word_ prep ARG {
+  [HEAD:mission, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = [pcas:as]; ↓4 = [@indef, @s]; ↓5 = []; ↓6 = [pcas:of]; ↓7 = $II; ⇑ = ⇓7;
+}
+SENT -> NP _was_ _discovered_ _by_ ARG {
+  [HEAD:discoverer, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = []; ↓3 = []; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+SENT -> ARG _discovered_ NP {
+  [HEAD:discovered, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = []; ↓3 = $I; ⇑ = ⇓3;
+}
+SENT -> ARG _created_ NP {
+  [HEAD:creator, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = []; ↓3 = $I; ⇑ = ⇓3;
+}
+SENT -> ARG _preceded_ NP {
+  [HEAD:preceded_By, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = []; ↓3 = $I; ⇑ = ⇓3;
+}
+
+// Extra first-runway alias observed with a different predicate spelling.
+SENT -> det _length_of_first_runway_word_ prep NP cop ARG _feet_word_ {
+  [HEAD:P_1st_Runway_Length_Feet, i:$I, ii:$II];
+  ↓1 = [@def, @s];
+  ↓2 = [];
+  ↓3 = [pcas:at];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ↓7 = [];
+  ⇑ = ⇓7;
+}
+
+
+/************************************************************
+ * v44: score-oriented phrasal frames and spelling variants.
+ * These replace telegraphic generic fallbacks for frequent low-score
+ * predicates and add frames for remaining camel-case predicate spellings.
+ ************************************************************/
+
+// Products, population and finance.
+SENT -> NP _produces_ ARG {
+  [HEAD:product, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _has_ det _population_word_ prep ARG {
+  [HEAD:population_Total, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _operating_income_word_ prep ARG {
+  [HEAD:operating_Income, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _net_income_word_ prep ARG {
+  [HEAD:net_Income, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// Languages, residence, religion, industry.
+SENT -> ARG cop _one_ prep det _languages_ _spoken_ prep NP {
+  [HEAD:languages, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = [@def, @p];
+  ↓6 = [];
+  ↓7 = [];
+  ↓8 = [pcas:in];
+  ↓9 = $I;
+  ⇑ = ⇓9;
+}
+
+SENT -> NP _lives_ prep ARG {
+  [HEAD:residence, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _has_ ARG prep det _religion_word_ {
+  [HEAD:religion, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [pcas:as];
+  ↓5 = [@indef, @s];
+  ↓6 = [];
+  ⇑ = ⇓6;
+}
+
+SENT -> NP cop prep ARG _industry_word_ {
+  [HEAD:industry, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+// Creative/work relations.
+SENT -> NP cop _written_ _by_ ARG {
+  [HEAD:writer, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _produced_ _by_ ARG {
+  [HEAD:producer, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _owned_ _by_ ARG {
+  [HEAD:owning_Company, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// Dates and institutional types.
+SENT -> NP _was_ _founded_ prep ARG {
+  [HEAD:founding_Date, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:on];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _was_ _founded_ prep ARG {
+  [HEAD:founding_Year, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _died_ prep ARG {
+  [HEAD:death_Year, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _was_ _selected_ _by_ _NASA_ {
+  [HEAD:was_selected_by_NASA, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:type, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _has_ det _government_type_word_ prep ARG {
+  [HEAD:government_Type, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _power_type_word_ prep ARG {
+  [HEAD:power_Type, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// Measurements and identifiers with phrasing instead of telegraphic fallback.
+SENT -> NP _has_ det _runtime_word_ prep ARG {
+  [HEAD:runtime, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _serving_size_word_ prep ARG {
+  [HEAD:serving_Size, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+/* V48: removed bare/telegraphic engine frame.
+SENT -> NP _has_ ARG _engine_word_ {
+  [HEAD:engine, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+*/
+
+SENT -> NP _has_ det _rotation_period_word_ prep ARG {
+  [HEAD:rotation_Period, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _absolute_magnitude_word_ prep ARG {
+  [HEAD:absolute_Magnitude, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _OCLC_number_word_ ARG {
+  [HEAD:oclc, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _has_ det _area_code_word_ ARG {
+  [HEAD:area_Code, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _has_ det _time_zone_word_ ARG {
+  [HEAD:time_Zone, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+
+/* V46 semantic cleanup: removed risky alternative.
+// SENT -> NP _has_ det _leader_title_word_ prep ARG {
+//   [HEAD:leader_Title, i:$I, ii:$II];
+//   ↓1 = $I;
+//   ↓2 = [@present, @indicative, @_3s];
+//   ↓3 = [@def, @s];
+//   ↓4 = [];
+//   ↓5 = [pcas:of];
+//   ↓6 = $II;
+//   ⇑ = ⇓6;
+// }
+*/
+
+// Name/alias spelling variants that still appeared as empty outputs.
+SENT -> NP cop ARG {
+  [HEAD:fullName, i:$I, ii:$II];
+  ↓1 = [HEAD:_FULL_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop _also_ _known_ prep ARG {
+  [HEAD:alterEgo, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [pcas:as];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _ship_class_word_ prep ARG {
+  [HEAD:ship_Class, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _ship_power_word_ prep ARG {
+  [HEAD:ship_Power, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _was_ prep ARG {
+  [HEAD:ship_In_Service, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _has_ det _single_temperature_word_ prep ARG {
+  [HEAD:single_Temperature, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+
+/************************************************************
+ * V46 semantic cleanup: safer frames for low-score review.
+ * These frames replace overly specific or semantically risky
+ * paraphrases removed above.
+ ************************************************************/
+
+// city(X,Y) -> X is located in Y / X is based in Y.
+SENT -> NP cop _located_ prep NP {
+  [HEAD:city, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// genre(X,Y) -> The musical genre of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = [HEAD:_MUSICAL_GENRE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// associated*(X,Y) -> X is associated with Y.
+SENT -> NP cop _associated_ prep NP {
+  [HEAD:associated_Band_associated_Musical_Artist, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:with];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// office(X,Y) -> X served as Y.
+SENT -> NP _served_ prep ARG {
+  [HEAD:office, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:as];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+SENT -> NP _served_ prep ARG {
+  [HEAD:office_worked_At_worked_As, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:as];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+
+/************************************************************
+ * V47 targeted semantic cleanup for remaining low-score single triples.
+ * These are conservative predicate-family frames: they replace raw
+ * label-like outputs by phrased realizations and avoid risky music/role
+ * paraphrases.
+ ************************************************************/
+
+// genre(X,Y): keep only neutral property-style formulations.
+SENT -> NP cop ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = [HEAD:_MUSICAL_GENRE, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP _has_ det common_noun ARG {
+  [HEAD:genre, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = [HEAD:_MUSIC_GENRE_NOUN, @s];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// areaTotal/areaMetro(X,Y): property-style area expressions.
+SENT -> NP _has_ det _total_area_word_ prep ARG {
+  [HEAD:areaTotal, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@def, @s, dem:false, poss:false, part:false];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _total_area_word_ prep NP cop ARG {
+  [HEAD:areaTotal, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _metropolitan_area_word_ prep ARG {
+  [HEAD:areaMetro, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _metropolitan_area_word_ prep NP cop ARG {
+  [HEAD:areaMetro, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// engine(X,Y): avoid “engine engine” and bare value outputs.
+SENT -> NP _has_ det ARG _engine_word_ {
+  [HEAD:engine, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = $II;
+  ↓5 = [];
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _powered_ _by_ det ARG _engine_word_ {
+  [HEAD:engine, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [@indef, @s];
+  ↓6 = $II;
+  ↓7 = [];
+  ⇑ = ⇓7;
+}
+
+// budget/distributor/knownFor/numberOfLocations/identifier codes.
+SENT -> det _budget_word_ prep NP cop ARG {
+  [HEAD:budget, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _budget_word_ prep ARG {
+  [HEAD:budget, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _was_ _distributed_ _by_ ARG {
+  [HEAD:distributor, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP cop _known_ prep ARG {
+  [HEAD:knownFor, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:for];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _has_ ARG _locations_word_ {
+  [HEAD:numberOfLocations, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ↓4 = [];
+  ⇑ = ⇓4;
+}
+
+SENT -> det _number_of_locations_word_ prep NP cop ARG {
+  [HEAD:numberOfLocations, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _ISO_639_1_code_word_ prep NP cop ARG {
+  [HEAD:iso6391Code, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _ISO_639_2_code_word_ prep NP cop ARG {
+  [HEAD:iso6392Code, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// length and serving size.
+SENT -> NP _has_ det _length_word_ prep ARG {
+  [HEAD:length, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> det _length_word_ prep NP cop ARG {
+  [HEAD:length, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _serving_size_word_ prep ARG {
+  [HEAD:servingSize, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = [pcas:of];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// youthclubs(X,Y): X played for the youth club Y.
+SENT -> NP _played_ prep det _youth_club_word_ ARG {
+  [HEAD:youthclubs, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [pcas:for];
+  ↓4 = [@def, @s, dem:false, poss:false, part:false];
+  ↓5 = [];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+// selectedByNasa / was selected by NASA: include date object when present.
+SENT -> NP _was_ _selected_ _by_ _NASA_ prep ARG {
+  [HEAD:was_selected_by_NASA, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = [];
+  ↓6 = [pcas:in];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+
+/************************************************************
+ * V48 stabilization: conservative singleton frames after semantic review.
+ * These rules avoid remaining telegraphic fallbacks and add spelling variants
+ * whose canonical predicate names occur in generated inputs.
+ ************************************************************/
+
+// Name variants: robust full-name frames with terminal lexical material.
+SENT -> det _full_name_word_ prep NP cop ARG {
+  [HEAD:fullName, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false];
+  ↓2 = [];
+  ↓3 = [pcas:of];
+  ↓4 = $I;
+  ↓5 = [@present, @indicative, @_3s];
+  ↓6 = $II;
+  ⇑ = ⇓6;
+}
+
+SENT -> NP _has_ det _full_name_word_ ARG {
+  [HEAD:fullName, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@indef, @s];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// Explicit variants kept for safety if generation preserves the original HEAD.
+SENT -> det _full_name_word_ prep NP cop ARG {
+  [HEAD:fullname, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false]; ↓2 = []; ↓3 = [pcas:of]; ↓4 = $I; ↓5 = [@present, @indicative, @_3s]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> det _full_name_word_ prep NP cop ARG {
+  [HEAD:full_Name, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false]; ↓2 = []; ↓3 = [pcas:of]; ↓4 = $I; ↓5 = [@present, @indicative, @_3s]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> det _full_name_word_ prep NP cop ARG {
+  [HEAD:longName, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false]; ↓2 = []; ↓3 = [pcas:of]; ↓4 = $I; ↓5 = [@present, @indicative, @_3s]; ↓6 = $II; ⇑ = ⇓6;
+}
+
+// Floor area and density/status/abbreviation with terminal nouns.
+SENT -> NP _has_ det _floor_area_word_ prep ARG {
+  [HEAD:floorArea, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> det _floor_area_word_ prep NP cop ARG {
+  [HEAD:floorArea, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false]; ↓2 = []; ↓3 = [pcas:of]; ↓4 = $I; ↓5 = [@present, @indicative, @_3s]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _has_ det _status_word_ prep ARG {
+  [HEAD:status, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> det _status_word_ prep NP cop ARG {
+  [HEAD:status, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false]; ↓2 = []; ↓3 = [pcas:of]; ↓4 = $I; ↓5 = [@present, @indicative, @_3s]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _has_ det _abbreviation_word_ prep ARG {
+  [HEAD:abbreviation, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> det _abbreviation_word_ prep NP cop ARG {
+  [HEAD:abbreviation, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false]; ↓2 = []; ↓3 = [pcas:of]; ↓4 = $I; ↓5 = [@present, @indicative, @_3s]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _has_ det _density_word_ prep ARG {
+  [HEAD:density, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> det _density_word_ prep NP cop ARG {
+  [HEAD:density, i:$I, ii:$II];
+  ↓1 = [@def, @s, dem:false, poss:false, part:false]; ↓2 = []; ↓3 = [pcas:of]; ↓4 = $I; ↓5 = [@present, @indicative, @_3s]; ↓6 = $II; ⇑ = ⇓6;
+}
+
+// City must not be realized as cityServed.
+SENT -> NP cop _based_ prep NP {
+  [HEAD:city, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = []; ↓4 = [pcas:in]; ↓5 = $II; ⇑ = ⇓5;
+}
+
+// Music subgenre: avoid raw "music music subgenre" fallbacks.
+SENT -> ARG cop det _subgenre_word_ prep NP {
+  [HEAD:musicSubgenre, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $I; ⇑ = ⇓6;
+}
+SENT -> NP _has_ det _subgenre_word_ ARG {
+  [HEAD:musicSubgenre, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = $II; ⇑ = ⇓5;
+}
+
+/************************************************************
+ * v49: safe frame stabilization for frequent 2-triple gaps.
+ * These are conservative single-fact frames; they should not change the
+ * sequence logic, but allow sequence-cleaned duplicates to realize once.
+ ************************************************************/
+
+// chairman(X,Y): The chairman of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:chairman, i:$I, ii:$II];
+  ↓1 = [HEAD:_CHAIRMAN_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// architect(X,Y): X was designed by Y.
+SENT -> NP _was_ _designed_ _by_ ARG {
+  [HEAD:architect, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// material(X,Y): X is made of Y.
+SENT -> NP cop _made_ prep ARG {
+  [HEAD:material, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// isPartOfMilitaryConflict(X,Y): X was part of Y.
+SENT -> NP _was_ _part_word_ prep ARG {
+  [HEAD:isPartOfMilitaryConflict, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+SENT -> NP _was_ _part_word_ prep ARG {
+  [HEAD:is_Part_Of_Military_Conflict, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:of];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// address(X,Y): The address of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:address, i:$I, ii:$II];
+  ↓1 = [HEAD:_ADDRESS_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// buildingType(X,Y): The building type of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:buildingType, i:$I, ii:$II];
+  ↓1 = [HEAD:_BUILDING_TYPE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:building_Type, i:$I, ii:$II];
+  ↓1 = [HEAD:_BUILDING_TYPE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// motto/nativeName/latinName.
+SENT -> NP cop ARG {
+  [HEAD:motto, i:$I, ii:$II];
+  ↓1 = [HEAD:_MOTTO_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:latinName, i:$I, ii:$II];
+  ↓1 = [HEAD:_LATIN_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:latin_Name, i:$I, ii:$II];
+  ↓1 = [HEAD:_LATIN_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:nativeName, i:$I, ii:$II];
+  ↓1 = [HEAD:_NATIVE_NAME_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// servingTemperature(X,Y): X is served at Y.
+SENT -> NP cop _served_ prep ARG {
+  [HEAD:servingTemperature, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:at];
+  ↓5 = $II;
+  ⇑ = ⇓5;
+}
+
+// addedToNationalRegister(X,Y): X was added to the National Register ... on Y.
+SENT -> NP _was_ _added_ prep _national_register_word_ prep ARG {
+  [HEAD:addedToNationalRegister, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [pcas:to];
+  ↓5 = [];
+  ↓6 = [pcas:on];
+  ↓7 = $II;
+  ⇑ = ⇓7;
+}
+
+// Backup pilot and commander roles.
+SENT -> NP cop ARG {
+  [HEAD:backupPilot, i:$I, ii:$II];
+  ↓1 = [HEAD:_BACKUP_PILOT_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+SENT -> NP cop ARG {
+  [HEAD:commander, i:$I, ii:$II];
+  ↓1 = [HEAD:_COMMANDER_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// Runway number aliases, using terminal role names to avoid missing common nouns.
+SENT -> ARG cop NP {
+  [HEAD:P__1st_runway_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_FIRST_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:r1_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_FIRST_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:P__2nd_runway_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_SECOND_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:r2_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_SECOND_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:P__3rd_runway_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_THIRD_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:r3_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_THIRD_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:P__4th_runway_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_FOURTH_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:r4_Number, i:$I, ii:$II];
+  ↓1 = $II;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [HEAD:_FOURTH_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ⇑ = ⇓3;
+}
+
+/************************************************************
+ * v50: conservative remaining 2-triple gaps.
+ * These singleton frames are intentionally safe and should not lower the
+ * single-triple score.  They mainly allow sequence-cleaned duplicates to
+ * realize once instead of remaining empty.
+ ************************************************************/
+
+// author(X,Y): The author of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:author, i:$I, ii:$II];
+  ↓1 = [HEAD:_AUTHOR_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// title(X,Y): The title of X is Y.
+SENT -> NP cop ARG {
+  [HEAD:title, i:$I, ii:$II];
+  ↓1 = [HEAD:_TITLE_NOUN, @def, @s, dem:false, poss:false, part:false, ofObj:$I];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $II;
+  ⇑ = ⇓3;
+}
+
+// state(X,Y): X is in the state of Y.
+SENT -> NP cop prep ARG {
+  [HEAD:state, i:$I, ii:$II];
+  ↓1 = $I;
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [pcas:in];
+  ↓4 = $II;
+  ⇑ = ⇓4;
+}
+
+// extra floor-area aliases that occur as WebNLG class-qualified predicates.
+SENT -> NP _has_ det _floor_area_word_ prep ARG {
+  [HEAD:Building_floorArea, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+SENT -> NP _has_ det _floor_area_word_ prep ARG {
+  [HEAD:Building_floor_Area, i:$I, ii:$II];
+  ↓1 = $I; ↓2 = [@present, @indicative, @_3s]; ↓3 = [@indef, @s]; ↓4 = []; ↓5 = [pcas:of]; ↓6 = $II; ⇑ = ⇓6;
+}
+
+// runway number aliases without the P_ prefix; these complement v49 aliases.
+SENT -> ARG cop NP {
+  [HEAD:_1st_runway_Number, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = [@present, @indicative, @_3s]; ↓3 = [HEAD:_FIRST_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I]; ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:_2nd_runway_Number, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = [@present, @indicative, @_3s]; ↓3 = [HEAD:_SECOND_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I]; ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:_3rd_runway_Number, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = [@present, @indicative, @_3s]; ↓3 = [HEAD:_THIRD_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I]; ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:_4th_runway_Number, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = [@present, @indicative, @_3s]; ↓3 = [HEAD:_FOURTH_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I]; ⇑ = ⇓3;
+}
+SENT -> ARG cop NP {
+  [HEAD:_5th_runway_Number, i:$I, ii:$II];
+  ↓1 = $II; ↓2 = [@present, @indicative, @_3s]; ↓3 = [HEAD:_FIFTH_RUNWAY_NUMBER, @def, @s, dem:false, poss:false, part:false, ofObj:$I]; ⇑ = ⇓3;
+}

@@ -1,0 +1,84 @@
+/************************************************************
+* Generic WebNLG-style generator for a richer controlled fragment.
+* Predicates are lexicalized as relation markers; objects are generic.
+************************************************************/
+
+@withoutSpaces
+Axiom → EntityDescription {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+/************************************************************
+* Generic one-, two-, and three-relation descriptions
+************************************************************/
+
+EntityDescription → ENTITY RELATION {
+  [HEAD:DESCRIBE_ENTITY, entity:$entity, rel1:$R1];
+
+  ↓1 = [entity:$entity];
+  ↓2 = $R1;
+
+  ⇑ = ↑;
+}
+
+EntityDescription → ENTITY RELATION COORD RELATION {
+  [HEAD:DESCRIBE_ENTITY, entity:$entity, rel1:$R1, rel2:$R2];
+
+  ↓1 = [entity:$entity];
+  ↓2 = $R1;
+  ↓3 = [];
+  ↓4 = $R2;
+
+  ⇑ = ↑;
+}
+
+EntityDescription → ENTITY RELATION COORD RELATION COORD RELATION {
+  [HEAD:DESCRIBE_ENTITY, entity:$entity, rel1:$R1, rel2:$R2, rel3:$R3];
+
+  ↓1 = [entity:$entity];
+  ↓2 = $R1;
+  ↓3 = [];
+  ↓4 = $R2;
+  ↓5 = [];
+  ↓6 = $R3;
+
+  ⇑ = ↑;
+}
+
+/************************************************************
+* Generic relation: a predicate marker followed by an object.
+************************************************************/
+
+RELATION → RELMARK OBJECT {
+  [pred:$Pred, obj:$Obj];
+
+  ↓1 = [pred:$Pred];
+  ↓2 = [obj:$Obj];
+
+  ⇑ = ↑;
+}
+
+/************************************************************
+* Lexical projections
+************************************************************/
+
+ENTITY → entity_name {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+RELMARK → relation_marker {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+OBJECT → object_name {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+COORD → coord {
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

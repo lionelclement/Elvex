@@ -1,0 +1,717 @@
+/************************************************************
+ * WebNLG multi-triple sequence rules.
+ *
+ * v38 assumes that generated inputs carry local ID features on every
+ * subject, predicate, and object.  After the Elvex guard-binding fix, repeated
+ * variables in guards are true equality constraints.  These rules therefore
+ * detect local co-reference structurally, without precomputed rel:same_subject
+ * flags in the input.
+ ************************************************************/
+
+S -> SENT dot {
+  [HEAD:webnlg_sequence];
+
+  ↓1 = ↑;
+  ↓2 = [];
+
+  ⇑ = ⇓1;
+}
+
+/* Exact semantic duplicate: same subject, predicate, and object IDs. */
+SENT -> SENT {
+  [HEAD:webnlg_sequence, size:2,
+   i:[pattern:$Pat1, s:$S, p:$P, o:$O],
+   ii:[pattern:$Pat2, s:$S, p:$P, o:$O]];
+
+  ↓1 = [HEAD:webnlg_simple, pattern:$Pat1, s:$S, p:$P, o:$O];
+
+  ⇑ = ⇓1;
+}
+
+
+/* Same subject and same object, with one predicate realized as a
+ * possessive relational noun.  This generalizes cases such as
+ * location(X,Y) + canton(X,Y): the main fact is realized first and
+ * the second fact is attached to the shared object as a relative clause,
+ * e.g. X is located in Y, which is its canton.  The rule family is
+ * deliberately restricted by the RELSEQ clauses below: it applies only
+ * to predicates explicitly listed as safe possessive relational nouns.
+ */
+SENT -> SENT comma RELSEQ {
+  [HEAD:webnlg_sequence, size:2,
+   i:[pattern:$PatRel, s:$S, p:$PRel, o:$O],
+   ii:[pattern:$PatMain, s:$S, p:$PMain, o:$O]];
+
+  attest $PRel != $PMain;
+
+  ↓1 = [HEAD:webnlg_simple, pattern:$PatMain, s:$S, p:$PMain, o:$O];
+  ↓2 = [];
+  ↓3 = [HEAD:poss_rel_for, p:$PRel];
+
+  ⇑ = ⇓3;
+}
+
+SENT -> SENT comma RELSEQ {
+  [HEAD:webnlg_sequence, size:2,
+   i:[pattern:$PatMain, s:$S, p:$PMain, o:$O],
+   ii:[pattern:$PatRel, s:$S, p:$PRel, o:$O]];
+
+  attest $PRel != $PMain;
+
+  ↓1 = [HEAD:webnlg_simple, pattern:$PatMain, s:$S, p:$PMain, o:$O];
+  ↓2 = [];
+  ↓3 = [HEAD:poss_rel_for, p:$PRel];
+
+  ⇑ = ⇓3;
+}
+
+/* Same subject, different predicates: share the initial NP and coordinate VPs.
+ * This covers generic patterns and a small set of predicate-frame VP fragments.
+ * If a predicate has no VPSEQ rule, the independent fallback below remains.
+ */
+SENT -> NP VPSEQ _and_ VPSEQ {
+  [HEAD:webnlg_sequence, size:2,
+   i:[pattern:$Pat1, s:$S, p:$P1, o:$O1],
+   ii:[pattern:$Pat2, s:$S, p:$P2, o:$O2]];
+
+  attest $P1 != $P2;
+  /* Same-subject/same-object predicate pairs are handled by the
+   * possessive-relative family above when licensed.  Do not also build
+   * a flat VP coordination such as "X is located in Y and is in Y".
+   */
+  attest $O1 != $O2;
+
+  ↓1 = $S;
+  ↓2 = [pattern:$Pat1, p:$P1, o:$O1];
+  ↓3 = [];
+  ↓4 = [pattern:$Pat2, p:$P2, o:$O2];
+
+  ⇑ = ⇓4;
+}
+
+/* Same subject and predicate, different objects: coordinate two VP fragments.
+ * This is useful for list-like RDF duplicates where objects differ.
+ */
+SENT -> NP VPSEQ _and_ VPSEQ {
+  [HEAD:webnlg_sequence, size:2,
+   i:[pattern:$Pat1, s:$S, p:$P, o:$O1],
+   ii:[pattern:$Pat2, s:$S, p:$P, o:$O2]];
+
+  attest $O1 != $O2;
+
+  ↓1 = $S;
+  ↓2 = [pattern:$Pat1, p:$P, o:$O1];
+  ↓3 = [];
+  ↓4 = [pattern:$Pat2, p:$P, o:$O2];
+
+  ⇑ = ⇓4;
+}
+
+/* Object of first triple is subject of second: simple relative attachment.
+ * The first triple remains a full realization; the second is a relative
+ * clause when its predicate can be expressed as a RELSEQ fragment.
+ */
+SENT -> SENT comma RELSEQ {
+  [HEAD:webnlg_sequence, size:2,
+   i:[pattern:$Pat1, s:$S1, p:$P1, o:$M],
+   ii:[pattern:$Pat2, s:$M, p:$P2, o:$O2]];
+
+  ↓1 = [HEAD:webnlg_simple, pattern:$Pat1, s:$S1, p:$P1, o:$M];
+  ↓2 = [];
+  ↓3 = [pattern:$Pat2, p:$P2, o:$O2];
+
+  ⇑ = ⇓3;
+}
+
+/* Subject of first triple is object of second: inverse relative attachment. */
+SENT -> SENT comma RELSEQ {
+  [HEAD:webnlg_sequence, size:2,
+   i:[pattern:$Pat1, s:$M, p:$P1, o:$O1],
+   ii:[pattern:$Pat2, s:$S2, p:$P2, o:$M]];
+
+  ↓1 = [HEAD:webnlg_simple, pattern:$Pat2, s:$S2, p:$P2, o:$M];
+  ↓2 = [];
+  ↓3 = [pattern:$Pat1, p:$P1, o:$O1];
+
+  ⇑ = ⇓3;
+}
+
+
+/************************************************************
+ * v39: size-3 reduction before full realization.
+ *
+ * These rules reduce exact or partial duplicates structurally.  They keep the
+ * compositional size-2 rules available after deduplication, rather than
+ * directly concatenating three full sentences.  This is intended to cut the
+ * main source of output explosion in 3-triple inputs.
+ ************************************************************/
+
+/* Three exact semantic duplicates: realize a single triple. */
+SENT -> SENT {
+  [HEAD:webnlg_sequence, size:3, i:$T1, ii:$T1, iii:$T1];
+
+  ↓1 = [HEAD:webnlg_simple] U $T1;
+
+  ⇑ = ⇓1;
+}
+
+/* First and second triples duplicate: reduce to a 2-triple sequence. */
+SENT -> SENT {
+  [HEAD:webnlg_sequence, size:3, i:$T1, ii:$T1, iii:$T3];
+
+  attest $T1 != $T3;
+
+  ↓1 = [HEAD:webnlg_sequence, size:2, i:$T1, ii:$T3];
+
+  ⇑ = ⇓1;
+}
+
+/* First and third triples duplicate: reduce to a 2-triple sequence. */
+SENT -> SENT {
+  [HEAD:webnlg_sequence, size:3, i:$T1, ii:$T2, iii:$T1];
+
+  attest $T1 != $T2;
+
+  ↓1 = [HEAD:webnlg_sequence, size:2, i:$T1, ii:$T2];
+
+  ⇑ = ⇓1;
+}
+
+/* Second and third triples duplicate: reduce to a 2-triple sequence. */
+SENT -> SENT {
+  [HEAD:webnlg_sequence, size:3, i:$T1, ii:$T2, iii:$T2];
+
+  attest $T1 != $T2;
+
+  ↓1 = [HEAD:webnlg_sequence, size:2, i:$T1, ii:$T2];
+
+  ⇑ = ⇓1;
+}
+
+/* Same subject, three different predicates: one NP, coordinated VP fragments. */
+SENT -> NP VPSEQ comma VPSEQ _and_ VPSEQ {
+  [HEAD:webnlg_sequence, size:3,
+   i:[pattern:$Pat1, s:$S, p:$P1, o:$O1],
+   ii:[pattern:$Pat2, s:$S, p:$P2, o:$O2],
+   iii:[pattern:$Pat3, s:$S, p:$P3, o:$O3]];
+
+  attest $P1 != $P2;
+  attest $P1 != $P3;
+  attest $P2 != $P3;
+
+  ↓1 = $S;
+  ↓2 = [pattern:$Pat1, p:$P1, o:$O1];
+  ↓3 = [];
+  ↓4 = [pattern:$Pat2, p:$P2, o:$O2];
+  ↓5 = [];
+  ↓6 = [pattern:$Pat3, p:$P3, o:$O3];
+
+  ⇑ = ⇓6;
+}
+
+/* Same subject and predicate, three different objects: one NP, three VP fragments.
+ * A later version can replace this by object-list coordination for selected
+ * list-like predicates; this rule is deliberately structural and conservative.
+ */
+SENT -> NP VPSEQ comma VPSEQ _and_ VPSEQ {
+  [HEAD:webnlg_sequence, size:3,
+   i:[pattern:$Pat1, s:$S, p:$P, o:$O1],
+   ii:[pattern:$Pat2, s:$S, p:$P, o:$O2],
+   iii:[pattern:$Pat3, s:$S, p:$P, o:$O3]];
+
+  attest $O1 != $O2;
+  attest $O1 != $O3;
+  attest $O2 != $O3;
+
+  ↓1 = $S;
+  ↓2 = [pattern:$Pat1, p:$P, o:$O1];
+  ↓3 = [];
+  ↓4 = [pattern:$Pat2, p:$P, o:$O2];
+  ↓5 = [];
+  ↓6 = [pattern:$Pat3, p:$P, o:$O3];
+
+  ⇑ = ⇓6;
+}
+
+/************************************************************
+ * VP fragments used by same-subject coordination.
+ ************************************************************/
+
+VPSEQ -> VREL NP {
+  [pattern:svo, p:$P, o:$O];
+  ↓1 = $P;
+  ↓2 = $O;
+  ⇑ = ⇓1;
+}
+
+VPSEQ -> cop ADJ {
+  [pattern:cop_adj, p:$P, o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = $P U $O;
+  ⇑ = ⇓2;
+}
+
+VPSEQ -> cop NP {
+  [pattern:cop_nom, p:$P, o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = $O;
+  ⇑ = ⇓2;
+}
+
+/* Frequent frame predicates expressed without repeating the subject. */
+VPSEQ -> cop _located_ prep NP {
+  [pattern:frame, p:[HEAD:location], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $O;
+  ⇑ = ⇓4;
+}
+
+VPSEQ -> cop _located_ prep NP {
+  [pattern:frame, p:[HEAD:country], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $O;
+  ⇑ = ⇓4;
+}
+
+VPSEQ -> cop _located_ prep NP {
+  [pattern:frame, p:[HEAD:location_City], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [pcas:in];
+  ↓4 = $O;
+  ⇑ = ⇓4;
+}
+
+VPSEQ -> cop _operated_ _by_ NP {
+  [pattern:frame, p:[HEAD:operator], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $O;
+  ⇑ = ⇓4;
+}
+
+VPSEQ -> cop _operated_ _by_ NP {
+  [pattern:frame, p:[HEAD:operating_Organisation], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $O;
+  ⇑ = ⇓4;
+}
+
+VPSEQ -> _plays_ prep NP {
+  [pattern:frame, p:[HEAD:ground], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [pcas:at];
+  ↓3 = $O;
+  ⇑ = ⇓3;
+}
+
+VPSEQ -> cop _managed_ _by_ NP {
+  [pattern:frame, p:[HEAD:manager], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $O;
+  ⇑ = ⇓4;
+}
+
+VPSEQ -> cop _managed_ _by_ NP {
+  [pattern:frame, p:[HEAD:coach], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = $O;
+  ⇑ = ⇓4;
+}
+
+VPSEQ -> _has_ _full_name_word_ VALUE {
+  [pattern:frame, p:[HEAD:fullname], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = $O;
+  ⇑ = ⇓3;
+}
+
+VPSEQ -> _has_ _full_name_word_ VALUE {
+  [pattern:frame, p:[HEAD:full_Name], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = $O;
+  ⇑ = ⇓3;
+}
+
+VPSEQ -> cop _also_ _known_ _as_word_ ARG {
+  [pattern:frame, p:[HEAD:alternative_Name], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = [];
+  ↓3 = [];
+  ↓4 = [];
+  ↓5 = $O;
+  ⇑ = ⇓5;
+}
+
+VPSEQ -> _has_ NUMBER_UNIT {
+  [pattern:frame, p:[HEAD:floor_Area], o:$O];
+  ↓1 = [@present, @indicative, @_3s];
+  ↓2 = $O;
+  ⇑ = ⇓2;
+}
+
+
+/* Possessive relative fragments for same-subject/same-object pairs. */
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:canton]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_CANTON_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:country]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_COUNTRY_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:location_Country]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_COUNTRY_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:state]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_STATE_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:region]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_REGION_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:county]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_COUNTY_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:municipality]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_MUNICIPALITY_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:capital]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_CAPITAL, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:capital_City]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_CAPITAL_CITY, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:largest_City]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_LARGEST_CITY_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:location_City]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_CITY, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:owner]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_OWNER, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:ship_Owner]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_OWNER, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:operator]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_OPERATOR_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:operating_Organisation]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_OPERATOR_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:ship_Operator]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_OPERATOR_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:manager]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_MANAGER_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:coach]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_COACH_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:chairman]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_CHAIRMAN_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:commander]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_COMMANDER_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:architect]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_ARCHITECT_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:manufacturer]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_MANUFACTURER_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:creator]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_CREATOR_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:author]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_AUTHOR_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:publisher]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_PUBLISHER_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:leader]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_LEADER, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:leaderName]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_LEADER, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:leader_Name]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_LEADER, @s];
+  ⇑ = ⇓4;
+}
+
+RELSEQ -> _which_ cop det common_noun {
+  [HEAD:poss_rel_for, p:[HEAD:leader_Title]];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+  ↓4 = [HEAD:_LEADER_TITLE_NOUN, @s];
+  ⇑ = ⇓4;
+}
+
+/************************************************************
+ * Relative fragments for chain configurations.
+ ************************************************************/
+
+RELSEQ -> _which_ cop _located_ prep NP {
+  [pattern:frame, p:[HEAD:location], o:$O];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $O;
+  ⇑ = ⇓5;
+}
+
+RELSEQ -> _which_ cop _located_ prep NP {
+  [pattern:frame, p:[HEAD:country], o:$O];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = [];
+  ↓4 = [pcas:in];
+  ↓5 = $O;
+  ⇑ = ⇓5;
+}
+
+RELSEQ -> _which_ cop NP {
+  [pattern:cop_nom, p:$P, o:$O];
+  ↓1 = [];
+  ↓2 = [@present, @indicative, @_3s];
+  ↓3 = $O;
+  ⇑ = ⇓3;
+}
+
+/************************************************************
+ * Fallbacks.
+ ************************************************************/
+
+SENT -> SENT _and_ SENT {
+  [HEAD:webnlg_sequence, size:2, i:$T1, ii:$T2];
+
+  attest $T1 != $T2;
+
+  ↓1 = [HEAD:webnlg_simple] U $T1;
+  ↓2 = [];
+  ↓3 = [HEAD:webnlg_simple] U $T2;
+
+  ⇑ = ⇓3;
+}
+
+SENT -> SENT comma SENT _and_ SENT {
+  [HEAD:webnlg_sequence, size:3, i:$T1, ii:$T2, iii:$T3];
+
+  ↓1 = [HEAD:webnlg_simple] U $T1;
+  ↓2 = [];
+  ↓3 = [HEAD:webnlg_simple] U $T2;
+  ↓4 = [];
+  ↓5 = [HEAD:webnlg_simple] U $T3;
+
+  ⇑ = ⇓5;
+}
+
+SENT -> SENT comma SENT comma SENT _and_ SENT {
+  [HEAD:webnlg_sequence, size:4, i:$T1, ii:$T2, iii:$T3, iv:$T4];
+
+  ↓1 = [HEAD:webnlg_simple] U $T1;
+  ↓2 = [];
+  ↓3 = [HEAD:webnlg_simple] U $T2;
+  ↓4 = [];
+  ↓5 = [HEAD:webnlg_simple] U $T3;
+  ↓6 = [];
+  ↓7 = [HEAD:webnlg_simple] U $T4;
+
+  ⇑ = ⇓7;
+}
+
+SENT -> SENT comma SENT comma SENT comma SENT _and_ SENT {
+  [HEAD:webnlg_sequence, size:5, i:$T1, ii:$T2, iii:$T3, iv:$T4, v:$T5];
+
+  ↓1 = [HEAD:webnlg_simple] U $T1;
+  ↓2 = [];
+  ↓3 = [HEAD:webnlg_simple] U $T2;
+  ↓4 = [];
+  ↓5 = [HEAD:webnlg_simple] U $T3;
+  ↓6 = [];
+  ↓7 = [HEAD:webnlg_simple] U $T4;
+  ↓8 = [];
+  ↓9 = [HEAD:webnlg_simple] U $T5;
+
+  ⇑ = ⇓9;
+}

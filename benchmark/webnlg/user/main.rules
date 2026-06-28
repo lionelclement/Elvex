@@ -1,0 +1,6 @@
+/* Main Elvex rules file.
+ * Keep this file as an include list; edit included files in user/rules/.
+ */
+#include user/rules/frames.rules
+#include user/rules/webnlg_sequence.rules
+#include user/rules/simple_triples.rules

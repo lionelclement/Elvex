@@ -1,0 +1,8 @@
+@s = [number:sg];
+@p = [number:pl];
+
+@_1 = [person:one];
+@_2 = [person:two];
+@_3 = [person:three];
+
+@_3s = [@_3, @s];

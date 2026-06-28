@@ -1,0 +1,408 @@
+/************************************************************
+ * Base local lexicon.
+ * Closed-class and functional entries only: no HEAD here.
+ * Fields are separated by tabs: output-form POS features;
+ ************************************************************/
+"."    dot    [];
+","    comma  [];
+
+"is"     cop    [@present, @indicative, @_3s];
+"are"    cop    [@present, @indicative, @_3p];
+
+// Determiners.
+// Determiners distinguish definiteness from true indefiniteness.
+// def:false alone is broad: possessives, demonstratives and quantifiers may
+// be non-definite without being valid realizations for an indefinite NP.
+// Frames that need a real indefinite article should request @indef, not only
+// def:false.
+"a"      det    [@s, @indef];
+""       det    [@p, @indef];
+"the"    det    [def:true, poss:false, part:false, dem:false];
+
+"my"     det    [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_1s]];
+"your"   det    [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_2s]];
+"our"    det    [@p, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_1p]];
+"their"  det    [@p, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3p]];
+"his"    det    [@ms, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3ms, human:true]];
+"her"    det    [@fs, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3fs, human:true]];
+
+"this"   det    [@s, def:true, poss:false, part:false, dem:true];
+"that"   det    [@s, def:true, poss:false, part:false, dem:true];
+"these"  det    [@p, def:true, poss:false, part:false, dem:true];
+"those"  det    [@p, def:true, poss:false, part:false, dem:true];
+
+"some"   det    [@p, indef:false, def:false, poss:false, part:false, dem:false, quant:some];
+"several" det   [@p, indef:false, def:false, poss:false, part:false, dem:false, quant:several];
+"many"   det    [@p, indef:false, def:false, poss:false, part:false, dem:false, quant:many];
+"few"    det    [@p, indef:false, def:false, poss:false, part:false, dem:false, quant:few];
+"each"   det    [@s, indef:false, def:false, poss:false, part:false, dem:false, quant:each];
+"every"  det    [@s, indef:false, def:false, poss:false, part:false, dem:false, quant:every];
+
+"of"     prep   [pcas:of];
+"at"     prep   [pcas:at];
+"in"     prep   [pcas:in];
+
+// Dynamic literal values supplied by input features.
+// General strings may still be realized through FORM.
+FORM   value          [];
+"located" _located_ [];
+
+// Predicate-frame function words and phrases.
+"operated" _operated_ [];
+"by" _by_ [];
+"has" _has_ [@present, @indicative, @_3s];
+"above" _above_ [];
+"sea level" _sea_level_ [];
+
+// Metric spelling variants used by WebNLG references.
+"$NUMBER metres"  NUMBER_METRES  [value:$NUMBER];
+
+// Numeric values are not compacted as proper nouns. They are realized by
+// variable lexical entries selected by [value:$NUMBER].
+"$NUMBER"          NUMBER         [value:$NUMBER];
+"$NUMBER $UNIT"    NUMBER_UNIT    [value:$NUMBER, unit:$UNIT];
+"$NUMBER meters"   NUMBER_METERS  [value:$NUMBER];
+
+// Additional predicate-frame function words.
+"found" _found_ [];
+"made" _made_ [];
+"from" _from_ [];
+"part" _part_ [];
+"with" _with_ [];
+"operates" _operates_ [@present, @indicative, @_3s];
+"owned" _owned_ [];
+"started" _started_ [];
+"performing" _performing_ [];
+"was" _was_ [];
+"born" _born_ [];
+"signed" _signed_ [];
+"belongs" _belongs_ [@present, @indicative, @_3s];
+"spoken" _spoken_ [];
+"musician" _musician_ [];
+"artist" _artist_ [];
+"genre" _genre_ [];
+"number" _number_ [];
+"surface" _surface_ [];
+"as" prep [pcas:as];
+"on" prep [pcas:on];
+"associated" _associated_ [];
+"with" prep [pcas:with];
+
+// v28 functional words for musical/person/background frames and extra WebNLG variants.
+"performs" _performs_ [@present, @indicative, @_3s];
+"plays" _plays_ [@present, @indicative, @_3s];
+"uses" _uses_ [@present, @indicative, @_3s];
+"music" _music_ [];
+"originated" _originated_ [];
+"origins" _origins_ [];
+"stylistic origins" _stylistic_origins_ [];
+"to" prep [pcas:to];
+"singer" _singer_ [];
+"sings" _sings_ [@present, @indicative, @_3s];
+
+
+// v29 functional words for low BLEU/chrF families.
+"musical" _musical_ [];
+"band" _band_word_ [];
+"became" _became_ [];
+"active" _active_ [];
+"began" _began_ [];
+"career" _career_word_ [];
+"started" _started_ [];
+"official" _official_ [];
+"one" _one_ [];
+"languages" _languages_ [];
+"spoken" _spoken_ [];
+"that" _that_word_ [];
+"part" _part_word_ [];
+"called" _called_ [];
+"known" _known_ [];
+"people" _people_ [];
+"inhabitants" _inhabitants_ [];
+"native citizens" _native_citizens_ [];
+"native people" _native_people_ [];
+"have" _have_ [@present, @indicative, @_3p];
+"comes" _comes_ [@present, @indicative, @_3s];
+"came" _came_ [];
+"fought" _fought_ [];
+"involved" _involved_ [];
+"battle" _battle_word_ [];
+"battles" _battles_word_ [];
+"capital" _capital_word_ [];
+"currency" _currency_word_ [];
+"mayor" _mayor_word_ [];
+"led" _led_ [];
+"from" prep [pcas:from];
+"for" prep [pcas:for];
+"since" prep [pcas:since];
+
+"music fusion" _music_fusion_ [];
+"fusion" _fusion_ [];
+"main" _main_ [];
+"record" _record_word_ [];
+"deal" _deal_ [@present, @indicative, @_3p];
+"deals" _deals_ [@present, @indicative, @_3s];
+"produce" _produce_ [@present, @indicative, @_3p];
+"produces" _produces_ [@present, @indicative, @_3s];
+"earns" _earns_ [@present, @indicative, @_3s];
+"living" _living_ [];
+"as" _as_word_ [];
+"lead" _lead_word_ [];
+"$NUMBER feet" NUMBER_FEET [value:$NUMBER];
+"$NUMBER ft" NUMBER_FEET [value:$NUMBER];
+
+// v30 functional words for remaining low-score families.
+"member" _member_word_ [];
+"and" _and_ [];
+"also" _also_ [];
+"voice" _voice_ [];
+"derives" _derives_ [@present, @indicative, @_3s];
+"derivative" _derivative_word_ [];
+"noted" _noted_ [];
+"involving" _involving_ [];
+"main genre of music" _main_genre_of_music_word_ [];
+"music genre" _music_genre_word_ [];
+
+// v31 functional words for remaining low-score typed frames.
+"headquarters" _headquarters_word_ [];
+"national" _national_ [];
+"anthem" _anthem_word_ [];
+"ethnic" _ethnic_ [];
+"group" _group_word_ [];
+"division" _division_word_ [];
+"class" _class_word_ [];
+"family" _family_word_ [];
+"transport" _transport_ [];
+"attack" _attack_ [];
+"aircraft" _aircraft_word_ [];
+"performed" _performed_ [];
+"exponent" _exponent_word_ [];
+"performer" _performer_word_ [];
+"used" _used_ [];
+
+// v32 functional words for missing-output families.
+"died" _died_ [];
+"alternative name" _alternative_name_word_ [];
+"goes" _goes_ [@present, @indicative, @_3s];
+"alternative" _alternative_word_ [];
+"name" _name_word_ [];
+"played" _played_ [];
+"play" _play_ [@present, @indicative, @_3p];
+"member" _member_word_ [];
+"manager" _manager_word_ [];
+"coach" _coach_word_ [];
+"league" _league_word_ [];
+"club" _club_word_ [];
+"team" _team_word_ [];
+"position" _position_word_ [];
+"ground" _ground_word_ [];
+"youth club" _youth_club_word_ [];
+"selected" _selected_ [];
+"NASA" _NASA_ [];
+"mission" _mission_word_ [];
+"crew member" _crew_member_word_ [];
+"commander" _commander_word_ [];
+"spent" _spent_ [];
+"minutes" _minutes_word_ [];
+"space" _space_word_ [];
+"awarded" _awarded_ [];
+"award" _award_word_ [];
+"chairman" _chairman_word_ [];
+"floor area" _floor_area_word_ [];
+"address" _address_word_ [];
+"status" _status_word_ [];
+"alma mater" _alma_mater_word_ [];
+"birth name" _birth_name_word_ [];
+"square metres" _square_metres_ [];
+"square meters" _square_meters_ [];
+"centimetres" _centimetres_ [];
+"centimeters" _centimeters_ [];
+"kilograms" _kilograms_ [];
+
+
+// v33 numeric/unit and building/astronomy frames.
+"completed" _completed_ [@past];
+"opened" _opened_ [@past];
+"building" _building_word_ [];
+"construction" _construction_word_ [];
+"designed" _designed_ [@past];
+"architect" _architect_word_ [];
+"cost" _cost_ [];
+"floor count" _floor_count_word_ [];
+"floors" _floors_word_ [];
+"area" _area_word_ [];
+"total area" _total_area_word_ [];
+"water area" _water_area_word_ [];
+"population density" _population_density_word_ [];
+"average speed" _average_speed_word_ [];
+"escape velocity" _escape_velocity_word_ [];
+"orbital period" _orbital_period_word_ [];
+"periapsis" _periapsis_word_ [];
+"apoapsis" _apoapsis_word_ [];
+"mass" _mass_word_ [];
+"temperature" _temperature_word_ [];
+"area code" _area_code_word_ [];
+"former name" _former_name_word_ [];
+"largest city" _largest_city_word_ [];
+
+// v33 fix3 user-requested strict-low-score frame terminals.
+"high" _high_word_ [];
+
+// v34 targeted lexical material for WebNLG score-sensitive frames.
+"created" _created_ [@past];
+"creator" _creator_word_ [];
+"ingredient" _ingredient_word_ [];
+"variation" _variation_word_ [];
+"variant" _variant_word_ [];
+"engine" _engine_word_ [];
+"region" _region_word_ [];
+"season" _season_word_ [];
+"based" _based_ [];
+"home" _home_word_ [];
+"related" _related_ [];
+"transport" _transport_word_ [];
+"followed" _followed_ [@past];
+"preceded" _preceded_ [@past];
+"sequel" _sequel_word_ [];
+"runtime" _runtime_word_ [];
+"run time" _run_time_word_ [];
+"members" _members_word_ [];
+"won" _won_ [@past];
+"received" _received_ [@past];
+"manufactured" _manufactured_ [];
+"manufacturer" _manufacturer_word_ [];
+"makes" _makes_ [@present, @indicative, @_3s];
+"starred" _starred_ [@past];
+"nationality" _nationality_word_ [];
+"national" _national_word_ [];
+"city" _city_word_ [];
+"people per square kilometer" _people_per_square_kilometer_ [];
+"people per square kilometre" _people_per_square_kilometre_ [];
+"inhabitants per square kilometre" _inhabitants_per_square_kilometre_ [];
+"inhabitants per square kilometer" _inhabitants_per_square_kilometer_ [];
+"tall" _tall_word_ [];
+"'s" _poss_s_ [];
+"leader" _leader_word_ [];
+"birth date" _birth_date_word_ [];
+
+
+// v37 empty-output targeted terminals.
+"worked" _worked_ [@past];
+"held" _held_ [@past];
+"managed" _managed_ [];
+"graduated" _graduated_ [@past];
+"attended" _attended_ [@past];
+"full name" _full_name_word_ [];
+"long name" _long_name_word_ [];
+"also" _also_ [];
+"known" _known_ [];
+"alter" _alter_ [];
+"ego" _ego_word_ [];
+"available" _available_ [];
+"ISSN number" _ISSN_number_word_ [];
+"ICAO location identifier" _ICAO_location_identifier_word_ [];
+"IATA location identifier" _IATA_location_identifier_word_ [];
+"abbreviation" _abbreviation_word_ [];
+"CODEN code" _CODEN_code_word_ [];
+"pages" _pages_word_ [];
+"ISBN" _ISBN_word_ [];
+"published" _published_ [];
+"transmission" _transmission_word_ [];
+"wheelbase" _wheelbase_word_ [];
+"ingredients" _ingredients_word_ [];
+"until" _until_ [];
+"retired" _retired_ [@past];
+"maiden flight" _maiden_flight_word_ [];
+"final flight" _final_flight_word_ [];
+"discovered" _discovered_ [@past];
+"UTC offset" _UTC_offset_word_ [];
+"course" _course_word_ [];
+"assembled" _assembled_ [];
+"commanded" _commanded_ [];
+"launched" _launched_ [];
+"christened" _christened_ [];
+"released" _released_ [];
+"inaugurated" _inaugurated_ [];
+"nickname" _nickname_word_ [];
+"popular" _popular_ [];
+"served" _served_ [@past];
+"service" _SERVICE_NOUN [];
+
+// v38 local planning function words.
+"which" _which_ [];
+"its"    det    [@s, indef:false, def:false, poss:true, part:false, dem:false, owner:[@_3s, human:false]];
+
+
+// v44 low-score and remaining empty-output functional words.
+"population" _population_word_ [];
+"operating income" _operating_income_word_ [];
+"net income" _net_income_word_ [];
+"income" _income_word_ [];
+"product" _product_word_ [];
+"products" _products_word_ [];
+"industry" _industry_word_ [];
+"religion" _religion_word_ [];
+"serving size" _serving_size_word_ [];
+"residence" _residence_word_ [];
+"writer" _writer_word_ [];
+"written" _written_ [];
+"owner" _owner_word_ [];
+"company" _company_word_ [];
+"death year" _death_year_word_ [];
+"absolute magnitude" _absolute_magnitude_word_ [];
+"rotation period" _rotation_period_word_ [];
+"OCLC number" _OCLC_number_word_ [];
+"area code" _area_code_word_ [];
+"leader title" _leader_title_word_ [];
+"time zone" _time_zone_word_ [];
+"producer" _producer_word_ [];
+"produced" _produced_ [];
+"founding date" _founding_date_word_ [];
+"founded" _founded_ [];
+"government type" _government_type_word_ [];
+"type" _type_word_ [];
+"power type" _power_type_word_ [];
+"ship class" _ship_class_word_ [];
+"ship power" _ship_power_word_ [];
+"in service" _in_service_word_ [];
+"single temperature" _single_temperature_word_ [];
+"temperature" _temperature_word_ [];
+"lives" _lives_ [@present, @indicative, @_3s];
+
+// v47 targeted semantic cleanup terminals.
+"metropolitan area" _metropolitan_area_word_ [];
+"budget" _budget_word_ [];
+"distributed" _distributed_ [];
+"ISO 639-1 code" _ISO_639_1_code_word_ [];
+"ISO 639-2 code" _ISO_639_2_code_word_ [];
+"number of locations" _number_of_locations_word_ [];
+"locations" _locations_word_ [];
+"length" _length_word_ [];
+"powered" _powered_ [];
+
+"density" _density_word_ [];
+"subgenre" _subgenre_word_ [];
+"full name" _FULL_NAME_NOUN [];
+"floor area" _FLOOR_AREA_NOUN [];
+"status" _STATUS_NOUN [];
+"abbreviation" _ABBREVIATION_NOUN [];
+// v49 sequence/safe frame terminals.
+"designed" _designed_ [];
+"chairman" _chairman_word_ [];
+"architect" _architect_word_ [];
+"address" _address_word_ [];
+"material" _material_word_ [];
+"military conflict" _military_conflict_word_ [];
+"motto" _motto_word_ [];
+"Latin name" _latin_name_word_ [];
+"native name" _native_name_word_ [];
+"building type" _building_type_word_ [];
+"serving temperature" _serving_temperature_word_ [];
+"National Register of Historic Places" _national_register_word_ [];
+"backup pilot" _backup_pilot_word_ [];
+"commander" _commander_word_ [];
+"first runway number" _first_runway_number_word_ [];
+"second runway number" _second_runway_number_word_ [];
+"third runway number" _third_runway_number_word_ [];
+"fourth runway number" _fourth_runway_number_word_ [];
+"fifth runway number" _fifth_runway_number_word_ [];

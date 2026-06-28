@@ -1,0 +1,119 @@
+S → ADJ
+{
+  [mod:<$M1>];
+
+  ↓1 = $M1;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ
+{
+  [mod:<$M1,$M2>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+
+  order by <⇓1.rank, ⇓2.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5,$M6>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+  ↓6 = $M6;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5,$M6,$M7>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+  ↓6 = $M6;
+  ↓7 = $M7;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank, ⇓7.rank>;
+
+  ⇑ = ↑;
+}
+
+S → ADJ ADJ ADJ ADJ ADJ ADJ ADJ ADJ
+{
+  [mod:<$M1,$M2,$M3,$M4,$M5,$M6,$M7,$M8>];
+
+  ↓1 = $M1;
+  ↓2 = $M2;
+  ↓3 = $M3;
+  ↓4 = $M4;
+  ↓5 = $M5;
+  ↓6 = $M6;
+  ↓7 = $M7;
+  ↓8 = $M8;
+
+  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank, ⇓7.rank, ⇓8.rank>;
+
+  ⇑ = ↑;
+}
+
+ADJ → adj
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

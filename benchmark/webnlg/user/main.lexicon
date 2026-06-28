@@ -1,0 +1,6 @@
+/* Main Elvex local lexicon file.
+ * Keep this file as an include list; edit included files in user/lexicon/.
+ * Local lexicon entries are closed-class or functional entries without HEAD.
+ */
+#include user/lexicon/base.lexicon
+#include user/lexicon/generated_determiners.lexicon
