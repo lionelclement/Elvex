@@ -1,0 +1,28 @@
+S → (A) (B)
+{
+  if (#1) {
+    ↓2 = [attr:withA];
+  }
+  else {
+    ↓2 = [attr:withoutA];
+  }
+
+  if (#2) {
+    ↓1 = [attr:withB];
+  }
+  else {
+    ↓1 = [attr:withoutB];
+  }
+}
+
+A → a
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+B → b
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

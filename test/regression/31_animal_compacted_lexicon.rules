@@ -1,0 +1,30 @@
+// PHRASE → SYNTACTIC DESCRIPTION
+//@unordered
+S → NP|cln VP dot
+{
+  [i:$i];
+  ↓1 = $i;
+  [number:$number, person:$person, selectional_restriction:$selectional_restriction] ⊂ ⇓1;
+  ↓2 = ↑ U [SUBJ:[number:$number, person:$person, selectional_restriction:$selectional_restriction]];
+  ↓3 = [];
+}
+
+NP → det N
+{
+  ↓2 = ↑;
+  ↓1 = ↑ U ⇓2;
+  ⇑ = ⇓1 U ⇓2 U [@_3];
+}
+
+N → noun
+{
+  [mod:NIL];
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+VP → verb
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

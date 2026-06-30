@@ -1,0 +1,4 @@
+S [score:12, kind:good, override:no]
+S [score:9, kind:good, override:no]
+S [score:3, kind:bad, override:yes]
+S [score:12, kind:bad, override:no]

@@ -1878,6 +1878,63 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
 /* **************************************************
  *
  ************************************************** */
+
+namespace
+{
+enum HashPresenceStatus
+{
+    HASH_PRESENCE_PENDING,
+    HASH_PRESENCE_FALSE,
+    HASH_PRESENCE_TRUE
+};
+
+static HashPresenceStatus evalHashPresence(class Item *item, uint8_t first, uint8_t second)
+{
+    if (!item || first >= item->getRuleRhs().size())
+        return HASH_PRESENCE_FALSE;
+
+    termsPtr terms = item->getTerms(first);
+    if (!terms)
+        return HASH_PRESENCE_FALSE;
+
+    const uint8_t index = item->getIndex();
+    const uint8_t indexTerm = item->getIndexTerms()[first];
+
+    // Item::step() sets indexTerms[first] = 0 when it merely places the dot
+    // before the first unresolved term.  That is NOT a branch choice.
+    // For #i/#i.j, a compound term is only interpretable once PASS/UNFOLD has
+    // produced a branch.  Before that, keep the IF suspended.
+    const bool beforeOrOnTerm = (index == Item::INDEX_NA || index <= first);
+
+    // Optional term not passed yet: X -> alpha • (Yi) beta, or no dot yet.
+    if (terms->isOptional() && beforeOrOnTerm)
+        return HASH_PRESENCE_PENDING;
+
+    // Multiple term not unfolded yet: X -> alpha • Yi1|...|Yik beta.
+    // This also covers the present branch of an optional multiple after PASS
+    // and before UNFOLD: X -> alpha • Yi1|...|Yik beta.
+    if (!terms->isOptional() && terms->size() > 1 && beforeOrOnTerm)
+        return HASH_PRESENCE_PENDING;
+
+    // Optional term passed without being realized: X -> alpha (Yi) • beta.
+    // The rule still contains an optional term at this position, therefore #i
+    // and #i.j are false.
+    if (terms->isOptional())
+        return HASH_PRESENCE_FALSE;
+
+    // #i: once a non-optional/simple branch is reached, the i-th term is present.
+    if (second == UINT8_MAX)
+        return HASH_PRESENCE_TRUE;
+
+    // #i.j: true only for the selected alternative j.
+    // For a simple non-multiple term, #i.1 is accepted as the unique variant.
+    if (indexTerm == Item::POSTERM_NA || indexTerm == Item::POSTERMS_NA)
+        return (second == 0 && terms->size() == 1) ? HASH_PRESENCE_TRUE : HASH_PRESENCE_FALSE;
+
+    return (second == indexTerm) ? HASH_PRESENCE_TRUE : HASH_PRESENCE_FALSE;
+}
+}
+
 valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synthesizer, bool replaceVariables, bool verbose)
 {
 #ifdef TRACE_APPLY_STATEMENT
@@ -1902,32 +1959,17 @@ valuePtr Statement::evalValue(class Item *item, Parser &parser, Generator *synth
 
     case HASH_STATEMENT:
     {
-        uint8_t first = getFirst();
-        uint8_t second = getSecond();
-        termsPtr t = item->getTerms(first);
-        if (t->isOptional())
+        switch (evalHashPresence(item, getFirst(), getSecond()))
         {
+        case HASH_PRESENCE_PENDING:
+            resultValue = valuePtr();
+            break;
+        case HASH_PRESENCE_TRUE:
+            resultValue = Value::STATIC_TRUE;
+            break;
+        case HASH_PRESENCE_FALSE:
             resultValue = Value::STATIC_FALSE;
-        }
-        else
-        {
-            // if (#i)
-            if (second == UINT8_MAX)
-            {
-                resultValue = Value::STATIC_TRUE;
-            }
-            // if (#i.j)
-            else
-            {
-                if (second == item->getIndexTerms()[first])
-                {
-                    resultValue = Value::STATIC_TRUE;
-                }
-                else
-                {
-                    resultValue = Value::STATIC_FALSE;
-                }
-            }
+            break;
         }
         goto valueBuilt;
     }
@@ -3510,18 +3552,27 @@ void Statement::stmIf(statementPtr statementRoot, class Item *item, Parser &pars
     statementPtr leftHandSide = second->first;
     statementPtr rightHandSide = second->second;
     enum test_choice result = __NONE__;
-    if (first->isSetFlags(Flags::CHOOSEN))
+
+    // The selected branch is stored on the THEN/ELSE statement nodes,
+    // not on the condition or on the THEN_ELSE container.  Reusing the
+    // wrong node here lets an IF be re-evaluated later and can execute
+    // the other branch as well, for instance defining ↓i twice.
+    if (leftHandSide && leftHandSide->isSetFlags(Flags::CHOOSEN))
     {
         result = __THEN__;
     }
-    else if (second && second->isSetFlags(Flags::CHOOSEN))
+    else if (rightHandSide && rightHandSide->isSetFlags(Flags::CHOOSEN))
     {
         result = __ELSE__;
     }
     else
     {
         valuePtr res = first->evalValue(item, parser, synthesizer, true, verbose);
-        if (!res || res->isFalse())
+        if (!res)
+        {
+            result = __NONE__;
+        }
+        else if (res->isFalse())
         {
             result = __ELSE__;
             leftHandSide->addFlags(Flags::REJECTED);
@@ -3564,7 +3615,9 @@ void Statement::stmIf(statementPtr statementRoot, class Item *item, Parser &pars
         }
         break;
     case __NONE__:
-        FATAL_ERROR_UNEXPECTED;
+        // The condition is not interpretable yet, typically because it depends
+        // on #i or #i.j before PASS/UNFOLD has resolved the i-th term.
+        effect = false;
         break;
     }
 #ifdef TRACE_APPLY_STATEMENT
@@ -3741,8 +3794,7 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
     case HASH_STATEMENT:
         if (on)
         {
-            if (item->getIndexTerms()[getFirst()] == Item::POSTERM_NA)
-            //|| ((getSecond() != UINT8_MAX) && (item->getIndexTerms()[getFirst()] != getSecond())))
+            if (evalHashPresence(item, getFirst(), getSecond()) == HASH_PRESENCE_PENDING)
             {
                 statementRoot->addFlags(Flags::DISABLED);
                 result = true;

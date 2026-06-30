@@ -1,0 +1,5 @@
+a a [];
+b-noA b [left:withoutA];
+b-A b [left:withA];
+c-noA c [left:withoutA];
+c-A c [left:withA];

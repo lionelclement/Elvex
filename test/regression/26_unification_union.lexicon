@@ -1,0 +1,3 @@
+nomsg a [number:singular, case:nom];
+sg a [number:singular];
+nompl a [number:plural, case:nom];

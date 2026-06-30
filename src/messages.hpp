@@ -66,7 +66,6 @@
 
 #define FATAL_ERROR(msg)                   \
     {                                            \
-        CERR_LINE;                               \
         throw fatal_exception(msg); \
     }
 

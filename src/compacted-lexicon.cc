@@ -241,8 +241,10 @@ void CompactedLexicon::loadFsa(bool verbose)
     std::cout << "---Info---" << std::endl;
 #endif // TRACE_DIFF
     info = new CompactedLexiconBuffer[sizeInfo + 1]();
-    if (!fread(info, sizeof(CompactedLexiconBuffer), sizeInfo, fsaFile))
+    if (!fread(info, sizeof(CompactedLexiconBuffer), sizeInfo, fsaFile)){
+        
         FATAL_ERROR_UNEXPECTED;
+    }
 #ifdef TRACE_DIFF
     for (uint32_t sizeSy = 0; sizeSy < sizeInfo; sizeSy++)
     {

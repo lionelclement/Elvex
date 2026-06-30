@@ -22,6 +22,7 @@
 #include <random>
 #include <vector>
 #include <limits>
+#include <iostream>
 
 #include "generator.hpp"
 #include "compacted-lexicon.hpp"
@@ -40,6 +41,9 @@
 #include "vartable.hpp"
 #include "parser_exception.hpp"
 #include "fatal_exception.hpp"
+
+static bool mergeRefs(class Item *target, const Item::set_of_uint32_t &refs);
+static bool mergeOrderSpecs(class Item *target, const OrderSpecs &orderSpecs);
 
 /* **************************************************
  *
@@ -424,6 +428,9 @@ unsigned int Generator::getEffectiveBeamWidth() const
     return 0;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 void Generator::seedRandom(uint32_t seed)
 {
     this->randomSeed = seed;
@@ -431,16 +438,25 @@ void Generator::seedRandom(uint32_t seed)
     this->randomEngine.seed(seed);
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 uint32_t Generator::getRandomSeed(void) const
 {
     return this->randomSeed;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 bool Generator::hasRandomSeed(void) const
 {
     return this->randomSeedSet;
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 uint32_t Generator::randomUInt(void)
 {
     std::uniform_int_distribution<uint32_t> distribution(
@@ -450,6 +466,9 @@ uint32_t Generator::randomUInt(void)
     return distribution(this->randomEngine);
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 size_t Generator::randomIndex(size_t size)
 {
     if (size == 0)
@@ -461,25 +480,25 @@ size_t Generator::randomIndex(size_t size)
     return distribution(this->randomEngine);
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 double Generator::randomDouble01(void)
 {
     std::uniform_real_distribution<double> distribution(0.0, 1.0);
     return distribution(this->randomEngine);
 }
 
+/* **************************************************
+ *
+ ************************************************** */
 std::mt19937 &Generator::getRandomEngine(void)
 {
     return this->randomEngine;
 }
 
 /* **************************************************
- * Insert an item into an Earley state, with optional pruning.
- *
- * exhaustive:
- *   comportement historique, sauf qu’on centralise l’insertion.
- *
- * sample / beam:
- *   si le budget est dépassé, on ignore l’item au lieu de bloquer.
+ * Insert an item into a state, with optional pruning.
  ************************************************** */
 bool Generator::insertStateItem(class ItemSet *state, class Item *item, bool fatalOnFailure)
 {
@@ -513,6 +532,23 @@ bool Generator::insertStateItem(class ItemSet *state, class Item *item, bool fat
     }
 
     return false;
+}
+
+/* **************************************************
+ * Insert an item unless an equivalent item is already present.
+ ************************************************** */
+bool Generator::insertOrMergeStateItem(class ItemSet *state, class Item *item)
+{
+    auto found = state->find(item);
+    if (found != state->cend())
+    {
+        const bool refsChanged = mergeRefs(*found, item->getRefs());
+        const bool orderSpecsChanged = mergeOrderSpecs(*found, item->getOrderSpecs());
+        free(item);
+        return refsChanged || orderSpecsChanged;
+    }
+
+    return insertStateItem(state, item, true);
 }
 
 #ifdef OUTPUT_XML
@@ -729,16 +765,6 @@ class Item *Generator::createItem(class Item *item, uint32_t row)
 /* **************************************************
  *
  ************************************************** */
-/*
-std::string
-Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
-{
-
-    std::stringstream ss;
-    ss << std::hex << actualItem->getId() << '\x0' << previousItem->getCurrentTerm() << '\x0' << std::dec << actualItem->getSynthesizedFeatures()->peekCoreSerialString();
-    return ss.str();
-}
-*/
 std::string
 Generator::keyMemoization(class Item *actualItem, class Item *previousItem)
 {
@@ -802,40 +828,105 @@ static bool containsEquivalentNode(const forestPtr &forest, const nodePtr &node)
 }
 
 /* **************************************************
- *
+ * Merge refs and report whether this really changed the target item.
  ************************************************** */
-void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
+static bool mergeRefs(class Item *target, const Item::set_of_uint32_t &refs)
+{
+    const size_t before = target->getRefs().size();
+    target->addRefs(refs);
+    return target->getRefs().size() != before;
+}
+
+/* **************************************************
+ * Merge order specs and report whether this really changed the target item.
+ *
+ * Order specs are not part of the ItemSet key because they are produced by
+ * statements after insertion.  When an equivalent item is found, keep all
+ * order constraints by merging them explicitly.
+ ************************************************** */
+static bool mergeOrderSpecs(class Item *target, const OrderSpecs &orderSpecs)
+{
+    const size_t before = target->getOrderSpecs().size();
+
+    for (const auto &orderSpec : orderSpecs.asVector())
+    {
+        target->addOrderSpec(orderSpec);
+    }
+
+    return target->getOrderSpecs().size() != before;
+}
+
+/* **************************************************
+ * PASS/UNFOLD must only be performed by Generator::normalize().
+ ************************************************** */
+static bool needsNormalization(class Item *item)
+{
+    if (item->getRuleRhs().size() <= item->getIndex() ||
+        item->isCompleted() ||
+        item->getForestIdentifiers()[item->getIndex()])
+    {
+        return false;
+    }
+
+    termsPtr terms = item->getCurrentTerms();
+    return terms->isOptional() || terms->size() > 1;
+}
+
+
+/* **************************************************
+ * Normalize a state before closure/shift.
+ ************************************************** */
+bool Generator::normalize(Parser &, class ItemSet *state, uint32_t row)
 {
     bool modification;
+    bool modificationOnce = false;
+
     do
     {
         modification = false;
 
-        // Iterate through list
         for (auto actualItem = state->cbegin();
              actualItem != state->cend() && !modification;
              ++actualItem)
         {
-
             if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM))
                 continue;
 
             // X -> alpha • [Y] gamma
-            if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() && !(*actualItem)->isCompleted() &&
-                !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] && (*actualItem)->getCurrentTerms()->isOptional())
+            if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() &&
+                !(*actualItem)->isCompleted() &&
+                !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
+                (*actualItem)->getCurrentTerms()->isOptional())
             {
+                const uint8_t normalizedIndex = (*actualItem)->getIndex();
+                const bool newlyMarked = !(*actualItem)->isNormalizedAt(normalizedIndex);
 
 #ifdef TRACE_PASS
-                std::cout << "<H3>####################### PASS #######################</H3>" << std::endl;
-                (*actualItem)->toHTML(std::cout);
-                std::cout << std::endl;
+                if (newlyMarked)
+                {
+                    std::cout << "<H3>####################### PASS #######################</H3>" << std::endl;
+                    (*actualItem)->toHTML(std::cout);
+                    std::cout << std::endl;
+                }
 #endif
 
-                (*actualItem)->addFlags(Flags::SEEN);
+                /*
+                 * Keep the source item as an idempotence witness.  It is marked
+                 * as already normalized at its current dot position and is never
+                 * processed by close()/shift() while it still needs normalization.
+                 * If a later reduce recreates the same source item with extra refs,
+                 * state->find() merges those refs into this witness and normalize()
+                 * re-emits the already computed branches below.
+                 */
+                if (newlyMarked)
+                {
+                    (*actualItem)->markNormalizedAt(normalizedIndex);
+                }
 
-                class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
+                class Item *absent = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
+                absent->clearNormalizedAt(normalizedIndex);
                 forestPtr forestFound = forestPtr();
-                class ForestIdentifier *fi = ForestIdentifier::create(it->getCurrentTerms()->getId(),
+                class ForestIdentifier *fi = ForestIdentifier::create(absent->getCurrentTerms()->getId(),
                                                                       row,
                                                                       row);
                 auto forestMapIt = forestMap.find(fi);
@@ -843,51 +934,69 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 {
                     forestFound = forestMapIt->second;
                     free(fi);
-                    it->addForestIdentifiers(it->getIndex(), forestMapIt->first);
+                    absent->addForestIdentifiers(absent->getIndex(), forestMapIt->first);
                 }
                 else
                 {
                     forestFound = Forest::create(row, row);
                     forestMap.insert(fi, forestFound);
-                    it->addForestIdentifiers(it->getIndex(), fi);
+                    absent->addForestIdentifiers(absent->getIndex(), fi);
                 }
-                it->setIndex((*actualItem)->getIndex() + 1);
-                it->getIndexTerms()[(*actualItem)->getIndex()] = 0;
-                it->addRange(row);
-                it->resetCoreSerial();
-#ifdef TRACE_PASS
-                std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
-                it->toHTML(std::cout);
-                std::cout << std::endl;
-#endif
-                if (!insertStateItem(state, it, true) && isStrategyExhaustive())
-                {
-                    FATAL_ERROR_UNEXPECTED
-                }
+                absent->setIndex((*actualItem)->getIndex() + 1);
+                absent->getIndexTerms()[(*actualItem)->getIndex()] = 0;
+                absent->addRange(row);
+                absent->resetCoreSerial();
 
-                it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
-                it->setRule((*actualItem)->getRule()->clone());
-                it->setIndex((*actualItem)->getIndex());
-                if (it->getCurrentTerms()->size() == 1)
+                class Item *present = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
+                present->clearNormalizedAt(normalizedIndex);
+                present->setRule((*actualItem)->getRule()->clone());
+                present->setIndex((*actualItem)->getIndex());
+                if (present->getCurrentTerms()->size() == 1)
                 {
-                    it->getIndexTerms()[(*actualItem)->getIndex()] = 0;
+                    present->getIndexTerms()[(*actualItem)->getIndex()] = 0;
                 }
                 else
                 {
-                    it->getIndexTerms()[(*actualItem)->getIndex()] = Item::POSTERMS_NA;
+                    present->getIndexTerms()[(*actualItem)->getIndex()] = Item::POSTERMS_NA;
                 }
-                it->getCurrentTerms()->unsetOptional();
-                it->resetCoreSerial();
-#ifdef TRACE_PASS
-                std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
-                it->toHTML(std::cout);
-                std::cout << std::endl;
-#endif
-                insertStateItem(state, it, false);
+                present->getCurrentTerms()->unsetOptional();
+                present->resetCoreSerial();
 
-                eraseItemMap((*actualItem)->getId());
-                state->erase(*actualItem);
-                modification = true;
+#ifdef TRACE_PASS
+                if (newlyMarked)
+                {
+                    std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
+                    absent->toHTML(std::cout);
+                    std::cout << std::endl;
+                }
+#endif
+                if (insertOrMergeStateItem(state, absent))
+                {
+                    modification = true;
+                }
+
+#ifdef TRACE_PASS
+                if (newlyMarked)
+                {
+                    std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
+                    present->toHTML(std::cout);
+                    std::cout << std::endl;
+                }
+#endif
+                if (insertOrMergeStateItem(state, present))
+                {
+                    modification = true;
+                }
+
+                if (newlyMarked)
+                {
+                    modification = true;
+                }
+
+                if (modification)
+                {
+                    modificationOnce = true;
+                }
             }
 
             // X -> alpha • Y1|Y2 beta
@@ -896,14 +1005,23 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                      !(*actualItem)->getCurrentTerms()->isOptional() &&
                      (*actualItem)->getCurrentTerms()->size() > 1)
             {
+                const uint8_t normalizedIndex = (*actualItem)->getIndex();
+                const bool newlyMarked = !(*actualItem)->isNormalizedAt(normalizedIndex);
 
 #ifdef TRACE_UNFOLD
-                std::cout << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
-                (*actualItem)->toHTML(std::cout);
-                std::cout << std::endl;
+                if (newlyMarked)
+                {
+                    std::cout << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
+                    (*actualItem)->toHTML(std::cout);
+                    std::cout << std::endl;
+                }
 #endif
 
-                (*actualItem)->addFlags(Flags::SEEN);
+                if (newlyMarked)
+                {
+                    (*actualItem)->markNormalizedAt(normalizedIndex);
+                }
+
                 termsPtr terms = (*actualItem)->getCurrentTerms();
 
                 std::vector<uint8_t> candidateTermIndexes;
@@ -917,10 +1035,9 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                 if (isStrategySample() && candidateTermIndexes.size() > 1)
                 {
-                    std::shuffle(
-                        candidateTermIndexes.begin(),
-                        candidateTermIndexes.end(),
-                        this->getRandomEngine());
+                    std::shuffle(candidateTermIndexes.begin(),
+                                 candidateTermIndexes.end(),
+                                 this->getRandomEngine());
                 }
 
                 if (maxRuleChoices > 0 && candidateTermIndexes.size() > maxRuleChoices)
@@ -932,26 +1049,103 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 for (uint8_t indexTerm1 : candidateTermIndexes)
                 {
                     class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
+                    it->clearNormalizedAt(normalizedIndex);
                     it->setRule((*actualItem)->getRule()->clone());
                     it->setIndex((*actualItem)->getIndex());
                     it->setCurrentTerms(Terms::create((*terms)[indexTerm1]));
                     it->getIndexTerms()[(*actualItem)->getIndex()] = indexTerm1;
+                    it->resetCoreSerial();
 
 #ifdef TRACE_UNFOLD
-                    std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
-                    it->toHTML(std::cout);
-                    std::cout << std::endl;
+                    if (newlyMarked)
+                    {
+                        std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
+                        it->toHTML(std::cout);
+                        std::cout << std::endl;
+                    }
 #endif
 
-                    insertStateItem(state, it, false);
+                    if (insertOrMergeStateItem(state, it))
+                    {
+                        modification = true;
+                    }
                 }
-                eraseItemMap((*actualItem)->getId());
-                state->erase((*actualItem));
-                modification = true;
+
+                if (newlyMarked)
+                {
+                    modification = true;
+                }
+
+                if (modification)
+                {
+                    modificationOnce = true;
+                }
+            }
+        }
+    } while (modification);
+
+    for (const auto &i : *state)
+        i->subFlags(Flags::SEEN);
+
+    return modificationOnce;
+}
+
+
+/* **************************************************
+ *
+ ************************************************** */
+void Generator::traceState(class ItemSet *state)
+{
+    if (!traceStage)
+    {
+        return;
+    }
+
+    std::cout << "<H3>####################### STAGE "
+              << state->getId()
+              << " #######################</H3>" << std::endl;
+    state->toHTML(std::cout);
+    std::cout << std::endl;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
+{
+    bool modification;
+    bool modificationOnce = false;
+
+    do
+    {
+        modification = false;
+
+        // Iterate through list
+        for (auto actualItem = state->cbegin();
+             actualItem != state->cend() && !modification;
+             ++actualItem)
+        {
+
+            if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM))
+                continue;
+
+            if (false)
+            {
+                // PASS and UNFOLD are handled by normalize().
             }
 
             else
             {
+
+                /*
+                 * Leave PASS/UNFOLD to the central normalize() phase. close()
+                 * must not apply statements, step, close or reduce an item whose
+                 * dot is still on an unresolved optional/alternative term.
+                 */
+                if (needsNormalization(*actualItem))
+                {
+                    continue;
+                }
 
                 if ((*actualItem)->getStatements() && (*actualItem)->isUnsetFlags(Flags::BOTTOM) && (*actualItem)->getStatements()->isUnsetFlags(Flags::SEEN))
                 {
@@ -1033,17 +1227,19 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                         for (const auto &iterRules : candidateRules)
                         {
-                            class Item *it;
-
-                            iterRules->incUsages(this);
-
-                            // garde ici le corps existant du for
-                            it = Item::create(iterRules->clone(), 0, Item::POSTERM_NA,
-                                              iterRules->getStatements() ? iterRules->getStatements()->clone(0)
-                                                                         : statementsPtr());
+                            class Item *it = Item::create(iterRules->clone(), 0, Item::POSTERM_NA,
+                                                          iterRules->getStatements() ? iterRules->getStatements()->clone(0)
+                                                                                     : statementsPtr());
                             it->addRange(row);
                             it->setInheritedFeatures(inheritedChildFeatures->clone());
                             it->renameVariables(it->getId());
+
+                            /*
+                             * Refs are reverse links only.  They are not part of
+                             * the item identity; if an equivalent item already
+                             * exists, we merge the new parent ref into it.
+                             */
+                            it->addRef((*actualItem)->getId());
 
                             if (traceClose || (trace && it->getRuleTrace()))
                             {
@@ -1057,23 +1253,28 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                             auto found = state->find(it);
                             if (found != state->cend())
                             {
-                                (*found)->addRef((*actualItem)->getId());
-
+                                const bool refsChanged = mergeRefs(*found, it->getRefs());
+                                const bool orderSpecsChanged = mergeOrderSpecs(*found, it->getOrderSpecs());
+                                if (refsChanged || orderSpecsChanged)
+                                {
+                                    iterRules->incUsages(this);
+                                    modification = true;
+                                }
                                 free(it);
                             }
                             else
                             {
-                                it->addRef((*actualItem)->getId());
+                                iterRules->incUsages(this);
 
                                 if (insertStateItem(state, it, true))
                                 {
+                                    modification = true;
                                 }
                                 else if (isStrategyExhaustive())
                                 {
                                     FATAL_ERROR_UNEXPECTED
                                 }
                             }
-                            modification = true;
                             (*actualItem)->addFlags(Flags::SEEN);
                         }
                     }
@@ -1137,10 +1338,15 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     forestFound = Forest::create((*actualItem)->getRanges()[0], row);
                                     forestMap.insert(fi, forestFound);
                                     nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
+                                    // The axiom forest is a possible root even when it is empty
+                                    // ([row,row]), e.g. S -> (A) (B) (C) (D) with every
+                                    // optional branch skipped.  Do not make it a child of
+                                    // itself when it is empty, but still expose it through
+                                    // nodeRoot so generation can emit the empty result.
+                                    nodeRoot->push_back(forestFound);
                                     if (forestFound->getFrom() != forestFound->getTo())
                                     {
                                         node->push_back(forestFound);
-                                        nodeRoot->push_back(forestFound);
                                     }
                                 }
                                 nodePtr node = Node::create((*actualItem)->getWithSpaces(), (*actualItem)->getUnordered());
@@ -1164,7 +1370,7 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                                 node->setOrderSpecs((*actualItem)->getOrderSpecs());
 
-                                // insEquivalentNode(forestFound, node))
+                                if (!containsEquivalentNode(forestFound, node))
                                 {
                                     forestFound->push_node(node);
                                 }
@@ -1209,6 +1415,28 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                                             it->addForestIdentifiers(previousItem->getIndex(), (*memoizationValue)->getForestIdentifier());
 
+                                            /*
+                                             * The memoized REDUCE path must restore the synthesized
+                                             * features of the daughter just reduced.  They are stored
+                                             * in the MemoizationValue when the non-memoized REDUCE path
+                                             * records the reduction.
+                                             *
+                                             * Without this, statements depending on ⇓i may remain pending
+                                             * on the reconstructed item.  In particular,
+                                             *
+                                             *     order 1, 2, 3 by ⇓.rank;
+                                             *
+                                             * can be skipped on a completed item reconstructed from
+                                             * memoization, which then inserts an unconstrained node in
+                                             * the forest in addition to the ordered one.
+                                             */
+                                            featuresPtr memoizedFeatures = (*memoizationValue)->getFeatures();
+                                            if (memoizedFeatures)
+                                            {
+                                                it->getSynthesizedChildFeatures()->add(previousItem->getIndex(),
+                                                                                       memoizedFeatures->clone());
+                                            }
+
 #ifdef TRACE_MEMOIZATION
                                             std::cout << "<H3>####################### MEMOIZED REDUCE (X -> α Y • β) #######################</H3>" << std::endl;
                                             it->toHTML(std::cout);
@@ -1219,19 +1447,19 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             auto found = states[row]->find(it);
                                             if (found != states[row]->cend())
                                             {
-                                                (*found)->addRefs(previousItem->getRefs());
-                                                free(it);
-                                                modification = true;
-                                            }
-                                            else
-                                            {
-                                                if (insertStateItem(states[row], it, true))
+                                                const bool refsChanged = mergeRefs(*found, previousItem->getRefs());
+                                                const bool orderSpecsChanged = mergeOrderSpecs(*found, it->getOrderSpecs());
+                                                if (refsChanged || orderSpecsChanged)
                                                 {
                                                     modification = true;
                                                 }
-                                                else if (isStrategyExhaustive())
+                                                free(it);
+                                            }
+                                            else
+                                            {
+                                                if (insertOrMergeStateItem(states[row], it))
                                                 {
-                                                    FATAL_ERROR_UNEXPECTED
+                                                    modification = true;
                                                 }
                                             }
                                             (*actualItem)->addFlags(Flags::SEEN);
@@ -1302,8 +1530,12 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                         auto found = states[row]->find(it);
                                         if (found != states[row]->cend())
                                         {
-                                            (*found)->addRefs(previousItem->getRefs());
-                                            modification = true;
+                                            const bool refsChanged = mergeRefs(*found, previousItem->getRefs());
+                                            const bool orderSpecsChanged = mergeOrderSpecs(*found, it->getOrderSpecs());
+                                            if (refsChanged || orderSpecsChanged)
+                                            {
+                                                modification = true;
+                                            }
                                             free(it);
                                         }
                                         else
@@ -1317,13 +1549,9 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                                                it);
                                             // record the item
                                             it->setRefs(previousItem->getRefs());
-                                            if (insertStateItem(states[row], it, true))
+                                            if (insertOrMergeStateItem(states[row], it))
                                             {
                                                 modification = true;
-                                            }
-                                            else if (isStrategyExhaustive())
-                                            {
-                                                FATAL_ERROR_UNEXPECTED
                                             }
                                             (*actualItem)->addFlags(Flags::SEEN);
                                         }
@@ -1352,15 +1580,16 @@ void Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 }
             }
         }
+
+        if (modification)
+        {
+            modificationOnce = true;
+        }
     } while (modification);
     for (const auto &i : *state)
         i->subFlags(Flags::SEEN);
-    if (traceStage)
-    {
-        std::cout << "<H3>####################### STAGE " << state->getId() << " #######################</H3>" << std::endl;
-        state->toHTML(std::cout);
-        std::cout << std::endl;
-    }
+
+    return modificationOnce;
 }
 
 /* **************************************************
@@ -1381,6 +1610,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
             if ((*actualItem)->isSetFlags(Flags::SEEN))
                 continue;
             if ((*actualItem)->isSetFlags(Flags::BOTTOM))
+                continue;
+            if (needsNormalization(*actualItem))
                 continue;
             if ((*actualItem)->getCurrentTerms())
             {
@@ -1472,6 +1703,14 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                 break;
                             }
 
+                            if (!entries || entries->size() == 0)
+                            {
+                                (*actualItem)->addFlags(Flags::BOTTOM);
+                                modification = true;
+                                modificationOnce = true;
+                                continue;
+                            }
+
                             // Found !
                             if (entries && entries->size() > 0)
                             {
@@ -1527,8 +1766,11 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                     // Filter !!
                                     // entryFeatures subsumes ↑
 
-                                    if (stage == STAGE_FORM ||
-                                        (entryFeatures && entryFeatures->subsumes(nullptr, inheritedChildFeatures, env, verbose)))
+                                    bool okSubsumes =
+                                        stage == STAGE_FORM ||
+                                        (entryFeatures && entryFeatures->subsumes(nullptr, inheritedChildFeatures, env, verbose));
+
+                                    if (okSubsumes)
                                     {
 
                                         // New item build
@@ -1681,20 +1923,58 @@ void Generator::generate(class Parser &parser)
         insertStateItem(initState, it, true);
     }
 
+    auto saturateState = [&](class ItemSet *state, uint32_t row)
+    {
+        bool modification;
+        do
+        {
+            modification = false;
+            if (normalize(parser, state, row))
+            {
+                modification = true;
+            }
+            if (close(parser, state, row))
+            {
+                modification = true;
+            }
+        } while (modification);
+    };
+
     states.insert(std::make_pair(0, initState));
-    close(parser, initState, 0);
+    saturateState(initState, 0);
+    traceState(initState);
 
     uint32_t i = 0;
     while (i <= maxLength)
     {
         class ItemSet *actualState = ItemSet::create(++i);
         states.insert(std::make_pair(i, actualState));
-        if (!shift(parser, initState, i))
+
+        bool shiftProducedNextState = false;
+        while (true)
+        {
+            saturateState(initState, i - 1);
+
+            bool shiftOk = shift(parser, initState, i);
+            if (actualState->size() > 0)
+            {
+                shiftProducedNextState = true;
+                break;
+            }
+            if (!shiftOk)
+            {
+                break;
+            }
+        }
+
+        if (!shiftProducedNextState)
         {
             break;
         }
+
         actualState->resetUsages();
-        close(parser, actualState, i);
+        saturateState(actualState, i);
+        traceState(actualState);
         initState = actualState;
     }
 

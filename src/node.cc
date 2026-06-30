@@ -21,6 +21,7 @@
 #include <vector>
 #include <forward_list>
 #include <functional>
+#include <iostream>
 
 #include "node.hpp"
 #include "messages.hpp"
@@ -431,6 +432,7 @@ std::vector<std::vector<size_t>> Node::computeTopologicalOrders() const
    };
 
    visit();
+
 
    return result;
 }

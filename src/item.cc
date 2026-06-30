@@ -72,6 +72,7 @@ Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr 
     {
         this->indexTerms.push_back(POSTERM_NA);
         this->seen.push_back(false);
+        this->normalizedAt.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedChildFeatures->push_back(Features::NIL);
         this->inheritedChildFeatures->push_back(Features::NIL);
@@ -92,6 +93,7 @@ Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms,
     for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
     {
         this->seen.push_back(false);
+        this->normalizedAt.push_back(false);
         this->forestIdentifiers.push_back(nullptr);
         this->synthesizedChildFeatures->push_back(Features::NIL);
         this->inheritedChildFeatures->push_back(Features::NIL);
@@ -106,6 +108,7 @@ Item::~Item()
     DELETE;
     refs.clear();
     seen.clear();
+    normalizedAt.clear();
     ranges.clear();
     if (inheritedFeatures)
         inheritedFeatures.reset();
@@ -373,6 +376,37 @@ void Item::setSeen(std::vector<bool> &_seen)
 bool Item::isSeen(uint8_t _index) const
 {
     return seen[_index];
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool Item::isNormalizedAt(uint8_t _index) const
+{
+    return _index < normalizedAt.size() && normalizedAt[_index];
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::markNormalizedAt(uint8_t _index)
+{
+    if (_index >= normalizedAt.size())
+    {
+        normalizedAt.resize(_index + 1, false);
+    }
+    normalizedAt[_index] = true;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Item::clearNormalizedAt(uint8_t _index)
+{
+    if (_index < normalizedAt.size())
+    {
+        normalizedAt[_index] = false;
+    }
 }
 
 /* **************************************************
@@ -722,7 +756,7 @@ void Item::toHTML(std::ostream &out) /*const*/
         if (index == INDEX_NA)
             out << "NA";
         else
-            out << '#' << (int)index;
+            out << (int)index;
         out << "</td>";
     }
     if (s_indexTerms)
@@ -883,6 +917,7 @@ class Item *Item::clone(const std::bitset<MAX_FLAGS> &protectedFlags, bool verbo
     it->addForestIdentifiers(this->forestIdentifiers);
     it->refs = this->refs;
     it->seen = this->seen;
+    it->normalizedAt = this->normalizedAt;
     it->orderSpecs = this->orderSpecs;
     it->inheritedFeatures = this->inheritedFeatures->clone();
     it->inheritedChildFeatures = this->inheritedChildFeatures->clone();
@@ -953,12 +988,16 @@ void Item::makeCoreSerialString()
         stream << std::hex << (int)*ind << '/';
     }
 
-    stream << '#';
-    for (auto ref = refs.cbegin(); ref != refs.cend(); ++ref)
-    {
-        stream << std::hex << (int)*ref << '/';
-    }
-
+    /*
+     * Refs are reverse links to parent items.  They are used to propagate a
+     * reduction to every item that was waiting for this constituent, but they
+     * must not be part of the logical identity of an item.
+     *
+     * Two items that differ only by refs must be merged into a single state
+     * item with the union of both ref sets.  Otherwise close() can reopen the
+     * same rule once per parent ref, which is especially visible with optional
+     * terms and order constraints.
+     */
     stream << '#';
     for (auto fi = forestIdentifiers.cbegin();
          fi != forestIdentifiers.cend();
@@ -970,8 +1009,18 @@ void Item::makeCoreSerialString()
     stream << '#';
     stream << (inheritedFeatures ? inheritedFeatures->peekCoreSerialString() : "0");
 
+    /*
+     * Order specs are produced by statements during item saturation.  They
+     * affect the generated forest ordering, but they must not be part of the
+     * ItemSet key: applying an order statement mutates the item after it has
+     * already been inserted into the unordered_set.  If order specs are part
+     * of the core serial string, this mutation changes the hash/key of an
+     * element already stored in the set and state->find() may stop finding it.
+     *
+     * Equivalent items are therefore merged independently of their order specs;
+     * the order specs themselves are merged explicitly in Generator.
+     */
     stream << '#';
-    stream << orderSpecs.coreSerialString();
 
     stream.flush();
     coreSerialString = stream.str();

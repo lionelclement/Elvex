@@ -233,6 +233,8 @@ public:
 
     bool insertStateItem(class ItemSet *, class Item *, bool fatalOnFailure = false);
 
+    bool insertOrMergeStateItem(class ItemSet *, class Item *);
+
     void seedRandom(uint32_t seed);
 
     uint32_t getRandomSeed(void) const;
@@ -249,7 +251,11 @@ public:
 
     void toHTMLState(std::ostream &, class ItemSet *);
 
-    void close(class Parser &, class ItemSet *, uint32_t);
+    bool normalize(class Parser &, class ItemSet *, uint32_t);
+
+    void traceState(class ItemSet *);
+
+    bool close(class Parser &, class ItemSet *, uint32_t);
 
     bool shift(class Parser &, class ItemSet *, uint32_t);
 

@@ -68,7 +68,7 @@ alphaMin [a-z]|à|á|â|ã|ä|å|æ|ç|è|é|ë|ê|ì|í|î|ï|ð|ñ|ò|ó|ô|õ
 alphaCap [A-Z]|À|Á|Â|Ã|Ä|Å|Æ|Ç|È|É|Ë|Ê|Ì|Í|Î|Ï|Ð|Ñ|Ò|Ó|Ô|Õ|Ö|Ø|Ù|Ú|Û|Ü|Ý|Ÿ
 alpha {alphaMin}|{alphaCap}
 alphaNum [[:digit:]]|{alpha}|_
-identifier {alpha}{alphaNum}*|[_]{alphaNum}+
+identifier {alpha}{alphaNum}*(-{alphaNum}+)*|[_]{alphaNum}+(-{alphaNum}+)*
 variable "$"{identifier}
 anonymous_variable "_"
 digit      [0-9]
@@ -545,9 +545,9 @@ double_down_arrow "⇓"
     return TOKEN_INTEGER;
   }
 
-  d{double} {
+  {double} {
     DBUGPRTARG("TOKEN_DOUBLE ", yytext);
-    sscanf(yytext + 1, "%lf", &ruleslval.double_slot);
+    sscanf(yytext, "%lf", &ruleslval.double_slot);
     return TOKEN_DOUBLE;
   }
 

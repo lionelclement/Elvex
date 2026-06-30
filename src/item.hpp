@@ -49,6 +49,7 @@ private:
     statementsPtr statements;                                // the semantics
     set_of_uint32_t refs;                                    // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
+    std::vector<bool> normalizedAt;                          // normalization witnesses per RHS position
     std::vector<uint32_t> ranges;                            // ranges
     featuresPtr inheritedFeatures;                           // ↑
     listFeaturesPtr inheritedChildFeatures;                  // ↓
@@ -62,7 +63,7 @@ private:
          s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
          s_inheritedChildFeatures = true, s_synthesizedFeatures = true,
-         s_synthesizedChildFeatures = true, s_statements = true, s_environment = true, s_orderSpecs = true;
+         s_synthesizedChildFeatures = true, s_statements = true, s_environment = true, s_orderSpecs = false;
 
     void makeSerialString(void);
     void makeCoreSerialString(void);
@@ -170,6 +171,12 @@ public:
     void addRefs(const set_of_uint32_t &);
 
     bool isSeen(uint8_t) const;
+
+    bool isNormalizedAt(uint8_t) const;
+
+    void markNormalizedAt(uint8_t);
+
+    void clearNormalizedAt(uint8_t);
 
     void addItem(std::unordered_map<uint32_t, class Item *> &, unsigned int, class Item *);
 

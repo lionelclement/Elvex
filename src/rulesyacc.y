@@ -1266,7 +1266,7 @@ expression_statement:
 	  delete($3);
 	}
 
-	|TOKEN_MIN TOKEN_LT expression_statement TOKEN_COMMA expression_statement TOKEN_GT
+	|TOKEN_MIN TOKEN_LPAR expression_statement TOKEN_COMMA expression_statement TOKEN_RPAR
 	{
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MIN, (*$3), (*$5)));
@@ -1274,7 +1274,7 @@ expression_statement:
 	  delete($5);
 	}
 
-	|TOKEN_MAX TOKEN_LT expression_statement TOKEN_COMMA expression_statement TOKEN_GT
+	|TOKEN_MAX TOKEN_LPAR expression_statement TOKEN_COMMA expression_statement TOKEN_RPAR
 	{
 	  DBUGPRT("expression_statement");
 	  $$ = new statementPtr(Statement::createFunction(ruleslineno, parser.getTopBufferName(), false, Statement::MAX, (*$3), (*$5)));

@@ -1,0 +1,30 @@
+S → (A) B (C)
+{
+  if (#1) {
+    ↓2 = [left:withA];
+    ↓3 = [left:withA];
+  }
+  else {
+    ↓2 = [left:withoutA];
+    ↓3 = [left:withoutA];
+  }
+  ↓1 = [];
+}
+
+A → a
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+B → b
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+C → c
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

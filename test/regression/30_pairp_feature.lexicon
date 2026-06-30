@@ -1,0 +1,2 @@
+alist a [list:<left, right>];
+other a [list:<right, left>];

@@ -1,0 +1,5 @@
+x x [];
+y y [];
+z-after-X z [case:X];
+z-after-Y z [case:Y];
+z-error z [case:ERR];

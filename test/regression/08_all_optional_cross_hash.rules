@@ -1,0 +1,46 @@
+S → (A) (B) (C) (D)
+{
+  if (#1)
+    ↓2 = [attr:withA];
+  else
+    ↓2 = [attr:withoutA];
+
+  if (#2)
+    ↓1 = [attr:withB];
+  else
+    ↓1 = [attr:withoutB];
+
+  if (#4)
+    ↓3 = [attr:withD];
+  else
+    ↓3 = [attr:withoutD];
+
+  if (#3)
+    ↓4 = [attr:withC];
+  else
+    ↓4 = [attr:withoutC];
+}
+
+A → a
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+B → b
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+C → c
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+D → d
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

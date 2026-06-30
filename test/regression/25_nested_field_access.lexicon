@@ -1,0 +1,2 @@
+plural n [number:plural];
+singular n [number:singular];

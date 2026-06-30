@@ -1,0 +1,11 @@
+zero num [value:0];
+one num [value:1];
+two num [value:2];
+three num [value:3];
+four num [value:4];
+five num [value:5];
+six num [value:6];
+seven num [value:7];
+eight num [value:8];
+nine num [value:9];
+ten num [value:10];

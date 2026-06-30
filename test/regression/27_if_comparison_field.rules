@@ -1,0 +1,15 @@
+S → W
+{
+  if (↑.score >= 10) {
+    ↓1 = [level:high];
+  }
+  else {
+    ↓1 = [level:low];
+  }
+}
+
+W → word
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

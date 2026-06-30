@@ -1,0 +1,15 @@
+S → W
+{
+  if (((↑.score >= 10) && (↑.kind == good)) || (↑.override == yes)) {
+    ↓1 = [accept:yes];
+  }
+  else {
+    ↓1 = [accept:no];
+  }
+}
+
+W → word
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

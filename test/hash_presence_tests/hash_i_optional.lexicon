@@ -1,0 +1,4 @@
+a-withB a [attr:withB];
+a-withoutB a [attr:withoutB];
+b-withA b [attr:withA];
+b-withoutA b [attr:withoutA];

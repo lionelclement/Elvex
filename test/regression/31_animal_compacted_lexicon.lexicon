@@ -1,0 +1,39 @@
+// FORM	POS	FEATURES;
+"." dot;
+
+un	det [@ms, @no_def, dem:no, poss:no, part:no];
+une	det [@fs, @no_def, dem:no, poss:no, part:no];
+des	det [@p, @no_def, qual:no, dem:no, poss:no, part:no];
+
+le	det [@ms, @def, dem:no, poss:no, part:no];
+la	det [@fs, @def, dem:no, poss:no, part:no];
+les	det [@p, @def, qual:no, dem:no, poss:no, part:no];
+
+mon	det [@ms, @no_def, poss:yes, part:no, dem:no, personPoss:one, numberPoss:sg];
+ma	det [@fs, @no_def, poss:yes, part:no, dem:no, personPoss:one, numberPoss:sg];
+mes	det [@p, @no_def, poss:yes, part:no, dem:no, personPoss:one, numberPoss:sg];
+ton	det [@ms, @no_def, poss:yes, part:no, dem:no, personPoss:two, numberPoss:sg];
+ta	det [@fs, @no_def, poss:yes, part:no, dem:no, personPoss:two, numberPoss:sg];
+tes	det [@p, @no_def, poss:yes, part:no, dem:no, personPoss:two, numberPoss:sg];
+son	det [@ms, @no_def, poss:yes, part:no, dem:no, personPoss:three, numberPoss:sg];
+sa	det [@fs, @no_def, poss:yes, part:no, dem:no, personPoss:three, numberPoss:sg];
+ses	det [@p, @no_def, poss:yes, part:no, dem:no, personPoss:three, numberPoss:sg];
+notre	det [@ms, @no_def, poss:yes, part:no, dem:no, personPoss:one, numberPoss:pl];
+nos	det [@p, @no_def, poss:yes, part:no, dem:no, personPoss:one, numberPoss:pl];
+votre	det [@ms, @no_def, poss:yes, part:no, dem:no, personPoss:two, numberPoss:pl];
+vos	det [@p, @no_def, poss:yes, part:no, dem:no, personPoss:two, numberPoss:pl];
+leur	det [@ms, @no_def, poss:yes, part:no, dem:no, personPoss:three, numberPoss:pl];
+leurs	det [@p, @no_def, poss:yes, part:no, dem:no, personPoss:three, numberPoss:pl];
+
+ce	det [@ms, @no_def, poss:no, dem:yes, part:no];
+ces	det [@p, @no_def, poss:no, dem:yes, part:no];
+cette	det [@fs, @no_def, poss:no, dem:yes, part:no];
+
+je	cln [HEAD:_pro, @_1s, clitic:yes];
+tu	cln [HEAD:_pro, @_2s, clitic:yes];
+il	cln [HEAD:_pro, @_3ms, clitic:yes];
+elle	cln [HEAD:_pro, @_3fs, clitic:yes];
+nous	cln [HEAD:_pro, @_1p, clitic:yes];
+vous	cln [HEAD:_pro, @_2p, clitic:yes];
+ils	cln [HEAD:_pro, @_3mp, clitic:yes];
+elles	cln [HEAD:_pro, @_3fp, clitic:yes];

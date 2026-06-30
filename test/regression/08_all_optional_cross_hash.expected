@@ -1,0 +1,16 @@
+
+b-withoutA
+d-withoutC
+c-withoutD
+a-withoutB
+a-withoutB d-withoutC
+a-withoutB c-withoutD
+b-withoutA c-withoutD
+a-withB b-withA
+b-withoutA d-withoutC
+c-withD d-withC
+a-withB b-withA d-withoutC
+a-withoutB c-withD d-withC
+b-withoutA c-withD d-withC
+a-withB b-withA c-withoutD
+a-withB b-withA c-withD d-withC
