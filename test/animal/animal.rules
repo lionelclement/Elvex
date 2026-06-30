@@ -1,4 +1,5 @@
 // PHRASE → SYNTACTIC DESCRIPTION
+//@unordered
 S → NP|cln VP dot
 {
   [i:$i];

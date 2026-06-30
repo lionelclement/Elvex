@@ -172,3 +172,14 @@ target_compile_options(elvexpostedition_fr PUBLIC -O4 -Wall -Wextra -Wno-depreca
 install(TARGETS elvex elvexlexicon elvexpostedition_en elvexpostedition_fr
         RUNTIME DESTINATION bin)
 
+enable_testing()
+find_program(BASH_PROGRAM bash)
+if(BASH_PROGRAM)
+    add_test(
+            NAME elvex_regression
+            COMMAND ${BASH_PROGRAM} ${CMAKE_CURRENT_SOURCE_DIR}/test/run-regression.sh $<TARGET_FILE:elvex>)
+    set_tests_properties(elvex_regression PROPERTIES
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+else()
+    message("bash not found; regression tests are disabled")
+endif()

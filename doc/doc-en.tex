@@ -34,7 +34,7 @@
 
 \title{Elvex -- Documentation}
 \author{Lionel Clément}
-\date{Version 2.14.0}
+\date{Version 2.27.0}
 %November 2019 - June 2024}
 
 \begin{document}
@@ -321,7 +321,19 @@ according to the person of the pronoun.
 \end{exe}
 
 According to this rule, the phrase \texttt{CLITICS} can also be empty,
-due to the fact that each term is optional.
+due to the fact that each term is optional.  A rule whose right-hand side
+contains only optional terms may therefore generate the empty string
+$\epsilon$. Operationally, an absent optional component is represented by
+an empty forest whose span is $[i,i]$: no lexical form is consumed, but the
+component is nevertheless considered resolved. This is important because the
+rest of the rule may still refer to the presence or absence of this component
+with the presence tests described below.
+
+For a rule with $n$ independent optional components, the generator may in
+principle produce up to $2^n$ combinations. One of these combinations may be
+empty if all optional components are absent. If the output device prints one
+realization per line, this empty realization may appear as a blank line or may
+not be visually obvious.
 
 \subsubsection*{Paradigms}
 
@@ -360,6 +372,24 @@ optional terms.
 The use of alternatives and optional terms is therefore recommended to
 describe the order of words, without regard to the combinatorial
 problem.
+
+\paragraph{Operational resolution of optional terms and alternatives}
+
+Optional terms and alternatives are resolved by the generator before the
+corresponding component is generated.  An optional term opens two branches:
+one branch where the component is absent and one branch where it is present.
+When the component is absent, the generator records an empty forest with the
+same start and end position. When the component is present, the optional mark
+is removed and the component is generated normally.
+
+An alternative such as \verb#NP|cln# also opens one branch for each possible
+variant. If the term is both optional and alternative, for example
+\verb#(NP|cln)#, the optional decision is made first: the component may be
+absent, or it may be present and then one of the alternatives is selected.
+
+These decisions are internal to the generation algorithm, but they are visible
+in the operational semantics through the presence tests \verb|#i| and
+\verb|#i.j|.
 
 \section{Elvex notations}
 
@@ -674,7 +704,10 @@ Each rule is written:
 		            first one. The constraint is projected onto the components that
 		            are actually present: if an optional component is absent, the
 		            remaining components keep the relative order specified by the
-		            chain.
+		            chain.  The constraint is a generation and forest-ordering
+		            constraint, not a syntactic left-to-right parsing requirement:
+		            alternatives that cannot be generated are simply discarded, and
+		            the surviving alternatives may still satisfy the order constraint.
 
 		      \item \verb#order << i;#
 
@@ -733,14 +766,61 @@ Each rule is written:
 		      \item $\downarrow_i$
 		      \item $\Downarrow_i$
 		      \item $\uparrow$\verb#.attr# and $\Downarrow$\verb#i.attr# Field access
-		      \item \verb|#i| and \verb|#i.j| Access to generated values identified
-		            by one-based indexes
+		      \item \verb|#i| and \verb|#i.j| Presence tests for the generated
+		            components identified by one-based indexes
 		      \item \verb#[...]# Feature structure
 		      \item \verb#NIL# Null value of a feature
 		      \item \verb#a|b...# Constant evaluated as true
 		      \item \verb#$X# Variable
 		      \item \verb#<...># List evaluated as true if not null (\verb#<>#)
 	      \end{itemize}
+
+\paragraph{Presence tests: \texttt{\#i} and \texttt{\#i.j}}
+
+The expressions \verb|#i| and \verb|#i.j| test the presence of a component on
+the right-hand side of the current rule. Indexes are one-based.
+
+\begin{itemize}
+	\item \verb|#i| is true if the $i$-th component is present in the current
+	      branch. It is false if this component is an optional component that
+	      has been skipped.
+	\item \verb|#i.j| is true if the $i$-th component is present and its
+	      selected variant is the $j$-th alternative. It is false for the other
+	      variants and for an absent optional component.
+\end{itemize}
+
+For example, with the rule:
+
+\begin{lstlisting}[numbers=none]
+S → (NP|cln) VP { ... }
+\end{lstlisting}
+
+\verb|#1| is true when either \verb#NP# or \verb#cln# is present,
+\verb|#1.1| is true only when \verb#NP# is selected, and \verb|#1.2| is true
+only when \verb#cln# is selected.
+
+Presence tests may be temporarily undecidable while the generator has not yet
+resolved the corresponding optional term or alternative. In that case, a
+statement depending on the test is suspended and is tried again when the
+choice is known. This applies in particular to \verb#if# statements:
+
+\begin{lstlisting}[numbers=none]
+S → (A) B {
+  if (#1) {
+    ↓2 = [x:A];
+  }
+  else {
+    ↓2 = [x:noA];
+  }
+}
+\end{lstlisting}
+
+The \verb#if# is not evaluated on the unresolved item \verb#S → • (A) B#.
+It is evaluated only after the optional component has been resolved: the
+present branch makes \verb|#1| true, and the absent branch makes it false.
+For a mandatory simple component, \verb|#i| is true. For a mandatory
+alternative, \verb|#i| is true once one variant has been selected, and
+\verb|#i.j| identifies the selected variant.
 
 \paragraph{Predefined string constants}
 
@@ -1409,15 +1489,20 @@ The options are:
 
 	\item \verb#-r|--random#
 
-	      Displays only one randomly selected output.
+	      Displays only one randomly selected output. Random choice may occur at
+	      several levels: lexical entry selection, forest node selection and final
+	      root forest selection.
 
 	\item \verb#--seed <number>#
 
-	      Sets the random seed for reproducible random generation.
+	      Sets the random seed for reproducible random generation. This option is
+	      useful with \verb#--random# and also controls calls to \verb#rand()# in
+	      operational statements.
 
 	\item \verb#-f|--first#
 
-	      Displays only the first output.
+	      Displays only the first output in the current deterministic generation
+	      order. Unlike \verb#--random#, this option does not shuffle choices.
 
 	\item \verb#--strategy <exhaustive|sample|beam>#
 
@@ -1482,6 +1567,11 @@ The options are:
 
 \end{description}
 
+When a grammar can generate the empty string, the corresponding realization
+contains no surface form. Depending on the output context, this may be shown
+as an empty line or may be visually invisible among the other realizations.
+
+
 \subsection{Grammar debugging}
 
 Grammar debugging is performed with the \texttt{elvex} command using
@@ -1512,7 +1602,9 @@ Where the specific options are:
 
 	\item \verb#--trace-stage#
 
-	      Trace the item sets for each generation stage.
+	      Trace the stabilized item set for each generation stage. A stage is
+	      printed once after normalization and closure; this is different from
+	      \verb#--trace-close#, which traces the internal closure operations.
 
 	\item \verb#--trace-close#
 

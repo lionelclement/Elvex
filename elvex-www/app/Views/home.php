@@ -100,8 +100,7 @@ $baseIndexUrl = e(url_path(''));
                     <?php endif; ?>
 
                     <button type="button" class="btn secondary" id="run-elvex-btn">Run once</button>
-                    <button type="button" class="btn secondary" id="start-elvex-server-btn">Start server</button>
-                    <button type="button" class="btn secondary" id="stop-elvex-server-btn" disabled>Stop server</button>
+                    <button type="button" class="btn server-toggle server-toggle-start" id="toggle-elvex-server-btn" data-running="0">Start server</button>
                     <span id="elvex-server-status" class="hint">Server stopped</span>
 
                     <?php if (is_logged_in()): ?>
@@ -259,8 +258,8 @@ $baseIndexUrl = e(url_path(''));
 (function () {
     var form = document.getElementById('project-form');
     var runBtn = document.getElementById('run-elvex-btn');
-    var startBtn = document.getElementById('start-elvex-server-btn');
-    var stopBtn = document.getElementById('stop-elvex-server-btn');
+    var toggleServerBtn = document.getElementById('toggle-elvex-server-btn');
+    var serverRunning = false;
     var sendBtn = document.getElementById('send-elvex-input-btn');
     var statusLabel = document.getElementById('elvex-server-status');
     var serverInput = document.getElementById('elvex-server-input');
@@ -282,11 +281,17 @@ $baseIndexUrl = e(url_path(''));
     }
 
     function setServerUi(running, message) {
-        if (startBtn) startBtn.disabled = !!running;
-        if (stopBtn) stopBtn.disabled = !running;
-        if (sendBtn) sendBtn.disabled = !running;
+        serverRunning = !!running;
+        if (toggleServerBtn) {
+            toggleServerBtn.disabled = false;
+            toggleServerBtn.dataset.running = serverRunning ? '1' : '0';
+            toggleServerBtn.textContent = serverRunning ? 'Stop server' : 'Start server';
+            toggleServerBtn.classList.toggle('server-toggle-start', !serverRunning);
+            toggleServerBtn.classList.toggle('server-toggle-stop', serverRunning);
+        }
+        if (sendBtn) sendBtn.disabled = !serverRunning;
         if (serverInputPanel) serverInputPanel.style.display = '';
-        if (statusLabel) statusLabel.textContent = message || (running ? 'Server running' : 'Server stopped');
+        if (statusLabel) statusLabel.textContent = message || (serverRunning ? 'Server running' : 'Server stopped');
     }
 
     async function parseJsonResponse(response) {
@@ -360,12 +365,13 @@ $baseIndexUrl = e(url_path(''));
         }
     });
 
-    startBtn.addEventListener('click', async function () {
-        startBtn.disabled = true;
+    async function startServer() {
+        toggleServerBtn.disabled = true;
+        toggleServerBtn.textContent = 'Starting...';
         output.value = '';
         error.value = '';
         logFrame.innerHTML = '<em>No trace available.</em>';
-        setServerUi(true, 'Starting server...');
+        if (statusLabel) statusLabel.textContent = 'Starting server...';
 
         try {
             const data = await postForm('<?= e(url_path('projects/server/start')) ?>');
@@ -377,10 +383,12 @@ $baseIndexUrl = e(url_path(''));
             error.value = e.message;
             activateTab('output');
         }
-    });
+    }
 
-    stopBtn.addEventListener('click', async function () {
-        stopBtn.disabled = true;
+    async function stopServer() {
+        toggleServerBtn.disabled = true;
+        toggleServerBtn.textContent = 'Stopping...';
+        if (statusLabel) statusLabel.textContent = 'Stopping server...';
 
         try {
             const data = await postForm('<?= e(url_path('projects/server/stop')) ?>');
@@ -389,6 +397,14 @@ $baseIndexUrl = e(url_path(''));
             error.value = e.message;
             activateTab('output');
             await refreshServerStatus();
+        }
+    }
+
+    toggleServerBtn.addEventListener('click', async function () {
+        if (serverRunning) {
+            await stopServer();
+        } else {
+            await startServer();
         }
     });
 
@@ -405,7 +421,7 @@ $baseIndexUrl = e(url_path(''));
 
         try {
             const data = await postForm('<?= e(url_path('projects/server/send')) ?>', {server_input: value});
-            output.value = '> ' + value + '\n' + (data.output || '');
+            output.value = data.output || '';
             setServerUi(!!data.running, data.running ? 'Server running' : 'Server stopped');
             activateTab('output');
         } catch (e) {
@@ -413,7 +429,7 @@ $baseIndexUrl = e(url_path(''));
             activateTab('output');
             await refreshServerStatus();
         } finally {
-            if (stopBtn && !stopBtn.disabled) {
+            if (serverRunning) {
                 sendBtn.disabled = false;
             }
         }

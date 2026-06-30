@@ -73,9 +73,11 @@ ANIMAL	noun	OURS	[selectional_restriction:[animate:yes, animal:yes, wild:yes, so
 //
 ANIMAL	noun	SERPENT	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler]]
 //
-ANIMAL	noun	CERF	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bramer]]
+ANIMAL	noun	DAIM	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier|bramer]]
 //
-ANIMAL	noun	CHEVREUIL	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bramer | raire]]
+ANIMAL	noun	CERF	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier|bramer|raire|réer]]
+//
+ANIMAL	noun	CHEVREUIL	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier|bramer|raire|réer]]
 //
 ANIMAL	noun	SANGLIER	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:grogner]]
 //
@@ -160,6 +162,7 @@ CRIER	verb	HULULER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, soun
 CRIER	verb	CROASSER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:croasser]]]
 CRIER	verb	COASSER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:coasser]]]
 CRIER	verb	GAZOUILLER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:gazouiller]]]
+CRIER	verb	CRIER	[SUBJ:[selectional_restriction:[animate:yes, sound:crier]]]
 //
 CRIER	verb	ROUCOULER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:roucouler]]]
 CRIER	verb	JASER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:jaser]]]

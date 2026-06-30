@@ -55,6 +55,10 @@
         .btn.primary { background:var(--brand); color:#fff; }
         .btn.secondary { background:#eef2ff; color:var(--brand-dark); }
         .btn.danger { background:#fef3f2; color:var(--danger); }
+        .btn.server-toggle { min-width:128px; color:#fff; text-align:center; }
+        .btn.server-toggle-start { background:var(--ok); }
+        .btn.server-toggle-stop { background:var(--danger); }
+        .btn:disabled { opacity:.65; cursor:not-allowed; }
 
         .modal-backdrop { position:fixed; inset:0; background:rgba(15,23,42,.55); display:none; align-items:center; justify-content:center; padding:16px; }
         .modal-backdrop.open { display:flex; }
@@ -200,6 +204,7 @@
         }
 
         @media (max-width:960px){ .page-grid{grid-template-columns:1fr;} .topbar{flex-wrap:wrap; padding-top:12px; padding-bottom:12px;} }
+        @media (max-width:640px){ .actions .btn, .actions a.btn { width:100%; text-align:center; } .actions .hint { width:100%; } }
     </style>
 </head>
 <body>
