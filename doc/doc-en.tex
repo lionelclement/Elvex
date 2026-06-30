@@ -389,7 +389,7 @@ absent, or it may be present and then one of the alternatives is selected.
 
 These decisions are internal to the generation algorithm, but they are visible
 in the operational semantics through the presence tests \verb|#i| and
-\verb|#i.j|.
+\verb|#i . j|.
 
 \section{Elvex notations}
 
@@ -766,7 +766,7 @@ Each rule is written:
 		      \item $\downarrow_i$
 		      \item $\Downarrow_i$
 		      \item $\uparrow$\verb#.attr# and $\Downarrow$\verb#i.attr# Field access
-		      \item \verb|#i| and \verb|#i.j| Presence tests for the generated
+		      \item \verb|#i| and \verb|#i . j| Presence tests for the generated
 		            components identified by one-based indexes
 		      \item \verb#[...]# Feature structure
 		      \item \verb#NIL# Null value of a feature
@@ -775,16 +775,16 @@ Each rule is written:
 		      \item \verb#<...># List evaluated as true if not null (\verb#<>#)
 	      \end{itemize}
 
-\paragraph{Presence tests: \texttt{\#i} and \texttt{\#i.j}}
+\paragraph{Presence tests: \texttt{\#i} and \texttt{\#i . j}}
 
-The expressions \verb|#i| and \verb|#i.j| test the presence of a component on
+The expressions \verb|#i| and \verb|#i . j| test the presence of a component on
 the right-hand side of the current rule. Indexes are one-based.
 
 \begin{itemize}
 	\item \verb|#i| is true if the $i$-th component is present in the current
 	      branch. It is false if this component is an optional component that
 	      has been skipped.
-	\item \verb|#i.j| is true if the $i$-th component is present and its
+	\item \verb|#i . j| is true if the $i$-th component is present and its
 	      selected variant is the $j$-th alternative. It is false for the other
 	      variants and for an absent optional component.
 \end{itemize}
@@ -820,7 +820,7 @@ It is evaluated only after the optional component has been resolved: the
 present branch makes \verb|#1| true, and the absent branch makes it false.
 For a mandatory simple component, \verb|#i| is true. For a mandatory
 alternative, \verb|#i| is true once one variant has been selected, and
-\verb|#i.j| identifies the selected variant.
+\verb|#i . j| identifies the selected variant.
 
 \paragraph{Predefined string constants}
 
