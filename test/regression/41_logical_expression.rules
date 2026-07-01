@@ -1,0 +1,15 @@
+S → W
+{
+  if (((↑.a == yes) => (↑.b == yes)) && ((↑.c == yes) <=> (↑.d == yes))) {
+    ↓1 = [logic:ok];
+  }
+  else {
+    ↓1 = [logic:ko];
+  }
+}
+
+W → word
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

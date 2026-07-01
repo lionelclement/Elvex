@@ -94,6 +94,7 @@ run_one() {
   local input="${TEST_DIR}/${name}.input"
   local stdin_file="${TEST_DIR}/${name}.stdin"
   local expected="${TEST_DIR}/${name}.expected"
+  local expected_stderr="${TEST_DIR}/${name}.stderr"
   local macros="${TEST_DIR}/${name}.macros"
   local pattern="${TEST_DIR}/${name}.pattern"
   local morpho="${TEST_DIR}/${name}.morpho"
@@ -102,6 +103,8 @@ run_one() {
   local stderr_log="${TMP_DIR}/${name}.stderr"
   local actual_sorted="${TMP_DIR}/${name}.actual.sorted"
   local expected_sorted="${TMP_DIR}/${name}.expected.sorted"
+  local stderr_sorted="${TMP_DIR}/${name}.stderr.sorted"
+  local expected_stderr_sorted="${TMP_DIR}/${name}.expected.stderr.sorted"
   local compacted_status=1
   local input_mode=""
   local input_source=""
@@ -192,7 +195,17 @@ run_one() {
     return 1
   fi
 
-  if [[ -s "${stderr_log}" ]]; then
+  if [[ -f "${expected_stderr}" ]]; then
+    normalize_output "${stderr_log}" > "${stderr_sorted}"
+    normalize_output "${expected_stderr}" > "${expected_stderr_sorted}"
+
+    if ! diff -u "${expected_stderr_sorted}" "${stderr_sorted}"; then
+      echo "[FAIL] ${name}: stderr mismatch" >&2
+      echo "Actual stderr was:" >&2
+      cat "${stderr_log}" >&2
+      return 1
+    fi
+  elif [[ -s "${stderr_log}" ]]; then
     echo "[WARN] ${name}: stderr was not empty" >&2
     cat "${stderr_log}" >&2
   fi

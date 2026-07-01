@@ -1,0 +1,15 @@
+S → W
+{
+  if (↑.mode == left) {
+    ↓1 = [side:left];
+  }
+  else {
+    ↓1 = [side:right];
+  }
+}
+
+W → word
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

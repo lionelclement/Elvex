@@ -1,0 +1,11 @@
+S → W
+{
+  [payload:[kind:$K]] ⊂ ↑;
+  ↓1 = [kind:$K, tag:↑.tag];
+}
+
+W → word
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

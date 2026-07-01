@@ -1,0 +1,14 @@
+S → W
+{
+  print out;
+  println line;
+  eprint err;
+  eprintln line;
+  ↓1 = [];
+}
+
+W → word
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

@@ -1,0 +1,3 @@
+a a [];
+selected b [flag:yes];
+other b [flag:no];

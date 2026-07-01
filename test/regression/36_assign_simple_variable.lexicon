@@ -1,0 +1,2 @@
+simple-variable word [case:selected];
+other word [case:other];

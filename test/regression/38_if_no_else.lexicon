@@ -1,0 +1,2 @@
+if-true word [case:on];
+if-false word [case:off];

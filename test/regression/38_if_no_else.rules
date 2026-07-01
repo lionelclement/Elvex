@@ -1,0 +1,12 @@
+S → W
+{
+  if (↑.enabled == yes) {
+    ↓1 = [case:on];
+  }
+}
+
+W → word
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

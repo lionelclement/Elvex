@@ -1,0 +1,2 @@
+logic-ok word [logic:ok];
+logic-ko word [logic:ko];

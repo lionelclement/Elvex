@@ -1,0 +1,3 @@
+a a [flag:yes];
+selected b [case:ok];
+other b [case:bad];
