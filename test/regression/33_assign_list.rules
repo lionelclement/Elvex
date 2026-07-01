@@ -1,7 +1,6 @@
 S → W
 {
-  $Items = ↑.items;
-  <$First :: $Rest> = $Items;
+  <$First :: $Rest> = ↑.items;
   <$Second :: $Tail> = $Rest;
   ↓1 = [first:$First, second:$Second];
 }

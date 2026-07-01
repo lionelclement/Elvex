@@ -1853,6 +1853,24 @@ pairpPtr Statement::evalPairp(class Item *item, Parser &parser, Generator *synth
     }
     break;
 
+    case FIELD_ACCESS_STATEMENT:
+    {
+        valuePtr _value = evalValue(item, parser, synthesizer, replaceVariables, verbose);
+        if (!_value || _value->isNil())
+            resultPairp = Pairp::NIL;
+        else if (_value->isPairp())
+            resultPairp = _value->getPairp()->clone();
+        else
+        {
+            std::ostringstream oss1, oss2;
+            this->toHTML(oss1);
+            item->printRule(oss2, -1, true);
+            WARNING_STM;
+            "<P>Field access " + oss1.str() + " does not evaluate to a list in</P>" + oss2.str();
+        }
+    }
+    break;
+
     default:
         FATAL_ERROR_UNEXPECTED;
         break;
@@ -4074,12 +4092,15 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
         /*
          * <…> = $X;
          * <…> = <…>;
+         * <…> = ↑.field;
+         * <…> = ⇓1.field;
          * <…> = search …;
          */
         ((isAssignment()) &&
          (first->isPairp()) &&
          ((second->isVariable()) ||
-          (second->isPairp())))
+          (second->isPairp()) ||
+          (second->isFieldAccess())))
 
         ||
 
