@@ -73,8 +73,8 @@ variable "$"{identifier}
 anonymous_variable "_"
 digit      [0-9]
 digits     [0-9]+
-integer    {digits}
-double     {digits}(\.{digits})?([Ee][+-]?{digits})?
+integer    -?{digits}
+double     -?{digits}(\.{digits})?([Ee][+-]?{digits})?
 string \"([^\n\"]|\\\")*\"
 blanks [[:blank:]\15]+
 rightArrow "→"|"->"
