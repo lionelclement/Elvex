@@ -1,0 +1,13 @@
+# Ne rien compter par défaut dans les statistiques de langages GitHub.
+**/* -linguist-detectable
+
+# Compter uniquement les sources C++ du moteur XLFG.
+src/**/*.cc  linguist-detectable linguist-language=C++
+src/**/*.cpp linguist-detectable linguist-language=C++
+src/**/*.cxx linguist-detectable linguist-language=C++
+
+# Compter les en-têtes comme du C++.
+src/**/*.h   linguist-detectable linguist-language=C++
+src/**/*.hh  linguist-detectable linguist-language=C++
+src/**/*.hpp linguist-detectable linguist-language=C++
+src/**/*.hxx linguist-detectable linguist-language=C++
