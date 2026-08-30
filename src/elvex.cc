@@ -159,6 +159,64 @@ Options:\n\
         std::cout << std::flush;
     }
 
+    void writeGeneratedOutput(const std::string &output, bool trace)
+    {
+        if (trace)
+        {
+            std::cout << "<li>" << std::endl;
+        }
+
+        std::cout << output << std::endl;
+
+        if (trace)
+        {
+            std::cout << "</li>" << std::endl;
+        }
+    }
+
+    bool outputRandomGeneratedResult(bool trace)
+    {
+        size_t outputCount = 0;
+
+        for (auto forestIt = generator.getNodeRoot()->cbegin();
+             forestIt != generator.getNodeRoot()->cend();
+             ++forestIt)
+        {
+            for (auto outputIt = (*forestIt)->output_cbegin();
+                 outputIt != (*forestIt)->output_cend();
+                 ++outputIt)
+            {
+                ++outputCount;
+            }
+        }
+
+        if (outputCount == 0)
+        {
+            return false;
+        }
+
+        size_t selected = generator.randomIndex(outputCount);
+        size_t index = 0;
+
+        for (auto forestIt = generator.getNodeRoot()->cbegin();
+             forestIt != generator.getNodeRoot()->cend();
+             ++forestIt)
+        {
+            for (auto outputIt = (*forestIt)->output_cbegin();
+                 outputIt != (*forestIt)->output_cend();
+                 ++outputIt)
+            {
+                if (index++ == selected)
+                {
+                    writeGeneratedOutput(*outputIt, trace);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     void generate(bool trace)
     {
         int randomTry = 0;
@@ -179,43 +237,40 @@ Options:\n\
 
             if (generator.getNodeRoot() && !generator.getNodeRoot()->empty())
             {
-                std::vector<forestPtr>::const_iterator forestIt = generator.getNodeRoot()->cbegin();
-                forestPtr forest;
-
-                if (generator.getRandomResult())
+                if (generator.getRandomResult() && generator.isStrategyExhaustive())
                 {
-                    size_t rv = generator.randomIndex(generator.getNodeRoot()->size());
-                    forest = generator.getNodeRoot()->at(rv);
+                    outputRandomGeneratedResult(trace);
                 }
-
-                while (forestIt != generator.getNodeRoot()->cend())
+                else
                 {
-                    if (!generator.getRandomResult())
+                    std::vector<forestPtr>::const_iterator forestIt = generator.getNodeRoot()->cbegin();
+                    forestPtr forest;
+
+                    if (generator.getRandomResult())
                     {
-                        forest = *forestIt;
+                        size_t rv = generator.randomIndex(generator.getNodeRoot()->size());
+                        forest = generator.getNodeRoot()->at(rv);
                     }
 
-                    for (auto i = forest->output_cbegin(); i != forest->output_cend(); ++i)
+                    while (forestIt != generator.getNodeRoot()->cend())
                     {
-                        if (trace)
+                        if (!generator.getRandomResult())
                         {
-                            std::cout << "<li>" << std::endl;
+                            forest = *forestIt;
                         }
 
-                        std::cout << (*i) << std::endl;
-
-                        if (trace)
+                        for (auto i = forest->output_cbegin(); i != forest->output_cend(); ++i)
                         {
-                            std::cout << "</li>" << std::endl;
+                            writeGeneratedOutput(*i, trace);
                         }
-                    }
 
-                    if (generator.getRandomResult() || generator.getFirstResult())
-                    {
-                        break;
-                    }
+                        if (generator.getRandomResult() || generator.getFirstResult())
+                        {
+                            break;
+                        }
 
-                    ++forestIt;
+                        ++forestIt;
+                    }
                 }
             }
 

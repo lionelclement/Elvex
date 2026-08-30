@@ -23,6 +23,17 @@
 #include <vector>
 #include <limits>
 #include <iostream>
+#include <unordered_set>
+#include <cstdlib>
+#include <iomanip>
+
+#ifdef ELVEX_EXPERIMENT_METRICS
+#include <chrono>
+#include <ctime>
+#if defined(__unix__) || defined(__APPLE__)
+#include <sys/resource.h>
+#endif
+#endif
 
 #include "generator.hpp"
 #include "compacted-lexicon.hpp"
@@ -44,6 +55,309 @@
 
 static bool mergeRefs(class Item *target, const Item::set_of_uint32_t &refs);
 static bool mergeOrderSpecs(class Item *target, const OrderSpecs &orderSpecs);
+
+
+static bool redundancyDiagnosticsEnabled()
+{
+    static bool enabled = []() {
+        const char *value = std::getenv("ELVEX_REDUNDANCY_DIAGNOSTICS");
+        if (!value || !*value)
+            return false;
+        std::string s(value);
+        return s != "0" && s != "false" && s != "FALSE" && s != "no" && s != "NO";
+    }();
+    return enabled;
+}
+
+struct RedundancyDiagnostics
+{
+    uint64_t saturateCalls;
+    uint64_t actionAttempts;
+    uint64_t closeAttempts;
+    uint64_t closeCandidates;
+    uint64_t closeDuplicates;
+    uint64_t closeInserted;
+    uint64_t reduceActual;
+    uint64_t reduceMemoHits;
+    uint64_t reduceMemoMisses;
+    uint64_t reduceProducedDuplicates;
+    uint64_t reduceProducedInserted;
+    uint64_t shiftAttempts;
+    uint64_t shiftCandidates;
+    uint64_t shiftDuplicatesBeforeInsert;
+    uint64_t shiftInserted;
+
+    std::unordered_map<std::string, uint64_t> top;
+    std::unordered_map<std::string, std::string> labels;
+
+    RedundancyDiagnostics()
+        : saturateCalls(0),
+          actionAttempts(0),
+          closeAttempts(0),
+          closeCandidates(0),
+          closeDuplicates(0),
+          closeInserted(0),
+          reduceActual(0),
+          reduceMemoHits(0),
+          reduceMemoMisses(0),
+          reduceProducedDuplicates(0),
+          reduceProducedInserted(0),
+          shiftAttempts(0),
+          shiftCandidates(0),
+          shiftDuplicatesBeforeInsert(0),
+          shiftInserted(0)
+    {
+    }
+
+    void clear()
+    {
+        saturateCalls = 0;
+        actionAttempts = 0;
+        closeAttempts = 0;
+        closeCandidates = 0;
+        closeDuplicates = 0;
+        closeInserted = 0;
+        reduceActual = 0;
+        reduceMemoHits = 0;
+        reduceMemoMisses = 0;
+        reduceProducedDuplicates = 0;
+        reduceProducedInserted = 0;
+        shiftAttempts = 0;
+        shiftCandidates = 0;
+        shiftDuplicatesBeforeInsert = 0;
+        shiftInserted = 0;
+        top.clear();
+        labels.clear();
+    }
+};
+
+static RedundancyDiagnostics redundancyDiagnostics;
+
+#ifdef ELVEX_EXPERIMENT_METRICS
+struct ExperimentMetrics
+{
+    uint64_t run;
+    uint64_t saturateCalls;
+    uint64_t saturationPasses;
+    uint64_t maxPassesPerSaturate;
+    uint64_t normalizeChangedPasses;
+    uint64_t closeChangedPasses;
+    uint64_t shiftCalls;
+    uint64_t lexicalShiftsInserted;
+    uint64_t reduceItemsProcessed;
+    uint64_t synthesizedHandoffs;
+    uint64_t synthesizedFeatureFields;
+    uint64_t chartItemsInserted;
+    uint64_t peakStateItems;
+
+    ExperimentMetrics()
+        : run(0), saturateCalls(0), saturationPasses(0), maxPassesPerSaturate(0),
+          normalizeChangedPasses(0), closeChangedPasses(0), shiftCalls(0),
+          lexicalShiftsInserted(0), reduceItemsProcessed(0), synthesizedHandoffs(0),
+          synthesizedFeatureFields(0), chartItemsInserted(0), peakStateItems(0)
+    {
+    }
+
+    void resetForNextRun()
+    {
+        const uint64_t nextRun = run + 1;
+        *this = ExperimentMetrics();
+        run = nextRun;
+    }
+};
+
+static ExperimentMetrics experimentMetrics;
+
+static double elapsedMilliseconds(std::chrono::steady_clock::time_point from,
+                                  std::chrono::steady_clock::time_point to)
+{
+    return std::chrono::duration<double, std::milli>(to - from).count();
+}
+
+static double elapsedCpuMilliseconds(std::clock_t from, std::clock_t to)
+{
+    return 1000.0 * static_cast<double>(to - from) / static_cast<double>(CLOCKS_PER_SEC);
+}
+
+static uint64_t processHighWaterRssKb()
+{
+#if defined(__unix__) || defined(__APPLE__)
+    struct rusage usage;
+    if (getrusage(RUSAGE_SELF, &usage) != 0)
+        return 0;
+#if defined(__APPLE__)
+    return static_cast<uint64_t>(usage.ru_maxrss) / 1024ULL;
+#else
+    return static_cast<uint64_t>(usage.ru_maxrss);
+#endif
+#else
+    return 0;
+#endif
+}
+#endif
+
+static std::unordered_set<std::string> processedCloseKeys;
+static std::unordered_set<std::string> processedReduceRootKeys;
+static std::unordered_set<std::string> processedReduceRefKeys;
+
+static std::string processedItemOperationKey(const char *kind, uint32_t row, class Item *item)
+{
+    std::ostringstream oss;
+    oss << kind
+        << "|row=" << row
+        << "|item=" << (item ? item->getId() : 0)
+        << "|index=" << (item ? static_cast<unsigned int>(item->getIndex()) : 0);
+    return oss.str();
+}
+
+static std::string processedReduceRefOperationKey(uint32_t row, class Item *actualItem, uint32_t previousItemId)
+{
+    std::ostringstream oss;
+    oss << "REDUCE_REF"
+        << "|row=" << row
+        << "|actual=" << (actualItem ? actualItem->getId() : 0)
+        << "|previous=" << previousItemId;
+    return oss.str();
+}
+
+static bool hasUnprocessedReduceWork(uint32_t row, class Item *actualItem, bool reduceAll)
+{
+    if (!actualItem)
+        return false;
+
+    if (reduceAll || actualItem->getRefs().empty())
+    {
+        const std::string rootKey = processedItemOperationKey("REDUCE_ROOT", row, actualItem);
+        if (processedReduceRootKeys.find(rootKey) == processedReduceRootKeys.end())
+        {
+            return true;
+        }
+    }
+
+    for (Item::set_of_uint32_t::const_iterator ref = actualItem->getRefs().begin();
+         ref != actualItem->getRefs().end();
+         ++ref)
+    {
+        const std::string refKey = processedReduceRefOperationKey(row, actualItem, *ref);
+        if (processedReduceRefKeys.find(refKey) == processedReduceRefKeys.end())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
+static std::string diagnosticRuleLabel(class Item *item)
+{
+    if (!item)
+        return "<null item>";
+
+    std::ostringstream oss;
+    item->printRule(oss, item->getIndex(), false, false);
+    return oss.str();
+}
+
+static std::string diagnosticItemKey(const char *kind, uint32_t row, class Item *item)
+{
+    std::ostringstream oss;
+    oss << kind
+        << "|row=" << row
+        << "|core=" << std::hex << std::hash<std::string>()(item ? item->peekCoreSerialString() : std::string("<null>"));
+    return oss.str();
+}
+
+static void diagnosticBump(const std::string &key, const std::string &label)
+{
+    if (!redundancyDiagnosticsEnabled())
+        return;
+
+    ++redundancyDiagnostics.top[key];
+    if (redundancyDiagnostics.labels.find(key) == redundancyDiagnostics.labels.end())
+    {
+        redundancyDiagnostics.labels.insert(std::make_pair(key, label));
+    }
+}
+
+static void diagnosticBumpItem(const char *kind, uint32_t row, class Item *item)
+{
+    if (!redundancyDiagnosticsEnabled())
+        return;
+
+    diagnosticBump(diagnosticItemKey(kind, row, item), diagnosticRuleLabel(item));
+}
+
+static bool diagnosticTopGreater(const std::pair<std::string, uint64_t> &a,
+                                 const std::pair<std::string, uint64_t> &b)
+{
+    if (a.second != b.second)
+        return a.second > b.second;
+    return a.first < b.first;
+}
+
+static void diagnosticPrintTop(std::ostream &os, const char *title, const char *prefix, std::size_t limit = 20)
+{
+    if (!redundancyDiagnosticsEnabled())
+        return;
+
+    std::vector<std::pair<std::string, uint64_t> > rows;
+    for (std::unordered_map<std::string, uint64_t>::const_iterator it = redundancyDiagnostics.top.begin();
+         it != redundancyDiagnostics.top.end();
+         ++it)
+    {
+        if (it->first.rfind(prefix, 0) == 0)
+        {
+            rows.push_back(*it);
+        }
+    }
+
+    std::sort(rows.begin(), rows.end(), diagnosticTopGreater);
+
+    os << "\n[elvex redundancy diagnostics] " << title << "\n";
+    const std::size_t n = std::min(limit, rows.size());
+    for (std::size_t i = 0; i < n; ++i)
+    {
+        const std::pair<std::string, uint64_t> &row = rows[i];
+        std::unordered_map<std::string, std::string>::const_iterator label = redundancyDiagnostics.labels.find(row.first);
+        os << "  " << std::setw(4) << row.second << "  "
+           << (label == redundancyDiagnostics.labels.end() ? row.first : label->second)
+           << "  [" << row.first << "]\n";
+    }
+}
+
+static void diagnosticPrintSummary()
+{
+    if (!redundancyDiagnosticsEnabled())
+        return;
+
+    std::cerr << "\n================ ELVEX REDUNDANCY DIAGNOSTICS ================\n";
+    std::cerr << "saturate calls:                 " << redundancyDiagnostics.saturateCalls << "\n";
+    std::cerr << "ACTION attempts:                " << redundancyDiagnostics.actionAttempts << "\n";
+    std::cerr << "CLOSE attempts:                 " << redundancyDiagnostics.closeAttempts << "\n";
+    std::cerr << "CLOSE candidate rules opened:   " << redundancyDiagnostics.closeCandidates << "\n";
+    std::cerr << "CLOSE inserted:                 " << redundancyDiagnostics.closeInserted << "\n";
+    std::cerr << "CLOSE duplicates:               " << redundancyDiagnostics.closeDuplicates << "\n";
+    std::cerr << "REDUCE actual items:            " << redundancyDiagnostics.reduceActual << "\n";
+    std::cerr << "REDUCE memo hits:               " << redundancyDiagnostics.reduceMemoHits << "\n";
+    std::cerr << "REDUCE memo misses:             " << redundancyDiagnostics.reduceMemoMisses << "\n";
+    std::cerr << "REDUCE produced inserted:       " << redundancyDiagnostics.reduceProducedInserted << "\n";
+    std::cerr << "REDUCE produced duplicates:     " << redundancyDiagnostics.reduceProducedDuplicates << "\n";
+    std::cerr << "SHIFT attempts:                 " << redundancyDiagnostics.shiftAttempts << "\n";
+    std::cerr << "SHIFT candidates:               " << redundancyDiagnostics.shiftCandidates << "\n";
+    std::cerr << "SHIFT duplicates before insert: " << redundancyDiagnostics.shiftDuplicatesBeforeInsert << "\n";
+    std::cerr << "SHIFT inserted:                 " << redundancyDiagnostics.shiftInserted << "\n";
+
+    diagnosticPrintTop(std::cerr, "Top ACTION attempts", "ACTION|");
+    diagnosticPrintTop(std::cerr, "Top CLOSE source attempts", "CLOSE_SOURCE|");
+    diagnosticPrintTop(std::cerr, "Top CLOSE duplicate candidates", "CLOSE_DUP|");
+    diagnosticPrintTop(std::cerr, "Top REDUCE actual items", "REDUCE_ACTUAL|");
+    diagnosticPrintTop(std::cerr, "Top SHIFT source attempts", "SHIFT_SOURCE|");
+
+    std::cerr << "================================================================\n";
+}
+
 
 /* **************************************************
  *
@@ -287,6 +601,16 @@ bool Generator::getRandomResult() const
 }
 
 /* **************************************************
+ * In exhaustive mode, --random must not prune or choose
+ * during generation: the random choice is made only on
+ * the completed forest, at output time.
+ ************************************************** */
+bool Generator::getRandomResultDuringGeneration() const
+{
+    return this->randomResult && !this->isStrategyExhaustive();
+}
+
+/* **************************************************
  *
  ************************************************** */
 void Generator::setFirstResult(const bool firstResult)
@@ -521,6 +845,10 @@ bool Generator::insertStateItem(class ItemSet *state, class Item *item, bool fat
     if (inserted)
     {
         insertItemMap(item);
+#ifdef ELVEX_EXPERIMENT_METRICS
+        ++experimentMetrics.chartItemsInserted;
+        experimentMetrics.peakStateItems = std::max<uint64_t>(experimentMetrics.peakStateItems, state->size());
+#endif
         return true;
     }
 
@@ -1149,6 +1477,12 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                 if ((*actualItem)->getStatements() && (*actualItem)->isUnsetFlags(Flags::BOTTOM) && (*actualItem)->getStatements()->isUnsetFlags(Flags::SEEN))
                 {
+                    if (redundancyDiagnosticsEnabled())
+                    {
+                        ++redundancyDiagnostics.actionAttempts;
+                        diagnosticBumpItem("ACTION", row, *actualItem);
+                    }
+
                     if (getTraceAction() || ((getTrace() && (*actualItem)->getRuleTrace())))
                     {
                         std::cout << "<H3>####################### ACTION #######################</H3>" << std::endl;
@@ -1186,6 +1520,19 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                          parser.getRules().isNonTerminal((*actualItem)->getCurrentTerm()) &&
                          !(*(*actualItem)->getInheritedChildFeatures())[(*actualItem)->getIndex()]->isNil())
                 {
+
+                    const std::string closeKey = processedItemOperationKey("CLOSE", row, *actualItem);
+                    if (processedCloseKeys.find(closeKey) != processedCloseKeys.end())
+                    {
+                        continue;
+                    }
+                    processedCloseKeys.insert(closeKey);
+
+                    if (redundancyDiagnosticsEnabled())
+                    {
+                        ++redundancyDiagnostics.closeAttempts;
+                        diagnosticBumpItem("CLOSE_SOURCE", row, *actualItem);
+                    }
 
                     if (traceClose || (trace && (*actualItem)->getRuleTrace()))
                     {
@@ -1250,9 +1597,20 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                             }
 
                             // record the item
+                            if (redundancyDiagnosticsEnabled())
+                            {
+                                ++redundancyDiagnostics.closeCandidates;
+                            }
+
                             auto found = state->find(it);
                             if (found != state->cend())
                             {
+                                if (redundancyDiagnosticsEnabled())
+                                {
+                                    ++redundancyDiagnostics.closeDuplicates;
+                                    diagnosticBumpItem("CLOSE_DUP", row, it);
+                                }
+
                                 const bool refsChanged = mergeRefs(*found, it->getRefs());
                                 const bool orderSpecsChanged = mergeOrderSpecs(*found, it->getOrderSpecs());
                                 if (refsChanged || orderSpecsChanged)
@@ -1268,6 +1626,10 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                                 if (insertStateItem(state, it, true))
                                 {
+                                    if (redundancyDiagnosticsEnabled())
+                                    {
+                                        ++redundancyDiagnostics.closeInserted;
+                                    }
                                     modification = true;
                                 }
                                 else if (isStrategyExhaustive())
@@ -1283,6 +1645,20 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                 // X -> delta •
                 else if ((*actualItem)->isCompleted())
                 {
+
+                    if (!hasUnprocessedReduceWork(row, *actualItem, reduceAll))
+                    {
+                        continue;
+                    }
+
+                    if (redundancyDiagnosticsEnabled())
+                    {
+                        ++redundancyDiagnostics.reduceActual;
+                        diagnosticBumpItem("REDUCE_ACTUAL", row, *actualItem);
+                    }
+#ifdef ELVEX_EXPERIMENT_METRICS
+                    ++experimentMetrics.reduceItemsProcessed;
+#endif
 
                     if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                     {
@@ -1315,6 +1691,12 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                             // If Axiom reduced or debug Transients
                             if (reduceAll || (*actualItem)->getRefs().empty())
                             {
+                                const std::string reduceRootKey = processedItemOperationKey("REDUCE_ROOT", row, *actualItem);
+                                if (processedReduceRootKeys.find(reduceRootKey) != processedReduceRootKeys.end())
+                                {
+                                    goto skipRootReduction;
+                                }
+                                processedReduceRootKeys.insert(reduceRootKey);
 
                                 if (traceReduce || (trace && (*actualItem)->getRuleTrace()))
                                 {
@@ -1375,8 +1757,16 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     forestFound->push_node(node);
                                 }
                             }
+skipRootReduction:
                             for (auto ref : (*actualItem)->getRefs())
                             {
+                                const std::string reduceRefKey = processedReduceRefOperationKey(row, *actualItem, ref);
+                                if (processedReduceRefKeys.find(reduceRefKey) != processedReduceRefKeys.end())
+                                {
+                                    continue;
+                                }
+                                processedReduceRefKeys.insert(reduceRefKey);
+
                                 class Item *previousItem = getItemMap(ref);
                                 if (!previousItem)
                                 {
@@ -1398,6 +1788,10 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     // Is this already done ?
                                     if (memItem != memoizedMap.cend())
                                     {
+                                        if (redundancyDiagnosticsEnabled())
+                                        {
+                                            ++redundancyDiagnostics.reduceMemoHits;
+                                        }
 
                                         std::vector<class MemoizationValue *> result = memItem->second;
                                         for (std::vector<class MemoizationValue *>::const_iterator memoizationValue = result.cbegin();
@@ -1433,8 +1827,22 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             featuresPtr memoizedFeatures = (*memoizationValue)->getFeatures();
                                             if (memoizedFeatures)
                                             {
+#ifdef ELVEX_ABLATE_SYNTHESIZED_HANDOFF
+                                                // Experimental ablation: preserve the structural slot for ⇓i
+                                                // but remove the information synthesized by the daughter.
+                                                it->getSynthesizedChildFeatures()->add(previousItem->getIndex(),
+                                                                                       Features::NIL);
+#else
+#ifdef ELVEX_EXPERIMENT_METRICS
+                                                if (!memoizedFeatures->isNil() && !memoizedFeatures->isBottom() && memoizedFeatures->size() > 0)
+                                                {
+                                                    ++experimentMetrics.synthesizedHandoffs;
+                                                    experimentMetrics.synthesizedFeatureFields += memoizedFeatures->size();
+                                                }
+#endif
                                                 it->getSynthesizedChildFeatures()->add(previousItem->getIndex(),
                                                                                        memoizedFeatures->clone());
+#endif
                                             }
 
 #ifdef TRACE_MEMOIZATION
@@ -1447,6 +1855,11 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             auto found = states[row]->find(it);
                                             if (found != states[row]->cend())
                                             {
+                                                if (redundancyDiagnosticsEnabled())
+                                                {
+                                                    ++redundancyDiagnostics.reduceProducedDuplicates;
+                                                }
+
                                                 const bool refsChanged = mergeRefs(*found, previousItem->getRefs());
                                                 const bool orderSpecsChanged = mergeOrderSpecs(*found, it->getOrderSpecs());
                                                 if (refsChanged || orderSpecsChanged)
@@ -1459,6 +1872,10 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             {
                                                 if (insertOrMergeStateItem(states[row], it))
                                                 {
+                                                    if (redundancyDiagnosticsEnabled())
+                                                    {
+                                                        ++redundancyDiagnostics.reduceProducedInserted;
+                                                    }
                                                     modification = true;
                                                 }
                                             }
@@ -1469,10 +1886,31 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     // This reduce action is new
                                     else
                                     {
+                                        if (redundancyDiagnosticsEnabled())
+                                        {
+                                            ++redundancyDiagnostics.reduceMemoMisses;
+                                        }
+
                                         class Item *it = createItem(previousItem, row);
                                         it->cloneEnvironment(previousItem);
+#ifdef ELVEX_ABLATE_SYNTHESIZED_HANDOFF
+                                        // Experimental ablation: the completed daughter is reduced,
+                                        // but its synthesized information is not handed to the parent.
+                                        it->getSynthesizedChildFeatures()->add(previousItem->getIndex(),
+                                                                               Features::NIL);
+#else
+#ifdef ELVEX_EXPERIMENT_METRICS
+                                        if (!(*actualItem)->getSynthesizedFeatures()->isNil() &&
+                                            !(*actualItem)->getSynthesizedFeatures()->isBottom() &&
+                                            (*actualItem)->getSynthesizedFeatures()->size() > 0)
+                                        {
+                                            ++experimentMetrics.synthesizedHandoffs;
+                                            experimentMetrics.synthesizedFeatureFields += (*actualItem)->getSynthesizedFeatures()->size();
+                                        }
+#endif
                                         it->getSynthesizedChildFeatures()->add(previousItem->getIndex(),
                                                                                (*actualItem)->getSynthesizedFeatures()->clone());
+#endif
 
                                         //...
                                         featuresPtr inheritedFeatures = it->getInheritedFeatures();
@@ -1530,6 +1968,11 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                         auto found = states[row]->find(it);
                                         if (found != states[row]->cend())
                                         {
+                                            if (redundancyDiagnosticsEnabled())
+                                            {
+                                                ++redundancyDiagnostics.reduceProducedDuplicates;
+                                            }
+
                                             const bool refsChanged = mergeRefs(*found, previousItem->getRefs());
                                             const bool orderSpecsChanged = mergeOrderSpecs(*found, it->getOrderSpecs());
                                             if (refsChanged || orderSpecsChanged)
@@ -1551,6 +1994,10 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             it->setRefs(previousItem->getRefs());
                                             if (insertOrMergeStateItem(states[row], it))
                                             {
+                                                if (redundancyDiagnosticsEnabled())
+                                                {
+                                                    ++redundancyDiagnostics.reduceProducedInserted;
+                                                }
                                                 modification = true;
                                             }
                                             (*actualItem)->addFlags(Flags::SEEN);
@@ -1597,6 +2044,9 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
  ************************************************** */
 bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
 {
+#ifdef ELVEX_EXPERIMENT_METRICS
+    ++experimentMetrics.shiftCalls;
+#endif
     bool modificationOnce = false;
     bool modification;
     do
@@ -1624,6 +2074,12 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                     !inheritedChildFeatures->isBottom() &&
                     parser.getRules().isTerminal((*actualItem)->getCurrentTerm()))
                 {
+
+                    if (redundancyDiagnosticsEnabled())
+                    {
+                        ++redundancyDiagnostics.shiftAttempts;
+                        diagnosticBumpItem("SHIFT_SOURCE", row, *actualItem);
+                    }
 
                     if (traceShift || (trace && (*actualItem)->getRuleTrace()))
                     {
@@ -1721,7 +2177,7 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                 {
                                     entryPtr entry = *entryIt;
 
-                                    if (this->randomResult)
+                                    if (this->getRandomResultDuringGeneration())
                                     {
                                         if (tryRandom++ > maxAttemps)
                                         {
@@ -1844,6 +2300,15 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                                         }
                                         it->setRefs((*actualItem)->getRefs());
 
+                                        if (redundancyDiagnosticsEnabled())
+                                        {
+                                            ++redundancyDiagnostics.shiftCandidates;
+                                            if (states[row]->find(it) != states[row]->cend())
+                                            {
+                                                ++redundancyDiagnostics.shiftDuplicatesBeforeInsert;
+                                            }
+                                        }
+
                                         if (traceShift || (trace && it->getRuleTrace()))
                                         {
                                             std::cout << "<H3>####################### SHIFT CON'T (X -> α ω • β) #######################</H3>" << std::endl;
@@ -1853,12 +2318,19 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
 
                                         if (insertStateItem(states[row], it, true))
                                         {
+                                            if (redundancyDiagnosticsEnabled())
+                                            {
+                                                ++redundancyDiagnostics.shiftInserted;
+                                            }
+#ifdef ELVEX_EXPERIMENT_METRICS
+                                            ++experimentMetrics.lexicalShiftsInserted;
+#endif
                                             modification = true;
                                             modificationOnce = true;
                                         }
 
                                         (*actualItem)->addFlags(Flags::SEEN);
-                                        if (this->getRandomResult())
+                                        if (this->getRandomResultDuringGeneration())
                                         {
                                             break;
                                         }
@@ -1887,6 +2359,19 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
  ************************************************** */
 void Generator::generate(class Parser &parser)
 {
+#ifdef ELVEX_EXPERIMENT_METRICS
+    experimentMetrics.resetForNextRun();
+    const std::chrono::steady_clock::time_point metricsWallStart = std::chrono::steady_clock::now();
+    const std::clock_t metricsCpuStart = std::clock();
+#endif
+    if (redundancyDiagnosticsEnabled())
+    {
+        redundancyDiagnostics.clear();
+    }
+    processedCloseKeys.clear();
+    processedReduceRootKeys.clear();
+    processedReduceRefKeys.clear();
+
 #ifdef OUTPUT_XML
     extern xmlNodePtr xmlNodeRoot;
 #endif
@@ -1925,19 +2410,44 @@ void Generator::generate(class Parser &parser)
 
     auto saturateState = [&](class ItemSet *state, uint32_t row)
     {
+        if (redundancyDiagnosticsEnabled())
+        {
+            ++redundancyDiagnostics.saturateCalls;
+            diagnosticBump(std::string("SATURATE|row=") + std::to_string(row),
+                           std::string("state row ") + std::to_string(row));
+        }
+
         bool modification;
+#ifdef ELVEX_EXPERIMENT_METRICS
+        ++experimentMetrics.saturateCalls;
+        uint64_t passesThisCall = 0;
+#endif
         do
         {
+#ifdef ELVEX_EXPERIMENT_METRICS
+            ++experimentMetrics.saturationPasses;
+            ++passesThisCall;
+#endif
             modification = false;
             if (normalize(parser, state, row))
             {
+#ifdef ELVEX_EXPERIMENT_METRICS
+                ++experimentMetrics.normalizeChangedPasses;
+#endif
                 modification = true;
             }
             if (close(parser, state, row))
             {
+#ifdef ELVEX_EXPERIMENT_METRICS
+                ++experimentMetrics.closeChangedPasses;
+#endif
                 modification = true;
             }
         } while (modification);
+#ifdef ELVEX_EXPERIMENT_METRICS
+        experimentMetrics.maxPassesPerSaturate =
+            std::max<uint64_t>(experimentMetrics.maxPassesPerSaturate, passesThisCall);
+#endif
     };
 
     states.insert(std::make_pair(0, initState));
@@ -1983,13 +2493,122 @@ void Generator::generate(class Parser &parser)
         throw fatal_exception("maxLength");
     }
 
+#ifdef ELVEX_EXPERIMENT_METRICS
+    const std::chrono::steady_clock::time_point metricsSearchEnd = std::chrono::steady_clock::now();
+    const std::clock_t metricsCpuSearchEnd = std::clock();
+
+    uint64_t metricsChartItemsFinal = 0;
+    uint64_t metricsMaxStateFinal = 0;
+    for (itemSet_map::const_iterator stateIt = states.cbegin(); stateIt != states.cend(); ++stateIt)
+    {
+        const uint64_t n = stateIt->second ? stateIt->second->size() : 0;
+        metricsChartItemsFinal += n;
+        metricsMaxStateFinal = std::max<uint64_t>(metricsMaxStateFinal, n);
+    }
+
+    uint64_t metricsForests = 0;
+    uint64_t metricsPackedNodes = 0;
+    uint64_t metricsForestEdges = 0;
+    for (ForestMap::map::const_iterator forestIt = forestMap.cbegin(); forestIt != forestMap.cend(); ++forestIt)
+    {
+        ++metricsForests;
+        const forestPtr &forest = forestIt->second;
+        if (!forest)
+            continue;
+        for (Forest::vectorNodes::const_iterator nodeIt = forest->cbegin(); nodeIt != forest->cend(); ++nodeIt)
+        {
+            ++metricsPackedNodes;
+            if (*nodeIt)
+                metricsForestEdges += (*nodeIt)->size();
+        }
+    }
+#endif
+
+    diagnosticPrintSummary();
+
+#ifdef ELVEX_EXPERIMENT_METRICS
+    const std::chrono::steady_clock::time_point metricsLinearizationStart = std::chrono::steady_clock::now();
+    const std::clock_t metricsCpuLinearizationStart = std::clock();
+#endif
+
     if (!nodeRoot->empty())
     {
         for (auto forest = nodeRoot->cbegin(); forest != nodeRoot->cend(); ++forest)
         {
-            (*forest)->generate(this, this->getRandomResult(), this->getFirstResult());
+            (*forest)->generate(this, this->getRandomResultDuringGeneration(), this->getFirstResult());
         }
     }
+
+#ifdef ELVEX_EXPERIMENT_METRICS
+    const std::chrono::steady_clock::time_point metricsEnd = std::chrono::steady_clock::now();
+    const std::clock_t metricsCpuEnd = std::clock();
+
+    uint64_t metricsEnumeratedOutputs = 0;
+    if (nodeRoot)
+    {
+        for (Node::vectorForests::const_iterator forestIt = nodeRoot->cbegin(); forestIt != nodeRoot->cend(); ++forestIt)
+        {
+            if (!*forestIt)
+                continue;
+            for (std::forward_list<std::string>::const_iterator outputIt = (*forestIt)->output_cbegin();
+                 outputIt != (*forestIt)->output_cend(); ++outputIt)
+            {
+                ++metricsEnumeratedOutputs;
+            }
+        }
+    }
+
+    static bool metricsHeaderPrinted = false;
+    if (!metricsHeaderPrinted)
+    {
+        std::cerr << "ELVEX_METRICS_HEADER\tsample_id\trun\tchart_forest_wall_ms\tlinearization_wall_ms\ttotal_wall_ms"
+                  << "\tchart_forest_cpu_ms\tlinearization_cpu_ms\ttotal_cpu_ms"
+                  << "\tstates\tchart_items_final\tchart_items_inserted\tpeak_state_items\tmax_state_final"
+                  << "\tsaturate_calls\tsaturation_passes\tmax_passes_per_saturate\tnormalize_changed_passes\tclose_changed_passes"
+                  << "\tshift_calls\tlexical_shifts_inserted\treduce_items_processed"
+                  << "\tsynthesized_handoffs\tsynthesized_feature_fields"
+                  << "\tforests\tpacked_nodes\tforest_edges\troot_forests\tenumerated_outputs\tprocess_hwm_rss_kb\n";
+        metricsHeaderPrinted = true;
+    }
+
+    const char *metricsSampleId = std::getenv("ELVEX_METRIC_ID");
+    const double metricsChartWall = elapsedMilliseconds(metricsWallStart, metricsSearchEnd);
+    const double metricsLinearizationWall = elapsedMilliseconds(metricsLinearizationStart, metricsEnd);
+    const double metricsChartCpu = elapsedCpuMilliseconds(metricsCpuStart, metricsCpuSearchEnd);
+    const double metricsLinearizationCpu = elapsedCpuMilliseconds(metricsCpuLinearizationStart, metricsCpuEnd);
+
+    std::cerr << std::fixed << std::setprecision(3)
+              << "ELVEX_METRICS\t" << (metricsSampleId ? metricsSampleId : "-")
+              << '\t' << experimentMetrics.run
+              << '\t' << metricsChartWall
+              << '\t' << metricsLinearizationWall
+              << '\t' << (metricsChartWall + metricsLinearizationWall)
+              << '\t' << metricsChartCpu
+              << '\t' << metricsLinearizationCpu
+              << '\t' << (metricsChartCpu + metricsLinearizationCpu)
+              << '\t' << states.size()
+              << '\t' << metricsChartItemsFinal
+              << '\t' << experimentMetrics.chartItemsInserted
+              << '\t' << experimentMetrics.peakStateItems
+              << '\t' << metricsMaxStateFinal
+              << '\t' << experimentMetrics.saturateCalls
+              << '\t' << experimentMetrics.saturationPasses
+              << '\t' << experimentMetrics.maxPassesPerSaturate
+              << '\t' << experimentMetrics.normalizeChangedPasses
+              << '\t' << experimentMetrics.closeChangedPasses
+              << '\t' << experimentMetrics.shiftCalls
+              << '\t' << experimentMetrics.lexicalShiftsInserted
+              << '\t' << experimentMetrics.reduceItemsProcessed
+              << '\t' << experimentMetrics.synthesizedHandoffs
+              << '\t' << experimentMetrics.synthesizedFeatureFields
+              << '\t' << metricsForests
+              << '\t' << metricsPackedNodes
+              << '\t' << metricsForestEdges
+              << '\t' << (nodeRoot ? nodeRoot->size() : 0)
+              << '\t' << metricsEnumeratedOutputs
+              << '\t' << processHighWaterRssKb()
+              << '\n';
+#endif
 
 #ifdef OUTPUT_XML
     if (outXML)

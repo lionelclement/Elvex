@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.5)
 
 project(elvex VERSION 2.27.0)
 
+# Experimental instrumentation used for paper evaluation.
+# Both options are OFF by default and do not affect normal builds.
+option(ELVEX_EXPERIMENT_METRICS
+       "Collect per-generation runtime/chart/forest/saturation metrics" OFF)
+option(ELVEX_ABLATE_SYNTHESIZED_HANDOFF
+       "Disable synthesized-feature handoff during REDUCE (experimental ablation)" OFF)
+
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD 11)
@@ -123,6 +130,17 @@ configure_file(
     @ONLY)
 
 add_executable(elvex ${ELVEX_COMMON_SOURCES} src/elvex.cc src/fatal_exception.cc src/fatal_exception.hpp)
+
+if (ELVEX_EXPERIMENT_METRICS)
+    target_compile_definitions(elvex PRIVATE ELVEX_EXPERIMENT_METRICS)
+    message(STATUS "ELVEX_EXPERIMENT_METRICS enabled")
+endif()
+
+if (ELVEX_ABLATE_SYNTHESIZED_HANDOFF)
+    target_compile_definitions(elvex PRIVATE ELVEX_ABLATE_SYNTHESIZED_HANDOFF)
+    message(STATUS "ELVEX_ABLATE_SYNTHESIZED_HANDOFF enabled")
+endif()
+
 target_compile_options(elvex PUBLIC -O4 -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
 #target_compile_options(elvex PUBLIC -g -Wall -Wextra -Wno-deprecated -Wno-sign-compare -Wno-missing-field-initializers
 #-DDEBUGYACC\(x\)=x 

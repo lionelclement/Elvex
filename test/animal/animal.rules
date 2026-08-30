@@ -1,11 +1,11 @@
 // PHRASE → SYNTACTIC DESCRIPTION
 //@unordered
-S → NP|cln VP dot
+S → NP VP dot
 {
-  [i:$i];
+  [i:$i, $rest];
   ↓1 = $i;
-  [number:$number, person:$person, selectional_restriction:$selectional_restriction] ⊂ ⇓1;
-  ↓2 = ↑ U [SUBJ:[number:$number, person:$person, selectional_restriction:$selectional_restriction]];
+  [number:$number, gender:$gender, person:$person, selectional_restriction:$selectional_restriction] ⊂ ⇓1;
+  ↓2 = $rest U [SUBJ:[number:$number, gender:$gender, person:$person, selectional_restriction:$selectional_restriction]];
   ↓3 = [];
 }
 
@@ -26,5 +26,15 @@ N → noun
 VP → verb
 {
   ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+@trace
+VP → copverb adj
+{
+  ↓1 = ↑;
+  [SUBJ:[number:$number, gender:$gender]] ⊂ ↑;
+  [ADJ:$ADJ] ⊂ ⇓1;
+  ↓2 = $ADJ U [number:$number, gender:$gender];
   ⇑ = ⇓1;
 }

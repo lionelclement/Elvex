@@ -203,6 +203,8 @@ public:
 
     bool getRandomResult(void) const;
 
+    bool getRandomResultDuringGeneration(void) const;
+
     void setFirstResult(bool);
 
     bool getFirstResult(void) const;
