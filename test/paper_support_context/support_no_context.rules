@@ -1,0 +1,146 @@
+T1 → S {
+    ↓1 = ↑;
+}
+
+T2 → S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+}
+
+T3 → S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+}
+
+T4 → S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+}
+
+T5 → S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+}
+
+T6 → S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+}
+
+T7 → S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+}
+
+T8 → S S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+    ↓8 = ↑;
+}
+
+T9 → S S S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+    ↓8 = ↑;
+    ↓9 = ↑;
+}
+
+T10 → S S S S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+    ↓8 = ↑;
+    ↓9 = ↑;
+    ↓10 = ↑;
+}
+
+/*
+ * Input expected by each S:
+ *
+ *   [i:[HEAD:JOHN], ii:[HEAD:ATTENTION]]
+ *
+ * i  = subject
+ * ii = semantic object to lexicalize
+ */
+S → NP VP dot {
+    [i:$subject, ii:$object];
+
+    ↓1 = $subject;
+    ↓2 = [OBJECT:$object];
+    ↓3 = [];
+}
+
+NP → proper_noun {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+NP → N {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+N → noun {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+/*
+ * NO-CONTEXT ablation.
+ *
+ * The object NP is realized exactly as in FULL, but the synthesized
+ * "support" specification is deliberately ignored.  Consequently,
+ * the verb choice and noun choice are independent.
+ */
+VP → V NP {
+    [OBJECT:$object];
+
+    ↓2 = $object;
+    ↓1 = [];
+}
+
+/*
+ * Both verb realizations are independently licensed.
+ *
+ * These two rules are intentional: they avoid constructing a HEAD
+ * from an ordinary feature value and keep PAY/TAKE properly typed
+ * as HEAD values.
+ */
+V → verb {
+    ↓1 = [HEAD:PAY];
+    ⇑ = ⇓1;
+}
+
+V → verb {
+    ↓1 = [HEAD:TAKE];
+    ⇑ = ⇓1;
+}

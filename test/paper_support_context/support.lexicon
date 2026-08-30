@@ -1,0 +1,30 @@
+"." dot [];
+
+John proper_noun [
+    HEAD:JOHN
+];
+
+/*
+ * Both nouns realize the same semantic object HEAD:ATTENTION.
+ * The lexical choice synthesizes the support-verb specification.
+ */
+attention noun [
+    HEAD:ATTENTION,
+    support:[HEAD:PAY]
+];
+
+notice noun [
+    HEAD:ATTENTION,
+    support:[HEAD:TAKE]
+];
+
+/*
+ * The verb entries themselves contain only lexical information.
+ */
+pays verb [
+    HEAD:PAY
+];
+
+takes verb [
+    HEAD:TAKE
+];

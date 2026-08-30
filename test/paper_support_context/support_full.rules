@@ -1,0 +1,146 @@
+T1 → S {
+    ↓1 = ↑;
+}
+
+T2 → S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+}
+
+T3 → S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+}
+
+T4 → S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+}
+
+T5 → S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+}
+
+T6 → S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+}
+
+T7 → S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+}
+
+T8 → S S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+    ↓8 = ↑;
+}
+
+T9 → S S S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+    ↓8 = ↑;
+    ↓9 = ↑;
+}
+
+T10 → S S S S S S S S S S {
+    ↓1 = ↑;
+    ↓2 = ↑;
+    ↓3 = ↑;
+    ↓4 = ↑;
+    ↓5 = ↑;
+    ↓6 = ↑;
+    ↓7 = ↑;
+    ↓8 = ↑;
+    ↓9 = ↑;
+    ↓10 = ↑;
+}
+
+/*
+ * Input expected by each S:
+ *
+ *   [i:[HEAD:JOHN], ii:[HEAD:ATTENTION]]
+ *
+ * i  = subject
+ * ii = semantic object to lexicalize
+ */
+S → NP VP dot {
+    [i:$subject, ii:$object];
+
+    ↓1 = $subject;
+    ↓2 = [OBJECT:$object];
+    ↓3 = [];
+}
+
+NP → proper_noun {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+NP → N {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+N → noun {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
+
+/*
+ * FULL condition.
+ *
+ * Surface order is V NP, but the object NP is computable independently
+ * from the input.  Its lexical realization synthesizes a feature:
+ *
+ *   attention -> support:[HEAD:PAY]
+ *   notice    -> support:[HEAD:TAKE]
+ *
+ * The deferred statement waits for ⇓2, extracts the complete feature
+ * structure stored under "support", and reuses that structure directly
+ * as the inherited specification of V.
+ *
+ * No ordinary feature value is converted into a HEAD value.
+ */
+VP → V NP {
+    [OBJECT:$object];
+
+    ↓2 = $object;
+
+    deferred (⇓2) {
+        [support:$support] ⊂ ⇓2;
+        ↓1 = $support;
+    }
+}
+
+V → verb {
+    ↓1 = ↑;
+    ⇑ = ⇓1;
+}
