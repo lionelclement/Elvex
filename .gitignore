@@ -60,3 +60,23 @@ benchmark/**/inputs_*/*
 motiflow-poc/
 test/env1.0.*
 elvex-www/config/config.php
+
+# LaTeX
+/doc/*.aux
+/doc/*.fdb_latexmk
+/doc/*.fls
+/doc/*.out
+/doc/*.synctex.gz
+
+# Logs locaux
+/stderr.txt
+/stdout.txt
+
+# Résultats générés des tests
+/test/animal/*.fsa
+/test/animal/*.tbl
+
+# Sources générées par Flex/Bison
+/src/ruleslex.cc
+/src/rulesyacc.cc
+/src/rulesyacc.hpp

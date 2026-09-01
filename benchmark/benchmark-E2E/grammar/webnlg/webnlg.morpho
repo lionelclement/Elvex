@@ -1,2 +1,0 @@
-is	verb	TO_BE	[HEAD:TO_BE,vtense:present,SUBJECT:[@_3s],tensed:true]
-was	verb	TO_BE	[HEAD:TO_BE,vtense:past,SUBJECT:[@_3s],tensed:true]
