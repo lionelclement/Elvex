@@ -18,6 +18,23 @@ You need:
 
 The commands below assume that `elvex` and `elvexlexicon` are available in `PATH`.
 
+The included `Makefile` provides the common maintenance commands:
+
+```bash
+make check       # static and generator consistency checks
+make generate    # regenerate vocabulary/function resources and generated tests
+make lexicon     # build en.fsa/en.tbl
+make test        # run all regression corpora
+make audit       # regenerate the lexical-function QA reports
+make clean       # remove local/generated artifacts not meant for version control
+```
+
+Override tool locations when needed, for example:
+
+```bash
+make test ELVEX=../../bin/elvex ELVEXLEXICON=../../bin/elvexlexicon
+```
+
 ## 2. Quick start
 
 ### Static validation
@@ -721,151 +738,4 @@ elvex \
   --rules-file en.rules \
   --lexicon-file en.lexicon \
   < en.stdin
-```
-# Elvex English — modular simple-clause grammar
-
-This package is a deliberately compact English generation grammar designed around the **current syntax used in `Elvex/test`**. It is not a rewrite of the older monolithic `en-1.1.1` grammar; it keeps the useful feature-structure approach while separating sentence shape, noun phrases, verbal valency, copula, tense/aspect and modals.
-
-## Files
-
-- `en.rules` — master file; includes all rule modules.
-- `en-sentence.rules` — Axiom, punctuation, declarative/interrogative routing.
-- `en-normalize.rules` — defaults plus compatibility with the current `Elvex/test/En.stdin` `vtense` values.
-- `en-noun.rules` — proper nouns, pronouns, determined common nouns, AP.
-- `en-verb.rules` — intransitive, transitive, ditransitive, prepositional and transitive+PP valencies.
-- `en-copula.rules` — copular `BE`, including the simple-tense no-do-support cases.
-- `en-tense.rules` — 12 conventional English tense/aspect combinations × declarative/interrogative × positive/negative.
-- `en-modal.rules` — `can could may might must shall should will would`, with simple/progressive/perfect/perfect-progressive stacks.
-- `en.macros`, `en.pattern`, `en.morpho`, `en.lexicon` — lexical resources in the current test syntax.
-- `en.input` — broad regression corpus; `en.stdin` is an identical alias for test-style workflows.
-- `en.expected.txt` — intended English surface forms (reference targets, not a captured Elvex run here).
-- `validate_static.py` — structural checks that do not require an Elvex binary.
-- `Makefile` — convenience targets (`static`, `lexicon`, `run`).
-
-## Semantic interface
-
-A finite non-modal sentence can use the compositional interface:
-
-```text
-Axiom [
-  HEAD:TO_READ,
-  i:[HEAD:JOHN],
-  ii:[HEAD:BOOK, number:sg, def:true],
-  iii:NIL,
-  tense:present,
-  aspect:simple,
-  modality:none,
-  polarity:positive,
-  illocution:declarative
-]
-```
-
-`en-normalize.rules` also accepts the current test-style shorthand, for example `Axiom [HEAD:TO_READ, i:[HEAD:JOHN], ii:[HEAD:BOOK], vtense:present_perfect]`. Missing `ii`/`iii` become `NIL`; missing `modality`, `polarity` and `illocution` default to `none`, `positive` and `declarative`. Common NPs default to singular definite when those features are omitted.
-
-### Tense/aspect values
-
-`tense`: `present | past | future`
-
-`aspect`: `simple | continuous | perfect | perfect_continuous`
-
-This gives the conventional 12-cell English paradigm:
-
-- present simple / continuous / perfect / perfect continuous
-- past simple / continuous / perfect / perfect continuous
-- future simple / continuous / perfect / perfect continuous
-
-
-### `vtense` compatibility
-
-The accepted one-dimensional values are the same 12 names used by the current English regression input: `present`, `present_continuous`, `present_perfect`, `present_perfect_continuous`, `preterite`, `past_continuous`, `past_perfect`, `past_perfect_continuous`, `future`, `future_continuous`, `future_perfect`, `future_perfect_continuous`. If `vtense` is supplied, it is normalized to the corresponding `tense` + `aspect` pair.
-
-### Clause type
-
-`polarity`: `positive | negative`
-
-`illocution`: `declarative | interrogative`
-
-Negative questions are deliberately uncontracted, e.g. `Does John not read the book?`, `Has John not read the book?`, `Can John not read the book?`. Contractions can be added later as a separate realization layer.
-
-### Modals
-
-For a modal clause, set `modality` to one of:
-
-`can | could | may | might | must | shall | should | will | would`
-
-and use `aspect` to select:
-
-- `simple`: `can read`
-- `continuous`: `can be reading`
-- `perfect`: `can have read`
-- `perfect_continuous`: `can have been reading`
-
-`tense` is intentionally not required for modal clauses; modal temporal interpretation is encoded by the selected modal plus aspect.
-
-## Valency conventions
-
-- intransitive: `ii:NIL, iii:NIL`
-- transitive: `ii` = direct object, `iii:NIL`
-- ditransitive: `ii` = first object/recipient, `iii` = second object/theme
-- prepositional: `ii` = PP object; the preposition comes from `pcase` in `en.pattern`
-- transitive+PP: `ii` = direct object, `iii` = PP object
-- copular: `HEAD:TO_BE`, `ii` = adjective or NP complement
-
-## Build/run
-
-Elvex's current Makefile builds the compact lexicon from `.macros + .pattern + .morpho`, then runs `elvex` with the compacted lexicon, `.rules`, `.lexicon` and input file. From this directory, the equivalent commands are expected to be along these lines (adjust binary paths to your build):
-
-```bash
-/path/to/Elvex/bin/elvexlexicon \
-  --compacted-lexicon-file en \
-  --macros-file en.macros \
-  --pattern-file en.pattern \
-  --morpho-file en.morpho \
-  build
-
-/path/to/Elvex/bin/elvex \
-  --macros-file en.macros \
-  --compacted-lexicon-file en \
-  --rules-file en.rules \
-  --lexicon-file en.lexicon \
-  < en.stdin
-```
-
-Run `python3 validate_static.py` first for local structural checks.
-
-## Scope / deliberate omissions
-
-This first package targets simple clauses. It does not yet implement WH-interrogatives, passive voice, relative clauses, coordination, tag questions, contractions, phrasal-verb alternations, raising/control or embedded finite clauses. The rule split is intended to make those additions local rather than forcing another monolithic grammar.
-
-## Large vocabulary extension
-
-The optional large-vocabulary layer is stored in `en-vocab-large.tsv` and generated by
-`generate_large_vocab.py`. It contributes 1,366 semantic lexemes:
-
-- 800 common nouns
-- 260 adjectives
-- 306 verbal frames (including alternate valencies for polysemous verbs)
-
-It also adds 63 proper names and 6 prepositions required by the new verbal frames.
-
-The generated blocks are delimited by `BEGIN/END GENERATED LARGE VOCABULARY` markers
-in `en.pattern`, `en.morpho`, and `en.lexicon`.
-
-Validate/regenerate:
-
-```sh
-python3 generate_large_vocab.py --check
-python3 generate_large_vocab.py
-```
-
-Because `.pattern` and `.morpho` change, rebuild the compacted lexicon after regeneration:
-
-```sh
-elvexlexicon --clf en --macros-file en.macros --pattern-file en.pattern --morpho-file en.morpho build
-```
-
-Run the dedicated smoke tests:
-
-```sh
-elvex --macros-file en.macros --compacted-lexicon-file en --rules-file en.rules --lexicon-file en.lexicon < en-large-vocab.stdin
 ```

@@ -1,6 +1,0 @@
-STATIC VALIDATION OK
-includes: en-sentence.rules, en-normalize.rules, en-noun.rules, en-verb.rules, en-copula.rules, en-tense.rules, en-modal.rules
-tense rules: 48
-simple copula rules: 8
-modal rules: 16
-input cases: 110

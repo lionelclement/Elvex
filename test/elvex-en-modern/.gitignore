@@ -1,0 +1,24 @@
+# Elvex compacted-lexicon build artifacts
+en.fsa
+en.tbl
+
+# Local regression/validation output
+actual.txt
+STATIC-VALIDATION.txt
+
+# Generated lexical-function audit reports
+en-lexical-functions-quality.md
+en-lexical-functions-quality.tsv
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Patch/editor leftovers
+*.orig
+*.rej
+*.bak
+
+# macOS metadata
+.DS_Store
+._*
