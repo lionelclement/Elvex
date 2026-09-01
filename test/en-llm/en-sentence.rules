@@ -11,28 +11,28 @@ Axiom → InputClause strongPunct
 
 Clause → CoreClause
 {
-  [illocution:declarative] ⊂ ↑;
+  [illocution:declarative];
   ↓1 = ↑;
   ⇑ = ⇓1 U [punct:_dot_];
 }
 
 Clause → CoreClause
 {
-  [illocution:interrogative] ⊂ ↑;
+  [illocution:interrogative];
   ↓1 = ↑;
   ⇑ = ⇓1 U [punct:_int_];
 }
 
 CoreClause → TenseClause
 {
-  [modality:none] ⊂ ↑;
+  [modality:none];
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
 
 CoreClause → ModalClause
 {
-  [modality:$modality] ⊂ ↑;
+  [modality:$modality];
   attest($modality != none);
   ↓1 = ↑;
   ⇑ = ⇓1;

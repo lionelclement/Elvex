@@ -32,9 +32,10 @@ NP → det N
 N → common_noun
 {
   [lexical_function:$LF] ⊂ ↑;
-  if ($LF)
-    attest (($LF != magn) && ($LF != antimagn));
-  ↓1 = ↑;
+  if (¬ $LF)
+    $LF = none;
+  attest (($LF != magn) && ($LF != antimagn));
+  ↓1 = ↑ U [lexical_function:$LF];
   ⇑ = ⇓1;
 }
 
@@ -42,8 +43,7 @@ N → common_noun
 // Magn(ATTENTION) -> close attention, AntiMagn(INTEREST) -> slight interest.
 N → adj common_noun
 {
-  [lexical_function:$LF] ⊂ ↑;
-  attest (($LF == magn) || ($LF == antimagn));
+  [lexical_function:magn|antimagn];
   ↓2 = ↑;
   [fixed_adj:$FIXED_ADJ] ⊂ ⇓2;
   ↓1 = $FIXED_ADJ U [lexical_function:none];
@@ -54,9 +54,10 @@ N → adj common_noun
 AP → adj
 {
   [lexical_function:$LF] ⊂ ↑;
-  if ($LF)
-    attest (($LF != magn) && ($LF != antimagn));
-  ↓1 = ↑;
+  if (¬ $LF)
+    $LF = none;
+  attest (($LF != magn) && ($LF != antimagn));
+  ↓1 = ↑ U [lexical_function:$LF];
   ⇑ = ⇓1;
 }
 
@@ -64,8 +65,7 @@ AP → adj
 // Magn(COLD) -> very cold, AntiMagn(DIFFICULT) -> somewhat difficult.
 AP → adv adj
 {
-  [lexical_function:$LF] ⊂ ↑;
-  attest (($LF == magn) || ($LF == antimagn));
+  [lexical_function:magn|antimagn];
   ↓2 = ↑;
   [fixed_adv:$FIXED_ADV] ⊂ ⇓2;
   ↓1 = $FIXED_ADV U [lexical_function:none];

@@ -1,3 +1,9 @@
+John adopts a attitude.
+John adopted a attitude.
+John has adopted a attitude.
+John is adopting a attitude.
+John does not adopt a attitude.
+does John adopt a attitude?
 John accepts a invitation.
 John accepted a invitation.
 John has accepted a invitation.
@@ -100,6 +106,18 @@ John has filed a lawsuit.
 John is filing a lawsuit.
 John does not file a lawsuit.
 does John file a lawsuit?
+Mary feels guilt.
+Mary felt guilt.
+Mary has felt guilt.
+Mary is feeling guilt.
+Mary does not feel guilt.
+does Mary feel guilt?
+John formulates a hypothesis.
+John formulated a hypothesis.
+John has formulated a hypothesis.
+John is formulating a hypothesis.
+John does not formulate a hypothesis.
+does John formulate a hypothesis?
 Mary gains knowledge.
 Mary gained knowledge.
 Mary has gained knowledge.
@@ -136,6 +154,12 @@ John has imposed a ban.
 John is imposing a ban.
 John does not impose a ban.
 does John impose a ban?
+John issues a denial.
+John issued a denial.
+John has issued a denial.
+John is issuing a denial.
+John does not issue a denial.
+does John issue a denial?
 John makes a mistake.
 John made a mistake.
 John has made a mistake.
@@ -184,6 +208,12 @@ John has played a role.
 John is playing a role.
 John does not play a role.
 does John play a role?
+John pledges allegiance.
+John pledged allegiance.
+John has pledged allegiance.
+John is pledging allegiance.
+John does not pledge allegiance.
+does John pledge allegiance?
 John poses a threat.
 John posed a threat.
 John has posed a threat.

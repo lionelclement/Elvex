@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate scalable lexical-function entries for the Elvex English grammar.
 
-Source: en-lexical-functions.tsv
-Generated blocks are appended to en.pattern and en.morpho and replaced
-idempotently on each run.
+Sources: en-lexical-functions.tsv and en-lexical-function-families.tsv.
+Lexicographic metadata is stored in en-predicative-nouns.tsv and
+en-support-verb-profiles.tsv. Generated blocks are appended to en.pattern and
+en.morpho and replaced idempotently on each run.
 """
 from __future__ import annotations
 
@@ -14,6 +15,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT / "en-lexical-functions.tsv"
 FAMILY_SOURCE = ROOT / "en-lexical-function-families.tsv"
+PREDICATE_PROFILE_SOURCE = ROOT / "en-predicative-nouns.tsv"
+SUPPORT_PROFILE_SOURCE = ROOT / "en-support-verb-profiles.tsv"
 PATTERN = ROOT / "en.pattern"
 MORPHO = ROOT / "en.morpho"
 BEGIN = "// BEGIN GENERATED LEXICAL FUNCTIONS"
@@ -24,6 +27,7 @@ IRREGULAR_VERBS = {
     "DO": ("do", "does", "did", "done", "doing"),
     "BEAR": ("bear", "bears", "bore", "borne", "bearing"),
     "SUBMIT": ("submit", "submits", "submitted", "submitted", "submitting"),
+    "FEEL": ("feel", "feels", "felt", "felt", "feeling"),
 }
 
 # These uppercase atoms are tokens in the Elvex lexer and therefore cannot be
@@ -146,6 +150,101 @@ def rows():
     return out
 
 
+
+def load_predicate_profiles():
+    """Load descriptive lexical profiles for predicative nouns.
+
+    These profiles document semantic valency, selectional restrictions,
+    countability and lexical fixedness.  They are intentionally kept separate
+    from the surface-realization TSV so the metadata can grow without changing
+    the current rule interface.
+    """
+    if not PREDICATE_PROFILE_SOURCE.exists():
+        return {}
+    required = [
+        "predicate", "class", "aktionsart", "semantic_valency",
+        "arg1_role", "arg1_restriction", "arg2_role", "arg2_restriction",
+        "default_prep", "countability", "fixedness", "note",
+    ]
+    out = {}
+    with PREDICATE_PROFILE_SOURCE.open(newline="", encoding="utf-8") as fh:
+        rd = csv.DictReader(fh, delimiter="\t")
+        if list(rd.fieldnames or ()) != required:
+            raise SystemExit(f"bad TSV header in {PREDICATE_PROFILE_SOURCE.name}: {rd.fieldnames}")
+        for raw in rd:
+            if not raw.get("predicate"):
+                continue
+            row = dict(raw)
+            pred = semantic_predicate(row.pop("predicate"))
+            if pred in out:
+                raise SystemExit(f"duplicate predicative-noun profile: {pred}")
+            out[pred] = row
+    return out
+
+
+def load_support_profiles():
+    """Load default aspectual/discourse profiles for support verbs."""
+    if not SUPPORT_PROFILE_SOURCE.exists():
+        return {}
+    required = [
+        "realizer", "lexical_aspect", "phase", "causativity", "agency",
+        "stance", "subjectivity", "register", "note",
+    ]
+    out = {}
+    with SUPPORT_PROFILE_SOURCE.open(newline="", encoding="utf-8") as fh:
+        rd = csv.DictReader(fh, delimiter="\t")
+        if list(rd.fieldnames or ()) != required:
+            raise SystemExit(f"bad TSV header in {SUPPORT_PROFILE_SOURCE.name}: {rd.fieldnames}")
+        for raw in rd:
+            if not raw.get("realizer"):
+                continue
+            row = dict(raw)
+            realizer = row.pop("realizer").upper()
+            if realizer in out:
+                raise SystemExit(f"duplicate support-verb profile: {realizer}")
+            out[realizer] = row
+    return out
+
+
+def validate_profiles(data, predicate_profiles, support_profiles):
+    pred_classes = {
+        "volition", "cognition", "epistemic", "communication", "emotion",
+        "deontic", "attitude", "evaluation", "social_relation",
+        "social_action", "event", "change", "legal", "economic", "medical",
+    }
+    aktionsarts = {"state", "activity", "achievement", "accomplishment", "event", "process"}
+    valencies = {"one", "two", "three"}
+    restrictions = {"", "human", "animate", "institution", "entity", "proposition", "event", "location", "resource", "any"}
+    countabilities = {"count", "mass", "either"}
+    fixedness = {"free", "collocational", "strong"}
+    for pred, r in predicate_profiles.items():
+        if r["class"] not in pred_classes:
+            raise SystemExit(f"unknown predicate class {r['class']!r} for {pred}")
+        if r["aktionsart"] not in aktionsarts:
+            raise SystemExit(f"unknown aktionsart {r['aktionsart']!r} for {pred}")
+        if r["semantic_valency"] not in valencies:
+            raise SystemExit(f"unknown semantic valency {r['semantic_valency']!r} for {pred}")
+        if r["arg1_restriction"] not in restrictions or r["arg2_restriction"] not in restrictions:
+            raise SystemExit(f"unknown selectional restriction for {pred}")
+        if r["countability"] not in countabilities:
+            raise SystemExit(f"unknown countability {r['countability']!r} for {pred}")
+        if r["fixedness"] not in fixedness:
+            raise SystemExit(f"unknown fixedness {r['fixedness']!r} for {pred}")
+    support_realisers = {r["realizer"] for r in data if r["kind"] == "support"}
+    for realizer, r in support_profiles.items():
+        if realizer not in support_realisers:
+            raise SystemExit(f"support profile without lexical-function relation: {realizer}")
+        if r["subjectivity"] not in {"low", "medium", "high", "neutral"}:
+            raise SystemExit(f"unknown subjectivity {r['subjectivity']!r} for {realizer}")
+        if r["register"] not in {"neutral", "formal", "informal"}:
+            raise SystemExit(f"unknown register {r['register']!r} for {realizer}")
+    return {
+        "profiled_predicates": len(predicate_profiles),
+        "profiled_supports": len(support_profiles),
+        "relations_with_predicate_profile": sum(1 for r in data if r["predicate"] in predicate_profiles),
+        "relations_with_support_profile": sum(1 for r in data if r["kind"] != "support" or r["realizer"] in support_profiles),
+    }
+
 def plural_noun(word: str) -> str:
     w = word.lower()
     if len(w) > 1 and w.endswith("y") and w[-2] not in "aeiou":
@@ -211,6 +310,9 @@ def parse_inventory(pattern_text: str, morpho_text: str):
 
 def generate(check_only=False):
     data = rows()
+    predicate_profiles = load_predicate_profiles()
+    support_profiles = load_support_profiles()
+    profile_stats = validate_profiles(data, predicate_profiles, support_profiles)
     base_pattern = strip_block(PATTERN.read_text(encoding="utf-8"))
     base_morpho = strip_block(MORPHO.read_text(encoding="utf-8"))
     noun_heads, adj_heads, adv_heads, verb_lemmas, morpho_lemmas, existing_patterns = parse_inventory(base_pattern, base_morpho)
@@ -314,7 +416,12 @@ def generate(check_only=False):
         predicates = {r["predicate"] for r in data}
         fn = ", ".join(f"{k}={v}" for k, v in sorted(by_function.items()))
         kn = ", ".join(f"{k}={v}" for k, v in sorted(by_kind.items()))
-        print(f"OK: {len(data)} lexical-function relations over {len(predicates)} predicates; {fn}; {kn}; {len(patt)} pattern lines and {len(morph)} morphology lines would be generated")
+        print(
+            f"OK: {len(data)} lexical-function relations over {len(predicates)} predicates; "
+            f"{fn}; {kn}; {profile_stats['profiled_predicates']} predicative-noun profiles; "
+            f"{profile_stats['profiled_supports']} support-verb profiles; "
+            f"{len(patt)} pattern lines and {len(morph)} morphology lines would be generated"
+        )
         return
 
     pblock = BEGIN + "\n" + "\n".join(patt) + "\n" + END + "\n"

@@ -14,7 +14,8 @@ LexVP → verb AP
   // The verb lookup resolves the semantic lexeme (TO_FEEL_BLUE) to the
   // morphological lemma FEEL and synthesizes the fixed adjective.
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:idiomatic_predicative, fixed_adj:$FIXED_ADJ] ⊂ ⇓1;
+  [valency:$VALENCY, fixed_adj:$FIXED_ADJ] ⊂ ⇓1;
+  attest ($VALENCY == idiomatic_predicative);
 
   // The adjective is not an argument of the semantic input: it comes from
   // the lexical pattern of TO_FEEL_BLUE.
@@ -32,7 +33,8 @@ LexVP → verb NP
   $MF = ↑.modifier_function;
 
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
-  [valency:support_nominal, lexical_function:$LF, fixed_object:$FIXED_OBJECT] ⊂ ⇓1;
+  [valency:$VALENCY, lexical_function:$SYNTH_LF, fixed_object:$FIXED_OBJECT] ⊂ ⇓1;
+  attest (($VALENCY == support_nominal) && ($SYNTH_LF == $LF));
 
   // A modifier lexical function (Magn/AntiMagn) is applied to the
   // synthesized predicative noun, independently from Oper1/Oper2.
@@ -53,7 +55,8 @@ LexVP → verb N
   $MF = ↑.modifier_function;
 
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
-  [valency:support_nominal_bare, lexical_function:$LF, fixed_object:$FIXED_OBJECT] ⊂ ⇓1;
+  [valency:$VALENCY, lexical_function:$SYNTH_LF, fixed_object:$FIXED_OBJECT] ⊂ ⇓1;
+  attest (($VALENCY == support_nominal_bare) && ($SYNTH_LF == $LF));
 
   // Bare support nouns do not pass through NP/determiner realization.
   if ($MF)
@@ -74,8 +77,9 @@ LexVP → verb N prep NP
   $MF = ↑.modifier_function;
 
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
-  [valency:support_nominal_bare_oblique, lexical_function:$LF,
+  [valency:$VALENCY, lexical_function:$SYNTH_LF,
    fixed_object:$FIXED_OBJECT, pcase:$pcase] ⊂ ⇓1;
+  attest (($VALENCY == support_nominal_bare_oblique) && ($SYNTH_LF == $LF));
 
   if ($MF)
     ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:$MF];
@@ -99,8 +103,9 @@ LexVP → verb NP prep NP
   $MF = ↑.modifier_function;
 
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
-  [valency:support_nominal_oblique, lexical_function:$LF,
+  [valency:$VALENCY, lexical_function:$SYNTH_LF,
    fixed_object:$FIXED_OBJECT, pcase:$pcase] ⊂ ⇓1;
+  attest (($VALENCY == support_nominal_oblique) && ($SYNTH_LF == $LF));
 
   if ($MF)
     ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:$MF];
@@ -123,10 +128,11 @@ LexVP → verb fixed_det N prep NP
   [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBJECT, iii:NIL, vtense:$vtense, $Rest];
 
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:idiomatic_nominal_oblique,
+  [valency:$VALENCY,
    fixed_det:$FIXED_DET,
    fixed_object:$FIXED_OBJECT,
    pcase:$pcase] ⊂ ⇓1;
+  attest ($VALENCY == idiomatic_nominal_oblique);
 
   // Both determiner and noun are fixed by the idiomatic lexical entry.
   ↓2 = $FIXED_DET;

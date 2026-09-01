@@ -1,6 +1,14 @@
 // Automatically generated support-verb morphology regression.
 // Six forms per support verb: present, past, perfect, continuous, negative, interrogative.
 
+// ADOPT: ATTITUDE + oper1
+Axiom [HEAD:ATTITUDE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ATTITUDE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ATTITUDE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:perfect, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ATTITUDE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ATTITUDE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
+Axiom [HEAD:ATTITUDE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
+
 // ACCEPT: INVITATION + oper1
 Axiom [HEAD:INVITATION, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
 Axiom [HEAD:INVITATION, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
@@ -137,6 +145,22 @@ Axiom [HEAD:LAWSUIT, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, ten
 Axiom [HEAD:LAWSUIT, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
 Axiom [HEAD:LAWSUIT, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
 
+// FEEL: GUILT + oper2
+Axiom [HEAD:GUILT, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:GUILT, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:GUILT, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:perfect, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:GUILT, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:GUILT, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
+Axiom [HEAD:GUILT, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
+
+// FORMULATE: HYPOTHESIS + oper1
+Axiom [HEAD:HYPOTHESIS, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:HYPOTHESIS, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:HYPOTHESIS, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:perfect, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:HYPOTHESIS, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:HYPOTHESIS, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
+Axiom [HEAD:HYPOTHESIS, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
+
 // GAIN: KNOWLEDGE + incepoper2
 Axiom [HEAD:KNOWLEDGE, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:incepoper2, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
 Axiom [HEAD:KNOWLEDGE, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:incepoper2, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
@@ -184,6 +208,14 @@ Axiom [HEAD:BAN, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:p
 Axiom [HEAD:BAN, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
 Axiom [HEAD:BAN, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
 Axiom [HEAD:BAN, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
+
+// ISSUE: DENIAL + oper1
+Axiom [HEAD:DENIAL, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:DENIAL, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:DENIAL, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:perfect, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:DENIAL, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:DENIAL, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
+Axiom [HEAD:DENIAL, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
 
 // MAKE: MISTAKE + oper1
 Axiom [HEAD:MISTAKE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
@@ -248,6 +280,14 @@ Axiom [HEAD:ROLE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:
 Axiom [HEAD:ROLE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
 Axiom [HEAD:ROLE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
 Axiom [HEAD:ROLE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
+
+// PLEDGE: ALLEGIANCE + oper1
+Axiom [HEAD:ALLEGIANCE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ALLEGIANCE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ALLEGIANCE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:perfect, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ALLEGIANCE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ALLEGIANCE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
+Axiom [HEAD:ALLEGIANCE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]
 
 // POSE: THREAT + oper1
 Axiom [HEAD:THREAT, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]

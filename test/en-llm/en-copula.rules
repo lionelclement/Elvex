@@ -4,7 +4,8 @@ CopHead → verb
 {
   [HEAD:TO_BE, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   ↓1 = [HEAD:TO_BE, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:copular] ⊂ ⇓1;
+  [valency:$VALENCY] ⊂ ⇓1;
+  attest ($VALENCY == copular);
   ⇑ = ⇓1;
 }
 

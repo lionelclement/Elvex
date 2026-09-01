@@ -1,0 +1,51 @@
+realizer	lexical_aspect	phase	causativity	agency	stance	subjectivity	register	note
+ACCEPT	achievement	bounded	none	medium	evaluative	medium	neutral	acceptance support
+ACHIEVE	achievement	terminative	none	high	resultative	low	neutral	result achievement support
+ADOPT	achievement	inchoative	none	high	evaluative	medium	formal	stance-selection support
+ASK	achievement	bounded	none	high	interpersonal	high	neutral	requestive speech-act support
+ASSUME	state	inchoative	none	medium	epistemic	high	formal	subjective epistemic support
+ATTRACT	process	inchoative	causative	low	resultative	low	neutral	causative attraction support
+BEAR	state	durative	none	low	experiential	medium	formal	burden/resemblance support
+CONDUCT	activity	durative	none	high	institutional	low	formal	organized activity support
+DO	activity	durative	none	high	agentive	neutral	neutral	generic activity support
+DRAW	achievement	terminative	none	high	inferential	medium	neutral	inference/result support
+EARN	accomplishment	terminative	none	high	evaluative	medium	neutral	merited acquisition support
+ENJOY	state	durative	none	low	experiential	high	neutral	positive experiential support
+EXERCISE	activity	durative	none	high	agentive	neutral	formal	authority/control support
+EXERT	activity	durative	causative	high	agentive	neutral	formal	force/influence support
+EXPERIENCE	state	durative	none	low	experiential	high	neutral	experiencer-oriented support
+EXPRESS	activity	neutral	none	high	expressive	high	neutral	overt subjective stance support
+FACE	state	durative	none	medium	evaluative	medium	neutral	adverse situation support
+FEEL	state	durative	none	low	experiential	high	neutral	subjective emotion support
+FILE	achievement	bounded	none	high	institutional	low	formal	administrative submission support
+FORMULATE	accomplishment	bounded	none	high	epistemic	medium	formal	explicit cognitive formulation support
+GAIN	achievement	inchoative	none	medium	resultative	low	neutral	acquisition support
+GET	achievement	inchoative	none	medium	resultative	medium	informal	general acquisition support
+GIVE	transfer	neutral	none	high	interpersonal	neutral	neutral	transfer/externalization support
+HAVE	state	neutral	none	low	experiential	neutral	neutral	stative possession/experience support
+HOLD	state	continuative	none	medium	institutional	low	formal	maintenance/institutional support
+IMPOSE	achievement	bounded	causative	high	institutional	low	formal	deontic causative support
+ISSUE	achievement	bounded	none	high	institutional	low	formal	institutional speech-act support
+MAKE	bounded	neutral	none	high	agentive	neutral	neutral	generic agentive support
+MEET	achievement	terminative	none	medium	resultative	low	neutral	satisfaction/requirement support
+OBTAIN	achievement	inchoative	none	high	resultative	low	formal	formal acquisition support
+OFFER	achievement	bounded	none	high	interpersonal	medium	neutral	proposal/evaluation support
+PAY	directed_activity	neutral	none	high	evaluative	medium	neutral	directed attention/respect support
+PERFORM	accomplishment	bounded	none	high	institutional	low	formal	task/performance support
+PLACE	achievement	bounded	none	high	agentive	neutral	neutral	placement/establishment support
+PLAY	activity	durative	none	high	agentive	neutral	neutral	role/activity support
+PLEDGE	achievement	bounded	none	high	commissive	high	formal	commissive support
+POSE	state	neutral	causative	medium	presentational	low	formal	presentational causative support
+PROVIDE	transfer	bounded	none	high	institutional	low	formal	objective provision support
+PUT	achievement	bounded	none	high	agentive	neutral	neutral	placement/state-change support
+RAISE	change	inchoative	causative	high	agentive	neutral	neutral	causative/increase support
+REACH	achievement	terminative	none	medium	resultative	neutral	neutral	endpoint/result support
+RECEIVE	achievement	bounded	none	low	receptive	low	neutral	recipient-oriented support
+SECURE	achievement	inchoative	none	high	resultative	low	formal	effortful acquisition support
+SET	bounded	neutral	none	high	agentive	neutral	neutral	establishing support
+SHOW	activity	neutral	none	medium	evidential	low	neutral	observable/evidential support
+SUBMIT	achievement	bounded	none	high	institutional	low	formal	formal submission support
+SUFFER	state	durative	none	low	experiential	high	neutral	negative experiential support
+TAKE	bounded	neutral	none	high	volitional	neutral	neutral	agentive bounded support
+UNDERGO	process	durative	none	low	experiential	low	formal	patient-oriented process support
+WIN	achievement	terminative	none	high	resultative	medium	neutral	competitive result support

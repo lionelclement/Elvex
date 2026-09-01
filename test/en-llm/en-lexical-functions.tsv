@@ -326,3 +326,85 @@ adj_modifier	DIFFERENT	antimagn	SLIGHTLY
 adj_modifier	UNUSUAL	antimagn	SOMEWHAT			
 adj_modifier	LIKELY	antimagn	FAIRLY			
 adj_modifier	HAPPY	antimagn	FAIRLY			
+support	ASSERTION	oper1	MAKE	indef		speech act: make an assertion
+support	DENIAL	oper1	ISSUE	indef		speech act: issue a denial
+support	RETRACTION	oper1	ISSUE	indef		speech act: issue a retraction
+support	CLARIFICATION	oper1	PROVIDE	bare		provide clarification
+support	CONFIRMATION	oper1	PROVIDE	bare		provide confirmation
+support	NOTIFICATION	oper1	ISSUE	indef		issue a notification
+support	ALERT	oper1	ISSUE	indef		issue an alert; a/an handled post-generation
+support	CERTAINTY	oper1	EXPRESS	bare		express certainty
+support	HYPOTHESIS	oper1	FORMULATE	indef		formulate a hypothesis
+support	CONJECTURE	oper1	MAKE	indef		make a conjecture
+support	MEMORY	oper1	HAVE	indef	of	have a memory of NP
+support	RECOLLECTION	oper1	HAVE	indef	of	have a recollection of NP
+support	REALIZATION	oper1	HAVE	indef		have a realization
+support	MISUNDERSTANDING	oper1	HAVE	indef	with	have a misunderstanding with NP
+support	RESENTMENT	oper1	EXPRESS	bare	against	express resentment against NP
+support	HOSTILITY	oper1	SHOW	bare	to	show hostility to NP
+support	AFFECTION	oper1	SHOW	bare	to	show affection to NP
+support	COMPASSION	oper1	SHOW	bare	for	show compassion for NP
+support	EMPATHY	oper1	SHOW	bare	for	show empathy for NP
+support	DISGUST	oper1	EXPRESS	bare	at	express disgust at NP
+support	CONTENTMENT	oper1	EXPRESS	bare		express contentment
+support	IRRITATION	oper1	EXPRESS	bare		express irritation
+support	EMBARRASSMENT	oper2	EXPERIENCE	bare		experience embarrassment
+support	GUILT	oper2	FEEL	bare		feel guilt
+support	SHAME	oper2	FEEL	bare		feel shame
+support	JEALOUSY	oper2	FEEL	bare		feel jealousy
+support	ENVY	oper2	FEEL	bare		feel envy
+support	GRIEF	oper2	EXPERIENCE	bare		experience grief
+support	BOREDOM	oper2	EXPERIENCE	bare		experience boredom
+support	APPREHENSION	oper2	FEEL	bare	about	feel apprehension about NP
+support	ABILITY	oper1	HAVE	bare		have ability
+support	INABILITY	oper1	SHOW	indef		show an inability; a/an handled post-generation
+support	PROHIBITION	oper1	IMPOSE	indef	on	impose a prohibition on NP
+support	ENTITLEMENT	oper1	HAVE	indef	to	have an entitlement to NP
+support	WISH	oper1	EXPRESS	indef		express a wish
+support	RESOLVE	oper1	SHOW	bare		show resolve
+support	DETERMINATION	oper1	SHOW	bare		show determination
+support	READINESS	oper1	SHOW	bare		show readiness
+support	UNWILLINGNESS	oper1	SHOW	bare		show unwillingness
+support	REFUSAL	oper1	ISSUE	indef		issue a refusal
+support	REJECTION	oper1	ISSUE	indef		issue a rejection
+support	ENDORSEMENT	oper1	GIVE	indef	to	give an endorsement to NP
+support	CONDEMNATION	oper1	EXPRESS	bare		express condemnation
+support	CRITIQUE	oper1	OFFER	indef	of	offer a critique of NP
+support	APPRAISAL	oper1	PROVIDE	indef	of	provide an appraisal of NP
+support	JUSTIFICATION	oper1	PROVIDE	bare	for	provide justification for NP
+support	RATIONALE	oper1	PROVIDE	indef	for	provide a rationale for NP
+support	STANCE	oper1	TAKE	indef	on	take a stance on NP
+support	ATTITUDE	oper1	ADOPT	indef		adopt an attitude
+support	VIEWPOINT	oper1	ADOPT	indef	on	adopt a viewpoint on NP
+support	MISTRUST	oper1	SHOW	bare	of	show mistrust of NP
+support	LOYALTY	oper1	SHOW	bare	to	show loyalty to NP
+support	SOLIDARITY	oper1	SHOW	bare	with	show solidarity with NP
+support	AFFILIATION	oper1	HAVE	indef	with	have an affiliation with NP
+support	ALLEGIANCE	oper1	PLEDGE	bare	to	pledge allegiance to NP
+support	INTERVENTION	oper1	PERFORM	indef		perform an intervention
+support	INVOLVEMENT	oper1	HAVE	bare	in	have involvement in NP
+support	ATTENDANCE	oper1	TAKE	bare		take attendance
+support	APPEARANCE	oper1	MAKE	indef		make an appearance
+support	EXIT	oper1	MAKE	indef	from	make an exit from NP
+support	ESCAPE	oper1	MAKE	indef	from	make an escape from NP
+support	VARIATION	oper1	SHOW	bare	in	show variation in NP
+support	ARREST	oper1	MAKE	indef		make an arrest
+support	DETENTION	oper2	UNDERGO	bare		undergo detention
+support	PROSECUTION	oper2	FACE	bare		face prosecution
+support	ACQUITTAL	incepoper2	SECURE	indef		secure an acquittal
+support	INDICTMENT	oper2	FACE	indef		face an indictment
+support	RULING	oper1	ISSUE	indef		issue a ruling
+support	DECREE	oper1	ISSUE	indef		issue a decree
+support	DIVIDEND	oper1	PAY	indef	to	pay a dividend to NP
+support	SUBSIDY	oper2	RECEIVE	indef	from	receive a subsidy from NP
+support	FINANCING	incepoper2	SECURE	bare	from	secure financing from NP
+support	EXPENDITURE	oper1	MAKE	indef		make an expenditure
+support	MORTGAGE	incepoper2	OBTAIN	indef	from	obtain a mortgage from NP
+support	INSURANCE	incepoper2	OBTAIN	bare	from	obtain insurance from NP
+support	REIMBURSEMENT	oper2	RECEIVE	bare	from	receive reimbursement from NP
+support	DONATION	oper1	MAKE	indef	to	make a donation to NP
+support	DIAGNOSIS	oper2	RECEIVE	indef	from	receive a diagnosis from NP
+support	INFECTION	oper2	SUFFER	indef		suffer an infection
+support	RELAPSE	oper2	SUFFER	indef		suffer a relapse
+support	FATIGUE	oper2	EXPERIENCE	bare		experience fatigue
+support	TRAUMA	oper2	SUFFER	bare		suffer trauma

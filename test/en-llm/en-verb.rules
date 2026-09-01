@@ -22,7 +22,8 @@ LexVP → verb
 {
   [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:NIL, iii:NIL, vtense:$vtense, $Rest];
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:intransitive] ⊂ ⇓1;
+  [valency:$VALENCY] ⊂ ⇓1;
+  attest ($VALENCY == intransitive);
   ⇑ = ⇓1;
 }
 
@@ -31,7 +32,8 @@ LexVP → verb NP
 {
   [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBJECT, iii:NIL, vtense:$vtense, $Rest];
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:transitive] ⊂ ⇓1;
+  [valency:$VALENCY] ⊂ ⇓1;
+  attest ($VALENCY == transitive);
   ↓2 = $OBJECT U [case:accusative];
   ⇑ = ⇓1;
 }
@@ -41,7 +43,8 @@ LexVP → verb NP NP
 {
   [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBJECT1, iii:$OBJECT2, vtense:$vtense, $Rest];
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:ditransitive] ⊂ ⇓1;
+  [valency:$VALENCY] ⊂ ⇓1;
+  attest ($VALENCY == ditransitive);
   ↓2 = $OBJECT1 U [case:accusative];
   ↓3 = $OBJECT2 U [case:accusative];
   ⇑ = ⇓1;
@@ -52,7 +55,8 @@ LexVP → verb prep NP
 {
   [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBJECT, iii:NIL, vtense:$vtense, $Rest];
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:prepositional, pcase:$pcase] ⊂ ⇓1;
+  [valency:$VALENCY, pcase:$pcase] ⊂ ⇓1;
+  attest ($VALENCY == prepositional);
   ↓2 = [pcase:$pcase];
   ↓3 = $OBJECT U [case:accusative];
   ⇑ = ⇓1;
@@ -63,7 +67,8 @@ LexVP → verb NP prep NP
 {
   [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBJECT, iii:$OBLIQUE, vtense:$vtense, $Rest];
   ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
-  [valency:transitive_prepositional, pcase:$pcase] ⊂ ⇓1;
+  [valency:$VALENCY, pcase:$pcase] ⊂ ⇓1;
+  attest ($VALENCY == transitive_prepositional);
   ↓2 = $OBJECT U [case:accusative];
   ↓3 = [pcase:$pcase];
   ↓4 = $OBLIQUE U [case:accusative];

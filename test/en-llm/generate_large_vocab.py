@@ -8,6 +8,8 @@ from pathlib import Path
 
 BEGIN = "// BEGIN GENERATED LARGE VOCABULARY"
 END = "// END GENERATED LARGE VOCABULARY"
+LEXFUN_BEGIN = "// BEGIN GENERATED LEXICAL FUNCTIONS"
+LEXFUN_END = "// END GENERATED LEXICAL FUNCTIONS"
 
 def read_rows(path: Path):
     with path.open(newline="", encoding="utf-8") as f:
@@ -23,6 +25,20 @@ def without_generated_block(text: str) -> str:
         return before + after
     return text
 
+def without_generated_morphology(text: str) -> str:
+    """Remove generated morphology blocks before inventory checks.
+
+    The large-vocabulary source must not depend on generated lexical-function
+    morphology from a previous run.  In particular, RISE/common_noun must not
+    suppress the unrelated RISE/verb paradigm.
+    """
+    text = without_generated_block(text)
+    if LEXFUN_BEGIN in text and LEXFUN_END in text:
+        before, rest = text.split(LEXFUN_BEGIN, 1)
+        _, after = rest.split(LEXFUN_END, 1)
+        text = before + after
+    return text
+
 def replace_block(path: Path, body: str):
     text = path.read_text(encoding="utf-8")
     block = BEGIN + "\n" + body.rstrip() + "\n" + END
@@ -34,14 +50,19 @@ def replace_block(path: Path, body: str):
         text = text.rstrip() + "\n\n" + block + "\n"
     path.write_text(text, encoding="utf-8")
 
-def base_morpho_lemmas(path: Path):
-    text = without_generated_block(path.read_text(encoding="utf-8"))
+def base_morpho_verb_lemmas(path: Path):
+    """Return hand-maintained verb lemmas already present in morphology.
+
+    POS matters: a common noun and a verb may share the same lemma (for
+    example RISE or AWARD), and the noun must not suppress verb generation.
+    """
+    text = without_generated_morphology(path.read_text(encoding="utf-8"))
     lemmas = set()
     for line in text.splitlines():
         if not line or line.startswith("//"):
             continue
         parts = line.split("\t")
-        if len(parts) >= 3:
+        if len(parts) >= 3 and parts[1] == "verb":
             lemmas.add(parts[2])
     return lemmas
 
@@ -154,7 +175,7 @@ def main():
         )
         return
 
-    existing = base_morpho_lemmas(root / "en.morpho")
+    existing = base_morpho_verb_lemmas(root / "en.morpho")
     p, m, l = build(data, existing)
     replace_block(root / "en.pattern", p)
     replace_block(root / "en.morpho", m)

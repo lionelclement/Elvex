@@ -16,6 +16,7 @@ EXPECTED = ROOT / "en-support-verbs-tenses.expected.txt"
 # intentionally simple (no free oblique actant and no Magn/AntiMagn) because
 # this suite tests verbal morphology, not lexical-function coverage.
 CASES = {
+    "ADOPT": ("ATTITUDE", "oper1"),
     "ACCEPT": ("INVITATION", "oper1"),
     "ACHIEVE": ("RESULT", "oper1"),
     "ASK": ("FAVOR", "oper1"),
@@ -33,12 +34,15 @@ CASES = {
     "EXPRESS": ("REGRET", "oper1"),
     "FACE": ("CHALLENGE", "oper2"),
     "FILE": ("LAWSUIT", "oper1"),
+    "FEEL": ("GUILT", "oper2"),
+    "FORMULATE": ("HYPOTHESIS", "oper1"),
     "GAIN": ("KNOWLEDGE", "incepoper2"),
     "GET": ("JOB", "incepoper2"),
     "GIVE": ("ADVICE", "oper1"),
     "HAVE": ("CONVERSATION", "oper1"),
     "HOLD": ("HEARING", "oper1"),
     "IMPOSE": ("BAN", "oper1"),
+    "ISSUE": ("DENIAL", "oper1"),
     "MAKE": ("MISTAKE", "oper1"),
     "MEET": ("REQUIREMENT", "oper2"),
     "OBTAIN": ("VISA", "incepoper2"),
@@ -47,6 +51,7 @@ CASES = {
     "PERFORM": ("PROCEDURE", "oper1"),
     "PLACE": ("BET", "oper1"),
     "PLAY": ("ROLE", "oper1"),
+    "PLEDGE": ("ALLEGIANCE", "oper1"),
     "POSE": ("THREAT", "oper1"),
     "PROVIDE": ("PROTECTION", "oper1"),
     "PUT": ("PRESSURE", "oper1"),
@@ -215,7 +220,7 @@ def main():
             expected_lines.append(sent)
         stdin_lines.append("")
 
-    if len(CASES) != 45 or len(expected_lines) != 270:
+    if len(CASES) != 50 or len(expected_lines) != 300:
         raise SystemExit(f"unexpected coverage: {len(CASES)} support verbs / {len(expected_lines)} sentences")
 
     if args.check:

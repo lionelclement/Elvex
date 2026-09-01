@@ -163,6 +163,8 @@ NONPURE_MAGN = {
 def audit():
     gen = load_generator()
     resolved = gen.rows()
+    predicate_profiles = gen.load_predicate_profiles()
+    support_profiles = gen.load_support_profiles()
     explicit = load_explicit(gen)
     explicit_exact = {exact_key(r) for r in explicit}
     fam_candidates = load_family_candidates(gen)
@@ -245,6 +247,8 @@ def audit():
         else:
             severity = "ok"
 
+        pp = predicate_profiles.get(r["predicate"], {})
+        sp = support_profiles.get(r["realizer"], {}) if r["kind"] == "support" else {}
         audited.append({
             "severity": severity,
             "score": score,
@@ -255,6 +259,16 @@ def audit():
             "form": r["form"],
             "prep": r["prep"],
             "origin": origin,
+            "pred_class": pp.get("class", ""),
+            "aktionsart": pp.get("aktionsart", ""),
+            "semantic_valency": pp.get("semantic_valency", ""),
+            "arg1_restriction": pp.get("arg1_restriction", ""),
+            "arg2_restriction": pp.get("arg2_restriction", ""),
+            "fixedness": pp.get("fixedness", ""),
+            "support_aspect": sp.get("lexical_aspect", ""),
+            "support_phase": sp.get("phase", ""),
+            "support_stance": sp.get("stance", ""),
+            "support_subjectivity": sp.get("subjectivity", ""),
             "surface_stub": surface_stub(r),
             "issues": ";".join(issues),
             "suggestion": " | ".join(dict.fromkeys(suggestions)),
@@ -264,7 +278,7 @@ def audit():
     severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3, "ok": 4}
     audited.sort(key=lambda x: (severity_order[x["severity"]], -x["score"], x["kind"], x["realizer"], x["predicate"]))
 
-    fields = ["severity", "score", "kind", "predicate", "function", "realizer", "form", "prep", "origin", "surface_stub", "issues", "suggestion", "family_candidates"]
+    fields = ["severity", "score", "kind", "predicate", "function", "realizer", "form", "prep", "origin", "pred_class", "aktionsart", "semantic_valency", "arg1_restriction", "arg2_restriction", "fixedness", "support_aspect", "support_phase", "support_stance", "support_subjectivity", "surface_stub", "issues", "suggestion", "family_candidates"]
     with OUT_TSV.open("w", newline="", encoding="utf-8") as fh:
         wr = csv.DictWriter(fh, fieldnames=fields, delimiter="\t", lineterminator="\n")
         wr.writeheader()
@@ -296,6 +310,8 @@ def audit():
     lines.append(f"- Low: **{sev['low']}**")
     lines.append(f"- No automatic flag: **{sev['ok']}**")
     lines.append(f"- Relations requiring some review: **{len(review)}**")
+    lines.append(f"- Predicative-noun profiles: **{len(predicate_profiles)}**")
+    lines.append(f"- Support-verb discourse/aspect profiles: **{len(support_profiles)}**")
     lines.append("")
     lines.append("## Highest-priority observations")
     lines.append("")

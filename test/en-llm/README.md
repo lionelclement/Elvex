@@ -94,6 +94,8 @@ When running several `Axiom` entries, use standard input as above rather than `-
 | `en-vocab-large.tsv` | Source data for the extended vocabulary |
 | `en-lexical-functions.tsv` | Explicit lexical-function definitions |
 | `en-lexical-function-families.tsv` | Large lexical-function families |
+| `en-predicative-nouns.tsv` | Semantic/valency profiles for curated predicative nouns |
+| `en-support-verb-profiles.tsv` | Aspectual and discourse profiles for support verbs |
 
 ### Generators and QA tools
 
@@ -119,7 +121,8 @@ Important corpora include:
 - `en-lexical-functions-massive.stdin`: large lexical-function coverage;
 - `en-support-verbs-tenses.stdin`: systematic support-verb conjugation tests;
 - `en-incepoper2.stdin`: `IncepOper2`;
-- `en-causoper1.stdin`: `CausOper1`.
+- `en-causoper1.stdin`: `CausOper1`;
+- `en-predicative-nouns.stdin`: curated predicative nouns and support-verb constraints.
 
 ## 4. Sentence semantic interface
 
@@ -432,7 +435,100 @@ verb	TO_APPEAR	appear	intransitive		appears	appeared	appeared	appearing
 
 Provide irregular forms explicitly when required.
 
-## 9. Extending lexical functions
+
+## 9. Predicative-noun and support-verb profiles
+
+The surface realization inventory is complemented by two descriptive lexical
+profile files.  They make explicit information that should belong to the
+lexeme rather than to a generic syntactic rule.
+
+### `en-predicative-nouns.tsv`
+
+Each curated predicative noun can specify:
+
+```text
+predicate
+class
+aktionsart
+semantic_valency
+arg1_role / arg1_restriction
+arg2_role / arg2_restriction
+default_prep
+countability
+fixedness
+note
+```
+
+For example, `ATTENTION` is a state predicate with an experiencer and a
+directed target, while `WARNING` is an achievement-like communication
+predicate with a source and a recipient.  `fixedness` distinguishes relatively
+free realizations from strongly collocational support constructions.
+
+The restriction fields are currently **lexicographic metadata**.  They are
+validated and exposed by the audit tools, but the current grammar does not yet
+reject an input solely because an actant violates a selectional restriction.
+This keeps the present rule interface stable while preparing future semantic
+typing of actants.
+
+### `en-support-verb-profiles.tsv`
+
+Support verbs have default lexical-aspect and discourse annotations:
+
+```text
+realizer
+lexical_aspect
+phase
+causativity
+agency
+stance
+subjectivity
+register
+note
+```
+
+The profile is not intended to claim that a verb has one invariant meaning in
+all collocations.  It records the default contribution of the support verb,
+while the lexical function still carries the structural relation (`Oper1`,
+`Oper2`, `IncepOper2`, `CausOper1`, ...).
+
+Typical contrasts are:
+
+```text
+HAVE       stative / experiential
+MAKE       bounded / agentive
+EXPRESS    expressive / strongly subjective
+SHOW       evidential / less subjective
+ASSUME     epistemic / subjective
+UNDERGO    process / patient-oriented
+GAIN       inchoative acquisition
+SECURE     effortful/formal acquisition
+ISSUE      institutional speech act
+FEEL       subjective experiential state
+```
+
+This separation is useful when generating large example sets: two support
+verbs may realize related predicates while differing in phase, agency,
+register, evidentiality or speaker commitment.
+
+### Adding a curated predicative noun
+
+For a new predicate, normally add:
+
+1. its semantic profile to `en-predicative-nouns.tsv`;
+2. one or more support/modifier relations to `en-lexical-functions.tsv`;
+3. a broad family only when the relation is genuinely productive;
+4. a regression example when the valency, preposition or lexicalization is new.
+
+Then run:
+
+```bash
+python3 generate_lexical_functions.py --check
+python3 generate_lexical_functions.py
+make test
+python3 audit_lexical_functions.py
+```
+
+## 10. Extending lexical functions
 
 Lexical-function data has two layers.
 
@@ -514,7 +610,7 @@ END GENERATED LEXICAL FUNCTIONS
 
 The generator replaces this block idempotently.
 
-## 10. Running regression tests
+## 11. Running regression tests
 
 A convenient shell helper is:
 
@@ -542,6 +638,7 @@ run_test en-lexical-functions
 run_test en-lexical-functions-massive
 run_test en-incepoper2
 run_test en-causoper1
+run_test en-predicative-nouns
 run_test en-large-vocab
 ```
 
@@ -572,7 +669,7 @@ This corpus checks, among other things:
 - interrogation;
 - irregular support verbs.
 
-## 11. Lexicographic audit
+## 12. Lexicographic audit
 
 Run:
 
@@ -587,6 +684,8 @@ en-lexical-functions-quality.tsv
 en-lexical-functions-quality.md
 ```
 
+The TSV report also includes available predicative-noun and support-verb profile fields (semantic class, Aktionsart, semantic valency, selectional restrictions, fixedness, support aspect/phase, stance and subjectivity).
+
 The report is useful for identifying:
 
 - potentially unnatural collocations;
@@ -597,7 +696,7 @@ The report is useful for identifying:
 
 The audit is a QA tool. A warning does not automatically mean that an entry is incorrect.
 
-## 12. Recommended workflow after a change
+## 13. Recommended workflow after a change
 
 ### If only `*.rules` files changed
 
@@ -641,7 +740,7 @@ elvexlexicon \
 
 Finally, run the relevant regression corpora.
 
-## 13. Important entry conventions
+## 14. Important entry conventions
 
 ### `en.pattern` format
 
@@ -686,7 +785,7 @@ When a modified realization is intended, specify the lexical function explicitly
 
 Free oblique actants in the current complex-support rules are realized neutrally. If a lexical function such as `Magn` must apply to the free actant itself, add a dedicated explicit pattern rather than making the general rule ambiguous.
 
-## 14. Morphophonology handled outside the grammar
+## 15. Morphophonology handled outside the grammar
 
 Elvex currently produces a structural surface form. Some morphophonological operations are intentionally left to a later post-processing layer, for example:
 
@@ -699,7 +798,7 @@ The same applies to contractions and, depending on the output context, sentence-
 
 Do not solve these cases by multiplying syntactic rules or lexical entries.
 
-## 15. Common maintenance commands
+## 16. Common maintenance commands
 
 ### Validate repository sources
 
