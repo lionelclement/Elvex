@@ -1,0 +1,21 @@
+// Oper1: count and bare predicative nouns
+Axiom [HEAD:MISTAKE, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:PROGRESS, i:[HEAD:JOHN], ii:NIL, iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+
+// Oper1 with a second semantic actant
+Axiom [HEAD:DEAL, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:ADVICE, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, lexical_function:oper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+
+// Oper2: semantic actant II is promoted to subject
+Axiom [HEAD:WARNING, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:SUPPORT, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:TREATMENT, i:NIL, ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+
+// Composition of a support function and a modifier lexical function
+Axiom [HEAD:ATTENTION, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, lexical_function:oper1, modifier_function:magn, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:SUPPORT, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, lexical_function:oper2, modifier_function:magn, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:INTEREST, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, lexical_function:oper1, modifier_function:antimagn, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+
+// Magn / AntiMagn directly on adjective predicates
+Axiom [HEAD:TO_BE, i:[HEAD:JOHN], ii:[HEAD:COLD, lexical_function:magn], iii:NIL, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:TO_BE, i:[HEAD:JOHN], ii:[HEAD:DIFFICULT, lexical_function:antimagn], iii:NIL, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]

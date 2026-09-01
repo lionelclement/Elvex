@@ -1,0 +1,12 @@
+/*
+ * Elvex English grammar — master file.
+ * Syntax follows the current Elvex/test conventions.
+ */
+#include en-sentence.rules
+#include en-normalize.rules
+#include en-noun.rules
+#include en-verb.rules
+#include en-complex.rules
+#include en-copula.rules
+#include en-tense.rules
+#include en-modal.rules

@@ -1,0 +1,7 @@
+// CausOper1 pilot: AWARENESS(i=causer, ii=theme) -> raise awareness of theme.
+Axiom [HEAD:AWARENESS, i:[HEAD:JOHN], ii:[HEAD:PROBLEM], iii:NIL, lexical_function:causoper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:AWARENESS, i:[HEAD:JOHN], ii:[HEAD:PROBLEM], iii:NIL, lexical_function:causoper1, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:AWARENESS, i:[HEAD:JOHN], ii:[HEAD:PROBLEM], iii:NIL, lexical_function:causoper1, tense:present, aspect:perfect, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:AWARENESS, i:[HEAD:JOHN], ii:[HEAD:PROBLEM], iii:NIL, lexical_function:causoper1, tense:present, aspect:continuous, modality:none, polarity:positive, illocution:declarative]
+Axiom [HEAD:AWARENESS, i:[HEAD:JOHN], ii:[HEAD:PROBLEM], iii:NIL, lexical_function:causoper1, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative]
+Axiom [HEAD:AWARENESS, i:[HEAD:JOHN], ii:[HEAD:PROBLEM], iii:NIL, lexical_function:causoper1, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative]

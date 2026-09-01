@@ -1,0 +1,103 @@
+/*
+ * Input normalization.
+ * Accepts both the current test-style one-dimensional vtense feature and
+ * the compositional tense+aspect interface used by the modular rules.
+ * Missing sentence controls default to a positive declarative non-modal clause.
+ */
+
+InputClause → Clause
+{
+  [vtense:$vtense, tense:$tense, aspect:$aspect, modality:$modality,
+   polarity:$polarity, illocution:$illocution, lexical_function:$LF,
+   i:$I, ii:$II, iii:$III, $Rest] ⊂ ↑;
+
+  if (¬ $modality)
+    $modality = none;
+  if (¬ $polarity)
+    $polarity = positive;
+  if (¬ $illocution)
+    $illocution = declarative;
+
+  // Compatibility with Elvex/test/En.stdin values.
+  if ($vtense) {
+    if ($vtense == present) {
+      $tense = present;
+      $aspect = simple;
+    }
+    else if ($vtense == present_continuous) {
+      $tense = present;
+      $aspect = continuous;
+    }
+    else if ($vtense == present_perfect) {
+      $tense = present;
+      $aspect = perfect;
+    }
+    else if ($vtense == present_perfect_continuous) {
+      $tense = present;
+      $aspect = perfect_continuous;
+    }
+    else if ($vtense == preterite) {
+      $tense = past;
+      $aspect = simple;
+    }
+    else if ($vtense == past_continuous) {
+      $tense = past;
+      $aspect = continuous;
+    }
+    else if ($vtense == past_perfect) {
+      $tense = past;
+      $aspect = perfect;
+    }
+    else if ($vtense == past_perfect_continuous) {
+      $tense = past;
+      $aspect = perfect_continuous;
+    }
+    else if ($vtense == future) {
+      $tense = future;
+      $aspect = simple;
+    }
+    else if ($vtense == future_continuous) {
+      $tense = future;
+      $aspect = continuous;
+    }
+    else if ($vtense == future_perfect) {
+      $tense = future;
+      $aspect = perfect;
+    }
+    else if ($vtense == future_perfect_continuous) {
+      $tense = future;
+      $aspect = perfect_continuous;
+    }
+  }
+  else {
+    if (¬ $tense)
+      $tense = present;
+    if (¬ $aspect)
+      $aspect = simple;
+  }
+
+  // Lexical-function actant mapping.  Oper1 promotes semantic actant I.
+  // Oper2 and IncepOper2 promote semantic actant II; IncepOper2 differs
+  // lexically/semantically by adding an inception/acquisition meaning, not
+  // by changing the surface actant mapping. CausOper1 keeps actant I as the
+  // surface subject like Oper1, while adding a causative lexical meaning.
+  if ($LF) {
+    if ($LF == oper2)
+      ↓1 = [tense:$tense, aspect:$aspect, modality:$modality,
+            polarity:$polarity, illocution:$illocution, lexical_function:$LF,
+            i:$II, ii:$I, iii:$III, $Rest];
+    else if ($LF == incepoper2)
+      ↓1 = [tense:$tense, aspect:$aspect, modality:$modality,
+            polarity:$polarity, illocution:$illocution, lexical_function:$LF,
+            i:$II, ii:$I, iii:$III, $Rest];
+    else
+      ↓1 = [tense:$tense, aspect:$aspect, modality:$modality,
+            polarity:$polarity, illocution:$illocution, lexical_function:$LF,
+            i:$I, ii:$II, iii:$III, $Rest];
+  }
+  else
+    ↓1 = [tense:$tense, aspect:$aspect, modality:$modality,
+          polarity:$polarity, illocution:$illocution,
+          i:$I, ii:$II, iii:$III, $Rest];
+  ⇑ = ⇓1;
+}

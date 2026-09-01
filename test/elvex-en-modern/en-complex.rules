@@ -1,0 +1,139 @@
+/*
+ * Complex lexical realizations.
+ *
+ * A complex semantic lexeme can synthesize material that is absent from
+ * the input structure.  This mirrors the older TO_FEEL_BLUE example while
+ * keeping the current Elvex syntax and the simple valency grammar intact.
+ */
+
+// Idiomatic predicative adjective: TO_FEEL_BLUE -> feel + blue.
+LexVP → verb AP
+{
+  [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:NIL, iii:NIL, vtense:$vtense, $Rest];
+
+  // The verb lookup resolves the semantic lexeme (TO_FEEL_BLUE) to the
+  // morphological lemma FEEL and synthesizes the fixed adjective.
+  ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
+  [valency:idiomatic_predicative, fixed_adj:$FIXED_ADJ] ⊂ ⇓1;
+
+  // The adjective is not an argument of the semantic input: it comes from
+  // the lexical pattern of TO_FEEL_BLUE.
+  ↓2 = $FIXED_ADJ;
+  ⇑ = ⇓1;
+}
+
+// Support verb / lexical function Oper1:
+// DECISION + oper1 -> make + a decision.
+// The semantic predicate remains DECISION; MAKE is the light/support verb.
+LexVP → verb NP
+{
+  [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:NIL, iii:NIL, vtense:$vtense, lexical_function:$LF, $Rest];
+
+  $MF = ↑.modifier_function;
+
+  ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
+  [valency:support_nominal, lexical_function:$LF, fixed_object:$FIXED_OBJECT] ⊂ ⇓1;
+
+  // A modifier lexical function (Magn/AntiMagn) is applied to the
+  // synthesized predicative noun, independently from Oper1/Oper2.
+  if ($MF)
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:$MF];
+  else
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:none];
+  ⇑ = ⇓1;
+}
+
+
+// Support verb / lexical function Oper1 with a bare nominal predicate:
+// ATTENTION + oper1 -> pay attention; ADVICE + oper1 -> give advice.
+LexVP → verb N
+{
+  [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:NIL, iii:NIL, vtense:$vtense, lexical_function:$LF, $Rest];
+
+  $MF = ↑.modifier_function;
+
+  ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
+  [valency:support_nominal_bare, lexical_function:$LF, fixed_object:$FIXED_OBJECT] ⊂ ⇓1;
+
+  // Bare support nouns do not pass through NP/determiner realization.
+  if ($MF)
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:$MF];
+  else
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:none];
+  ⇑ = ⇓1;
+}
+
+
+// Support verb with a bare nominal predicate plus an oblique semantic actant:
+// ATTENTION + oper1: X pays attention to Y.
+// ATTENTION + oper2: Y receives attention from X.
+LexVP → verb N prep NP
+{
+  [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBLIQUE, iii:NIL, vtense:$vtense, lexical_function:$LF, $Rest];
+
+  $MF = ↑.modifier_function;
+
+  ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
+  [valency:support_nominal_bare_oblique, lexical_function:$LF,
+   fixed_object:$FIXED_OBJECT, pcase:$pcase] ⊂ ⇓1;
+
+  if ($MF)
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:$MF];
+  else
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:none];
+  ↓3 = [pcase:$pcase];
+
+  // Free semantic actants use their neutral lexical realization here.
+  // This avoids duplicate derivations from Magn/AntiMagn lexical entries.
+  ↓4 = $OBLIQUE U [case:accusative, lexical_function:none];
+  ⇑ = ⇓1;
+}
+
+
+// Support verb with a count nominal predicate plus an oblique semantic actant:
+// e.g. X makes a deal with Y; Y receives a warning from X.
+LexVP → verb NP prep NP
+{
+  [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBLIQUE, iii:NIL, vtense:$vtense, lexical_function:$LF, $Rest];
+
+  $MF = ↑.modifier_function;
+
+  ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, lexical_function:$LF, $Rest];
+  [valency:support_nominal_oblique, lexical_function:$LF,
+   fixed_object:$FIXED_OBJECT, pcase:$pcase] ⊂ ⇓1;
+
+  if ($MF)
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:$MF];
+  else
+    ↓2 = $FIXED_OBJECT U [case:accusative, lexical_function:none];
+  ↓3 = [pcase:$pcase];
+
+  // Free semantic actants use their neutral lexical realization here.
+  // This avoids duplicate derivations from Magn/AntiMagn lexical entries.
+  ↓4 = $OBLIQUE U [case:accusative, lexical_function:none];
+  ⇑ = ⇓1;
+}
+
+
+// Idiom with fixed lexical material plus one free semantic actant:
+// TO_KEEP_AN_EYE_ON(i=X, ii=Y) -> X keeps an eye on Y.
+// "an eye on" is lexically imposed; Y remains a free semantic argument.
+LexVP → verb fixed_det N prep NP
+{
+  [HEAD:$HEAD, SUBJECT:$SUBJECT, ii:$OBJECT, iii:NIL, vtense:$vtense, $Rest];
+
+  ↓1 = [HEAD:$HEAD, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
+  [valency:idiomatic_nominal_oblique,
+   fixed_det:$FIXED_DET,
+   fixed_object:$FIXED_OBJECT,
+   pcase:$pcase] ⊂ ⇓1;
+
+  // Both determiner and noun are fixed by the idiomatic lexical entry.
+  ↓2 = $FIXED_DET;
+  ↓3 = $FIXED_OBJECT;
+  ↓4 = [pcase:$pcase];
+
+  // The object of the preposition is the free semantic actant ii.
+  ↓5 = $OBJECT U [case:accusative];
+  ⇑ = ⇓1;
+}

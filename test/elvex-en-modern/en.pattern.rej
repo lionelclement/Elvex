@@ -1,0 +1,65 @@
+@@ -1,37 +1,37 @@
+ // LEXEME  POS  LEMMA  FEATURES
+ 
+ // Verbs: semantic lexeme -> morphological lemma + valency.
+-TO_SLEEP   verb   SLEEP   [valency:intransitive]
+-TO_SWIM   verb   SWIM   [valency:intransitive]
+-TO_ARRIVE   verb   ARRIVE   [valency:intransitive]
+-
+-TO_READ   verb   READ   [valency:transitive]
+-TO_SEE   verb   SEE   [valency:transitive]
+-TO_LOVE   verb   LOVE   [valency:transitive]
+-TO_EAT   verb   EAT   [valency:transitive]
++TO_SLEEP	verb	SLEEP	[valency:intransitive]
++TO_SWIM	verb	SWIM	[valency:intransitive]
++TO_ARRIVE	verb	ARRIVE	[valency:intransitive]
++
++TO_READ	verb	READ	[valency:transitive]
++TO_SEE	verb	SEE	[valency:transitive]
++TO_LOVE	verb	LOVE	[valency:transitive]
++TO_EAT	verb	EAT	[valency:transitive]
+ 
+-TO_GIVE   verb   GIVE   [valency:ditransitive]
+-TO_SEND   verb   SEND   [valency:ditransitive]
++TO_GIVE	verb	GIVE	[valency:ditransitive]
++TO_SEND	verb	SEND	[valency:ditransitive]
+ 
+-TO_LISTEN   verb   LISTEN   [valency:prepositional, pcase:_to_]
+-TO_PUT   verb   PUT   [valency:transitive_prepositional, pcase:_on_]
++TO_LISTEN	verb	LISTEN	[valency:prepositional, pcase:_to_]
++TO_PUT	verb	PUT	[valency:transitive_prepositional, pcase:_on_]
+ 
+-TO_BE   verb   BE   [valency:copular]
++TO_BE	verb	BE	[valency:copular]
+ 
+ // Common nouns.
+-STUDENT   common_noun   STUDENT   []
+-BOOK   common_noun   BOOK   []
+-LETTER   common_noun   LETTER   []
+-GIFT   common_noun   GIFT   []
+-CAT   common_noun   CAT   []
+-DOG   common_noun   DOG   []
+-MUSIC   common_noun   MUSIC   []
+-TABLE   common_noun   TABLE   []
+-PARK   common_noun   PARK   []
+-APPLE   common_noun   APPLE   []
++STUDENT	common_noun	STUDENT	[]
++BOOK	common_noun	BOOK	[]
++LETTER	common_noun	LETTER	[]
++GIFT	common_noun	GIFT	[]
++CAT	common_noun	CAT	[]
++DOG	common_noun	DOG	[]
++MUSIC	common_noun	MUSIC	[]
++TABLE	common_noun	TABLE	[]
++PARK	common_noun	PARK	[]
++APPLE	common_noun	APPLE	[]
+ 
+ // Adjectives.
+-HAPPY   adj   HAPPY   []
+-READY   adj   READY   []
+-TIRED   adj   TIRED   []
+-LUCKY   adj   LUCKY   []
++HAPPY	adj	HAPPY	[]
++READY	adj	READY	[]
++TIRED	adj	TIRED	[]
++LUCKY	adj	LUCKY	[]

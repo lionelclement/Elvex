@@ -1,0 +1,1435 @@
+# kind	lexeme	lemma/form	arg1	arg2	arg3	arg4	arg5	arg6
+noun	PRINCE	prince	princes					
+noun	TIME	time	times					
+noun	FACE	face	faces					
+noun	ROOM	room	rooms					
+noun	WAR	war	wars					
+noun	WAY	way	ways					
+noun	HAND	hand	hands					
+noun	DAY	day	days					
+noun	ARMY	army	armies					
+noun	COUNT	count	counts					
+noun	PART	part	parts					
+noun	STATE	state	states					
+noun	EMPEROR	emperor	emperors					
+noun	BONE	bone	bones					
+noun	FATHER	father	fathers					
+noun	SIDE	side	sides					
+noun	FORM	form	forms					
+noun	MOMENT	moment	moments					
+noun	END	end	ends					
+noun	CHAPTER	chapter	chapters					
+noun	OFFICER	officer	officers					
+noun	VOICE	voice	voices					
+noun	BATTLE	battle	battles					
+noun	HISTORY	history	histories					
+noun	CASE	case	cases					
+noun	POSITION	position	positions					
+noun	LAW	law	laws					
+noun	SMILE	smile	smiles					
+noun	COUNTRY	country	countries					
+noun	COURSE	course	courses					
+noun	RESULT	result	results					
+noun	NIGHT	night	nights					
+noun	PATIENT	patient	patients					
+noun	CAUSE	cause	causes					
+noun	PRESIDENT	president	presidents					
+noun	WIFE	wife	wives					
+noun	MATTER	matter	matters					
+noun	WORLD	world	worlds					
+noun	FEELING	feeling	feelings					
+noun	FRONT	front	fronts					
+noun	ACTION	action	actions					
+noun	QUESTION	question	questions					
+noun	MOVEMENT	movement	movements					
+noun	CONDITION	condition	conditions					
+noun	SON	son	sons					
+noun	MIND	mind	minds					
+noun	MORNING	morning	mornings					
+noun	BODY	body	bodies					
+noun	HORSE	horse	horses					
+noun	NERVE	nerve	nerves					
+noun	EXPRESSION	expression	expressions					
+noun	MOTHER	mother	mothers					
+noun	COMMANDER	commander	commanders					
+noun	YEAR	year	years					
+noun	WOUND	wound	wounds					
+noun	THING	thing	things					
+noun	NUMBER	number	numbers					
+noun	WORD	word	words					
+noun	PARTY	party	parties					
+noun	ENEMY	enemy	enemies					
+noun	FACT	fact	facts					
+noun	PROJECT	project	projects					
+noun	EXAMPLE	example	examples					
+noun	ILLUSTRATION	illustration	illustrations					
+noun	SURFACE	surface	surfaces					
+noun	LAND	land	lands					
+noun	UNION	union	unions					
+noun	EVENING	evening	evenings					
+noun	NAME	name	names					
+noun	ARM	arm	arms					
+noun	ROAD	road	roads					
+noun	HEART	heart	hearts					
+noun	LINE	line	lines					
+noun	SYSTEM	system	systems					
+noun	FORCE	force	forces					
+noun	KING	king	kings					
+noun	PRESSURE	pressure	pressures					
+noun	FELLOW	fellow	fellows					
+noun	REGIMENT	regiment	regiments					
+noun	GROWTH	growth	growths					
+noun	CROWD	crowd	crowds					
+noun	SERVICE	service	services					
+noun	POINT	point	points					
+noun	INTEREST	interest	interests					
+noun	BED	bed	beds					
+noun	SOUND	sound	sounds					
+noun	OPINION	opinion	opinions					
+noun	TRADE	trade	trades					
+noun	PRESENCE	presence	presences					
+noun	LIMB	limb	limbs					
+noun	SOLDIER	soldier	soldiers					
+noun	FORMATION	formation	formations					
+noun	OPERATION	operation	operations					
+noun	FIELD	field	fields					
+noun	FAMILY	family	families					
+noun	PERIOD	period	periods					
+noun	NECK	neck	necks					
+noun	REVOLUTION	revolution	revolutions					
+noun	FOOT	foot	feet					
+noun	HUSBAND	husband	husbands					
+noun	LYMPH	lymph	lymphs					
+noun	SPREAD	spread	spreads					
+noun	MIDDLE	middle	middles					
+noun	COMPANY	company	companies					
+noun	REASON	reason	reasons					
+noun	ATTENTION	attention	attentions					
+noun	WALL	wall	walls					
+noun	CAMPAIGN	campaign	campaigns					
+noun	EFFECT	effect	effects					
+noun	SUBJECT	subject	subjects					
+noun	PERSON	person	people					
+noun	SIZE	size	sizes					
+noun	DINNER	dinner	dinners					
+noun	STRENGTH	strength	strengths					
+noun	HONOR	honor	honors					
+noun	DAUGHTER	daughter	daughters					
+noun	CONVERSATION	conversation	conversations					
+noun	STREET	street	streets					
+noun	VIEW	view	views					
+noun	PAPER	paper	papers					
+noun	LADY	lady	ladies					
+noun	BROTHER	brother	brothers					
+noun	ACCOUNT	account	accounts					
+noun	TOWN	town	towns					
+noun	CHARACTER	character	characters					
+noun	COURT	court	courts					
+noun	FREEDOM	freedom	freedoms					
+noun	COAT	coat	coats					
+noun	KNEE	knee	knees					
+noun	SEAT	seat	seats					
+noun	NATURE	nature	natures					
+noun	GROUND	ground	grounds					
+noun	CANCER	cancer	cancers					
+noun	SOCIETY	society	societies					
+noun	NATION	nation	nations					
+noun	BOY	boy	boys					
+noun	SOUL	soul	souls					
+noun	ARTERY	artery	arteries					
+noun	SPIRIT	spirit	spirits					
+noun	TONE	tone	tones					
+noun	REPLY	reply	replies					
+noun	GIRL	girl	girls					
+noun	FEAR	fear	fears					
+noun	MOUTH	mouth	mouths					
+noun	AREA	area	areas					
+noun	VILLAGE	village	villages					
+noun	SOMEONE	someone	someones					
+noun	NEED	need	needs					
+noun	PLAN	plan	plans					
+noun	ULCER	ulcer	ulcers					
+noun	ATTACK	attack	attacks					
+noun	BRIDGE	bridge	bridges					
+noun	MEMBRANE	membrane	membranes					
+noun	MUSCLE	muscle	muscles					
+noun	DOUBT	doubt	doubts					
+noun	INDEPENDENCE	independence	independences					
+noun	CONVENTION	convention	conventions					
+noun	COMMAND	command	commands					
+noun	CHANGE	change	changes					
+noun	JOHN_NOUN	john	johns					
+noun	HOPE	hope	hopes					
+noun	ST	st	sts					
+noun	OPENING	opening	openings					
+noun	DIRECTION	direction	directions					
+noun	LEG	leg	legs					
+noun	GOVERNOR	governor	governors					
+noun	STUDY	study	studies					
+noun	STAFF	staff	staffs					
+noun	SMOKE	smoke	smokes					
+noun	SISTER	sister	sisters					
+noun	CAPITAL	capital	capitals					
+noun	HAPPINESS	happiness	happiness					
+noun	COLONEL	colonel	colonels					
+noun	CARRIAGE	carriage	carriages					
+noun	METHOD	method	methods					
+noun	MASTER	master	masters					
+noun	IDEA	idea	ideas					
+noun	FIRM	firm	firms					
+noun	STEP	step	steps					
+noun	SARCOMA	sarcoma	sarcomas					
+noun	RELATION	relation	relations					
+noun	PLEASURE	pleasure	pleasures					
+noun	GROUP	group	groups					
+noun	INFLUENCE	influence	influences					
+noun	CAMP	camp	camps					
+noun	VESSEL	vessel	vessels					
+noun	PROPERTY	property	properties					
+noun	AGE	age	ages					
+noun	SILENCE	silence	silences					
+noun	INDUSTRY	industry	industries					
+noun	DUTY	duty	duties					
+noun	UNCLE	uncle	uncles					
+noun	MARCH	march	marches					
+noun	MANNER	manner	manners					
+noun	CHAIR	chair	chairs					
+noun	APPEARANCE	appearance	appearances					
+noun	TERM	term	terms					
+noun	LORD	lord	lords					
+noun	VICTORY	victory	victories					
+noun	OFFICE	office	offices					
+noun	ACTIVITY	activity	activities					
+noun	INJURY	injury	injuries					
+noun	EFFORT	effort	efforts					
+noun	SIGHT	sight	sights					
+noun	LATTER	latter	latters					
+noun	DRESSING	dressing	dressings					
+noun	SILVER	silver	silvers					
+noun	SERIES	series	series					
+noun	CORNER	corner	corners					
+noun	EVERYBODY	everybody	everybodies					
+noun	CAPTAIN	captain	captains					
+noun	FUTURE	future	futures					
+noun	GOLD	gold	golds					
+noun	TARIFF	tariff	tariffs					
+noun	DANGER	danger	dangers					
+noun	BALL	ball	balls					
+noun	UNIFORM	uniform	uniforms					
+noun	PORTION	portion	portions					
+noun	FINGER	finger	fingers					
+noun	CONTROL	control	controls					
+noun	RULE	rule	rules					
+noun	PURPOSE	purpose	purposes					
+noun	MAJORITY	majority	majorities					
+noun	HEALTH	health	healths					
+noun	CLOCK	clock	clocks					
+noun	ELECTION	election	elections					
+noun	COMMERCE	commerce	commerces					
+noun	MEETING	meeting	meetings					
+noun	DISTANCE	distance	distances					
+noun	SPITE	spite	spites					
+noun	SECTION	section	sections					
+noun	REGION	region	regions					
+noun	POST	post	posts					
+noun	IMPORTANCE	importance	importances					
+noun	EARTH	earth	earths					
+noun	CHURCH	church	churches					
+noun	ADMINISTRATION	administration	administrations					
+noun	VEIN	vein	veins					
+noun	SHOULDER	shoulder	shoulders					
+noun	POLICY	policy	policies					
+noun	AFFAIR	affair	affairs					
+noun	TRUTH	truth	truths					
+noun	SUFFRAGE	suffrage	suffrages					
+noun	NOTE	note	notes					
+noun	MEANING	meaning	meanings					
+noun	INCREASE	increase	increases					
+noun	TERRITORY	territory	territories					
+noun	SENATE	senate	senates					
+noun	READING	reading	readings					
+noun	TREATY	treaty	treaties					
+noun	DIVISION	division	divisions					
+noun	DEVELOPMENT	development	developments					
+noun	AID	aid	aids					
+noun	TOMORROW	tomorrow	tomorrows					
+noun	RIVER	river	rivers					
+noun	EVENT	event	events					
+noun	DESTRUCTION	destruction	destructions					
+noun	VOTE	vote	votes					
+noun	PASSAGE	passage	passages					
+noun	NONE	none	nones					
+noun	EYE	eye	eyes					
+noun	DIFFICULTY	difficulty	difficulties					
+noun	SOLUTION	solution	solutions					
+noun	BANK	bank	banks					
+noun	STAGE	stage	stages					
+noun	REMOVAL	removal	removals					
+noun	EXPERIENCE	experience	experiences					
+noun	AIM	aim	aims					
+noun	TEA	tea	teas					
+noun	SURPRISE	surprise	surprises					
+noun	HILL	hill	hills					
+noun	VALUE	value	values					
+noun	HEALING	healing	healings					
+noun	FLOOR	floor	floors					
+noun	CARE	care	cares					
+noun	HAT	hat	hats					
+noun	SUPPORT	support	supports					
+noun	CARTILAGE	cartilage	cartilages					
+noun	TEMPERATURE	temperature	temperatures					
+noun	SENSE	sense	senses					
+noun	PROGRESS	progress	progress					
+noun	OBJECT	object	objects					
+noun	NOSE	nose	noses					
+noun	FIGURE	figure	figures					
+noun	CONNECTION	connection	connections					
+noun	MAJESTY	majesty	majesties					
+noun	LESION	lesion	lesions					
+noun	MOVE	move	moves					
+noun	ISSUE	issue	issues					
+noun	INSTANT	instant	instants					
+noun	POPULATION	population	populations					
+noun	PATH	path	paths					
+noun	FLUID	fluid	fluids					
+noun	FLANK	flank	flanks					
+noun	DISCHARGE	discharge	discharges					
+noun	AUTHORITY	authority	authorities					
+noun	SIGN	sign	signs					
+noun	GENTLEMAN	gentleman	gentlemen					
+noun	EXTENT	extent	extents					
+noun	BILL	bill	bills					
+noun	NOTICE	notice	notices					
+noun	FATE	fate	fates					
+noun	ABSENCE	absence	absences					
+noun	SOURCE	source	sources					
+noun	SAKE	sake	sakes					
+noun	DEMOCRACY	democracy	democracies					
+noun	CAP	cap	caps					
+noun	REACTION	reaction	reactions					
+noun	OPPOSITION	opposition	oppositions					
+noun	MARRIAGE	marriage	marriages					
+noun	FIGHT	fight	fights					
+noun	DESIRE	desire	desires					
+noun	CHANCE	chance	chances					
+noun	CAVITY	cavity	cavities					
+noun	WEEK	week	weeks					
+noun	SHOT	shot	shots					
+noun	PRACTICE	practice	practices					
+noun	ADVANCE	advance	advances					
+noun	RETREAT	retreat	retreats					
+noun	DEGREE	degree	degrees					
+noun	CANNON	cannon	cannons					
+noun	TODAY	today	todays					
+noun	SOIL	soil	soils					
+noun	MEASURE	measure	measures					
+noun	INFLAMMATION	inflammation	inflammations					
+noun	HEARING	hearing	hearings					
+noun	CIRCULATION	circulation	circulations					
+noun	CENTURY	century	centuries					
+noun	ELBOW	elbow	elbows					
+noun	AMOUNT	amount	amounts					
+noun	SORT	sort	sorts					
+noun	OFFICIAL	official	officials					
+noun	GLANCE	glance	glances					
+noun	PORCH	porch	porches					
+noun	SIGNIFICANCE	significance	significances					
+noun	SCAR	scar	scars					
+noun	POSSIBILITY	possibility	possibilities					
+noun	JOY	joy	joys					
+noun	AMENDMENT	amendment	amendments					
+noun	WOOD	wood	woods					
+noun	TENDER	tender	tenders					
+noun	ESTATE	estate	estates					
+noun	TYPE	type	types					
+noun	SITUATION	situation	situations					
+noun	SHOCK	shock	shocks					
+noun	REPORT	report	reports					
+noun	REGARD	regard	regards					
+noun	MAID	maid	maids					
+noun	CONTACT	contact	contacts					
+noun	SNOW	snow	snows					
+noun	RUPTURE	rupture	ruptures					
+noun	NONSENSE	nonsense	nonsenses					
+noun	NECESSITY	necessity	necessities					
+noun	LODGE	lodge	lodges					
+noun	FOUNDATION	foundation	foundations					
+noun	DRIVE	drive	drives					
+noun	BREAST	breast	breasts					
+noun	TENDENCY	tendency	tendencies					
+noun	JUSTICE	justice	justices					
+noun	TAX	tax	taxes					
+noun	SUPPLY	supply	supplies					
+noun	SOFA	sofa	sofas					
+noun	INFANTRY	infantry	infantries					
+noun	VARIETY	variety	varieties					
+noun	MINUTE	minute	minutes					
+noun	HEAT	heat	heats					
+noun	HALL	hall	halls					
+noun	AGITATION	agitation	agitations					
+noun	SUN	sun	suns					
+noun	SPEECH	speech	speeches					
+noun	SEA	sea	seas					
+noun	VISIT	visit	visits					
+noun	FAVOR	favor	favors					
+noun	CONCEPTION	conception	conceptions					
+noun	COMPANION	companion	companions					
+noun	CHEST	chest	chests					
+noun	INTERFERENCE	interference	interferences					
+noun	COTTON	cotton	cottons					
+noun	YARD	yard	yards					
+noun	THEORY	theory	theories					
+noun	SUITE	suite	suites					
+noun	LEGISLATURE	legislature	legislatures					
+noun	LAUGHTER	laughter	laughters					
+noun	EVIDENCE	evidence	evidences					
+noun	CAVALRY	cavalry	cavalries					
+noun	VALLEY	valley	valleys					
+noun	UNDERSTANDING	understanding	understanding					
+noun	SLAVE	slave	slaves					
+noun	REPAIR	repair	repairs					
+noun	PEASANT	peasant	peasants					
+noun	ORIGIN	origin	origins					
+noun	MARROW	marrow	marrows					
+noun	LIBERTY	liberty	liberties					
+noun	IRON	iron	irons					
+noun	CIRCLE	circle	circles					
+noun	BATTERY	battery	batteries					
+noun	WEALTH	wealth	wealths					
+noun	RESPECT	respect	respects					
+noun	DEMAND	demand	demands					
+noun	CENT	cent	cents					
+noun	APPLICATION	application	applications					
+noun	STRUGGLE	struggle	struggles					
+noun	STREAM	stream	streams					
+noun	SPOT	spot	spots					
+noun	PROBLEM	problem	problems					
+noun	FOREST	forest	forests					
+noun	COUNCIL	council	councils					
+noun	ATTEMPT	attempt	attempts					
+noun	RISK	risk	risks					
+noun	PITY	pity	pities					
+noun	ISLAND	island	islands					
+noun	FOOD	food	foods					
+noun	FEVER	fever	fevers					
+noun	CONFLICT	conflict	conflicts					
+noun	BOX	box	boxes					
+noun	VISITOR	visitor	visitors					
+noun	SUPREME	supreme	supremes					
+noun	MINISTER	minister	ministers					
+noun	MATERIAL	material	materials					
+noun	TRUNK	trunk	trunks					
+noun	SHIP	ship	ships					
+noun	SENSATION	sensation	sensations					
+noun	SAC	sac	sacs					
+noun	RAILWAY	railway	railways					
+noun	INFORMATION	information	information					
+noun	BURST	burst	bursts					
+noun	AMPUTATION	amputation	amputations					
+noun	AFFECTION	affection	affections					
+noun	TOUCH	touch	touches					
+noun	STONE	stone	stones					
+noun	SETTLEMENT	settlement	settlements					
+noun	PROPORTION	proportion	proportions					
+noun	EXAMINATION	examination	examinations					
+noun	ENTERPRISE	enterprise	enterprises					
+noun	EMPIRE	empire	empires					
+noun	DEVIL	devil	devils					
+noun	CLAY	clay	clays					
+noun	CANAL	canal	canals					
+noun	BLOW	blow	blows					
+noun	ATTITUDE	attitude	attitudes					
+noun	ADDITION	addition	additions					
+noun	SKULL	skull	skulls					
+noun	SHAFT	shaft	shafts					
+noun	KNOWLEDGE	knowledge	knowledge					
+noun	FRONTIER	frontier	frontiers					
+noun	CURE	cure	cures					
+noun	COMPROMISE	compromise	compromises					
+noun	CLUB	club	clubs					
+noun	ARTHRITIS	arthritis	arthritis					
+noun	WEIGHT	weight	weights					
+noun	SQUARE	square	squares					
+noun	SPRING	spring	springs					
+noun	NURSE	nurse	nurses					
+noun	LAD	lad	lads					
+noun	HEAVEN	heaven	heavens					
+noun	GAUZE	gauze	gauzes					
+noun	CLOT	clot	clots					
+noun	CHARGE	charge	charges					
+noun	CENTER	center	centers					
+noun	BEAUTY	beauty	beauties					
+noun	AGREEMENT	agreement	agreements					
+noun	YESTERDAY	yesterday	yesterdays					
+noun	SHEATH	sheath	sheaths					
+noun	SHARE	share	shares					
+noun	JOURNEY	journey	journeys					
+noun	DEAL	deal	deals					
+noun	COPYRIGHT	copyright	copyrights					
+noun	WRIST	wrist	wrists					
+noun	TRUST	trust	trusts					
+noun	SKY	sky	skies					
+noun	GARDEN	garden	gardens					
+noun	ARRIVAL	arrival	arrivals					
+noun	YOUTH	youth	youths					
+noun	THROAT	throat	throats					
+noun	SATISFACTION	satisfaction	satisfactions					
+noun	RATE	rate	rates					
+noun	PROMISE	promise	promises					
+noun	OCCURRENCE	occurrence	occurrences					
+noun	IMPRESSION	impression	impressions					
+noun	DEFENSE	defense	defenses					
+noun	CYST	cyst	cysts					
+noun	TONGUE	tongue	tongues					
+noun	SQUADRON	squadron	squadrons					
+noun	SACRIFICE	sacrifice	sacrifices					
+noun	RELIEF	relief	reliefs					
+noun	OPPORTUNITY	opportunity	opportunities					
+noun	MARSHAL	marshal	marshals					
+noun	INTENTION	intention	intentions					
+noun	IMMIGRATION	immigration	immigrations					
+noun	FOREHEAD	forehead	foreheads					
+noun	SPACE	space	spaces					
+noun	PARLIAMENT	parliament	parliaments					
+noun	GATE	gate	gates					
+noun	DOCTRINE	doctrine	doctrines					
+noun	DEBT	debt	debts					
+noun	COST	cost	costs					
+noun	BELL	bell	bells					
+noun	SUPPER	supper	suppers					
+noun	MONTH	month	months					
+noun	IRRITATION	irritation	irritations					
+noun	HORROR	horror	horrors					
+noun	FRACTURE	fracture	fractures					
+noun	FAITH	faith	faiths					
+noun	EXISTENCE	existence	existences					
+noun	WOLF	wolf	wolves					
+noun	PROTECTION	protection	protections					
+noun	LENGTH	length	lengths					
+noun	GUN	gun	guns					
+noun	DEGENERATION	degeneration	degenerations					
+noun	CONDUCT	conduct	conducts					
+noun	BIT	bit	bits					
+noun	ADVICE	advice	advice					
+noun	ADVANTAGE	advantage	advantages					
+noun	SHAPE	shape	shapes					
+noun	MINE	mine	ours					
+noun	EXCITEMENT	excitement	excitements					
+noun	DOMAIN	domain	domains					
+noun	DISTRIBUTION	distribution	distributions					
+noun	COMMISSION	commission	commissions					
+noun	COLUMN	column	columns					
+noun	CLOAK	cloak	cloaks					
+noun	WINE	wine	wines					
+noun	SUMMER	summer	summers					
+noun	PIECE	piece	pieces					
+noun	LEGISLATION	legislation	legislations					
+noun	GRANT	grant	grants					
+noun	FEATURE	feature	features					
+noun	DECISION	decision	decisions					
+noun	CURIOSITY	curiosity	curiosities					
+noun	CROWN	crown	crowns					
+noun	CRIME	crime	crimes					
+noun	CREDIT	credit	credits					
+noun	CONTRACTION	contraction	contractions					
+noun	ADMISSION	admission	admissions					
+noun	ACID	acid	acids					
+noun	TRIUMPH	triumph	triumphs					
+noun	SORROW	sorrow	sorrows					
+noun	SCIENCE	science	sciences					
+noun	PRISONER	prisoner	prisoners					
+noun	NAIL	nail	nails					
+noun	MOTION	motion	motions					
+noun	INJECTION	injection	injections					
+noun	HURRAH	hurrah	hurrahs					
+noun	GESTURE	gesture	gestures					
+noun	EDGE	edge	edges					
+noun	DEPARTURE	departure	departures					
+noun	ARREST	arrest	arrests					
+noun	SEARCH	search	searches					
+noun	REFORM	reform	reforms					
+noun	PAGE	page	pages					
+noun	ENTRANCE	entrance	entrances					
+noun	ANGER	anger	angers					
+noun	VICE	vice	vices					
+noun	SHADOW	shadow	shadows					
+noun	RECEPTION	reception	receptions					
+noun	LEADERSHIP	leadership	leaderships					
+noun	HUT	hut	huts					
+noun	EXTENSION	extension	extensions					
+noun	EXPLANATION	explanation	explanations					
+noun	CONFUSION	confusion	confusions					
+noun	CONCLUSION	conclusion	conclusions					
+noun	BRAIN	brain	brains					
+noun	APPROVAL	approval	approvals					
+noun	TROUBLE	trouble	troubles					
+noun	TRAIN	train	trains					
+noun	TERROR	terror	terrors					
+noun	SYMPATHY	sympathy	sympathies					
+noun	RESOLUTION	resolution	resolutions					
+noun	FUNCTION	function	functions					
+noun	EDUCATION	education	educations					
+noun	COLONY	colony	colonies					
+noun	ANIMAL	animal	animals					
+noun	VIRTUE	virtue	virtues					
+noun	REPUBLIC	republic	republics					
+noun	PRINCIPLE	principle	principles					
+noun	PIPE	pipe	pipes					
+noun	LIP	lip	lips					
+noun	HANDKERCHIEF	handkerchief	handkerchiefs					
+noun	GUARD	guard	guards					
+noun	GRAIN	grain	grains					
+noun	CART	cart	carts					
+noun	CANDIDATE	candidate	candidates					
+noun	ARTILLERY	artillery	artilleries					
+noun	ACQUAINTANCE	acquaintance	acquaintances					
+noun	RING	ring	rings					
+noun	POSSESSION	possession	possessions					
+noun	MEMORY	memory	memories					
+noun	HOUSEHOLD	household	households					
+noun	HERO	hero	heroes					
+noun	HABIT	habit	habits					
+noun	GAME	game	games					
+noun	DRINK	drink	drinks					
+noun	ASPECT	aspect	aspects					
+noun	ARTICLE	article	articles					
+noun	APPEAL	appeal	appeals					
+noun	AGRICULTURE	agriculture	agricultures					
+noun	EXERCISE	exercise	exercises					
+noun	ENLARGEMENT	enlargement	enlargements					
+noun	CONTEST	contest	contests					
+noun	CAST	cast	casts					
+noun	BAND	band	bands					
+noun	WELFARE	welfare	welfares					
+noun	TEST	test	tests					
+noun	SUM	sum	sums					
+noun	SERUM	serum	serums					
+noun	LEVEL	level	levels					
+noun	LEAGUE	league	leagues					
+noun	LEADER	leader	leaders					
+noun	HUMANITY	humanity	humanities					
+noun	GOWN	gown	gowns					
+noun	EXECUTIVE	executive	executives					
+noun	EXCUSE	excuse	excuses					
+noun	DEFORMITY	deformity	deformities					
+noun	CONFIDENCE	confidence	confidences					
+noun	BUILDING	building	buildings					
+noun	BASE	base	bases					
+noun	WINTER	winter	winters					
+noun	STATION	station	stations					
+noun	SECRETARY	secretary	secretaries					
+noun	PLATFORM	platform	platforms					
+noun	PERMISSION	permission	permissions					
+noun	OCCUPATION	occupation	occupations					
+noun	MARKET	market	markets					
+noun	GLAND	gland	glands					
+noun	FOOL	fool	fools					
+noun	EXTREMITY	extremity	extremities					
+noun	DIGNITY	dignity	dignities					
+noun	CONSENT	consent	consents					
+noun	COACHMAN	coachman	coachmen					
+noun	BRANCH	branch	branches					
+noun	AUNT	aunt	aunts					
+noun	ASSISTANCE	assistance	assistances					
+noun	ALARM	alarm	alarms					
+noun	WHISPER	whisper	whispers					
+noun	THUMB	thumb	thumbs					
+noun	SUGAR	sugar	sugars					
+noun	SEPARATION	separation	separations					
+noun	REMARK	remark	remarks					
+noun	RECOVERY	recovery	recoveries					
+noun	POCKET	pocket	pockets					
+noun	PISTOL	pistol	pistols					
+noun	OCCASION	occasion	occasions					
+noun	MOOD	mood	moods					
+noun	LAYER	layer	layers					
+noun	INEVITABILITY	inevitability	inevitabilities					
+noun	ALLIANCE	alliance	alliances					
+noun	SMELL	smell	smells					
+noun	SILK	silk	silks					
+noun	SHIRT	shirt	shirts					
+noun	PURCHASE	purchase	purchases					
+noun	PRINT	print	prints					
+noun	MIDST	midst	midsts					
+noun	MEMBER	member	members					
+noun	INSTANCE	instance	instances					
+noun	IMAGINATION	imagination	imaginations					
+noun	FAULT	fault	faults					
+noun	FARM	farm	farms					
+noun	DECLARATION	declaration	declarations					
+noun	CURRENCY	currency	currencies					
+noun	CORPS	corps	corps					
+noun	CONTRAST	contrast	contrasts					
+noun	CENTRE	centre	centres					
+noun	ASSISTANT	assistant	assistants					
+noun	WIND	wind	winds					
+noun	VIOLENCE	violence	violences					
+noun	VICINITY	vicinity	vicinities					
+noun	TASK	task	tasks					
+noun	SUBSTANCE	substance	substances					
+noun	SCENE	scene	scenes					
+noun	PULSE	pulse	pulses					
+noun	JUNCTION	junction	junctions					
+noun	GLORY	glory	glories					
+noun	FASHION	fashion	fashions					
+noun	EXPOSURE	exposure	exposures					
+noun	BANDAGE	bandage	bandages					
+noun	BALLOT	ballot	ballots					
+noun	BAKER	baker	bakers					
+noun	ARMCHAIR	armchair	armchairs					
+noun	TOBACCO	tobacco	tobaccoes					
+noun	RUIN	ruin	ruins					
+noun	PROVINCE	province	provinces					
+noun	MANAGEMENT	management	managements					
+noun	LIST	list	lists					
+noun	FOREARM	forearm	forearms					
+noun	FOOTMAN	footman	footmen					
+noun	FLOW	flow	flows					
+noun	FLIGHT	flight	flights					
+noun	ENGAGEMENT	engagement	engagements					
+noun	DISPUTE	dispute	disputes					
+noun	DATE	date	dates					
+noun	CONVICTION	conviction	convictions					
+noun	AIDE	aide	aides					
+noun	REVIEW	review	reviews					
+noun	RESISTANCE	resistance	resistances					
+noun	RAPIDITY	rapidity	rapidities					
+noun	INCOME	income	incomes					
+noun	HIP	hip	hips					
+noun	GRIEF	grief	griefs					
+noun	GAP	gap	gaps					
+noun	DROP	drop	drops					
+noun	DELAY	delay	delays					
+noun	CONFEDERATION	confederation	confederations					
+noun	BORDER	border	borders					
+noun	ART	art	arts					
+noun	STRANGER	stranger	strangers					
+noun	STAMP	stamp	stamps					
+noun	SERVANT	servant	servants					
+noun	QUARTER	quarter	quarters					
+noun	PROVISION	provision	provisions					
+noun	MESSAGE	message	messages					
+noun	HOSPITAL	hospital	hospitals					
+noun	HEADQUARTERS	headquarters	headquarters					
+noun	EAR	ear	ears					
+noun	DUKE	duke	dukes					
+noun	DIFFERENCE	difference	differences					
+noun	DEFEAT	defeat	defeats					
+noun	CORD	cord	cords					
+noun	COPY	copy	copies					
+noun	CHOICE	choice	choices					
+noun	BULLET	bullet	bullets					
+noun	BOTTLE	bottle	bottles					
+noun	BENEFIT	benefit	benefits					
+noun	AUTUMN	autumn	autumns					
+noun	ANXIETY	anxiety	anxieties					
+noun	TUBE	tube	tubes					
+noun	SENATOR	senator	senators					
+noun	SCALE	scale	scales					
+noun	RANK	rank	ranks					
+noun	PRODUCTION	production	productions					
+noun	PROCLAMATION	proclamation	proclamations					
+noun	PRICE	price	prices					
+noun	MUSTACHE	mustache	mustaches					
+noun	MONSIEUR	monsieur	monsieurs					
+noun	JUDGE	judge	judges					
+noun	HURRY	hurry	hurries					
+noun	FEDERATION	federation	federations					
+noun	ENERGY	energy	energies					
+noun	DREAM	dream	dreams					
+noun	DESPAIR	despair	despairs					
+noun	DANCING	dancing	dancings					
+noun	COUPLE	couple	couples					
+noun	CORN	corn	corns					
+noun	BEDROOM	bedroom	bedrooms					
+noun	BATTALION	battalion	battalions					
+noun	BABY	baby	babies					
+noun	ASSOCIATION	association	associations					
+noun	VALET	valet	valets					
+noun	SEVERITY	severity	severities					
+noun	REFERENCE	reference	references					
+noun	POWDER	powder	powders					
+noun	MEDIUM	medium	mediums					
+noun	GAIN	gain	gains					
+noun	FRIENDSHIP	friendship	friendships					
+noun	SURGEON	surgeon	surgeons					
+noun	STOMACH	stomach	stomaches					
+noun	PROGRAM	program	programs					
+noun	INVASION	invasion	invasions					
+noun	INQUIRY	inquiry	inquiries					
+noun	ICON	icon	icons					
+noun	HUNTER	hunter	hunters					
+noun	FORTUNE	fortune	fortunes					
+noun	DELIGHT	delight	delights					
+noun	COMBINATION	combination	combinations					
+noun	CLAIM	claim	claims					
+noun	CHINA	china	chinas					
+noun	CHEEK	cheek	cheeks					
+noun	BREATHING	breathing	breathings					
+noun	BOW	bow	bows					
+noun	BEARD	beard	beards					
+noun	BALANCE	balance	balances					
+noun	ABSORPTION	absorption	absorptions					
+noun	WOOL	wool	wools					
+noun	WEATHER	weather	weathers					
+noun	TREE	tree	trees					
+noun	TRAP	trap	traps					
+noun	THRUST	thrust	thrusts					
+noun	SWORD	sword	swords					
+noun	SURGERY	surgery	surgeries					
+noun	STATEMENT	statement	statements					
+noun	SABER	saber	sabers					
+noun	ROLE	role	roles					
+noun	RECONSTRUCTION	reconstruction	reconstructions					
+noun	RACE	race	races					
+noun	PRAYER	prayer	prayers					
+noun	ORGANIZATION	organization	organizations					
+noun	MERCY	mercy	mercies					
+noun	KNIFE	knife	knives					
+noun	JERSEY	jersey	jerseys					
+noun	HAY	hay	hays					
+noun	HARM	harm	harms					
+noun	GALLOP	gallop	gallops					
+noun	DISTURBANCE	disturbance	disturbances					
+noun	COMMUNICATION	communication	communications					
+noun	COLOR	color	colors					
+noun	BOTTOM	bottom	bottoms					
+noun	ANGEL	angel	angels					
+noun	WARFARE	warfare	warfares					
+noun	VITALITY	vitality	vitalities					
+noun	STRUCTURE	structure	structures					
+adj	NEW	new						
+adj	LITTLE	little						
+adj	LONG	long						
+adj	GENERAL	general						
+adj	GREAT	great						
+adj	MUCH	much						
+adj	SMALL	small						
+adj	LARGE	large						
+adj	DEAR	dear						
+adj	FREE	free						
+adj	CERTAIN	certain						
+adj	WHITE	white						
+adj	POSSIBLE	possible						
+adj	NECESSARY	necessary						
+adj	HIGH	high						
+adj	RED	red						
+adj	PUBLIC	public						
+adj	COMMON	common						
+adj	DIFFERENT	different						
+adj	EARLY	early						
+adj	FULL	full						
+adj	COLD	cold						
+adj	IMPOSSIBLE	impossible						
+adj	SHORT	short						
+adj	BLACK	black						
+adj	CLEAR	clear						
+adj	STRANGE	strange						
+adj	DEEP	deep						
+adj	TRUE	true						
+adj	ABLE	able						
+adj	TERRIBLE	terrible						
+adj	LOCAL	local						
+adj	SILENT	silent						
+adj	SOFT	soft						
+adj	DARK	dark						
+adj	HARD	hard						
+adj	USUAL	usual						
+adj	FOREIGN	foreign						
+adj	CIVIL	civil						
+adj	FINE	fine						
+adj	SINGLE	single						
+adj	SEVERE	severe						
+adj	CONSIDERABLE	considerable						
+adj	HUMAN	human						
+adj	ACUTE	acute						
+adj	STRONG	strong						
+adj	THIN	thin						
+adj	PALE	pale						
+adj	LATE	late						
+adj	DEAD	dead						
+adj	FRESH	fresh						
+adj	CLINICAL	clinical						
+adj	SPECIAL	special						
+adj	CONTRARY	contrary						
+adj	VARIOUS	various						
+adj	PRIMARY	primary						
+adj	GLAD	glad						
+adj	SECONDARY	secondary						
+adj	UNABLE	unable						
+adj	LIABLE	liable						
+adj	NATURAL	natural						
+adj	COMPLETE	complete						
+adj	BLUE	blue						
+adj	SERIOUS	serious						
+adj	DIRECT	direct						
+adj	SIMPLE	simple						
+adj	HEAVY	heavy						
+adj	ILL	ill						
+adj	FURTHER	further						
+adj	POPULAR	popular						
+adj	LOW	low						
+adj	DRY	dry						
+adj	UPPER	upper						
+adj	EAST	east						
+adj	SIMILAR	similar						
+adj	POOR	poor						
+adj	STRAIGHT	straight						
+adj	SURE	sure						
+adj	EASY	easy						
+adj	CHRONIC	chronic						
+adj	ECONOMIC	economic						
+adj	INDIVIDUAL	individual						
+adj	HOT	hot						
+adj	QUIET	quiet						
+adj	HANDSOME	handsome						
+adj	SLIGHT	slight						
+adj	BRIGHT	bright						
+adj	ROYAL	royal						
+adj	EVIDENT	evident						
+adj	NORMAL	normal						
+adj	PLAIN	plain						
+adj	EQUAL	equal						
+adj	WIDE	wide						
+adj	WRONG	wrong						
+adj	FIBROUS	fibrous						
+adj	REAL	real						
+adj	ORDINARY	ordinary						
+adj	EXTERNAL	external						
+adj	CONNECTIVE	connective						
+adj	INDUSTRIAL	industrial						
+adj	CHARACTERISTIC	characteristic						
+adj	RAPID	rapid						
+adj	PLEASANT	pleasant						
+adj	ACTIVE	active						
+adj	SUPERFICIAL	superficial						
+adj	MULTIPLE	multiple						
+adj	PRIVATE	private						
+adj	ORIGINAL	original						
+adj	ADJACENT	adjacent						
+adj	RICH	rich						
+adj	PARTICULAR	particular						
+adj	INTERNAL	internal						
+adj	ESSENTIAL	essential						
+adj	DANGEROUS	dangerous						
+adj	CONSTITUTIONAL	constitutional						
+adj	BROAD	broad						
+adj	SAD	sad						
+adj	PERSONAL	personal						
+adj	CALM	calm						
+adj	LOOSE	loose						
+adj	HUGE	huge						
+adj	GRAY	gray						
+adj	FAT	fat						
+adj	MALIGNANT	malignant						
+adj	UNKNOWN	unknown						
+adj	WEAK	weak						
+adj	BRILLIANT	brilliant						
+adj	PECULIAR	peculiar						
+adj	PAINFUL	painful						
+adj	SHARP	sharp						
+adj	RARE	rare						
+adj	SOVEREIGN	sovereign						
+adj	BIG	big						
+adj	BALD	bald						
+adj	SORE	sore						
+adj	SOCIAL	social						
+adj	SECRET	secret						
+adj	QUICK	quick						
+adj	GRAND	grand						
+adj	OPPOSITE	opposite						
+adj	LIMITED	limited						
+adj	SUDDEN	sudden						
+adj	PACIFIC	pacific						
+adj	FAMILIAR	familiar						
+adj	MAJOR	major						
+adj	LIKELY	likely						
+adj	DEFINITE	definite						
+adj	THICK	thick						
+adj	SPLENDID	splendid						
+adj	SORRY	sorry						
+adj	REMARKABLE	remarkable						
+adj	IMMENSE	immense						
+adj	REGULAR	regular						
+adj	PROMINENT	prominent						
+adj	CENTRAL	central						
+adj	YELLOW	yellow						
+adj	WARM	warm						
+adj	SUFFICIENT	sufficient						
+adj	TALL	tall						
+adj	MUSCULAR	muscular						
+adj	EXTRAORDINARY	extraordinary						
+adj	DULL	dull						
+adj	DOMESTIC	domestic						
+adj	BARE	bare						
+adj	USEFUL	useful						
+adj	POWERFUL	powerful						
+adj	INDEPENDENT	independent						
+adj	ENORMOUS	enormous						
+adj	CONSTANT	constant						
+adj	INNOCENT	innocent						
+adj	EXTREME	extreme						
+adj	CURRENT	current						
+adj	BROWN	brown						
+adj	AUSTRIAN	austrian						
+adj	ALIVE	alive						
+adj	WORTH	worth						
+adj	SOLE	sole						
+adj	CELLULAR	cellular						
+adj	AUGUST	august						
+adj	SEPARATE	separate						
+adj	OBVIOUS	obvious						
+adj	DREADFUL	dreadful						
+adj	CONSCIOUS	conscious						
+adj	COMMERCIAL	commercial						
+adj	SURGICAL	surgical						
+adj	SPANISH	spanish						
+adj	FINAL	final						
+adj	ANIMATED	animated						
+adj	STERN	stern						
+adj	SLOW	slow						
+adj	INTERESTED	interested						
+adj	HISTORICAL	historical						
+adj	GREEN	green						
+adj	DIFFUSE	diffuse						
+adj	PERMANENT	permanent						
+adj	LOUD	loud						
+adj	FALSE	false						
+adj	ASHAMED	ashamed						
+adj	ACTUAL	actual						
+adj	MOIST	moist						
+adj	FATAL	fatal						
+adj	ENTIRE	entire						
+adj	ANXIOUS	anxious						
+adj	STOUT	stout						
+adj	PRACTICAL	practical						
+adj	EXCELLENT	excellent						
+adj	CHARMING	charming						
+adj	NARROW	narrow						
+adj	INEVITABLE	inevitable						
+adj	FOND	fond						
+adj	EMPTY	empty						
+adj	CLEAN	clean						
+adj	WET	wet						
+adj	VISIBLE	visible						
+adj	INNER	inner						
+adj	HEALTHY	healthy						
+adj	STRIKING	striking						
+adj	PHYSICAL	physical						
+adj	FAMOUS	famous						
+adj	SWOLLEN	swollen						
+adj	RAW	raw						
+adj	GENTLE	gentle						
+adj	ELECTRONIC	electronic						
+adj	STUPID	stupid						
+adj	SMOOTH	smooth						
+adj	IMMEDIATE	immediate						
+adj	SUCCESSFUL	successful						
+adj	MERRY	merry						
+adj	INTERIOR	interior						
+adj	FRIENDLY	friendly						
+adj	CLEVER	clever						
+adj	ABSOLUTE	absolute						
+adj	ABSENT	absent						
+adj	SOLEMN	solemn						
+adj	FAIR	fair						
+adj	EVIL	evil						
+adj	STANDARD	standard						
+adj	RELIGIOUS	religious						
+adj	RECENT	recent						
+adj	PURE	pure						
+adj	NERVOUS	nervous						
+adj	IMPERIAL	imperial						
+adj	DIPLOMATIC	diplomatic						
+adj	DELICATE	delicate						
+adj	CAPABLE	capable						
+adj	BACTERIAL	bacterial						
+adj	UNPLEASANT	unpleasant						
+adj	SICK	sick						
+adj	PROTECTIVE	protective						
+adj	PROGRESSIVE	progressive						
+adj	OPERATIVE	operative						
+adj	NICE	nice						
+adj	INTIMATE	intimate						
+adj	INFLAMED	inflamed						
+adj	WEARY	weary						
+adj	REVOLUTIONARY	revolutionary						
+adj	LEGAL	legal						
+adj	HOLY	holy						
+adj	HOLLOW	hollow						
+adj	CHEERFUL	cheerful						
+verb	TO_APPEAR	appear	intransitive		appears	appeared	appeared	appearing
+verb	TO_DISAPPEAR	disappear	intransitive		disappears	disappeared	disappeared	disappearing
+verb	TO_HAPPEN	happen	intransitive		happens	happened	happened	happening
+verb	TO_OCCUR	occur	intransitive		occurs	occurred	occurred	occurring
+verb	TO_EXIST	exist	intransitive		exists	existed	existed	existing
+verb	TO_REMAIN	remain	intransitive		remains	remained	remained	remaining
+verb	TO_DEPART	depart	intransitive		departs	departed	departed	departing
+verb	TO_RETURN	return	intransitive		returns	returned	returned	returning
+verb	TO_TRAVEL	travel	intransitive		travels	traveled	traveled	traveling
+verb	TO_JUMP	jump	intransitive		jumps	jumped	jumped	jumping
+verb	TO_SIT	sit	intransitive		sits	sat	sat	sitting
+verb	TO_STAND	stand	intransitive		stands	stood	stood	standing
+verb	TO_KNEEL	kneel	intransitive		kneels	kneeled	kneeled	kneeling
+verb	TO_LIE	lie	intransitive		lies	lay	lain	lying
+verb	TO_WAKE	wake	intransitive		wakes	woke	woken	waking
+verb	TO_SMILE	smile	intransitive		smiles	smiled	smiled	smiling
+verb	TO_COUGH	cough	intransitive		coughs	coughed	coughed	coughing
+verb	TO_SNEEZE	sneeze	intransitive		sneezes	sneezed	sneezed	sneezing
+verb	TO_DANCE	dance	intransitive		dances	danced	danced	dancing
+verb	TO_SING	sing	intransitive		sings	sang	sung	singing
+verb	TO_REST	rest	intransitive		rests	rested	rested	resting
+verb	TO_GROW	grow	intransitive		grows	grew	grown	growing
+verb	TO_DIE	die	intransitive		dies	died	died	dying
+verb	TO_RISE	rise	intransitive		rises	rose	risen	rising
+verb	TO_FLY	fly	intransitive		flies	flew	flown	flying
+verb	TO_DRIVE	drive	intransitive		drives	drove	driven	driving
+verb	TO_STOP	stop	intransitive		stops	stopped	stopped	stopping
+verb	TO_START	start	intransitive		starts	started	started	starting
+verb	TO_BEGIN	begin	intransitive		begins	began	begun	beginning
+verb	TO_END	end	intransitive		ends	ended	ended	ending
+verb	TO_CONTINUE	continue	intransitive		continues	continued	continued	continuing
+verb	TO_MOVE	move	intransitive		moves	moved	moved	moving
+verb	TO_STAY	stay	intransitive		stays	stayed	stayed	staying
+verb	TO_BREATHE	breathe	intransitive		breathes	breathed	breathed	breathing
+verb	TO_BLEED	bleed	intransitive		bleeds	bled	bled	bleeding
+verb	TO_SHINE	shine	intransitive		shines	shone	shone	shining
+verb	TO_RAIN	rain	intransitive		rains	rained	rained	raining
+verb	TO_SNOW	snow	intransitive		snows	snowed	snowed	snowing
+verb	TO_BURN	burn	intransitive		burns	burned	burned	burning
+verb	TO_MELT	melt	intransitive		melts	melted	melted	melting
+verb	TO_FREEZE	freeze	intransitive		freezes	froze	frozen	freezing
+verb	TO_BREAK	break	intransitive		breaks	broke	broken	breaking
+verb	TO_COLLAPSE	collapse	intransitive		collapses	collapsed	collapsed	collapsing
+verb	TO_ESCAPE	escape	intransitive		escapes	escaped	escaped	escaping
+verb	TO_HESITATE	hesitate	intransitive		hesitates	hesitated	hesitated	hesitating
+verb	TO_PAUSE	pause	intransitive		pauses	paused	paused	pausing
+verb	TO_REACT	react	intransitive		reacts	reacted	reacted	reacting
+verb	TO_SUCCEED	succeed	intransitive		succeeds	succeeded	succeeded	succeeding
+verb	TO_FAIL	fail	intransitive		fails	failed	failed	failing
+verb	TO_VANISH	vanish	intransitive		vanishes	vanished	vanished	vanishing
+verb	TO_FLOAT	float	intransitive		floats	floated	floated	floating
+verb	TO_HURRY	hurry	intransitive		hurries	hurried	hurried	hurrying
+verb	TO_MARCH	march	intransitive		marches	marched	marched	marching
+verb	TO_RACE	race	intransitive		races	raced	raced	racing
+verb	TO_CRAWL	crawl	intransitive		crawls	crawled	crawled	crawling
+verb	TO_CLIMB	climb	intransitive		climbs	climbed	climbed	climbing
+verb	TO_SLIP	slip	intransitive		slips	slipped	slipped	slipping
+verb	TO_SLIDE	slide	intransitive		slides	slid	slid	sliding
+verb	TO_SWING	swing	intransitive		swings	swung	swung	swinging
+verb	TO_TREMBLE	tremble	intransitive		trembles	trembled	trembled	trembling
+verb	TO_SHAKE	shake	intransitive		shakes	shook	shaken	shaking
+verb	TO_ACCEPT	accept	transitive		accepts	accepted	accepted	accepting
+verb	TO_ADD	add	transitive		adds	added	added	adding
+verb	TO_ADMIRE	admire	transitive		admires	admired	admired	admiring
+verb	TO_ANSWER	answer	transitive		answers	answered	answered	answering
+verb	TO_AVOID	avoid	transitive		avoids	avoided	avoided	avoiding
+verb	TO_BAKE	bake	transitive		bakes	baked	baked	baking
+verb	TO_BELIEVE	believe	transitive		believes	believed	believed	believing
+verb	TO_BUILD	build	transitive		builds	built	built	building
+verb	TO_CARRY	carry	transitive		carries	carried	carried	carrying
+verb	TO_CATCH	catch	transitive		catches	caught	caught	catching
+verb	TO_CHANGE	change	transitive		changes	changed	changed	changing
+verb	TO_CHOOSE	choose	transitive		chooses	chose	chosen	choosing
+verb	TO_CLEAN	clean	transitive		cleans	cleaned	cleaned	cleaning
+verb	TO_COLLECT	collect	transitive		collects	collected	collected	collecting
+verb	TO_COMPLETE	complete	transitive		completes	completed	completed	completing
+verb	TO_CONSIDER	consider	transitive		considers	considered	considered	considering
+verb	TO_CONTROL	control	transitive		controls	controlled	controlled	controlling
+verb	TO_COOK	cook	transitive		cooks	cooked	cooked	cooking
+verb	TO_COPY	copy	transitive		copies	copied	copied	copying
+verb	TO_CREATE	create	transitive		creates	created	created	creating
+verb	TO_CUT	cut	transitive		cuts	cut	cut	cutting
+verb	TO_DESCRIBE	describe	transitive		describes	described	described	describing
+verb	TO_DESTROY	destroy	transitive		destroys	destroyed	destroyed	destroying
+verb	TO_DISCOVER	discover	transitive		discovers	discovered	discovered	discovering
+verb	TO_DISCUSS	discuss	transitive		discusses	discussed	discussed	discussing
+verb	TO_DRAW	draw	transitive		draws	drew	drawn	drawing
+verb	TO_DRINK	drink	transitive		drinks	drank	drunk	drinking
+verb	TO_DRIVE_TR	drive	transitive		drives	drove	driven	driving
+verb	TO_DROP	drop	transitive		drops	dropped	dropped	dropping
+verb	TO_ENJOY	enjoy	transitive		enjoys	enjoyed	enjoyed	enjoying
+verb	TO_ENTER	enter	transitive		enters	entered	entered	entering
+verb	TO_EXPLAIN	explain	transitive		explains	explained	explained	explaining
+verb	TO_FEED	feed	transitive		feeds	fed	fed	feeding
+verb	TO_FILL	fill	transitive		fills	filled	filled	filling
+verb	TO_FINISH	finish	transitive		finishes	finished	finished	finishing
+verb	TO_FOLLOW	follow	transitive		follows	followed	followed	following
+verb	TO_FORGET	forget	transitive		forgets	forgot	forgotten	forgetting
+verb	TO_FORGIVE	forgive	transitive		forgives	forgave	forgiven	forgiving
+verb	TO_GET	get	transitive		gets	got	gotten	getting
+verb	TO_GRAB	grab	transitive		grabs	grabbed	grabbed	grabbing
+verb	TO_HATE	hate	transitive		hates	hated	hated	hating
+verb	TO_HEAR	hear	transitive		hears	heard	heard	hearing
+verb	TO_HIT	hit	transitive		hits	hit	hit	hitting
+verb	TO_HOLD	hold	transitive		holds	held	held	holding
+verb	TO_IMAGINE	imagine	transitive		imagines	imagined	imagined	imagining
+verb	TO_INCLUDE	include	transitive		includes	included	included	including
+verb	TO_INVITE	invite	transitive		invites	invited	invited	inviting
+verb	TO_JOIN	join	transitive		joins	joined	joined	joining
+verb	TO_KILL	kill	transitive		kills	killed	killed	killing
+verb	TO_KISS	kiss	transitive		kisses	kissed	kissed	kissing
+verb	TO_LEARN	learn	transitive		learns	learned	learned	learning
+verb	TO_LEAVE	leave	transitive		leaves	left	left	leaving
+verb	TO_MAKE	make	transitive		makes	made	made	making
+verb	TO_MEET	meet	transitive		meets	met	met	meeting
+verb	TO_MENTION	mention	transitive		mentions	mentioned	mentioned	mentioning
+verb	TO_MISS	miss	transitive		misses	missed	missed	missing
+verb	TO_MOVE_TR	move	transitive		moves	moved	moved	moving
+verb	TO_NEED	need	transitive		needs	needed	needed	needing
+verb	TO_NOTICE	notice	transitive		notices	noticed	noticed	noticing
+verb	TO_ORDER	order	transitive		orders	ordered	ordered	ordering
+verb	TO_PAINT	paint	transitive		paints	painted	painted	painting
+verb	TO_PASS	pass	transitive		passes	passed	passed	passing
+verb	TO_PAY	pay	transitive		pays	paid	paid	paying
+verb	TO_PICK	pick	transitive		picks	picked	picked	picking
+verb	TO_PLAN	plan	transitive		plans	planned	planned	planning
+verb	TO_PLAY	play	transitive		plays	played	played	playing
+verb	TO_PREPARE	prepare	transitive		prepares	prepared	prepared	preparing
+verb	TO_PULL	pull	transitive		pulls	pulled	pulled	pulling
+verb	TO_PUSH	push	transitive		pushes	pushed	pushed	pushing
+verb	TO_REACH	reach	transitive		reaches	reached	reached	reaching
+verb	TO_REMEMBER	remember	transitive		remembers	remembered	remembered	remembering
+verb	TO_REMOVE	remove	transitive		removes	removed	removed	removing
+verb	TO_REPAIR	repair	transitive		repairs	repaired	repaired	repairing
+verb	TO_REPEAT	repeat	transitive		repeats	repeated	repeated	repeating
+verb	TO_REPLACE	replace	transitive		replaces	replaced	replaced	replacing
+verb	TO_SAVE	save	transitive		saves	saved	saved	saving
+verb	TO_SELL	sell	transitive		sells	sold	sold	selling
+verb	TO_SERVE	serve	transitive		serves	served	served	serving
+verb	TO_SHARE	share	transitive		shares	shared	shared	sharing
+verb	TO_SOLVE	solve	transitive		solves	solved	solved	solving
+verb	TO_SPEND	spend	transitive		spends	spent	spent	spending
+verb	TO_START_TR	start	transitive		starts	started	started	starting
+verb	TO_STOP_TR	stop	transitive		stops	stopped	stopped	stopping
+verb	TO_STUDY	study	transitive		studies	studied	studied	studying
+verb	TO_SUPPORT	support	transitive		supports	supported	supported	supporting
+verb	TO_TEST	test	transitive		tests	tested	tested	testing
+verb	TO_TOUCH	touch	transitive		touches	touched	touched	touching
+verb	TO_TRY	try	transitive		tries	tried	tried	trying
+verb	TO_TURN	turn	transitive		turns	turned	turned	turning
+verb	TO_UNDERSTAND	understand	transitive		understands	understood	understood	understanding
+verb	TO_USE	use	transitive		uses	used	used	using
+verb	TO_VISIT	visit	transitive		visits	visited	visited	visiting
+verb	TO_WANT	want	transitive		wants	wanted	wanted	wanting
+verb	TO_WASH	wash	transitive		washes	washed	washed	washing
+verb	TO_WEAR	wear	transitive		wears	wore	worn	wearing
+verb	TO_WIN	win	transitive		wins	won	won	winning
+verb	TO_ALLOW	allow	transitive		allows	allowed	allowed	allowing
+verb	TO_ASSUME	assume	transitive		assumes	assumed	assumed	assuming
+verb	TO_BLAME	blame	transitive		blames	blamed	blamed	blaming
+verb	TO_CAPTURE	capture	transitive		captures	captured	captured	capturing
+verb	TO_COMPARE	compare	transitive		compares	compared	compared	comparing
+verb	TO_CONFIRM	confirm	transitive		confirms	confirmed	confirmed	confirming
+verb	TO_CONNECT	connect	transitive		connects	connected	connected	connecting
+verb	TO_CONTAIN	contain	transitive		contains	contained	contained	containing
+verb	TO_COVER	cover	transitive		covers	covered	covered	covering
+verb	TO_DECIDE	decide	transitive		decides	decided	decided	deciding
+verb	TO_DELIVER	deliver	transitive		delivers	delivered	delivered	delivering
+verb	TO_DEVELOP	develop	transitive		develops	developed	developed	developing
+verb	TO_ENCOURAGE	encourage	transitive		encourages	encouraged	encouraged	encouraging
+verb	TO_ESTABLISH	establish	transitive		establishes	established	established	establishing
+verb	TO_EXAMINE	examine	transitive		examines	examined	examined	examining
+verb	TO_EXPECT	expect	transitive		expects	expected	expected	expecting
+verb	TO_EXPERIENCE	experience	transitive		experiences	experienced	experienced	experiencing
+verb	TO_EXPRESS	express	transitive		expresses	expressed	expressed	expressing
+verb	TO_FIX	fix	transitive		fixes	fixed	fixed	fixing
+verb	TO_GAIN	gain	transitive		gains	gained	gained	gaining
+verb	TO_HANDLE	handle	transitive		handles	handled	handled	handling
+verb	TO_IMPROVE	improve	transitive		improves	improved	improved	improving
+verb	TO_INCREASE	increase	transitive		increases	increased	increased	increasing
+verb	TO_INFLUENCE	influence	transitive		influences	influenced	influenced	influencing
+verb	TO_INTRODUCE	introduce	transitive		introduces	introduced	introduced	introducing
+verb	TO_INVOLVE	involve	transitive		involves	involved	involved	involving
+verb	TO_LEAD	lead	transitive		leads	led	led	leading
+verb	TO_LOSE	lose	transitive		loses	lost	lost	losing
+verb	TO_MAINTAIN	maintain	transitive		maintains	maintained	maintained	maintaining
+verb	TO_MANAGE	manage	transitive		manages	managed	managed	managing
+verb	TO_MARK	mark	transitive		marks	marked	marked	marking
+verb	TO_MEASURE	measure	transitive		measures	measured	measured	measuring
+verb	TO_OBSERVE	observe	transitive		observes	observed	observed	observing
+verb	TO_ORGANIZE	organize	transitive		organizes	organized	organized	organizing
+verb	TO_OWN	own	transitive		owns	owned	owned	owning
+verb	TO_PERFORM	perform	transitive		performs	performed	performed	performing
+verb	TO_PREVENT	prevent	transitive		prevents	prevented	prevented	preventing
+verb	TO_PRODUCE	produce	transitive		produces	produced	produced	producing
+verb	TO_PROVE	prove	transitive		proves	proved	proved	proving
+verb	TO_RECEIVE	receive	transitive		receives	received	received	receiving
+verb	TO_RECOGNIZE	recognize	transitive		recognizes	recognized	recognized	recognizing
+verb	TO_REDUCE	reduce	transitive		reduces	reduced	reduced	reducing
+verb	TO_RELEASE	release	transitive		releases	released	released	releasing
+verb	TO_REPORT	report	transitive		reports	reported	reported	reporting
+verb	TO_REQUIRE	require	transitive		requires	required	required	requiring
+verb	TO_RESPECT	respect	transitive		respects	respected	respected	respecting
+verb	TO_SEARCH	search	transitive		searches	searched	searched	searching
+verb	TO_SELECT	select	transitive		selects	selected	selected	selecting
+verb	TO_SET	set	transitive		sets	set	set	setting
+verb	TO_TEACH	teach	transitive		teaches	taught	taught	teaching
+verb	TO_THANK	thank	transitive		thanks	thanked	thanked	thanking
+verb	TO_TREAT	treat	transitive		treats	treated	treated	treating
+verb	TO_TRUST	trust	transitive		trusts	trusted	trusted	trusting
+verb	TO_VALUE	value	transitive		values	valued	valued	valuing
+verb	TO_VIEW	view	transitive		views	viewed	viewed	viewing
+verb	TO_WARN	warn	transitive		warns	warned	warned	warning
+verb	TO_BRING	bring	ditransitive		brings	brought	brought	bringing
+verb	TO_BUY_DITR	buy	ditransitive		buys	bought	bought	buying
+verb	TO_TEACH_DITR	teach	ditransitive		teaches	taught	taught	teaching
+verb	TO_PAY_DITR	pay	ditransitive		pays	paid	paid	paying
+verb	TO_PROMISE	promise	ditransitive		promises	promised	promised	promising
+verb	TO_ASK	ask	ditransitive		asks	asked	asked	asking
+verb	TO_AWARD	award	ditransitive		awards	awarded	awarded	awarding
+verb	TO_GRANT	grant	ditransitive		grants	granted	granted	granting
+verb	TO_HAND	hand	ditransitive		hands	handed	handed	handing
+verb	TO_MAIL	mail	ditransitive		mails	mailed	mailed	mailing
+verb	TO_PASS_DITR	pass	ditransitive		passes	passed	passed	passing
+verb	TO_READ_DITR	read	ditransitive		reads	read	read	reading
+verb	TO_SELL_DITR	sell	ditransitive		sells	sold	sold	selling
+verb	TO_SERVE_DITR	serve	ditransitive		serves	served	served	serving
+verb	TO_SPARE	spare	ditransitive		spares	spared	spared	sparing
+verb	TO_WISH	wish	ditransitive		wishes	wished	wished	wishing
+verb	TO_WRITE_DITR	write	ditransitive		writes	wrote	written	writing
+verb	TO_AGREE_WITH	agree	prepositional	with	agrees	agreed	agreed	agreeing
+verb	TO_APOLOGIZE_TO	apologize	prepositional	to	apologizes	apologized	apologized	apologizing
+verb	TO_APPLY_FOR	apply	prepositional	for	applies	applied	applied	applying
+verb	TO_ARGUE_WITH	argue	prepositional	with	argues	argued	argued	arguing
+verb	TO_ASK_FOR	ask	prepositional	for	asks	asked	asked	asking
+verb	TO_BELIEVE_IN	believe	prepositional	in	believes	believed	believed	believing
+verb	TO_BELONG_TO	belong	prepositional	to	belongs	belonged	belonged	belonging
+verb	TO_CARE_ABOUT	care	prepositional	about	cares	cared	cared	caring
+verb	TO_COMPLAIN_ABOUT	complain	prepositional	about	complains	complained	complained	complaining
+verb	TO_CONCENTRATE_ON	concentrate	prepositional	on	concentrates	concentrated	concentrated	concentrating
+verb	TO_CONSIST_OF	consist	prepositional	of	consists	consisted	consisted	consisting
+verb	TO_COPE_WITH	cope	prepositional	with	copes	coped	coped	coping
+verb	TO_DEAL_WITH	deal	prepositional	with	deals	dealt	dealt	dealing
+verb	TO_DREAM_ABOUT	dream	prepositional	about	dreams	dreamed	dreamed	dreaming
+verb	TO_PAY_FOR	pay	prepositional	for	pays	paid	paid	paying
+verb	TO_PREPARE_FOR	prepare	prepositional	for	prepares	prepared	prepared	preparing
+verb	TO_RELY_ON	rely	prepositional	on	relies	relied	relied	relying
+verb	TO_RESPOND_TO	respond	prepositional	to	responds	responded	responded	responding
+verb	TO_SEARCH_FOR	search	prepositional	for	searches	searched	searched	searching
+verb	TO_SPEAK_TO	speak	prepositional	to	speaks	spoke	spoken	speaking
+verb	TO_THINK_ABOUT	think	prepositional	about	thinks	thought	thought	thinking
+verb	TO_WORK_ON	work	prepositional	on	works	worked	worked	working
+verb	TO_WORRY_ABOUT	worry	prepositional	about	worries	worried	worried	worrying
+verb	TO_LAUGH_AT	laugh	prepositional	at	laughs	laughed	laughed	laughing
+verb	TO_LOOK_FOR	look	prepositional	for	looks	looked	looked	looking
+verb	TO_SUFFER_FROM	suffer	prepositional	from	suffers	suffered	suffered	suffering
+verb	TO_RECOVER_FROM	recover	prepositional	from	recovers	recovered	recovered	recovering
+verb	TO_REFER_TO	refer	prepositional	to	refers	referred	referred	referring
+verb	TO_OBJECT_TO	object	prepositional	to	objects	objected	objected	objecting
+verb	TO_PARTICIPATE_IN	participate	prepositional	in	participates	participated	participated	participating
+verb	TO_SUCCEED_IN	succeed	prepositional	in	succeeds	succeeded	succeeded	succeeding
+verb	TO_FOCUS_ON	focus	prepositional	on	focuses	focused	focused	focusing
+verb	TO_INSIST_ON	insist	prepositional	on	insists	insisted	insisted	insisting
+verb	TO_APPROVE_OF	approve	prepositional	of	approves	approved	approved	approving
+verb	TO_DREAM_OF	dream	prepositional	of	dreams	dreamed	dreamed	dreaming
+verb	TO_ESCAPE_FROM	escape	prepositional	from	escapes	escaped	escaped	escaping
+verb	TO_HEAR_ABOUT	hear	prepositional	about	hears	heard	heard	hearing
+verb	TO_LEARN_ABOUT	learn	prepositional	about	learns	learned	learned	learning
+verb	TO_WRITE_ABOUT	write	prepositional	about	writes	wrote	written	writing
+verb	TO_FIGHT_AGAINST	fight	prepositional	against	fights	fought	fought	fighting
+verb	TO_VOTE_FOR	vote	prepositional	for	votes	voted	voted	voting
+verb	TO_ARGUE_ABOUT	argue	prepositional	about	argues	argued	argued	arguing
+verb	TO_TALK_ABOUT	talk	prepositional	about	talks	talked	talked	talking
+verb	TO_SPEAK_ABOUT	speak	prepositional	about	speaks	spoke	spoken	speaking
+verb	TO_THINK_OF	think	prepositional	of	thinks	thought	thought	thinking
+verb	TO_SEND_TO	send	transitive_prepositional	to	sends	sent	sent	sending
+verb	TO_BRING_TO	bring	transitive_prepositional	to	brings	brought	brought	bringing
+verb	TO_COMPARE_WITH	compare	transitive_prepositional	with	compares	compared	compared	comparing
+verb	TO_PROTECT_FROM	protect	transitive_prepositional	from	protects	protected	protected	protecting
+verb	TO_PROVIDE_WITH	provide	transitive_prepositional	with	provides	provided	provided	providing
+verb	TO_FILL_WITH	fill	transitive_prepositional	with	fills	filled	filled	filling
+verb	TO_COVER_WITH	cover	transitive_prepositional	with	covers	covered	covered	covering
+verb	TO_REPLACE_WITH	replace	transitive_prepositional	with	replaces	replaced	replaced	replacing
+verb	TO_INTRODUCE_TO	introduce	transitive_prepositional	to	introduces	introduced	introduced	introducing
+verb	TO_INVITE_TO	invite	transitive_prepositional	to	invites	invited	invited	inviting
+verb	TO_MOVE_TO	move	transitive_prepositional	to	moves	moved	moved	moving
+verb	TO_CARRY_TO	carry	transitive_prepositional	to	carries	carried	carried	carrying
+verb	TO_THROW_AT	throw	transitive_prepositional	at	throws	threw	thrown	throwing
+verb	TO_HIDE_FROM	hide	transitive_prepositional	from	hides	hid	hidden	hiding
+verb	TO_SEPARATE_FROM	separate	transitive_prepositional	from	separates	separated	separated	separating
+verb	TO_REMOVE_FROM	remove	transitive_prepositional	from	removes	removed	removed	removing
+verb	TO_TRANSLATE_INTO	translate	transitive_prepositional	into	translates	translated	translated	translating
+verb	TO_DIVIDE_INTO	divide	transitive_prepositional	into	divides	divided	divided	dividing
+verb	TO_CHANGE_INTO	change	transitive_prepositional	into	changes	changed	changed	changing
+verb	TO_TURN_INTO	turn	transitive_prepositional	into	turns	turned	turned	turning
+verb	TO_ADD_TO	add	transitive_prepositional	to	adds	added	added	adding
+verb	TO_ATTACH_TO	attach	transitive_prepositional	to	attaches	attached	attached	attaching
+verb	TO_CONNECT_TO	connect	transitive_prepositional	to	connects	connected	connected	connecting
+verb	TO_MIX_WITH	mix	transitive_prepositional	with	mixes	mixed	mixed	mixing
+verb	TO_COMBINE_WITH	combine	transitive_prepositional	with	combines	combined	combined	combining
+verb	TO_LOAD_WITH	load	transitive_prepositional	with	loads	loaded	loaded	loading
+verb	TO_SUPPLY_WITH	supply	transitive_prepositional	with	supplies	supplied	supplied	supplying
+verb	TO_BLAME_FOR	blame	transitive_prepositional	for	blames	blamed	blamed	blaming
+verb	TO_THANK_FOR	thank	transitive_prepositional	for	thanks	thanked	thanked	thanking
+verb	TO_ASK_TR_FOR	ask	transitive_prepositional	for	asks	asked	asked	asking
+verb	TO_PREPARE_TR_FOR	prepare	transitive_prepositional	for	prepares	prepared	prepared	preparing
+proper	JAMES	James	ms					
+proper	ROBERT	Robert	ms					
+proper	WILLIAM	William	ms					
+proper	THOMAS	Thomas	ms					
+proper	DANIEL	Daniel	ms					
+proper	MATTHEW	Matthew	ms					
+proper	ANTHONY	Anthony	ms					
+proper	MARK	Mark	ms					
+proper	PAUL	Paul	ms					
+proper	STEVEN	Steven	ms					
+proper	ANDREW	Andrew	ms					
+proper	GEORGE	George	ms					
+proper	EDWARD	Edward	ms					
+proper	BRIAN	Brian	ms					
+proper	KEVIN	Kevin	ms					
+proper	JASON	Jason	ms					
+proper	RYAN	Ryan	ms					
+proper	JACOB	Jacob	ms					
+proper	SAMUEL	Samuel	ms					
+proper	HENRY	Henry	ms					
+proper	CHARLES	Charles	ms					
+proper	JOSEPH	Joseph	ms					
+proper	RICHARD	Richard	ms					
+proper	CHRISTOPHER	Christopher	ms					
+proper	JOSHUA	Joshua	ms					
+proper	NICHOLAS	Nicholas	ms					
+proper	JONATHAN	Jonathan	ms					
+proper	BENJAMIN	Benjamin	ms					
+proper	ALEXANDER	Alexander	ms					
+proper	ETHAN	Ethan	ms					
+proper	NOAH	Noah	ms					
+proper	LIAM	Liam	ms					
+proper	ANNA	Anna	fm					
+proper	EMILY	Emily	fm					
+proper	OLIVIA	Olivia	fm					
+proper	SOPHIA	Sophia	fm					
+proper	GRACE	Grace	fm					
+proper	CHLOE	Chloe	fm					
+proper	JULIA	Julia	fm					
+proper	HANNAH	Hannah	fm					
+proper	REBECCA	Rebecca	fm					
+proper	RACHEL	Rachel	fm					
+proper	JESSICA	Jessica	fm					
+proper	JENNIFER	Jennifer	fm					
+proper	AMANDA	Amanda	fm					
+proper	ELIZABETH	Elizabeth	fm					
+proper	VICTORIA	Victoria	fm					
+proper	NATALIE	Natalie	fm					
+proper	SAMANTHA	Samantha	fm					
+proper	KATHERINE	Katherine	fm					
+proper	CATHERINE	Catherine	fm					
+proper	CHARLOTTE	Charlotte	fm					
+proper	AMELIA	Amelia	fm					
+proper	MIA	Mia	fm					
+proper	AVA	Ava	fm					
+proper	LILY	Lily	fm					
+proper	ZOE	Zoe	fm					
+proper	MEGAN	Megan	fm					
+proper	NICOLE	Nicole	fm					
+proper	MICHELLE	Michelle	fm					
+proper	DIANA	Diana	fm					
+proper	HELEN	Helen	fm					
+proper	SUSAN	Susan	fm					
+prep		with	_with_					
+prep		about	_about_					
+prep		of	_of_					
+prep		from	_from_					
+prep		into	_into_					
+prep		against	_against_					

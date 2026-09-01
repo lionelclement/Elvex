@@ -1,0 +1,125 @@
+/* Copular BE. Simple present/past are special because English does not use do-support. */
+
+CopHead → verb
+{
+  [HEAD:TO_BE, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
+  ↓1 = [HEAD:TO_BE, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
+  [valency:copular] ⊂ ⇓1;
+  ⇑ = ⇓1;
+}
+
+CopComplement → AP
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+CopComplement → NP
+{
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+// Non-finite BE used after auxiliaries/modals: be/being/been + complement.
+CopVP → CopHead CopComplement
+{
+  [HEAD:TO_BE, SUBJECT:$SUBJECT, ii:$COMPLEMENT, iii:NIL, vtense:$vtense, $Rest];
+  ↓1 = [HEAD:TO_BE, SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
+  ↓2 = $COMPLEMENT;
+  ⇑ = ⇓1;
+}
+
+/* Finite simple copula: declarative/interrogative × positive/negative. */
+
+// present simple copula — declarative, positive
+TenseClause → NP CopHead CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative, $Rest];
+  ↓1 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓1;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓2 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:present, $Rest];
+  ↓3 = $COMPLEMENT;
+  ⇑ = ⇓2;
+}
+// present simple copula — declarative, negative
+TenseClause → NP CopHead neg CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:present, aspect:simple, modality:none, polarity:negative, illocution:declarative, $Rest];
+  ↓1 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓1;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓2 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:present, $Rest];
+  ↓3 = [];
+  ↓4 = $COMPLEMENT;
+  ⇑ = ⇓2;
+}
+// present simple copula — interrogative, positive
+TenseClause → CopHead NP CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:present, aspect:simple, modality:none, polarity:positive, illocution:interrogative, $Rest];
+  ↓2 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓2;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓1 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:present, $Rest];
+  ↓3 = $COMPLEMENT;
+  ⇑ = ⇓1;
+}
+// present simple copula — interrogative, negative
+TenseClause → CopHead NP neg CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:present, aspect:simple, modality:none, polarity:negative, illocution:interrogative, $Rest];
+  ↓2 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓2;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓1 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:present, $Rest];
+  ↓3 = [];
+  ↓4 = $COMPLEMENT;
+  ⇑ = ⇓1;
+}
+// past simple copula — declarative, positive
+TenseClause → NP CopHead CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:past, aspect:simple, modality:none, polarity:positive, illocution:declarative, $Rest];
+  ↓1 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓1;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓2 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:preterite, $Rest];
+  ↓3 = $COMPLEMENT;
+  ⇑ = ⇓2;
+}
+// past simple copula — declarative, negative
+TenseClause → NP CopHead neg CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:past, aspect:simple, modality:none, polarity:negative, illocution:declarative, $Rest];
+  ↓1 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓1;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓2 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:preterite, $Rest];
+  ↓3 = [];
+  ↓4 = $COMPLEMENT;
+  ⇑ = ⇓2;
+}
+// past simple copula — interrogative, positive
+TenseClause → CopHead NP CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:past, aspect:simple, modality:none, polarity:positive, illocution:interrogative, $Rest];
+  ↓2 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓2;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓1 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:preterite, $Rest];
+  ↓3 = $COMPLEMENT;
+  ⇑ = ⇓1;
+}
+// past simple copula — interrogative, negative
+TenseClause → CopHead NP neg CopComplement
+{
+  [HEAD:TO_BE, i:$SUBJECT, ii:$COMPLEMENT, iii:NIL, tense:past, aspect:simple, modality:none, polarity:negative, illocution:interrogative, $Rest];
+  ↓2 = $SUBJECT U [case:nominative];
+  $SynthSubject = ⇓2;
+  [person:$person, number:$number] ⊂ $SynthSubject;
+  ↓1 = [HEAD:TO_BE, SUBJECT:$SynthSubject, vtense:preterite, $Rest];
+  ↓3 = [];
+  ↓4 = $COMPLEMENT;
+  ⇑ = ⇓1;
+}

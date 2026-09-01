@@ -1,0 +1,328 @@
+kind	predicate	function	realizer	form	prep	note
+support	DECISION	oper1	MAKE	indef		
+support	CHOICE	oper1	MAKE	indef		
+support	EFFORT	oper1	MAKE	indef		
+support	ATTEMPT	oper1	MAKE	indef		
+support	MISTAKE	oper1	MAKE	indef		
+support	PROMISE	oper1	MAKE	indef		
+support	REQUEST	oper1	MAKE	indef		
+support	SUGGESTION	oper1	MAKE	indef		
+support	OFFER	oper1	MAKE	indef		
+support	APPOINTMENT	oper1	MAKE	indef	with	
+support	ARRANGEMENT	oper1	MAKE	indef		
+support	PLAN	oper1	MAKE	indef		
+support	CHANGE	oper1	MAKE	indef		
+support	IMPROVEMENT	oper1	MAKE	indef		
+support	PROGRESS	oper1	MAKE	bare		
+support	USE	oper1	MAKE	bare	of	
+support	NOISE	oper1	MAKE	indef		
+support	COMMENT	oper1	MAKE	indef		
+support	STATEMENT	oper1	MAKE	indef		
+support	ANNOUNCEMENT	oper1	MAKE	indef		
+support	CONFESSION	oper1	MAKE	indef		
+support	DISCOVERY	oper1	MAKE	indef		
+support	CONTRIBUTION	oper1	MAKE	indef	to	
+support	PAYMENT	oper1	MAKE	indef		
+support	PROFIT	oper1	MAKE	indef		
+support	LOSS	oper1	MAKE	indef		
+support	IMPRESSION	oper1	MAKE	indef	on	
+support	DIFFERENCE	oper1	MAKE	indef		
+support	COMPARISON	oper1	MAKE	indef	with	
+support	CALCULATION	oper1	MAKE	indef		
+support	ESTIMATE	oper1	MAKE	indef		
+support	GUESS	oper1	MAKE	indef		
+support	JOKE	oper1	MAKE	indef		
+support	CONTACT	oper1	MAKE	bare	with	
+support	DEAL	oper1	MAKE	indef	with	
+support	APPLICATION	oper1	MAKE	indef	for	
+support	SPEECH	oper1	GIVE	indef		
+support	ANSWER	oper1	GIVE	indef	to	
+support	REPLY	oper1	GIVE	indef	to	
+support	RESPONSE	oper1	GIVE	indef	to	
+support	EXPLANATION	oper1	GIVE	indef	to	
+support	DESCRIPTION	oper1	GIVE	indef	of	
+support	WARNING	oper1	GIVE	indef	to	
+support	ADVICE	oper1	GIVE	bare	to	
+support	PERMISSION	oper1	GIVE	bare	to	
+support	INFORMATION	oper1	GIVE	bare	to	
+support	HELP	oper1	GIVE	bare	to	
+support	SUPPORT	oper1	GIVE	bare	to	
+support	ASSISTANCE	oper1	GIVE	bare	to	
+support	PRAISE	oper1	GIVE	bare	to	
+support	NOTICE	oper1	GIVE	bare		
+support	BIRTH	oper1	GIVE	bare		
+support	KISS	oper1	GIVE	indef	to	
+support	SMILE	oper1	GIVE	indef		
+support	LOOK	oper1	HAVE	indef	at	
+support	CONVERSATION	oper1	HAVE	indef	with	
+support	DISCUSSION	oper1	HAVE	indef	with	
+support	TALK	oper1	HAVE	indef	with	
+support	MEETING	oper1	HAVE	indef	with	
+support	INTERVIEW	oper1	HAVE	indef	with	
+support	ARGUMENT	oper1	HAVE	indef	with	
+support	FIGHT	oper1	HAVE	indef	with	
+support	DREAM	oper1	HAVE	indef		
+support	IDEA	oper1	HAVE	indef		
+support	CHANCE	oper1	HAVE	indef		
+support	OPPORTUNITY	oper1	HAVE	indef		
+support	PROBLEM	oper1	HAVE	indef	with	
+support	DIFFICULTY	oper1	HAVE	bare	with	
+support	TROUBLE	oper1	HAVE	bare	with	
+support	FUN	oper1	HAVE	bare		
+support	TIME	oper1	HAVE	bare		
+support	REST	oper1	HAVE	indef		
+support	BREAK	oper1	HAVE	indef		
+support	BATH	oper1	HAVE	indef		
+support	DRINK	oper1	HAVE	indef		
+support	MEAL	oper1	HAVE	indef		
+support	FEVER	oper1	HAVE	indef		
+support	PAIN	oper1	HAVE	bare		
+support	EXPERIENCE	oper1	HAVE	indef		
+support	FEELING	oper1	HAVE	indef	about	
+support	DOUBT	oper1	HAVE	indef	about	
+support	HOPE	oper1	HAVE	bare		
+support	FEAR	oper1	HAVE	indef	of	
+support	NEED	oper1	HAVE	indef	for	
+support	EFFECT	oper1	HAVE	indef	on	
+support	INFLUENCE	oper1	HAVE	indef	on	
+support	ROLE	oper1	PLAY	indef	in	
+support	PART	oper1	PLAY	indef	in	
+support	GAME	oper1	PLAY	indef		
+support	TRICK	oper1	PLAY	indef	on	
+support	RISK	oper1	TAKE	indef		
+support	ACTION	oper1	TAKE	bare		
+support	STEP	oper1	TAKE	indef		
+support	BREAK	oper1	TAKE	indef		
+support	REST	oper1	TAKE	indef		
+support	SEAT	oper1	TAKE	indef		
+support	LOOK	oper1	TAKE	indef	at	
+support	WALK	oper1	TAKE	indef		
+support	BATH	oper1	TAKE	indef		
+support	CARE	oper1	TAKE	bare	of	
+support	CONTROL	oper1	TAKE	bare	of	
+support	RESPONSIBILITY	oper1	TAKE	bare	for	
+support	ADVANTAGE	oper1	TAKE	bare	of	
+support	INTEREST	oper1	TAKE	indef	in	
+support	PRIDE	oper1	TAKE	bare	in	
+support	BLAME	oper1	TAKE	def	for	
+support	ATTENTION	oper1	PAY	bare	to	
+support	RESPECT	oper1	PAY	bare	to	
+support	VISIT	oper1	PAY	indef	to	
+support	PRICE	oper1	PAY	indef	for	
+support	DEBT	oper1	PAY	indef		
+support	QUESTION	oper1	ASK	indef		
+support	FAVOR	oper1	ASK	indef	of	
+support	PERMISSION	oper1	ASK	bare		
+support	ORDER	oper1	PLACE	indef		
+support	EMPHASIS	oper1	PLACE	bare	on	
+support	PRESSURE	oper1	PUT	bare	on	
+support	TRUST	oper1	PUT	bare	in	
+support	END	oper1	PUT	indef	to	
+support	STOP	oper1	PUT	indef	to	
+support	BAN	oper1	IMPOSE	indef	on	
+support	FINE	oper1	IMPOSE	indef	on	
+support	PENALTY	oper1	IMPOSE	indef	on	
+support	BURDEN	oper1	IMPOSE	indef	on	
+support	THREAT	oper1	POSE	indef	to	
+support	RISK	oper1	POSE	indef	to	
+support	PROBLEM	oper1	POSE	indef	for	
+support	CHALLENGE	oper1	POSE	indef	to	
+support	QUESTION	oper1	RAISE	indef		
+support	ISSUE	oper1	RAISE	indef		
+support	ALARM	oper1	RAISE	bare		
+support	AWARENESS	causoper1	RAISE	bare	of	CausOper1 pilot: cause/increase awareness of actant II
+support	OBJECTION	oper1	RAISE	indef	to	
+support	AGREEMENT	oper1	REACH	indef	with	
+support	CONCLUSION	oper1	REACH	indef		
+support	COMPROMISE	oper1	REACH	indef	with	
+support	SOLUTION	oper1	REACH	indef		
+support	AIM	oper1	ACHIEVE	indef		
+support	RESULT	oper1	ACHIEVE	indef		
+support	VICTORY	oper1	ACHIEVE	indef		
+support	SUCCESS	oper1	ACHIEVE	bare		
+support	ATTENTION	oper2	RECEIVE	bare	from	
+support	ADVICE	oper2	RECEIVE	bare	from	
+support	ASSISTANCE	oper2	RECEIVE	bare	from	
+support	APPROVAL	oper2	RECEIVE	bare	from	
+support	BLOW	oper2	RECEIVE	indef	from	
+support	CARE	oper2	RECEIVE	bare	from	
+support	CONSENT	oper2	RECEIVE	bare	from	
+support	CRITICISM	oper2	RECEIVE	bare	from	
+support	EDUCATION	oper2	RECEIVE	bare	from	
+support	HELP	oper2	RECEIVE	bare	from	
+support	INFORMATION	oper2	RECEIVE	bare	from	
+support	KISS	oper2	RECEIVE	indef	from	
+support	LETTER	oper2	RECEIVE	indef	from	
+support	MESSAGE	oper2	RECEIVE	indef	from	
+support	NOTICE	oper2	RECEIVE	bare	from	
+support	OFFER	oper2	RECEIVE	indef	from	
+support	PAYMENT	oper2	RECEIVE	indef	from	
+support	PERMISSION	oper2	RECEIVE	bare	from	
+support	PRAISE	oper2	RECEIVE	bare	from	
+support	PROTECTION	oper2	RECEIVE	bare	from	
+support	RECOGNITION	oper2	RECEIVE	bare	from	
+support	REPLY	oper2	RECEIVE	indef	from	
+support	REPORT	oper2	RECEIVE	indef	from	
+support	REQUEST	oper2	RECEIVE	indef	from	
+support	RESPONSE	oper2	RECEIVE	indef	from	
+support	REWARD	oper2	RECEIVE	indef	from	
+support	SHOCK	oper2	RECEIVE	indef	from	
+support	SUPPORT	oper2	RECEIVE	bare	from	
+support	VISIT	oper2	RECEIVE	indef	from	
+support	WARNING	oper2	RECEIVE	indef	from	
+support	GIFT	oper2	RECEIVE	indef	from	
+support	GRANT	oper2	RECEIVE	indef	from	
+support	HONOR	oper2	RECEIVE	indef	from	
+support	QUESTION	oper2	RECEIVE	indef	from	
+support	CALL	oper2	RECEIVE	indef	from	
+support	VOTE	oper2	RECEIVE	indef	from	
+support	EXAMINATION	oper2	UNDERGO	indef		
+support	SURGERY	oper2	UNDERGO	bare		
+support	TREATMENT	oper2	UNDERGO	bare		
+support	CHANGE	oper2	UNDERGO	indef		
+support	OPERATION	oper2	UNDERGO	indef		
+support	TEST	oper2	UNDERGO	indef		
+support	REVIEW	oper2	UNDERGO	indef		
+support	TRAINING	oper2	UNDERGO	bare		
+support	LOSS	oper2	SUFFER	indef	from	
+support	DEFEAT	oper2	SUFFER	bare	from	
+support	INJURY	oper2	SUFFER	indef	from	
+support	DAMAGE	oper2	SUFFER	bare	from	
+support	DELAY	oper2	EXPERIENCE	indef		
+support	DIFFICULTY	oper2	EXPERIENCE	bare		
+support	PROBLEM	oper2	EXPERIENCE	indef		
+support	GROWTH	oper2	EXPERIENCE	bare		
+noun_modifier	ATTENTION	magn	CLOSE			
+noun_modifier	SUPPORT	magn	STRONG			
+noun_modifier	PRESSURE	magn	STRONG			
+noun_modifier	PAIN	magn	SEVERE			
+noun_modifier	ANXIETY	magn	SEVERE			
+noun_modifier	ANGER	magn	EXTREME			
+noun_modifier	APPROVAL	magn	FULL			
+noun_modifier	ASSISTANCE	magn	CONSIDERABLE			
+noun_modifier	ATTEMPT	magn	SERIOUS			
+noun_modifier	CHANGE	magn	MAJOR			
+noun_modifier	CHANCE	magn	GOOD			
+noun_modifier	CONFIDENCE	magn	GREAT			
+noun_modifier	CONFLICT	magn	SERIOUS			
+noun_modifier	DANGER	magn	SERIOUS			
+noun_modifier	DEMAND	magn	HIGH			
+noun_modifier	DESIRE	magn	STRONG			
+noun_modifier	DIFFICULTY	magn	GREAT			
+noun_modifier	DOUBT	magn	SERIOUS			
+noun_modifier	EFFORT	magn	GREAT			
+noun_modifier	EFFECT	magn	STRONG			
+noun_modifier	EXCITEMENT	magn	GREAT			
+noun_modifier	FEAR	magn	GREAT			
+noun_modifier	GAIN	magn	CONSIDERABLE			
+noun_modifier	HARM	magn	SERIOUS			
+noun_modifier	HELP	magn	GREAT			
+noun_modifier	HOPE	magn	GREAT			
+noun_modifier	IMPORTANCE	magn	GREAT			
+noun_modifier	IMPRESSION	magn	STRONG			
+noun_modifier	INFLUENCE	magn	STRONG			
+noun_modifier	INTEREST	magn	GREAT			
+noun_modifier	JOY	magn	GREAT			
+noun_modifier	NEED	magn	GREAT			
+noun_modifier	OPPOSITION	magn	STRONG			
+noun_modifier	PLEASURE	magn	GREAT			
+noun_modifier	PROBLEM	magn	SERIOUS			
+noun_modifier	PROGRESS	magn	GREAT			
+noun_modifier	QUESTION	magn	IMPORTANT			
+noun_modifier	RELIEF	magn	GREAT			
+noun_modifier	RESISTANCE	magn	STRONG			
+noun_modifier	RISK	magn	HIGH			
+noun_modifier	ROLE	magn	IMPORTANT			
+noun_modifier	SHOCK	magn	SEVERE			
+noun_modifier	SORROW	magn	GREAT			
+noun_modifier	STRENGTH	magn	GREAT			
+noun_modifier	SURPRISE	magn	GREAT			
+noun_modifier	THREAT	magn	SERIOUS			
+noun_modifier	TROUBLE	magn	SERIOUS			
+noun_modifier	VIOLENCE	magn	EXTREME			
+noun_modifier	WARNING	magn	SERIOUS			
+noun_modifier	WEALTH	magn	GREAT			
+noun_modifier	RESULT	magn	IMPORTANT			
+noun_modifier	DIFFERENCE	magn	MAJOR			
+noun_modifier	IMPACT	magn	MAJOR			
+noun_modifier	LOSS	magn	HEAVY			
+noun_modifier	INTEREST	antimagn	SLIGHT			
+noun_modifier	CHANCE	antimagn	SLIGHT			
+noun_modifier	DIFFERENCE	antimagn	SLIGHT			
+noun_modifier	CHANGE	antimagn	SLIGHT			
+noun_modifier	RISK	antimagn	SLIGHT			
+noun_modifier	PAIN	antimagn	SLIGHT			
+noun_modifier	HOPE	antimagn	LITTLE			
+noun_modifier	SUPPORT	antimagn	LIMITED			
+noun_modifier	PROGRESS	antimagn	SLOW			
+noun_modifier	IMPROVEMENT	antimagn	SLIGHT			
+noun_modifier	PRESSURE	antimagn	LIGHT			
+noun_modifier	CONCERN	antimagn	SLIGHT			
+adj_modifier	BAD	magn	VERY			
+adj_modifier	GOOD	magn	VERY			
+adj_modifier	HAPPY	magn	VERY			
+adj_modifier	SAD	magn	VERY			
+adj_modifier	ANGRY	magn	VERY			
+adj_modifier	CALM	magn	VERY			
+adj_modifier	BUSY	magn	VERY			
+adj_modifier	TIRED	magn	VERY			
+adj_modifier	HUNGRY	magn	VERY			
+adj_modifier	COLD	magn	VERY			
+adj_modifier	HOT	magn	VERY			
+adj_modifier	BIG	magn	VERY			
+adj_modifier	SMALL	magn	VERY			
+adj_modifier	OLD	magn	VERY			
+adj_modifier	YOUNG	magn	VERY			
+adj_modifier	STRONG	magn	VERY			
+adj_modifier	WEAK	magn	VERY			
+adj_modifier	RICH	magn	VERY			
+adj_modifier	POOR	magn	VERY			
+adj_modifier	HIGH	magn	VERY			
+adj_modifier	LOW	magn	VERY			
+adj_modifier	LONG	magn	VERY			
+adj_modifier	SHORT	magn	VERY			
+adj_modifier	IMPORTANT	magn	VERY			
+adj_modifier	DIFFICULT	magn	VERY			
+adj_modifier	EASY	magn	VERY			
+adj_modifier	SERIOUS	magn	VERY			
+adj_modifier	CLEAR	magn	VERY			
+adj_modifier	POPULAR	magn	VERY			
+adj_modifier	COMMON	magn	VERY			
+adj_modifier	RARE	magn	VERY			
+adj_modifier	BEAUTIFUL	magn	VERY			
+adj_modifier	DANGEROUS	magn	VERY			
+adj_modifier	DARK	magn	VERY			
+adj_modifier	BRIGHT	magn	VERY			
+adj_modifier	LOUD	magn	VERY			
+adj_modifier	QUIET	magn	VERY			
+adj_modifier	WIDE	magn	VERY			
+adj_modifier	NARROW	magn	VERY			
+adj_modifier	HEAVY	magn	VERY			
+adj_modifier	LIKELY	magn	HIGHLY			
+adj_modifier	UNLIKELY	magn	HIGHLY			
+adj_modifier	SUCCESSFUL	magn	HIGHLY			
+adj_modifier	IMPORTANT	magn	EXTREMELY			
+adj_modifier	DIFFICULT	magn	EXTREMELY			
+adj_modifier	SERIOUS	magn	EXTREMELY			
+adj_modifier	HAPPY	magn	EXTREMELY			
+adj_modifier	SAD	magn	DEEPLY			
+adj_modifier	ASHAMED	magn	DEEPLY			
+adj_modifier	INTERESTED	magn	DEEPLY			
+adj_modifier	CERTAIN	magn	ABSOLUTELY			
+adj_modifier	ESSENTIAL	magn	ABSOLUTELY			
+adj_modifier	NECESSARY	magn	ABSOLUTELY			
+adj_modifier	IMPOSSIBLE	magn	ABSOLUTELY			
+adj_modifier	WRONG	magn	ABSOLUTELY			
+adj_modifier	CLEAR	magn	PERFECTLY			
+adj_modifier	NORMAL	magn	PERFECTLY			
+adj_modifier	TRUE	magn	PERFECTLY			
+adj_modifier	OPPOSED	magn	STRONGLY			
+adj_modifier	RECOMMENDED	magn	STRONGLY			
+adj_modifier	ANGRY	antimagn	SLIGHTLY			
+adj_modifier	WORRIED	antimagn	SLIGHTLY			
+adj_modifier	TIRED	antimagn	SLIGHTLY			
+adj_modifier	DIFFICULT	antimagn	SOMEWHAT			
+adj_modifier	DIFFERENT	antimagn	SLIGHTLY			
+adj_modifier	UNUSUAL	antimagn	SOMEWHAT			
+adj_modifier	LIKELY	antimagn	FAIRLY			
+adj_modifier	HAPPY	antimagn	FAIRLY			

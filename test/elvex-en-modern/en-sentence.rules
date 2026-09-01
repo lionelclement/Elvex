@@ -1,0 +1,39 @@
+/* Sentence shell and punctuation. */
+
+@withoutSpaces
+Axiom → InputClause strongPunct
+{
+  ↓1 = ↑;
+  [punct:$punct] ⊂ ⇓1;
+  ↓2 = [punct:$punct];
+  ⇑ = ⇓1;
+}
+
+Clause → CoreClause
+{
+  [illocution:declarative] ⊂ ↑;
+  ↓1 = ↑;
+  ⇑ = ⇓1 U [punct:_dot_];
+}
+
+Clause → CoreClause
+{
+  [illocution:interrogative] ⊂ ↑;
+  ↓1 = ↑;
+  ⇑ = ⇓1 U [punct:_int_];
+}
+
+CoreClause → TenseClause
+{
+  [modality:none] ⊂ ↑;
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}
+
+CoreClause → ModalClause
+{
+  [modality:$modality] ⊂ ↑;
+  attest($modality != none);
+  ↓1 = ↑;
+  ⇑ = ⇓1;
+}

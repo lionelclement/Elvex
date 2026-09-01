@@ -1,0 +1,164 @@
+// FORM  POS  FEATURES;
+
+// punctuation
+"." strongPunct [punct:_dot_];
+"?" strongPunct [punct:_int_];
+
+// determiners
+the det [def:true];
+a det [def:indefinite, number:sg];
+some det [def:indefinite, number:pl];
+
+// proper nouns
+John proper_noun [HEAD:JOHN, @_3s, @m, @human];
+Mary proper_noun [HEAD:MARY, @_3s, @f, @human];
+Sarah proper_noun [HEAD:SARAH, @_3s, @f, @human];
+Peter proper_noun [HEAD:PETER, @_3s, @m, @human];
+
+// personal pronouns — case is selected by the grammar
+I pro [HEAD:pro, @_1s, case:nominative, @human];
+me pro [HEAD:pro, @_1s, case:accusative, @human];
+you pro [HEAD:pro, @_2s, case:nominative, @human];
+you pro [HEAD:pro, @_2s, case:accusative, @human];
+he pro [HEAD:pro, @_3s, @m, case:nominative, @human];
+him pro [HEAD:pro, @_3s, @m, case:accusative, @human];
+she pro [HEAD:pro, @_3s, @f, case:nominative, @human];
+her pro [HEAD:pro, @_3s, @f, case:accusative, @human];
+it pro [HEAD:pro, @_3s, case:nominative, @nonhuman];
+it pro [HEAD:pro, @_3s, case:accusative, @nonhuman];
+we pro [HEAD:pro, @_1p, case:nominative, @human];
+us pro [HEAD:pro, @_1p, case:accusative, @human];
+you pro [HEAD:pro, @_2p, case:nominative, @human];
+you pro [HEAD:pro, @_2p, case:accusative, @human];
+they pro [HEAD:pro, @_3p, case:nominative];
+them pro [HEAD:pro, @_3p, case:accusative];
+
+// do-support
+do aux_do [aux_tense:present, SUBJECT:[@_12s]];
+do aux_do [aux_tense:present, SUBJECT:[@p]];
+does aux_do [aux_tense:present, SUBJECT:[@_3s]];
+did aux_do [aux_tense:past];
+
+// finite BE auxiliary
+am aux_be [aux_tense:present, SUBJECT:[@_1s]];
+are aux_be [aux_tense:present, SUBJECT:[@_2s]];
+are aux_be [aux_tense:present, SUBJECT:[@p]];
+is aux_be [aux_tense:present, SUBJECT:[@_3s]];
+was aux_be [aux_tense:past, SUBJECT:[@_13s]];
+were aux_be [aux_tense:past, SUBJECT:[@_2s]];
+were aux_be [aux_tense:past, SUBJECT:[@p]];
+
+// finite HAVE auxiliary
+have aux_have [aux_tense:present, SUBJECT:[@_12s]];
+have aux_have [aux_tense:present, SUBJECT:[@p]];
+has aux_have [aux_tense:present, SUBJECT:[@_3s]];
+had aux_have [aux_tense:past];
+
+// future auxiliary and non-finite auxiliaries
+will aux_future [];
+be aux_be_base [];
+have aux_have_base [];
+been aux_been [];
+
+// negation
+not neg [];
+
+// modals
+can aux_modal [modality:can];
+could aux_modal [modality:could];
+may aux_modal [modality:may];
+might aux_modal [modality:might];
+must aux_modal [modality:must];
+shall aux_modal [modality:shall];
+should aux_modal [modality:should];
+will aux_modal [modality:will];
+would aux_modal [modality:would];
+
+// prepositions selected by verbal valency
+to prep [pcase:_to_];
+on prep [pcase:_on_];
+in prep [pcase:_in_];
+at prep [pcase:_at_];
+
+// Additional proper nouns.
+Alice proper_noun [HEAD:ALICE, @_3s, @f, @human];
+Bob proper_noun [HEAD:BOB, @_3s, @m, @human];
+Emma proper_noun [HEAD:EMMA, @_3s, @f, @human];
+David proper_noun [HEAD:DAVID, @_3s, @m, @human];
+Michael proper_noun [HEAD:MICHAEL, @_3s, @m, @human];
+Laura proper_noun [HEAD:LAURA, @_3s, @f, @human];
+
+// Additional preposition required by TO_WAIT.
+for prep [pcase:_for_];
+
+// BEGIN GENERATED LARGE VOCABULARY
+James proper_noun [HEAD:JAMES, @_3s, @m, @human];
+Robert proper_noun [HEAD:ROBERT, @_3s, @m, @human];
+William proper_noun [HEAD:WILLIAM, @_3s, @m, @human];
+Thomas proper_noun [HEAD:THOMAS, @_3s, @m, @human];
+Daniel proper_noun [HEAD:DANIEL, @_3s, @m, @human];
+Matthew proper_noun [HEAD:MATTHEW, @_3s, @m, @human];
+Anthony proper_noun [HEAD:ANTHONY, @_3s, @m, @human];
+Mark proper_noun [HEAD:MARK, @_3s, @m, @human];
+Paul proper_noun [HEAD:PAUL, @_3s, @m, @human];
+Steven proper_noun [HEAD:STEVEN, @_3s, @m, @human];
+Andrew proper_noun [HEAD:ANDREW, @_3s, @m, @human];
+George proper_noun [HEAD:GEORGE, @_3s, @m, @human];
+Edward proper_noun [HEAD:EDWARD, @_3s, @m, @human];
+Brian proper_noun [HEAD:BRIAN, @_3s, @m, @human];
+Kevin proper_noun [HEAD:KEVIN, @_3s, @m, @human];
+Jason proper_noun [HEAD:JASON, @_3s, @m, @human];
+Ryan proper_noun [HEAD:RYAN, @_3s, @m, @human];
+Jacob proper_noun [HEAD:JACOB, @_3s, @m, @human];
+Samuel proper_noun [HEAD:SAMUEL, @_3s, @m, @human];
+Henry proper_noun [HEAD:HENRY, @_3s, @m, @human];
+Charles proper_noun [HEAD:CHARLES, @_3s, @m, @human];
+Joseph proper_noun [HEAD:JOSEPH, @_3s, @m, @human];
+Richard proper_noun [HEAD:RICHARD, @_3s, @m, @human];
+Christopher proper_noun [HEAD:CHRISTOPHER, @_3s, @m, @human];
+Joshua proper_noun [HEAD:JOSHUA, @_3s, @m, @human];
+Nicholas proper_noun [HEAD:NICHOLAS, @_3s, @m, @human];
+Jonathan proper_noun [HEAD:JONATHAN, @_3s, @m, @human];
+Benjamin proper_noun [HEAD:BENJAMIN, @_3s, @m, @human];
+Alexander proper_noun [HEAD:ALEXANDER, @_3s, @m, @human];
+Ethan proper_noun [HEAD:ETHAN, @_3s, @m, @human];
+Noah proper_noun [HEAD:NOAH, @_3s, @m, @human];
+Liam proper_noun [HEAD:LIAM, @_3s, @m, @human];
+Anna proper_noun [HEAD:ANNA, @_3s, @f, @human];
+Emily proper_noun [HEAD:EMILY, @_3s, @f, @human];
+Olivia proper_noun [HEAD:OLIVIA, @_3s, @f, @human];
+Sophia proper_noun [HEAD:SOPHIA, @_3s, @f, @human];
+Grace proper_noun [HEAD:GRACE, @_3s, @f, @human];
+Chloe proper_noun [HEAD:CHLOE, @_3s, @f, @human];
+Julia proper_noun [HEAD:JULIA, @_3s, @f, @human];
+Hannah proper_noun [HEAD:HANNAH, @_3s, @f, @human];
+Rebecca proper_noun [HEAD:REBECCA, @_3s, @f, @human];
+Rachel proper_noun [HEAD:RACHEL, @_3s, @f, @human];
+Jessica proper_noun [HEAD:JESSICA, @_3s, @f, @human];
+Jennifer proper_noun [HEAD:JENNIFER, @_3s, @f, @human];
+Amanda proper_noun [HEAD:AMANDA, @_3s, @f, @human];
+Elizabeth proper_noun [HEAD:ELIZABETH, @_3s, @f, @human];
+Victoria proper_noun [HEAD:VICTORIA, @_3s, @f, @human];
+Natalie proper_noun [HEAD:NATALIE, @_3s, @f, @human];
+Samantha proper_noun [HEAD:SAMANTHA, @_3s, @f, @human];
+Katherine proper_noun [HEAD:KATHERINE, @_3s, @f, @human];
+Catherine proper_noun [HEAD:CATHERINE, @_3s, @f, @human];
+Charlotte proper_noun [HEAD:CHARLOTTE, @_3s, @f, @human];
+Amelia proper_noun [HEAD:AMELIA, @_3s, @f, @human];
+Mia proper_noun [HEAD:MIA, @_3s, @f, @human];
+Ava proper_noun [HEAD:AVA, @_3s, @f, @human];
+Lily proper_noun [HEAD:LILY, @_3s, @f, @human];
+Zoe proper_noun [HEAD:ZOE, @_3s, @f, @human];
+Megan proper_noun [HEAD:MEGAN, @_3s, @f, @human];
+Nicole proper_noun [HEAD:NICOLE, @_3s, @f, @human];
+Michelle proper_noun [HEAD:MICHELLE, @_3s, @f, @human];
+Diana proper_noun [HEAD:DIANA, @_3s, @f, @human];
+Helen proper_noun [HEAD:HELEN, @_3s, @f, @human];
+Susan proper_noun [HEAD:SUSAN, @_3s, @f, @human];
+with prep [pcase:_with_];
+about prep [pcase:_about_];
+of prep [pcase:_of_];
+from prep [pcase:_from_];
+into prep [pcase:_into_];
+against prep [pcase:_against_];
+// END GENERATED LARGE VOCABULARY
