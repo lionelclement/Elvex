@@ -1,4 +1,0 @@
-Axiom [HEAD:TO_FEEL_BLUE, i:[HEAD:JOHN], ii:NIL, iii:NIL, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
-
-// Idiom with fixed material and a free actant.
-Axiom [HEAD:TO_KEEP_AN_EYE_ON, i:[HEAD:JOHN], ii:[HEAD:MARY], iii:NIL, tense:present, aspect:simple, modality:none, polarity:positive, illocution:declarative]
