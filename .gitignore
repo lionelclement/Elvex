@@ -40,22 +40,6 @@ venv/
 elvex-www/tmp/
 elvex-www/config/config.local.php
 
-# Benchmark generated data/results
-benchmark/**/__pycache__/
-benchmark/**/*.pyc
-benchmark/**/*.log
-benchmark/**/log.html
-benchmark/**/log.txt
-benchmark/**/*.zip
-benchmark/**/outputs_*
-benchmark/**/details_*.jsonl
-benchmark/**/metrics_*.json
-benchmark/**/results/
-benchmark/**/runs/
-benchmark/**/data/raw/
-benchmark/**/data/processed/
-benchmark/**/inputs_*/*
-
 # Local/unpublished work
 motiflow-poc/
 test/env1.0.*

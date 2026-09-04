@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 project(elvex VERSION 2.27.0)
 
-# Experimental instrumentation used for paper evaluation.
+# Optional experimental instrumentation.
 # Both options are OFF by default and do not affect normal builds.
 option(ELVEX_EXPERIMENT_METRICS
        "Collect per-generation runtime/chart/forest/saturation metrics" OFF)
