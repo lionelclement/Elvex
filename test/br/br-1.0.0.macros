@@ -1,0 +1,37 @@
+// @macro	features
+// ***********************************************************
+// Macros
+// ***********************************************************/
+@m = [gender:ms];
+@f = [gender:fm];
+
+@_1 = [person:one];
+@_2 = [person:two];
+@_3 = [person:three];
+
+@s = [number:sg];
+@p = [number:pl];
+@_1s = [@_1, @s];
+@_2s = [@_2, @s];
+@_3s = [@_3, @s];
+@_1p = [@_1, @p];
+@_2p = [@_2, @p];
+@_3p = [@_3, @p];
+@_3sm = [@_3s, @m];
+@_3sf = [@_3s, @f];
+
+@_poss1s = [poss:[@_1s]];
+@_poss2s = [poss:[@_2s]];
+@_poss3sm = [poss:[@_3sm]];
+@_poss3sf = [poss:[@_3sf]];
+@_poss1p = [poss:[@_1p]];
+@_poss2p = [poss:[@_2p]];
+@_poss3p = [poss:[@_3p]];
+
+@def = [def:true, poss:none];
+@indef = [def:false, poss:none];
+
+@quant = [quant:true];
+
+@poss = [poss:true, def:none];
+
