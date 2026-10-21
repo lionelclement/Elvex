@@ -1,85 +1,128 @@
-# music_pop_didactic — version simple et bornée
+# Didactic Pop Music Generation with Elvex
 
-Cette archive corrige l'erreur :
+This directory contains a small, self-contained set of **four didactic pop-music examples**. Elvex interprets the `.input` descriptions through a deliberately bounded music grammar and emits LilyPond scores. LilyPond then engraves printable sheet music and, where requested by the score, creates MIDI playback.
 
-```text
-*** fatal error: too much items build : 12001 (12000 Max)
+The grammar is intentionally smaller than the project's historical ensemble grammars. It limits the number of alternative derivations to help avoid Elvex's `too much items build` error. Its main design goal is to demonstrate reusable musical roles—lead, guitar, bass, percussion, keyboard and brass—rather than hand-write each piece.
+
+## Requirements
+
+- **Elvex** (`elvex`) with support for the grammar and lexicon syntax used here.
+- **LilyPond** (`lilypond`) to engrave the scores and generate MIDI where supported.
+- **GNU Make** or a compatible `make` implementation.
+- Standard Unix shell tools: `test`, `grep`, `tail`, `rm`, `touch` and `printf`.
+
+Check that the executables are on your `PATH`:
+
+```sh
+command -v elvex
+command -v lilypond
+make --version
 ```
 
-La cause était que la première archive réutilisait plusieurs gros modules historiques
-(`role_ensemble.rules`, `staves.rules`, `bars.rules`) contenant de nombreuses formes
-anciennes. Même avec un exemple pop simple, Elvex devait ouvrir trop d'items.
+The Makefile allows the executable names to be overridden, e.g. `make ELVEX=/path/to/elvex LILYPOND=/path/to/lilypond`.
 
-Cette version garde seulement :
+## Quick start
 
-- `music.rules`
-- `pop_didactic.rules`
-- `music.lexicon`
-- `common.lexicon`
-- `chords.lexicon`
-- `Makefile`
-- 4 fichiers `.input`
+Run commands **from this directory** (the directory containing the `Makefile`):
 
-Le fichier principal est `pop_didactic.rules`. Il contient :
-
-1. la construction LilyPond minimale ;
-2. les portées pour des ensembles de 4, 6, 7 ou 9 instruments ;
-3. le routage par rôle musical ;
-4. une forme pop de 16 mesures ;
-5. des cellules tonales simples ;
-6. les règles de conversion degré relatif -> note absolue.
-
-La grammaire reste volontairement didactique : elle décrit des rôles musicaux
-(`lead`, `guitar`, `bass`, `drums`, `brass_punch`, etc.), pas des morceaux ad hoc.
-
-## Compiler
-
-```bash
-make list
-make ly
-make pdf
+```sh
+make list       # show the available input files
+make ly         # generate LilyPond .ly sources with Elvex
+make pdf        # engrave PDF scores with LilyPond
+make midi       # generate MIDI files when present in LilyPond output
 ```
 
-Pour un seul exemple :
+Or simply run `make` (equivalent to `make all`), which requests both PDF and MIDI targets.
 
-```bash
+To build just the French chanson example:
+
+```sh
 make 001_chanson_francaise_voix_guitare_djembe.ly
 make 001_chanson_francaise_voix_guitare_djembe.pdf
 ```
 
-## Tracer
+## Example inputs
 
-```bash
+| Input file | Musical setup |
+| --- | --- |
+| `001_chanson_francaise_voix_guitare_djembe.input` | French chanson: voice, guitar, bass and djembe |
+| `002_english_pop_piano_band.input` | English-language pop with piano and band |
+| `003_couleurs_flute_clarinette_sax_violon.input` | Flute, clarinet, saxophone and violin ensemble |
+| `004_refrain_pop_avec_cuivres.input` | Pop refrain with brass |
+
+Each `.input` describes the piece, its instrumentation and musical parameters. Modify or add an input, then build the corresponding target with `make <name>.ly` or `make <name>.pdf`.
+
+## Make targets
+
+| Command | Action |
+| --- | --- |
+| `make` / `make all` | Request all PDFs and MIDI files |
+| `make list` | List the available `.input` files |
+| `make ly` | Convert every `.input` into a `.ly` file |
+| `make pdf` | Build the engraved `.pdf` scores |
+| `make midi` | Request the `.midi` targets |
+| `make trace-001` through `make trace-004` | Produce a separate Elvex trace, `log-001.html` through `log-004.html` |
+| `make clean` | Remove generated music files, stamps and build logs |
+| `make rebuild` | Clean and rebuild all PDF and MIDI targets |
+
+## Expected outputs
+
+For each `<name>.input`, the build pipeline is:
+
+```text
+<name>.input  -- Elvex -->  <name>.ly  -- LilyPond -->  <name>.pdf
+                                               \----->  <name>.midi (if produced)
+```
+
+The `.ly` file is LilyPond source; the `.pdf` is printable sheet music; and the `.midi`, when present, is playback data. LilyPond is run once per `.ly` file and the Makefile records successful processing in a `<name>.lilypond.stamp` file. `log.txt` collects Elvex diagnostic output and LilyPond output.
+
+**MIDI caveat:** The Makefile warns if LilyPond does not produce a requested MIDI file, but its MIDI target check does not fail in that situation. Therefore `make midi` succeeding does **not** guarantee that every example has a `.midi` file. Check the actual outputs with `ls *.midi` (if any).
+
+## Directory layout
+
+```text
+Makefile                 Build rules and trace targets
+music.rules             Main grammar entry point (includes pop_didactic.rules)
+pop_didactic.rules      Bounded music-generation grammar
+music.lexicon           Main lexicon entry point
+common.lexicon          Shared vocabulary
+chords.lexicon          Chord definitions
+001_...input to 004_...input  The four musical examples
+README.md                This guide
+.gitignore              Generated-file exclusions for Git
+```
+
+The generated `.ly`, `.pdf`, `.midi`, `.lilypond.stamp`, trace, and log files are intentionally not stored as source files. Run `make ly`, `make pdf`, or `make` to regenerate them.
+
+## Tracing and troubleshooting
+
+To inspect Elvex's processing of a single example:
+
+```sh
 make trace-001
-open log.html
+# Open log-001.html in a browser, for example on macOS:
+open log-001.html
 ```
 
-ou :
+If a target fails, inspect the end of the log:
 
-```bash
-elvex --trace-all \
-  --rules-file music.rules \
-  --lexicon-file music.lexicon \
-  --input-file 001_chanson_francaise_voix_guitare_djembe.input \
-  -f > log.html
+```sh
+tail -80 log.txt
 ```
 
+- **`elvex: command not found`**: install Elvex or set `ELVEX=/path/to/elvex`.
+- **`lilypond: command not found`**: install LilyPond or set `LILYPOND=/path/to/lilypond`.
+- **Elvex grammar or lexicon error**: inspect `music.rules`, `pop_didactic.rules` and the included lexicons; ensure Elvex-reserved words are not used as conflicting identifiers.
+- **Elvex `too much items build`**: this local grammar avoids including the larger historical role/stave/bar rule modules; avoid adding them without considering derivation growth.
+- **Missing MIDI**: LilyPond may engrave a score without emitting MIDI. Inspect the `.ly` and `log.txt`; a warning alone is not proof of an engraving failure.
 
-## fix2
+The grammar also includes a dedicated `LH_CHORD4` handling path: left-hand piano/keyboard bass notes can remain in octave 2 while the chord voicing is taken from the next octave, matching the chord lexicon's available register.
 
-Cette version ajoute explicitement un attribut synthétisé `⇑=[];` à chaque règle qui ne renvoie pas déjà de structure. C’est volontairement verbeux mais plus sûr pour Elvex : chaque réduction peut se fermer proprement même si le parent n’utilise pas de traits synthétisés.
+## Rebuilding and version control
 
-## fix3 — piano_lh / keyboard_lh à l'octave 2
+```sh
+make clean
+make
+```
 
-Cette archive corrige aussi le cas où les exemples `002_english_pop_piano_band.input`
-et `004_refrain_pop_avec_cuivres.input` ne produisaient aucun `.ly`.
-
-Cause : les rôles `piano_lh` et `keyboard_lh` utilisent des basses à l'octave 2,
-mais certaines mesures de main gauche sont des accords plaqués. Le lexique
-`chords.lexicon` commence ses accords à l'octave 3. Les anciennes règles
-`LH_I_CHORDS`, `LH_V_CHORDS` et `LH_IV_CHORDS` appelaient `CHORD4`, qui
-cherchait des accords à l'octave 2 et échouait silencieusement.
-
-Correction : ajout de `LH_CHORD4`, qui conserve les basses à l'octave donnée
-mais place les accords de main gauche à `$oct+1`.
-
+Commit the `Makefile`, grammar, lexicons and `.input` examples; ignore build products and local logs. Do not delete `.input`, `.rules` or `.lexicon` files when cleaning the directory.
