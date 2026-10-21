@@ -1,0 +1,16 @@
+# Compiled Elvex lexicon
+animal.fsa
+animal.tbl
+
+# Generated diagnostic/output files
+animal-trace.html
+animal.out
+animal.log
+.animal-lexicon.stamp
+sentences.txt
+
+# macOS / editor artifacts
+.DS_Store
+._*
+*~
+#*#
