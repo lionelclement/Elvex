@@ -62,7 +62,7 @@ ACC_RH_TONIC_PAD → CHORD_BAR2
 
 @withoutSpaces
 ACC_RH_TONIC_PAD → CHORD_BAR2
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:tonic]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:minor, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:tonic]; }
 
 @withoutSpaces
 ACC_RH_TONIC_HOLD → CHORD_BAR1
@@ -70,7 +70,7 @@ ACC_RH_TONIC_HOLD → CHORD_BAR1
 
 @withoutSpaces
 ACC_RH_TONIC_HOLD → CHORD_BAR1
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:min, dur:"1/1"]; ⇑ = [last_function:tonic]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:minor, dur:"1/1"]; ⇑ = [last_function:tonic]; }
 
 @withoutSpaces
 ACC_RH_SUBDOMINANT_PAD → CHORD_BAR2
@@ -78,7 +78,7 @@ ACC_RH_SUBDOMINANT_PAD → CHORD_BAR2
 
 @withoutSpaces
 ACC_RH_SUBDOMINANT_PAD → CHORD_BAR2
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:min, root2:0, q2:min], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:predominant]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:minor, root2:0, q2:minor], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:predominant]; }
 
 @withoutSpaces
 ACC_RH_DOMINANT_PAD → CHORD_BAR2
@@ -90,7 +90,7 @@ ACC_RH_CADENCE_PAD → CHORD_BAR2
 
 @withoutSpaces
 ACC_RH_CADENCE_PAD → CHORD_BAR2
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:0, q2:min], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:tonic]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:0, q2:minor], rhythm:[r1:"1/2", r2:"1/2"]]; ⇑ = [last_function:tonic]; }
 
 @withoutSpaces
 ACC_RH_FINAL_TONIC_HOLD → CHORD_BAR1
@@ -98,7 +98,7 @@ ACC_RH_FINAL_TONIC_HOLD → CHORD_BAR1
 
 @withoutSpaces
 ACC_RH_FINAL_TONIC_HOLD → CHORD_BAR1
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:min, dur:"1/1"]; ⇑ = [last_function:tonic, cadence:final]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:minor, dur:"1/1"]; ⇑ = [last_function:tonic, cadence:final]; }
 
 // Accompagnement main gauche : basse, figures de type Alberti, et pédale de dominante.
 @withoutSpaces
@@ -261,7 +261,7 @@ ACC_RH_MINUET_TONIC → CHORD_BAR3
 
 @withoutSpaces
 ACC_RH_MINUET_TONIC → CHORD_BAR3
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:7, q2:maj, root3:0, q3:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:tonic]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:minor, root2:7, q2:maj, root3:0, q3:minor], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:tonic]; }
 
 @withoutSpaces
 ACC_RH_MINUET_SUBDOMINANT → CHORD_BAR3
@@ -269,7 +269,7 @@ ACC_RH_MINUET_SUBDOMINANT → CHORD_BAR3
 
 @withoutSpaces
 ACC_RH_MINUET_SUBDOMINANT → CHORD_BAR3
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:min, root2:0, q2:min, root3:5, q3:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:subdominant]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5, q1:minor, root2:0, q2:minor, root3:5, q3:minor], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:subdominant]; }
 
 @withoutSpaces
 ACC_RH_MINUET_DOMINANT → CHORD_BAR3
@@ -281,7 +281,7 @@ ACC_RH_MINUET_CADENCE → CHORD_BAR3
 
 @withoutSpaces
 ACC_RH_MINUET_CADENCE → CHORD_BAR3
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj, root3:0, q3:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:tonic]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj, root3:0, q3:minor], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:tonic]; }
 
 @withoutSpaces
 ACC_RH_MINUET_FINAL → CHORD_BAR3
@@ -289,7 +289,7 @@ ACC_RH_MINUET_FINAL → CHORD_BAR3
 
 @withoutSpaces
 ACC_RH_MINUET_FINAL → CHORD_BAR3
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:7, q2:maj, root3:0, q3:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:tonic, cadence:final]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1 = [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:minor, root2:7, q2:maj, root3:0, q3:minor], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4"]]; ⇑ = [last_function:tonic, cadence:final]; }
 
 // --- Cellules d’accompagnement de main gauche en 3/4 -----------------------
 @withoutSpaces

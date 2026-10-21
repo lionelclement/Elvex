@@ -169,7 +169,7 @@ ROCK_CHOIR_PAD_bVII → CHORD_BAR1
 { ↓1=↑ ∪ [chords:[root1:10, q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
 @withoutSpaces
 ROCK_CHOIR_PAD_vi → CHORD_BAR1
-{ ↓1=↑ ∪ [chords:[root1:9, q1:min], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [chords:[root1:9, q1:minor], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
 @withoutSpaces
 ROCK_CHOIR_PAD_DOM → CHORD_BAR1
 { ↓1=↑ ∪ [chords:[root1:7, q1:maj], rhythm:[r1:"1/1"]]; ⇑=⇓1; }
@@ -230,7 +230,7 @@ ROCK_GTR_WARM_IV → CHORD_BAR4
 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [chords:[root1:5,q1:maj,root2:5,q2:maj,root3:5,q3:maj,root4:5,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 ROCK_GTR_WARM_vi → CHORD_BAR4
-{ [mode:major] ⊂ ↑; ↓1=↑ ∪ [chords:[root1:9,q1:min,root2:9,q2:min,root3:9,q3:min,root4:9,q4:min], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:major] ⊂ ↑; ↓1=↑ ∪ [chords:[root1:9,q1:minor,root2:9,q2:minor,root3:9,q3:minor,root4:9,q4:minor], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 ROCK_GTR_WARM_SPACE → BAR1
 { ↓1=↑ ∪ [motif:[o1:0], rhythm:[r1:"1/1"]]; ⇑=⇓1; }

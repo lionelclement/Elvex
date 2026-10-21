@@ -182,34 +182,34 @@ SAFE_PIANO_LH_CODA_8 → SAFE_LH_SEQ SAFE_LH_IV SAFE_LH_V SAFE_LH_I SAFE_LH_IV_B
 
 @withoutSpaces
 SAFE_RH_I → CHORD_BAR4
-{ ↓1=↑ ∪ [chords:[root1:0, q1:maj, root2:4, q2:min, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [chords:[root1:0, q1:maj, root2:4, q2:minor, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_IV → CHORD_BAR4
-{ ↓1=↑ ∪ [chords:[root1:5, q1:maj, root2:9, q2:min, root3:5, q3:maj, root4:9, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [chords:[root1:5, q1:maj, root2:9, q2:minor, root3:5, q3:maj, root4:9, q4:minor], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_V → CHORD_BAR4
 { ↓1=↑ ∪ [chords:[root1:7, q1:maj, root2:11, q2:dim, root3:7, q3:maj, root4:11, q4:dim], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_VI → CHORD_BAR4
-{ ↓1=↑ ∪ [chords:[root1:9, q1:min, root2:5, q2:maj, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [chords:[root1:9, q1:minor, root2:5, q2:maj, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_SEQ → CHORD_BAR4
-{ ↓1=↑ ∪ [chords:[root1:9, q1:min, root2:2, q2:min, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [chords:[root1:9, q1:minor, root2:2, q2:minor, root3:7, q3:maj, root4:0, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_I_ALT → CHORD_BAR4
-{ ↓1=↑ ∪ [chords:[root1:0, q1:maj, root2:7, q2:maj, root3:4, q3:min, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [chords:[root1:0, q1:maj, root2:7, q2:maj, root3:4, q3:minor, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_IV_ALT → CHORD_BAR4
-{ ↓1=↑ ∪ [chords:[root1:5, q1:maj, root2:0, q2:maj, root3:2, q3:min, root4:5, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [chords:[root1:5, q1:maj, root2:0, q2:maj, root3:2, q3:minor, root4:5, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_V_ALT → CHORD_BAR4
 { ↓1=↑ ∪ [chords:[root1:7, q1:maj, root2:7, q2:maj, root3:11, q3:dim, root4:7, q4:maj], rhythm:[r1:"1/8", r2:"1/8", r3:"1/4", r4:"1/2"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_HIGH_I → CHORD_BAR4
-{ ↓1=↑ ∪ [octave:5, chords:[root1:0, q1:maj, root2:4, q2:min, root3:7, q3:maj, root4:12, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [octave:5, chords:[root1:0, q1:maj, root2:4, q2:minor, root3:7, q3:maj, root4:12, q4:maj], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_HIGH_IV → CHORD_BAR4
-{ ↓1=↑ ∪ [octave:5, chords:[root1:5, q1:maj, root2:9, q2:min, root3:12, q3:maj, root4:9, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
+{ ↓1=↑ ∪ [octave:5, chords:[root1:5, q1:maj, root2:9, q2:minor, root3:12, q3:maj, root4:9, q4:minor], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 SAFE_RH_HIGH_V → CHORD_BAR4
 { ↓1=↑ ∪ [octave:5, chords:[root1:7, q1:maj, root2:11, q2:dim, root3:14, q3:maj, root4:11, q4:dim], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]]; ⇑=⇓1; }

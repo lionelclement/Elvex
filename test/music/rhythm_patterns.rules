@@ -306,11 +306,11 @@ SARABANDE_SUPPORT_BAR → BAR3
 PIANO_SICILIANA_CHORDS → CHORD_BAR6
 { [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:maj, root2:0, q2:maj, root3:0, q3:maj, root4:7, q4:maj, root5:7, q5:maj, root6:7, q6:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_chords]; }
 PIANO_SICILIANA_CHORDS → CHORD_BAR6
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:min, root2:0, q2:min, root3:0, q3:min, root4:7, q4:maj, root5:7, q5:maj, root6:7, q6:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_chords]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0, q1:minor, root2:0, q2:minor, root3:0, q3:minor, root4:7, q4:maj, root5:7, q5:maj, root6:7, q6:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_chords]; }
 PIANO_SICILIANA_CADENCE → CHORD_BAR6
 { [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj, root3:7, q3:maj, root4:0, q4:maj, root5:0, q5:maj, root6:0, q6:maj], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_cadence]; }
 PIANO_SICILIANA_CADENCE → CHORD_BAR6
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj, root3:7, q3:maj, root4:0, q4:min, root5:0, q5:min, root6:0, q6:min], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_cadence]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7, q1:maj, root2:7, q2:maj, root3:7, q3:maj, root4:0, q4:minor, root5:0, q5:minor, root6:0, q6:minor], rhythm:[r1:"3/16",r2:"1/16",r3:"1/8",r4:"3/16",r5:"1/16",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_cadence]; }
 PIANO_SICILIANA_BASS → BAR6
 { [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:12,o4:7,o5:12,o6:7], rhythm:[r1:"1/8",r2:"1/8",r3:"1/8",r4:"1/8",r5:"1/8",r6:"1/8"]]; ⇑=[last_function:piano_siciliana_bass]; }
 PIANO_SICILIANA_BASS_CADENCE → BAR6
@@ -319,11 +319,11 @@ PIANO_SICILIANA_BASS_CADENCE → BAR6
 PIANO_GALLOP_CHORDS → CHORD_BAR4
 { [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:maj,root2:0,q2:maj,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_chords]; }
 PIANO_GALLOP_CHORDS → CHORD_BAR4
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:min,root2:0,q2:min,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_chords]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:minor,root2:0,q2:minor,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_chords]; }
 PIANO_GALLOP_CADENCE → CHORD_BAR4
 { [mode:major, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7,q1:maj,root2:7,q2:maj,root3:0,q3:maj,root4:0,q4:maj], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_cadence]; }
 PIANO_GALLOP_CADENCE → CHORD_BAR4
-{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7,q1:maj,root2:7,q2:maj,root3:0,q3:min,root4:0,q4:min], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_cadence]; }
+{ [mode:minor, tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:7,q1:maj,root2:7,q2:maj,root3:0,q3:minor,root4:0,q4:minor], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_cadence]; }
 PIANO_GALLOP_BASS → BAR4
 { [tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, octave:$octave, accidental_policy:$accidental_policy, motif:[o1:0,o2:7,o3:12,o4:7], rhythm:[r1:"1/4",r2:"1/8",r3:"1/4",r4:"1/8"]]; ⇑=[last_function:piano_gallop_bass]; }
 PIANO_GALLOP_BASS_CADENCE → BAR4

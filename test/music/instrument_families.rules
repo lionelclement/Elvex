@@ -362,7 +362,7 @@ GUITAR_STRUM_TONIC → CHORD_BAR2
 {
   // Minor-key tonic version: i - V.
   [mode:minor] ⊂ ↑;
-  ↓1 = ↑ ∪ [chords:[root1:0, q1:min, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]];
+  ↓1 = ↑ ∪ [chords:[root1:0, q1:minor, root2:7, q2:maj], rhythm:[r1:"1/2", r2:"1/2"]];
   ⇑ = ⇓1;
 }
 
@@ -380,7 +380,7 @@ GUITAR_STRUM_PREDOMINANT → CHORD_BAR4
 {
   // Minor-key version: i - iv - V - i.
   [mode:minor] ⊂ ↑;
-  ↓1 = ↑ ∪ [chords:[root1:0, q1:min, root2:5, q2:min, root3:7, q3:maj, root4:0, q4:min], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
+  ↓1 = ↑ ∪ [chords:[root1:0, q1:minor, root2:5, q2:minor, root3:7, q3:maj, root4:0, q4:minor], rhythm:[r1:"1/4", r2:"1/4", r3:"1/4", r4:"1/4"]];
   ⇑ = ⇓1;
 }
 
@@ -396,7 +396,7 @@ GUITAR_STRUM_CODA → CHORD_BAR1
 GUITAR_STRUM_CODA → CHORD_BAR1
 {
   [mode:minor] ⊂ ↑;
-  ↓1 = ↑ ∪ [root:0, quality:min, dur:"1/1"];
+  ↓1 = ↑ ∪ [root:0, quality:minor, dur:"1/1"];
   ⇑ = ⇓1;
 }
 

@@ -197,56 +197,56 @@ POP_GTR_OUTRO_8 → POP_GTR_P4 POP_GTR_P2 POP_GTR_P3 POP_GTR_P1 POP_GTR_P2 POP_G
 
 @withoutSpaces
 POP_GTR_P0 → CHORD_BAR4
-{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:maj,root2:7,q2:maj,root3:9,q3:min,root4:5,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:maj,root2:7,q2:maj,root3:9,q3:minor,root4:5,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P0 → CHORD_BAR4
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:min,root2:8,q2:maj,root3:3,q3:maj,root4:10,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:minor,root2:8,q2:maj,root3:3,q3:maj,root4:10,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 
 @withoutSpaces
 POP_GTR_P1 → CHORD_BAR4
 { [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5,q1:maj,root2:0,q2:maj,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P1 → CHORD_BAR4
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:0,q2:min,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:0,q2:minor,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 
 @withoutSpaces
 POP_GTR_P2 → CHORD_BAR4
-{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:9,q1:min,root2:5,q2:maj,root3:0,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:9,q1:minor,root2:5,q2:maj,root3:0,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P2 → CHORD_BAR4
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:3,q2:maj,root3:0,q3:min,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:3,q2:maj,root3:0,q3:minor,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 
 @withoutSpaces
 POP_GTR_P3 → CHORD_BAR4
-{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:2,q1:min,root2:5,q2:maj,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:2,q1:minor,root2:5,q2:maj,root3:7,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P3 → CHORD_BAR4
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5,q1:min,root2:8,q2:maj,root3:10,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5,q1:minor,root2:8,q2:maj,root3:10,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 
 @withoutSpaces
 POP_GTR_P4 → CHORD_BAR4
 { [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:maj,root2:7,q2:maj,root3:5,q3:maj,root4:0,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P4 → CHORD_BAR4
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:min,root2:10,q2:maj,root3:8,q3:maj,root4:0,q4:min], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:0,q1:minor,root2:10,q2:maj,root3:8,q3:maj,root4:0,q4:minor], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 
 @withoutSpaces
 POP_GTR_P5 → CHORD_BAR4
-{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5,q1:maj,root2:7,q2:maj,root3:9,q3:min,root4:0,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:5,q1:maj,root2:7,q2:maj,root3:9,q3:minor,root4:0,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P5 → CHORD_BAR4
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:10,q2:maj,root3:0,q3:min,root4:0,q4:min], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:10,q2:maj,root3:0,q3:minor,root4:0,q4:minor], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 
 @withoutSpaces
 POP_GTR_P6 → CHORD_BAR4
-{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:9,q1:min,root2:4,q2:min,root3:5,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:9,q1:minor,root2:4,q2:minor,root3:5,q3:maj,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P6 → CHORD_BAR4
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:3,q2:maj,root3:5,q3:min,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, chords:[root1:8,q1:maj,root2:3,q2:maj,root3:5,q3:minor,root4:7,q4:maj], rhythm:[r1:"1/4",r2:"1/4",r3:"1/4",r4:"1/4"]]; ⇑=⇓1; }
 
 @withoutSpaces
 POP_GTR_P7 → CHORD_BAR1
 { [mode:major] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:maj, dur:"1/1"]; ⇑=⇓1; }
 @withoutSpaces
 POP_GTR_P7 → CHORD_BAR1
-{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:min, dur:"1/1"]; ⇑=⇓1; }
+{ [mode:minor] ⊂ ↑; ↓1=[tonic_pc:$tonic_pc, mode:$mode, octave:$octave, accidental_policy:$accidental_policy, root:0, quality:minor, dur:"1/1"]; ⇑=⇓1; }
