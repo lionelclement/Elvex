@@ -348,11 +348,11 @@ RH_PAD_RESPONSE → BAR1 { ↓1=↑ ∪ [motif:[o1:7], rhythm:[r1:"1/1"]]; ⇑=[
 @withoutSpaces
 LH_I_PATTERN → LH_BASS_CHORD { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,fifth:7,quality:maj]; ⇑=[];}
 @withoutSpaces
-LH_I_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,fifth:7,quality:min]; ⇑=[];}
+LH_I_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,fifth:7,quality:minor]; ⇑=[];}
 @withoutSpaces
 LH_I_CHORDS → LH_CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
 @withoutSpaces
-LH_I_CHORDS → LH_CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+LH_I_CHORDS → LH_CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:minor]; ⇑=[];}
 @withoutSpaces
 LH_V_PATTERN → LH_BASS_CHORD { ↓1=↑ ∪ [root:7,fifth:2,quality:maj]; ⇑=[];}
 @withoutSpaces
@@ -360,48 +360,48 @@ LH_V_CHORDS → LH_CHORD4 { ↓1=↑ ∪ [root:7,quality:maj]; ⇑=[];}
 @withoutSpaces
 LH_IV_PATTERN → LH_BASS_CHORD { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,fifth:0,quality:maj]; ⇑=[];}
 @withoutSpaces
-LH_IV_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,fifth:0,quality:min]; ⇑=[];}
+LH_IV_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,fifth:0,quality:minor]; ⇑=[];}
 @withoutSpaces
 LH_IV_CHORDS → LH_CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:maj]; ⇑=[];}
 @withoutSpaces
-LH_IV_CHORDS → LH_CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:min]; ⇑=[];}
+LH_IV_CHORDS → LH_CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:minor]; ⇑=[];}
 @withoutSpaces
-LH_VI_PATTERN → LH_BASS_CHORD { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,fifth:4,quality:min]; ⇑=[];}
+LH_VI_PATTERN → LH_BASS_CHORD { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,fifth:4,quality:minor]; ⇑=[];}
 @withoutSpaces
 LH_VI_PATTERN → LH_BASS_CHORD { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:8,fifth:3,quality:maj]; ⇑=[];}
 @withoutSpaces
 LH_I_FINAL → LH_HALF_CADENCE { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
 @withoutSpaces
-LH_I_FINAL → LH_HALF_CADENCE { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+LH_I_FINAL → LH_HALF_CADENCE { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:minor]; ⇑=[];}
 
 // Accords. Les règles majeures/mineures sont séparées pour rester lisibles.
 @withoutSpaces
 CH_I → CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
 @withoutSpaces
-CH_I → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+CH_I → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:minor]; ⇑=[];}
 @withoutSpaces
 CH_V → CHORD4 { ↓1=↑ ∪ [root:7,quality:maj]; ⇑=[];}
 @withoutSpaces
 CH_IV → CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:maj]; ⇑=[];}
 @withoutSpaces
-CH_IV → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:min]; ⇑=[];}
+CH_IV → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:minor]; ⇑=[];}
 @withoutSpaces
-CH_VI → CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,quality:min]; ⇑=[];}
+CH_VI → CHORD4 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,quality:minor]; ⇑=[];}
 @withoutSpaces
 CH_VI → CHORD4 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:8,quality:maj]; ⇑=[];}
 
 @withoutSpaces
 PAD_I → CHORD1 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:maj]; ⇑=[];}
 @withoutSpaces
-PAD_I → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:min]; ⇑=[];}
+PAD_I → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:0,quality:minor]; ⇑=[];}
 @withoutSpaces
 PAD_V → CHORD1 { ↓1=↑ ∪ [root:7,quality:maj]; ⇑=[];}
 @withoutSpaces
 PAD_IV → CHORD1 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:maj]; ⇑=[];}
 @withoutSpaces
-PAD_IV → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:min]; ⇑=[];}
+PAD_IV → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:5,quality:minor]; ⇑=[];}
 @withoutSpaces
-PAD_VI → CHORD1 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,quality:min]; ⇑=[];}
+PAD_VI → CHORD1 { [mode:major] ⊂ ↑; ↓1=↑ ∪ [root:9,quality:minor]; ⇑=[];}
 @withoutSpaces
 PAD_VI → CHORD1 { [mode:minor] ⊂ ↑; ↓1=↑ ∪ [root:8,quality:maj]; ⇑=[];}
 
