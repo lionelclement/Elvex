@@ -35,27 +35,31 @@ python = python3
 # Directory where test files are located
 test_dir = test
 
-# List of all input files
-input_files = $(wildcard $(test_dir)/*.input)
-stdin_files = $(wildcard $(test_dir)/*.stdin)
-
-# Specific targets to generate all *.output files
-output_files = $(patsubst $(test_dir)/%.input,$(test_dir)/%.output,$(input_files)) 
-output_files += $(patsubst $(test_dir)/%.stdin,$(test_dir)/%.output,$(stdin_files)) 
+# Each standalone example now lives in test/<suite>/.
+# A .test fixture is the opt-in marker for this historical comparison suite:
+# do not accidentally run the music samples or test/regression/*.expected here.
+reference_files = $(sort $(wildcard $(test_dir)/*/*.test))
+output_files = $(patsubst %.test,%.output,$(reference_files))
 
 # Target to run tests
+# Keep the historical sorted-output comparison, independently of the suite path.
 test: $(output_files)
-	@for file in $(output_files); do \
-		base=$$(basename $$file .output); \
-		sort $(test_dir)/$$base.output > $(test_dir)/$$base.output.sorted; \
-		sort $(test_dir)/$$base.test > $(test_dir)/$$base.test.sorted; \
-		if diff $(test_dir)/$$base.output.sorted $(test_dir)/$$base.test.sorted> /dev/null 2>&1; then \
-			echo "Test $$base passed."; \
+	@set -e; for file in $(output_files); do \
+		base=$${file%.output}; \
+		sort "$$file" > "$$base.output.sorted"; \
+		sort "$$base.test" > "$$base.test.sorted"; \
+		if diff "$$base.output.sorted" "$$base.test.sorted" > /dev/null 2>&1; then \
+			echo "Test $$(basename "$$base") passed."; \
 		else \
-			echo "Test $$base failed. Please check the trace with --trace options."; \
+			echo "Test $$(basename "$$base") failed. Please check the trace with --trace options."; \
+			rm -f "$$base.output.sorted" "$$base.test.sorted"; \
+			exit 1; \
 		fi; \
-		rm  $(test_dir)/$$base.output.sorted $(test_dir)/$$base.test.sorted; \
+		rm -f "$$base.output.sorted" "$$base.test.sorted"; \
 	done
+
+input_files = $(filter %.input,$(patsubst %.test,%.input,$(reference_files)))
+input_files := $(wildcard $(input_files))
 
 # Specific targets to generate all *.pdf files
 all_pdf: $(patsubst $(test_dir)/%.input,$(test_dir)/%.pdf,$(input_files))

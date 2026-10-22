@@ -1,3 +1,0 @@
-// music.lexicon — lexiques fermés du mini-projet pop.
-#include common.lexicon
-#include chords.lexicon

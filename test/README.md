@@ -21,3 +21,5 @@ Covered cases:
 - cross-dependencies between optional terms;
 - hyphenated identifiers such as `foo-123`;
 - optionals around a required term without duplicate `↓i` definitions.
+
+Les exemples historiques sont rangés par famille ; voir [ORGANISATION.md](ORGANISATION.md).
