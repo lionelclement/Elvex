@@ -18,6 +18,7 @@ Makefile
 a.out
 
 # Logs and generated reports
+/test/*/.elvex-build/
 *.log
 log.html
 log.txt
@@ -64,3 +65,8 @@ elvex-www/config/config.php
 /src/ruleslex.cc
 /src/rulesyacc.cc
 /src/rulesyacc.hpp
+# Fichiers musicaux générés
+/test/music/*.pdf
+/test/music/*.midi
+/test/music/*.ly
+/test/music/*.lilypond.stamp

@@ -21,6 +21,7 @@
 #define COMPACTEDLEXICONFSA_H
 
 #include <ostream>
+#include <cstdint>
 
 struct CompactedLexiconFsa
 {

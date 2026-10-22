@@ -109,6 +109,9 @@ Item::~Item()
     refs.clear();
     seen.clear();
     normalizedAt.clear();
+    normalizedRefs.clear();
+    normalizedOrders.clear();
+    normalizedFeatures.clear();
     ranges.clear();
     if (inheritedFeatures)
         inheritedFeatures.reset();
@@ -401,12 +404,70 @@ void Item::markNormalizedAt(uint8_t _index)
 /* **************************************************
  *
  ************************************************** */
+// A Features/ListFeatures core serialization can have a cached value even
+// when a nested feature/value has subsequently been modified in place.
+// Clone the entire structure before serializing so that all nested
+// serializations are rebuilt from the current semantic content.
+static std::string currentFeaturesSignature(const featuresPtr &fs)
+{
+    return fs ? fs->clone()->peekCoreSerialString() : std::string("<null>");
+}
+
+static std::string currentListFeaturesSignature(const listFeaturesPtr &lf)
+{
+    return lf ? lf->clone()->peekCoreSerialString() : std::string("<null>");
+}
+
+static std::array<std::string, 4> normalizationFeaturesSignature(
+    const featuresPtr &inherited, const listFeaturesPtr &inheritedChildren,
+    const featuresPtr &synthesized, const listFeaturesPtr &synthesizedChildren)
+{
+    return {
+        currentFeaturesSignature(inherited),
+        currentListFeaturesSignature(inheritedChildren),
+        currentFeaturesSignature(synthesized),
+        currentListFeaturesSignature(synthesizedChildren)
+    };
+}
+
+bool Item::needsNormalizationPropagation(uint8_t _index) const
+{
+    if (!isNormalizedAt(_index))
+        return true;
+    if (_index >= normalizedRefs.size() || _index >= normalizedOrders.size() ||
+        _index >= normalizedFeatures.size())
+        return true;
+    return normalizedRefs[_index] != refs ||
+           normalizedOrders[_index] != orderSpecs ||
+           normalizedFeatures[_index] != normalizationFeaturesSignature(inheritedFeatures, inheritedChildFeatures,
+               synthesizedFeatures, synthesizedChildFeatures);
+}
+
+void Item::markNormalizationPropagated(uint8_t _index)
+{
+    if (_index >= normalizedRefs.size())
+        normalizedRefs.resize(_index + 1);
+    if (_index >= normalizedOrders.size())
+        normalizedOrders.resize(_index + 1);
+    if (_index >= normalizedFeatures.size())
+        normalizedFeatures.resize(_index + 1);
+    normalizedRefs[_index] = refs;
+    normalizedOrders[_index] = orderSpecs;
+    normalizedFeatures[_index] = normalizationFeaturesSignature(inheritedFeatures, inheritedChildFeatures,
+               synthesizedFeatures, synthesizedChildFeatures);
+    markNormalizedAt(_index);
+}
+
 void Item::clearNormalizedAt(uint8_t _index)
 {
     if (_index < normalizedAt.size())
-    {
         normalizedAt[_index] = false;
-    }
+    if (_index < normalizedRefs.size())
+        normalizedRefs[_index].clear();
+    if (_index < normalizedOrders.size())
+        normalizedOrders[_index].clear();
+    if (_index < normalizedFeatures.size())
+        normalizedFeatures[_index] = {};
 }
 
 /* **************************************************
@@ -918,6 +979,9 @@ class Item *Item::clone(const std::bitset<MAX_FLAGS> &protectedFlags, bool verbo
     it->refs = this->refs;
     it->seen = this->seen;
     it->normalizedAt = this->normalizedAt;
+    it->normalizedRefs = this->normalizedRefs;
+    it->normalizedOrders = this->normalizedOrders;
+    it->normalizedFeatures = this->normalizedFeatures;
     it->orderSpecs = this->orderSpecs;
     it->inheritedFeatures = this->inheritedFeatures->clone();
     it->inheritedChildFeatures = this->inheritedChildFeatures->clone();

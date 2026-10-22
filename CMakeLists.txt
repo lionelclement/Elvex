@@ -198,6 +198,11 @@ if(BASH_PROGRAM)
             COMMAND ${BASH_PROGRAM} ${CMAKE_CURRENT_SOURCE_DIR}/test/run-regression.sh $<TARGET_FILE:elvex>)
     set_tests_properties(elvex_regression PROPERTIES
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    # PASS/UNFOLD: witness must notice both new references and late feature changes.
+    add_test(
+            NAME elvex_optional_normalization
+            COMMAND ${BASH_PROGRAM} ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_optional_late_features.sh)
+    set_tests_properties(elvex_optional_normalization PROPERTIES TIMEOUT 180)
 else()
     message("bash not found; regression tests are disabled")
 endif()

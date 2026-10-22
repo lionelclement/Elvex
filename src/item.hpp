@@ -21,6 +21,7 @@
 #define ELVEX_ITEM_H
 
 #include <climits>
+#include <array>
 #include <unordered_set>
 #include <vector>
 #include <unordered_map>
@@ -50,6 +51,10 @@ private:
     set_of_uint32_t refs;                                    // set of items from which this one is derived
     std::vector<bool> seen;                                  // seen flags
     std::vector<bool> normalizedAt;                          // normalization witnesses per RHS position
+    std::vector<set_of_uint32_t> normalizedRefs;             // refs already propagated at each position
+    std::vector<OrderSpecs> normalizedOrders;                 // order constraints already propagated
+    // Deep content snapshots: ↑, ↓, ⇑, ⇓, per RHS position.
+    std::vector<std::array<std::string, 4>> normalizedFeatures;
     std::vector<uint32_t> ranges;                            // ranges
     featuresPtr inheritedFeatures;                           // ↑
     listFeaturesPtr inheritedChildFeatures;                  // ↓
@@ -59,7 +64,7 @@ private:
     environmentPtr environment;                              // variable environment
     OrderSpecs orderSpecs;
 
-    bool s_id = false, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
+    bool s_id = true, s_ruleId = false, s_rule = false, s_flags = false, s_refs = false,
          s_seen = false, s_item = true, s_index = false, s_indexTerms = false, s_terms = false,
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
          s_inheritedChildFeatures = true, s_synthesizedFeatures = true,
@@ -175,6 +180,10 @@ public:
     bool isNormalizedAt(uint8_t) const;
 
     void markNormalizedAt(uint8_t);
+
+    bool needsNormalizationPropagation(uint8_t) const;
+
+    void markNormalizationPropagated(uint8_t);
 
     void clearNormalizedAt(uint8_t);
 

@@ -16,6 +16,7 @@ NP → det N
   ⇑ = ⇓1 U ⇓2 U [@_3];
 }
 
+@trace
 N → noun
 {
   [mod:NIL];
@@ -23,6 +24,7 @@ N → noun
   ⇑ = ⇓1;
 }
 
+@trace
 VP → verb
 {
   ↓1 = ↑;

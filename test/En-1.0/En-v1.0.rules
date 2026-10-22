@@ -2,9 +2,10 @@
  * 
  ************************************************** */
 @withoutSpaces
+@trace
 Axiom → Text_with_features strongPunct {
-  //eprintln __FILE__, "...";
-  //eprintln __FILE__, " will take a while due to the large number of possible combinations.";
+  eprintln __FILE__, "...";
+  eprintln __FILE__, " will take a while due to the large number of possible combinations.";
   ↓1 = ↑;
   [punct:$punc] ⊂ ⇓1;
   ↓2 = [punct:$punc];
@@ -13,7 +14,7 @@ Axiom → Text_with_features strongPunct {
 /* **************************************************
  * 
  ************************************************** */
-@trace
+
 Text_with_features → VTENSE S_tense {
   [vtense:$vtense] ⊂ ⇓2;
   [lexical_function:$lexical_function, tense:$tense, verbal_constr:$verbal_constr, $Rest] ⊂ ↑;
@@ -148,6 +149,7 @@ S_anaphoric → S_mod {
 /* **************************************************
  * Sentence modifiers
  ************************************************** */
+/*
 S_mod → S_mod form {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
@@ -161,6 +163,7 @@ S_mod → S_mod advs {
   ↓2 = $H;
   ⇑ = ⇓1;
 }
+*/
 
 S_mod → S {
   [MOD:NIL, $Rest];
@@ -215,11 +218,13 @@ S → S_anaphoric form S_anaphoric {
 /* **************************************************
  * Sentence arguments
  ************************************************** */
+/*
 S → S {
   [i:$i, ii:NIL, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, $Rest];
   ⇑ = ⇓1;
 }
+*/
 
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
@@ -227,6 +232,7 @@ S → S {
   ⇑ = ⇓1;
 }
 
+/*
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $Rest];
@@ -254,6 +260,7 @@ S → S {
   ↓1 = [SUBJECT:$i248, VCOMP:[i:$i248, $iiRest249], iiReal:VCOMP, $Rest248];
   ⇑ = ⇓1;
 }
+*/
 
 zS → S {
   [i:$i, ii:$ii, iii:$iii, $Rest];
@@ -270,6 +277,7 @@ zS → S {
 /* **************************************************
  * Affirmative Sentence
  ************************************************** */
+
 S → (NP|cln) VP {
   [SUBJECT:$SUBJECT, vtense:$vtense, $Rest];
   [verbal_constr:$verbal_constr] ⊂ ↑;
@@ -350,6 +358,7 @@ N1 → N {
   ⇑ = ⇓1;
 }
 
+/*
 N1 → ADJS N {
   [MOD:$List, $Rest];
   ↓1 = [mod:$List];
@@ -367,7 +376,7 @@ ADJS → ADJ ADJ {
   [mod:<$M1,$M2>];
   ↓1 = $M1;
   ↓2 = $M2;
-  order by <⇓1.rank, ⇓2.rank>;
+	order 1, 2 by ⇓.rank;
   ⇑ = ↑;
 }
 
@@ -376,7 +385,7 @@ ADJS → ADJ ADJ ADJ {
   ↓1 = $M1;
   ↓2 = $M2;
   ↓3 = $M3;
-  order by <⇓1.rank, ⇓2.rank, ⇓3.rank>;
+	order 1, 2, 3 by ⇓.rank;
   ⇑ = ↑;
 }
 
@@ -386,7 +395,7 @@ ADJS → ADJ ADJ ADJ ADJ {
   ↓2 = $M2;
   ↓3 = $M3;
   ↓4 = $M4;
-  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank>;
+	order 1, 2, 3, 4 by ⇓.rank;
   ⇑ = ↑;
 }
 
@@ -397,7 +406,7 @@ ADJS → ADJ ADJ ADJ ADJ ADJ {
   ↓3 = $M3;
   ↓4 = $M4;
   ↓5 = $M5;
-  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank>;
+	order 1, 2, 3, 4, 5 by ⇓.rank;
   ⇑ = ↑;
 }
 
@@ -409,7 +418,7 @@ ADJS → ADJ ADJ ADJ ADJ ADJ ADJ {
   ↓4 = $M4;
   ↓5 = $M5;
   ↓6 = $M6;
-  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank>;
+	order 1, 2, 3, 4, 5, 6 by ⇓.rank;
   ⇑ = ↑;
 }
 
@@ -422,7 +431,7 @@ ADJS → ADJ ADJ ADJ ADJ ADJ ADJ ADJ {
   ↓5 = $M5;
   ↓6 = $M6;
   ↓7 = $M7;
-  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank, ⇓7.rank>;
+	order 1, 2, 3, 4, 5, 6, 7 by ⇓.rank;
   ⇑ = ↑;
 }
 
@@ -436,7 +445,7 @@ ADJS → ADJ ADJ ADJ ADJ ADJ ADJ ADJ ADJ {
   ↓6 = $M6;
   ↓7 = $M7;
   ↓8 = $M8;
-  order by <⇓1.rank, ⇓2.rank, ⇓3.rank, ⇓4.rank, ⇓5.rank, ⇓6.rank, ⇓7.rank, ⇓8.rank>;
+	order 1, 2, 3, 4, 5, 6, 7, 8 by ⇓.rank;
   ⇑ = ↑;
 }
 
@@ -444,6 +453,9 @@ ADJ → adj {
   ↓1 = ↑;
   ⇑ = ⇓1;
 }
+
+*/
+
 
 N → common_noun {
   [MOD:NIL, $Rest];
@@ -454,6 +466,8 @@ N → common_noun {
 /* **************************************************
  * Verb and its complements
  ************************************************** */
+/*
+
 VP → VN (NP) (part) (NP) (AP|form) (PP) (SCOMP|VCOMP) {
   // Given Arguments
   [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;
@@ -506,13 +520,13 @@ VP → VN (NP) (part) (NP) (AP|form) (PP) (SCOMP|VCOMP) {
     attest (¬$OBJ_THETA ∧ ¬$Synth_OBJ_THETA);
   }
   
-  if (#7.1) {
+  if (#7 . 1) {
     [compl:$compl] ⊂ ⇓1;
     if ($Synth_SCOMP)
       $SCOMP = $SCOMP ∪ $Synth_SCOMP; 
     ↓7 = [lexical_function:$lexical_function, compl:$compl, $SCOMP];
   }
-  else if (#7.2) {
+  else if (#7 . 2) {
     if ($Synth_VCOMP)
       $VCOMP = $VCOMP ∪ $Synth_VCOMP; 
     ↓7 = [lexical_function:$lexical_function, $VCOMP];
@@ -524,10 +538,32 @@ VP → VN (NP) (part) (NP) (AP|form) (PP) (SCOMP|VCOMP) {
   
   ⇑ = ⇓1;
 }
+*/
+
+VP → VN NP {
+  // Given arguments
+  [OBJECT:$OBJECT, lexical_function:$lexical_function, $Rest] ⊂ ↑;
+
+  // Idiomatic arguments supplied by VN
+  [OBJECT:$Synth_OBJECT] ⊂ ⇓1;
+
+  // Verb
+  ↓1 = $Rest;
+
+  // Direct object
+  if ($Synth_OBJECT)
+    $OBJECT = $OBJECT ∪ $Synth_OBJECT;
+
+  ↓2 = [case:accusative, lexical_function:$lexical_function, $OBJECT];
+
+  // Synthesized features
+  ⇑ = ⇓1;
+}
 
 /* **************************************************
  * Verb 
  ************************************************** */
+
 VN → VERB {
   [OBJECT:NIL, OBLIQUE:NIL, OBJ_THETA:NIL, PRED_ADJ:NIL, SCOMP:NIL, VCOMP:NIL, $Rest];
   ↓1 = $Rest;

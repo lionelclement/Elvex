@@ -56,10 +56,10 @@
 static bool mergeRefs(class Item *target, const Item::set_of_uint32_t &refs);
 static bool mergeOrderSpecs(class Item *target, const OrderSpecs &orderSpecs);
 
-
 static bool redundancyDiagnosticsEnabled()
 {
-    static bool enabled = []() {
+    static bool enabled = []()
+    {
         const char *value = std::getenv("ELVEX_REDUNDANCY_DIAGNOSTICS");
         if (!value || !*value)
             return false;
@@ -248,8 +248,6 @@ static bool hasUnprocessedReduceWork(uint32_t row, class Item *actualItem, bool 
     return false;
 }
 
-
-
 static std::string diagnosticRuleLabel(class Item *item)
 {
     if (!item)
@@ -302,7 +300,7 @@ static void diagnosticPrintTop(std::ostream &os, const char *title, const char *
     if (!redundancyDiagnosticsEnabled())
         return;
 
-    std::vector<std::pair<std::string, uint64_t> > rows;
+    std::vector<std::pair<std::string, uint64_t>> rows;
     for (std::unordered_map<std::string, uint64_t>::const_iterator it = redundancyDiagnostics.top.begin();
          it != redundancyDiagnostics.top.end();
          ++it)
@@ -357,7 +355,6 @@ static void diagnosticPrintSummary()
 
     std::cerr << "================================================================\n";
 }
-
 
 /* **************************************************
  *
@@ -1200,7 +1197,6 @@ static bool needsNormalization(class Item *item)
     return terms->isOptional() || terms->size() > 1;
 }
 
-
 /* **************************************************
  * Normalize a state before closure/shift.
  ************************************************** */
@@ -1242,14 +1238,13 @@ bool Generator::normalize(Parser &, class ItemSet *state, uint32_t row)
                  * Keep the source item as an idempotence witness.  It is marked
                  * as already normalized at its current dot position and is never
                  * processed by close()/shift() while it still needs normalization.
-                 * If a later reduce recreates the same source item with extra refs,
-                 * state->find() merges those refs into this witness and normalize()
-                 * re-emits the already computed branches below.
+                 * The source remains in the chart for later reference, order or
+                 * feature changes. Re-emit alternatives only when that input
+                 * information differs from the last propagated snapshot.
                  */
-                if (newlyMarked)
-                {
-                    (*actualItem)->markNormalizedAt(normalizedIndex);
-                }
+                if (!(*actualItem)->needsNormalizationPropagation(normalizedIndex))
+                    continue;
+                (*actualItem)->markNormalizationPropagated(normalizedIndex);
 
                 class Item *absent = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
                 absent->clearNormalizedAt(normalizedIndex);
@@ -1345,10 +1340,10 @@ bool Generator::normalize(Parser &, class ItemSet *state, uint32_t row)
                 }
 #endif
 
-                if (newlyMarked)
-                {
-                    (*actualItem)->markNormalizedAt(normalizedIndex);
-                }
+                // Re-emit alternatives only when propagated inputs have changed.
+                if (!(*actualItem)->needsNormalizationPropagation(normalizedIndex))
+                    continue;
+                (*actualItem)->markNormalizationPropagated(normalizedIndex);
 
                 termsPtr terms = (*actualItem)->getCurrentTerms();
 
@@ -1417,7 +1412,6 @@ bool Generator::normalize(Parser &, class ItemSet *state, uint32_t row)
 
     return modificationOnce;
 }
-
 
 /* **************************************************
  *
@@ -1503,7 +1497,6 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                         std::cout << std::endl;
                     }
                 }
-
                 if ((*actualItem)->isSetFlags(Flags::BOTTOM))
                 {
                     eraseItemMap((*actualItem)->getId());
@@ -1757,7 +1750,7 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                     forestFound->push_node(node);
                                 }
                             }
-skipRootReduction:
+                        skipRootReduction:
                             for (auto ref : (*actualItem)->getRefs())
                             {
                                 const std::string reduceRefKey = processedReduceRefOperationKey(row, *actualItem, ref);

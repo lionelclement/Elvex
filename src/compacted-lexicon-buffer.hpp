@@ -21,6 +21,7 @@
 #define COMPACTEDLEXICONBUFFER_H
 
 #include <iostream>
+#include <cstdint>
 
 struct CompactedLexiconBuffer
 {

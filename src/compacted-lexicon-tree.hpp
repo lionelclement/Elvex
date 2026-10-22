@@ -21,6 +21,7 @@
 #define COMPACTEDLEXICONTREE_H
 
 #include <cstdio>
+#include <cstdint>
 
 class CompactedLexiconTree
 {
