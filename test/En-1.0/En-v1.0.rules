@@ -149,7 +149,6 @@ S_anaphoric → S_mod {
 /* **************************************************
  * Sentence modifiers
  ************************************************** */
-/*
 S_mod → S_mod form {
   [MOD:<$H :: $T>, $Rest];
   ↓1 = [MOD:$T, $Rest];
@@ -163,7 +162,6 @@ S_mod → S_mod advs {
   ↓2 = $H;
   ⇑ = ⇓1;
 }
-*/
 
 S_mod → S {
   [MOD:NIL, $Rest];
@@ -218,13 +216,11 @@ S → S_anaphoric form S_anaphoric {
 /* **************************************************
  * Sentence arguments
  ************************************************** */
-/*
 S → S {
   [i:$i, ii:NIL, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, $Rest];
   ⇑ = ⇓1;
 }
-*/
 
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
@@ -232,7 +228,6 @@ S → S {
   ⇑ = ⇓1;
 }
 
-/*
 S → S {
   [i:$i, ii:$ii, iii:NIL, $Rest];
   ↓1 = [SUBJECT:$i, PRED_ADJ:$ii, iiReal:PRED_ADJ, $Rest];
@@ -260,7 +255,6 @@ S → S {
   ↓1 = [SUBJECT:$i248, VCOMP:[i:$i248, $iiRest249], iiReal:VCOMP, $Rest248];
   ⇑ = ⇓1;
 }
-*/
 
 zS → S {
   [i:$i, ii:$ii, iii:$iii, $Rest];
@@ -358,7 +352,6 @@ N1 → N {
   ⇑ = ⇓1;
 }
 
-/*
 N1 → ADJS N {
   [MOD:$List, $Rest];
   ↓1 = [mod:$List];
@@ -454,9 +447,6 @@ ADJ → adj {
   ⇑ = ⇓1;
 }
 
-*/
-
-
 N → common_noun {
   [MOD:NIL, $Rest];
   ↓1 = $Rest;
@@ -466,8 +456,6 @@ N → common_noun {
 /* **************************************************
  * Verb and its complements
  ************************************************** */
-/*
-
 VP → VN (NP) (part) (NP) (AP|form) (PP) (SCOMP|VCOMP) {
   // Given Arguments
   [OBJECT:$OBJECT, OBLIQUE:$OBLIQUE, OBJ_THETA:$OBJ_THETA, PRED_ADJ:$PRED_ADJ, SCOMP:$SCOMP, VCOMP:$VCOMP, lexical_function:$lexical_function, $Rest] ⊂ ↑;
@@ -536,27 +524,6 @@ VP → VN (NP) (part) (NP) (AP|form) (PP) (SCOMP|VCOMP) {
     attest (¬$VCOMP ∧ ¬$Synth_VCOMP);
   }
   
-  ⇑ = ⇓1;
-}
-*/
-
-VP → VN NP {
-  // Given arguments
-  [OBJECT:$OBJECT, lexical_function:$lexical_function, $Rest] ⊂ ↑;
-
-  // Idiomatic arguments supplied by VN
-  [OBJECT:$Synth_OBJECT] ⊂ ⇓1;
-
-  // Verb
-  ↓1 = $Rest;
-
-  // Direct object
-  if ($Synth_OBJECT)
-    $OBJECT = $OBJECT ∪ $Synth_OBJECT;
-
-  ↓2 = [case:accusative, lexical_function:$lexical_function, $OBJECT];
-
-  // Synthesized features
   ⇑ = ⇓1;
 }
 
