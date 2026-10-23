@@ -131,6 +131,12 @@ public:
   void printMacros();
 
 private:
+  /** Keep the original input name on the lexer diagnostic stack. */
+  void parseNamedSource(std::string bufferName, std::string source);
+
+  /** Render the analyses for one part of speech without changing their order. */
+  static void printLexiconEntries(std::ostream &, const entries_map &);
+
   void parseString(std::string buffer);
 };
 

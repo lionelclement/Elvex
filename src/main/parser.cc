@@ -211,17 +211,20 @@ void Parser::printCacheLexicon(std::ostream &out) const {
         out << "<li>";
         out << Vartable::codeToName((*i).first);
         out << "<ul>";
-        for (entries_map::iterator j = (*i).second->begin(); j != (*i).second->end(); ++j) {
-            out << "<li>";
-            out << Vartable::codeToName((*j).first) << " -&gt; ";
-            (*j).second->print(out);
-            out << "</li>";
-
-        }
+        printLexiconEntries(out, *(*i).second);
         out << "</ul>";
         out << "</il>";
     }
     out << "</ul>";
+}
+
+void Parser::printLexiconEntries(std::ostream &out, const entries_map &entries) {
+    for (entries_map::const_iterator i = entries.cbegin(); i != entries.cend(); ++i) {
+        out << "<li>";
+        out << Vartable::codeToName((*i).first) << " -&gt; ";
+        (*i).second->print(out);
+        out << "</li>";
+    }
 }
 
 /* ************************************************************
@@ -235,30 +238,29 @@ void Parser::addMacros(std::string key, featuresPtr features) {
  *                                                            *
  ************************************************************ */
 featuresPtr Parser::findMacros(const std::string& str) {
-    //std::cerr << "find @" << str << ":";
-    macro_map::const_iterator found;
-    found = macros.find(str);
-    if (found == macros.end()) {
-        return featuresPtr();
-    } else {
-        return found->second;
-    }
+    const macro_map::const_iterator found = macros.find(str);
+    return found == macros.end() ? featuresPtr() : found->second;
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Parser::parseFile(std::string prefix, std::string suffix, std::string fileName) {
-    pushBufferName(fileName);
-    parseString(prefix + "\n#include " + fileName + "\n" + suffix);
+    const std::string source = prefix + "\n#include " + fileName + "\n" + suffix;
+    parseNamedSource(fileName, source);
 }
 
 /* **************************************************
  *
  ************************************************** */
 void Parser::parseBuffer(std::string prefix, std::string suffix, std::string buffer, std::string bufferName) {
+    const std::string source = prefix + "\n" + buffer + "\n" + suffix;
+    parseNamedSource(bufferName, source);
+}
+
+void Parser::parseNamedSource(std::string bufferName, std::string source) {
     pushBufferName(bufferName);
-    parseString(prefix + "\n" + buffer + "\n" + suffix);
+    parseString(source);
 }
 
 /* **************************************************
@@ -275,9 +277,9 @@ void Parser::parseString(std::string buffer) {
  *
  ************************************************** */
 void Parser::printMacros() {
-    for (auto iterator : macros) {
-        std::cout << '@' << iterator.first << " => ";
-        iterator.second->flatPrint(std::cout);
+    for (const auto &macro : macros) {
+        std::cout << '@' << macro.first << " => ";
+        macro.second->flatPrint(std::cout);
         std::cout << std::endl;
     }
 }

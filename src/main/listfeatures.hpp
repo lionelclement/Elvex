@@ -60,14 +60,17 @@ public:
 
     size_t size() const;
 
+    /** Deep-clone each child feature structure, preserving positional order. */
     listFeaturesPtr clone(void);
 
+    /** Position must be smaller than size(); no bounds checking is performed. */
     featuresPtr operator[](unsigned int);
 
     void toHTML(std::ostream &) const;
 
     void flatPrint(std::ostream &) const;
 
+    /** Apply a separately cloned statement to each child feature structure. */
     void apply(statementPtr from, class Item *item, class Parser &parser, class Generator *synthesizer, const statementPtr &variable, statementPtr body,
           bool &effect, bool verbose);
 

@@ -136,8 +136,8 @@ size_t ListFeatures::size() const
 listFeaturesPtr ListFeatures::clone()
 {
     listFeaturesPtr lf = ListFeatures::create();
-    for (auto &listFeature : listFeatures)
-        lf->push_back(listFeature->clone());
+    for (const auto &childFeatures : listFeatures)
+        lf->push_back(childFeatures->clone());
     return lf;
 }
 
@@ -160,14 +160,12 @@ void ListFeatures::toHTML(std::ostream &outStream) const
 void ListFeatures::flatPrint(std::ostream &outStream) const
 {
     outStream << '(';
-    bool first = true;
-    for (auto &listFeature : listFeatures)
+    const char *separator = "";
+    for (const auto &childFeatures : listFeatures)
     {
-        if (first)
-            first = false;
-        else
-            outStream << ", ";
-        listFeature->flatPrint(outStream);
+        outStream << separator;
+        childFeatures->flatPrint(outStream);
+        separator = ", ";
     }
     outStream << ')';
 }
@@ -178,9 +176,10 @@ void ListFeatures::flatPrint(std::ostream &outStream) const
 void ListFeatures::apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, const statementPtr &variable, statementPtr statement,
                          bool &effect, bool verbose)
 {
-    for (auto &features : listFeatures)
+    for (const auto &childFeatures : listFeatures)
     {
-        features->apply(statementRoot, item, parser, synthesizer, variable, statement->clone(0), effect, verbose);
+        // Each child must receive its own mutable statement tree.
+        childFeatures->apply(statementRoot, item, parser, synthesizer, variable, statement->clone(0), effect, verbose);
     }
 }
 
