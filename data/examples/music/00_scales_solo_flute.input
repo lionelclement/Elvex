@@ -58,8 +58,8 @@ PIECE [
     ],
 
   key:[
-      tonic:c,
-      mode:minor],
+      tonic:ees,
+      mode:major],
 
   meter:[
       num:4,
