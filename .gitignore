@@ -85,3 +85,8 @@ DartConfiguration.tcl
 # Patch backup and reject files
 *.orig
 *.rej
+# Generated music files
+/data/examples/music/**/*.ly
+/data/examples/music/**/*.midi
+/data/examples/music/**/*.pdf
+/data/examples/music/**/*.lilypond.stamp
