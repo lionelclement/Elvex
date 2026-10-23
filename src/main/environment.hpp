@@ -25,6 +25,10 @@
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
+/**
+ * Bindings of grammar variables to values during feature evaluation.
+ * Unification updates an environment, so alternatives must use independent copies.
+ */
 class Environment : public Serializable,
                     public std::enable_shared_from_this<class Environment>
 {
@@ -39,6 +43,9 @@ private:
 
     bool remove(const std::string &);
 
+    /** Emit the existing verbose diagnostic for an incompatible variable binding. */
+    void warnBindingConflict(statementPtr statementRoot, const std::string &key) const;
+
 public:
     Environment();
 
@@ -46,8 +53,10 @@ public:
 
     static environmentPtr create(void);
 
+    /** Bind a variable code; override controls replacement of a binding. */
     bool add(statementPtr from, uint32_t, valuePtr, bool verbose, bool override);
 
+    /** Merge another environment into this one. */
     bool add(statementPtr from, const environmentPtr &, bool verbose, bool override);
 
     bool add(statementPtr from, const environmentPtr &, const environmentPtr &, bool verbose, bool override);
@@ -62,12 +71,18 @@ public:
 
     void toHTML(std::ostream &) const;
 
+    /** Clone bindings before exploring an alternative that may mutate them. */
     environmentPtr clone(statementPtr from, bool verbose) const;
 
     valuePtr get(const uint32_t) const;
 
+    /**
+     * Substitute known bindings into a feature structure in place.
+     * The bool reference reports whether a substitution changed it.
+     */
     void replaceVariables(const featuresPtr &, bool &);
 
+    /** Resolve bound variables in a value; update the change flag. */
     void replaceVariables(const valuePtr &, bool &);
 
     void replaceVariables(const pairpPtr &, bool &);

@@ -172,20 +172,49 @@ void Pairp::makeCoreSerialString()
         break;
     case _PAIRP_:
         coreSerialString = '-' + pairp.car->peekCoreSerialString();
-        if (pairp.cdr->isAtom())
-        {
+        if (!pairp.cdr->isNil())
             coreSerialString += '-' + pairp.cdr->peekCoreSerialString();
-        }
-        else if (pairp.cdr->isNil())
-        {
-        }
-        else
-        {
-            coreSerialString += '-' + pairp.cdr->peekCoreSerialString();
-        }
         coreSerialString += '-';
         break;
     }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+/** Render the non-empty pair branch of the HTML representation. */
+void Pairp::writePairHTML(std::ostream &outStream) const
+{
+    pairp.car->toHTML(outStream);
+    if (pairp.cdr->isAtom())
+    {
+        outStream << "::";
+        pairp.cdr->toHTML(outStream);
+    }
+    else if (!pairp.cdr->isNil())
+    {
+        pairp.cdr->toHTML(outStream);
+    }
+}
+
+/** Render one pair, including the original dotted-tail and bracket rules. */
+void Pairp::writePairFlat(std::ostream &outStream, bool par) const
+{
+    if (par || pairp.cdr->isAtom())
+        outStream << '<';
+    pairp.car->flatPrint(outStream, true);
+    if (pairp.cdr->isAtom())
+    {
+        outStream << "::";
+        pairp.cdr->flatPrint(outStream, true);
+    }
+    else if (!pairp.cdr->isNil())
+    {
+        outStream << ",";
+        pairp.cdr->flatPrint(outStream, false);
+    }
+    if (par || pairp.cdr->isAtom())
+        outStream << '>';
 }
 
 /* **************************************************
@@ -202,16 +231,7 @@ void Pairp::toHTML(std::ostream &outStream) const
         value->toHTML(outStream);
         break;
     case _PAIRP_:
-        pairp.car->toHTML(outStream);
-        if (pairp.cdr->isAtom())
-        {
-            outStream << "::";
-            pairp.cdr->toHTML(outStream);
-        }
-        else if (!pairp.cdr->isNil())
-        {
-            pairp.cdr->toHTML(outStream);
-        }
+        writePairHTML(outStream);
         break;
     }
 }
@@ -226,31 +246,11 @@ void Pairp::flatPrint(std::ostream &outStream, bool par) const
     case _NIL_:
         outStream << "<>";
         break;
-
     case _ATOM_:
         value->flatPrint(outStream);
         break;
-
     case _PAIRP_:
-        if (par || pairp.cdr->isAtom())
-        {
-            outStream << '<';
-        }
-        pairp.car->flatPrint(outStream, true);
-        if (pairp.cdr->isAtom())
-        {
-            outStream << "::";
-            pairp.cdr->flatPrint(outStream, true);
-        }
-        else if (!pairp.cdr->isNil())
-        {
-            outStream << ",";
-            pairp.cdr->flatPrint(outStream, false);
-        }
-        if (par || pairp.cdr->isAtom())
-        {
-            outStream << '>';
-        }
+        writePairFlat(outStream, par);
         break;
     }
 }

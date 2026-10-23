@@ -24,6 +24,10 @@
 #include <string>
 #include "orderspec.hpp"
 
+/**
+ * Collection of precedence constraints applied when linearizing a node.
+ * Together they define a directed ordering graph.
+ */
 class OrderSpecs
 {
 private:
@@ -35,6 +39,7 @@ public:
 
     OrderSpecs();
 
+    /** Insert a distinct constraint; preserve the order of existing specs. */
     void add(const OrderSpec &spec);
     void clear();
 
@@ -48,6 +53,7 @@ public:
 
     const std::vector<OrderSpec> &asVector() const;
 
+    /** Accumulate all constraints in the supplied precedence graph. */
     void addEdges(std::vector<std::vector<bool>> &edge,
                   const std::vector<uint32_t> &rhsIndexes) const;
 

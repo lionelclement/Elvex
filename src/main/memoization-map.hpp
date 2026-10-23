@@ -25,6 +25,11 @@
 #include <vector>
 #include "memoization-value.hpp"
 
+/**
+ * Indexes reduction results by a serialized pair of chart items.
+ * Values are stored in insertion order within each key. The existing
+ * raw-pointer lifetime policy is unchanged: clear() only empties the index.
+ */
 class MemoizationMap : public std::enable_shared_from_this<class MemoizationMap>
 {
 
@@ -35,12 +40,15 @@ private:
     map memoizationMap;
 
 public:
+    /** Discard indexed pointers without destroying their pointees. */
     void clear(void);
 
     map::const_iterator cend(void) const;
 
+    /** Look up a pair; returns cend() if it has no memoized results. */
     map::const_iterator find(const std::string &) const;
 
+    /** Append one result; repeated keys retain the insertion order. */
     void insert(const std::string &, featuresPtr, class ForestIdentifier *, class Item *);
 };
 

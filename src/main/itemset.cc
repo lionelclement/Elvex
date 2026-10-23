@@ -113,39 +113,43 @@ ItemSet::set_of_item_const_iterator ItemSet::find(class Item *item) const
 /* **************************************************
  *
  ************************************************** */
-bool ItemSet::insert(class Item *item, Generator *synthesizer)
+void ItemSet::checkCapacity(const Generator *generator) const
 {
-    if (items.size() > synthesizer->getMaxItems())
+    if (items.size() > generator->getMaxItems())
     {
         std::ostringstream oss;
-        oss << "too much items build : " << items.size() << " (" << synthesizer->getMaxItems() << " Max)";
-            //this->toHTML(std::cout);
-            //std::cout << std::endl;
+        oss << "too much items build : " << items.size() << " (" << generator->getMaxItems() << " Max)";
         throw fatal_exception(oss);
     }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+bool ItemSet::insert(class Item *item, Generator *synthesizer)
+{
+    checkCapacity(synthesizer);
 #ifdef TRACE_INSERT
     std::cout << "<H3>####################### INSERT " << item->getId() << " #######################</H3>" << std::endl;
     item->toHTML(std::cout);
     std::cout << std::endl;
 #endif
-    bool inserted = items.insert(item).second;
+    const bool inserted = items.insert(item).second;
+#ifdef TRACE_INSERT
     if (!inserted)
     {
-#ifdef TRACE_INSERT
-            std::cout << "<H3>####################### DUPLICATE " << item->getId() << " #######################</H3>" << std::endl;
-            item->toHTML(std::cout);
-            std::cout << std::endl;
-#endif
+        std::cout << "<H3>####################### DUPLICATE " << item->getId() << " #######################</H3>" << std::endl;
+        item->toHTML(std::cout);
+        std::cout << std::endl;
     }
-    else {
-#ifdef TRACE_INSERT
-            std::cout << "<H3>####################### RESULT INSERTED " << item->getId() << " #######################</H3>" << std::endl;
-            //item->toHTML(std::cout);
-
-            this->toHTML(std::cout);
-            std::cout << std::endl;
+    else
+    {
+        std::cout << "<H3>####################### RESULT INSERTED " << item->getId() << " #######################</H3>" << std::endl;
+        //item->toHTML(std::cout);
+        this->toHTML(std::cout);
+        std::cout << std::endl;
+    }
 #endif
-}
     return inserted;
 }
 

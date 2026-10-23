@@ -18,6 +18,7 @@
  ************************************************** */
 
 #include "lexicon.hpp"
+#include <utility>
 #include <unordered_map>
 #include <sstream>
 #include "messages.hpp"
@@ -28,9 +29,9 @@ std::vector<std::string> Lexicon::emptyList = std::vector<std::string>();
  *
  ************************************************** */
 Lexicon::Lexicon(std::string name)
+    : name(std::move(name))
 {
     NEW;
-    this->name = name;
 }
 
 /* **************************************************
@@ -62,17 +63,9 @@ std::size_t Lexicon::size(void)
  ************************************************** */
 void Lexicon::add(std::string key, std::string value)
 {
-    //CERR_LINE;
-    //std::cerr << "Lexicon::add [key:\"" << key << "\", value:\"" << value << "\"]" << std::endl;
-    unordered_map::iterator it = the_map.find(key);
-    if (it != the_map.end())
-        (*it).second.push_back(value);
-    else
-    {
-        std::vector<std::string> list = std::vector<std::string>();
-        list.push_back(value);
-        the_map[key] = list;
-    }
+    // operator[] creates an empty list on the first insertion for a key.
+    // Later insertions preserve the order of alternative lexical analyses.
+    the_map[key].push_back(std::move(value));
 }
 
 /* **************************************************
@@ -80,15 +73,9 @@ void Lexicon::add(std::string key, std::string value)
  ************************************************** */
 std::vector<std::string> Lexicon::find(std::string key)
 {
-    unordered_map::const_iterator it = the_map.find(key);
-    if (it != the_map.end())
-    {
-        return (*it).second;
-    }
-    else
-    {
-        return emptyList;
-    }
+    const auto it = the_map.find(key);
+    // Return a copy, so callers cannot modify the indexed lexical template.
+    return it != the_map.end() ? it->second : emptyList;
 }
 
 /* **************************************************

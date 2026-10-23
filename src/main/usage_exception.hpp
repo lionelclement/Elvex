@@ -25,6 +25,7 @@
 
 #include "fatal_exception.hpp"
 
+/** Exception used for invalid command-line usage. */
 class usage_exception :
     public fatal_exception {
 

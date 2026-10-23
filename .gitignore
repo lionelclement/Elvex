@@ -77,3 +77,11 @@ elvex-www/config/config.php
 /data/examples/**/.elvex-build/
 /data/examples/**/*.output.sorted
 /data/examples/**/*.test.sorted
+
+# Generated CMake/CTest files
+CTestTestfile.cmake
+DartConfiguration.tcl
+
+# Patch backup and reject files
+*.orig
+*.rej

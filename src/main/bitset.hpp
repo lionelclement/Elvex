@@ -34,6 +34,10 @@
 #define MAXBITS 2048
 #endif
 
+/**
+ * Set of interned symbols used as atomic feature attributes and values.
+ * Shares the core-serialization protocol used for structural comparisons.
+ */
 class Bitset : public std::bitset<MAXBITS>,
                public Serializable,
                public std::enable_shared_from_this<Bitset>

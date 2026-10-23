@@ -17,6 +17,7 @@
  *
  ************************************************** */
 
+#include <algorithm>
 #include <sstream>
 #include "orderspecs.hpp"
 
@@ -27,13 +28,10 @@ OrderSpecs::OrderSpecs()
 
 void OrderSpecs::add(const OrderSpec &spec)
 {
-    for (const auto &existing : specs)
-    {
-        if (existing == spec)
-            return;
-    }
-
-    specs.push_back(spec);
+    // A duplicate has the same canonical serialized constraint; retain the
+    // first occurrence to preserve the ordering of distinct constraints.
+    if (std::find(specs.begin(), specs.end(), spec) == specs.end())
+        specs.push_back(spec);
 }
 
 void OrderSpecs::clear()

@@ -29,7 +29,6 @@
 #include "statement.hpp"
 #include "statements.hpp"
 #include "messages.hpp"
-#include "item.hpp"
 #include "shared_ptr.hpp"
 #include "generator.hpp"
 #include "vartable.hpp"
@@ -382,48 +381,74 @@ bool Value::isSynthesizedChildFeatures() const
 /* **************************************************
  *
  ************************************************** */
-void Value::toHTML(std::ostream &outStream) const
+/**
+ * Render values that have no nested grammar structure. HTML and plain text
+ * share their spelling except for the quotes around string literals.
+ * Returning false leaves structured values to their respective renderers.
+ */
+bool Value::writeSimpleValue(std::ostream &outStream, bool quoteStrings) const
 {
     switch (type)
     {
     case NIL_VALUE:
         outStream << "NIL";
-        break;
+        return true;
     case TRUE_VALUE:
         outStream << "TRUE";
-        break;
+        return true;
     case FALSE_VALUE:
         outStream << "FALSE";
-        break;
+        return true;
     case CONSTANT_VALUE:
         outStream << bitset->toString();
-        break;
+        return true;
     case VARIABLE_VALUE:
         outStream << '$' << Vartable::codeToName(code);
-        break;
+        return true;
     case ANONYMOUS_VARIABLE_VALUE:
         outStream << '_';
-        break;
+        return true;
     case IDENTIFIER_VALUE:
         outStream << Vartable::codeToName(code);
-        break;
+        return true;
     case NUMBER_VALUE:
         outStream << number;
-        break;
+        return true;
     case STRING_VALUE:
+        if (quoteStrings)
+            outStream << '"';
         outStream << string;
-        break;
+        if (quoteStrings)
+            outStream << '"';
+        return true;
+    case SYNTHESIZED_CHILD_FEATURES_VALUE:
+        outStream << "⇓" << code + 1;
+        return true;
+    default:
+        return false;
+    }
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Value::toHTML(std::ostream &outStream) const
+{
+    if (writeSimpleValue(outStream, false))
+        return;
+
+    switch (type)
+    {
     case FEATURES_VALUE:
         getFeatures()->toHTML(outStream);
         break;
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
         break;
-    case SYNTHESIZED_CHILD_FEATURES_VALUE:
-        outStream << "⇓" << code + 1;
-        break;
     case STATEMENT_VALUE:
         getStatement()->toHTML(outStream);
+        break;
+    default:
         break;
     }
 }
@@ -433,46 +458,21 @@ void Value::toHTML(std::ostream &outStream) const
  ************************************************** */
 void Value::flatPrint(std::ostream &outStream) const
 {
+    if (writeSimpleValue(outStream, true))
+        return;
+
     switch (type)
     {
-    case NIL_VALUE:
-        outStream << "NIL";
-        break;
-    case TRUE_VALUE:
-        outStream << "TRUE";
-        break;
-    case FALSE_VALUE:
-        outStream << "FALSE";
-        break;
-    case CONSTANT_VALUE:
-        outStream << bitset->toString();
-        break;
-    case ANONYMOUS_VARIABLE_VALUE:
-        outStream << '_';
-        break;
-    case IDENTIFIER_VALUE:
-        outStream << Vartable::codeToName(code);
-        break;
-    case VARIABLE_VALUE:
-        outStream << '$' << Vartable::codeToName(code);
-        break;
-    case NUMBER_VALUE:
-        outStream << number;
-        break;
-    case STRING_VALUE:
-        outStream << '"' << string << '"';
-        break;
     case FEATURES_VALUE:
         getFeatures()->flatPrint(outStream);
         break;
     case PAIRP_VALUE:
         getPairp()->flatPrint(outStream, true);
         break;
-    case SYNTHESIZED_CHILD_FEATURES_VALUE:
-        outStream << "⇓" << code + 1;
-        break;
     case STATEMENT_VALUE:
         getStatement()->flatPrint(outStream);
+        break;
+    default:
         break;
     }
 }

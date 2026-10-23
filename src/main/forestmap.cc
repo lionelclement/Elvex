@@ -39,12 +39,7 @@ ForestMap::ForestMap()
 ForestMap::~ForestMap()
 {
     DELETE;
-    for (auto &i : data)
-    {
-        forestPtr tmp = i.second;
-        if (tmp)
-            tmp.reset();
-    }
+    // data releases its shared forest pointers automatically.
 }
 
 /* **************************************************
@@ -76,7 +71,7 @@ ForestMap::map::const_iterator ForestMap::cend() const
  ************************************************** */
 void ForestMap::clear()
 {
-    return data.clear();
+    data.clear();
 }
 
 /* **************************************************

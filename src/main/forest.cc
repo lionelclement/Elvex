@@ -32,15 +32,9 @@ std::string Forest::EMPTY_FORM = "";
  *
  ************************************************** */
 Forest::Forest(uint32_t from, uint32_t to, std::string &form)
+    : from(from), to(to), empty(from == to), form(form)
 {
     NEW;
-    this->from = from;
-    this->to = to;
-    if (from == to)
-        this->empty = true;
-    else
-        this->empty = false;
-    this->form = form;
 }
 
 /* **************************************************
@@ -57,11 +51,7 @@ forestPtr Forest::create(uint32_t from, uint32_t to, std::string &form)
 Forest::~Forest()
 {
     DELETE;
-    for (auto tmp : nodes)
-    {
-        if (tmp)
-            tmp.reset();
-    }
+    // The vector automatically releases its shared node references.
 }
 
 /* **************************************************
@@ -130,95 +120,86 @@ std::string &Forest::getForm(void)
 }
 
 #ifdef OUTPUT_XML
-/* **************************************************
- *
- ************************************************** */
+/** Write the attributes of a fully serialized (non-reference) forest. */
+void Forest::writeXmlAttributes(xmlNodePtr forestNode) const
+{
+    xmlSetProp(forestNode, (xmlChar *)"from", (xmlChar *)std::to_string(from).c_str());
+    xmlSetProp(forestNode, (xmlChar *)"to", (xmlChar *)std::to_string(to).c_str());
+    xmlSetProp(forestNode, (xmlChar *)"size", (xmlChar *)std::to_string(nodes.size()).c_str());
+    xmlSetProp(forestNode, (xmlChar *)"empty", (xmlChar *)(empty ? "yes" : "no"));
+}
+
+/** Write the cached texts, or the legacy NONE marker if none exist. */
+void Forest::writeXmlOutput(xmlNodePtr forestNode) const
+{
+    xmlNodePtr outputNode = xmlNewChild(forestNode, NULL, (const xmlChar *)"OUTPUT", NULL);
+    if (output.empty())
+    {
+        xmlNewChild(outputNode, NULL, (const xmlChar *)"TEXT", (xmlChar *)"NONE");
+        return;
+    }
+    for (const auto &text : output)
+        xmlNewChild(outputNode, NULL, (const xmlChar *)"TEXT", (xmlChar *)text.c_str());
+}
+
 void Forest::toXML(xmlNodePtr nodeRoot, bool root)
 {
-    xmlNodePtr f = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"FOREST", NULL);
+    xmlNodePtr forestNode = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"FOREST", NULL);
     if (root)
-        xmlSetProp(f, (xmlChar *)"root", (xmlChar *)"yes");
+        xmlSetProp(forestNode, (xmlChar *)"root", (xmlChar *)"yes");
+
+    // A forest may appear in several parent nodes; emit its body only once.
     if (isSetFlags(Flags::XML))
     {
-        xmlSetProp(f, (xmlChar *)"idref", (xmlChar *)(this->getIdStr()).c_str());
+        xmlSetProp(forestNode, (xmlChar *)"idref", (xmlChar *)getIdStr().c_str());
+        return;
     }
-    else
-    {
-        xmlSetProp(f, (xmlChar *)"id", (xmlChar *)(this->getIdStr()).c_str());
-        addFlags(Flags::XML);
-        xmlSetProp(f, (xmlChar *)"from", (xmlChar *)std::to_string(this->from).c_str());
-        xmlSetProp(f, (xmlChar *)"to", (xmlChar *)std::to_string(this->to).c_str());
-        xmlSetProp(f, (xmlChar *)"size", (xmlChar *)(std::to_string(nodes.size())).c_str());
 
-        if (empty)
-            xmlSetProp(f, (xmlChar *)"empty", (xmlChar *)"yes");
-        else
-            xmlSetProp(f, (xmlChar *)"empty", (xmlChar *)"no");
+    xmlSetProp(forestNode, (xmlChar *)"id", (xmlChar *)getIdStr().c_str());
+    addFlags(Flags::XML);
+    writeXmlAttributes(forestNode);
+    writeXmlOutput(forestNode);
 
-        // if (terminal)
-        //     terminal->toXML(f);
-        // if (entry)
-        //     entry->toXML(f);
-
-        if (!output.empty())
-        {
-            xmlNodePtr o = xmlNewChild(f, NULL, (const xmlChar *)"OUTPUT", NULL);
-            for (const auto &s : output)
-                xmlNewChild(o, NULL, (const xmlChar *)"TEXT", (xmlChar *)(s.c_str()));
-        }
-        else
-        {
-            xmlNodePtr o = xmlNewChild(f, NULL, (const xmlChar *)"OUTPUT", NULL);
-            xmlNewChild(o, NULL, (const xmlChar *)"TEXT", (xmlChar *)"NONE");
-        }
-        for (Forest::vectorNodes::const_iterator n = nodes.begin(); n != nodes.end(); ++n)
-        {
-            (*n)->toXML(nodeRoot, f);
-        }
-    }
+    // Keep alternatives at the document root, as in the existing XML format.
+    for (const auto &node : nodes)
+        node->toXML(nodeRoot, forestNode);
 }
 #endif
 
-/* **************************************************
- *
- ************************************************** */
-void Forest::generate(class Generator *generator, bool randomResult, bool singleResult)
+/** Preserve the historical push_front ordering of alternatives. */
+void Forest::appendNodeOutputs(const nodePtr &node)
 {
-    if (isUnsetFlags(Flags::GENERATED))
+    for (auto text = node->output_cbegin(); text != node->output_cend(); ++text)
+        output.push_front(*text);
+}
+
+/** Select and expand one alternative, or all of them, on demand. */
+void Forest::generateAlternatives(Generator *generator, bool randomResult, bool singleResult)
+{
+    nodePtr randomNode;
+    if (randomResult)
+        randomNode = nodes.at(generator->randomIndex(nodes.size()));
+
+    for (const auto &alternative : nodes)
     {
-        addFlags(Flags::GENERATED);
-        if (!form.empty())
-        {
-            output.push_front(form);
-        }
-        else if (!nodes.empty())
-        {
-            auto nodeIt = nodes.begin();
-            nodePtr node;
-            if (randomResult)
-            {
+        const nodePtr &node = randomResult ? randomNode : alternative;
+        if (node->isUnsetFlags(Flags::GENERATED))
+            node->generate(generator, randomResult, singleResult);
+        appendNodeOutputs(node);
 
-                size_t rv = generator->randomIndex(nodes.size());
-node = nodes.at(rv);
-
-            }
-            while (nodeIt != nodes.end())
-            {
-                if (!randomResult)
-                    node = *nodeIt;
-                if (node->isUnsetFlags(Flags::GENERATED))
-                {
-                    node->generate(generator, randomResult, singleResult);
-                }
-                for (std::forward_list<std::string>::const_iterator s = node->output_cbegin(); s != node->output_cend(); ++s)
-                {
-                    output.push_front(*s);
-                }
-                if (randomResult || singleResult){
-                    break;
-                }
-                ++nodeIt;
-            }
-        }
+        if (randomResult || singleResult)
+            break;
     }
+}
+
+void Forest::generate(Generator *generator, bool randomResult, bool singleResult)
+{
+    if (isSetFlags(Flags::GENERATED))
+        return;
+
+    addFlags(Flags::GENERATED);
+    if (!form.empty())
+        output.push_front(form);
+    else if (!nodes.empty())
+        generateAlternatives(generator, randomResult, singleResult);
 }

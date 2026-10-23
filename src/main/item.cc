@@ -20,7 +20,6 @@
 #include <climits>
 #include <utility>
 #include "item.hpp"
-#include "item.hpp"
 #include "feature.hpp"
 #include "features.hpp"
 #include "value.hpp"
@@ -66,17 +65,8 @@ Item::Item(rulePtr rule, uint8_t index, statementsPtr statements)
 Item::Item(const rulePtr &rule, uint8_t index, uint8_t indexTerm, statementsPtr statements)
     : Item(rule, index, statements)
 {
-    std::vector<termsPtr> terms = rule->getRhs();
-    unsigned j = 0;
-    for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
-    {
-        this->indexTerms.push_back(POSTERM_NA);
-        this->seen.push_back(false);
-        this->normalizedAt.push_back(false);
-        this->forestIdentifiers.push_back(nullptr);
-        this->synthesizedChildFeatures->push_back(Features::NIL);
-        this->inheritedChildFeatures->push_back(Features::NIL);
-    }
+    initializeRhsSlots(true);
+    const std::vector<termsPtr> terms = rule->getRhs();
     if ((terms.size() < index) && (index != INDEX_NA))
         this->indexTerms[index] = indexTerm;
 }
@@ -88,15 +78,26 @@ Item::Item(const rulePtr &rule, uint8_t index, std::vector<uint8_t> &indexTerms,
     : Item(rule, index, statements)
 {
     this->indexTerms = indexTerms;
-    std::vector<termsPtr> terms = rule->getRhs();
-    unsigned j = 0;
-    for (std::vector<termsPtr>::const_iterator i = terms.begin(); i != terms.end(); ++i, ++j)
+    initializeRhsSlots(false);
+}
+
+/**
+ * Allocate state for each RHS position. The constructor that receives an
+ * indexTerms vector keeps that vector unchanged; the other constructor
+ * initializes all term indices to POSTERM_NA.
+ */
+void Item::initializeRhsSlots(bool initializeTermIndices)
+{
+    const std::vector<termsPtr> terms = rule->getRhs();
+    for (auto it = terms.begin(); it != terms.end(); ++it)
     {
-        this->seen.push_back(false);
-        this->normalizedAt.push_back(false);
-        this->forestIdentifiers.push_back(nullptr);
-        this->synthesizedChildFeatures->push_back(Features::NIL);
-        this->inheritedChildFeatures->push_back(Features::NIL);
+        if (initializeTermIndices)
+            indexTerms.push_back(POSTERM_NA);
+        seen.push_back(false);
+        normalizedAt.push_back(false);
+        forestIdentifiers.push_back(nullptr);
+        synthesizedChildFeatures->push_back(Features::NIL);
+        inheritedChildFeatures->push_back(Features::NIL);
     }
 }
 
@@ -430,6 +431,10 @@ static std::array<std::string, 4> normalizationFeaturesSignature(
     };
 }
 
+/**
+ * Compare current references and feature/order snapshots with the last
+ * propagated state at this RHS position.
+ */
 bool Item::needsNormalizationPropagation(uint8_t _index) const
 {
     if (!isNormalizedAt(_index))
@@ -708,6 +713,16 @@ void Item::defaultInheritedChildFeatures()
  ************************************************** */
 void Item::toHTML(std::ostream &out) /*const*/
 {
+    writeHtmlHeader(out);
+    writeHtmlIdentityCells(out);
+    writeHtmlFeatureCells(out);
+    writeHtmlDetailCells(out);
+    out << "</tr></table>";
+    out << std::endl;
+}
+
+void Item::writeHtmlHeader(std::ostream &out)
+{
     out << "<table border=\"1\" style=\"color:black; ";
     if (isSetFlags(Flags::BOTTOM))
     {
@@ -756,6 +771,10 @@ void Item::toHTML(std::ostream &out) /*const*/
     if (s_orderSpecs)
         out << "<th align = center>OrderSpecs</th>";
     out << "</tr><tr>";
+}
+
+void Item::writeHtmlIdentityCells(std::ostream &out)
+{
     if (s_id)
     {
         out << "<td>";
@@ -877,6 +896,10 @@ void Item::toHTML(std::ostream &out) /*const*/
         }
         out << "</td>";
     }
+}
+
+void Item::writeHtmlFeatureCells(std::ostream &out)
+{
     if (s_inheritedFeatures)
     {
         out << "<td bgcolor=\"lightyellow\">"; //<center>↑</center><br>";
@@ -918,6 +941,10 @@ void Item::toHTML(std::ostream &out) /*const*/
         }
         out << "</table></td>";
     }
+}
+
+void Item::writeHtmlDetailCells(std::ostream &out)
+{
     if (s_statements)
     {
         auto r = rand();
@@ -962,10 +989,7 @@ void Item::toHTML(std::ostream &out) /*const*/
         out << "</td>";
     }
 
-    out << "</tr></table>";
-    out << std::endl;
 }
-
 /* **************************************************
  *
  ************************************************** */

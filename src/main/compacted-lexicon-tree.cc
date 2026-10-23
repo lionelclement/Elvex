@@ -110,6 +110,8 @@ void CompactedLexiconTree::printStaticFSA(FILE *out, class CompactedLexicon *lex
  ************************************************** */
 void CompactedLexiconTree::setIndexStaticInfo(uint32_t &index)
 {
+    // Assign child subtrees first; the second pass then assigns this level's
+    // payload chains. Do not interleave these passes: offsets are serialized.
     for (CompactedLexiconTree *lexiconSy = this; lexiconSy != nullptr; lexiconSy = lexiconSy->next)
     {
         if (lexiconSy->child)
@@ -159,38 +161,39 @@ void CompactedLexiconTree::printStaticInfo(FILE *out) const
  ************************************************** */
 void CompactedLexiconTree::add(const char *str, uint32_t offset)
 {
-    if (!this->character)
+    // The first insertion initializes an empty root without creating a sibling.
+    if (!character)
+        character = str[0];
+
+    if (character == str[0])
     {
-        this->character = str[0];
-        if (!str[1])
-        {
-            this->info = new CompactedLexiconInfo(this->info, offset);
-        }
-        else
-        {
-            if (!this->child)
-                this->child = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[1]);
-            this->child->add((char *)str + 1, offset);
-        }
+        addMatchingKey(str, offset);
     }
-    else if (this->character == str[0])
+    else if (next)
     {
-        if (!str[1])
-        {
-            this->info = new CompactedLexiconInfo(this->info, offset);
-        }
-        else
-        {
-            if (!this->child)
-                this->child = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[1]);
-            this->child->add((char *)str + 1, offset);
-        }
+        next->add(str, offset);
     }
-    else if (this->next)
-        this->next->add(str, offset);
     else
     {
-        this->next = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[0]);
-        this->next->add(str, offset);
+        next = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[0]);
+        next->add(str, offset);
+    }
+}
+
+/* **************************************************
+ * Preserve the original LIFO order of lexical payloads. In particular,
+ * adding a duplicate spelling prepends its offset to the existing chain.
+ ************************************************** */
+void CompactedLexiconTree::addMatchingKey(const char *str, uint32_t offset)
+{
+    if (!str[1])
+    {
+        info = new CompactedLexiconInfo(info, offset);
+    }
+    else
+    {
+        if (!child)
+            child = new CompactedLexiconTree(nullptr, nullptr, nullptr, str[1]);
+        child->add(str + 1, offset);
     }
 }

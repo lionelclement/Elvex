@@ -30,6 +30,10 @@
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
+/**
+ * Feature structure supporting variable binding and subsumption.
+ * The NIL and BOTTOM special instances represent distinct logical states.
+ */
 class Features : public Facade,
                  public Serializable,
                  public std::enable_shared_from_this<class Features>
@@ -49,11 +53,22 @@ private:
 
     std::string form;
 
+    /** Create the distinguished inconsistent/bottom feature structure. */
     static featuresPtr createBottom();
 
+    /** Create the distinguished NIL feature structure. */
     static featuresPtr createNil();
 
     void makeCoreSerialString();
+
+    /** Check whether two features denote the same attribute or special slot. */
+    static bool hasMatchingAttribute(const featurePtr &left, const featurePtr &right);
+
+    /** Bind unmatched fields to variable attributes, then clear temporary SEEN flags. */
+    void bindRemainingStructureVariables(statementPtr statementRoot,
+                                         const environmentPtr &environment,
+                                         const featuresPtr &otherFeatures,
+                                         bool verbose, bool override);
 
 public:
     Features(const featurePtr &);
@@ -96,6 +111,10 @@ public:
 
     valuePtr find(const bitsetPtr &) const;
 
+    /**
+     * Unify this feature structure with another and update variable bindings.
+     * The supplied environment is mutable despite being passed as a shared pointer.
+     */
     bool buildEnvironment(statementPtr statementRoot, const environmentPtr &, const featuresPtr &, bool
 #ifdef TRACE_BUILD_ENVIRONMENT
                           ,
@@ -117,6 +136,10 @@ public:
 
     void testEnable(statementPtr statementRoot, class Item *, class Generator *synthesizer, bool &, bool);
 
+    /**
+     * Check feature compatibility while binding variables in the environment.
+     * Callers must clone the environment before speculative alternatives.
+     */
     bool subsumes(statementPtr statementRoot, const featuresPtr &, const environmentPtr &, bool verbose);
 
     bool containsVariable();

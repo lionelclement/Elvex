@@ -23,6 +23,11 @@
 #include <ostream>
 #include <cstdint>
 
+/**
+ * One transition of the serialized finite-state lexical index.
+ * Child and sibling links navigate the trie without allocating runtime nodes.
+ * Field order and size form part of the on-disk lexicon format.
+ */
 struct CompactedLexiconFsa
 {
 private:

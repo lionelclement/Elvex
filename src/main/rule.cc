@@ -31,17 +31,9 @@
  ************************************************************ */
 Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, std::vector<termsPtr> &rhs,
            statementsPtr statements)
-    : Facade(id)
+    : Facade(id), lhs(lhs), rhs(rhs), statements(statements), usages(0), filename(filename), lineno(lineno), trace(false),
+      withSpaces(withSpaces), unordered(unordered)
 {
-    this->lineno = lineno;
-    this->filename = filename;
-    this->withSpaces = withSpaces;
-    this->unordered = unordered;
-    this->lhs = lhs;
-    this->rhs = rhs;
-    this->statements = statements;
-    this->usages = 0;
-    this->trace = false;
     NEW;
 }
 
@@ -49,16 +41,9 @@ Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, 
  *
  ************************************************************ */
 Rule::Rule(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs, statementsPtr statements)
-    : Facade(id)
+    : Facade(id), lhs(lhs), statements(statements), usages(0), filename(filename), lineno(lineno), trace(false),
+      withSpaces(withSpaces), unordered(unordered)
 {
-    this->lineno = lineno;
-    this->filename = filename;
-    this->withSpaces = withSpaces;
-    this->unordered = unordered;
-    this->lhs = lhs;
-    this->statements = statements;
-    this->usages = 0;
-    this->trace = false;
     NEW;
 }
 
@@ -229,13 +214,17 @@ void Rule::setTrace(bool _trace)
 /***************************
  *
  ***************************/
+std::vector<termsPtr> Rule::cloneRightHandSide() const
+{
+    std::vector<termsPtr> copied;
+    for (size_t i = 0; i < rhs.size(); ++i)
+        copied.push_back(rhs[i]->clone());
+    return copied;
+}
+
 rulePtr Rule::clone() const
 {
-    std::vector<termsPtr> rhsCopy;
-    for (size_t i = 0; i < rhs.size(); ++i){
-        rhsCopy.push_back(rhs[i]->clone());
-        //rhsCopy.push_back(rhs[i]);
-    }
+    std::vector<termsPtr> rhsCopy = cloneRightHandSide();
     rulePtr rule = Rule::create(this->getId(), this->lineno, this->filename, this->withSpaces, this->unordered, lhs, rhsCopy, statements);
     rule->usages = usages;
     rule->trace = trace;
@@ -249,30 +238,16 @@ rulePtr Rule::clone() const
 void Rule::toXML(xmlNodePtr nodeRoot)
 {
     xmlNodePtr r = xmlNewChild(nodeRoot, NULL, (const xmlChar *)"RULE", NULL);
-    // xmlNodePtr hs =
     xmlNewChild(r, NULL, (const xmlChar *)"LHS", NULL);
-    /*
-    lhs->toXML(hs);
-    hs = xmlNewChild(r, NULL, (const xmlChar*)"RHS", NULL);
-    for(size_t i = 0; i < rhs.size(); ++i){
-     for (featuresVector<termsPtr>::const_iterator term=rhs[i]->begin();
-     term != rhs[i]->end();
-     term++) {
-    (*term)->toXML(hs);
-       }
-    }
-    */
 }
 #endif
 
 /* ************************************************************
  *
  ************************************************************ */
-void Rule::print(std::ostream &outStream, uint8_t index, bool withSemantic, bool html) const
+void Rule::printRightHandSide(std::ostream &outStream, uint8_t index, const std::string &space) const
 {
-    std::string space = (html ? "&nbsp;" : " ");
     bool first = true;
-    outStream << Vartable::codeToName(lhs) << space << "→" << space;
     for (size_t i = 0; i < rhs.size(); i++)
     {
         if (first)
@@ -285,6 +260,13 @@ void Rule::print(std::ostream &outStream, uint8_t index, bool withSemantic, bool
     }
     if (index == rhs.size())
         outStream << space << "•";
+}
+
+void Rule::print(std::ostream &outStream, uint8_t index, bool withSemantic, bool html) const
+{
+    const std::string space = (html ? "&nbsp;" : " ");
+    outStream << Vartable::codeToName(lhs) << space << "→" << space;
+    printRightHandSide(outStream, index, space);
     if (withSemantic)
     {
         statementsPtr stms = getStatements();

@@ -24,6 +24,7 @@
 
 #define MAX_FLAGS 14
 
+/** Named bit flags controlling evaluation, tracing and generation state. */
 class Flags
 {
 

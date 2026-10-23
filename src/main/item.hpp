@@ -32,6 +32,11 @@
 #include "generator.hpp"
 #include "orderspecs.hpp"
 
+/**
+ * Grammar rule at a particular dot position, with feature environments,
+ * semantic statements, chart spans and derivation references.
+ * Its core identity determines whether equivalent chart items can be merged.
+ */
 class Item : public Facade,
              public Serializable
 {
@@ -69,6 +74,15 @@ private:
          s_ranges = false, s_forestIdentifiers = false, s_inheritedFeatures = true,
          s_inheritedChildFeatures = true, s_synthesizedFeatures = true,
          s_synthesizedChildFeatures = true, s_statements = true, s_environment = true, s_orderSpecs = false;
+
+    /** Initialize the per-RHS-position state, optionally including term indices. */
+    void initializeRhsSlots(bool initializeTermIndices);
+
+    /** Render the item as a table without changing its diagnostic format. */
+    void writeHtmlHeader(std::ostream &out);
+    void writeHtmlIdentityCells(std::ostream &out);
+    void writeHtmlFeatureCells(std::ostream &out);
+    void writeHtmlDetailCells(std::ostream &out);
 
     void makeSerialString(void);
     void makeCoreSerialString(void);
@@ -181,8 +195,13 @@ public:
 
     void markNormalizedAt(uint8_t);
 
+    /**
+     * Detect whether references, ordering or feature information have
+     * changed since the last normalization of this RHS position.
+     */
     bool needsNormalizationPropagation(uint8_t) const;
 
+    /** Save a normalization snapshot to avoid propagating unchanged state. */
     void markNormalizationPropagated(uint8_t);
 
     void clearNormalizedAt(uint8_t);
@@ -215,6 +234,7 @@ public:
 
     void renameVariables(uint32_t);
 
+    /** Whether the dot has advanced beyond every RHS position. */
     bool isCompleted(void);
 
     bool isStarted(void);
@@ -245,14 +265,20 @@ public:
 
     void defaultInheritedChildFeatures(void);
 
+    /** Evaluate attached semantic statements in the current item context. */
     void apply(Parser &parser, Generator *generator, bool verbose);
 
     void replaceSynthesizedChildFeaturesValue(featuresPtr features);
 
     void replaceSynthesizedChildFeaturesValue(valuePtr value);
 
+    /**
+     * Create an independent item for an alternative chart transition,
+     * preserving only the requested processing flags.
+     */
     class Item *clone(const std::bitset<MAX_FLAGS> &savedFlags, bool verbose);
 
+    /** Copy a source item's variable environment for isolated unification. */
     void cloneEnvironment(const class Item *from);
 
     struct Hash

@@ -20,6 +20,7 @@
 #ifndef ELVEX_VARIABLE_FLAG_H
 #define ELVEX_VARIABLE_FLAG_H
 
+/** Tracks whether a grammar expression is known to contain variables. */
 class VariableFlag
 {
 

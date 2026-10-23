@@ -34,8 +34,8 @@ Entries::Entries()
  *
  ************************************************** */
 Entries::Entries(const entryPtr &entry)
+    : entries{entry}
 {
-    this->entries.insert(this->entries.begin(), entry);
     NEW;
 }
 
@@ -43,8 +43,8 @@ Entries::Entries(const entryPtr &entry)
  *
  ************************************************** */
 Entries::Entries(const std::vector<entryPtr> &entries)
+    : entries(entries)
 {
-    this->entries = entries;
     NEW;
 }
 
@@ -122,10 +122,9 @@ void Entries::add(const entryPtr &entry)
  ************************************************** */
 void Entries::add(entriesPtr entries)
 {
-    for (auto entry : *entries)
-    {
+    // Copy shared entry handles; do not mutate the source collection.
+    for (const auto &entry : *entries)
         this->entries.push_back(entry);
-    }
 }
 
 /* **************************************************
@@ -143,8 +142,8 @@ entryPtr Entries::get(unsigned int i) const
 void Entries::toXML(xmlNodePtr nodeRoot) const
 {
     xmlNodePtr node = xmlNewChild(nodeRoot, nullptr, (const xmlChar *)"ENTRIES", nullptr);
-    for (const auto &entrie : entries)
-        entrie->toXML(node);
+    for (const auto &entry : entries)
+        entry->toXML(node);
 }
 #endif
 

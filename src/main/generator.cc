@@ -1267,6 +1267,10 @@ static bool needsNormalization(class Item *item)
 /* **************************************************
  * Normalize a state before closure/shift.
  ************************************************** */
+/**
+ * Propagate newly available feature information until this row reaches
+ * a stable state. Incremental snapshots avoid repeating unchanged updates.
+ */
 bool Generator::normalize(Parser &, class ItemSet *state, uint32_t row)
 {
     bool modification;
@@ -1498,9 +1502,10 @@ void Generator::traceState(class ItemSet *state)
     std::cout << std::endl;
 }
 
-/* **************************************************
- *
- ************************************************** */
+/**
+ * Predict productions for the nonterminals expected by this row.
+ * Equivalent predictions are merged by chart-item identity.
+ */
 bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 {
     bool modification;
@@ -2101,9 +2106,43 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
     return modificationOnce;
 }
 
-/* **************************************************
- *
- ************************************************** */
+/**
+ * Select the lexical lookup mode from inherited lexical constraints.
+ * A concrete head takes priority over an explicitly requested surface form.
+ */
+Generator::Stage Generator::classifyShiftStage(const featuresPtr &inheritedFeatures,
+                                               uint32_t head, std::string *&form) const
+{
+    if (head != Vartable::code_for_DOES_NOT_CONTAIN_A_HEAD)
+        return STAGE_HEAD;
+    form = inheritedFeatures->assignForm();
+    return form ? STAGE_FORM : STAGE_MAIN;
+}
+
+/**
+ * Reuse the existing head, main, and surface-form lookup paths.
+ * The compacted lexicon is consulted only for head-based lookup.
+ */
+entriesPtr Generator::findShiftEntries(class Parser &parser, Parser::entries_map *entriesMap,
+                                       Stage stage, uint32_t pos, uint32_t head)
+{
+    switch (stage)
+    {
+    case STAGE_HEAD:
+        return findByHeadThenCompactedLexicon(parser, entriesMap, pos, head);
+    case STAGE_MAIN:
+        return findMain(entriesMap);
+    case STAGE_FORM:
+        return findByForm(entriesMap);
+    }
+    return entriesPtr();
+}
+
+/**
+ * Try lexical analyses against terminal expectations.
+ * An item is marked seen even when all candidates fail: otherwise it
+ * would repeat the same expensive lookup on later iterations of the row.
+ */
 bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
 {
 #ifdef ELVEX_EXPERIMENT_METRICS
@@ -2152,24 +2191,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
                     }
 
                     std::string *form = nullptr;
-                    uint32_t head = inheritedChildFeatures->assignHead();
-                    Stage stage;
-                    if (head != Vartable::code_for_DOES_NOT_CONTAIN_A_HEAD)
-                    {
-                        stage = STAGE_HEAD;
-                    }
-                    else
-                    {
-                        form = inheritedChildFeatures->assignForm();
-                        if (!form)
-                        {
-                            stage = STAGE_MAIN;
-                        }
-                        else
-                        {
-                            stage = STAGE_FORM;
-                        }
-                    }
+                    const uint32_t head = inheritedChildFeatures->assignHead();
+                    const Stage stage = classifyShiftStage(inheritedChildFeatures, head, form);
 
                     /*
                      std::cout << "<p>";
@@ -2193,34 +2216,8 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
 
                         if (entriesMap)
                         {
-                            Parser::entries_map::const_iterator found;
-                            entriesPtr entries = entriesPtr();
-
-                            /*
-                            COUT_LINE;
-                            std::cout << "stage : " << (stage == STAGE_HEAD ? "STAGE_HEAD" : (stage == STAGE_FORM ? "STAGE_FORM" : "STAGE_MAIN")) << std::endl;
-                            std::cout << "head : " << Vartable::codeToName(head) << std::endl;
-                            std::cout << "form : \"" << (form ? *form : "nullptr") << '"' << std::endl;
-                            */
-
-                            switch (stage)
-                            {
-
-                            case STAGE_HEAD:
-                                entries = findByHeadThenCompactedLexicon(parser, entriesMap, (*actualItem)->getCurrentTerm(), head);
-                                /*
-                                std::cout << "entries found by head : " << (entries ? entries->size() : 0) << std::endl;
-                                */
-                                break;
-
-                            case STAGE_MAIN:
-                                entries = findMain(entriesMap);
-                                break;
-
-                            case STAGE_FORM:
-                                entries = findByForm(entriesMap);
-                                break;
-                            }
+                            entriesPtr entries = findShiftEntries(parser, entriesMap, stage,
+                                                                 (*actualItem)->getCurrentTerm(), head);
 
                             if (!entries || entries->size() == 0)
                             {
@@ -2421,9 +2418,150 @@ bool Generator::shift(class Parser &parser, class ItemSet *state, uint32_t row)
     return modificationOnce;
 }
 
-/* **************************************************
- *
- ************************************************** */
+/** Reset per-run chart, lexical cache and rule usage state. */
+void Generator::resetGenerationState(class Parser &parser)
+{
+    // A new request can supply another parser and/or lexical resource.
+    compactedEntriesCache.clear();
+    states.clear();
+    itemMap.clear();
+    forestMap.clear();
+    for (const auto &iterRules : parser.getRules().getRules())
+    {
+        iterRules->resetUsages();
+    }
+
+}
+
+/** Seed the first chart row with start-symbol rules. */
+class ItemSet *Generator::createInitialState(class Parser &parser)
+{
+    nodeRoot = Node::create(false, false);
+    class ItemSet *initState = ItemSet::create(0);
+    std::list<rulePtr> *rules = parser.getRules().findRules(parser.getStartTerm());
+    class Item *it;
+    for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule)
+    {
+        (*rule)->incUsages(this);
+        it = Item::create(*rule, Item::INDEX_NA, Item::POSTERM_NA,
+                          (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
+        it->addRange(0);
+        featuresPtr startFeatures = parser.getStartFeatures();
+        it->setInheritedFeatures(startFeatures);
+        // inutile
+        it->renameVariables(it->getId());
+
+        if (traceInit || (trace && it->getRuleTrace()))
+        {
+            std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;
+            it->toHTML(std::cout);
+            std::cout << std::endl;
+        }
+        insertStateItem(initState, it, true);
+    }
+
+    return initState;
+}
+
+/** Reach a fixed point for action normalization and grammar closure. */
+void Generator::saturateState(class Parser &parser, class ItemSet *state, uint32_t row)
+{
+    if (redundancyDiagnosticsEnabled())
+    {
+        ++redundancyDiagnostics.saturateCalls;
+        diagnosticBump(std::string("SATURATE|row=") + std::to_string(row),
+                       std::string("state row ") + std::to_string(row));
+    }
+
+    bool modification;
+#ifdef ELVEX_EXPERIMENT_METRICS
+    ++experimentMetrics.saturateCalls;
+    uint64_t passesThisCall = 0;
+#endif
+    do
+    {
+#ifdef ELVEX_EXPERIMENT_METRICS
+        ++experimentMetrics.saturationPasses;
+        ++passesThisCall;
+#endif
+        modification = false;
+        if (normalize(parser, state, row))
+        {
+#ifdef ELVEX_EXPERIMENT_METRICS
+            ++experimentMetrics.normalizeChangedPasses;
+#endif
+            modification = true;
+        }
+        if (close(parser, state, row))
+        {
+#ifdef ELVEX_EXPERIMENT_METRICS
+            ++experimentMetrics.closeChangedPasses;
+#endif
+            modification = true;
+        }
+    } while (modification);
+#ifdef ELVEX_EXPERIMENT_METRICS
+    experimentMetrics.maxPassesPerSaturate =
+        std::max<uint64_t>(experimentMetrics.maxPassesPerSaturate, passesThisCall);
+#endif
+}
+
+/** Advance successive chart rows until no lexical shift produces a successor. */
+uint32_t Generator::buildChart(class Parser &parser, class ItemSet *initState)
+{
+    states.insert(std::make_pair(0, initState));
+    saturateState(parser, initState, 0);
+    elvexProgressTick(progress, "row-complete", 0, initState->size(), true);
+    traceState(initState);
+
+    uint32_t i = 0;
+    while (i <= maxLength)
+    {
+        class ItemSet *actualState = ItemSet::create(++i);
+        states.insert(std::make_pair(i, actualState));
+
+        bool shiftProducedNextState = false;
+        while (true)
+        {
+            saturateState(parser, initState, i - 1);
+
+            bool shiftOk = shift(parser, initState, i);
+            if (actualState->size() > 0)
+            {
+                shiftProducedNextState = true;
+                break;
+            }
+            if (!shiftOk)
+            {
+                break;
+            }
+        }
+
+        if (!shiftProducedNextState)
+        {
+            break;
+        }
+
+        actualState->resetUsages();
+        saturateState(parser, actualState, i);
+        elvexProgressTick(progress, "row-complete", i, actualState->size(), true);
+        traceState(actualState);
+        initState = actualState;
+    }
+
+    if (i > maxLength)
+    {
+        throw fatal_exception("maxLength");
+    }
+
+    return i;
+}
+
+/**
+ * Run the chart pipeline, build packed forest alternatives and optionally
+ * linearize them. Forest-only and progress reporting leave chart semantics
+ * unchanged.
+ */
 void Generator::generate(class Parser &parser)
 {
     if (progress)
@@ -2449,127 +2587,11 @@ void Generator::generate(class Parser &parser)
 #ifdef OUTPUT_XML
     extern xmlNodePtr xmlNodeRoot;
 #endif
-    // A new request can supply another parser and/or lexical resource.
-    compactedEntriesCache.clear();
-    states.clear();
-    itemMap.clear();
-    forestMap.clear();
-    for (const auto &iterRules : parser.getRules().getRules())
-    {
-        iterRules->resetUsages();
-    }
+    resetGenerationState(parser);
 
-    std::ofstream outfile;
-    nodeRoot = Node::create(false, false);
-    class ItemSet *initState = ItemSet::create(0);
-    std::list<rulePtr> *rules = parser.getRules().findRules(parser.getStartTerm());
-    class Item *it;
-    for (std::list<rulePtr>::const_iterator rule = rules->begin(); rule != rules->end(); ++rule)
-    {
-        (*rule)->incUsages(this);
-        it = Item::create(*rule, Item::INDEX_NA, Item::POSTERM_NA,
-                          (*rule)->getStatements() ? (*rule)->getStatements()->clone(0) : statementsPtr());
-        it->addRange(0);
-        featuresPtr startFeatures = parser.getStartFeatures();
-        it->setInheritedFeatures(startFeatures);
-        // inutile
-        it->renameVariables(it->getId());
+    class ItemSet *initState = createInitialState(parser);
 
-        if (traceInit || (trace && it->getRuleTrace()))
-        {
-            std::cout << "<H3>####################### INIT #######################</H3>" << std::endl;
-            it->toHTML(std::cout);
-            std::cout << std::endl;
-        }
-        insertStateItem(initState, it, true);
-    }
-
-    auto saturateState = [&](class ItemSet *state, uint32_t row)
-    {
-        if (redundancyDiagnosticsEnabled())
-        {
-            ++redundancyDiagnostics.saturateCalls;
-            diagnosticBump(std::string("SATURATE|row=") + std::to_string(row),
-                           std::string("state row ") + std::to_string(row));
-        }
-
-        bool modification;
-#ifdef ELVEX_EXPERIMENT_METRICS
-        ++experimentMetrics.saturateCalls;
-        uint64_t passesThisCall = 0;
-#endif
-        do
-        {
-#ifdef ELVEX_EXPERIMENT_METRICS
-            ++experimentMetrics.saturationPasses;
-            ++passesThisCall;
-#endif
-            modification = false;
-            if (normalize(parser, state, row))
-            {
-#ifdef ELVEX_EXPERIMENT_METRICS
-                ++experimentMetrics.normalizeChangedPasses;
-#endif
-                modification = true;
-            }
-            if (close(parser, state, row))
-            {
-#ifdef ELVEX_EXPERIMENT_METRICS
-                ++experimentMetrics.closeChangedPasses;
-#endif
-                modification = true;
-            }
-        } while (modification);
-#ifdef ELVEX_EXPERIMENT_METRICS
-        experimentMetrics.maxPassesPerSaturate =
-            std::max<uint64_t>(experimentMetrics.maxPassesPerSaturate, passesThisCall);
-#endif
-    };
-
-    states.insert(std::make_pair(0, initState));
-    saturateState(initState, 0);
-    elvexProgressTick(progress, "row-complete", 0, initState->size(), true);
-    traceState(initState);
-
-    uint32_t i = 0;
-    while (i <= maxLength)
-    {
-        class ItemSet *actualState = ItemSet::create(++i);
-        states.insert(std::make_pair(i, actualState));
-
-        bool shiftProducedNextState = false;
-        while (true)
-        {
-            saturateState(initState, i - 1);
-
-            bool shiftOk = shift(parser, initState, i);
-            if (actualState->size() > 0)
-            {
-                shiftProducedNextState = true;
-                break;
-            }
-            if (!shiftOk)
-            {
-                break;
-            }
-        }
-
-        if (!shiftProducedNextState)
-        {
-            break;
-        }
-
-        actualState->resetUsages();
-        saturateState(actualState, i);
-        elvexProgressTick(progress, "row-complete", i, actualState->size(), true);
-        traceState(actualState);
-        initState = actualState;
-    }
-
-    if (i > maxLength)
-    {
-        throw fatal_exception("maxLength");
-    }
+    const uint32_t i = buildChart(parser, initState);
 
 #ifdef ELVEX_EXPERIMENT_METRICS
     const std::chrono::steady_clock::time_point metricsSearchEnd = std::chrono::steady_clock::now();
@@ -2746,9 +2768,10 @@ entriesPtr Generator::findMain(Parser::entries_map *map)
     return entries;
 }
 
-/* **************************************************
- *
- ************************************************** */
+/**
+ * Combine analyses from both lexicon sources without mutating the
+ * parser-owned lexical collection.
+ */
 entriesPtr Generator::findByHeadThenCompactedLexicon(Parser &parser, Parser::entries_map *map,
                                                      uint32_t pos, uint32_t head)
 {
@@ -2805,6 +2828,10 @@ entriesPtr Generator::findByForm(Parser::entries_map *map)
  * returns entries= (entry1, entry2, ...)
  * where entryi= (uint32_t pos, uint32_t head, std::string form, featuresPtr features)
  ************************************************** */
+/**
+ * Reuse parsed lexical templates by (part of speech, head) when enabled.
+ * The templates are not unified directly; shift() works on clones.
+ */
 entriesPtr Generator::findCompactedLexicon(Parser &parser, const uint32_t pos, const uint32_t head)
 {
     // Both components are uint32_t: collision-free composite cache key.

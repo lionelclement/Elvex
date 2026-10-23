@@ -56,16 +56,12 @@ OrderSpec OrderSpec::chain(const std::vector<uint32_t> &indexes)
 
 OrderSpec OrderSpec::first(uint32_t index)
 {
-    std::vector<uint32_t> indexes;
-    indexes.push_back(index);
-    return OrderSpec(FIRST, indexes);
+    return OrderSpec(FIRST, {index});
 }
 
 OrderSpec OrderSpec::last(uint32_t index)
 {
-    std::vector<uint32_t> indexes;
-    indexes.push_back(index);
-    return OrderSpec(LAST, indexes);
+    return OrderSpec(LAST, {index});
 }
 
 OrderSpec OrderSpec::createFieldAccess(const std::vector<uint32_t> &indexes,
@@ -100,128 +96,123 @@ bool OrderSpec::hasFieldAccess() const
     return static_cast<bool>(fieldAccessStatement);
 }
 
+/**
+ * Constraints refer to original RHS indices, but the graph contains only
+ * the children participating in the current derivation. The first matching
+ * position is used when an index occurs more than once.
+ */
+int OrderSpec::findChildPosition(const std::vector<uint32_t> &rhsIndexes, uint32_t rhsIndex)
+{
+    for (size_t i = 0; i < rhsIndexes.size(); ++i)
+    {
+        if (rhsIndexes[i] == rhsIndex)
+            return static_cast<int>(i);
+    }
+    return -1;
+}
+
+void OrderSpec::addEdge(std::vector<std::vector<bool>> &edge, size_t before, size_t after)
+{
+    if (before != after)
+        edge[before][after] = true;
+}
+
+/** Project a chain onto present children, preserving their declared order. */
+void OrderSpec::addChainEdges(std::vector<std::vector<bool>> &edge,
+                              const std::vector<uint32_t> &rhsIndexes) const
+{
+    std::vector<size_t> projected;
+    for (auto rhsIndex : indexes)
+    {
+        int childPosition = findChildPosition(rhsIndexes, rhsIndex);
+        if (childPosition >= 0)
+            projected.push_back(static_cast<size_t>(childPosition));
+    }
+
+    for (size_t i = 0; i + 1 < projected.size(); ++i)
+        addEdge(edge, projected[i], projected[i + 1]);
+}
+
+/** Force one present child before (FIRST) or after (LAST) every other child. */
+void OrderSpec::addBoundaryEdges(std::vector<std::vector<bool>> &edge,
+                                 const std::vector<uint32_t> &rhsIndexes, bool first) const
+{
+    if (indexes.empty())
+        return;
+
+    int childPosition = findChildPosition(rhsIndexes, indexes[0]);
+    if (childPosition < 0)
+        return;
+
+    const size_t boundary = static_cast<size_t>(childPosition);
+    for (size_t i = 0; i < edge.size(); ++i)
+    {
+        if (i != boundary)
+        {
+            if (first)
+                addEdge(edge, boundary, i);
+            else
+                addEdge(edge, i, boundary);
+        }
+    }
+}
+
+/**
+ * A field-access constraint orders pairs only when both children exist,
+ * both values are present, and the values compare strictly. Equal values
+ * intentionally add no edge.
+ */
+void OrderSpec::addFieldAccessEdges(std::vector<std::vector<bool>> &edge,
+                                    const std::vector<uint32_t> &rhsIndexes) const
+{
+    if (indexes.size() != fieldAccessValues.size())
+        return;
+
+    for (size_t i = 0; i < indexes.size(); ++i)
+    {
+        int posI = findChildPosition(rhsIndexes, indexes[i]);
+        if (posI < 0)
+            continue;
+
+        const valuePtr &valueI = fieldAccessValues[i];
+        if (!valueI || valueI->isNil())
+            continue;
+
+        for (size_t j = i + 1; j < indexes.size(); ++j)
+        {
+            int posJ = findChildPosition(rhsIndexes, indexes[j]);
+            if (posJ < 0)
+                continue;
+
+            const valuePtr &valueJ = fieldAccessValues[j];
+            if (!valueJ || valueJ->isNil())
+                continue;
+
+            if (valueI->lessThan(valueJ))
+                addEdge(edge, static_cast<size_t>(posI), static_cast<size_t>(posJ));
+            else if (valueJ->lessThan(valueI))
+                addEdge(edge, static_cast<size_t>(posJ), static_cast<size_t>(posI));
+        }
+    }
+}
+
 void OrderSpec::addEdges(std::vector<std::vector<bool>> &edge,
                          const std::vector<uint32_t> &rhsIndexes) const
 {
-    auto findChildPosition = [&](uint32_t rhsIndex) -> int
+    switch (kind)
     {
-        for (size_t i = 0; i < rhsIndexes.size(); ++i)
-        {
-            if (rhsIndexes[i] == rhsIndex)
-                return static_cast<int>(i);
-        }
-        return -1;
-    };
-
-    auto addEdge = [&](size_t before, size_t after)
-    {
-        if (before != after)
-            edge[before][after] = true;
-    };
-
-    if (kind == CHAIN)
-    {
-        std::vector<size_t> projected;
-
-        for (auto rhsIndex : indexes)
-        {
-            int childPosition = findChildPosition(rhsIndex);
-            if (childPosition >= 0)
-                projected.push_back(static_cast<size_t>(childPosition));
-        }
-
-        for (size_t i = 0; i + 1 < projected.size(); ++i)
-            addEdge(projected[i], projected[i + 1]);
-
-        return;
-    }
-
-    if (kind == FIRST)
-    {
-        if (indexes.empty())
-            return;
-
-        int childPosition = findChildPosition(indexes[0]);
-
-        if (childPosition >= 0)
-        {
-            for (size_t i = 0; i < edge.size(); ++i)
-            {
-                if (i != static_cast<size_t>(childPosition))
-                    addEdge(static_cast<size_t>(childPosition), i);
-            }
-        }
-
-        return;
-    }
-
-    if (kind == LAST)
-    {
-        if (indexes.empty())
-            return;
-
-        int childPosition = findChildPosition(indexes[0]);
-
-        if (childPosition >= 0)
-        {
-            for (size_t i = 0; i < edge.size(); ++i)
-            {
-                if (i != static_cast<size_t>(childPosition))
-                    addEdge(i, static_cast<size_t>(childPosition));
-            }
-        }
-
-        return;
-    }
-
-    if (kind == FIELD_ACCESS)
-    {
-        /*
-         * order 1, 2, 3 by ⇓.weight;
-         *
-         * For each pair of listed daughters:
-         *   if key_i < key_j, add i < j
-         *   if key_j < key_i, add j < i
-         *   if equal, add no edge
-         */
-
-        if (indexes.size() != fieldAccessValues.size())
-            return;
-
-        for (size_t i = 0; i < indexes.size(); ++i)
-        {
-            int posI = findChildPosition(indexes[i]);
-            if (posI < 0)
-                continue;
-
-            valuePtr valueI = fieldAccessValues[i];
-            if (!valueI || valueI->isNil())
-                continue;
-
-            for (size_t j = i + 1; j < indexes.size(); ++j)
-            {
-                int posJ = findChildPosition(indexes[j]);
-                if (posJ < 0)
-                    continue;
-
-                valuePtr valueJ = fieldAccessValues[j];
-                if (!valueJ || valueJ->isNil())
-                    continue;
-
-                if (valueI->lessThan(valueJ))
-                {
-                    addEdge(static_cast<size_t>(posI),
-                            static_cast<size_t>(posJ));
-                }
-                else if (valueJ->lessThan(valueI))
-                {
-                    addEdge(static_cast<size_t>(posJ),
-                            static_cast<size_t>(posI));
-                }
-            }
-        }
-
-        return;
+    case CHAIN:
+        addChainEdges(edge, rhsIndexes);
+        break;
+    case FIRST:
+        addBoundaryEdges(edge, rhsIndexes, true);
+        break;
+    case LAST:
+        addBoundaryEdges(edge, rhsIndexes, false);
+        break;
+    case FIELD_ACCESS:
+        addFieldAccessEdges(edge, rhsIndexes);
+        break;
     }
 }
 

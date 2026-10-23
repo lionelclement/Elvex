@@ -23,6 +23,11 @@
 #include <iostream>
 #include <cstdint>
 
+/**
+ * On-disk link between a lexical entry payload and the next alternative.
+ * Its offsets are interpreted relative to the compacted lexicon data buffer.
+ * Field order and size form part of the on-disk lexicon format.
+ */
 struct CompactedLexiconBuffer
 {
 private:

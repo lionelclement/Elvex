@@ -29,6 +29,10 @@
 #include <libxml/tree.h>
 #endif
 
+/**
+ * Common identity and processing flags for grammar and forest objects.
+ * Flags record lifecycle state; the identity is used by diagnostic/output code.
+ */
 class Facade
 {
 

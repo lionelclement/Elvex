@@ -28,6 +28,10 @@
 #include <libxml/tree.h>
 #endif
 
+/**
+ * Grammar rule collection with terminal/nonterminal classification.
+ * Provides rule lookup and term analysis for the chart generator.
+ */
 class Rules
 {
 public:
@@ -41,6 +45,17 @@ private:
     uint32_t startTerm;
     rulePtr firstRule;
     uint32_t idMax;
+
+    /** Collect all symbols occurring on the left-hand side of a rule. */
+    void collectNonTerminals();
+
+    /** Register terminal symbols and prime the parser's lexical cache. */
+    void collectTerminals(class Parser &);
+    void prepareTerminalCache(class Parser &, uint32_t code);
+
+    /** Emit the existing HTML diagnostics without changing their order. */
+    void printSymbols(std::ostream &, const set_of_uint32_t &) const;
+    void printRuleRows(std::ostream &) const;
 
 public:
     Rules(void);
@@ -77,12 +92,14 @@ public:
 
     bool isNonTerminal(uint32_t) const;
 
+    /** Classify grammar symbols and prepare terminal/nonterminal lookups. */
     void analyseTerms(class Parser &);
 
 #ifdef OUTPUT_XML
     void toXML(xmlNodePtr);
 #endif
 
+    /** Find productions whose left-hand side matches a nonterminal. */
     list_of_rule *findRules(uint32_t lhs);
 };
 

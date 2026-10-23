@@ -24,6 +24,7 @@
 #include <cstdint>
 #include <string>
 
+/** Identifies an object with an explicit or automatically allocated ID. */
 class UniqId
 {
 

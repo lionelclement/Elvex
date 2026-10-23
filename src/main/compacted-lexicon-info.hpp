@@ -22,6 +22,11 @@
 
 #include <cstdint>
 
+/**
+ * Linked metadata for lexical payload offsets while building the static index.
+ * Each node owns its `next` node; the chain is destroyed recursively.
+ * Address assignment is performed before the binary lexicon is written.
+ */
 class CompactedLexiconInfo
 {
 private:

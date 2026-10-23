@@ -33,6 +33,11 @@
 
 class Generator;
 
+/**
+ * Packed alternatives for a constituent spanning two chart positions.
+ * Several derivation nodes can share the same forest instead of duplicating
+ * their common substructure.
+ */
 class Forest : public Facade,
                public std::enable_shared_from_this<class Forest>
 {
@@ -48,6 +53,15 @@ private:
     bool empty;
     std::forward_list<std::string> output;
     std::string form;
+
+    // Surface output is cached for each shared forest during enumeration.
+    void generateAlternatives(Generator *generator, bool randomResult, bool singleResult);
+    void appendNodeOutputs(const nodePtr &node);
+
+#ifdef OUTPUT_XML
+    void writeXmlAttributes(xmlNodePtr forestNode) const;
+    void writeXmlOutput(xmlNodePtr forestNode) const;
+#endif
 
 public:
     Forest(uint32_t from, uint32_t to, std::string &form);
@@ -66,8 +80,10 @@ public:
 
     const std::forward_list<std::string>::const_iterator output_cend(void) const;
 
+    /** Add one alternative derivation to this constituent forest. */
     void push_node(const nodePtr &);
 
+    /** Prepend a realized surface form to the cached output of this forest. */
     void push_output(std::string output);
 
     std::string &getForm(void);
@@ -83,10 +99,15 @@ public:
 
 
 #ifdef OUTPUT_XML
+    /** Serialize this forest once; subsequent references use its XML identifier. */
     void toXML(const xmlNodePtr, bool);
 #endif
 
-void generate(class Generator *generator, bool randomResult, bool singleResult);
+    /**
+     * Expand the packed alternatives into surface strings.
+     * This is skipped entirely when the generator runs in forest-only mode.
+     */
+    void generate(Generator *generator, bool randomResult, bool singleResult);
 };
 
 #endif // ELVEX_FOREST_H

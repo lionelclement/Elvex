@@ -22,17 +22,17 @@
 /* **************************************************
  *
  ************************************************** */
-CompactedLexiconBuffer::CompactedLexiconBuffer(uint32_t next, uint32_t offset) {
-    this->next = next;
-    this->offset = offset;
+CompactedLexiconBuffer::CompactedLexiconBuffer(uint32_t next, uint32_t offset)
+    : next(next), offset(offset)
+{
 }
 
 /* **************************************************
- *
+ * Keep the on-disk representation and absent-link sentinel unchanged.
  ************************************************** */
-CompactedLexiconBuffer::CompactedLexiconBuffer() {
-    this->next = (uint32_t) (~0UL);
-    this->offset = (uint32_t) (~0UL);
+CompactedLexiconBuffer::CompactedLexiconBuffer()
+    : next((uint32_t)(~0UL)), offset((uint32_t)(~0UL))
+{
 }
 
 /* **************************************************

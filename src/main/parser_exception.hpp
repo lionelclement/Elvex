@@ -23,6 +23,7 @@
 #include <string>
 #include "fatal_exception.hpp"
 
+/** Parse error enriched with a human-readable diagnostic message. */
 class parser_exception : public fatal_exception
 {
 

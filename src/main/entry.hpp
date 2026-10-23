@@ -28,6 +28,10 @@
 #include <libxml/tree.h>
 #endif
 
+/**
+ * A lexical surface form together with its associated feature structure.
+ * An entry acts as a template for an individual generation candidate.
+ */
 class Entry : public Facade,
               public Serializable,
               public std::enable_shared_from_this<class Entry>
@@ -52,8 +56,10 @@ public:
 
     static entryPtr create(featuresPtr features);
 
+    /** Editable surface form; keep its lifetime bound to this entry. */
     std::string &getForm();
 
+    /** Shared feature template; callers must clone it before unification. */
     featuresPtr getFeatures() const;
 
 #ifdef OUTPUT_XML
@@ -62,8 +68,13 @@ public:
 
     void print(std::ostream &) const;
     
+    /** Give variables in this entry a fresh scope. */
     void _renameVariables(uint32_t);
 
+    /**
+     * Clone lexical features before matching against a particular item.
+     * The compacted-lexicon cache must retain its unmodified templates.
+     */
     entryPtr clone(void) const;
 
 };

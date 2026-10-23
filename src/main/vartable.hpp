@@ -12,6 +12,10 @@
 #define CONTAINS_A_FORM "CONTAINS_A_FORM"
 #define DOES_NOT_CONTAIN_A_HEAD "DOES_NOT_CONTAIN_A_HEAD"
 
+/**
+ * Interns grammar symbols and names into numeric codes/bit positions.
+ * Also creates scoped variable names to avoid binding collisions.
+ */
 class Vartable
 {
 public:
@@ -37,6 +41,7 @@ public:
     static bitsetPtr createSymbol(const std::string& name);
     static bitsetPtr createSymbol(const std::string& name, uint32_t key);
 
+    /** Intern a symbol name and return its stable internal numeric code. */
     static uint32_t nameToCode(const std::string& name);
     static uint32_t nameToCode(const std::string& name, uint32_t key);
 
@@ -48,11 +53,18 @@ public:
     static uint32_t_to_string_iterator bitMapFind(uint32_t key);
     static uint32_t_to_string_const_iterator bitMapcEnd();
 
+    /** Scope variable occurrences embedded in a textual expression. */
     static void renameVariables(std::string& data, uint32_t key);
 
 private:
     static std::string makeScopedName(const std::string& name, uint32_t key);
     static std::string makeHexSuffix(uint32_t key);
+
+    /** Format the existing diagnostic when no symbol bit remains available. */
+    static std::string symbolLimitMessage(const std::string& name);
+
+    /** Return the bit position encoded by the current one-hot index. */
+    static size_t currentSymbolBit();
 
     static bool isVariableStart(unsigned char c);
     static bool isVariableChar(unsigned char c);

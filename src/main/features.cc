@@ -388,6 +388,53 @@ valuePtr Features::find(const bitsetPtr &code) const
 /* **************************************************
  *
  ************************************************** */
+bool Features::hasMatchingAttribute(const featurePtr &left, const featurePtr &right)
+{
+    return (left->isConstant() && right->isConstant() &&
+            ((*left->getAttribute() & *right->getAttribute()).any())) ||
+           (left->isHead() && right->isHead()) ||
+           (left->isLemma() && right->isLemma());
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Features::bindRemainingStructureVariables(statementPtr statementRoot,
+                                               const environmentPtr &environment,
+                                               const featuresPtr &otherFeatures,
+                                               bool verbose, bool override)
+{
+    // Only variable attributes consume fields that were not matched above.
+    for (const auto &this_feature : features)
+    {
+        if (this_feature->isVariable())
+        {
+            if (this_feature->getValue())
+            {
+                throw fatal_exception("A variable attribute is not allowed in this context: " +
+                                      this_feature->getAttribute()->toString());
+            }
+            else
+            {
+                featuresPtr nFeatures = Features::create();
+                for (auto &other_feature : *otherFeatures)
+                {
+                    if (other_feature->isUnsetFlags(Flags::SEEN))
+                    {
+                        other_feature->addFlags(Flags::SEEN);
+                        nFeatures->add(other_feature);
+                    }
+                }
+                environment->add(statementRoot, this_feature->getCode(), Value::createFeatures(nFeatures), verbose, override);
+            }
+        }
+    }
+    otherFeatures->subFlags(Flags::SEEN);
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const featuresPtr &other_features, bool acceptToFilterNULLVariables
 #ifdef TRACE_BUILD_ENVIRONMENT
                                 ,
@@ -427,9 +474,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
             {
                 // Si deux constantes matchent
                 // ou deux HEAD matchent
-                if (((other_feature->isConstant()) && (this_feature->isConstant()) &&
-                     ((*this_feature->getAttribute() & *other_feature->getAttribute()).any())) ||
-                    ((this_feature->isHead()) && (other_feature->isHead())) || ((this_feature->isLemma()) && (other_feature->isLemma())))
+                if (hasMatchingAttribute(this_feature, other_feature))
                 {
                     other_feature->addFlags(Flags::SEEN);
 
@@ -499,33 +544,7 @@ bool Features::buildEnvironment(statementPtr statementRoot, const environmentPtr
         }
     }
 
-    // traite les variables de structures
-    for (const auto &this_feature : features)
-    {
-        // this_feature: X
-        if (this_feature->isVariable())
-        {
-            if (this_feature->getValue())
-            {
-                throw fatal_exception("A variable attribute is not allowed in this context: " +
-                                      this_feature->getAttribute()->toString());
-            }
-            else
-            {
-                featuresPtr nFeatures = Features::create();
-                for (auto &other_feature : *other_features)
-                {
-                    if (other_feature->isUnsetFlags(Flags::SEEN))
-                    {
-                        other_feature->addFlags(Flags::SEEN);
-                        nFeatures->add(other_feature);
-                    }
-                }
-                environment->add(statementRoot, this_feature->getCode(), Value::createFeatures(nFeatures), verbose, override);
-            }
-        }
-    }
-    other_features->subFlags(Flags::SEEN);
+    bindRemainingStructureVariables(statementRoot, environment, other_features, verbose, override);
 
 #ifdef TRACE_BUILD_ENVIRONMENT
     if (root)
@@ -594,7 +613,7 @@ bool Features::subsumes(statementPtr statementRoot, const featuresPtr &other_fea
                 // [LEMMA:X] << [LEMMA:Y]
                 // [att:X] << [att:Y]
                 // X << Y
-                if (((feature->isLemma()) && (other_feature->isLemma())) || ((feature->isHead()) && (other_feature->isHead())) || ((feature->isConstant()) && (other_feature->isConstant()) && ((*feature->getAttribute() & *other_feature->getAttribute()).any())))
+                if (hasMatchingAttribute(feature, other_feature))
                 {
                     valuePtr v1 = feature->getValue();
                     valuePtr v2 = other_feature->getValue();

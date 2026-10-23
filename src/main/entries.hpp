@@ -27,6 +27,10 @@
 #include <vector>
 #include "shared_ptr.hpp"
 
+/**
+ * Collection of lexical analyses associated with a lexical lookup.
+ * Callers may receive shared entries; generation clones an entry before unification.
+ */
 class Entries : public std::enable_shared_from_this<class Entries>
 {
 
@@ -58,10 +62,15 @@ public:
 
     std::vector<entryPtr>::iterator end();
 
+    /** Return a shared entry handle (the entry itself is not copied). */
     entryPtr get(unsigned int) const;
 
     void add(const entryPtr &);
 
+    /**
+     * Append another collection of lexical analyses to this list.
+     * Do not mutate a parser-owned list when merging independent sources.
+     */
     void add(entriesPtr);
 
 #ifdef OUTPUT_XML

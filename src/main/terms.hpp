@@ -30,6 +30,10 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 
+/**
+ * A grammar RHS position: a terminal/nonterminal or a set of alternatives,
+ * with an optionality marker.
+ */
 class Terms : 
         public Facade,
         public std::enable_shared_from_this<class Terms>
@@ -39,6 +43,7 @@ private:
     std::vector<uint32_t> terms;
     bool optional;
 
+    /** Copy the RHS alternatives; subsequent changes must not affect callers. */
     Terms(std::vector<uint32_t> &, bool optional);
 
     Terms(uint32_t, bool optional);

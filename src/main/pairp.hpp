@@ -28,6 +28,10 @@
 #include <libxml/tree.h>
 #endif
 
+/**
+ * Recursive list/pair value used by the grammar expression evaluator.
+ * Pairs may contain atoms or other pairs, including a distinguished NIL.
+ */
 class Pairp : public Facade,
               public Serializable,
               public std::enable_shared_from_this<Pairp>
@@ -52,6 +56,10 @@ private:
     } pairp;
 
     void makeCoreSerialString(void);
+
+    /** Emit pair structure without changing atom or NIL representation. */
+    void writePairHTML(std::ostream &) const;
+    void writePairFlat(std::ostream &, bool parenthesize) const;
 
     static pairpPtr create(void);
 
@@ -88,6 +96,7 @@ public:
 
     void flatPrint(std::ostream &, bool) const;
 
+    /** Unify recursive pairs and bind their variables in the environment. */
     bool buildEnvironment(statementPtr statement, const environmentPtr &environment, const pairpPtr &otherPairp, bool acceptToFilterNULLVariables, bool root, bool verbose, bool override);
 
     bool renameVariables(uint32_t);
@@ -103,6 +112,7 @@ public:
 
     void testEnable(const statementPtr &, class Item *, class Generator *generator, bool &, bool);
 
+    /** Match two list/pair structures recursively. */
     bool subsumes(statementPtr from, const pairpPtr &, const environmentPtr &, bool verbose);
 
     pairpPtr pushFront(valuePtr);

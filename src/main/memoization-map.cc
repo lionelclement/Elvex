@@ -60,18 +60,9 @@ void MemoizationMap::insert(std::string const &key, featuresPtr features, class 
     std::cout << "<BR>";
     std::cout << std::endl;
 #endif
-    class MemoizationValue *value = MemoizationValue::create(std::move(features), std::move(forestIdentifier), item);
-    auto memItem = memoizationMap.find(key);
-    if (memItem != memoizationMap.end())
-    {
-        memItem->second.push_back(value);
-    }
-    else
-    {
-        std::vector<class MemoizationValue *> values;
-        values.push_back(value);
-        memoizationMap[key] = values;
-    }
+    // Existing results for this key remain ordered; a new key gets an empty vector.
+    class MemoizationValue *value = MemoizationValue::create(std::move(features), forestIdentifier, item);
+    memoizationMap[key].push_back(value);
 }
 
 /* ************************************************************

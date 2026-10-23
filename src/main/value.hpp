@@ -28,6 +28,10 @@
 #include <libxml/tree.h>
 #endif
 
+/**
+ * Tagged grammar value (number, symbol, string, structure, variable,
+ * list or expression). Supports unification and variable substitution.
+ */
 class Value : public Facade,
               public Serializable,
               public std::enable_shared_from_this<class Value>
@@ -75,6 +79,9 @@ private:
 
     void makeCoreSerialString(void);
 
+    /** Print scalar values without changing the compound-value renderers. */
+    bool writeSimpleValue(std::ostream &outStream, bool quoteStrings) const;
+
 public:
     ~Value();
 
@@ -114,12 +121,18 @@ public:
     void toXML(xmlNodePtr) const;
 #endif
 
+    /**
+     * Unify values and record bindings; options control handling of
+     * missing variables and replacement of prior bindings.
+     */
     bool buildEnvironment(statementPtr statementRoot, const environmentPtr &environment, const valuePtr &value, bool acceptToFilterNULLVariables, bool root, bool verbose, bool override);
 
+    /** Test whether a value can be matched under the given environment. */
     bool subsumes(statementPtr statementRoot, const valuePtr &, const environmentPtr &, bool verbose);
 
     valuePtr clone(void);
 
+    /** Scope variables so separately instantiated rules cannot collide. */
     bool renameVariables(uint32_t);
 
     bool isNil(void) const;

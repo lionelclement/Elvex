@@ -22,6 +22,10 @@
 
 #include "shared_ptr.hpp"
 
+/**
+ * One cached reduction: a shared feature structure and two raw references
+ * identifying its derivation. Destruction does not delete those references.
+ */
 class MemoizationValue
 {
 
@@ -35,6 +39,7 @@ private:
 public:
     ~MemoizationValue();
 
+    /** Allocate a result using the existing raw-pointer interface. */
     static class MemoizationValue *create(featuresPtr, class ForestIdentifier *, class Item *);
 
     featuresPtr getFeatures(void) const;

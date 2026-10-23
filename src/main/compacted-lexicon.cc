@@ -91,6 +91,10 @@ void CompactedLexicon::printResults(std::ostream &output, uint32_t index, bool s
 // input: string
 // output: info
 ////////////////////////////////////////////////////////////
+/**
+ * Follow the serialized lexical trie for a key.
+ * Returns a payload-link index or the sentinel when no entry matches.
+ */
 uint32_t CompactedLexicon::search(uint32_t index, const std::string &s) const
 {
     char *str = strdup(s.c_str());

@@ -140,31 +140,37 @@ void Rules::addRule(rulePtr rule)
 /* **************************************************
  *
  ************************************************** */
+void Rules::printSymbols(std::ostream &outStream, const set_of_uint32_t &symbols) const
+{
+    bool first = true;
+    for (set_of_uint32_t::const_iterator iter = symbols.begin(); iter != symbols.end(); ++iter)
+    {
+        if (first)
+            first = false;
+        else
+            outStream << ", ";
+        outStream << Vartable::codeToName(*iter);
+    }
+}
+
+void Rules::printRuleRows(std::ostream &outStream) const
+{
+    for (list_of_rule::const_iterator iterRules = cbegin(); iterRules != cend(); ++iterRules)
+    {
+        outStream << "<tr><td>";
+        (*iterRules)->print(outStream, -1, true);
+        outStream << "</td></tr>";
+    }
+}
+
 void Rules::print(std::ostream &outStream) const
 {
     outStream << "<table border=\"1\"><tr><td>";
     outStream << "Terminals</td><td>";
-    set_of_uint32_t::const_iterator iter;
-    bool first = true;
-    for (iter = terminals.begin(); iter != terminals.end(); ++iter)
-    {
-        if (first)
-            first = false;
-        else
-            outStream << ", ";
-        outStream << Vartable::codeToName(*iter);
-    }
+    printSymbols(outStream, terminals);
     outStream << "</td></tr><tr><td>";
     outStream << "NonTerminals</td><td>";
-    first = true;
-    for (iter = nonTerminals.begin(); iter != nonTerminals.end(); ++iter)
-    {
-        if (first)
-            first = false;
-        else
-            outStream << ", ";
-        outStream << Vartable::codeToName(*iter);
-    }
+    printSymbols(outStream, nonTerminals);
     outStream << "</td></tr><tr><td>";
     outStream << "StartTerm</td><td>";
     if (startTerm)
@@ -173,12 +179,7 @@ void Rules::print(std::ostream &outStream) const
         outStream << "NULL";
     outStream << std::endl;
     outStream << "</td></tr><tr><td>Rules</td><td><table>";
-    for (list_of_rule::const_iterator iterRules = cbegin(); iterRules != cend(); ++iterRules)
-    {
-        outStream << "<tr><td>";
-        (*iterRules)->print(outStream, -1, true);
-        outStream << "</td></tr>";
-    }
+    printRuleRows(outStream);
     outStream << "</table></td></tr></td></table>";
     outStream << std::endl;
 }
@@ -220,40 +221,49 @@ bool Rules::isNonTerminal(uint32_t t) const
 /* **************************************************
  *
  ************************************************** */
-void Rules::analyseTerms(class Parser &parser)
+void Rules::collectNonTerminals()
 {
-    nonTerminals.clear();
-    terminals.clear();
-    list_of_rule::const_iterator iterRules;
-    for (iterRules = cbegin(); iterRules != cend(); ++iterRules)
+    for (list_of_rule::const_iterator rule = cbegin(); rule != cend(); ++rule)
+        nonTerminals.insert((*rule)->getLhs());
+}
+
+void Rules::prepareTerminalCache(class Parser &parser, uint32_t code)
+{
+    Parser::entries_map_map::const_iterator foundCode = parser.findCacheLexicon(code);
+    if (foundCode == parser.cendCacheLexicon())
     {
-        nonTerminals.insert((*iterRules)->getLhs());
+        Parser::entries_map *headToEntries = new Parser::entries_map;
+        headToEntries->insert(std::make_pair(code, Entries::create()));
+        parser.insertCacheLexicon(std::make_pair(code, headToEntries));
     }
-    for (iterRules = cbegin(); iterRules != cend(); ++iterRules)
+}
+
+void Rules::collectTerminals(class Parser &parser)
+{
+    for (list_of_rule::const_iterator rule = cbegin(); rule != cend(); ++rule)
     {
-        unsigned int i;
-        for (i = 0; i < (*iterRules)->getRhs().size(); ++i)
+        for (unsigned int i = 0; i < (*rule)->getRhs().size(); ++i)
         {
-            for (std::vector<uint32_t>::const_iterator term = (*iterRules)->getTerms(i)->begin();
-                 term != (*iterRules)->getTerms(i)->end(); ++term)
+            for (std::vector<uint32_t>::const_iterator term = (*rule)->getTerms(i)->begin();
+                 term != (*rule)->getTerms(i)->end(); ++term)
             {
                 if (nonTerminals.find(*term) == nonTerminals.end())
                 {
-                    uint32_t code = (*term);
+                    const uint32_t code = *term;
                     terminals.insert(code);
-
-                    Parser::entries_map *headToEntries;
-                    Parser::entries_map_map::const_iterator foundCode = parser.findCacheLexicon(code);
-                    if (foundCode == parser.cendCacheLexicon())
-                    {
-                        headToEntries = new Parser::entries_map;
-                        headToEntries->insert(std::make_pair(code, Entries::create()));
-                        parser.insertCacheLexicon(std::make_pair(code, headToEntries));
-                    }
+                    prepareTerminalCache(parser, code);
                 }
             }
         }
     }
+}
+
+void Rules::analyseTerms(class Parser &parser)
+{
+    nonTerminals.clear();
+    terminals.clear();
+    collectNonTerminals();
+    collectTerminals(parser);
 }
 
 #ifdef OUTPUT_XML

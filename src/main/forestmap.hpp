@@ -24,6 +24,12 @@
 #include "shared_ptr.hpp"
 #include "forestidentifier.hpp"
 
+/**
+ * Registry of shared forests keyed by constituent identifiers.
+ * Hashing and equality use the identifier content, not pointer identity.
+ * The map owns forest shared pointers but does not own the raw key pointers;
+ * callers must keep the inserted identifiers alive while they are indexed.
+ */
 class ForestMap {
 
 public:
@@ -47,8 +53,10 @@ public:
 
     map::const_iterator cend() const;
 
+    /** Drop the indexed forests (but not the raw identifier objects). */
     void clear();
 
+    /** Insert a new forest; return false if an equivalent identifier exists. */
     bool insert(class ForestIdentifier*, forestPtr);
 
 };

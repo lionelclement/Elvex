@@ -20,7 +20,6 @@
 #include <algorithm>
 #include <vector>
 #include <forward_list>
-#include <functional>
 #include <iostream>
 
 #include "node.hpp"
@@ -181,9 +180,10 @@ void Node::toXML(xmlNodePtr nodeRoot, xmlNodePtr nodeFather) const
 #include <stack>
 #include "rule.hpp"
 
-/* ************************************************************
- *                                                            *
- ************************************************************ */
+/**
+ * Enumerate combinations of child outputs using an explicit stack.
+ * The packed forest is shared, but this routine materializes strings.
+ */
 void Node::generateLR(std::string &currentCombination, const vectorForests &forestsToGenerate)
 {
    if (forestsToGenerate.empty())
@@ -233,9 +233,10 @@ void Node::generateLR(std::string &currentCombination, const vectorForests &fore
    }
 }
 
-/* **************************************************
- *
- ************************************************** */
+/**
+ * Enumerate all child permutations for unordered productions.
+ * This is an intentionally combinatorial step, not part of chart building.
+ */
 void Node::generatePermutations(Node::vectorForests &forestsToGenerate, int start, int end)
 {
    if (start >= end)
@@ -270,6 +271,55 @@ void Node::generateWithOrder(const std::vector<size_t> &order)
    generateLR(currentCombination, orderedForests);
 }
 
+/**
+ * Ensure the child forests are ready before combining their output strings.
+ * The GENERATED flag belongs to the forest: a shared child is visited once.
+ */
+void Node::generateChildForests(Generator *generator, bool randomResult, bool singleResult)
+{
+   if (!forests.empty())
+   {
+      for (vectorForests::const_iterator forest = cbegin(); forest != cend(); ++forest)
+         if ((*forest)->isUnsetFlags(Flags::GENERATED))
+         {
+            (*forest)->generate(generator, randomResult, singleResult);
+         }
+   }
+}
+
+/** Select the required ordering strategy without changing enumeration order. */
+void Node::linearizeChildren()
+{
+   if (!orderSpecs.empty() && unordered)
+   {
+      FATAL_ERROR("A node cannot be both unordered and constrained by order");
+   }
+   else if (!orderSpecs.empty())
+   {
+      std::vector<std::vector<size_t>> orders = computeTopologicalOrders();
+
+      if (orders.empty())
+      {
+         FATAL_ERROR("cyclic order constraints");
+      }
+
+      for (const auto &order : orders)
+      {
+         generateWithOrder(order);
+      }
+   }
+   else if (unordered)
+   {
+      vectorForests forestsToGenerate = forests;
+      generatePermutations(forestsToGenerate, 0, static_cast<int>(forestsToGenerate.size()) - 1);
+   }
+   else
+   {
+      std::string currentCombination = "";
+      generateLR(currentCombination, forests);
+   }
+}
+
 /* **************************************************
  * TO do: remove empty forests
  ************************************************** */
@@ -278,43 +328,8 @@ void Node::generate(class Generator *generator, bool randomResult, bool singleRe
    if (isUnsetFlags(Flags::GENERATED))
    {
       addFlags(Flags::GENERATED);
-      if (!forests.empty())
-      {
-         for (vectorForests::const_iterator forest = cbegin(); forest != cend(); ++forest)
-            if ((*forest)->isUnsetFlags(Flags::GENERATED))
-            {
-               (*forest)->generate(generator, randomResult, singleResult);
-            }
-      }
-      if (!orderSpecs.empty() && unordered)
-      {
-         FATAL_ERROR("A node cannot be both unordered and constrained by order");
-      }
-
-      else if (!orderSpecs.empty())
-      {
-         std::vector<std::vector<size_t>> orders = computeTopologicalOrders();
-
-         if (orders.empty())
-         {
-            FATAL_ERROR("cyclic order constraints");
-         }
-
-         for (const auto &order : orders)
-         {
-            generateWithOrder(order);
-         }
-      }
-      else if (unordered)
-      {
-         vectorForests forestsToGenerate = forests;
-         generatePermutations(forestsToGenerate, 0, static_cast<int>(forestsToGenerate.size()) - 1);
-      }
-      else
-      {
-         std::string currentCombination = "";
-         generateLR(currentCombination, forests);
-      }
+      generateChildForests(generator, randomResult, singleResult);
+      linearizeChildren();
    }
 }
 
@@ -353,10 +368,57 @@ const std::vector<uint32_t> &Node::getRhsIndexes() const
 /* **************************************************
  *
  ************************************************** */
+namespace
+{
+/**
+ * Enumerate every linear extension of a precedence graph, keeping the original
+ * child-index traversal order. A branch with no available vertex is discarded.
+ */
+void enumerateTopologicalOrders(const std::vector<std::vector<bool>> &edge,
+                                std::vector<int> &indegree,
+                                std::vector<bool> &used,
+                                std::vector<size_t> &current,
+                                std::vector<std::vector<size_t>> &result)
+{
+   const size_t n = edge.size();
+   if (current.size() == n)
+   {
+      result.push_back(current);
+      return;
+   }
+
+   for (size_t i = 0; i < n; ++i)
+   {
+      if (!used[i] && indegree[i] == 0)
+      {
+         used[i] = true;
+         current.push_back(i);
+
+         for (size_t j = 0; j < n; ++j)
+         {
+            if (edge[i][j])
+               --indegree[j];
+         }
+
+         enumerateTopologicalOrders(edge, indegree, used, current, result);
+
+         for (size_t j = 0; j < n; ++j)
+         {
+            if (edge[i][j])
+               ++indegree[j];
+         }
+
+         current.pop_back();
+         used[i] = false;
+      }
+   }
+}
+} // namespace
+
+/** Construct the ordering graph, then enumerate its valid child orders. */
 std::vector<std::vector<size_t>> Node::computeTopologicalOrders() const
 {
    std::vector<std::vector<size_t>> result;
-
    const size_t n = forests.size();
 
    if (n == 0)
@@ -366,11 +428,9 @@ std::vector<std::vector<size_t>> Node::computeTopologicalOrders() const
    }
 
    std::vector<std::vector<bool>> edge(n, std::vector<bool>(n, false));
-
    orderSpecs.addEdges(edge, rhsIndexes);
-   
-   std::vector<int> indegree(n, 0);
 
+   std::vector<int> indegree(n, 0);
    for (size_t i = 0; i < n; ++i)
    {
       for (size_t j = 0; j < n; ++j)
@@ -382,57 +442,6 @@ std::vector<std::vector<size_t>> Node::computeTopologicalOrders() const
 
    std::vector<bool> used(n, false);
    std::vector<size_t> current;
-
-   std::function<void()> visit = [&]()
-   {
-      if (current.size() == n)
-      {
-         result.push_back(current);
-         return;
-      }
-
-      bool found = false;
-
-      for (size_t i = 0; i < n; ++i)
-      {
-         if (!used[i] && indegree[i] == 0)
-         {
-            found = true;
-
-            used[i] = true;
-            current.push_back(i);
-
-            for (size_t j = 0; j < n; ++j)
-            {
-               if (edge[i][j])
-                  --indegree[j];
-            }
-
-            visit();
-
-            for (size_t j = 0; j < n; ++j)
-            {
-               if (edge[i][j])
-                  ++indegree[j];
-            }
-
-            current.pop_back();
-            used[i] = false;
-         }
-      }
-
-      /*
-       * No available node while the order is incomplete:
-       * this means there is a cycle.
-       */
-      if (!found && current.size() < n)
-      {
-         return;
-      }
-   };
-
-   visit();
-
-
+   enumerateTopologicalOrders(edge, indegree, used, current, result);
    return result;
 }

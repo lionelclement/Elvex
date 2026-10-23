@@ -29,6 +29,10 @@
 #include "item.hpp"
 #include "shared_ptr.hpp"
 
+/**
+ * Deduplicated set of chart items at one input/generation position.
+ * Insertion uses structural Item hashing/equality, not pointer identity.
+ */
 class ItemSet
 {
 
@@ -45,6 +49,9 @@ private:
     unsigned int id;
 
     set_of_item items;
+
+    /** Enforce the configured chart limit before attempting an insertion. */
+    void checkCapacity(const class Generator *generator) const;
 
 public:
     ItemSet(unsigned int);
@@ -67,6 +74,10 @@ public:
 
     set_of_item_const_iterator find(class Item *) const;
 
+    /**
+     * Insert an item if its structural identity is not already present.
+     * Equivalent items are detected by Item::Hash and Item::KeyEqual.
+     */
     bool insert(class Item *, class Generator *);
 
     void erase(class Item *);
@@ -82,4 +93,4 @@ public:
 #endif
 };
 
-#endif // ITEM_H
+#endif // ELVEX_ITEMSET_H

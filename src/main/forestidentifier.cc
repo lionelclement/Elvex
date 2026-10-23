@@ -25,12 +25,9 @@
  *                                                            *
  ************************************************************ */
 ForestIdentifier::ForestIdentifier(uint32_t code, uint32_t from, uint32_t to)
+    : code(code), from(from), to(to)
 {
     NEW;
-    this->code = code;
-    this->from = from;
-    this->to = to;
-    //this->featuresSerialString = featuresSerialString;
 }
 
 /* **************************************************
@@ -59,7 +56,6 @@ void ForestIdentifier::makeCoreSerialString()
 {
     std::ostringstream stream;
     stream << '#' << std::hex << code << '#' << from << '#' << to;
-    stream.flush();
     coreSerialString = stream.str();
 }
 

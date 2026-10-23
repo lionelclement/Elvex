@@ -24,6 +24,7 @@
 #include <exception>
 #include <sstream>
 
+/** Exception used to report unrecoverable ELVEX processing errors. */
 class fatal_exception : public std::exception
 {
 private:

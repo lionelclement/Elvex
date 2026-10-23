@@ -28,6 +28,10 @@
 #include <libxml/tree.h>
 #endif
 
+/**
+ * One attribute/value pair (or variable) within a feature structure.
+ * Special attributes also carry lexical head, lemma or surface-form information.
+ */
 class Feature : public Facade,
                 public Serializable,
                 public std::enable_shared_from_this<class Feature>
@@ -56,6 +60,9 @@ private:
     valuePtr value;
 
     void makeCoreSerialString(void);
+
+    /** Print the labelled HTML value cells shared by non-variable features. */
+    void writeHTMLValueCells(std::ostream &outStream, const std::string &label) const;
 
 public:
     Feature(Type, bitsetPtr, valuePtr);
@@ -110,8 +117,10 @@ public:
     void toXML(xmlNodePtr nodeRoot);
 #endif
 
+    /** Rename variable codes to isolate rule instantiations. */
     bool renameVariables(uint32_t);
 
+    /** Evaluate whether the feature participates in the current semantic action. */
     void testEnable(const statementPtr &, class Item *, class Generator *synthesizer, bool &, bool);
 
     bool containsVariable(void);

@@ -3997,6 +3997,96 @@ void Statement::testEnable(statementPtr statementRoot, class Item *item, Generat
 #endif
 }
 
+/**
+ * Apply ordering constraints. False means a field-based order is not yet
+ * evaluable and the statement must stay pending for a later chart pass.
+ */
+bool Statement::applyOrder(class Item *item, Parser &parser, Generator *synthesizer,
+                           bool &effect, bool verbose)
+{
+
+    OrderSpec::Kind kind;
+
+    if (op == ORDER_CHAIN_STATEMENT)
+        kind = OrderSpec::CHAIN;
+    else if (op == ORDER_FIRST_STATEMENT)
+        kind = OrderSpec::FIRST;
+    else if (op == ORDER_LAST_STATEMENT)
+        kind = OrderSpec::LAST;
+    else if (op == ORDER_FIELD_ACCESS_STATEMENT)
+        kind = OrderSpec::FIELD_ACCESS;
+    else
+        FATAL_ERROR_UNEXPECTED;
+
+    if (kind == OrderSpec::FIELD_ACCESS)
+    {
+        /*
+         * A relative field-access order such as:
+         *
+         *   order 2, 3 by ⇓.weight;
+         *
+         * depends on synthesized child features.  These values may not be
+         * available when the statement is first visited.  In that case,
+         * do not add an incomplete OrderSpec and, crucially, do not mark
+         * the statement as SEEN: it must be tried again after reductions
+         * have filled ⇓2, ⇓3, ...
+         */
+        std::vector<valuePtr> values;
+        bool ready = true;
+
+        for (auto rhsIndex : orderChain)
+        {
+            valuePtr value =
+                first->evalOrderFieldAccess(
+                    item,
+                    parser,
+                    synthesizer,
+                    rhsIndex,
+                    verbose);
+
+            if (!value || value->isNil())
+            {
+                ready = false;
+                break;
+            }
+
+            values.push_back(value);
+        }
+
+        if (!ready)
+        {
+            return false;
+        }
+
+        item->addOrderSpec(
+            OrderSpec::createFieldAccess(orderChain, first, values));
+
+        effect = true;
+        addFlags(Flags::SEEN);
+    }
+    else if (kind == OrderSpec::CHAIN)
+    {
+        item->addOrderSpec(OrderSpec::chain(orderChain));
+        effect = true;
+        addFlags(Flags::SEEN);
+    }
+    else if (kind == OrderSpec::FIRST)
+    {
+        if (!orderChain.empty())
+            item->addOrderSpec(OrderSpec::first(orderChain[0]));
+        effect = true;
+        addFlags(Flags::SEEN);
+    }
+    else if (kind == OrderSpec::LAST)
+    {
+        if (!orderChain.empty())
+            item->addOrderSpec(OrderSpec::last(orderChain[0]));
+        effect = true;
+        addFlags(Flags::SEEN);
+    }
+    return true;
+}
+
 /* ************************************************************
  *
  ************************************************************ */
@@ -4163,86 +4253,8 @@ void Statement::apply(statementPtr statementRoot, class Item *item, Parser &pars
 
     else if (isOrder())
     {
-
-        OrderSpec::Kind kind;
-
-        if (op == ORDER_CHAIN_STATEMENT)
-            kind = OrderSpec::CHAIN;
-        else if (op == ORDER_FIRST_STATEMENT)
-            kind = OrderSpec::FIRST;
-        else if (op == ORDER_LAST_STATEMENT)
-            kind = OrderSpec::LAST;
-        else if (op == ORDER_FIELD_ACCESS_STATEMENT)
-            kind = OrderSpec::FIELD_ACCESS;
-        else
-            FATAL_ERROR_UNEXPECTED;
-
-        if (kind == OrderSpec::FIELD_ACCESS)
-        {
-            /*
-             * A relative field-access order such as:
-             *
-             *   order 2, 3 by ⇓.weight;
-             *
-             * depends on synthesized child features.  These values may not be
-             * available when the statement is first visited.  In that case,
-             * do not add an incomplete OrderSpec and, crucially, do not mark
-             * the statement as SEEN: it must be tried again after reductions
-             * have filled ⇓2, ⇓3, ...
-             */
-            std::vector<valuePtr> values;
-            bool ready = true;
-
-            for (auto rhsIndex : orderChain)
-            {
-                valuePtr value =
-                    first->evalOrderFieldAccess(
-                        item,
-                        parser,
-                        synthesizer,
-                        rhsIndex,
-                        verbose);
-
-                if (!value || value->isNil())
-                {
-                    ready = false;
-                    break;
-                }
-
-                values.push_back(value);
-            }
-
-            if (!ready)
-            {
-                return;
-            }
-
-            item->addOrderSpec(
-                OrderSpec::createFieldAccess(orderChain, first, values));
-
-            effect = true;
-            addFlags(Flags::SEEN);
-        }
-        else if (kind == OrderSpec::CHAIN)
-        {
-            item->addOrderSpec(OrderSpec::chain(orderChain));
-            effect = true;
-            addFlags(Flags::SEEN);
-        }
-        else if (kind == OrderSpec::FIRST)
-        {
-            if (!orderChain.empty())
-                item->addOrderSpec(OrderSpec::first(orderChain[0]));
-            effect = true;
-            addFlags(Flags::SEEN);
-        }
-        else if (kind == OrderSpec::LAST)
-        {
-            if (!orderChain.empty())
-                item->addOrderSpec(OrderSpec::last(orderChain[0]));
-            effect = true;
-            addFlags(Flags::SEEN);
-        }
+        if (!applyOrder(item, parser, synthesizer, effect, verbose))
+            return;
     }
 
     // statements

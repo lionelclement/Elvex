@@ -33,6 +33,11 @@
 
 class Generator;
 
+/**
+ * One derivation alternative in a packed Forest.
+ * Its child forests may be linearized in RHS order, all permutations, or an
+ * order satisfying explicit precedence constraints.
+ */
 class Node : public Facade,
              public std::enable_shared_from_this<class Node>
 {
@@ -47,6 +52,12 @@ private:
     std::forward_list<std::string> output;
     bool withSpaces;
     bool unordered;
+
+    /** Generate child forests only once, before combining their outputs. */
+    void generateChildForests(Generator *generator, bool randomResult, bool singleResult);
+
+    /** Enumerate outputs according to RHS order, permutations or constraints. */
+    void linearizeChildren();
 
 public:
     Node(bool withSpaces, bool unordered);
@@ -90,14 +101,30 @@ public:
     void toXML(xmlNodePtr, xmlNodePtr) const;
 #endif
 
+    /**
+     * Compute the Cartesian product of child-forest outputs in the supplied
+     * order, respecting the node's spacing mode.
+     */
     void generateLR(std::string &currentCombination, const vectorForests &forestsToGenerate);
 
+    /**
+     * Enumerate child orders for an explicitly unordered rule.
+     * This can grow factorially with the number of children.
+     */
     void generatePermutations(vectorForests &forestsToGenerate, int start, int end);
 
     void generateWithOrder(const std::vector<size_t> &order);
 
+    /**
+     * Return valid child orders satisfying the precedence graph.
+     * An empty set indicates that no valid ordering was found.
+     */
     std::vector<std::vector<size_t>> computeTopologicalOrders() const;
 
+    /**
+     * Generate child forests, then linearize the selected derivation orders.
+     * Rejects contradictory unordered/ordered configurations.
+     */
     void generate(class Generator *generator, bool randomResult, bool singleResult);
 };
 

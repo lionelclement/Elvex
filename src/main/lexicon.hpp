@@ -24,6 +24,10 @@
 #include <vector>
 #include <unordered_map>
 
+/**
+ * In-memory mapping from lexical keys to alternative textual entries.
+ * Used when building the compacted lexicon.
+ */
 class Lexicon
 {
 
@@ -51,8 +55,10 @@ public:
 
     std::size_t size(void);
 
+    /** Add one alternative for a lexical key. */
     void add(std::string key, std::string value);
 
+    /** Return a copy of the alternatives, preserving insertion order. */
     std::vector<std::string> find(std::string key);
 
     std::size_t count(std::string key);

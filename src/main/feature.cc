@@ -208,41 +208,34 @@ void Feature::setValue(valuePtr _value)
 /* **************************************************
  *
  ************************************************** */
+void Feature::writeHTMLValueCells(std::ostream &outStream, const std::string &label) const
+{
+    outStream << "<TD ALIGN=\"LEFT\">" << label << "</TD><TD ALIGN=\"LEFT\">";
+    if (value)
+        value->toHTML(outStream);
+    else
+        FATAL_ERROR_UNEXPECTED;
+    outStream << "</TD>";
+}
+
+/* **************************************************
+ *
+ ************************************************** */
 void Feature::toHTML(std::ostream &outStream) const
 {
     switch (type)
     {
     case Feature::_HEAD_:
-        outStream << R"(<TD ALIGN="LEFT">HEAD</TD><TD ALIGN="LEFT">)";
-        if (value)
-            value->toHTML(outStream);
-        else
-            FATAL_ERROR_UNEXPECTED;
-        outStream << "</TD>";
+        writeHTMLValueCells(outStream, "HEAD");
         break;
     case Feature::_LEMMA_:
-        outStream << R"(<TD ALIGN="LEFT">LEMMA</TD><TD ALIGN="LEFT">)";
-        if (value)
-            value->toHTML(outStream);
-        else
-            FATAL_ERROR_UNEXPECTED;
-        outStream << "</TD>";
+        writeHTMLValueCells(outStream, "LEMMA");
         break;
     case Feature::_FORM_:
-        outStream << R"(<TD ALIGN="LEFT">FORM</TD><TD ALIGN="LEFT">)";
-        if (value)
-            value->toHTML(outStream);
-        else
-            FATAL_ERROR_UNEXPECTED;
-        outStream << "</TD>";
+        writeHTMLValueCells(outStream, "FORM");
         break;
     case Feature::_CONSTANT_:
-        outStream << "<TD ALIGN=\"LEFT\">" << attributeToString() << "</TD><TD ALIGN=\"LEFT\">";
-        if (value)
-            value->toHTML(outStream);
-        else
-            FATAL_ERROR_UNEXPECTED;
-        outStream << "</TD>";
+        writeHTMLValueCells(outStream, attributeToString());
         break;
     case Feature::_VARIABLE_:
         outStream << "<TD ALIGN=\"LEFT\">$" << Vartable::codeToName(code) << "</TD>";

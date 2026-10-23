@@ -24,6 +24,7 @@
 #include "shared_ptr.hpp"
 #include "facade.hpp"
 
+/** Position-indexed collection of child feature structures used by rules. */
 class ListFeatures : public Facade,
                      public Serializable,
                      public std::enable_shared_from_this<class ListFeatures>

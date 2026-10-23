@@ -23,6 +23,11 @@
 #include "serializable.hpp"
 #include "shared_ptr.hpp"
 
+/**
+ * Canonical key identifying a constituent by symbol and chart span.
+ * Used to look up shared forests independently of pointer identity.
+ * The serialized key and its hash are computed lazily by Serializable.
+ */
 class ForestIdentifier :
         public Serializable {
 
@@ -38,8 +43,12 @@ public:
 
     ~ForestIdentifier() override;
 
+    /** Allocate a key for the symbol and chart span [from, to].
+     * The caller is responsible for the lifetime of the returned pointer.
+     */
     static class ForestIdentifier* create(uint32_t code, uint32_t from, uint32_t to);
 
+    /** Encode the three identity fields for content-based equality. */
     void makeCoreSerialString() override;
     
     uint32_t getFrom() const {
@@ -54,10 +63,12 @@ public:
         return code;
     };
 
+    /** Hash raw pointers according to their serialized identifier content. */
     struct Hash {
          size_t operator()(class ForestIdentifier *) const;
     };
 
+    /** Compare serialized keys, not the addresses of the key objects. */
     struct KeyEqual {
          bool operator()(class ForestIdentifier *, class ForestIdentifier *) const;
     };

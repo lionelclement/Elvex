@@ -111,20 +111,26 @@ bool Environment::add(statementPtr statementRoot,
     }
 
     if (verbose)
-    {
-        if (statementRoot)
-        {
-            WARNING("conflicting binding of " << key << " "
-                                              << statementRoot->_getBufferName()
-                                              << " (line " << std::dec << statementRoot->_getLineno() << ")");
-        }
-        else
-        {
-            WARNING("conflicting binding of " << key);
-        }
-    }
+        warnBindingConflict(statementRoot, key);
 
     return false;
+}
+
+/* **************************************************
+ *
+ ************************************************** */
+void Environment::warnBindingConflict(statementPtr statementRoot, const std::string &key) const
+{
+    if (statementRoot)
+    {
+        WARNING("conflicting binding of " << key << " "
+                                          << statementRoot->_getBufferName()
+                                          << " (line " << std::dec << statementRoot->_getLineno() << ")");
+    }
+    else
+    {
+        WARNING("conflicting binding of " << key);
+    }
 }
 
 /* **************************************************

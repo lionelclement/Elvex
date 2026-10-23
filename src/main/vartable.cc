@@ -97,10 +97,61 @@ bool Vartable::isVariableChar(unsigned char c)
 }
 
 /* ************************************************************
- * ajoute une nouvelle variable à la table
- * y associe un poids de bitset
- * bitMap[poids] := str
- * variableMap[str] := bitset
+ * Keep the original diagnostic, including the last 30 symbol names.
+ ************************************************************ */
+std::string Vartable::symbolLimitMessage(const std::string &name)
+{
+    std::ostringstream oss;
+
+    oss << "Too much values to create a new symbol ("
+        << name
+        << " not created)"
+        << " ; symbols="
+        << nameToBitsetMap.size()
+        << "/"
+        << MAXBITS
+        << " ; variables/codes="
+        << nameToCodeMap.size();
+
+    oss << " ; last symbols=[";
+
+    const size_t total = bitToNameMap.size();
+    const size_t first = total > 30 ? total - 30 : 0;
+    bool firstPrinted = true;
+
+    for (size_t i = first; i < total; ++i)
+    {
+        auto itBit = bitToNameMap.find(static_cast<uint32_t>(i));
+        if (itBit != bitToNameMap.end())
+        {
+            if (!firstPrinted)
+            {
+                oss << ", ";
+            }
+            oss << i << ":" << itBit->second;
+            firstPrinted = false;
+        }
+    }
+
+    oss << "]";
+    return oss.str();
+}
+
+/* ************************************************************
+ * Preserve the scan of the one-hot index and its exhausted state.
+ ************************************************************ */
+size_t Vartable::currentSymbolBit()
+{
+    size_t bitIndex = 0;
+    while (bitIndex < variableMapIndex.size() && !variableMapIndex.test(bitIndex))
+    {
+        ++bitIndex;
+    }
+    return bitIndex;
+}
+
+/* ************************************************************
+ * Intern one symbol using the next available bit position.
  ************************************************************ */
 bitsetPtr Vartable::createSymbol(const std::string &name)
 {
@@ -112,54 +163,13 @@ bitsetPtr Vartable::createSymbol(const std::string &name)
 
     if (variableMapIndex.none())
     {
-        std::ostringstream oss;
-
-        oss << "Too much values to create a new symbol ("
-            << name
-            << " not created)"
-            << " ; symbols="
-            << nameToBitsetMap.size()
-            << "/"
-            << MAXBITS
-            << " ; variables/codes="
-            << nameToCodeMap.size();
-
-        oss << " ; last symbols=[";
-
-        const size_t total = bitToNameMap.size();
-        const size_t first = total > 30 ? total - 30 : 0;
-
-        bool firstPrinted = true;
-
-        for (size_t i = first; i < total; ++i)
-        {
-            auto itBit = bitToNameMap.find(static_cast<uint32_t>(i));
-            if (itBit != bitToNameMap.end())
-            {
-                if (!firstPrinted)
-                {
-                    oss << ", ";
-                }
-
-                oss << i << ":" << itBit->second;
-                firstPrinted = false;
-            }
-        }
-
-        oss << "]";
-
-        throw fatal_exception(oss.str());
+        throw fatal_exception(symbolLimitMessage(name));
     }
 
     bitsetPtr result = Bitset::create(variableMapIndex);
     nameToBitsetMap.emplace(name, result);
 
-    size_t bitIndex = 0;
-    while (bitIndex < variableMapIndex.size() && !variableMapIndex.test(bitIndex))
-    {
-        ++bitIndex;
-    }
-
+    const size_t bitIndex = currentSymbolBit();
     if (bitIndex >= variableMapIndex.size())
     {
         throw fatal_exception("Internal error while creating symbol (" + name + ")");

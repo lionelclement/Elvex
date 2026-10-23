@@ -27,22 +27,18 @@
 CompactedLexiconFsa::CompactedLexiconFsa(uint32_t child, uint32_t next,
                                          uint32_t info,
                                          char character)
+    : child(child), next(next), info(info), character(character)
 {
-    this->child = child;
-    this->next = next;
-    this->info = info;
-    this->character = character;
 }
 
 /* **************************************************
- *
+ * Keep the historical all-bits-set sentinel for absent indices.
+ * The field layout is part of the on-disk binary FSA format.
  ************************************************** */
 CompactedLexiconFsa::CompactedLexiconFsa(void)
+    : child((uint32_t)~0UL), next((uint32_t)~0UL),
+      info((uint32_t)~0UL), character((char)~0)
 {
-    this->child = (uint32_t)~0UL;
-    this->next = (uint32_t)~0UL;
-    this->info = (uint32_t)~0UL;
-    this->character = (char)~0;
 }
 
 /* **************************************************

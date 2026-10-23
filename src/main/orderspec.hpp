@@ -25,6 +25,10 @@
 #include <cstdint>
 #include "shared_ptr.hpp"
 
+/**
+ * One precedence constraint on RHS positions, including constraints
+ * derived from feature-field access when requested by a grammar rule.
+ */
 class OrderSpec
 {
 public:
@@ -43,6 +47,19 @@ private:
     // Used only for FIELD_ACCESS.
     statementPtr fieldAccessStatement;
     std::vector<valuePtr> fieldAccessValues;
+
+    /** The first active RHS position matching an index, or -1 if absent. */
+    static int findChildPosition(const std::vector<uint32_t> &rhsIndexes, uint32_t rhsIndex);
+
+    /** Record a precedence edge without introducing self-edges. */
+    static void addEdge(std::vector<std::vector<bool>> &edge, size_t before, size_t after);
+
+    void addChainEdges(std::vector<std::vector<bool>> &edge,
+                       const std::vector<uint32_t> &rhsIndexes) const;
+    void addBoundaryEdges(std::vector<std::vector<bool>> &edge,
+                          const std::vector<uint32_t> &rhsIndexes, bool first) const;
+    void addFieldAccessEdges(std::vector<std::vector<bool>> &edge,
+                             const std::vector<uint32_t> &rhsIndexes) const;
 
 public:
     OrderSpec();
@@ -69,6 +86,7 @@ public:
 
     bool hasFieldAccess() const;
 
+    /** Translate this constraint into edges of the RHS precedence graph. */
     void addEdges(std::vector<std::vector<bool>> &edge,
                   const std::vector<uint32_t> &rhsIndexes) const;
 

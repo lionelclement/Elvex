@@ -36,9 +36,8 @@
  *
  ************************************************** */
 Entry::Entry(const std::string &form, featuresPtr features)
+    : form(form), features(std::move(features))
 {
-    this->form = form;
-    this->features = features;
     NEW;
 }
 
@@ -46,9 +45,8 @@ Entry::Entry(const std::string &form, featuresPtr features)
  *
  ************************************************** */
 Entry::Entry(featuresPtr features)
+    : form(), features(std::move(features))
 {
-    this->form = "";
-    this->features = features;
     NEW;
 }
 
@@ -117,7 +115,7 @@ void Entry::toXML(xmlNodePtr nodeRoot) const
  ************************************************** */
 void Entry::print(std::ostream &os) const
 {
-    os << "Entry(" /*<< Vartable::codeToName(this->pos) */;
+    os << "Entry(";
     if (!this->form.empty())
         os << "form:\"" << this->form << "\", ";
     if (features)
@@ -150,7 +148,7 @@ void Entry::makeCoreSerialString()
  ************************************************** */
 entryPtr Entry::clone() const
 {
-    return create(std::string(form), features->clone());
+    return create(form, features->clone());
 }
 
 /* **************************************************

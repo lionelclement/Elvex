@@ -28,6 +28,10 @@
 #include "entries.hpp"
 #include "features.hpp"
 
+/**
+ * Reads grammar, macro and lexicon syntax into rules, lexical entries
+ * and feature structures. Maintains parse-location information for diagnostics.
+ */
 class Parser
 {
 
@@ -86,6 +90,7 @@ public:
 
   void setLocalFeatures(featuresPtr);
 
+  /** Register the parsed lexical analyses for a part of speech. */
   void insertCacheLexicon(std::pair<uint32_t, entries_map *>);
 
   entries_map_map::const_iterator findCacheLexicon(uint32_t) const;
@@ -106,12 +111,21 @@ public:
 
   void insertMapLocalEntry(std::pair<std::string, entryPtr>);
 
+  /** Register a named reusable feature structure. */
   void addMacros(std::string, featuresPtr);
 
   featuresPtr findMacros(const std::string &);
 
+  /**
+   * Read and parse a grammar-related file, preserving its source name
+   * for syntax error diagnostics.
+   */
   void parseFile(std::string prefix, std::string suffix, std::string fileName);
 
+  /**
+   * Parse a supplied string as grammar input.
+   * Used both for user files and feature structures read from the lexicon.
+   */
   void parseBuffer(std::string prefix, std::string suffix, std::string buffer, std::string bufferName);
 
   void printMacros();

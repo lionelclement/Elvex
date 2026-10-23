@@ -31,6 +31,10 @@
 #include "facade.hpp"
 #include "shared_ptr.hpp"
 
+/**
+ * Grammar production with alternatives, semantic statements and source
+ * location. An item records progress through one instance of such a rule.
+ */
 class Rule : public Facade,
              public Serializable,
              public std::enable_shared_from_this<class Rule>
@@ -48,6 +52,12 @@ private:
     bool unordered;
 
     void makeCoreSerialString(void);
+
+    /** Duplicate each RHS term group when cloning a derivation rule. */
+    std::vector<termsPtr> cloneRightHandSide() const;
+
+    /** Print the RHS terms and the parser dot without semantic annotations. */
+    void printRightHandSide(std::ostream &, uint8_t index, const std::string &space) const;
 
 public:
     static rulePtr create(uint32_t id, uint32_t lineno, std::string filename, bool withSpaces, bool unordered, uint32_t lhs,
@@ -82,6 +92,7 @@ public:
 
     statementsPtr getStatements(void) const;
 
+    /** Account for use of this rule; enforce the generator's usage limit. */
     void incUsages(class Generator *);
 
     void resetUsages(void);
@@ -98,6 +109,7 @@ public:
 
     void setTrace(bool trace);
 
+    /** Clone the production for use in a distinct derivation. */
     rulePtr clone() const;
 
     void print(std::ostream &, uint8_t index = UINT8_MAX, bool withSemantic = false, bool html = true) const;

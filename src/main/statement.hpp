@@ -73,6 +73,11 @@
         std::cerr << oss.str() << std::endl;                    \
     }
 
+/**
+ * Grammar-language expression or instruction, including assignments,
+ * guards, conditional evaluation, field access and output operations.
+ * Evaluation can modify an Item and its variable environment.
+ */
 class Statement : public Facade,
                   public Serializable,
                   public std::enable_shared_from_this<class Statement>
@@ -166,6 +171,10 @@ private:
     double number;
     std::vector<uint32_t> orderChain;
     std::vector<statementPtr> orderByKeys;
+
+    /** Process an order specification, deferring unresolved field-based orders. */
+    bool applyOrder(class Item *item, Parser &parser, Generator *synthesizer,
+                    bool &effect, bool verbose);
 
 public:
     Statement(uint32_t lineno, std::string bufferName, type op, bool rootOp);
@@ -372,8 +381,13 @@ public:
 
     void stmPrintln(class Item *item, Parser &parser, Generator *generator, std::ostream &out, bool verbose);
 
+    /** Determine whether this statement should be enabled in context. */
     void testEnable(statementPtr statementRoot, class Item *, class Generator *, bool &, bool);
 
+    /**
+     * Evaluate this expression/action in the item environment.
+     * Assignments, guards and output operations may have side effects.
+     */
     void apply(statementPtr statementRoot, class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool replaceVariables, bool verbose);
 
     void lookingForAssignedInheritedChildFeatures(std::vector<bool> &);

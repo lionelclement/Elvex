@@ -107,6 +107,15 @@ void Statements::addStatement(const statementPtr &statement)
     // resetSerial();
 }
 
+void Statements::printIndent(std::ostream &out, uint8_t tabulation, bool enabled)
+{
+    if (enabled)
+    {
+        for (uint8_t j = 1; j <= tabulation; ++j)
+            out << "&nbsp;";
+    }
+}
+
 /* **************************************************
  *
  ************************************************** */
@@ -117,11 +126,7 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
     {
         out << "<div>";
     }
-    if (ln)
-    {
-        for (uint8_t j = 1; j <= tabulation; ++j)
-            out << "&nbsp;";
-    }
+    printIndent(out, tabulation, ln);
     out << leftSep;
     if (ln)
     {
@@ -130,11 +135,7 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
     tabulation += tabulationLenght;
     if (guard)
     {
-        if (ln)
-        {
-            for (uint8_t j = 1; j <= tabulation; ++j)
-                out << "&nbsp;";
-        }
+        printIndent(out, tabulation, ln);
         guard->toHTML(out, tabulationLenght, tabulation, color, bgcolor);
     }
     bool first = true;
@@ -144,19 +145,14 @@ void Statements::print(std::ostream &out, uint8_t tabulationLenght, uint8_t tabu
             first = false;
         else
             out << sep;
-        if (ln)
-        {
-            for (uint8_t j = 1; j <= tabulation; ++j)
-                out << "&nbsp;";
-        }
+        printIndent(out, tabulation, ln);
         (*statement)->toHTML(out, tabulationLenght, tabulation, color, bgcolor);
     }
     tabulation -= tabulationLenght;
     if (ln)
     {
         out << "</div>";
-        for (uint8_t j = 1; j <= tabulation; ++j)
-            out << "&nbsp;";
+        printIndent(out, tabulation, true);
     }
     out << rightSep;
     if (ln)
@@ -251,111 +247,115 @@ void Statements::renameVariables(uint32_t code)
 }
 
 /* **************************************************
- * Applique l'ensemble des instructions
+ * A statement block runs in three stages: guard evaluation,
+ * enablement refresh, then repeated application until no change.
  ************************************************** */
-void Statements::apply(class Item *item, Parser &parser, Generator *synthesizer, bool &effect, bool verbose)
+void Statements::traceItem(Item *item, Generator *synthesizer, const char *heading)
 {
-    bool allSeen = true;
+    if (synthesizer->getTraceAction() ||
+        (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
+    {
+        std::cout << heading << std::endl;
+        item->toHTML(std::cout);
+        std::cout << std::endl;
+    }
+}
+
+bool Statements::applyGuard(Item *item, Parser &parser, Generator *synthesizer,
+                            bool &effect, bool verbose)
+{
+    if (!guard || guard->isSetFlags(Flags::SEEN))
+        return false;
+
+    traceItem(item, synthesizer, "<H3>####################### APPLY (before gard) #######################</H3>");
+    guard->apply(guard, item, parser, synthesizer, effect, true, verbose);
+    guard->addFlags(Flags::SEEN);
+    traceItem(item, synthesizer, "<H3>####################### APPLY CON'T (after gard) #######################</H3>");
+
+    if (guard->isSetFlags(Flags::BOTTOM))
+    {
+        addFlags(Flags::BOTTOM);
+        return true;
+    }
+    return false;
+}
+
+void Statements::refreshEnablement(Item *item, Generator *synthesizer)
+{
+    for (list_statement::const_iterator statement = statements.cbegin();
+         statement != statements.cend(); ++statement)
+    {
+        if ((*statement)->isUnsetFlags(Flags::SEEN))
+        {
+            bool enableResult = false;
+            (*statement)->testEnable(*statement, item, synthesizer, enableResult, false);
+            if (enableResult)
+                (*statement)->testEnable(*statement, item, synthesizer, enableResult, true);
+        }
+    }
+}
+
+bool Statements::applyEnabled(Item *item, Parser &parser, Generator *synthesizer,
+                              bool &effect, bool verbose, bool &localEffect)
+{
+    for (list_statement::const_iterator statement = statements.cbegin();
+         statement != statements.cend(); ++statement)
+    {
+        if ((*statement)->isSetFlags(Flags::SEEN) || (*statement)->isSetFlags(Flags::DISABLED))
+            continue;
+
+        effect = false;
+        (*statement)->apply((*statement), item, parser, synthesizer, effect, true, verbose);
+        if ((*statement)->isSetFlags(Flags::BOTTOM))
+        {
+            addFlags(Flags::BOTTOM);
+            return true;
+        }
+        if (effect)
+            localEffect = true;
+    }
+    return false;
+}
+
+void Statements::markSeenWhenComplete()
+{
+    for (list_statement::const_iterator statement = statements.cbegin();
+         statement != statements.cend(); ++statement)
+    {
+        if ((*statement)->isUnsetFlags(Flags::SEEN))
+            return;
+    }
+    addFlags(Flags::SEEN);
+}
+
+void Statements::apply(Item *item, Parser &parser, Generator *synthesizer,
+                       bool &effect, bool verbose)
+{
     if (item->isSetFlags(Flags::BOTTOM | Flags::SEEN))
     {
         FATAL_ERROR_UNEXPECTED
     }
 
-    bool localEffect;
-
-    if (guard && guard->isUnsetFlags(Flags::SEEN))
+    if (!applyGuard(item, parser, synthesizer, effect, verbose))
     {
-        if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
+        bool localEffect = true;
+        bool rejected = false;
+        while (localEffect && item->isUnsetFlags(Flags::BOTTOM))
         {
-            std::cout << "<H3>####################### APPLY (before gard) #######################</H3>" << std::endl;
-            item->toHTML(std::cout);
-            std::cout << std::endl;
-        }
-        guard->apply(guard, item, parser, synthesizer, effect, true, verbose);
-        guard->addFlags(Flags::SEEN);
-        if (synthesizer->getTraceAction() || ((synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace())))
-        {
-            std::cout << "<H3>####################### APPLY CON'T (after gard) #######################</H3>" << std::endl;
-            item->toHTML(std::cout);
-            std::cout << std::endl;
-        }
-        if (guard->isSetFlags(Flags::BOTTOM))
-        {
-            addFlags(Flags::BOTTOM);
-            goto exitApply;
-        }
-    }
-
-    localEffect = true;
-    while (localEffect && item->isUnsetFlags(Flags::BOTTOM))
-    {
-        localEffect = false;
-
-        for (list_statement::const_iterator statement = statements.cbegin();
-             statement != statements.cend();
-             ++statement)
-        {
-            if ((*statement)->isUnsetFlags(Flags::SEEN))
+            localEffect = false;
+            refreshEnablement(item, synthesizer);
+            if (applyEnabled(item, parser, synthesizer, effect, verbose, localEffect))
             {
-                bool enableResult = false;
-                (*statement)->testEnable(*statement, item, synthesizer, enableResult, false);
-                if (enableResult)
-                {
-                    (*statement)->testEnable(*statement, item, synthesizer, enableResult, true);
-                }
-            }
-        }
-
-        for (list_statement::const_iterator statement = statements.cbegin();
-             statement != statements.cend();
-             ++statement)
-        {
-            if ((*statement)->isSetFlags(Flags::SEEN))
-            {
-                continue;
-            }
-            if ((*statement)->isSetFlags(Flags::DISABLED))
-            {
-                continue;
-            }
-            effect = false;
-            (*statement)->apply((*statement), item, parser, synthesizer, effect, true, verbose);
-            if ((*statement)->isSetFlags(Flags::BOTTOM))
-            {
-                addFlags(Flags::BOTTOM);
-                goto exitApply;
+                rejected = true;
                 break;
             }
-            if (effect)
-            {
-                localEffect = true;
-            }
         }
+        if (!rejected)
+            markSeenWhenComplete();
     }
 
-    for (list_statement::const_iterator statement = statements.cbegin();
-         statement != statements.cend();
-         ++statement)
-    {
-        if ((*statement)->isUnsetFlags(Flags::SEEN))
-        {
-            allSeen = false;
-            break;
-        }
-    }
-
-    if (allSeen)
-        this->addFlags(Flags::SEEN);
-
-exitApply:
-{
-}
-    if (synthesizer->getTraceAction() || (synthesizer->getVerbose() && synthesizer->getTrace() && item->getRuleTrace()))
-    {
-        std::cout << "<H3>####################### APPLY CON'T #######################</H3>" << std::endl;
-        item->toHTML(std::cout);
-        std::cout << std::endl;
-    }
+    // Trace the final state even if a guard or statement rejected the item.
+    traceItem(item, synthesizer, "<H3>####################### APPLY CON'T #######################</H3>");
 }
 
 /* **************************************************

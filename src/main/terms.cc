@@ -26,9 +26,8 @@
  *
  ************************************************** */
 Terms::Terms(std::vector<uint32_t> &terms, bool optional)
+    : terms(terms), optional(optional)
 {
-    this->terms = terms;
-    this->optional = optional;
     NEW;
 }
 
@@ -36,9 +35,8 @@ Terms::Terms(std::vector<uint32_t> &terms, bool optional)
  *
  ************************************************** */
 Terms::Terms(uint32_t term, bool optional)
+    : terms(1, term), optional(optional)
 {
-    this->terms.push_back(term);
-    this->optional = optional;
     NEW;
 }
 
@@ -46,8 +44,8 @@ Terms::Terms(uint32_t term, bool optional)
  *
  ************************************************** */
 Terms::Terms()
+    : optional(false)
 {
-    this->optional = false;
     NEW;
 }
 
@@ -202,10 +200,9 @@ void Terms::print(std::ostream &outStream)
  ************************************************** */
 termsPtr Terms::clone(void) const
 {
-    std::vector<uint32_t> new_terms;
-    for (auto t = begin(); t != end(); ++t)
-        new_terms.push_back((*t));
-    return Terms::create(new_terms, optional);
+    // The clone owns a separate RHS vector, retaining alternative order.
+    std::vector<uint32_t> copiedTerms(terms);
+    return Terms::create(copiedTerms, optional);
 }
 
 /* **************************************************

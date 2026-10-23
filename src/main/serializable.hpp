@@ -23,6 +23,10 @@
 #include <string>
 #include <cstddef>
 
+/**
+ * Provides canonical serialization and hashing of an object core.
+ * Derived classes define which structural fields participate in identity.
+ */
 class Serializable
 {
 private:
@@ -39,12 +43,15 @@ public:
     virtual ~Serializable();
 
     // Sérialisation d'identité logique (clé des sets/maps)
+    /** Get the canonical core representation used for structural equality. */
     std::string peekCoreSerialString();
 
     // Hash logique
+    /** Hash the canonical core representation. */
     size_t coreHash();
 
     // Invalide uniquement la sérialisation logique
+    /** Invalidate a cached core representation after a structural change. */
     void resetCoreSerial();
 };
 
