@@ -4,5 +4,5 @@
   - *Affiliation:* Univ. Bordeaux, CNRS, Bordeaux INP, LaBRI, UMR 5800
   - *Address:* 351, cours de la Libération
                33405 Talence Cedex - France
-  - *Email:* lionel.clement|at|u-bordeaux.fr
+  - *Email:* lionel.clement@u-bordeaux.fr
 

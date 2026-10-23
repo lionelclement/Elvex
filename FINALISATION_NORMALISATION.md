@@ -58,8 +58,9 @@ systeme. Utiliser `gtimeout` sur macOS pour imposer un delai externe, si besoin.
   `present:  John uses Elvex.` et `present:  John uses the elvex.`
 
 Ce correctif est valide sur ces essais, sans garantie d'absence de regressions
-sur toutes les grammaires possibles. Le projet reste en version 2.27.0 ;
-aucune nouvelle version officielle n'est annoncee dans cet ensemble.
+sur toutes les grammaires possibles. Ce document décrit une étape antérieure, menée sur la version 2.27.0.
+La distribution issue de cette consolidation porte le numéro 2.28.0 ;
+voir CHANGELOG.md pour le périmètre de la nouvelle version.
 
 ## Notes de distribution
 

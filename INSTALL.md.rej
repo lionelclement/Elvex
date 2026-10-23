@@ -1,0 +1,6 @@
+@@ -1,4 +1,4 @@
+-# Installation d’ELVEX 2.27.0 — sources réorganisées
++# Installation d’ELVEX 2.28.0 — sources réorganisées
+ 
+ La configuration CMake reste **à la racine**, et la compilation se fait dans `build/`.
+ 

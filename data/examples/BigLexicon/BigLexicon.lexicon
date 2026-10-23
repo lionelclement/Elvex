@@ -1,0 +1,11 @@
+
+/************************************************************
+*  Forms
+************************************************************/
+FORM form;
+
+/************************************************************
+*  CLOSED_CLASS_WORD
+************************************************************/
+"[attrMorpho:$attrMorpho,attrPattern:$attrPattern,attrInteger:$attrInteger,attrString:\"$attrString\"]"	CLOSED_CLASS_WORD [attrMorpho:$attrMorpho, attrPattern:$attrPattern,attrInteger:$attrInteger,attrString:$attrString];
+

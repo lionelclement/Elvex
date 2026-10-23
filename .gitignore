@@ -70,3 +70,10 @@ elvex-www/config/config.php
 /test/music/*.midi
 /test/music/*.ly
 /test/music/*.lilypond.stamp
+
+# ELVEX réorganisé
+/build/
+/generated/
+/data/examples/**/.elvex-build/
+/data/examples/**/*.output.sorted
+/data/examples/**/*.test.sorted

@@ -1,0 +1,172 @@
+// LEXEME	POS	LEMMA	FEATURES
+//
+// generic lexeme: ANIMAL
+// specific lexeme: DOG, CAT, etc.
+//
+// ==========================
+// DOMESTIC ANIMALS
+// ==========================
+//
+ANIMAL	noun	CHIEN	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:aboyer | japper | hurler]]
+ANIMAL	noun	CHIOT	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:aboyer | japper]]
+CHIEN	noun	CHIEN	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:aboyer | japper | hurler]]
+CHIEN	noun	CHIOT	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:aboyer | japper]]
+//
+ANIMAL	noun	CHAT	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:miauler]]
+//
+ANIMAL	noun	VACHE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:meugler]]
+ANIMAL	noun	BOEUF	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:meugler]]
+ANIMAL	noun	TAUREAU	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:meugler]]
+//
+ANIMAL	noun	CHEVAL	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:hennir]]
+ANIMAL	noun	JUMENT	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:hennir]]
+ANIMAL	noun	ETALON	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:hennir]]
+ANIMAL	noun	ONGRE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:hennir]]
+ANIMAL	noun	ANE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:braire]]
+//
+ANIMAL	noun	MOUTON	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:beler]]
+ANIMAL	noun	BREBIS	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:beler]]
+ANIMAL	noun	AGNEAU	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:beler]]
+ANIMAL	noun	CHEVRE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:beler]]
+//
+ANIMAL	noun	POULE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:caqueter]]
+ANIMAL	noun	COQ	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:chanter]]
+ANIMAL	noun	OIE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:cacarder]]
+ANIMAL	noun	DINDON	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:glouglouter]]
+ANIMAL	noun	CANARD	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:cancaner]]
+//
+ANIMAL	noun	HAMSTER	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+ANIMAL	noun	LAPIN	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+//
+ANIMAL	noun	COCHON	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:grogner]]
+ANIMAL	noun	TRUIE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:grogner]]
+ANIMAL	noun	PORCELET	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+//
+ANIMAL	noun	CABRI	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:beler]]
+//
+ANIMAL	noun	PIGEON	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:roucouler]]
+ANIMAL	noun	TOURTERELLE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:roucouler]]
+//
+ANIMAL	noun	PERROQUET	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:jaser | piauler]]
+ANIMAL	noun	PERROQUETTE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:jaser | piauler]]
+ANIMAL	noun	CANARI	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:chanter | gazouiller]]
+//
+ANIMAL	noun	COBAYE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+ANIMAL	noun	GERBILLE	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner]]
+ANIMAL	noun	FURET	[selectional_restriction:[animate:yes, animal:yes, domestic:yes, sound:couiner | siffler]]
+//
+// ==========================
+// WILD ANIMALS
+// ==========================
+//
+ANIMAL	noun	CHAUVE_SOURIS	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:piauler | couiner | crier]]
+//
+ANIMAL	noun	LOUP	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hurler]]
+ANIMAL	noun	COYOTE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hurler]]
+ANIMAL	noun	CHACAL	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hurler]]
+//
+ANIMAL	noun	LION	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:rugir]]
+ANIMAL	noun	TIGRE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:rugir]]
+ANIMAL	noun	LEOPARD	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:rugir]]
+ANIMAL	noun	JAGUAR	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:rugir]]
+ANIMAL	noun	OURS	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:rugir]]
+//
+ANIMAL	noun	SERPENT	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler]]
+//
+ANIMAL	noun	DAIM	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier|bramer]]
+//
+ANIMAL	noun	CERF	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier|bramer|raire|réer]]
+//
+ANIMAL	noun	CHEVREUIL	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier|bramer|raire|réer]]
+//
+ANIMAL	noun	SANGLIER	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:grogner]]
+//
+ANIMAL	noun	RENARD	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:glapir]]
+//
+ANIMAL	noun	HIBOU	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hululer]]
+ANIMAL	noun	CHOUETTE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hululer]]
+//
+ANIMAL	noun	CORBEAU	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:croasser]]
+ANIMAL	noun	CORNEILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:croasser]]
+//
+ANIMAL	noun	GRENOUILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:coasser]]
+//
+ANIMAL	noun	OISEAU	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:gazouiller]]
+ANIMAL	noun	MOINEAU	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:gazouiller]]
+ANIMAL	noun	MESANGE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:gazouiller]]
+//
+ANIMAL	noun	SOURIS	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:couiner]]
+ANIMAL	noun	RAT	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:couiner]]
+//
+//
+ANIMAL	noun	ELEPHANT	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:barrir]]
+//
+ANIMAL	noun	SINGE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier | hurler]]
+ANIMAL	noun	GORILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hurler]]
+ANIMAL	noun	CHIMPANZE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+//
+ANIMAL	noun	HYENE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:rire | grogner]]
+//
+ANIMAL	noun	PHOQUE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:hurler]]
+ANIMAL	noun	DAUPHIN	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler]]
+BALEINE	noun	BALEINE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+ANIMAL	noun	BALEINE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+//
+ANIMAL	noun	AIGLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+ANIMAL	noun	FAUCON	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+ANIMAL	noun	MOUETTE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:crier]]
+ANIMAL	noun	MERLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler | chanter]]
+ANIMAL	noun	ROSSIGNOL	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+ANIMAL	noun	COUCOU	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+//
+ANIMAL	noun	CIGALE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+ANIMAL	noun	GRILLON	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:chanter]]
+//
+ANIMAL	noun	ABEILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+ANIMAL	noun	GUEPE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+ANIMAL	noun	MOUCHE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+ANIMAL	noun	MOUSTIQUE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:bourdonner]]
+//
+ANIMAL	noun	CORNEILLE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:croasser]]
+ANIMAL	noun	CRAPAUD	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:coasser]]
+ANIMAL	noun	CIGOGNE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:claqueter]]
+ANIMAL	noun	CYGNE	[selectional_restriction:[animate:yes, animal:yes, wild:yes, sound:siffler]]
+//
+//
+CRIER	verb	ABOYER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:aboyer]]]
+ABOYER	verb	ABOYER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:aboyer]]]
+//
+CRIER	verb	CRIER	[SUBJ:[selectional_restriction:[animate:yes, sound:crier]]]
+CRIER	verb	SIFFLER	[SUBJ:[selectional_restriction:[animate:yes, sound:siffler]]]
+CRIER	verb	GROGNER	[SUBJ:[selectional_restriction:[animate:yes, sound:grogner]]]
+//
+CRIER	verb	MEUGLER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:meugler]]]
+CRIER	verb	JAPPER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:japper]]]
+CRIER	verb	MIAULER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:miauler]]]
+CRIER	verb	HENNIR	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:hennir]]]
+CRIER	verb	BELER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:beler]]]
+CRIER	verb	CAQUETER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:caqueter]]]
+CRIER	verb	CHANTER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:chanter]]]
+CRIER	verb	CACARDER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:cacarder]]]
+CRIER	verb	GLOUGLOUTER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:glouglouter]]]
+CRIER	verb	CANCANER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:cancaner]]]
+CRIER	verb	COUINER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:couiner]]]
+CRIER	verb	BRAIRE	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:braire]]]
+CRIER	verb	HURLER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:hurler]]]
+CRIER	verb	PIAULER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:piauler]]]
+CRIER	verb	RUGIR	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:rugir]]]
+CRIER	verb	BRAMER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:bramer]]]
+CRIER	verb	RAIRE	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:raire]]]
+CRIER	verb	GLAPIR	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:glapir]]]
+CRIER	verb	HULULER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:hululer]]]
+CRIER	verb	CROASSER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:croasser]]]
+CRIER	verb	COASSER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:coasser]]]
+CRIER	verb	GAZOUILLER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:gazouiller]]]
+CRIER	verb	CRIER	[SUBJ:[selectional_restriction:[animate:yes, sound:crier]]]
+//
+CRIER	verb	ROUCOULER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:roucouler]]]
+CRIER	verb	JASER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:jaser]]]
+CRIER	verb	BARRIR	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:barrir]]]
+CRIER	verb	RIRE	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:rire]]]
+CRIER	verb	BOURDONNER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:bourdonner]]]
+CRIER	verb	CLAQUETER	[SUBJ:[selectional_restriction:[animate:yes, animal:yes, sound:claqueter]]]
