@@ -1,6 +1,6 @@
 /************************************************************
-* en-v1.0.macros
-* Macro definitions required by en-v1.0.pattern and en-v1.0.morpho.
+* english-sentences.macros
+* Macro definitions required by english-sentences.pattern and english-sentences.morpho.
 ************************************************************/
 
 // ***********************************************************

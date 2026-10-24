@@ -6,12 +6,12 @@ The grammar is intentionally smaller than the project's historical ensemble gram
 
 ## Requirements
 
-- **Elvex** (`elvex`) with support for the grammar and lexicon syntax used here.
+- **ELVEX** (`elvex`) with support for the grammar and lexicon syntax used here.
 - **LilyPond** (`lilypond`) to engrave the scores and generate MIDI where supported.
 - **GNU Make** or a compatible `make` implementation.
 - Standard Unix shell tools: `test`, `grep`, `tail`, `rm`, `touch` and `printf`.
 
-Check that the executables are on your `PATH`:
+Build ELVEX from the repository root first ([installation](../../../INSTALL.md)). Check that the executables are on your `PATH` or pass their paths using Make variables:
 
 ```sh
 command -v elvex
@@ -23,7 +23,7 @@ The Makefile allows the executable names to be overridden, e.g. `make ELVEX=/pat
 
 ## Quick start
 
-Run commands **from this directory** (the directory containing the `Makefile`):
+Run commands **from `data/examples/pop-music-didactic/`** (the directory containing the `Makefile`). From the repository root, first run `cd data/examples/pop-music-didactic`.
 
 ```sh
 make list       # show the available input files
@@ -92,7 +92,7 @@ README.md                This guide
 .gitignore              Generated-file exclusions for Git
 ```
 
-The generated `.ly`, `.pdf`, `.midi`, `.lilypond.stamp`, trace, and log files are build artifacts rather than sources. They may exist in a working directory or an exported archive, but should not be committed as source files. Run `make ly`, `make pdf`, or `make` to regenerate them.
+The generated `.ly`, `.pdf`, `.midi`, `.lilypond.stamp`, trace, and log files are build artifacts rather than original source files. Some `.ly` files may still be present in older checkouts, but users can regenerate them with this Makefile. Newly generated outputs should not be committed as source files. Run `make ly`, `make pdf`, or `make` to regenerate them.
 
 ## Tracing and troubleshooting
 

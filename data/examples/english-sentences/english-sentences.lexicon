@@ -1,8 +1,8 @@
 /************************************************************
-* En-v1.0.lexicon
+* english-sentences.lexicon
 * Base lexicon for simple English sentence generation.
 * Built from the supplied En.lexicon and extended with the
-* particles/prepositions referenced by En-v1.0.pattern.
+* particles/prepositions referenced by english-sentences.pattern.
 ************************************************************/
 
 /************************************************************
@@ -161,7 +161,7 @@ not	not;
 "wooden" adjMaterial [HEAD:WOODEN];
 
 /************************************************************
-* Extra particles/prepositions required by En-v1.0.pattern
+* Extra particles/prepositions required by english-sentences.pattern
 ************************************************************/
 "about"	part [particle:_about_];
 "across"	part [particle:_across_];
