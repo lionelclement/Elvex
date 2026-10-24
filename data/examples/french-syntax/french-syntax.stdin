@@ -1,2 +1,3 @@
-S [HEAD:predicate, i:[HEAD:SUBST], mode:indicative]
-S [HEAD:predicate, i:[HEAD:SUBST], ii:[HEAD:SUBST], mode:indicative]
+//S [HEAD:predicate, i:[HEAD:luc], mode:indicative]
+//S [HEAD:predicate, i:[HEAD:luc], ii:[HEAD:marie], mode:indicative]
+text [HEAD:cause, i:[HEAD:rain], ii:[HEAD:umbrella, i:[HEAD:_you]]]

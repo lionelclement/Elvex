@@ -66,3 +66,6 @@ tables	noun	TABLE	[@fp]
 
 Luc	pn	LUC	[]
 Marie	pn	MARIE	[]
+
+pleut	verb	PLEUVOIR	[@P3s]
+prendras	verb	PRENDRE	[vform:tensed, tense:future, mode:indicative, subj:[@_2s]]

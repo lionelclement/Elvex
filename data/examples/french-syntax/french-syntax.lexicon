@@ -1,22 +1,23 @@
 le det[gender:ms, number:sg, def:true];
-//la det[gender:fm, number:sg, def:true];
-//les det[number:pl, def:true];
-//un det[gender:ms, number:sg, def:false];
-//une det[gender:fm, number:sg, def:false];
-//des det[number:pl, def:false];
-//ce det[gender:ms, number:sg, def:true, dem:true];
-//cette det[gender:fm, number:sg, def:true, dem:true];
-//ces det[number:pl, def:true, dem:true];
+la det[gender:fm, number:sg, def:true];
+les det[number:pl, def:true];
+un det[gender:ms, number:sg, def:false];
+une det[gender:fm, number:sg, def:false];
+des det[number:pl, def:false];
+ce det[gender:ms, number:sg, def:true, dem:true];
+cette det[gender:fm, number:sg, def:true, dem:true];
+ces det[number:pl, def:true, dem:true];
 
-//je cln[HEAD:SUBST, number:sg, person:one, anim:true, hum:true];
-//tu cln[HEAD:SUBST, number:sg, person:two, anim:true, hum:true];
-//il cln[HEAD:SUBST, gender:ms, number:sg, person:three, anim:true, hum:true];
-//elle cln[HEAD:SUBST, gender:fm, number:sg, person:three, anim:true, hum:true];
-//"on" cln[HEAD:SUBST, number:sg, person:three, anim:true, hum:true];
-//nous cln[HEAD:SUBST, number:pl, person:one, anim:true, hum:true];
-//vous cln[HEAD:SUBST, number:pl, person:two, anim:true, hum:true];
-//ils cln[HEAD:SUBST, gender:ms, number:pl, person:three, anim:true, hum:true];
-//elles cln[HEAD:SUBST, gender:fm, number:pl, person:three, anim:true, hum:true];
+je cln[HEAD:_i, number:sg, person:one, human:true, anim:true];
+tu pro[HEAD:_you, person:two, number:sg, human:true, anim:true];
+il pro[HEAD:_impersonal, person:three, number:sg, human:false, anim:false];
+il cln[HEAD:_he, gender:ms, number:sg, person:three, human:true, anim:true];
+elle cln[HEAD:_she, gender:fm, number:sg, person:three, human:true, anim:true];
+"on" cln[HEAD:_on, number:sg, person:three, human:true, anim:true];
+nous cln[HEAD:_we, number:pl, person:one, human:true, anim:true];
+vous cln[HEAD:_you, number:pl, person:two, human:true, anim:true];
+ils cln[HEAD:_they, gender:ms, number:pl, person:three, human:true, anim:true];
+elles cln[HEAD:_they, gender:fm, number:pl, person:three, human:true, anim:true];
 
 à prep[pcas:à];
 de prep[pcas:de];
@@ -42,10 +43,12 @@ qui prel [fct:subj];
 
 "" pro [HEAD:PRO];
 
-/*
-lui pro[HEAD:SUBST, gender:ms, number:sg, hum:true];
-elle pro[HEAD:SUBST, gender:fm, number:sg, hum:true];
-eux pro[HEAD:SUBST, gender:ms, number:pl, hum:true];
-elles pro[HEAD:SUBST, gender:fm, number:pl, hum:true];
-*/
+lui pro[HEAD:_he, gender:ms, number:sg, person:three, human:true, anim:true];
+elle pro[HEAD:_she, gender:fm, number:sg, person:three, human:true, anim:true];
+eux pro[HEAD:_they, gender:ms, number:pl, person:three, human:true, anim:true];
+elles pro[HEAD:_they, gender:fm, number:pl, person:three, human:true, anim:true];
 
+si conj[HEAD:conditional];
+"," comma [];
+
+parapluie noun[HEAD:umbrella, gender:ms, number:sg, human:false, anim:false];

@@ -122,10 +122,11 @@ NP → det N
 }
 
 // Place les relatives après les adjectifs
+//error: see lightness to correct
 N2 → N {
-  [mod:<[HEAD:ADJ]::<[HEAD:predicate]::$x>>];
-  [mod:<$car::<$cadr::$cddr>>, $rest] ⊂ ↑;
-  ↓1 = [mod:<$cadr::<$car::$cddr>>, $rest];
+  [mod:<[HEAD:ADJ]::<[HEAD:predicate]::$x> >];
+  [mod:<$car::<$cadr::$cddr> >, $rest] ⊂ ↑;
+  ↓1 = [mod:<$cadr::<$car::$cddr> >, $rest];
   ⇑ = ⇓1;
 }
 
@@ -282,3 +283,43 @@ PP → prep NP {
   ↓2 = ↑;
   ⇑ = ⇓2;
 }
+
+/* Compositional conditional sentence: connective, clauses, punctuation. */
+text → CONDITIONAL_CLAUSE comma S dot {
+  [HEAD:cause, i:$condition, ii:$consequence];
+  ↓1 = $condition;
+  ↓2 = [];
+  ↓3 = $consequence;
+  ↓4 = [];
+  ⇑ = [];
+}
+
+CONDITIONAL_CLAUSE → conj S {
+  ↓1 = [HEAD:conditional];
+  ↓2 = ↑;
+  ⇑ = ⇓2;
+}
+
+/* Personal clause: the semantic head selects lexical verb and object.
+   This example introduces the object with an indefinite determiner. */
+S → NP VP {
+  [HEAD:$predicate, i:$actor];
+  ↓1 = $actor;
+  ↓2 = [HEAD:$predicate, subj:$actor,
+         obj:[HEAD:$predicate, def:false],
+         vform:tensed, mode:indicative];
+  ⇑ = [];
+}
+
+/* General impersonal clause (e.g. weather predicates). */
+S → NP VP {
+  [HEAD:$predicate];
+  ↓1 = [HEAD:_impersonal, person:three, number:sg,
+        human:false, anim:false];
+  ↓2 = [HEAD:$predicate, obj:NIL,
+         subj:[HEAD:_impersonal, person:three, number:sg,
+               human:false, anim:false],
+         vform:tensed, mode:indicative];
+  ⇑ = [];
+}
+
