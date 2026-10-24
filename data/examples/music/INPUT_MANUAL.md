@@ -1,100 +1,59 @@
-# Manuel d’écriture des fichiers `.input`
+# Music `.input` authoring guide
 
-## Lire les règles Elvex
+This guide documents the feature structures used by the music-generation examples in ELVEX. An `.input` file specifies a piece of music—its title, style, form, rhythm, instrumentation, key and meter. The accompanying grammar transforms those features into LilyPond (`.ly`) notation.
 
-Les fichiers `.rules` définissent comment Elvex transforme les traits musicaux d’un `.input` en fragments LilyPond. Cette section donne les conventions de lecture utiles pour comprendre les règles sans répéter ce rappel dans chaque fichier `.rules`.
+The field names and enumeration values shown below are **ELVEX grammar identifiers**. Keep them exactly as written, even when they contain French words such as `chanson_francaise`. They are not natural-language prose and translating them would break grammar matching.
 
-Syntaxe générale d’une règle Elvex :
+## 1. Reading ELVEX grammar rules
 
-```txt
+The `.rules` files describe how musical features are converted to LilyPond fragments. A typical rule has this shape:
+
+```text
 A → B C
 {
-  [trait:valeur, trait:$valeur_variable, $reste_traits];
-    // Filtre les traits hérités de la règle courante.
-    // Les variables comme $valeur_variable et $reste_traits sont liées
-    // par unification et peuvent être réutilisées ensuite.
+  [feature:value, feature:$variable, $remaining_features];
+    // Filter the attributes inherited by this rule.
+    // Variables are bound by unification for later reuse.
 
-  [trait:$valeur_variable, $reste_traits] ⊂ ↑;
-    // Extrait depuis les traits hérités ↑ les valeurs utiles à la règle.
-    // Les variables sont liées par unification à partir de ↑.
-    // Cette forme sert généralement à récupérer des valeurs ou un reste
-    // de structure de traits pour les réutiliser ensuite.
+  [feature:$variable, $remaining_features] ⊂ ↑;
+    // Extract values from the inherited feature structure.
 
   ↓1 = ↑ ∪ [...];
-    // Définit les traits hérités transmis au premier enfant.
+    // Set the features inherited by the first child.
 
   ↓2 = ↑ ∪ [...];
-    // Définit les traits hérités transmis au second enfant.
+    // Set the features inherited by the second child.
 
   ... ⇓1 ...;
-    // Utilise les traits synthétisés remontés par le premier enfant.
+    // Read the features synthesized by the first child.
 
   ... ⇓2 ...;
-    // Utilise les traits synthétisés remontés par le second enfant.
+    // Read the features synthesized by the second child.
 
   ⇑ = ...;
-    // Définit les traits synthétisés remontés par cette règle.
+    // Set the features synthesized by this rule.
 }
 ```
 
-Conventions principales :
+| Symbol | Meaning |
+| --- | --- |
+| `↑` | Features inherited by the current rule |
+| `↓1`, `↓2`, ... | Inherited features passed to each child |
+| `⇓1`, `⇓2`, ... | Features synthesized by each child |
+| `⇑` | Features synthesized by the current rule |
 
-| Symbole | Sens |
-|---|---|
-| `↑` | traits hérités reçus par la règle courante |
-| `↓1`, `↓2`, etc. | traits hérités transmis au premier, second, etc. enfant |
-| `⇓1`, `⇓2`, etc. | traits synthétisés remontés par le premier, second, etc. enfant |
-| `⇑` | traits synthétisés remontés par la règle courante |
+High-level modules select musical structures or instrumentation; lower-level modules construct measures, notes, chords, rests and LilyPond fragments.
 
-Les modules de haut niveau choisissent généralement une structure musicale ou une instrumentation. Les modules de bas niveau réalisent ensuite des mesures, notes, accords, silences ou fragments LilyPond.
+## 2. Overall input structure
 
-## Note importante : `count` dans `ensemble.instruments`
+The root symbol is always `PIECE`. An input typically has the following structure:
 
-Le bloc `ensemble.instruments` utilise des entrées indexées `i1`, `i2`, `i3`, etc. Le champ `count` est obligatoire et doit indiquer le nombre d’instruments déclarés.
-
-Exemple pour un instrument :
-
-```txt
-ensemble:[
-  instruments:[
-    count:1,
-    i1:[id:flute, name:"Flute", family:woodwind, role:flute1, midi:"flute", clef:treble, octave:5, dynamic:mf]
-  ]
-]
-```
-
-Exemple pour trois instruments :
-
-```txt
-ensemble:[
-  instruments:[
-    count:3,
-    i1:[id:flute, name:"Flute", family:woodwind, role:flute_piano_lead, midi:"flute", clef:treble, octave:5, dynamic:mf],
-    i2:[id:piano_rh, name:"Piano RH", family:keyboard, role:piano_acc_rh, midi:"acoustic grand", clef:treble, octave:4, dynamic:mp],
-    i3:[id:piano_lh, name:"Piano LH", family:keyboard, role:piano_acc_lh, midi:"acoustic grand", clef:bass, octave:3, dynamic:p]
-  ]
-]
-```
-
-`count` doit toujours correspondre au dernier indice utilisé. Par exemple, si l’ensemble contient `i1`, `i2` et `i3`, il faut écrire `count:3`.
-
-Ce champ peut sembler redondant, mais il rend le routage grammatical déterministe : la grammaire choisit directement la règle `count:1`, `count:2`, `count:3`, etc., sans essayer des règles trop courtes ou trop longues.
-
-
-Ce manuel décrit le format courant des fichiers `.input` utilisés par Elvex pour produire un fichier LilyPond `.ly`.
-
-Un fichier `.input` décrit une pièce musicale : son titre, son style, sa forme, son rythme, son instrumentation, sa tonalité et sa mesure.
-
-La racine du fichier est toujours `PIECE`.
-
-```txt
+```text
 PIECE [
   generation:[syntax:instrument_roles, strict:false, fallback:true],
-
-  title:"Titre de la pièce",
-  composer:"Nom du compositeur",
+  title:"Piece title",
+  composer:"Composer name",
   bpm:96,
-
   music:[...],
   ensemble:[...],
   key:[...],
@@ -102,92 +61,57 @@ PIECE [
 ]
 ```
 
-## 1. Principe général
+Musical settings should not be chosen independently: `style`, `form`, `phrase_model` and the rhythm attributes must form a compatible combination. For example, a classical gigue commonly uses:
 
-Les champs musicaux ne doivent pas être choisis comme une liste plate d’options indépendantes.
-
-Les champs suivants vont généralement ensemble :
-
-```txt
-style
-form
-phrase_model
-rhythm.topic
-rhythm.dance
-rhythm.density
-rhythm.articulation
-```
-
-Par exemple, une gigue classique combine généralement :
-
-```txt
+```text
 style:classical_19c
 form:long_gigue
 phrase_model:periodic
 rhythm:[topic:gallop, dance:gigue, density:active, articulation:detached]
 ```
 
-Une chanson couplet/refrain combine plutôt :
+A French verse/chorus song typically uses:
 
-```txt
+```text
 style:chanson_francaise
 form:chanson_francaise_couplet_refrain
 phrase_model:verse_chorus
 rhythm:[topic:chanson_syllabic, dance:none, density:medium, articulation:legato]
 ```
 
-Le plus sûr est donc de partir d’un des profils recommandés ci-dessous, puis de modifier seulement les paramètres nécessaires.
+Start from a recommended profile (section 7), then change only the parameters needed by your piece.
 
-## 2. Bloc `generation`
+## 3. `generation` and metadata
 
-Le bloc `generation` indique comment l’input est organisé.
-
-```txt
+```text
 generation:[syntax:instrument_roles, strict:false, fallback:true]
 ```
 
-### Champs
+| Field | Values | Purpose |
+| --- | --- | --- |
+| `syntax` | `instrument_roles` | Public syntax: instruments are described by identifier, family and musical role |
+| `strict` | `true`, `false` | With `false`, the grammar may fill certain missing fields with defaults |
+| `fallback` | `true`, `false` | With `true`, a generic realization may be used when a specialized case is unavailable |
 
-| Champ | Valeurs | Usage |
-|---|---|---|
-| `syntax` | `instrument_roles` | Les instruments sont décrits par identifiant, famille et rôle musical. C’est la syntaxe publique de cette version. |
-| `strict` | `true`, `false` | Avec `false`, la grammaire peut compléter certains champs manquants par des valeurs par défaut. |
-| `fallback` | `true`, `false` | Avec `true`, la grammaire peut utiliser une solution générique quand un cas spécialisé n’existe pas. |
+Recommended settings: `generation:[syntax:instrument_roles, strict:false, fallback:true]`.
 
-Usage recommandé :
-
-```txt
-generation:[syntax:instrument_roles, strict:false, fallback:true]
-```
-
-## 3. Métadonnées
-
-```txt
-title:"Titre",
-composer:"Compositeur",
+```text
+title:"Etude in G",
+composer:"ELVEX",
 bpm:96
 ```
 
-| Champ | Exemple | Remarque |
-|---|---|---|
-| `title` | `"Étude en sol"` | Titre imprimé dans le fichier LilyPond. |
-| `composer` | `"Elvex"` | Compositeur imprimé dans l’en-tête. |
-| `bpm` | `96` | Tempo MIDI et indication générale. |
+| Field | Example | Purpose |
+| --- | --- | --- |
+| `title` | `"Etude in G"` | Title printed in the LilyPond score |
+| `composer` | `"ELVEX"` | Composer printed in the score header |
+| `bpm` | `96` | MIDI tempo and general tempo indication |
 
-Le tempo dépend du style :
+Typical tempo ranges are 60–84 BPM for slow studies, sicilianas and ballads; 88–112 for moderate classical works; 104–128 for marches, pop and chansons; and 120–144 for gigues and active rock.
 
-| Usage | `bpm` typique |
-|---|---:|
-| étude lente, sicilienne, ballade | `60`–`84` |
-| classique modéré | `88`–`112` |
-| marche, pop, chanson | `104`–`128` |
-| gigue, rock actif | `120`–`144` |
+## 4. The `music` block
 
-## 4. Bloc `music`
-
-Le bloc `music` décrit le matériau musical.
-
-```txt
+```text
 music:[
   style:classical_19c,
   form:rounded_binary,
@@ -196,80 +120,72 @@ music:[
 ]
 ```
 
-### 4.1 `style`
+### Styles
 
-| Valeur | Usage |
-|---|---|
-| `classical_19c` | Écriture classique, formes périodiques, danses, études, pièces instrumentales. |
-| `pop_60s_80s` | Chanson pop avec couplet/refrain et accompagnement. |
-| `chanson_francaise` | Chanson française, voix ou ligne mélodique + accompagnement. |
-| `rock` | Groupe rock, backbeat, guitare, basse, batterie. |
+| `style` value | Use |
+| --- | --- |
+| `classical_19c` | Classical forms, dance movements, studies and instrumental works |
+| `pop_60s_80s` | Verse/chorus pop with accompaniment |
+| `chanson_francaise` | French chanson with voice or melodic lead and accompaniment |
+| `rock` | Rock band, backbeat, guitar, bass and drums |
 
-### 4.2 `form`
+### Forms (`form`)
 
-Les formes compatibles dépendent fortement du style.
+The supported forms depend on `style`. Preserve the exact form identifiers in input files.
 
-#### Formes classiques
+| Classical form | Intended use |
+| --- | --- |
+| `scales` | Scale studies |
+| `rounded_binary` | Short rounded binary form |
+| `ternary` | Simple ABA form |
+| `minuet_trio` | Minuet and trio |
+| `theme_and_variations` | Theme and variations |
+| `long_rounded_binary` | Extended rounded binary form |
+| `long_ternary` | Extended ABA form |
+| `long_theme_and_variations` | Extended theme and variations |
+| `long_siciliana` | Long siciliana |
+| `long_gigue` | Long gigue |
+| `long_march` | Long march |
+| `formal_long_rounded_binary` | Formalized extended rounded binary |
+| `formal_long_ternary` | Formalized extended ABA |
+| `formal_long_theme_and_variations` | Formalized extended theme and variations |
+| `formal_long_siciliana` | Formalized long siciliana |
+| `formal_long_gigue` | Formalized long gigue |
+| `formal_long_march` | Formalized long march |
 
-| Forme | Usage recommandé |
-|---|---|
-| `scales` | Études de gammes. |
-| `rounded_binary` | Petite forme binaire avec retour. |
-| `ternary` | Forme ABA simple. |
-| `minuet_trio` | Menuet/trio classique. |
-| `theme_and_variations` | Thème et variations. |
-| `long_rounded_binary` | Forme binaire plus longue. |
-| `long_ternary` | Forme ABA plus longue. |
-| `long_theme_and_variations` | Thème et variations développé. |
-| `long_siciliana` | Sicilienne longue. |
-| `long_gigue` | Gigue longue. |
-| `long_march` | Marche longue. |
-| `formal_long_rounded_binary` | Version plus formelle de `long_rounded_binary`. |
-| `formal_long_ternary` | Version plus formelle de `long_ternary`. |
-| `formal_long_theme_and_variations` | Version plus formelle du thème et variations. |
-| `formal_long_siciliana` | Sicilienne longue formelle. |
-| `formal_long_gigue` | Gigue longue formelle. |
-| `formal_long_march` | Marche longue formelle. |
+| Pop form | Intended use |
+| --- | --- |
+| `pop_song_verse_chorus` | Verse/chorus pop song |
 
-#### Formes pop
+| French chanson form | Intended use |
+| --- | --- |
+| `chanson_francaise_couplet_refrain` | Standard verse/chorus chanson |
+| `chanson_francaise_couplet_refrain_lyrique` | Lyrical, more fully sung variant |
+| `chanson_francaise_couplet_refrain_parle` | Spoken/recitative variant |
+| `chanson_francaise_couplet_refrain_nostalgique` | Nostalgic variant |
+| `chanson_francaise_couplet_refrain_refrain_hook` | Hook-led refrain |
+| `chanson_francaise_couplet_refrain_recit_bas` | Lower-register recitative |
+| `chanson_francaise_couplet_refrain_grande_arche` | Broad melodic arch |
+| `chanson_francaise_couplet_refrain_hook_syncopated` | Syncopated hook |
+| `chanson_francaise_couplet_refrain_descendante` | Descending melodic line |
 
-| Forme | Usage recommandé |
-|---|---|
-| `pop_song_verse_chorus` | Chanson pop avec couplet/refrain. |
+| Rock form | Intended use |
+| --- | --- |
+| `rock_song_verse_chorus` | Verse/chorus rock band |
+| `rock_song_sax_choir` | Rock band with saxophone and choir |
+| `rock_direct_band` | Direct rock-band scoring |
+| `rock_direct_sax_choir` | Direct rock scoring with saxophone and choir |
 
-#### Formes chanson française
+### Phrase models (`phrase_model`)
 
-| Forme | Usage recommandé |
-|---|---|
-| `chanson_francaise_couplet_refrain` | Forme standard couplet/refrain. |
-| `chanson_francaise_couplet_refrain_lyrique` | Version plus chantée et lyrique. |
-| `chanson_francaise_couplet_refrain_parle` | Version plus parlée/récitative. |
-| `chanson_francaise_couplet_refrain_nostalgique` | Version nostalgique. |
-| `chanson_francaise_couplet_refrain_refrain_hook` | Refrain plus accrocheur. |
-| `chanson_francaise_couplet_refrain_recit_bas` | Récit dans un registre plus bas. |
-| `chanson_francaise_couplet_refrain_grande_arche` | Grande arche mélodique. |
-| `chanson_francaise_couplet_refrain_hook_syncopated` | Hook syncopé. |
-| `chanson_francaise_couplet_refrain_descendante` | Ligne descendante. |
+| Value | Typical style | Use |
+| --- | --- | --- |
+| `periodic` | `classical_19c` | Regular antecedent/consequent phrasing and classical periods |
+| `verse_chorus` | `pop_60s_80s`, `chanson_francaise`, `rock` | Verse/chorus organization |
 
-#### Formes rock
+### Rhythm (`rhythm`)
 
-| Forme | Usage recommandé |
-|---|---|
-| `rock_song_verse_chorus` | Groupe rock couplet/refrain. |
-| `rock_song_sax_choir` | Groupe rock avec saxophone et chœur. |
-| `rock_direct_band` | Écriture rock directe pour groupe. |
-| `rock_direct_sax_choir` | Écriture rock directe avec saxophone et chœur. |
-
-### 4.3 `phrase_model`
-
-| Valeur | Styles habituels | Usage |
-|---|---|---|
-| `periodic` | `classical_19c` | Phrases régulières, antécédent/conséquent, périodes classiques. |
-| `verse_chorus` | `pop_60s_80s`, `chanson_francaise`, `rock` | Organisation couplet/refrain. |
-
-### 4.4 Bloc `rhythm`
-
-```txt
+```text
 rhythm:[
   topic:neutral,
   dance:none,
@@ -281,76 +197,195 @@ rhythm:[
 ]
 ```
 
-#### `topic`
+| `topic` value | Intended use |
+| --- | --- |
+| `neutral` | Safe neutral rhythm for general classical forms |
+| `siciliana` | Gently swaying siciliana |
+| `gallop` | Active triple-meter movement or gigue |
+| `march` | March |
+| `dotted` | Dotted rhythms |
+| `lombard` | Lombard rhythm |
+| `syncopation` | Syncopation |
+| `sarabande` | Sarabande |
+| `pop_backbeat` | Pop backbeat |
+| `pop_ballad` | Pop ballad |
+| `chanson_syllabic` | Syllabic chanson |
+| `chanson_acoustic` | Acoustic chanson accompaniment |
+| `chanson_lyrique` | Lyrical chanson |
+| `chanson_parlee` | Spoken or recitative chanson |
+| `chanson_nostalgique` | Nostalgic chanson |
+| `chanson_hook` | Chanson with a prominent hook |
+| `rock_backbeat` | Rock backbeat |
+| `classic_rock_backbeat` | Classic rock |
 
-| Valeur | Usage |
-|---|---|
-| `neutral` | Rythme neutre, très sûr pour les formes classiques générales. |
-| `siciliana` | Sicilienne, balancement doux. |
-| `gallop` | Gigue ou mouvement ternaire actif. |
-| `march` | Marche. |
-| `dotted` | Rythmes pointés. |
-| `lombard` | Rythme lombard. |
-| `syncopation` | Syncopes. |
-| `sarabande` | Sarabande. |
-| `pop_backbeat` | Pop avec backbeat. |
-| `pop_ballad` | Ballade pop. |
-| `chanson_syllabic` | Chanson syllabique. |
-| `chanson_acoustic` | Chanson accompagnée de manière acoustique. |
-| `chanson_lyrique` | Chanson lyrique. |
-| `chanson_parlee` | Chanson parlée/récitative. |
-| `chanson_nostalgique` | Chanson nostalgique. |
-| `chanson_hook` | Chanson avec hook marqué. |
-| `rock_backbeat` | Rock avec backbeat. |
-| `classic_rock_backbeat` | Rock classique. |
+Some internal rhythm topics target individual instrumental parts, for example `piano_acc_siciliana_rh`, `piano_acc_siciliana_lh`, `gallop_support` and `march_support`. Use the general topics above for public inputs.
 
-Certains topics internes sont destinés à des parties instrumentales précises, par exemple `piano_acc_siciliana_rh`, `piano_acc_siciliana_lh`, `gallop_support`, `march_support`. Pour un utilisateur, il vaut mieux choisir les topics généraux du tableau ci-dessus.
+| `dance` | Use |
+| --- | --- |
+| `none` | No explicit dance |
+| `gigue` | Use with `topic:gallop` and a gigue form |
+| `sarabande` | Use with `topic:dotted` or `topic:sarabande` |
+| `minuet` | Use with `form:minuet_trio` |
 
-#### `dance`
+| `density` | Use |
+| --- | --- |
+| `sparse` | Very few notes and an open texture |
+| `light` | Light texture |
+| `low_medium` | Between light and medium; useful for restrained accompaniment |
+| `medium` | Standard density |
+| `active` | More animated writing |
 
-| Valeur | Usage |
-|---|---|
-| `none` | Pas de danse explicite. |
-| `gigue` | À utiliser avec `topic:gallop` et une forme de gigue. |
-| `sarabande` | À utiliser avec `topic:dotted` ou `topic:sarabande`. |
-| `minuet` | À utiliser avec `form:minuet_trio`. |
+| `articulation` | Use |
+| --- | --- |
+| `neutral` | No specialized articulation |
+| `slurred` | Smooth, singing line |
+| `detached` | Detached notes, for a gigue or lively dance |
+| `marked` | Strongly articulated, for a march or sarabande |
+| `legato` | Connected, singing pop or chanson |
+| `accented` | Accents, rock or strong march |
 
-#### `density`
+| Other rhythm field | Typical values | Purpose |
+| --- | --- | --- |
+| `anacrusis` | `true`, `false` | Pickup before the first full measure |
+| `hemiola_at_cadence` | `true`, `false` | Hemiola near a cadence |
+| `ostinato` | `none`, `guitar_strum`, `guitar_riff` | Repeated pattern or accompaniment |
 
-| Valeur | Usage |
-|---|---|
-| `sparse` | Très peu de notes, écriture aérée. |
-| `light` | Léger. |
-| `low_medium` | Entre léger et moyen, utile pour chanson ou accompagnement discret. |
-| `medium` | Valeur standard. |
-| `active` | Écriture plus animée. |
+## 5. The `ensemble` block
 
-#### `articulation`
+The `ensemble.instruments` structure contains indexed entries `i1`, `i2`, `i3`, etc. **`count` is mandatory** and must equal the number of instruments declared. It makes grammar dispatch deterministic, so the grammar can select the `count:1`, `count:2`, `count:3` case directly.
 
-| Valeur | Usage |
-|---|---|
-| `neutral` | Articulation non spécialisée. |
-| `slurred` | Lié, chantant. |
-| `detached` | Détaché, utile pour gigue ou danse active. |
-| `marked` | Articulé/marqué, utile pour marche ou sarabande. |
-| `legato` | Chantant, pop, chanson. |
-| `accented` | Accents, rock, marche forte. |
+For one instrument:
 
-#### Autres champs rythmiques
+```text
+ensemble:[
+  instruments:[
+    count:1,
+    i1:[id:flute, name:"Flute", family:woodwind, role:flute1, midi:"flute", clef:treble, octave:5, dynamic:mf]
+  ]
+]
+```
 
-| Champ | Valeurs usuelles | Usage |
-|---|---|---|
-| `anacrusis` | `true`, `false` | Départ en levée. |
-| `hemiola_at_cadence` | `true`, `false` | Hémiole proche de la cadence. |
-| `ostinato` | `none`, `guitar_strum`, `guitar_riff` | Motif répété ou accompagnement. |
+For three instruments:
 
-## 5. Profils recommandés
+```text
+ensemble:[
+  instruments:[
+    count:3,
+    i1:[id:flute, name:"Flute", family:woodwind, role:flute_piano_lead, midi:"flute", clef:treble, octave:5, dynamic:mf],
+    i2:[id:piano_rh, name:"Piano RH", family:keyboard, role:piano_acc_rh, midi:"acoustic grand", clef:treble, octave:4, dynamic:mp],
+    i3:[id:piano_lh, name:"Piano LH", family:keyboard, role:piano_acc_lh, midi:"acoustic grand", clef:bass, octave:3, dynamic:p]
+  ]
+]
+```
 
-Les profils ci-dessous ne sont pas des champs spéciaux : ce sont des combinaisons complètes et cohérentes à copier dans le bloc `music`.
+If you declare `i1`, `i2` and `i3`, write `count:3`; with `i1` through `i4`, write `count:4`.
 
-### Classique neutre
+| Instrument field | Example | Purpose |
+| --- | --- | --- |
+| `id` | `flute`, `piano_rh` | Readable internal identifier |
+| `name` | `"Flute"` | Name displayed in the score |
+| `family` | `woodwind` | Instrument family |
+| `role` | `lead` | Musical role |
+| `midi` | `"flute"` | LilyPond MIDI instrument |
+| `clef` | `treble` | Staff clef |
+| `octave` | `5` | Principal register |
+| `dynamic` | `mf` | Initial dynamic |
 
-```txt
+| `family` value | Instruments |
+| --- | --- |
+| `woodwind` | Flute, clarinet, oboe and saxophone |
+| `brass` | Brass instruments |
+| `bowed_strings` | Violin, viola, cello and double bass |
+| `plucked_strings` | Guitar, harp and plucked strings |
+| `keyboard` | Piano or keyboard |
+| `percussion` | Percussion and drums |
+| `voice` | Voice or vocal guide |
+| `electric_bass` | Electric bass |
+| `electric_strings` | Electric strings |
+| `free_reed` | Accordion, harmonica, etc. |
+| `synth`, `synth_bass`, `synth_brass`, `synth_strings` | Synthesizer parts |
+
+| General `role` | Purpose |
+| --- | --- |
+| `lead` | Main melody |
+| `countermelody` | Countermelody |
+| `inner_voice` | Inner voice |
+| `bass` | Bass line |
+| `harmonic_support` | Harmonic accompaniment |
+| `rhythmic_pedal` | Pedal or rhythmic pattern |
+| `accent`, `bass_accent`, `cadence_accent` | Local accent |
+| `guitar` | General guitar part |
+| `drum_kit` | Drum kit |
+
+| Specialized `role` | Purpose |
+| --- | --- |
+| `flute1`, `flute2` | Flute parts in a duet |
+| `flute_piano_lead` | Solo flute with piano accompaniment |
+| `piano_rh`, `piano_lh` | Solo piano, right and left hands |
+| `piano_acc_rh`, `piano_acc_lh` | Accompanying piano, right and left hands |
+| `chanson_voice`, `chanson_guitar` | French chanson voice/guitar |
+| `rock_voice`, `rock_guitar`, `rock_bass`, `rock_drums` | Rock band roles |
+| `rock_sax`, `rock_choir` | Rock saxophone and choir |
+
+| `clef` | Meaning |
+| --- | --- |
+| `treble` | Treble clef |
+| `bass` | Bass clef |
+| `alto` | Alto clef |
+| `treble_8` | Octave-transposing treble clef, useful for guitar |
+| `percussion` | Percussion clef |
+
+| `dynamic` | Meaning |
+| --- | --- |
+| `p` | Piano (soft) |
+| `mp` | Mezzo-piano |
+| `mf` | Mezzo-forte |
+| `f` | Forte (loud) |
+| `ff` | Fortissimo |
+
+## 6. Key and meter
+
+The key is expressed with `tonic` and `mode`:
+
+```text
+key:[tonic:c, mode:major]
+```
+
+Common tonic values: `c`, `d`, `e`, `f`, `g`, `a`, `b`, `bes`, `ees`.
+
+| Value | Pitch |
+| --- | --- |
+| `c` | C |
+| `d` | D |
+| `e` | E |
+| `f` | F |
+| `g` | G |
+| `a` | A |
+| `b` | B |
+| `bes` | B-flat |
+| `ees` | E-flat |
+
+`mode` is either `major` or `minor`.
+
+The meter is given by numerator and denominator:
+
+```text
+meter:[num:4, den:4]
+```
+
+| Meter | Common use |
+| --- | --- |
+| `meter:[num:4, den:4]` | General use, pop, rock or march |
+| `meter:[num:3, den:4]` | Minuet, sarabande and triple-meter forms |
+| `meter:[num:6, den:8]` | Siciliana, gigue and compound-metre movement |
+
+## 7. Recommended complete `music` profiles
+
+These are **combinations of existing fields**, not additional special syntax. Copy a compatible profile into the `music` block of your input.
+
+### Neutral classical piece
+
+```text
 music:[
   style:classical_19c,
   form:rounded_binary,
@@ -359,9 +394,9 @@ music:[
 ]
 ```
 
-### Étude de gammes
+### Scale study
 
-```txt
+```text
 music:[
   style:classical_19c,
   form:scales,
@@ -370,9 +405,9 @@ music:[
 ]
 ```
 
-### Sicilienne classique
+### Classical siciliana
 
-```txt
+```text
 music:[
   style:classical_19c,
   form:long_siciliana,
@@ -381,9 +416,9 @@ music:[
 ]
 ```
 
-### Gigue classique
+### Classical gigue
 
-```txt
+```text
 music:[
   style:classical_19c,
   form:long_gigue,
@@ -392,9 +427,9 @@ music:[
 ]
 ```
 
-### Marche classique
+### Classical march
 
-```txt
+```text
 music:[
   style:classical_19c,
   form:long_march,
@@ -403,9 +438,9 @@ music:[
 ]
 ```
 
-### Pop couplet/refrain
+### Verse/chorus pop song
 
-```txt
+```text
 music:[
   style:pop_60s_80s,
   form:pop_song_verse_chorus,
@@ -414,9 +449,9 @@ music:[
 ]
 ```
 
-### Ballade pop
+### Pop ballad
 
-```txt
+```text
 music:[
   style:pop_60s_80s,
   form:pop_song_verse_chorus,
@@ -425,9 +460,9 @@ music:[
 ]
 ```
 
-### Chanson française lyrique
+### Lyrical French chanson
 
-```txt
+```text
 music:[
   style:chanson_francaise,
   form:chanson_francaise_couplet_refrain_lyrique,
@@ -436,9 +471,9 @@ music:[
 ]
 ```
 
-### Chanson française parlée
+### Spoken French chanson
 
-```txt
+```text
 music:[
   style:chanson_francaise,
   form:chanson_francaise_couplet_refrain_parle,
@@ -447,9 +482,9 @@ music:[
 ]
 ```
 
-### Rock classique
+### Classic rock
 
-```txt
+```text
 music:[
   style:rock,
   form:rock_song_verse_chorus,
@@ -458,9 +493,9 @@ music:[
 ]
 ```
 
-### Rock avec saxophone et chœur
+### Rock with saxophone and choir
 
-```txt
+```text
 music:[
   style:rock,
   form:rock_song_sax_choir,
@@ -469,174 +504,39 @@ music:[
 ]
 ```
 
-## 6. Bloc `ensemble`
+## 8. Compatibility quick reference
 
-Le bloc `ensemble` décrit les instruments par ordre, avec des entrées `i1`, `i2`, `i3`, etc. Le champ `count` est obligatoire et indique combien d’instruments sont déclarés.
-
-```txt
-ensemble:[
-  instruments:[
-    count:2,
-    i1:[id:flute, name:"Flute", family:woodwind, role:lead, midi:"flute", clef:treble, octave:5, dynamic:mf],
-    i2:[id:piano_rh, name:"Piano RH", family:keyboard, role:harmonic_support, midi:"acoustic grand", clef:treble, octave:4, dynamic:mp]
-  ]
-]
-```
-
-`count` doit correspondre au nombre d’entrées `iN`. Si l’ensemble contient `i1` et `i2`, on écrit `count:2`; s’il contient `i1`, `i2`, `i3`, `i4`, on écrit `count:4`.
-
-### Champs d’un instrument
-
-| Champ | Exemple | Usage |
-|---|---|---|
-| `id` | `flute`, `piano_rh` | Identifiant interne lisible. |
-| `name` | `"Flute"` | Nom affiché dans la partition. |
-| `family` | `woodwind` | Famille instrumentale. |
-| `role` | `lead` | Fonction musicale. |
-| `midi` | `"flute"` | Instrument MIDI LilyPond. |
-| `clef` | `treble` | Clé. |
-| `octave` | `5` | Registre principal. |
-| `dynamic` | `mf` | Nuance de départ. |
-
-### `family`
-
-| Valeur | Usage |
-|---|---|
-| `woodwind` | Flûte, clarinette, hautbois, saxophone. |
-| `brass` | Cuivres. |
-| `bowed_strings` | Violon, alto, violoncelle, contrebasse. |
-| `plucked_strings` | Guitare, harpe, cordes pincées. |
-| `keyboard` | Piano, clavier. |
-| `percussion` | Percussions, batterie. |
-| `voice` | Voix ou guide vocal. |
-| `electric_bass` | Basse électrique. |
-| `electric_strings` | Cordes électriques. |
-| `free_reed` | Accordéon, harmonica, etc. |
-| `synth`, `synth_bass`, `synth_brass`, `synth_strings` | Parties de synthétiseur. |
-
-### `role`
-
-Les rôles les plus généraux sont :
-
-| Rôle | Usage |
-|---|---|
-| `lead` | Mélodie principale. |
-| `countermelody` | Contrechant. |
-| `inner_voice` | Voix intérieure. |
-| `bass` | Basse. |
-| `harmonic_support` | Accompagnement harmonique. |
-| `rhythmic_pedal` | Pédale ou motif rythmique. |
-| `accent`, `bass_accent`, `cadence_accent` | Accents ponctuels. |
-| `guitar` | Partie de guitare générique. |
-| `drum_kit` | Batterie/percussion. |
-
-Rôles spécialisés utiles :
-
-| Rôle | Usage |
-|---|---|
-| `flute1`, `flute2` | Duo ou écriture pour flûtes. |
-| `flute_piano_lead` | Flûte soliste avec piano. |
-| `piano_rh`, `piano_lh` | Piano solo, main droite/main gauche. |
-| `piano_acc_rh`, `piano_acc_lh` | Piano accompagnateur, main droite/main gauche. |
-| `chanson_voice`, `chanson_guitar` | Chanson française voix/guitare. |
-| `rock_voice`, `rock_guitar`, `rock_bass`, `rock_drums` | Groupe rock. |
-| `rock_sax`, `rock_choir` | Rock avec saxophone et chœur. |
-
-### `clef`
-
-| Valeur | Usage |
-|---|---|
-| `treble` | Clé de sol. |
-| `bass` | Clé de fa. |
-| `alto` | Clé d’ut alto. |
-| `treble_8` | Clé de sol octaviée, utile pour guitare. |
-| `percussion` | Percussion. |
-
-### `dynamic`
-
-| Valeur | Usage |
-|---|---|
-| `p` | doux |
-| `mp` | mezzo-piano |
-| `mf` | mezzo-forte |
-| `f` | fort |
-| `ff` | très fort |
-
-## 7. Tonalité : bloc `key`
-
-```txt
-key:[tonic:c, mode:major]
-```
-
-### `tonic`
-
-Valeurs utilisées couramment :
-
-```txt
-c, d, e, f, g, a, b, bes, ees
-```
-
-Exemples :
-
-| Valeur | Signification |
-|---|---|
-| `c` | do |
-| `d` | ré |
-| `e` | mi |
-| `f` | fa |
-| `g` | sol |
-| `a` | la |
-| `b` | si |
-| `bes` | si bémol |
-| `ees` | mi bémol |
-
-### `mode`
-
-| Valeur | Usage |
-|---|---|
-| `major` | mode majeur |
-| `minor` | mode mineur |
-
-## 8. Mesure : bloc `meter`
-
-```txt
-meter:[num:4, den:4]
-```
-
-| Mesure | Usage |
-|---|---|
-| `meter:[num:4, den:4]` | Mesure générale, pop, rock, marche. |
-| `meter:[num:3, den:4]` | Menuet, sarabande, formes ternaires. |
-| `meter:[num:6, den:8]` | Sicilienne, gigue, balancement composé. |
-
-## 9. Matrice de compatibilité rapide
-
-| Style | Formes recommandées | `phrase_model` | Topics recommandés |
-|---|---|---|---|
+| Style | Recommended forms | `phrase_model` | Typical rhythm topics |
+| --- | --- | --- | --- |
 | `classical_19c` | `scales`, `rounded_binary`, `ternary`, `minuet_trio`, `theme_and_variations`, `long_*`, `formal_long_*` | `periodic` | `neutral`, `siciliana`, `gallop`, `march`, `dotted`, `lombard`, `syncopation`, `sarabande` |
 | `pop_60s_80s` | `pop_song_verse_chorus` | `verse_chorus` | `pop_backbeat`, `pop_ballad` |
 | `chanson_francaise` | `chanson_francaise_couplet_refrain*` | `verse_chorus` | `chanson_syllabic`, `chanson_acoustic`, `chanson_lyrique`, `chanson_parlee`, `chanson_nostalgique`, `chanson_hook` |
 | `rock` | `rock_song_verse_chorus`, `rock_song_sax_choir`, `rock_direct_band`, `rock_direct_sax_choir` | `verse_chorus` | `rock_backbeat`, `classic_rock_backbeat` |
 
-## 10. Exemples complets
+## 9. Complete input examples
 
-Des exemples prêts à lancer sont fournis dans les fichiers :
+Ready-to-run examples are supplied as `sample_*.input` in this directory. They cover classical forms, sicilianas, gigues, marches, pop, French chansons and rock.
 
-```txt
-sample_*.input
+Build the desired example from `data/examples/music/`:
+
+```sh
+make sample_classical_gigue_flute_duet.ly
+make sample_classical_gigue_flute_duet.pdf
 ```
 
-Ils couvrent plusieurs combinaisons sûres : classique, sicilienne, gigue, marche, pop, chanson française et rock.
+See [README.md](README.md) for tool installation, target names and generated-file conventions.
 
-## 11. Checklist avant génération
+## 10. Before running ELVEX
 
-Avant de lancer Elvex, vérifier :
+Check that:
 
-1. Le fichier commence par `PIECE [`.
-2. Le bloc `generation` contient `syntax:instrument_roles`.
-3. Les instruments sont dans `ensemble:[instruments:[count:N, i1:..., i2:...]]`.
-4. Le champ `count` est présent et correspond au nombre d’instruments déclarés.
-5. Les champs `style`, `form`, `phrase_model` et `rhythm` forment une combinaison cohérente.
-6. Chaque instrument possède au moins `id`, `name`, `family`, `role`, `midi`, `clef`, `octave`, `dynamic`.
-7. `key` contient `tonic` et `mode`.
-8. `meter` contient `num` et `den`.
+1. The input starts with `PIECE [`.
+2. `generation` specifies `syntax:instrument_roles`.
+3. Instrument entries appear inside `ensemble:[instruments:[count:N, i1:..., i2:...]]`.
+4. `count` is present and equals the number of indexed instruments.
+5. `style`, `form`, `phrase_model` and `rhythm` are compatible.
+6. Every instrument defines `id`, `name`, `family`, `role`, `midi`, `clef`, `octave` and `dynamic`.
+7. `key` includes `tonic` and `mode`.
+8. `meter` includes `num` and `den`.
+
+If ELVEX reports an unsupported or missing feature, start from the closest working `.input` and change one attribute at a time.

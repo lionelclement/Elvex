@@ -1,6 +1,6 @@
 # ============================================================
-# Elvex - Makefile generique (GNU Make >= 4.3)
-# Utilisation : make DATA=english-sentences random SEED=42 MAX_TIME=30
+# ELVEX - shared example Makefile (GNU Make >= 4.3)
+# Usage: make DATA=english-sentences random SEED=42 MAX_TIME=30
 # ============================================================
 
 # Run from data/examples, e.g. make -C data/examples DATA=french-animal-calls run
@@ -15,15 +15,15 @@ DIR := $(patsubst %/,%,$(DATA))
         sample-random beam-random reduce-all output trace debug xml \
         info check clean rebuild help
 
-# Les fichiers ne sont examines que pour les cibles qui les utilisent.
-# Ainsi 'make help', 'make check' et 'make clean' restent independants de DATA.
+# Files are checked only by targets that actually use them.
+# Thus help, check, and clean do not require a valid DATA directory.
 define require_one
-$(if $(filter 1,$(words $(2))),$(firstword $(2)),$(error Attendu exactement un fichier $(1) dans $(DIR) ; trouves : $(2)))
+$(if $(filter 1,$(words $(2))),$(firstword $(2)),$(error Expected exactly one $(1) in $(DIR); found: $(2)))
 endef
 
-# Zero ou un fichier .macros : aucun argument si absent.
+# An optional .macros file: no argument if absent.
 define optional_one
-$(if $(filter 0 1,$(words $(2))),$(firstword $(2)),$(error Attendu au plus un fichier $(1) dans $(DIR) ; trouves : $(2)))
+$(if $(filter 0 1,$(words $(2))),$(firstword $(2)),$(error Expected at most one $(1) in $(DIR); found: $(2)))
 endef
 
 MACROS  = $(call optional_one,.macros,$(wildcard $(DIR)/*.macros))
@@ -32,16 +32,16 @@ LEXICON = $(call require_one,.lexicon,$(wildcard $(DIR)/*.lexicon))
 MORPHO  = $(call optional_one,.morpho,$(wildcard $(DIR)/*.morpho))
 PATTERN = $(call optional_one,.pattern,$(wildcard $(DIR)/*.pattern))
 # Existing suites use .input; newer suites use .stdin.  Accept either, never both.
-INPUT   = $(call require_one,.stdin ou .input,$(wildcard $(DIR)/*.stdin $(DIR)/*.input))
+INPUT   = $(call require_one,.stdin or .input,$(wildcard $(DIR)/*.stdin $(DIR)/*.input))
 
-# Le lexique compacte n'est construit que si les deux sources existent.
-# Une source seule est une configuration incomplete.
+# Build a compacted lexicon only if both sources exist.
+# A single source is an incomplete configuration.
 HAS_MORPHO = $(if $(MORPHO),1,0)
 HAS_PATTERN = $(if $(PATTERN),1,0)
 BUILD_LEXICON = $(if $(and $(MORPHO),$(PATTERN)),1,)
-validate_lexicon_pair = $(if $(filter-out $(HAS_MORPHO),$(HAS_PATTERN)),$(error Fournir .morpho et .pattern ensemble dans $(DIR)),)
+validate_lexicon_pair = $(if $(filter-out $(HAS_MORPHO),$(HAS_PATTERN)),$(error Provide .morpho and .pattern together in $(DIR)),)
 
-# Pas d'erreur de recherche lors du chargement du Makefile.
+# Do not validate resources while loading the Makefile.
 SOURCE_DEPS := $(wildcard $(DIR)/*.macros $(DIR)/*.morpho $(DIR)/*.pattern)
 
 BUILD_DIR := $(DIR)/.elvex-build
@@ -52,9 +52,9 @@ OUTPUT    := $(BUILD_DIR)/sentences.txt
 DEBUG_FILE := $(BUILD_DIR)/debug.html
 XML_FILE  := $(BUILD_DIR)/sentences.xml
 
-# Strategie : exhaustive | sample | beam
+# Strategy: exhaustive | sample | beam
 STRATEGY ?= exhaustive
-# Selection : all | first | random
+# Selection: all | first | random
 MODE ?= all
 SEED ?=
 REDUCE_ALL ?= 0
@@ -66,8 +66,8 @@ MAX_ITEMS ?=
 MAX_ATTEMPTS ?=
 MAX_RULE_CHOICES ?=
 BEAM_WIDTH ?=
-# TRACE_MODE accepte une liste de modes separes par des virgules.
-# Par defaut, aucune trace pour run ; toutes les traces pour debug.
+# TRACE_MODE accepts a comma-separated list of modes.
+# By default, run has no traces; debug enables all traces.
 TRACE_MODE ?= none
 EXTRA_OPTS ?=
 
@@ -80,7 +80,7 @@ space := $(empty) $(empty)
 TRACE_MODES = $(strip $(subst $(comma),$(space),$(TRACE_MODE)))
 UNKNOWN_TRACES = $(filter-out $(VALID_TRACES),$(TRACE_MODES))
 
-validate_options = $(if $(filter $(STRATEGY),$(VALID_STRATEGIES)),,$(error STRATEGY invalide : $(STRATEGY)))  $(if $(filter $(MODE),$(VALID_MODES)),,$(error MODE invalide : $(MODE)))  $(if $(UNKNOWN_TRACES),$(error TRACE_MODE invalide : $(UNKNOWN_TRACES)),)  $(if $(filter none,$(TRACE_MODES)),$(if $(filter-out none,$(TRACE_MODES)),$(error TRACE_MODE=none ne se combine pas avec d'autres valeurs),),)  $(if $(filter all,$(TRACE_MODES)),$(if $(filter-out all,$(TRACE_MODES)),$(error TRACE_MODE=all ne se combine pas avec d'autres valeurs),),)
+validate_options = $(if $(filter $(STRATEGY),$(VALID_STRATEGIES)),,$(error Invalid STRATEGY : $(STRATEGY)))  $(if $(filter $(MODE),$(VALID_MODES)),,$(error Invalid MODE : $(MODE)))  $(if $(UNKNOWN_TRACES),$(error Invalid TRACE_MODE : $(UNKNOWN_TRACES)),)  $(if $(filter none,$(TRACE_MODES)),$(if $(filter-out none,$(TRACE_MODES)),$(error TRACE_MODE=none cannot be combined with other values),),)  $(if $(filter all,$(TRACE_MODES)),$(if $(filter-out all,$(TRACE_MODES)),$(error TRACE_MODE=all cannot be combined with other values),),)
 
 define validate_sources
 $(MACROS) $(RULES) $(LEXICON) $(INPUT) $(validate_lexicon_pair)
@@ -121,7 +121,7 @@ all: run
 $(BUILD_DIR):
 	mkdir -p "$@"
 
-# Une compilation cree les deux fichiers (.fsa et .tbl).
+# Compiling the compacted lexicon produces two files (.fsa and .tbl).
 ifeq ($(BUILD_LEXICON),1)
 $(FSA) $(TBL) &: $(SOURCE_DEPS) | $(BUILD_DIR)
 	@: $(validate_sources)
@@ -136,7 +136,7 @@ lexicon: $(FSA) $(TBL)
 else
 lexicon:
 	@: $(validate_lexicon_pair)
-	@echo "Pas de .morpho/.pattern : elvexlexicon ignore."
+	@echo "No .morpho/.pattern pair: skipping lexicon compilation."
 endif
 
 run: lexicon
@@ -165,10 +165,10 @@ reduce-all: run
 output: lexicon | $(BUILD_DIR)
 	@: $(validate_options) $(validate_sources)
 	$(ELVEX) $(ELVEX_FILES) $(RUN_OPTS) > "$(OUTPUT)"
-	@echo "Phrases : $(OUTPUT)"
+	@echo "Sentences: $(OUTPUT)"
 
-# Trace des seules regles annotees @trace, dans le terminal.
-# Exemple : make DATA=english-sentences trace
+# Trace only rules annotated with @trace to the terminal.
+# Example: make DATA=english-sentences trace
 trace: TRACE_MODE = rules
 trace: run
 
@@ -176,7 +176,7 @@ debug: TRACE_MODE = all
 debug: lexicon | $(BUILD_DIR)
 	@: $(validate_options) $(validate_sources)
 	$(ELVEX) $(ELVEX_FILES) $(RUN_OPTS) > "$(DEBUG_FILE)"
-	@echo "Trace : $(DEBUG_FILE)"
+	@echo "Trace: $(DEBUG_FILE)"
 
 xml: lexicon | $(BUILD_DIR)
 	@: $(validate_options) $(validate_sources)
@@ -185,20 +185,20 @@ xml: lexicon | $(BUILD_DIR)
 
 info:
 	@: $(validate_options) $(validate_sources)
-	@echo "Dossier : $(DIR)"
-	@echo "Macros : $(MACROS)"
-	@echo "Regles : $(RULES)"
-	@echo "Lexique : $(LEXICON)"
-	@echo "Morphologie : $(MORPHO)"
-	@echo "Patterns : $(PATTERN)"
-	@echo "Entree : $(INPUT)"
-	@echo "Lexique compile : $(if $(BUILD_LEXICON),$(CLF),(non utilise))"
-	@echo "Strategie : $(STRATEGY) ; selection : $(MODE) ; traces : $(TRACE_MODE)"
+	@echo "Directory: $(DIR)"
+	@echo "Macros: $(MACROS)"
+	@echo "Rules: $(RULES)"
+	@echo "Lexicon: $(LEXICON)"
+	@echo "Morphology: $(MORPHO)"
+	@echo "Patterns: $(PATTERN)"
+	@echo "Input: $(INPUT)"
+	@echo "Compiled lexicon: $(if $(BUILD_LEXICON),$(CLF),(not used))"
+	@echo "Strategy: $(STRATEGY) ; selection: $(MODE) ; traces: $(TRACE_MODE)"
 
 check:
-	@command -v "$(ELVEX)" >/dev/null || { echo "Introuvable : $(ELVEX)"; exit 1; }
-	$(if $(BUILD_LEXICON),	@command -v "$(ELVEXLEXICON)" >/dev/null || { echo "Introuvable : $(ELVEXLEXICON)"; exit 1; },	@echo "elvexlexicon non requis pour $(DIR).")
-	@echo "Executables Elvex detectes."
+	@command -v "$(ELVEX)" >/dev/null || { echo "Executable not found: $(ELVEX)"; exit 1; }
+	$(if $(BUILD_LEXICON),	@command -v "$(ELVEXLEXICON)" >/dev/null || { echo "Executable not found: $(ELVEXLEXICON)"; exit 1; },	@echo "elvexlexicon is not required for $(DIR).")
+	@echo "ELVEX executables found."
 
 clean:
 	rm -rf "$(BUILD_DIR)"
@@ -209,68 +209,69 @@ rebuild:
 
 help:
 	@printf '%s\n' \
-	  'ELVEX - MAKEFILE GENERIQUE' \
+	  'ELVEX - SHARED EXAMPLE MAKEFILE' \
 	  '' \
-	  'UTILISATION' \
-	  '  make DATA=<dossier> [cible] [VARIABLE=valeur ...]' \
-	  '  Exemple : make DATA=english-sentences random SEED=42 MAX_TIME=30' \
-	  '  DATA=english-sentences par defaut. .input ou .stdin ; .macros facultatif ; .morpho et .pattern facultatifs ensemble.' \
+	  'USAGE' \
+	  '  make DATA=<directory> [target] [VARIABLE=value ...]' \
+	  '  Example: make DATA=english-sentences random SEED=42 MAX_TIME=30' \
+	  '  Default DATA=english-sentences. Exactly one .input or .stdin is required.' \
+	  '  .macros is optional; .morpho and .pattern must occur together.' \
 	  '' \
-	  'GENERATION (affichage dans le terminal)' \
-	  '  run             Generation standard (exhaustive, toutes les phrases).' \
-	  '  exhaustive      Explore toutes les derivations (STRATEGY=exhaustive).' \
-	  '  sample          Echantillonnage des derivations (STRATEGY=sample).' \
-	  '  beam            Recherche en faisceau (STRATEGY=beam).' \
-	  '  random          Selectionne une phrase au hasard (--random).' \
-	  '  first           Affiche la premiere phrase (--first).' \
-	  '  sample-random   Strategie sample + selection aleatoire.' \
-	  '  beam-random     Strategie beam + selection aleatoire.' \
-	  '  reduce-all      Active --reduce-all.' \
+	  'GENERATION (print to terminal)' \
+	  '  run             Default generation (exhaustive, all results).' \
+	  '  exhaustive      Explore all derivations (STRATEGY=exhaustive).' \
+	  '  sample          Sample derivations (STRATEGY=sample).' \
+	  '  beam            Use beam search (STRATEGY=beam).' \
+	  '  random          Select a random sentence (--random).' \
+	  '  first           Print the first sentence (--first).' \
+	  '  sample-random   Sample strategy with random selection.' \
+	  '  beam-random     Beam strategy with random selection.' \
+	  '  reduce-all      Enable --reduce-all.' \
 	  '' \
-	  'DEBUG ET EXPORTS' \
-	  '  debug           Enregistre les traces dans .elvex-build/debug.html.' \
-	  '                  TRACE_MODE=all par defaut sur cette cible.' \
-	  '  trace           Affiche --trace dans le terminal (regles @trace).' \
-	  '  output          Enregistre les phrases dans .elvex-build/sentences.txt.' \
-	  '  xml             Produit .elvex-build/sentences.xml avec --xml.' \
+	  'DEBUGGING AND EXPORTS' \
+	  '  debug           Save trace output to .elvex-build/debug.html.' \
+	  '                  Defaults to TRACE_MODE=all for this target.' \
+	  '  trace           Print rule traces to the terminal (rules marked @trace).' \
+	  '  output          Save sentences to .elvex-build/sentences.txt.' \
+	  '  xml             Write .elvex-build/sentences.xml using --xml.' \
 	  '' \
-	  'TRACE_MODE (plusieurs modes possibles, separes par des virgules)' \
-	  '  none            Aucune trace (par defaut pour run).' \
-	  '  rules           --trace : regles marquees @trace.' \
-	  '  all             --trace-all : trace complete.' \
-	  '  init            --trace-init : initialisation.' \
-	  '  stage           --trace-stage : etapes.' \
-	  '  close           --trace-close : fermeture.' \
-	  '  shift           --trace-shift : decalages.' \
-	  '  reduce          --trace-reduce : reductions.' \
-	  '  action          --trace-action : actions.' \
-	  '  Exemple : make DATA=english-sentences debug TRACE_MODE=shift,reduce,action' \
+	  'TRACE_MODE (comma-separated modes)' \
+	  '  none            No trace (default for run).' \
+	  '  rules           --trace: grammar rules marked @trace.' \
+	  '  all             --trace-all: full trace.' \
+	  '  init            --trace-init: initialization.' \
+	  '  stage           --trace-stage: stages.' \
+	  '  close           --trace-close: closure.' \
+	  '  shift           --trace-shift: shifts.' \
+	  '  reduce          --trace-reduce: reductions.' \
+	  '  action          --trace-action: actions.' \
+	  '  Example: make DATA=english-sentences debug TRACE_MODE=shift,reduce,action' \
 	  '' \
-	  'OPTIONS DE GENERATION' \
-	  '  STRATEGY=exhaustive|sample|beam   Methode de derivation.' \
-	  '  MODE=all|first|random            Selection de la sortie.' \
-	  '  SEED=42                          Graine aleatoire reproductible.' \
-	  '  REDUCE_ALL=1                     Active --reduce-all.' \
-	  '  VERBOSE=1                        Active --verbose.' \
-	  '  MAX_TIME=30                      Duree maximale (secondes).' \
-	  '  MAX_LENGTH=25                    Longueur maximale des phrases.' \
-	  '  MAX_USAGES=100                   Usages maximaux de regles.' \
-	  '  MAX_ITEMS=1000                   Elements max. par ensemble.' \
-	  '  MAX_ATTEMPTS=100                 Tentatives de choix aleatoire.' \
-	  '  MAX_RULE_CHOICES=100             Choix ouverts en mode sample.' \
-	  '  BEAM_WIDTH=50                    Elements conserves en beam.' \
-	  '  EXTRA_OPTS=...                   Autres options passees a elvex.' \
-	  '  ELVEX=... / ELVEXLEXICON=...    Chemin des executables.' \
+	  'GENERATION OPTIONS' \
+	  '  STRATEGY=exhaustive|sample|beam   Derivation strategy.' \
+	  '  MODE=all|first|random            Output selection.' \
+	  '  SEED=42                          Reproducible random seed.' \
+	  '  REDUCE_ALL=1                     Enable --reduce-all.' \
+	  '  VERBOSE=1                        Enable --verbose.' \
+	  '  MAX_TIME=30                      Maximum duration (seconds).' \
+	  '  MAX_LENGTH=25                    Maximum sentence length.' \
+	  '  MAX_USAGES=100                   Maximum rule uses.' \
+	  '  MAX_ITEMS=1000                   Maximum items per set.' \
+	  '  MAX_ATTEMPTS=100                 Maximum random selection attempts.' \
+	  '  MAX_RULE_CHOICES=100             Choices in sample strategy.' \
+	  '  BEAM_WIDTH=50                    Items retained in beam search.' \
+	  '  EXTRA_OPTS=...                   Other elvex options.' \
+	  '  ELVEX=... / ELVEXLEXICON=...    Paths to executables.' \
 	  '' \
 	  'MAINTENANCE' \
-	  '  lexicon         Compile si .morpho ET .pattern existent ; sinon ignore.' \
-	  '  info            Affiche les fichiers automatiquement trouves.' \
-	  '  check           Verifie la presence des executables.' \
-	  '  clean           Supprime uniquement .elvex-build.' \
-	  '  rebuild         Nettoie puis recompile le lexique.' \
-	  '  help            Affiche cette aide, meme sans dossier DATA.' \
+	  '  lexicon         Build only if both .morpho and .pattern exist.' \
+	  '  info            Show detected example resource files.' \
+	  '  check           Check that required executables exist.' \
+	  '  clean           Remove only the local .elvex-build directory.' \
+	  '  rebuild         Clean and rebuild the compacted lexicon.' \
+	  '  help            Show this help, even without a valid DATA directory.' \
 	  '' \
-	  'EXEMPLES' \
+	  'EXAMPLES' \
 	  '  make DATA=english-sentences first MAX_TIME=30' \
 	  '  make DATA=english-sentences random SEED=42 MAX_TIME=30' \
 	  '  make DATA=english-sentences sample MAX_RULE_CHOICES=100' \
