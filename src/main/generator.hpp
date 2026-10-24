@@ -277,8 +277,11 @@ public:
      */
     bool insertStateItem(class ItemSet *, class Item *, bool fatalOnFailure = false);
 
-    /** Merge equivalent chart items or insert a previously unseen one. */
-    bool insertOrMergeStateItem(class ItemSet *, class Item *);
+    /**
+     * Merge equivalent items or insert a new one. If a change occurs,
+     * optionally return the stored item so normalization can reschedule it.
+     */
+    bool insertOrMergeStateItem(class ItemSet *, class Item *, class Item **changedItem = nullptr);
 
     /** Make sampling and random selection reproducible with a fixed seed. */
     void seedRandom(uint32_t seed);

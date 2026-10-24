@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <random>
 #include <vector>
+#include <deque>
 #include <limits>
 #include <iostream>
 #include <unordered_set>
@@ -928,18 +929,32 @@ bool Generator::insertStateItem(class ItemSet *state, class Item *item, bool fat
 /* **************************************************
  * Insert an item unless an equivalent item is already present.
  ************************************************** */
-bool Generator::insertOrMergeStateItem(class ItemSet *state, class Item *item)
+bool Generator::insertOrMergeStateItem(class ItemSet *state, class Item *item,
+                                       class Item **changedItem)
 {
+    if (changedItem)
+        *changedItem = nullptr;
+
+    // Preserve derivation history: only the existing ItemSet equality rule
+    // permits merging. Never collapse items merely because they originated
+    // from the same PASS/UNFOLD production. When an equivalent item is found,
+    // keep ALL parent references by taking their union.
     auto found = state->find(item);
     if (found != state->cend())
     {
         const bool refsChanged = mergeRefs(*found, item->getRefs());
         const bool orderSpecsChanged = mergeOrderSpecs(*found, item->getOrderSpecs());
+        const bool changed = refsChanged || orderSpecsChanged;
+        if (changed && changedItem)
+            *changedItem = *found;
         free(item);
-        return refsChanged || orderSpecsChanged;
+        return changed;
     }
 
-    return insertStateItem(state, item, true);
+    const bool inserted = insertStateItem(state, item, true);
+    if (inserted && changedItem)
+        *changedItem = item;
+    return inserted;
 }
 
 #ifdef OUTPUT_XML
@@ -1273,211 +1288,208 @@ static bool needsNormalization(class Item *item)
  */
 bool Generator::normalize(Parser &, class ItemSet *state, uint32_t row)
 {
-    bool modification;
     bool modificationOnce = false;
 
-    do
-    {
-        modification = false;
+    // ItemSet uses an unordered_set: adding an item can invalidate its
+    // iterators. Keep stable Item pointers in a worklist instead. Worklist
+    // membership is pointer-based: distinct chart items stay distinct.
+    // Requeue an existing item only when unioning equivalent derivation
+    // references or order constraints really adds information.
+    std::deque<class Item *> pending;
+    std::unordered_set<class Item *> scheduled;
+    auto enqueue = [&](class Item *item) {
+        if (scheduled.insert(item).second)
+            pending.push_back(item);
+    };
 
-        for (auto actualItem = state->cbegin();
-             actualItem != state->cend() && !modification;
-             ++actualItem)
+    for (class Item *item : *state)
+        enqueue(item);
+
+    auto insertAndSchedule = [&](class Item *item) {
+        class Item *changedItem = nullptr;
+        if (insertOrMergeStateItem(state, item, &changedItem))
         {
-            elvexProgressTick(progress, "normalize", row, state->size());
-            if ((*actualItem)->isSetFlags(Flags::SEEN | Flags::BOTTOM))
-                continue;
-
-            // X -> alpha • [Y] gamma
-            if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() &&
-                !(*actualItem)->isCompleted() &&
-                !(*actualItem)->getForestIdentifiers()[(*actualItem)->getIndex()] &&
-                (*actualItem)->getCurrentTerms()->isOptional())
-            {
-                const uint8_t normalizedIndex = (*actualItem)->getIndex();
-                const bool newlyMarked = !(*actualItem)->isNormalizedAt(normalizedIndex);
-
-#ifdef TRACE_PASS
-                if (newlyMarked)
-                {
-                    std::cout << "<H3>####################### PASS #######################</H3>" << std::endl;
-                    (*actualItem)->toHTML(std::cout);
-                    std::cout << std::endl;
-                }
-#endif
-
-                /*
-                 * Keep the source item as an idempotence witness.  It is marked
-                 * as already normalized at its current dot position and is never
-                 * processed by close()/shift() while it still needs normalization.
-                 * The source remains in the chart for later reference, order or
-                 * feature changes. Re-emit alternatives only when that input
-                 * information differs from the last propagated snapshot.
-                 */
-                if (!(*actualItem)->needsNormalizationPropagation(normalizedIndex))
-                    continue;
-                (*actualItem)->markNormalizationPropagated(normalizedIndex);
-
-                class Item *absent = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
-                absent->clearNormalizedAt(normalizedIndex);
-                forestPtr forestFound = forestPtr();
-                class ForestIdentifier *fi = ForestIdentifier::create(absent->getCurrentTerms()->getId(),
-                                                                      row,
-                                                                      row);
-                auto forestMapIt = forestMap.find(fi);
-                if (forestMapIt != forestMap.cend())
-                {
-                    forestFound = forestMapIt->second;
-                    free(fi);
-                    absent->addForestIdentifiers(absent->getIndex(), forestMapIt->first);
-                }
-                else
-                {
-                    forestFound = Forest::create(row, row);
-                    forestMap.insert(fi, forestFound);
-                    absent->addForestIdentifiers(absent->getIndex(), fi);
-                }
-                absent->setIndex((*actualItem)->getIndex() + 1);
-                absent->getIndexTerms()[(*actualItem)->getIndex()] = 0;
-                absent->addRange(row);
-                absent->resetCoreSerial();
-
-                class Item *present = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
-                present->clearNormalizedAt(normalizedIndex);
-                present->setRule((*actualItem)->getRule()->clone());
-                present->setIndex((*actualItem)->getIndex());
-                if (present->getCurrentTerms()->size() == 1)
-                {
-                    present->getIndexTerms()[(*actualItem)->getIndex()] = 0;
-                }
-                else
-                {
-                    present->getIndexTerms()[(*actualItem)->getIndex()] = Item::POSTERMS_NA;
-                }
-                present->getCurrentTerms()->unsetOptional();
-                present->resetCoreSerial();
-
-#ifdef TRACE_PASS
-                if (newlyMarked)
-                {
-                    std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
-                    absent->toHTML(std::cout);
-                    std::cout << std::endl;
-                }
-#endif
-                if (insertOrMergeStateItem(state, absent))
-                {
-                    modification = true;
-                }
-
-#ifdef TRACE_PASS
-                if (newlyMarked)
-                {
-                    std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
-                    present->toHTML(std::cout);
-                    std::cout << std::endl;
-                }
-#endif
-                if (insertOrMergeStateItem(state, present))
-                {
-                    modification = true;
-                }
-
-                if (newlyMarked)
-                {
-                    modification = true;
-                }
-
-                if (modification)
-                {
-                    modificationOnce = true;
-                }
-            }
-
-            // X -> alpha • Y1|Y2 beta
-            else if ((*actualItem)->getRuleRhs().size() > (*actualItem)->getIndex() &&
-                     !(*actualItem)->isCompleted() &&
-                     !(*actualItem)->getCurrentTerms()->isOptional() &&
-                     (*actualItem)->getCurrentTerms()->size() > 1)
-            {
-                const uint8_t normalizedIndex = (*actualItem)->getIndex();
-                const bool newlyMarked = !(*actualItem)->isNormalizedAt(normalizedIndex);
-
-#ifdef TRACE_UNFOLD
-                if (newlyMarked)
-                {
-                    std::cout << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
-                    (*actualItem)->toHTML(std::cout);
-                    std::cout << std::endl;
-                }
-#endif
-
-                // Re-emit alternatives only when propagated inputs have changed.
-                if (!(*actualItem)->needsNormalizationPropagation(normalizedIndex))
-                    continue;
-                (*actualItem)->markNormalizationPropagated(normalizedIndex);
-
-                termsPtr terms = (*actualItem)->getCurrentTerms();
-
-                std::vector<uint8_t> candidateTermIndexes;
-
-                for (uint8_t indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1)
-                {
-                    candidateTermIndexes.push_back(indexTerm1);
-                }
-
-                const unsigned int maxRuleChoices = getEffectiveMaxRuleChoices();
-
-                if (isStrategySample() && candidateTermIndexes.size() > 1)
-                {
-                    std::shuffle(candidateTermIndexes.begin(),
-                                 candidateTermIndexes.end(),
-                                 this->getRandomEngine());
-                }
-
-                if (maxRuleChoices > 0 && candidateTermIndexes.size() > maxRuleChoices)
-                {
-                    candidateTermIndexes.resize(maxRuleChoices);
-                    WARNING("unfolding: too many choices, only the first " << maxRuleChoices << " will be considered");
-                }
-
-                for (uint8_t indexTerm1 : candidateTermIndexes)
-                {
-                    class Item *it = (*actualItem)->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
-                    it->clearNormalizedAt(normalizedIndex);
-                    it->setRule((*actualItem)->getRule()->clone());
-                    it->setIndex((*actualItem)->getIndex());
-                    it->setCurrentTerms(Terms::create((*terms)[indexTerm1]));
-                    it->getIndexTerms()[(*actualItem)->getIndex()] = indexTerm1;
-                    it->resetCoreSerial();
-
-#ifdef TRACE_UNFOLD
-                    if (newlyMarked)
-                    {
-                        std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
-                        it->toHTML(std::cout);
-                        std::cout << std::endl;
-                    }
-#endif
-
-                    if (insertOrMergeStateItem(state, it))
-                    {
-                        modification = true;
-                    }
-                }
-
-                if (newlyMarked)
-                {
-                    modification = true;
-                }
-
-                if (modification)
-                {
-                    modificationOnce = true;
-                }
-            }
+            modificationOnce = true;
+            enqueue(changedItem);
         }
-    } while (modification);
+    };
+
+    while (!pending.empty())
+    {
+        class Item *actualItem = pending.front();
+        pending.pop_front();
+        scheduled.erase(actualItem);
+
+        elvexProgressTick(progress, "normalize", row, state->size());
+        if (actualItem->isSetFlags(Flags::SEEN | Flags::BOTTOM))
+            continue;
+
+        // X -> alpha • [Y] gamma
+        if (actualItem->getRuleRhs().size() > actualItem->getIndex() &&
+            !actualItem->isCompleted() &&
+            !actualItem->getForestIdentifiers()[actualItem->getIndex()] &&
+            actualItem->getCurrentTerms()->isOptional())
+        {
+            const uint8_t normalizedIndex = actualItem->getIndex();
+            const bool newlyMarked = !actualItem->isNormalizedAt(normalizedIndex);
+
+#ifdef TRACE_PASS
+            if (newlyMarked)
+            {
+                std::cout << "<H3>####################### PASS #######################</H3>" << std::endl;
+                actualItem->toHTML(std::cout);
+                std::cout << std::endl;
+            }
+#endif
+
+            /*
+             * Keep the source item as an idempotence witness.  It is marked
+             * as already normalized at its current dot position and is never
+             * processed by close()/shift() while it still needs normalization.
+             * The source remains in the chart for later reference, order or
+             * feature changes. Re-emit alternatives only when that input
+             * information differs from the last propagated snapshot.
+             */
+            if (!actualItem->needsNormalizationPropagation(normalizedIndex))
+                continue;
+            actualItem->markNormalizationPropagated(normalizedIndex);
+
+            class Item *absent = actualItem->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
+            absent->clearNormalizedAt(normalizedIndex);
+            forestPtr forestFound = forestPtr();
+            class ForestIdentifier *fi = ForestIdentifier::create(absent->getCurrentTerms()->getId(),
+                                                                  row,
+                                                                  row);
+            auto forestMapIt = forestMap.find(fi);
+            if (forestMapIt != forestMap.cend())
+            {
+                forestFound = forestMapIt->second;
+                free(fi);
+                absent->addForestIdentifiers(absent->getIndex(), forestMapIt->first);
+            }
+            else
+            {
+                forestFound = Forest::create(row, row);
+                forestMap.insert(fi, forestFound);
+                absent->addForestIdentifiers(absent->getIndex(), fi);
+            }
+            absent->setIndex(actualItem->getIndex() + 1);
+            absent->getIndexTerms()[actualItem->getIndex()] = 0;
+            absent->addRange(row);
+            absent->resetCoreSerial();
+
+            class Item *present = actualItem->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
+            present->clearNormalizedAt(normalizedIndex);
+            present->setRule(actualItem->getRule()->clone());
+            present->setIndex(actualItem->getIndex());
+            if (present->getCurrentTerms()->size() == 1)
+            {
+                present->getIndexTerms()[actualItem->getIndex()] = 0;
+            }
+            else
+            {
+                present->getIndexTerms()[actualItem->getIndex()] = Item::POSTERMS_NA;
+            }
+            present->getCurrentTerms()->unsetOptional();
+            present->resetCoreSerial();
+
+#ifdef TRACE_PASS
+            if (newlyMarked)
+            {
+                std::cout << "<H3>####################### PASS: X -> alpha [Y] • gamma #######################</H3>" << std::endl;
+                absent->toHTML(std::cout);
+                std::cout << std::endl;
+            }
+#endif
+            insertAndSchedule(absent);
+
+#ifdef TRACE_PASS
+            if (newlyMarked)
+            {
+                std::cout << "<H3>####################### PASS: X -> alpha • Y gamma #######################</H3>" << std::endl;
+                present->toHTML(std::cout);
+                std::cout << std::endl;
+            }
+#endif
+            insertAndSchedule(present);
+
+            if (newlyMarked)
+                modificationOnce = true;
+        }
+
+        // X -> alpha • Y1|Y2 beta
+        else if (actualItem->getRuleRhs().size() > actualItem->getIndex() &&
+                 !actualItem->isCompleted() &&
+                 !actualItem->getCurrentTerms()->isOptional() &&
+                 actualItem->getCurrentTerms()->size() > 1)
+        {
+            const uint8_t normalizedIndex = actualItem->getIndex();
+            const bool newlyMarked = !actualItem->isNormalizedAt(normalizedIndex);
+
+#ifdef TRACE_UNFOLD
+            if (newlyMarked)
+            {
+                std::cout << "<H3>####################### UNFOLD #######################</H3>" << std::endl;
+                actualItem->toHTML(std::cout);
+                std::cout << std::endl;
+            }
+#endif
+
+            // Re-emit alternatives only when propagated inputs have changed.
+            if (!actualItem->needsNormalizationPropagation(normalizedIndex))
+                continue;
+            actualItem->markNormalizationPropagated(normalizedIndex);
+
+            termsPtr terms = actualItem->getCurrentTerms();
+
+            std::vector<uint8_t> candidateTermIndexes;
+
+            for (uint8_t indexTerm1 = 0; indexTerm1 < terms->size(); ++indexTerm1)
+            {
+                candidateTermIndexes.push_back(indexTerm1);
+            }
+
+            const unsigned int maxRuleChoices = getEffectiveMaxRuleChoices();
+
+            if (isStrategySample() && candidateTermIndexes.size() > 1)
+            {
+                std::shuffle(candidateTermIndexes.begin(),
+                             candidateTermIndexes.end(),
+                             this->getRandomEngine());
+            }
+
+            if (maxRuleChoices > 0 && candidateTermIndexes.size() > maxRuleChoices)
+            {
+                candidateTermIndexes.resize(maxRuleChoices);
+                WARNING("unfolding: too many choices, only the first " << maxRuleChoices << " will be considered");
+            }
+
+            for (uint8_t indexTerm1 : candidateTermIndexes)
+            {
+                class Item *it = actualItem->clone(Flags::SEEN | Flags::CHOOSEN | Flags::REJECTED, verbose);
+                it->clearNormalizedAt(normalizedIndex);
+                it->setRule(actualItem->getRule()->clone());
+                it->setIndex(actualItem->getIndex());
+                it->setCurrentTerms(Terms::create((*terms)[indexTerm1]));
+                it->getIndexTerms()[actualItem->getIndex()] = indexTerm1;
+                it->resetCoreSerial();
+
+#ifdef TRACE_UNFOLD
+                if (newlyMarked)
+                {
+                    std::cout << "<H3>####################### UNFOLD: insert #######################</H3>" << std::endl;
+                    it->toHTML(std::cout);
+                    std::cout << std::endl;
+                }
+#endif
+
+                insertAndSchedule(it);
+            }
+
+            if (newlyMarked)
+                modificationOnce = true;
+        }
+    }
 
     for (const auto &i : *state)
         i->subFlags(Flags::SEEN);
@@ -1508,17 +1520,30 @@ void Generator::traceState(class ItemSet *state)
  */
 bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 {
-    bool modification;
     bool modificationOnce = false;
 
-    do
-    {
-        modification = false;
+    // Each stored item is queued independently. Never merge queue entries by
+    // grammar term, state core or parent history: ItemSet retains authority
+    // over structural equivalence and mergeRefs retains every parent link.
+    std::deque<class Item *> pending;
+    std::unordered_set<class Item *> scheduled;
+    auto enqueue = [&](class Item *item) {
+        if (item && scheduled.insert(item).second)
+            pending.push_back(item);
+    };
+    for (class Item *item : *state)
+        enqueue(item);
 
-        // Iterate through list
-        for (auto actualItem = state->cbegin();
-             actualItem != state->cend() && !modification;
-             ++actualItem)
+    while (!pending.empty())
+    {
+        class Item *selected = pending.front();
+        pending.pop_front();
+        scheduled.erase(selected);
+        // BOTTOM items can have been removed from the state in this phase.
+        if (getItemMap(selected->getId()) != selected)
+            continue;
+        class Item **actualItem = &selected;
+        bool modification = false;
         {
             elvexProgressTick(progress, "close", row, state->size());
 
@@ -1684,6 +1709,7 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                 {
                                     iterRules->incUsages(this);
                                     modification = true;
+                                    enqueue(*found);
                                 }
                                 free(it);
                             }
@@ -1693,6 +1719,7 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
 
                                 if (insertStateItem(state, it, true))
                                 {
+                                    enqueue(it);
                                     if (redundancyDiagnosticsEnabled())
                                     {
                                         ++redundancyDiagnostics.closeInserted;
@@ -1932,13 +1959,16 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                                 if (refsChanged || orderSpecsChanged)
                                                 {
                                                     modification = true;
+                                                    enqueue(*found);
                                                 }
                                                 free(it);
                                             }
                                             else
                                             {
-                                                if (insertOrMergeStateItem(states[row], it))
+                                                class Item *changedItem = nullptr;
+                                                if (insertOrMergeStateItem(states[row], it, &changedItem))
                                                 {
+                                                    enqueue(changedItem);
                                                     if (redundancyDiagnosticsEnabled())
                                                     {
                                                         ++redundancyDiagnostics.reduceProducedInserted;
@@ -2045,6 +2075,7 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                             if (refsChanged || orderSpecsChanged)
                                             {
                                                 modification = true;
+                                                enqueue(*found);
                                             }
                                             free(it);
                                         }
@@ -2059,8 +2090,10 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
                                                                it);
                                             // record the item
                                             it->setRefs(previousItem->getRefs());
-                                            if (insertOrMergeStateItem(states[row], it))
+                                            class Item *changedItem = nullptr;
+                                            if (insertOrMergeStateItem(states[row], it, &changedItem))
                                             {
+                                                enqueue(changedItem);
                                                 if (redundancyDiagnosticsEnabled())
                                                 {
                                                     ++redundancyDiagnostics.reduceProducedInserted;
@@ -2098,8 +2131,12 @@ bool Generator::close(Parser &parser, class ItemSet *state, uint32_t row)
         if (modification)
         {
             modificationOnce = true;
+            // In particular, Item::step may advance the dot in place.
+            // Allow another visit; SEEN/processed-operation keys still guard
+            // non-repeatable work as in the original close() loop.
+            enqueue(selected);
         }
-    } while (modification);
+    }
     for (const auto &i : *state)
         i->subFlags(Flags::SEEN);
 
