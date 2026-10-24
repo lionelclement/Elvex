@@ -11,8 +11,6 @@ The directories below demonstrate grammatical and lexical generation. Example na
 | [`english-adjectives/`](english-adjectives/README.md) | English adjective ordering from semantic features. |
 | [`french-animal-calls/`](french-animal-calls/README.md) | French sentences naming animals and the sounds they make. |
 | [`french-lightness/`](french-lightness/README.md) | French light-verb and lexical-function constructions. |
-| [`partial-word-order/`](partial-word-order/README.md) | Language-neutral partial-order constraints over grammatical constituents. |
-| [`optional-constituents/`](optional-constituents/README.md) | Language-neutral optional-rule constituents and conditional features. |
 | [`french-syntax/`](french-syntax/README.md) | A French syntax and morphology generation example. |
 | [`music/`](music/README.md) | A collection of score-generation grammars and multiple independent musical input files. |
 | [`pop-music-didactic/`](pop-music-didactic/README.md) | A multi-language collection of small pop-music score-generation examples. |
