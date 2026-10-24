@@ -6,7 +6,7 @@
 \usepackage{amssymb}
 \usepackage{listings}
 \usepackage{epsfig}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{gb4e}
 \usepackage{enumitem}
 
@@ -18,7 +18,7 @@
   {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
   {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
   {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
-  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {À}{{\`A}}1 {È}{{\`E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
   {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
   {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
   {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
@@ -34,13 +34,16 @@
 
 \title{Elvex -- Documentation}
 \author{Lionel Clément}
-\date{Version 2.27.0}
+\date{Version 2.28.0}
 %November 2019 - June 2024}
 
 \begin{document}
 \maketitle
+\tableofcontents
+\clearpage
 
 \section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
 
 \texttt{Elvex} is a surface realisation system based on typed feature
 structures, lexical resources and syntagmatic rules. It takes as input a
@@ -114,9 +117,9 @@ Lines 7) and 16) follow the same logic and we have the
 context-free grammar:
 
 \begin{lstlisting}[numbers=none]
-NP → det N
-N → adj N
-N → n
+NP → det N;
+N → adj N;
+N → n;
 \end{lstlisting}
 
 The only sequence we can generate with this simple example is
@@ -293,7 +296,7 @@ Example: The following rule gives all possible combinations for clitic
 pronouns placed before the verb.
 
 \begin{lstlisting}[numbers=none]
-  CLITICS → (clr) (cld) (cla) (cld) (clg) (cll) 
+  CLITICS → (clr) (cld) (cla) (cld) (clg) (cll);
 \end{lstlisting}
 
 In French, the dative clitic (\texttt{cld}) is sometimes placed
@@ -347,7 +350,7 @@ nominative clitic subject \texttt{cln} (\textit{je}, \textit{tu},
 \textit{il}, $\dots$), or with a subject as a nominal group.
 
 \begin{lstlisting}[numbers=none]
-S → (cln | NP) VP
+S → (cln | NP) VP;
 \end{lstlisting}
 
 A grammar written by using massively rules with alternatives and
@@ -356,14 +359,17 @@ the rule describing the order of clitic pronouns is equivalent to a
 set of 64 rules:
 
 \begin{lstlisting}[numbers=none]
-  CLITICS → 
-  CLITICS → clr 
-  CLITICS → cld 
+  CLITICS → ;
+  CLITICS → clr;
+  CLITICS → cld;
   ...
-  CLITICS → clr cld 
-  CLITICS → clr cld cla
+  CLITICS → clr cld;
+  CLITICS → clr cld cla;
   ... ...
 \end{lstlisting}
+
+The ellipses in this listing stand for omitted productions, not literal
+Elvex tokens. Complete rules without an action block end with a semicolon.
 
 However, \texttt{Elvex} never builds this set of rules explicitly and
 remains efficient with large grammars written with alternatives and
@@ -421,7 +427,7 @@ For example:
 \paragraph{File inclusion}
 
 An Elvex source file may include another file with the directive
-\verb|\#include| at the beginning of a line:
+\verb|#include| at the beginning of a line:
 
 \begin{lstlisting}[numbers=none]
 #include path/to/file.elvex
@@ -432,10 +438,17 @@ the directive.  This is useful for splitting large descriptions into several
 files.
 
 When verbose mode is enabled, Elvex reports the opening of included files.
+The current lexer opens the supplied file name relative to the process working
+directory; an included path is not automatically resolved relative to the
+including file's directory.
 
 A syntagmatic rule is written
 
 $A~ \rightarrow B_1 B_2 \dots B_k <operational~semantics>$
+
+A rule with no operational statements ends in a semicolon; otherwise, it
+ends with a statement block in braces. The following symbols may occur in
+the right-hand side.
 
 Where $B_i$ is written:
 
@@ -497,6 +510,10 @@ S -> NP VP { ↓1 = ↑ U [case:nom]; }
 The named variables are noted by an identifier preceded by ``\$'',
 the anonymous variables are noted ``\verb#_#'', the
 constant values are noted by identifiers.
+
+Although the lexer recognizes the words \verb#TRUE# and \verb#FALSE#,
+the supplied Bison grammar does not admit them as value or expression
+literals. Use supported constants or expressions instead.
 
 The feature structures are noted $[ f_1, f_2, \dots, f_k ]$
 where $ f_i$ is a feature as
@@ -719,18 +736,19 @@ Each rule is written:
 		            Constrains component \verb#i#, if present, to be generated after
 		            all other present components of the rule.
 
-		      \item \verb#order by <key_1, key_2, ..., key_k>;#
+		      \item \verb#order i, j, ... by #$\Downarrow$\verb#.attribute;#
 
-		            Sorts the present components of the rule according to the keys
-		            associated with them.  The first key is associated with the first
-		            component, the second key with the second component, and so on.
-		            Keys must be numeric and the current parser accepts only a
-		            variable, a field access, an integer or a double as a key; it
-		            does not accept an arbitrary algebraic expression in this
-		            position.  Components are generated in increasing key order;
-		            equal keys keep the original right-hand-side order.  For example:
-		            \verb#order by <$R1,$R2,$R3>;# or
-		            \verb#order by <#$\Downarrow$\verb#1.rank, #$\Downarrow$\verb#2.rank>;#.
+		            Constrains the relative order of the listed right-hand-side
+		            components using the same synthesized feature path for each
+		            component. The indexes are one-based. The parser also accepts
+		            an inherited path beginning with $\downarrow$, and paths may
+		            contain multiple fields, such as $\Downarrow$\verb#.prosody.weight#.
+		            Each key must evaluate to a number. The generator evaluates
+		            the path separately on the selected components; it orders two
+		            components when their numeric keys compare strictly. Equal
+		            keys do not impose a relative order (other constraints may do so).
+		            For example: \verb#order 1, 2, 3 by #$\Downarrow$\verb#.rank;#.
+		            The syntax \verb#order by <...>;# is not supported.
 
 
 	      \end{itemize}
@@ -853,10 +871,13 @@ Let's add algebraic expressions and numbers:
 		      \item \verb#<expr>#  $/$ \verb#<expr>#
 		      \item $-$ \verb#<expr>#
 		      \item \verb#floor(<expr>)# Integer floor of a numeric expression
+		      \item \verb#min(<expr>, <expr>)# Minimum of two numeric expressions
+		      \item \verb#max(<expr>, <expr>)# Maximum of two numeric expressions
 		      \item \verb#rand()# Random number generator
-		      \item Double-precision floating-point format number.  In the current
-		            lexer, double literals are written with a leading \verb#d#,
-		            for example \verb#d1.25#.
+		      \item Double-precision floating-point format number. The current
+		            lexer accepts ordinary decimal notation, for example
+		            \verb#1.25#, \verb#-0.5# or \verb#1e3#. Do not prefix a number
+		            with \verb#d#: \verb#d1.25# is not a numeric literal.
 	      \end{itemize}
 
 \end{itemize}
@@ -939,7 +960,7 @@ a	v[HEAD:brouillard, subjC:[FORM:"il"],
 		vform:tensed, vtense:present, 
 		mode:indicative, 
 		subj:[person:three, number:sg], 
-		neg:$Neg, fct:none]
+		neg:$Neg, fct:none];
 \end{lstlisting}
 
 	      The variable \verb#$Neg# is linked in this lexical entry to the expression "it is foggy"
@@ -947,10 +968,10 @@ a	v[HEAD:brouillard, subjC:[FORM:"il"],
 
 	      \begin{exe}
 		      \ex \begin{xlist}
-			      \ex \label{0-a} \textit{Il y a du brouillard} (it is foggy)
-			      \ex \label{0-a} \textit{Il n'y a pas de brouillard} (There is no fog)
-			      \ex \label{0-a} \textit{*Il y a de brouillard} ()
-			      \ex \label{0-a} \textit{*Il n'y a pas du brouillard}
+			      \ex \textit{Il y a du brouillard} (it is foggy)
+			      \ex \textit{Il n'y a pas de brouillard} (There is no fog)
+			      \ex \textit{*Il y a de brouillard} ()
+			      \ex \textit{*Il n'y a pas du brouillard}
 		      \end{xlist}
 	      \end{exe}
 
@@ -971,7 +992,11 @@ features:
 
 \begin{lstlisting}[numbers=none]
 @commonNoun = [cat:noun, number:sg];
+\end{lstlisting}
 
+The following rule, stored in a separate rules file, refers to that macro:
+
+\begin{lstlisting}[numbers=none]
 N → n {
   ↓1 = [@commonNoun, HEAD:$H];
 }
@@ -1201,10 +1226,10 @@ sentence
 
 	\item
 	      \begin{verbatim}
-sentence 
-   [HEAD:cause, 
-    i: [HEAD:raining]]
-    ii: [HEAD:se_couvrir, i:[HEAD:you], modality:devoir]
+sentence
+   [HEAD:cause,
+    i:[HEAD:raining],
+    ii:[HEAD:se_couvrir, i:[HEAD:you], modality:devoir]
    ]
 \end{verbatim}
 
@@ -1275,7 +1300,7 @@ sentence
 
 \end{itemize}
 
-\section{Design pattern (to be completed)}
+\section{Grammar design patterns}
 
 A design pattern applies in a general case which can be summarized by
 some constraints. It is not associated with a specific event, but to a
@@ -1329,6 +1354,10 @@ VN → V (PP) PP {
 taken verb[HEAD:take_one_to_the_cleaners, 
 	constI:[HEAD:cleaner, number:pl, def:yes]];
 \end{lstlisting}
+
+The \texttt{VN} production belongs in a rules file, whereas the
+\texttt{taken verb[...];} entry belongs in a lexicon file. They are
+shown together here only to illustrate their interaction.
 
 Example 2:
 The agent of a clause is carried out by the grammatical function subject
@@ -1435,23 +1464,25 @@ outputs a text corresponding to the concept written in natural language.
 
 \subsection*{Compilation and full installation of \texttt{Elvex}}
 
-The full compilation of \texttt{Elvex} requires the following programs on your machine:
+ELVEX 2.28.0 uses the top-level CMake configuration and an out-of-source
+build directory. It requires CMake 3.12 or later, a C++11 compiler, Flex,
+Bison, and the libxml2 development headers and library. For platform-specific
+packages and other requirements, see the repository's \texttt{INSTALL.md}.
 
-\begin{itemize}
-	\item g++
-	\item flex
-	\item bison
-	\item cmake
-	\item libxml2-dev
-\end{itemize}
-
-The full command is:
+From the repository root, configure and build the executable files with:
 
 \begin{lstlisting}[frame=none, numbers=none]
-cmake .
-make
-sudo make install
+cmake -S . -B build
+cmake --build build --parallel 8
+ctest --test-dir build --output-on-failure
+./build/bin/elvex --version
 \end{lstlisting}
+
+The executables are written to \texttt{build/bin/}. Installation into a
+system directory is optional, not required to run ELVEX from its source tree.
+If needed, configure \texttt{CMAKE\_INSTALL\_PREFIX} and use
+\verb#cmake --install build#; elevated permissions are only necessary when
+the chosen installation directory requires them.
 
 \subsection{\texttt{Elvex} command}
 
@@ -1484,8 +1515,9 @@ The options are:
 
 	\item \verb#-t|--trace#
 
-	      Displays the reduced rules during the generation process. This mode is useful
-	      for grammar debugging.
+	      Enables HTML tracing of rules marked \verb#@trace#. For detailed
+	      tracing of all stages, use \verb#--trace-all# or the individual
+	      \verb#--trace-...# options.
 
 	\item \verb#-r|--random#
 
@@ -1503,6 +1535,21 @@ The options are:
 
 	      Displays only the first output in the current deterministic generation
 	      order. Unlike \verb#--random#, this option does not shuffle choices.
+
+	\item \verb#--forest-only#
+
+	      Builds the shared derivation forest without enumerating its output strings.
+	      This is useful when a grammar produces many realizations.
+
+	\item \verb#--progress#
+
+	      Sends periodic generation progress reports to standard error.
+
+	\item \verb#--server-stdio# (also \verb#--stdio-server#)
+
+	      Reads one generation input per line from standard input. Each result
+	      is terminated by an ASCII record separator and output is flushed.
+	      This mode cannot be combined with \verb#--input-file# or positional inputs.
 
 	\item \verb#--strategy <exhaustive|sample|beam>#
 
@@ -1578,15 +1625,16 @@ Grammar debugging is performed with the \texttt{elvex} command using
 trace options. For example:
 
 \begin{lstlisting}[frame=none, numbers=none]
-elvex --trace \
-  --rules-file rules.elvex \
-  --lexicon-file lexicon.elvex \
-  <input>
+cd data/examples/french-noun-phrases
+../../../build/bin/elvex --trace \
+  --rules-file french-noun-phrases.rules \
+  --lexicon-file french-noun-phrases.lexicon \
+  --input-file french-noun-phrases.input > trace.html
 \end{lstlisting}
 
-With tracing enabled, \texttt{elvex} produces an HTML document on the
-standard output. You must use a browser to view this document properly
-and review the computation.
+With tracing enabled, \texttt{elvex} produces an HTML document on
+standard output. To inspect the trace, redirect it to a file and open it
+in a web browser. The example above uses files shipped with the repository.
 
 Where the specific options are:
 
@@ -1694,7 +1742,8 @@ lexeme  pos  lemma  features
 	      The \verb#lexeme# is the lexical unit selected by the generation
 	      model. It may correspond to a simple word, a collocation or an
 	      idiomatic construction. The \verb#lemma# identifies the morphological
-	      paradigm with which the lexeme is associated.
+	      paradigm with which the lexeme is associated. All four columns
+	      must be separated by actual TAB characters, not spaces.
 
 	\item \verb#--morpho-file <file>#
 
@@ -1707,6 +1756,7 @@ form  pos  lemma  features
 
 	      The \verb#form# is the produced surface form. The \verb#lemma# is used
 	      to match a morphological entry with one or more pattern entries.
+	      This format also requires TAB separators between its four columns.
 \end{description}
 
 The compacted lexicon is built by combining pattern entries and morphological
@@ -1719,17 +1769,17 @@ For example, a pattern file may contain adjective classes and their
 linearization rank:
 
 \begin{lstlisting}[frame=none, numbers=none]
-LARGE  adj  large  [HEAD:large, type:size, rank:1]
-PINK   adj  pink   [HEAD:pink, type:color, rank:4]
-IRON   adj  iron   [HEAD:iron, type:material, rank:6]
+LARGE	adj	large	[HEAD:large, type:size, rank:1]
+PINK	adj	pink	[HEAD:pink, type:color, rank:4]
+IRON	adj	iron	[HEAD:iron, type:material, rank:6]
 \end{lstlisting}
 
 and the morphological file may contain the corresponding surface forms:
 
 \begin{lstlisting}[frame=none, numbers=none]
-large  adj  large  []
-pink   adj  pink   []
-iron   adj  iron   []
+large	adj	large	[]
+pink	adj	pink	[]
+iron	adj	iron	[]
 \end{lstlisting}
 
 After compilation, the resulting entries can be used by grammar rules. For
@@ -1737,7 +1787,7 @@ instance, the synthesized feature \verb#rank# can later be exploited by a
 linearization instruction such as:
 
 \begin{lstlisting}[frame=none, numbers=none]
-order by <⇓1.rank, ⇓2.rank, ⇓3.rank>;
+order 1, 2, 3 by ⇓.rank;
 \end{lstlisting}
 
 \subsubsection*{Command to build a compacted lexicon}
